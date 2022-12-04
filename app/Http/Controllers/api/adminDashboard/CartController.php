@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use Illuminate\Http\Request;
+use App\Http\Controllers\api\BaseController as BaseController;
 
-class CartController extends Controller
+class CartController extends BaseController
 {
     /**
      * Display a listing of the resource.
