@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\Package_store;
 use Illuminate\Http\Request;
+use App\Http\Controllers\api\BaseController as BaseController;
 
-class PackageStoreController extends Controller
+class PackageStoreController extends BaseController
 {
     /**
      * Display a listing of the resource.

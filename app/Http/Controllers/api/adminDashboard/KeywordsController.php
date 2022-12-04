@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\Keywords;
 use Illuminate\Http\Request;
+use App\Http\Controllers\api\BaseController as BaseController;
 
-class KeywordsController extends Controller
+class KeywordsController extends BaseController
 {
     /**
      * Display a listing of the resource.

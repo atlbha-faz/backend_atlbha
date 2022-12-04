@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\Cart;
 use Illuminate\Http\Request;

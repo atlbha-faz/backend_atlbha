@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
+use App\Http\Controllers\api\BaseController as BaseController;
 
-class WebsiteorderController extends Controller
+class WebsiteorderController extends BaseController
 {
     /**
      * Display a listing of the resource.

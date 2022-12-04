@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\viewplatform;
 use Illuminate\Http\Request;
+use App\Http\Controllers\api\BaseController as BaseController;
 
-class ViewplatformController extends Controller
+class ViewplatformController extends BaseController
 {
     /**
      * Display a listing of the resource.
