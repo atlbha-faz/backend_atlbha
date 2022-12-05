@@ -38,8 +38,8 @@ class StoreResource extends JsonResource
         'category' =>New CategoryResource($this->category),
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
-        'status'=>$this->status,
-        'is_deleted'=>$this->is_deleted
+        'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
     ];
     }
 }

@@ -58,7 +58,7 @@ class StoreController extends BaseController
             'description' =>'required',
             'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'accept_status' =>'required',
+            'accept_status' =>'required|in:pending,accepted,rejected',
             'snapchat' =>'required|url',
             'facebook' =>'required|url',
             'twiter' =>'required|url',
@@ -66,10 +66,10 @@ class StoreController extends BaseController
             'instegram' =>'required|url',
             'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'entity_type' =>'required',
-            'activity_id' =>'required',
-            'package_id' =>'required',
-            'country_id'=>'required',
-            'city_id'=>'required',
+            'activity_id' =>'required|exists:activites,id',
+            'package_id' =>'required|exists:packages,id',
+            'country_id'=>'required|exists:countries,id',
+            'city_id'=>'required|exists:cities,id',
 
         ]);
 
@@ -134,7 +134,7 @@ class StoreController extends BaseController
     public function show($store)
     {
         $store =Store::query()->find($store);
-        if ($store->is_deleted==1){
+        if (is_null($store) || $store->is_deleted==1){
         return $this->sendError("المتجر غير موجودة","store is't exists");
         }
 
@@ -167,7 +167,7 @@ class StoreController extends BaseController
      */
     public function update(Request $request, Store $store)
     {
-                $store_id =$store->id;
+
 
                 $user =$store->user;
 
@@ -188,7 +188,7 @@ class StoreController extends BaseController
             'description' =>'required',
             // 'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             // 'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'accept_status' =>'required',
+            'accept_status' =>'required|in:pending,accepted,rejected',
              'snapchat' =>'required|url',
             'facebook' =>'required|url',
             'twiter' =>'required|url',
@@ -196,10 +196,10 @@ class StoreController extends BaseController
             'instegram' =>'required|url',
             //   'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
              'entity_type' =>'required',
-            'activity_id' =>'required',
-            'package_id' =>'required',
-            'country_id'=>'required',
-            'city_id'=>'required',
+          'activity_id' =>'required|exists:activites,id',
+            'package_id' =>'required|exists:packages,id',
+            'country_id'=>'required|exists:countries,id',
+            'city_id'=>'required|exists:cities,id',
 
            ]);
            if ($validator->fails())
@@ -255,7 +255,7 @@ class StoreController extends BaseController
      public function changeStatus($id)
     {
         $store = Store::query()->find($id);
-         if ($store->is_deleted==1){
+         if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
 
@@ -280,7 +280,7 @@ class StoreController extends BaseController
     public function destroy($store)
     {
        $store = Store::query()->find($store);
-         if ($store->is_deleted==1){
+         if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
         $store->update(['is_deleted' => 1]);

@@ -74,7 +74,7 @@ class PlatformController extends BaseController
     public function show($platform)
     {
         $platform = Platform::query()->find($platform);
-        if ($platform->is_deleted==1){
+        if (is_null($platform ) || $platform->is_deleted==1){
         return $this->sendError("السوق  غير موجودة","platform is't exists");
         }
 
@@ -88,7 +88,7 @@ class PlatformController extends BaseController
     public function changeStatus($id)
     {
         $platform = Platform::query()->find($id);
-         if ($platform->is_deleted==1){
+         if (is_null($platform ) || $platform->is_deleted==1){
          return $this->sendError("السوق غير موجودة","platform is't exists");
          }
 
@@ -125,7 +125,7 @@ class PlatformController extends BaseController
      */
     public function update(Request $request, Platform $platform)
     {
-        if ($platform->is_deleted==1){
+        if (is_null($platform ) || $platform->is_deleted==1){
             return $this->sendError("االسوق غير موجودة","platform is't exists");
                 }
             $input = $request->all();
@@ -161,7 +161,7 @@ class PlatformController extends BaseController
     public function destroy( $platform)
     {
         $platform = Platform::query()->find($platform);
-        if ($platform->is_deleted==1){
+        if (is_null($platform ) || $platform->is_deleted==1){
             return $this->sendError("السوق غير موجودة","platform is't exists");
             }
            $platform->update(['is_deleted' => 1]);

@@ -48,7 +48,7 @@ class CategoryController extends BaseController
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-                'for'=>'required',
+                'for'=>'required|in:store,etlobha',
             ]);
             if ($validator->fails())
             {
@@ -79,7 +79,7 @@ class CategoryController extends BaseController
             $input = $request->all();
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
-                'for'=>'required',
+                'for'=>'required|in:store,etlobha',
                 'parent_id'=>'required'
             ]);
             if ($validator->fails())
@@ -121,7 +121,7 @@ class CategoryController extends BaseController
     public function show($category)
     {
         $category= Category::query()->find($category);
-        if ($category->is_deleted==1){
+        if ( is_null($category) || $category->is_deleted==1){
                return $this->sendError("القسم غير موجودة","Category is't exists");
                }
               $success['categories']=New CategoryResource($category);
@@ -154,7 +154,7 @@ class CategoryController extends BaseController
     public function changeStatus($id)
     {
         $category = Category::query()->find($id);
-        if ($category->is_deleted==1){
+        if (is_null($category) || $category->is_deleted==1){
          return $this->sendError("القسم غير موجودة","category is't exists");
          }
         if($category->status === 'active'){
@@ -177,7 +177,7 @@ class CategoryController extends BaseController
      */
     public function update(Request $request, Category $category)
     {
-        if ($category->is_deleted==1){
+        if (is_null($category) ||  $category->is_deleted==1){
             return $this->sendError("التصنيف غير موجودة"," Category is't exists");
        }
         if($request->parent_id == null){
@@ -238,7 +238,7 @@ class CategoryController extends BaseController
     public function destroy($category)
     {
         $category =Category::query()->find($category);
-        if ($category->is_deleted==1){
+        if (is_null($category) || $category->is_deleted==1){
             return $this->sendError("القسم غير موجودة","category is't exists");
             }
            $category->update(['is_deleted' => 1]);

@@ -25,8 +25,8 @@ class CouponResource extends JsonResource
             'user_redemptions' => $this->user_redemptions,
             'free_shipping' => $this->free_shipping,
             'exception_discount_product' => $this->exception_discount_product,
-            'status' => $this->status,
-            'is_deleted' => $this->is_deleted
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0
         ];
     }
 }

@@ -51,7 +51,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-            // 'store_id'=>'required|exists:stores,id',
+            'store_id'=>'required|exists:stores,id',
 
 
         ]);
@@ -67,6 +67,7 @@ class PageController extends BaseController
             'seo_desc' => $request->seo_desc,
             'tags' => implode(',', $request->tags),
             'store_id' => $request->store_id,
+            'name'=> $request->name,
           ]);
            //$request->input('name', []);
           $page->page_categories()->attach(explode(',', $request->name));
@@ -86,7 +87,7 @@ class PageController extends BaseController
     public function show($page)
     {
         $page= Page::query()->find($page);
-        if ($page->is_deleted==1){
+        if (is_null($page) || $page->is_deleted==1){
                return $this->sendError("الصفحة غير موجودة","Page is't exists");
                }
               $success['pages']=New PageResource($page);
@@ -129,7 +130,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-
+         'store_id'=>'required|exists:stores,id',
            ]);
            if ($validator->fails())
            {
@@ -142,7 +143,9 @@ class PageController extends BaseController
                'seo_title' => $request->input('seo_title'),
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
+               'store_id' => $request->input('store_id'),
                'tags' => implode(',',$request->input('tags')),
+               'name'=> $request->input('name'),
            ]);
            //$request->input('name', []);
            if($request->name!=null){
@@ -163,7 +166,7 @@ class PageController extends BaseController
     public function destroy($page)
     {
         $page =Page::query()->find($page);
-        if ($page->is_deleted==1){
+        if (is_null($page) || $page->is_deleted==1){
             return $this->sendError("الصفحة غير موجودة","page is't exists");
             }
            $page->update(['is_deleted' => 1]);
@@ -177,7 +180,7 @@ class PageController extends BaseController
       public function changeStatus($id)
     {
         $page = Page::query()->find($id);
-         if ($page->is_deleted==1){
+         if (is_null($page) || $page->is_deleted==1){
          return $this->sendError("  الصفحة غير موجودة","page is't exists");
          }
 

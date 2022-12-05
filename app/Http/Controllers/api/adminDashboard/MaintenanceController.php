@@ -45,7 +45,7 @@ class MaintenanceController extends BaseController
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
             'message'=>'required',
-           // 'store_id'=>'required|exists:stores,id'
+           'store_id'=>'required|exists:stores,id'
         ]);
         if ($validator->fails())
         {
@@ -73,7 +73,7 @@ class MaintenanceController extends BaseController
     public function show( $maintenance)
     {
         $maintenance= Maintenance::query()->find($maintenance);
-        if ($maintenance->is_deleted==1){
+        if (is_null($maintenance) || $maintenance->is_deleted==1){
                return $this->sendError("وضع الصيانة غير موجودة","Maintenance is't exists");
                }
               $success['maintenances']=New MaintenanceResource($maintenance);
@@ -95,7 +95,7 @@ class MaintenanceController extends BaseController
     public function changeStatus($id)
     {
         $maintenance= Maintenance::query()->find($id);
-        if ($maintenance->is_deleted==1){
+        if (is_null($maintenance) || $maintenance->is_deleted==1){
          return $this->sendError("الصيانة غير موجودة","maintenance is't exists");
          }
         if($maintenance->status === 'active'){
@@ -123,14 +123,14 @@ class MaintenanceController extends BaseController
      */
     public function update(Request $request, Maintenance $maintenance)
     {
-        if ($maintenance->is_deleted==1){
+        if (is_null($maintenance) || $maintenance->is_deleted==1){
             return $this->sendError("الصيانة غير موجودة"," Maintenance is't exists");
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
                 'title'=>'required|string|max:255',
                 'message'=>'required',
-               // 'store_id'=>'required|exists:stores,id'
+               'store_id'=>'required|exists:stores,id'
 
            ]);
            if ($validator->fails())
@@ -159,7 +159,7 @@ class MaintenanceController extends BaseController
     public function destroy($maintenance)
     {
         $maintenance =Maintenance::query()->find($maintenance);
-        if ($maintenance->is_deleted==1){
+        if (is_null($maintenance) || $maintenance->is_deleted==1){
             return $this->sendError("وضع الصيانة غير موجودة","maintenance is't exists");
             }
            $maintenance->update(['is_deleted' => 1]);

@@ -72,7 +72,7 @@ class CityController extends BaseController
     public function show(City $city)
     {
          $city = City::query()->find($city->id);
-         if ($city->is_deleted==1){
+         if (is_null($city) || $city->is_deleted==1){
          return $this->sendError("المدينه غير موجودة","city is't exists");
          }
 
@@ -86,7 +86,7 @@ class CityController extends BaseController
     public function changeStatus($id)
     {
         $city = City::query()->find($id);
-         if ($city->is_deleted==1){
+         if (is_null($city) ||$city->is_deleted==1){
          return $this->sendError("المدينه غير موجودة","city is't exists");
          }
 
@@ -122,7 +122,7 @@ class CityController extends BaseController
      */
     public function update(Request $request, City $city)
 {
-        if ($city->is_deleted==1){
+        if (is_null($city) || $city->is_deleted==1){
          return $this->sendError("المدينه غير موجودة","city is't exists");
     }
          $input = $request->all();
@@ -158,7 +158,7 @@ class CityController extends BaseController
      */
     public function destroy(City $city)
     {
-         if ($city->is_deleted==1){
+         if (is_null($city) ||$city->is_deleted==1){
          return $this->sendError("المدينه غير موجودة","city is't exists");
          }
         $city->update(['is_deleted' => 1]);

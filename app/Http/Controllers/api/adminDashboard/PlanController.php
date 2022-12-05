@@ -78,7 +78,7 @@ class PlanController extends BaseController
     {
 
           $plan = Plan::query()->find($plan);
-         if ($plan->is_deleted == 1){
+         if (is_null($plan) || $plan->is_deleted == 1){
          return $this->sendError(" الخطة غير موجودة","plan is't exists");
          }
 
@@ -110,7 +110,7 @@ class PlanController extends BaseController
      */
     public function update(Request $request, Plan $plan)
        {
-         if ($plan->is_deleted==1){
+         if (is_null($plan) || $plan->is_deleted==1){
          return $this->sendError(" الخطة غير موجود","plan is't exists");
           }
          $input = $request->all();
@@ -138,7 +138,7 @@ class PlanController extends BaseController
        public function changeStatus($id)
     {
         $plan = Plan::query()->find($id);
-         if ($plan->is_deleted==1){
+         if (is_null($plan) || $plan->is_deleted==1){
          return $this->sendError(" الباقة غير موجود","plan is't exists");
          }
 
@@ -163,7 +163,7 @@ class PlanController extends BaseController
     public function destroy($plan)
     {
        $plan = Plan::query()->find($plan);
-         if ($plan->is_deleted==1){
+         if (is_null($plan) || $plan->is_deleted==1){
          return $this->sendError("الباقة غير موجودة","plan is't exists");
          }
         $plan->update(['is_deleted' => 1]);

@@ -45,7 +45,7 @@ class SeoController extends BaseController
         $validator =  Validator::make($input ,[
             'index_page_title'=>'required|string|max:255',
             'index_page_description'=>'required|string',
-           'show_pages'=>'required',
+           'show_pages'=>'required|in:short_link,name_link',
            'link'=>'required|url',
            'robots'=>'required|string',
             'store_id'=>'required|exists:stores,id'
@@ -80,7 +80,7 @@ class SeoController extends BaseController
     public function show($seo)
     {
         $seo= Seo::query()->find($seo);
-        if ($seo->is_deleted==1){
+        if (is_null($seo) || $seo->is_deleted==1){
                return $this->sendError("االكلمات المفتاحية غير موجودة","Seo is't exists");
                }
               $success['seos']=New SeoResource($seo);
@@ -91,7 +91,7 @@ class SeoController extends BaseController
     public function changeStatus($id)
     {
         $seo = Seo::query()->find($id);
-        if ($seo->is_deleted==1){
+        if (is_null($seo) || $seo->is_deleted==1){
          return $this->sendError("الكلمات المفتاحية غير موجودة","seo is't exists");
          }
         if($seo->status === 'active'){
@@ -125,7 +125,7 @@ class SeoController extends BaseController
      */
     public function update(Request $request, Seo $seo)
     {
-        if ($seo->is_deleted==1){
+        if (is_null($seo) || $seo->is_deleted==1){
             return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
        }
             $input = $request->all();
@@ -133,7 +133,7 @@ class SeoController extends BaseController
             'index_page_title'=>'required|string|max:255',
             'index_page_description'=>'required|string',
 
-           'show_pages'=>'required',
+           'show_pages'=>'required|in:short_link,name_link',
            'link'=>'required|url',
            'robots'=>'required|string',
             'store_id'=>'required|exists:stores,id'
@@ -170,7 +170,7 @@ class SeoController extends BaseController
     public function destroy($seo)
     {
         $seo =Seo::query()->find($seo);
-        if ($seo->is_deleted==1){
+        if (is_null($seo) || $seo->is_deleted==1){
             return $this->sendError("االكلمات المفتاحية غير موجودة","seo is't exists");
             }
            $seo->update(['is_deleted' => 1]);

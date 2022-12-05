@@ -77,7 +77,7 @@ class ExplainVideosController extends BaseController
     public function show($explainVideos)
     {
           $explainVideos = ExplainVideos::query()->find($explainVideos);
-         if ($explainVideos->is_deleted == 1){
+         if (is_null($explainVideos) || $explainVideos->is_deleted == 1){
          return $this->sendError("المدينه غير موجودة","explainvideo is't exists");
          }
 
@@ -108,7 +108,7 @@ class ExplainVideosController extends BaseController
      */
     public function update(Request $request, ExplainVideos $explainVideos)
  {
-        if ($explainVideos->is_deleted==1){
+        if (is_null($explainVideos) || $explainVideos->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","explainvideo is't exists");
     }
          $input = $request->all();
@@ -140,7 +140,7 @@ class ExplainVideosController extends BaseController
       public function changeStatus($id)
     {
         $explainvideos = ExplainVideos::query()->find($id);
-         if ($explainvideos->is_deleted==1){
+         if (is_null($$explainvideos) || $explainvideos->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","explainvideo is't exists");
          }
 
@@ -166,7 +166,7 @@ class ExplainVideosController extends BaseController
     public function destroy($explainVideos)
    {
        $explainVideos = ExplainVideos::query()->find($explainVideos);
-         if ($explainVideos->is_deleted==1){
+         if (is_null($explainVideos) || $explainVideos->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","explainVideos is't exists");
          }
         $explainVideos->update(['is_deleted' => 1]);

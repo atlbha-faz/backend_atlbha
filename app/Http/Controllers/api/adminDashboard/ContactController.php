@@ -73,7 +73,7 @@ class ContactController extends BaseController
     public function show($contact)
     {
         $contact= Contact::query()->find($contact);
-        if ($contact->is_deleted==1){
+        if (is_null($contact) ||$contact->is_deleted==1){
                return $this->sendError("بيانات التواصل غير موجودة","contact is't exists");
                }
               $success['contacts']=New ContactResource($contact);
@@ -118,7 +118,7 @@ class ContactController extends BaseController
      */
     public function update(Request $request, Contact $contact)
     {
-        if ($contact->is_deleted==1){
+        if (is_null($contact) ||$contact->is_deleted==1){
             return $this->sendError("بيانات التواصل غير موجودة"," contact is't exists");
        }
             $input = $request->all();
@@ -156,7 +156,7 @@ class ContactController extends BaseController
     public function destroy($contact)
     {
         $contact =contact::query()->find($contact);
-        if ($contact->is_deleted==1){
+        if (is_null($contact) ||$contact->is_deleted==1){
             return $this->sendError("بيانات التواصل غير موجودة","contact is't exists");
             }
            $contact->update(['is_deleted' => 1]);

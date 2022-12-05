@@ -74,7 +74,7 @@ class NotificationController extends BaseController
     public function show($id)
     {
         $notification= Notification::query()->find($id);
-        if ($notification->is_deleted==1){
+        if (is_null($notification) || $notification->is_deleted==1){
                return $this->sendError(" الاشعار غير موجودة","Notification is't exists");
                }
               $success['notifications']=New NotificationResource($notification);
@@ -85,7 +85,7 @@ class NotificationController extends BaseController
     public function changeStatus($id)
     {
         $notification = Notification::query()->find($id);
-        if ($notification->is_deleted==1){
+        if (is_null($notification) || $notification->is_deleted==1){
          return $this->sendError(" نوع الاشعار غير موجودة","Notification is't exists");
          }
         if($notification->status === 'active'){
@@ -122,7 +122,7 @@ class NotificationController extends BaseController
     {
          $notification = Notification::query()->find($notification);
 
-        if ($notification->is_deleted==1){
+        if (is_null($notification) || $notification->is_deleted==1){
             return $this->sendError(" الاشعار غير موجودة"," notification is't exists");
        }
             $input = $request->all();
@@ -160,7 +160,7 @@ class NotificationController extends BaseController
     public function destroy( $id)
     {
         $notification =Notification::query()->find($id);
-        if ($notification->is_deleted==1){
+        if (is_null($notification) || $notification->is_deleted==1){
             return $this->sendError(" الاشعار غير موجودة","notification is't exists");
             }
            $notification->update(['is_deleted' => 1]);

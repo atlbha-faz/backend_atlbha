@@ -23,8 +23,8 @@ class PageResource extends JsonResource
             'seo_desc' => $this->seo_desc,
            'tags' => explode(',',$this->tags),
             'store_id' => $this->store_id,
-            'status' => $this->status,
-            'is_deleted' => $this->is_deleted
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0
         ];
     }
 }

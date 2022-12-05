@@ -69,7 +69,7 @@ class PageCategoryController extends BaseController
     public function show($page_category)
     {
         $page_category= Page_category::query()->find($page_category);
-        if ($page_category->is_deleted==1){
+        if (is_null($page_category) || $page_category->is_deleted==1){
                return $this->sendError("التصنيف غير موجودة","Page_category is't exists");
                }
               $success['page_categories']=New Page_categoryResource($page_category);
@@ -100,7 +100,7 @@ class PageCategoryController extends BaseController
     public function update(Request $request,  $page_category)
     {
         $page_category =Page_category::query()->find($page_category);
-        if ($page_category->is_deleted==1){
+        if (is_null($page_category) || $page_category->is_deleted==1){
          return $this->sendError("التصنيف غير موجودة","page_category is't exists");
           }
          $input = $request->all();
@@ -131,7 +131,7 @@ class PageCategoryController extends BaseController
     public function destroy($page_category)
     {
         $page_category =Page_category::query()->find($page_category);
-        if ($page_category->is_deleted==1){
+        if (is_null($page_category) || $page_category->is_deleted==1){
             return $this->sendError("التصنيف غير موجودة","page_category is't exists");
             }
            $page_category->update(['is_deleted' => 1]);
@@ -145,7 +145,7 @@ class PageCategoryController extends BaseController
      public function changeStatus($id)
     {
         $page_category = Page_category::query()->find($id);
-         if ($page_category->is_deleted==1){
+         if (is_null($page_category) || $page_category->is_deleted==1){
          return $this->sendError("التصنيف غير موجودة","page_category is't exists");
          }
 

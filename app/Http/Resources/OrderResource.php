@@ -20,8 +20,8 @@ class OrderResource extends JsonResource
             'user' => New UserResource($this->user),
             'quantity' => $this->quantity,
             'total_price' => $this->total_price,
-            'status' => $this->status,
-            'is_deleted' => $this->is_deleted
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
         ];
     }
 }

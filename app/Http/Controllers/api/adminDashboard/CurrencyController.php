@@ -76,7 +76,7 @@ class CurrencyController extends BaseController
     {
         
              $currency = Currency::query()->find($currency->id);
-             if ($currency->is_deleted==1){
+             if (is_null($currency) || $currency->is_deleted==1){
              return $this->sendError("العملة غير موجودة"," Currency is't exists");
              }
     
@@ -90,7 +90,7 @@ class CurrencyController extends BaseController
         public function changeStatus($id)
         {
             $currency =Currency::query()->find($id);
-             if ($currency->is_deleted==1){
+             if (is_null($currency) || $currency->is_deleted==1){
              return $this->sendError("العملة غير موجودة","currency is't exists");
              }
     
@@ -126,7 +126,7 @@ class CurrencyController extends BaseController
      */
     public function update(Request $request, Currency $currency)
     {
-        if ($currency->is_deleted==1){
+        if (is_null($currency) || $currency->is_deleted==1){
          return $this->sendError("العملة غير موجودة","currency is't exists");
     }
          $input = $request->all();
@@ -162,7 +162,7 @@ class CurrencyController extends BaseController
      */
     public function destroy(Currency $currency)
     {
-          if ($currency->is_deleted==1){
+          if (is_null($currency) || $currency->is_deleted==1){
          return $this->sendError("العملة غير موجودة","currency is't exists");
          }
         $currency->update(['is_deleted' => 1]);
