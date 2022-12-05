@@ -86,7 +86,7 @@ class PageController extends BaseController
     public function show($page)
     {
         $page= Page::query()->find($page);
-        if ($page->is_deleted==1){
+        if (is_null($page) || $page->is_deleted==1){
                return $this->sendError("الصفحة غير موجودة","Page is't exists");
                }
               $success['pages']=New PageResource($page);
@@ -163,7 +163,7 @@ class PageController extends BaseController
     public function destroy($page)
     {
         $page =Page::query()->find($page);
-        if ($page->is_deleted==1){
+        if (is_null($page) || $page->is_deleted==1){
             return $this->sendError("الصفحة غير موجودة","page is't exists");
             }
            $page->update(['is_deleted' => 1]);
@@ -177,7 +177,7 @@ class PageController extends BaseController
       public function changeStatus($id)
     {
         $page = Page::query()->find($id);
-         if ($page->is_deleted==1){
+         if (is_null($page) || $page->is_deleted==1){
          return $this->sendError("  الصفحة غير موجودة","page is't exists");
          }
 

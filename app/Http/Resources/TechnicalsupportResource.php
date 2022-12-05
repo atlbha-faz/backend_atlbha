@@ -21,8 +21,8 @@ class TechnicalsupportResource extends JsonResource
             'content' =>$this->content,
             'type'=>$this->type,
             'supportstatus'=>$this->supportstatus,
-            'status'=>$this->status,
-            'is_deleted'=>$this->is_deleted,
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
             'store' => New StoreResource($this->store)
 
         ];

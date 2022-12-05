@@ -24,8 +24,8 @@ class SettingResource extends JsonResource
             'logo' => $this->logo,
             'icon' => $this->icon,
             'address' => $this->address,
-            'status' => $this->status,
-            'is_deleted' => $this->is_deleted,
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
             'country' => New CountryResource($this->country),
             'city' => New CityResource($this->city)
 

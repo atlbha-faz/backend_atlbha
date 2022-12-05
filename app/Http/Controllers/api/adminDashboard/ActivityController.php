@@ -69,7 +69,7 @@ class ActivityController extends BaseController
     public function show($activity)
     {
         $activity= Activity::query()->find($activity);
-        if ($activity->is_deleted==1){
+        if (is_null($activity) || $activity->is_deleted==1){
                return $this->sendError("النشاط غير موجودة","Activity is't exists");
                }
               $success['activities']=New ActivityResource($activity);
@@ -80,7 +80,7 @@ class ActivityController extends BaseController
     public function changeStatus($id)
     {
         $activity = Activity::query()->find($id);
-        if ($activity->is_deleted==1){
+        if (is_null($activity) || $activity->is_deleted==1){
          return $this->sendError("النشاط غير موجودة","Activity is't exists");
          }
         if($activity->status === 'active'){
@@ -115,7 +115,7 @@ class ActivityController extends BaseController
      */
     public function update(Request $request, Activity $activity)
     {
-        if ($activity->is_deleted==1){
+        if ( is_null($activity) || $activity->is_deleted==1){
             return $this->sendError("النشاط غير موجودة"," Activity is't exists");
        }
             $input = $request->all();
@@ -148,7 +148,7 @@ class ActivityController extends BaseController
     public function destroy($activity)
     {
         $activity =Activity::query()->find($activity);
-        if ($activity->is_deleted==1){
+        if (is_null($activity)||$activity->is_deleted==1){
             return $this->sendError("النشاط غير موجودة","activity is't exists");
             }
            $activity->update(['is_deleted' => 1]);

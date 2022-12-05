@@ -81,7 +81,7 @@ class CommentController extends BaseController
     public function show($comment)
    {
         $comment = Comment::query()->find($comment);
-        if ($comment->is_deleted==1){
+        if (is_null($comment) ||$comment->is_deleted==1){
         return $this->sendError("'طريقة الدفع غير موجودة","comment type is't exists");
         }
 
@@ -112,7 +112,7 @@ class CommentController extends BaseController
      */
     public function update(Request $request, Comment $comment)
       {
-         if ($comment->is_deleted==1){
+         if (is_null($comment) ||$comment->is_deleted==1){
          return $this->sendError(" التعليق غير موجود","comment is't exists");
           }
          $input = $request->all();
@@ -143,7 +143,7 @@ class CommentController extends BaseController
     public function changeStatus($id)
     {
         $comment = Comment::query()->find($id);
-         if ($comment->is_deleted==1){
+         if (is_null($comment) ||$comment->is_deleted==1){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
 
@@ -169,7 +169,7 @@ class CommentController extends BaseController
     public function destroy($comment)
       {
        $comment = Comment::query()->find($comment);
-         if ($comment->is_deleted==1){
+         if (is_null($comment) ||$comment->is_deleted==1){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
         $comment->update(['is_deleted' => 1]);

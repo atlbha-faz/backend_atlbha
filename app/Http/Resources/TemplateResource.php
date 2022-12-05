@@ -18,8 +18,8 @@ class TemplateResource extends JsonResource
             'id' =>$this->id,
             'name' => $this->name,
             'parent_id' => $this->parent_id,
-            'status' => $this->status,
-            'is_deleted' => $this->is_deleted,
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
             'parent' => New TemplateResource($this->parent)
         ];
     }

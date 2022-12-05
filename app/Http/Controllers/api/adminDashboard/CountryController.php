@@ -77,7 +77,7 @@ class CountryController extends  BaseController
     public function show(Country $country)
     {
         $country = Country::query()->find($country->id);
-  if ($country->is_deleted==1){
+  if (is_null($country) || $country->is_deleted==1){
          return $this->sendError("الدولة غير موجودة","country is't exists");
          }
         $success['$countries']=New CountryResource($country);
@@ -90,7 +90,7 @@ class CountryController extends  BaseController
      public function changeStatus($id)
     {
         $country = Country::query()->find($id);
-        if ($country->is_deleted==1){
+        if (is_null($country) || $country->is_deleted==1){
          return $this->sendError("الدولة غير موجودة","country is't exists");
          }
         if($country->status === 'active'){
@@ -126,7 +126,7 @@ class CountryController extends  BaseController
     public function update(Request $request, Country $country)
     {
         // $country = Country::query()->find($id);
-        if ($country->is_deleted==1){
+        if (is_null($country) || $country->is_deleted==1){
          return $this->sendError("الدولة غير موجودة","country is't exists");
          }
         $input = $request->all();
@@ -159,7 +159,7 @@ class CountryController extends  BaseController
      */
     public function destroy(Country $country)
     {
-        if ($country->is_deleted==1){
+        if (is_null($country) || $country->is_deleted==1){
          return $this->sendError("الدولة غير موجودة","country is't exists");
          }
 

@@ -19,8 +19,8 @@ class website_socialmediaResource extends JsonResource
             'name' => $this->name,
             'logo' => $this->logo,
             'link' => $this->link,
-            'status' => $this->status,
-            'is_deleted' => $this->is_deleted,
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
             'created_at' => (string) $this->created_at,
              'updated_at' => (string) $this->updated_at,
           ];

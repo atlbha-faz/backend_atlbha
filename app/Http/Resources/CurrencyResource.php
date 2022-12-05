@@ -19,8 +19,8 @@ class CurrencyResource extends JsonResource
             'name' => $this->name,
             'name_en' => $this->name_en,
             'image' => $this->image,
-            'status' => $this->status,
-            'is_deleted' => $this->is_deleted
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
         ];
     }
 }

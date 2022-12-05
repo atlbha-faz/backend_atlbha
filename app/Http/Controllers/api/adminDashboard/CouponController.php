@@ -93,7 +93,7 @@ class CouponController extends BaseController
     public function show($coupon)
     {
         $coupon = Coupon::query()->find($coupon);
-        if ($coupon->is_deleted==1){
+        if (is_null($coupon ) || $coupon->is_deleted==1){
                return $this->sendError("الكوبون غير موجودة","Coupon is't exists");
                }
               $success['Coupons']=New CouponResource($coupon);
@@ -106,7 +106,7 @@ class CouponController extends BaseController
            public function changeStatus($id)
           {
               $coupon = Coupon::query()->find($id);
-              if ($coupon->is_deleted==1){
+              if (is_null($coupon ) || $coupon->is_deleted==1){
                return $this->sendError("الكوبون غير موجودة","coupon is't exists");
                }
               if($coupon->status === 'active'){
@@ -141,7 +141,7 @@ class CouponController extends BaseController
      */
     public function update(Request $request, Coupon $coupon)
     {
-        if ($coupon->is_deleted==1){
+        if (is_null($coupon ) || $coupon->is_deleted==1){
             return $this->sendError("الكوبون غير موجودة"," coupon is't exists");
        }
             $input = $request->all();
@@ -187,7 +187,7 @@ class CouponController extends BaseController
     public function destroy($coupon)
     {
         $coupon =  Coupon::query()->find($coupon);
-        if ($coupon->is_deleted==1){
+        if (is_null($coupon ) || $coupon->is_deleted==1){
             return $this->sendError("الكوبون غير موجودة","coupon is't exists");
             }
            $coupon->update(['is_deleted' => 1]);

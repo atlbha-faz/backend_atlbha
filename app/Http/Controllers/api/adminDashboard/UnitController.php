@@ -79,7 +79,7 @@ class UnitController extends BaseController
     public function show($unit)
      {
           $unit = Unit::query()->find($unit);
-         if ($unit->is_deleted == 1){
+         if (is_null($unit) || $unit->is_deleted == 1){
          return $this->sendError("الوحدة غير موجودة","unit is't exists");
          }
 
@@ -110,7 +110,7 @@ class UnitController extends BaseController
      */
     public function update(Request $request, Unit $unit)
        {
-         if ($unit->is_deleted==1){
+         if (is_null($unit) || $unit->is_deleted==1){
          return $this->sendError("الوحدة غير موجودة","unit is't exists");
           }
          $input = $request->all();
@@ -140,7 +140,7 @@ class UnitController extends BaseController
   public function changeStatus($id)
     {
         $unit = Unit::query()->find($id);
-         if ($unit->is_deleted==1){
+         if (is_null($unit) || $unit->is_deleted==1){
          return $this->sendError("الوحدة غير موجودة","unit is't exists");
          }
 
@@ -166,7 +166,7 @@ class UnitController extends BaseController
     public function destroy($unit)
     {
        $unit = Unit::query()->find($unit);
-         if ($unit->is_deleted==1){
+         if (is_null($unit) || $unit->is_deleted==1){
          return $this->sendError("الوحدة غير موجودة","unit is't exists");
          }
         $unit->update(['is_deleted' => 1]);

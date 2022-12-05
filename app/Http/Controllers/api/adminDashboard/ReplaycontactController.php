@@ -73,7 +73,7 @@ class ReplaycontactController extends BaseController
     public function show($replaycontact)
     {
         $replaycontact= Replaycontact::query()->find($replaycontact);
-        if ($replaycontact->is_deleted==1){
+        if (is_null($replaycontact) || $replaycontact->is_deleted==1){
                return $this->sendError("الرد غير موجودة","contact is't exists");
                }
               $success['Replaycontacts']=New ReplaycontactResource($replaycontact);
@@ -84,7 +84,7 @@ class ReplaycontactController extends BaseController
     public function changeStatus($id)
     {
         $replaycontact = Replaycontact::query()->find($id);
-        if ($replaycontact->is_deleted==1){
+        if (is_null($replaycontact) || $replaycontact->is_deleted==1){
          return $this->sendError(" الرد غير موجودة","replaycontact is't exists");
          }
         if($replaycontact->status === 'active'){
@@ -119,7 +119,7 @@ class ReplaycontactController extends BaseController
      */
     public function update(Request $request, Replaycontact $replaycontact)
     {
-        if ($replaycontact->is_deleted==1){
+        if ( is_null($replaycontact) || $replaycontact->is_deleted==1){
             return $this->sendError("الرد غير موجودة"," replaycontact is't exists");
        }
             $input = $request->all();
@@ -156,7 +156,7 @@ class ReplaycontactController extends BaseController
     public function destroy($replaycontact)
     {
         $replaycontact =Replaycontact::query()->find($replaycontact);
-        if ($replaycontact->is_deleted==1){
+        if (is_null($replaycontact) || $replaycontact->is_deleted==1){
             return $this->sendError(" الرد غير موجودة","replaycontact is't exists");
             }
            $replaycontact->update(['is_deleted' => 1]);

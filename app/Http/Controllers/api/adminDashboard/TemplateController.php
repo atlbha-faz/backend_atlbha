@@ -96,7 +96,7 @@ class TemplateController extends BaseController
     public function show($template)
     {
         $template= Template::query()->find($template);
-        if ($template->is_deleted==1){
+        if (is_null($template) || $template->is_deleted==1){
                return $this->sendError("القالب غير موجود","template is't exists");
                }
               $success['categories']=New templateResource($template);
@@ -125,7 +125,7 @@ class TemplateController extends BaseController
      */
     public function update(Request $request, Template $template)
      {
-        if ($template->is_deleted==1){
+        if (is_null($template) || $template->is_deleted==1){
             return $this->sendError("التصنيف غير موجودة"," template is't exists");
        }
         if($request->parent_id == null){
@@ -177,7 +177,7 @@ class TemplateController extends BaseController
   public function changeStatus($id)
     {
         $template = Template::query()->find($id);
-        if ($template->is_deleted==1){
+        if (is_null($template) || $template->is_deleted==1){
          return $this->sendError("القسم غير موجودة","template is't exists");
          }
         if($template->status === 'active'){
@@ -200,7 +200,7 @@ class TemplateController extends BaseController
     public function destroy($template)
     {
         $template =Template::query()->find($template);
-        if ($template->is_deleted==1){
+        if (is_null($template) || $template->is_deleted==1){
             return $this->sendError("القالب غير موجودة","template is't exists");
             }
            $template->update(['is_deleted' => 1]);

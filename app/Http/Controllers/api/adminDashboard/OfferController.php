@@ -63,13 +63,13 @@ class OfferController extends BaseController
               'coupon_status' =>'required_if:offer_type,fixed_amount,percent',
              'discount_value_offer3' =>'required_if:offer_type,percent',
             'maximum_discount' =>'required_if:offer_type,percent',
-            'product_id'=>['required_if:offer_type,If_bought_gets','required_if:category_id,null'],
+            'product_id'=>'',
             'get_product_id' =>'',
-            'category_id'=>['required_if:offer_type,If_bought_gets','required_if:product_id,null'],
-            'get_category_id'=>"",
-            'select_product_id'=>"",
-            'select_category_id'=>"",
-            'select_payment_id'=>"",
+            'category_id'=>'required_if:offer_type,If_bought_gets|required_if:product_id,null',
+            'get_category_id'=>'',
+            'select_product_id'=>'',
+            'select_category_id'=>'',
+            'select_payment_id'=>'',
         ]);
         if ($validator->fails())
         {
@@ -139,7 +139,7 @@ class OfferController extends BaseController
     public function show($offer)
    {
         $offer = Offer::query()->find($offer);
-        if ($offer->is_deleted==1){
+        if (is_null($offer) || $offer->is_deleted==1){
         return $this->sendError("العرض غير موجود","offer is't exists");
         }
 
@@ -154,7 +154,7 @@ class OfferController extends BaseController
       public function changeStatus($id)
     {
         $offer = Offer::query()->find($id);
-         if ($offer->is_deleted==1){
+         if (is_null($offer) || $offer->is_deleted==1){
          return $this->sendError(" العرض غير موجود","offer is't exists");
          }
 
@@ -289,7 +289,7 @@ class OfferController extends BaseController
     public function destroy($offer)
      {
         $offer = Offer::query()->find($offer);
-        if ($offer->is_deleted==1){
+        if (is_null($offer) || $offer->is_deleted==1){
             return $this->sendError("العرض غير موجود","offer is't exists");
             }
            $offer->update(['is_deleted' => 1]);

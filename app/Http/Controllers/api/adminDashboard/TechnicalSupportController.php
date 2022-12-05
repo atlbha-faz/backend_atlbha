@@ -84,7 +84,7 @@ class TechnicalSupportController extends BaseController
     public function show($technicalSupport)
  {
           $technicalSupport = TechnicalSupport::query()->find($technicalSupport);
-         if ($technicalSupport->is_deleted == 1){
+         if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1){
          return $this->sendError("طلب الدعم الفني غير موجود","Technical Support is't exists");
          }
 
@@ -115,7 +115,7 @@ class TechnicalSupportController extends BaseController
      */
     public function update(Request $request, TechnicalSupport $technicalSupport)
     {
-         if ($technicalSupport->is_deleted==1){
+         if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
          return $this->sendError("طلب الدعم غير موجود","technicalSupport is't exists");
           }
          $input = $request->all();
@@ -150,7 +150,7 @@ class TechnicalSupportController extends BaseController
          public function changeStatus($id)
     {
         $technicalSupport = TechnicalSupport::query()->find($id);
-         if ($technicalSupport->is_deleted==1){
+         if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
          return $this->sendError("طلب الدعم غير موجود","technical Support is't exists");
          }
 
@@ -176,7 +176,7 @@ class TechnicalSupportController extends BaseController
     public function destroy($technicalSupport)
    {
        $technicalSupport = TechnicalSupport::query()->find($technicalSupport);
-         if ($technicalSupport->is_deleted==1){
+         if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
          return $this->sendError("الوحدة غير موجودة","technicalSupport is't exists");
          }
         $technicalSupport->update(['is_deleted' => 1]);

@@ -18,7 +18,7 @@ class website_settingResource extends JsonResource
             'id' =>$this->id,
             'key' => $this->key,
             'value' => $this->value,
-            'is_deleted' => $this->is_deleted,
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
             'created_at' => (string) $this->created_at,
              'updated_at' => (string) $this->updated_at,
           ];

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountryController;
 
@@ -89,3 +90,9 @@ Route::resource('replaycontact',App\Http\Controllers\api\adminDashboard\Replayco
 Route::resource('seo',App\Http\Controllers\api\adminDashboard\SeoController::class);
 Route::resource('store',App\Http\Controllers\api\adminDashboard\StoreController::class);
 Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController::class);
+Auth::routes();
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+
+});
