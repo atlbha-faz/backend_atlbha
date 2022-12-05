@@ -47,7 +47,7 @@ class ProductController extends BaseController
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'sku'=>'required|string',
-            'for'=>'required',
+            'for'=>'required|in:store,etlobha',
             'description'=>'required|string',
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
@@ -130,7 +130,7 @@ class ProductController extends BaseController
          $validator =  Validator::make($input ,[
              'name'=>'required|string|max:255',
             'sku'=>'required|string',
-            'for'=>'required',
+             'for'=>'required|in:store,etlobha',
             'description'=>'required|string',
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],

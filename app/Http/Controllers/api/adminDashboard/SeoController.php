@@ -45,7 +45,7 @@ class SeoController extends BaseController
         $validator =  Validator::make($input ,[
             'index_page_title'=>'required|string|max:255',
             'index_page_description'=>'required|string',
-           'show_pages'=>'required',
+           'show_pages'=>'required|in:short_link,name_link',
            'link'=>'required|url',
            'robots'=>'required|string',
             'store_id'=>'required|exists:stores,id'
@@ -133,7 +133,7 @@ class SeoController extends BaseController
             'index_page_title'=>'required|string|max:255',
             'index_page_description'=>'required|string',
 
-           'show_pages'=>'required',
+           'show_pages'=>'required|in:short_link,name_link',
            'link'=>'required|url',
            'robots'=>'required|string',
             'store_id'=>'required|exists:stores,id'
