@@ -58,7 +58,7 @@ class StoreController extends BaseController
             'description' =>'required',
             'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'accept_status' =>'required',
+            'accept_status' =>'required|in:pending,accepted,rejected',
             'snapchat' =>'required|url',
             'facebook' =>'required|url',
             'twiter' =>'required|url',
@@ -66,10 +66,10 @@ class StoreController extends BaseController
             'instegram' =>'required|url',
             'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'entity_type' =>'required',
-            'activity_id' =>'required',
-            'package_id' =>'required',
-            'country_id'=>'required',
-            'city_id'=>'required',
+            'activity_id' =>'required|exists:activites,id',
+            'package_id' =>'required|exists:packages,id',
+            'country_id'=>'required|exists:countries,id',
+            'city_id'=>'required|exists:cities,id',
 
         ]);
 
@@ -188,7 +188,7 @@ class StoreController extends BaseController
             'description' =>'required',
             // 'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             // 'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'accept_status' =>'required',
+            'accept_status' =>'required|in:pending,accepted,rejected',
              'snapchat' =>'required|url',
             'facebook' =>'required|url',
             'twiter' =>'required|url',
@@ -196,10 +196,10 @@ class StoreController extends BaseController
             'instegram' =>'required|url',
             //   'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
              'entity_type' =>'required',
-            'activity_id' =>'required',
-            'package_id' =>'required',
-            'country_id'=>'required',
-            'city_id'=>'required',
+          'activity_id' =>'required|exists:activites,id',
+            'package_id' =>'required|exists:packages,id',
+            'country_id'=>'required|exists:countries,id',
+            'city_id'=>'required|exists:cities,id',
 
            ]);
            if ($validator->fails())

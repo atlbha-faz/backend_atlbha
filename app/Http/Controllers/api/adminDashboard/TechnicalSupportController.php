@@ -47,8 +47,8 @@ class TechnicalSupportController extends BaseController
             'title'=>'required|string|max:255',
             'phoneNumber'=>'required|numeric',
             'content'=>'required|max:1000',
-            'type'=>'required',
-            'supportstatus'=>'required',
+            'type'=>'required|in:complaint,enquiry,suggestion',
+            'supportstatus'=>'required|in:finished,not_finished,pending',
             'store_id' =>'required|exists:stores,id'
 
 
@@ -123,8 +123,8 @@ class TechnicalSupportController extends BaseController
           'title'=>'required|string|max:255',
             'phoneNumber'=>'required|numeric',
             'content'=>'required|max:1000',
-            'type'=>'required',
-            'supportstatus'=>'required',
+            'type'=>'required|in:complaint,enquiry,suggestion',
+            'supportstatus'=>'required|in:finished,not_finished,pending',
             'store_id' =>'required|exists:stores,id'
          ]);
          if ($validator->fails())
