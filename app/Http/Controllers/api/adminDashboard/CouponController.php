@@ -44,13 +44,13 @@ class CouponController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'code'=>'required|string|max:255',
-            'discount_type'=>'required|string',
+            'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric|gt:0'],
             'discount'=>['required','numeric|gt:0'],
             'expire_date' =>['required','date'],
             'total_redemptions'=>['required','numeric'],
             'user_redemptions'=>['required','numeric'],
-            
+
         ]);
         if ($validator->fails())
         {
@@ -98,11 +98,11 @@ class CouponController extends BaseController
                }
               $success['Coupons']=New CouponResource($coupon);
               $success['status']= 200;
-      
+
                return $this->sendResponse($success,'تم  عرض بنجاح','coupon showed successfully');
-      
+
           }
-      
+
            public function changeStatus($id)
           {
               $coupon = Coupon::query()->find($id);
@@ -119,7 +119,7 @@ class CouponController extends BaseController
               $success['status']= 200;
                return $this->sendResponse($success,'تم تعدبل حالة الكوبون بنجاح','coupon status updared successfully');
           }
-    
+
 
     /**
      * Show the form for editing the specified resource.
@@ -147,7 +147,7 @@ class CouponController extends BaseController
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'code'=>'required|string|max:255',
-            'discount_type'=>'required|string',
+            'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric|gt:0'],
             'discount'=>['required','numeric|gt:0'],
             'expire_date' =>['required','date'],
@@ -197,5 +197,5 @@ class CouponController extends BaseController
 
             return $this->sendResponse($success,'تم حذف الكوبون بنجاح','coupon deleted successfully');
     }
-    
+
 }

@@ -51,12 +51,15 @@ class OfferController extends BaseController
             'start_at'=>'required|date',
             'end_at'=>'required|date',
             'purchase_quantity' =>"required_if:offer_type,If_bought_gets",
-            'purchase_type' =>'required_if:offer_type,If_bought_gets|in:product,category',            'get_quantity' =>'required_if:offer_type,If_bought_gets|numeric',
+
+            'purchase_type' =>'required_if:offer_type,If_bought_gets|in:product,category',
+            'get_quantity' =>'required_if:offer_type,If_bought_gets|numeric',
+
             'get_type' =>'required_if:offer_type,If_bought_gets|in:product,category',
             'offer1_type' =>'required_if:offer_type,If_bought_gets|in:percent,free_product',
             'discount_percent' =>'required_if:offer1_type,percent',
             'discount_value_offer2' =>'required_if:offer_type,fixed_amount',
-            'offer_apply' =>'required_if:offer_type,fixed_amount,percent',
+            'offer_apply' =>'required_if:offer_type,fixed_amount,percent|in:all,selected_product,selected_category,selected_payment',
             'offer_type_minimum' =>'required_if:offer_type,fixed_amount,percent',
              'offer_amount_minimum' =>'required_if:offer_type,fixed_amount,percent',
               'coupon_status' =>'required_if:offer_type,fixed_amount,percent',
