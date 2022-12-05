@@ -54,6 +54,8 @@ Route::post('changeContactStatus/{id}', [App\Http\Controllers\api\adminDashboard
 Route::post('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class,'changeStatus']);
 Route::post('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeStatus']);
 Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
+Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
+
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
 Route::resource('city',App\Http\Controllers\api\adminDashboard\CityController::class);
@@ -89,3 +91,5 @@ Route::resource('replaycontact',App\Http\Controllers\api\adminDashboard\Replayco
 Route::resource('seo',App\Http\Controllers\api\adminDashboard\SeoController::class);
 Route::resource('store',App\Http\Controllers\api\adminDashboard\StoreController::class);
 Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController::class);
+Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
+

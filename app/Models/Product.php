@@ -9,13 +9,22 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','sku','for','description','purchasing_price','selling_price','quantity','less_qty','weight','image','tags','cat_id','store_id','status','is_deleted'];
+    protected $fillable = ['name','sku','for','description','image','purchasing_price','selling_price','quantity','less_qty','tags','category_id','store_id','status','is_deleted'];
 
     public function comment()
     {
         return $this->hasMany(Comment::class);
     }
 
+      public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+      public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
    public function orders()
     {
           return $this->belongsToMany(
