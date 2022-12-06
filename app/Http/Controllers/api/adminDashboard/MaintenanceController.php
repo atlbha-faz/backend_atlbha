@@ -45,7 +45,7 @@ class MaintenanceController extends BaseController
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
             'message'=>'required',
-           // 'store_id'=>'required|exists:stores,id'
+           'store_id'=>'required|exists:stores,id'
         ]);
         if ($validator->fails())
         {
@@ -130,7 +130,7 @@ class MaintenanceController extends BaseController
            $validator =  Validator::make($input ,[
                 'title'=>'required|string|max:255',
                 'message'=>'required',
-               // 'store_id'=>'required|exists:stores,id'
+               'store_id'=>'required|exists:stores,id'
 
            ]);
            if ($validator->fails())

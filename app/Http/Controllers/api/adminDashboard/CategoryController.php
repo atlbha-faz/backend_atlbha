@@ -48,7 +48,7 @@ class CategoryController extends BaseController
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-                'for'=>'required',
+                'for'=>'required|in:store,etlobha',
             ]);
             if ($validator->fails())
             {
@@ -79,7 +79,7 @@ class CategoryController extends BaseController
             $input = $request->all();
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
-                'for'=>'required',
+                'for'=>'required|in:store,etlobha',
                 'parent_id'=>'required'
             ]);
             if ($validator->fails())
