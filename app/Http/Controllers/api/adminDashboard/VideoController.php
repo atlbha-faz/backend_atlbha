@@ -109,7 +109,7 @@ class VideoController extends BaseController
     public function show($video)
     {
           $video = Video::query()->find($video);
-         if ($video->is_deleted == 1){
+         if (is_null($video ) || $video->is_deleted == 1){
          return $this->sendError("الوحدة غير موجودة","video is't exists");
          }
 
@@ -140,7 +140,7 @@ class VideoController extends BaseController
      */
     public function update(Request $request, Video $video)
      {
-         if ($video->is_deleted==1){
+         if (is_null($video ) || $video->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","video is't exists");
           }
          $input = $request->all();
@@ -186,7 +186,7 @@ class VideoController extends BaseController
   public function changeStatus($id)
     {
         $video = Video::query()->find($id);
-         if ($video->is_deleted==1){
+         if (is_null($video ) || $video->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","video is't exists");
          }
 
@@ -212,7 +212,7 @@ class VideoController extends BaseController
     public function destroy($video)
      {
        $video = Video::query()->find($video);
-         if ($video->is_deleted==1){
+         if (is_null($video ) || $video->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","video is't exists");
          }
         $video->update(['is_deleted' => 1]);

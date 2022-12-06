@@ -73,7 +73,7 @@ class WebsiteSocialmediaController extends BaseController
     public function show($website_socialmedia)
     {
         $website_socialmedia = website_socialmedia::query()->find($website_socialmedia);
-             if ($website_socialmedia->is_deleted==1){
+             if (is_null($website_socialmedia) || $website_socialmedia->is_deleted==1){
              return $this->sendError("وسائل التواصل غير موجودة"," website_socialmedia is't exists");
              }
 
@@ -87,7 +87,7 @@ class WebsiteSocialmediaController extends BaseController
         public function changeStatus($id)
         {
             $website_socialmedia =website_socialmedia::query()->find($id);
-             if ($website_socialmedia->is_deleted==1){
+             if (is_null($website_socialmedia) || $website_socialmedia->is_deleted==1){
              return $this->sendError("وسائل التواصل غير موجودة","website_socialmedia is't exists");
              }
 
@@ -124,7 +124,7 @@ class WebsiteSocialmediaController extends BaseController
     public function update(Request $request,  $website_socialmedia)
     {
         $website_socialmedia =website_socialmedia::query()->find($website_socialmedia);
-        if ($website_socialmedia->is_deleted==1){
+        if (is_null($website_socialmedia) || $website_socialmedia->is_deleted==1){
             return $this->sendError("وسائل التواصل غير موجودة","website_socialmedia is't exists");
        }
             $input = $request->all();
@@ -162,7 +162,7 @@ class WebsiteSocialmediaController extends BaseController
     {
      $website_socialmedia =website_socialmedia::query()->find($website_socialmedia);
 
-        if ($website_socialmedia->is_deleted==1){
+        if (is_null($website_socialmedia) || $website_socialmedia->is_deleted==1){
             return $this->sendError(" وسائل التواصل غير موجودة","website_socialmedia is't exists");
             }
            $website_socialmedia->update(['is_deleted' => 1]);

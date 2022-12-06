@@ -89,7 +89,7 @@ class SettingController extends BaseController
     public function show($setting)
     {
           $setting = Setting::query()->find($setting);
-         if ($setting->is_deleted == 1){
+         if (is_null($setting) || $setting->is_deleted == 1){
          return $this->sendError("الاعدادات غير موجودة","settings is't exists");
          }
 
@@ -120,7 +120,7 @@ class SettingController extends BaseController
      */
     public function update(Request $request, Setting $setting)
        {
-         if ($setting->is_deleted==1){
+         if (is_null($setting) || $setting->is_deleted==1){
          return $this->sendError("\الاعداداتغير موجودة","setting is't exists");
           }
          $input = $request->all();
@@ -164,7 +164,7 @@ class SettingController extends BaseController
   public function changeStatus($id)
     {
         $setting = Setting::query()->find($id);
-         if ($setting->is_deleted==1){
+         if (is_null($setting) || $setting->is_deleted==1){
          return $this->sendError("الاعدادات غير موجودة","setting is't exists");
          }
 
@@ -190,7 +190,7 @@ class SettingController extends BaseController
     public function destroy($setting)
     {
        $setting = Setting::query()->find($setting);
-         if ($setting->is_deleted==1){
+         if (is_null($setting) || $setting->is_deleted==1){
          return $this->sendError("الاعدادات غير موجودة","setting is't exists");
          }
         $setting->update(['is_deleted' => 1]);

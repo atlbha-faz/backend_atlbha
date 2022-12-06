@@ -74,7 +74,7 @@ class ShippingtypeController extends BaseController
     public function show($shippingtype)
      {
         $shippingtype = Shippingtype::query()->find($shippingtype);
-        if ($shippingtype->is_deleted==1){
+        if (is_null($shippingtype) || $shippingtype->is_deleted==1){
         return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
         }
 
@@ -105,7 +105,7 @@ class ShippingtypeController extends BaseController
      */
     public function update(Request $request, Shippingtype $shippingtype)
         {
-         if ($shippingtype->is_deleted==1){
+         if (is_null($shippingtype) || $shippingtype->is_deleted==1){
          return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
           }
          $input = $request->all();
@@ -134,7 +134,7 @@ class ShippingtypeController extends BaseController
      public function changeStatus($id)
     {
         $shippingtype = Shippingtype::query()->find($id);
-         if ($shippingtype->is_deleted==1){
+         if (is_null($shippingtype) || $shippingtype->is_deleted==1){
          return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
          }
 
@@ -160,7 +160,7 @@ class ShippingtypeController extends BaseController
     public function destroy($shippingtype)
      {
        $shippingtype = Shippingtype::query()->find($shippingtype);
-         if ($shippingtype->is_deleted==1){
+         if (is_null($shippingtype) || $shippingtype->is_deleted==1){
          return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
          }
         $shippingtype->update(['is_deleted' => 1]);

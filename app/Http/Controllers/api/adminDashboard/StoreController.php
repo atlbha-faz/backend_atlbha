@@ -134,7 +134,7 @@ class StoreController extends BaseController
     public function show($store)
     {
         $store =Store::query()->find($store);
-        if ($store->is_deleted==1){
+        if (is_null($store) || $store->is_deleted==1){
         return $this->sendError("المتجر غير موجودة","store is't exists");
         }
 
@@ -167,7 +167,7 @@ class StoreController extends BaseController
      */
     public function update(Request $request, Store $store)
     {
-                $store_id =$store->id;
+
 
                 $user =$store->user;
 
@@ -255,7 +255,7 @@ class StoreController extends BaseController
      public function changeStatus($id)
     {
         $store = Store::query()->find($id);
-         if ($store->is_deleted==1){
+         if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
 
@@ -280,7 +280,7 @@ class StoreController extends BaseController
     public function destroy($store)
     {
        $store = Store::query()->find($store);
-         if ($store->is_deleted==1){
+         if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
         $store->update(['is_deleted' => 1]);

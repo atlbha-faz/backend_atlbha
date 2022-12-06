@@ -20,8 +20,8 @@ class PackageResource extends JsonResource
             'monthly_price' => $this->monthly_price,
             'yearly_price' => $this->yearly_price,
             'discount' => $this->discount,
-            'status' => $this->status,
-            'is_deleted' => $this->is_deleted
+            'status' => $this->status !==null ? $this->status:'active',
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
         ];
     }
 }

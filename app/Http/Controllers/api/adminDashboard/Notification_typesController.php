@@ -70,7 +70,7 @@ class Notification_typesController extends BaseController
     public function show($id)
     {
         $notification_type= Notification_type::query()->find($id);
-        if ($notification_type->is_deleted==1){
+        if (is_null($notification_type) || $notification_type->is_deleted==1){
                return $this->sendError("نوع الاشعار غير موجودة","Notification_type is't exists");
                }
               $success['notification_types']=New Notification_typeResource($notification_type);
@@ -81,7 +81,7 @@ class Notification_typesController extends BaseController
     public function changeStatus($id)
     {
         $notification_type = Notification_type::query()->find($id);
-        if ($notification_type->is_deleted==1){
+        if (is_null($notification_type) || $notification_type->is_deleted==1){
          return $this->sendError(" نوع الاشعار غير موجودة","Notification_type is't exists");
          }
         if($notification_type->status === 'active'){
@@ -117,7 +117,7 @@ class Notification_typesController extends BaseController
     {
     $notification_type = Notification_type::query()->find($id);
 
-        if ($notification_type->is_deleted==1){
+        if (is_null($notification_type) || $notification_type->is_deleted==1){
             return $this->sendError("نوع الاشعار غير موجودة"," notification_type is't exists");
        }
             $input = $request->all();
@@ -150,7 +150,7 @@ class Notification_typesController extends BaseController
     public function destroy($id)
     {
         $notification_type =Notification_type::query()->find($id);
-        if ($notification_type->is_deleted==1){
+        if (is_null($notification_type) || $notification_type->is_deleted==1){
             return $this->sendError("نوع الاشعار غير موجودة","notification_type is't exists");
             }
            $notification_type->update(['is_deleted' => 1]);

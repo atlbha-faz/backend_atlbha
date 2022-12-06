@@ -79,7 +79,7 @@ class ReplaycommentController extends BaseController
     public function show($replaycomment)
    {
         $replaycomment = Replaycomment::query()->find($replaycomment);
-        if ($replaycomment->is_deleted==1){
+        if (is_null($replaycomment ) || $replaycomment->is_deleted==1){
         return $this->sendError("'رد التعليق غير موجودة","replay comment type is't exists");
         }
 
@@ -111,7 +111,7 @@ class ReplaycommentController extends BaseController
      */
     public function update(Request $request, Replaycomment $replaycomment)
      {
-         if ($replaycomment->is_deleted==1){
+         if (is_null($replaycomment ) || $replaycomment->is_deleted==1){
          return $this->sendError(" التعليق غير موجود","replay comment is't exists");
           }
 
@@ -141,7 +141,7 @@ class ReplaycommentController extends BaseController
      public function changeStatus($id)
     {
         $replaycomment = Replaycomment::query()->find($id);
-         if ($replaycomment->is_deleted==1){
+         if (is_null($replaycomment ) || $replaycomment->is_deleted==1){
          return $this->sendError("التعليق غير موجود","replaycomment is't exists");
          }
 
@@ -166,7 +166,7 @@ class ReplaycommentController extends BaseController
     public function destroy($replaycomment)
     {
        $replaycomment = Replaycomment::query()->find($replaycomment);
-         if ($replaycomment->is_deleted==1){
+         if (is_null($replaycomment ) || $replaycomment->is_deleted==1){
          return $this->sendError("التعليق غير موجود","replaycomment is't exists");
          }
         $replaycomment->update(['is_deleted' => 1]);

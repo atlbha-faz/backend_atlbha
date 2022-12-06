@@ -77,7 +77,7 @@ class PaymenttypeController extends BaseController
      public function show($paymenttype)
      {
         $paymenttype = Paymenttype::query()->find($paymenttype);
-        if ($paymenttype->is_deleted==1){
+        if (is_null($paymenttype) || $paymenttype->is_deleted==1){
         return $this->sendError("'طريقة الدفع غير موجودة","payment type is't exists");
         }
 
@@ -109,7 +109,7 @@ class PaymenttypeController extends BaseController
      */
     public function update(Request $request, Paymenttype $paymenttype)
      {
-         if ($paymenttype->is_deleted==1){
+         if (is_null($paymenttype) || $paymenttype->is_deleted==1){
          return $this->sendError("طريقة الدفع غير موجودة","payment type is't exists");
           }
          $input = $request->all();
@@ -139,7 +139,7 @@ class PaymenttypeController extends BaseController
      public function changeStatus($id)
     {
         $paymenttype = Paymenttype::query()->find($id);
-         if ($paymenttype->is_deleted==1){
+         if (is_null($paymenttype) || $paymenttype->is_deleted==1){
          return $this->sendError("شركة الشحن غير موجودة","paymenttype is't exists");
          }
 
@@ -165,7 +165,7 @@ class PaymenttypeController extends BaseController
     public function destroy($paymenttype)
       {
        $paymenttype = Paymenttype::query()->find($paymenttype);
-         if ($paymenttype->is_deleted==1){
+         if (is_null($paymenttype) || $paymenttype->is_deleted==1){
          return $this->sendError("طريقةالدفع غير موجودة","payment type is't exists");
          }
         $paymenttype->update(['is_deleted' => 1]);

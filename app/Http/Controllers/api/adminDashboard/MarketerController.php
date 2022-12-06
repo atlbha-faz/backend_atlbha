@@ -100,7 +100,7 @@ class MarketerController extends BaseController
     public function show(Marketer $marketer)
     {
        $marketer = Marketer::query()->find($marketer->id);
-if ($marketer->is_deleted==1){
+if (is_null($marketer) || $marketer->is_deleted==1){
          return $this->sendError("المندوب غير موجودة","marketer is't exists");
          }
         $success['$marketers']=New MarketerResource($marketer);
@@ -183,7 +183,7 @@ if ($marketer->is_deleted==1){
       public function changeStatus($id)
     {
         $marketer = Marketer::query()->find($id);
-        if ($marketer->is_deleted==1){
+        if (is_null($marketer) || $marketer->is_deleted==1){
          return $this->sendError("المندوب غير موجودة","marketer is't exists");
          }
         if($marketer->status === 'active'){
@@ -207,7 +207,7 @@ if ($marketer->is_deleted==1){
      */
     public function destroy(Marketer $marketer)
     {
-       if ($marketer->is_deleted==1){
+       if (is_null($marketer) || $marketer->is_deleted==1){
          return $this->sendError("المندوب غير موجودة","marketer is't exists");
          }
             $marketer->update(['is_deleted' => 1]);

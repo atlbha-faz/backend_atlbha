@@ -18,8 +18,8 @@ class PaymenttypeResource extends JsonResource
         'id' =>$this->id,
         'name'=>$this->name,
          'image'=>$this->image,
-        'status'=>$this->status,
-        'is_deleted'=>$this->is_deleted
+         'status' => $this->status !==null ? $this->status:'active',
+         'is_deleted' => $this->is_deleted!==null ? $this->status:0,
     ];
     }
 }
