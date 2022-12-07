@@ -101,4 +101,5 @@ Route::group(['middleware' => ['auth']], function() {
 });
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
+Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 

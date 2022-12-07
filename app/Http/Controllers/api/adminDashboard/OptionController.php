@@ -25,6 +25,17 @@ class OptionController extends BaseController
          return $this->sendResponse($success,'تم ارجاع الخيارات بنجاح','options return successfully');
     }
 
+ public function optionsProduct($product_id)
+   {
+     $option =Option::where('product_id',$product_id)->first();
+        if (is_null($option) || $option->is_deleted==1){
+        return $this->sendError("لايوجد خيارات لهذا المنتج","options is't exists");
+        }
+        $success['options']=OptionResource::collection(Option::where('is_deleted',0)->where('product_id',$product_id)->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع الخيارات بنجاح','options return successfully');
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -117,56 +128,59 @@ class OptionController extends BaseController
      * @param  \App\Models\Option  $option
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Product $product)
-      {
+
+   public function update(Request $request, $product_id)
+  {
 
 
+    //    dd($options_id);
 
-            //    dd($options_id);
+    $input = $request->all();
+    $validator =  Validator::make($input, [
+      'data' => 'required|array',
+      'data.*.type' => 'required|in:brand,color,wight,size',
+      'data.*.title' => 'required|string',
+      'data.*.value' => 'required|array',
+      'data.*.id' => 'nullable|numeric',
+    ]);
+    if ($validator->fails()) {
+      # code...
+      return $this->sendError(null, $validator->errors());
+    }
+    $option = Option::where('product_id', $product_id);
 
-         $input = $request->all();
-         $validator =  Validator::make($input ,[
-            'data'=>'required|array',
-            'data.*.type'=>'required|in:brand,color,wight,size',
-            'data.*.title'=>'required|string',
-            'data.*.value'=>'required|array',
-             'data.*.id' =>'nullable|numeric',
-         ]);
-         if ($validator->fails())
-         {
-            # code...
-            return $this->sendError(null,$validator->errors());
-         }
-          $option= Option::where('product_id',$product->id);
 
-              foreach($request->data as $data)
-    {
-       $options[]= Option::updateOrCreate([
-     'id'=>$data['id']
-         ],[
-              'type' => $data['type'],
-            'title' => $data['title'],
-            'value' => $data['value'],
-            'product_id' => $product->id
-          ]);
-        }
-        // dd($request->$data['id']);
- $options_id= Option::where('product_id',$product->id)->pluck('id')->toArray();
-          foreach( $options_id as $oid){
-          if(!(in_array($oid,$request->$data['id']))){
-       $option = Option::query()->find($oid);
+    // dd($request->$data['id']);
+    $options_id = Option::where('product_id', $product_id)->pluck('id')->toArray();
+    foreach ($options_id as $oid) {
+      if (!(in_array($oid, array_column($request->data, 'id')))) {
+        $option = Option::query()->find($oid);
         $option->update(['is_deleted' => 1]);
-          }
-        }
+      }
+    }
 
-//  dd($option->id);
+    foreach ($request->data as $data) {
+      $options[] = Option::updateOrCreate([
+        'id' => $data['id'],
+        'product_id' => $product_id,
+        'is_deleted' => 0,
+      ], [
+        'type' => $data['type'],
+        'title' => $data['title'],
+        'value' => $data['value'],
+        'product_id' => $product_id
+      ]);
+    }
 
 
-            $success['options']=OptionResource::collection($options);
-            $success['status']= 200;
+    //  dd($option->id);
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','option updated successfully');
-}
+
+    $success['options'] = OptionResource::collection($options);
+    $success['status'] = 200;
+
+    return $this->sendResponse($success, 'تم التعديل بنجاح', 'option updated successfully');
+  }
 
        public function changeStatus($id)
     {
