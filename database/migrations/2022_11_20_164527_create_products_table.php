@@ -23,7 +23,7 @@ return new class extends Migration
             $table->double('selling_price');
             $table->integer('quantity');
             $table->integer('less_qty');
-            $table->string('image');
+            $table->string('cover');
             $table->text("tags")->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
