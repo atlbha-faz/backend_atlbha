@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();
             $table->integer('purchase_quantity')->nullable();
-            $table->enum('purchase_type',['product','category'])->nullable();
+            $table->enum('purchase_type',['product','category','payment'])->nullable();
             $table->integer('get_quantity')->nullable();
              $table->enum('get_type',['product','category'])->nullable();
             $table->enum('offer1_type',['percent','free_product'])->nullable();
