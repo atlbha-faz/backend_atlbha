@@ -25,6 +25,8 @@ class CourseResource extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'user' => New UserResource($this->user),
+            'count' => $this->countVideo($this->id),
+            'unit' =>$this->unit
         ];
-    }
+        }
 }

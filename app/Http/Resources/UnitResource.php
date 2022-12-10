@@ -23,6 +23,7 @@ class UnitResource extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'course' => New CourseResource($this->course),
+            'unitvideo' => $this->countVideo($this->id)
         ];
     }
 }

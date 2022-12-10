@@ -103,3 +103,25 @@ Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductControl
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
+
+Route::prefix('/Store')->group(function () {
+
+Route::resource('page',App\Http\Controllers\api\storeDashboard\pageController::class);
+Route::resource('pagecategory',App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
+Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class,'changeStatus']);
+Route::post('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class,'changeStatus']);
+Route::resource('explainVideos',App\Http\Controllers\api\storeDashboard\ExplainVideosController::class);
+Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class,'changeStatus']);
+Route::resource('product',App\Http\Controllers\api\storeDashboard\ProductController::class);
+Route::resource('category',App\Http\Controllers\api\storeDashboard\CategoryController::class);
+Route::post('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class,'changeStatus']);
+Route::resource('course',App\Http\Controllers\api\storeDashboard\CourseController::class);
+Route::post('changeCourseStatus/{id}', [App\Http\Controllers\api\storeDashboard\CourseController::class,'changeStatus']);
+Route::post('changeVideoStatus/{id}', [App\Http\Controllers\api\storeDashboard\VideoController::class,'changeStatus']);
+Route::resource('video',App\Http\Controllers\api\storeDashboard\VideoController::class);
+Route::post('changeUnitStatus/{id}', [App\Http\Controllers\api\storeDashboard\UnitController::class,'changeStatus']);
+Route::resource('unit',App\Http\Controllers\api\storeDashboard\UnitController::class);
+
+
+
+});

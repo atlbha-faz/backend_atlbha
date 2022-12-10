@@ -22,7 +22,10 @@ class PageResource extends JsonResource
             'seo_link' => $this->seo_link,
             'seo_desc' => $this->seo_desc,
            'tags' => explode(',',$this->tags),
-            'store_id' => $this->store_id,
+           'store' => New StoreResource($this->store),
+           'user' => New UserResource($this->user),
+           'created_at' => (string) $this->created_at,
+            'updated_at' => (string) $this->updated_at,
             'status' => $this->status !==null ? $this->status:'active',
             'is_deleted' => $this->is_deleted!==null ? $this->status:0
         ];
