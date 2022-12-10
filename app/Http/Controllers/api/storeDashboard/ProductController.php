@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -56,14 +57,16 @@ class ProductController extends BaseController
             'less_qty'=>['required','numeric','gt:0'],
             'tags'=>'required',
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'discount_price'=>['required','numeric','gt:0'],
-            'discount_percent'=>['required','numeric','gt:0'],
-
+            'discount_price'=>['required','numeric'],
+            'discount_percent'=>['required','numeric'],
             'category_id'=>'required|exists:categories,id',
-            'subcategory_id'=>['array','required','numeric',
+                 'subcategory_id'=>['required','array'],
+            'subcategory_id.*'=>['required','numeric',
             Rule::exists('categories', 'id')->where(function ($query) {
             return $query->join('categories', 'id', 'parent_id');
-             }),
+        }),
+
+
             ]
 
             // 'store_id'=>'required|exists:stores,id',
@@ -83,9 +86,9 @@ class ProductController extends BaseController
             'less_qty' => $request->less_qty,
             'cover' => $request->cover,
             'tags' => implode(',', $request->tags),
-            'discount_price'=>$request->discount_price,
+           'discount_price'=>$request->discount_price,
             'discount_percent'=>$request->discount_percent,
-            'subcategory_id'=>$request->subcategory_id,
+            'subcategory_id'=>implode(',',$request->subcategory_id),
             'category_id' => $request->category_id,
             // 'store_id' => $request->store_id,
           ]);
@@ -164,13 +167,16 @@ class ProductController extends BaseController
             'less_qty'=>['required','numeric','gt:0'],
             'tags'=>'required',
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'discount_price'=>['required','numeric','gt:0'],
-            'discount_percent'=>['required','numeric','gt:0'],
+            'discount_price'=>['required','numeric'],
+            'discount_percent'=>['required','numeric'],
             'category_id'=>'required|exists:categories,id',
-            'subcategory_id'=>['array','required','numeric',
+            'subcategory_id'=>['required','array'],
+            'subcategory_id.*'=>['required','numeric',
             Rule::exists('categories', 'id')->where(function ($query) {
             return $query->join('categories', 'id', 'parent_id');
-             }),
+        }),
+
+
             ]
 
          ]);

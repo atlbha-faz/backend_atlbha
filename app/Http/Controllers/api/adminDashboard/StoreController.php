@@ -118,6 +118,7 @@ class StoreController extends BaseController
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
           ]);
+        $package->stores()->attach(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
          $success['stors']=New StoreResource($store);
         $success['status']= 200;
@@ -245,7 +246,9 @@ class StoreController extends BaseController
                'country_id' => $request->input('country_id'),
                'city_id' => $request->input('city_id'),
            ]);
-
+  if($request->store!=null){
+           $package->stores()->sync(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
+           }
            $success['stores']=New StoreResource($store);
            $success['status']= 200;
 

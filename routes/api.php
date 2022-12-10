@@ -121,6 +121,8 @@ Route::post('changeVideoStatus/{id}', [App\Http\Controllers\api\storeDashboard\V
 Route::resource('video',App\Http\Controllers\api\storeDashboard\VideoController::class);
 Route::post('changeUnitStatus/{id}', [App\Http\Controllers\api\storeDashboard\UnitController::class,'changeStatus']);
 Route::resource('unit',App\Http\Controllers\api\storeDashboard\UnitController::class);
+Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
+Route::resource('technicalSupport',App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class);
 
 
 

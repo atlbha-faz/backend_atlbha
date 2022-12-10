@@ -62,7 +62,6 @@ class PackageController extends BaseController
              'discount' => $request->discount,
 
           ]);
-        $package->stores()->attach(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
           $package->plans()->attach(explode(',', $request->plan));
          $package->templates()->attach(explode(',', $request->template));
 
@@ -142,9 +141,7 @@ class PackageController extends BaseController
 
          ]);
 
-          if($request->store!=null){
-           $package->stores()->sync(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
-           }
+        
 
          if($request->plan!=null){
            $package->plans()->sync(explode(',', $request->plan));
