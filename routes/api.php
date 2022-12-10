@@ -57,6 +57,7 @@ Route::post('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\Seo
 Route::post('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeStatus']);
 Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
 Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
+Route::post('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
 
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
@@ -100,4 +101,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
 
 });
+<<<<<<< HEAD
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
+=======
+Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
+Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
+Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
+
+>>>>>>> c30982c92dcd3265a29347b360984bd2d44a054d

@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','sku','for','description','image','purchasing_price','selling_price','quantity','less_qty','tags','category_id','store_id','status','is_deleted'];
+    protected $fillable = ['name','sku','for','description','cover','purchasing_price','selling_price','quantity','less_qty','tags','category_id','store_id','status','is_deleted'];
 
     public function comment()
     {
@@ -25,6 +25,10 @@ class Product extends Model
     {
         return $this->belongsTo(Store::class);
     }
+
+      public function image(){
+        return $this->hasMany(Image::class);
+    }
    public function orders()
     {
           return $this->belongsToMany(
@@ -36,32 +40,28 @@ class Product extends Model
      );
     }
 
-    public function setImageAttribute($image)
+    public function setCoverAttribute($cover)
     {
-        if (!is_null($image)) {
-            if (gettype($image) != 'string') {
-                $i = $image->store('images/product', 'public');
-                $this->attributes['image'] = $image->hashName();
+        if (!is_null($cover)) {
+            if (gettype($cover) != 'string') {
+                $i = $cover->store('images/product', 'public');
+                $this->attributes['cover'] = $cover->hashName();
             } else {
-                $this->attributes['image'] = $image;
+                $this->attributes['cover'] = $cover;
             }
         }
     }
 
-    public function getImageAttribute($image)
+    public function getCoverAttribute($cover)
     {
-        if (is_null($image)) {
+        if (is_null($cover)) {
             return   asset('assets/media/man.png');
         }
-        return asset('storage/images/product') . '/' . $image;
+        return asset('storage/images/product') . '/' . $cover;
     }
-    public function options()
+    public function option()
     {
-       return $this->belongsToMany(
-        Option::class,
-            'options_products',
-            'product_id',
-            'option_id');
+       return $this->hasMany(Option::class);
     }
 
     public function offers()

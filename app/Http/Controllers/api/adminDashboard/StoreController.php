@@ -210,7 +210,7 @@ class StoreController extends BaseController
             'instegram' =>'required|url',
             //   'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
              'entity_type' =>'required',
-          'activity_id' =>'required|exists:activites,id',
+          'activity_id' =>'required|exists:activities,id',
             'package_id' =>'required|exists:packages,id',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',

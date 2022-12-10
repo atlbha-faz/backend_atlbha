@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
             'quantity' => $this->quantity,
             'less_qty' => $this->less_qty,
             'tags' => $this->tags,
-            'image' =>$this->image,
+            'cover' =>$this->cover,
             'status' => $this->status !== null ? $this->status : 'active',
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
