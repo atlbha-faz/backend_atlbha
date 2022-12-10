@@ -113,7 +113,17 @@ class ProductController extends BaseController
     {
         //
     }
+    public function rateing($product)
+    {
+        $product =Product::query()->find($product);
 
+        $rating =$product->comment->avg('rateing');
+        
+        $success['rateing']= $rating;
+        $success['status']= 200;
+         return $this->sendResponse($success,'تم عرض التقييم بنجاح',' rateing showrd successfully');
+
+    }
     /**
      * Update the specified resource in storage.
      *

@@ -81,6 +81,7 @@ class CommentController extends BaseController
     public function show($comment)
    {
         $comment = Comment::query()->find($comment);
+        
         if (is_null($comment) ||$comment->is_deleted==1){
         return $this->sendError("'طريقة الدفع غير موجودة","comment type is't exists");
         }

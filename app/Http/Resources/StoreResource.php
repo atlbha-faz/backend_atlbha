@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StoreResource extends JsonResource
@@ -38,8 +39,11 @@ class StoreResource extends JsonResource
         'category' =>New CategoryResource($this->category),
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
+        'rate'=> $this->rate($this->id),
+        'period'=>$this->period($this->id),
+        'left'=>$this->left($this->id),
         'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
+         'is_deleted' => $this->is_deleted!==null ? $this->status:0,
     ];
     }
 }

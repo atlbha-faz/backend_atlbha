@@ -60,7 +60,6 @@ class PackageController extends BaseController
              'discount' => $request->discount,
 
           ]);
-
           $package->plans()->attach(explode(',', $request->plan));
          $package->templates()->attach(explode(',', $request->template));
 
