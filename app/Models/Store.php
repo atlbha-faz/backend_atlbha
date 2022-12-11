@@ -13,7 +13,7 @@ class Store extends Model
 {
     use HasFactory;
      protected $fillable = ['store_name','store_email','domain','icon','description','business_license','phonenumber','ID_file','accept_status',
-     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','category_id','status','is_deleted'];
+     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','category_id','start_at','end_at','period','status','is_deleted'];
 
      public function rate($id){
         $product_id=Product::select('id')->where('store_id',$id)->get();
@@ -49,14 +49,14 @@ class Store extends Model
      );
     }
     public function left($id){
-       $day=Package_store::select('end_at')->where('store_id',$id)->first();
+       $day=Store::select('end_at')->where('id',$id)->first();
         $date1 = new DateTime($day->end_at);
         $now_date= Carbon::now();
         $interval = $date1->diff($now_date);
         return $interval->d;
     }
     public function period($id){
-        $period=Package_store::select('period')->where('store_id',$id)->first();
+        $period=Store::select('period')->where('id',$id)->first();
          return $period->period;
      }
      public function user()

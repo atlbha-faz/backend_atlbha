@@ -51,7 +51,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-            'store_id'=>'required|exists:stores,id',
+            'user_id'=>'required|exists:users,id',
 
 
         ]);
@@ -66,7 +66,7 @@ class PageController extends BaseController
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
             'tags' => implode(',', $request->tags),
-            'store_id' => $request->store_id,
+            'user_id' => $request->user_id,
             'name'=> $request->name,
           ]);
            //$request->input('name', []);
@@ -130,7 +130,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-         'store_id'=>'required|exists:stores,id',
+         'user_id'=>'required|exists:users,id',
            ]);
            if ($validator->fails())
            {
@@ -143,7 +143,7 @@ class PageController extends BaseController
                'seo_title' => $request->input('seo_title'),
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
-               'store_id' => $request->input('store_id'),
+               'user_id' => $request->input('user_id'),
                'tags' => implode(',',$request->input('tags')),
                'name'=> $request->input('name'),
            ]);

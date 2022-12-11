@@ -101,11 +101,6 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
 
 });
-<<<<<<< HEAD
-Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
-=======
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
-
->>>>>>> c30982c92dcd3265a29347b360984bd2d44a054d
