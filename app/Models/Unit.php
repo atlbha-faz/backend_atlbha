@@ -37,4 +37,13 @@ class Unit extends Model
         }
         return asset('storage/files/unitfile') . '/' . $file;
     }
+
+      public function countVideo($unitid)
+    {
+        $unitid=Video::select('id')->where('unit_id',$unitid)->get();
+
+$videoes=$unitid->count();
+    return  $videoes;
+// dd($videoes);
+  }
 }
