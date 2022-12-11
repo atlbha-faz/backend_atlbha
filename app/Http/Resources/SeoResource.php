@@ -18,13 +18,13 @@ class SeoResource extends JsonResource
             'id' =>$this->id,
             'index_page_title' => $this->index_page_title,
             'index_page_description' => $this->index_page_description,
-            
+
             'show_pages' => $this->show_pages,
             'link' => $this->link,
            'robots' => $this->robots,
             'key_words' => explode(',',$this->key_words),
             'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
+            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'store' => New StoreResource($this->store)

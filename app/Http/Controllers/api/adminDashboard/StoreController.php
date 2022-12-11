@@ -71,6 +71,9 @@ class StoreController extends BaseController
             'package_id' =>'required|exists:packages,id',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
+            'start_at'=>'required|date',
+            'end_at'=>'required|date',
+            'period'=>'required|numeric',
 
         ]);
 
@@ -118,8 +121,14 @@ class StoreController extends BaseController
             'accept_status' => $request->accept_status,
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
+             'start_at'=>$request->start_at,
+            'end_at'=>$request->end_at,
+            'period'=>$request->period,
+
           ]);
           $store->packages()->attach(explode(',', $request->package),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
+
+        $store->packages()->attach(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
          $success['stors']=New StoreResource($store);
         $success['status']= 200;
@@ -146,14 +155,14 @@ class StoreController extends BaseController
 
         return $this->sendResponse($success,'تم عرض المتجر  بنجاح','store showed successfully');
     }
-    
+
     public function rateing($store)
     {
       $products=Product::where('store_id',$store)->get();
       $rating=$products->comment->avg('rateing');
 
        // $rating =$product->comment->avg('rateing');
-        
+
         $success['rateing']= $rating;
         $success['status']= 200;
          return $this->sendResponse($success,'تم عرض التقييم بنجاح',' rateing showrd successfully');
@@ -191,7 +200,7 @@ class StoreController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-         'name'=>'required|string|max:255',
+            'name'=>'required|string|max:255',
             'store_name'=>'required|string|max:255',
             'email'=>'required|email',
             'store_email'=>'required|email',
@@ -203,17 +212,20 @@ class StoreController extends BaseController
             // 'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             // 'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'accept_status' =>'required|in:pending,accepted,rejected',
-             'snapchat' =>'required|url',
+            'snapchat' =>'required|url',
             'facebook' =>'required|url',
             'twiter' =>'required|url',
             'youtube' =>'required|url',
             'instegram' =>'required|url',
             //   'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-             'entity_type' =>'required',
-          'activity_id' =>'required|exists:activities,id',
+            'entity_type' =>'required',
+            'activity_id' =>'required|exists:activities,id',
             'package_id' =>'required|exists:packages,id',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
+            'start_at'=>'required|date',
+            'end_at'=>'required|date',
+            'period'=>'required|numeric',
 
            ]);
            if ($validator->fails())
@@ -257,6 +269,10 @@ class StoreController extends BaseController
                'accept_status' => $request->input('accept_status'),
                'country_id' => $request->input('country_id'),
                'city_id' => $request->input('city_id'),
+                'start_at' => $request->input('start_at'),
+               'end_at' => $request->input('end_at'),
+               'end_at' => $request->input('end_at'),
+               'period' => $request->input('period'),
            ]);
            $store->packages()->sync(explode(',', $request->package),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 

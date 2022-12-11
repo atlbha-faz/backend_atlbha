@@ -47,9 +47,9 @@ class PackageController extends BaseController
             'monthly_price'=>'required|numeric|gt:0',
             'yearly_price'=>'required|numeric|gt:0',
             'discount'=>'required|numeric|gt:0',
-           'start_at'=>'required|date',
-           'end_at'=>'required|date',
-           'period'=>'required|numeric',
+        //    'start_at'=>'required|date',
+        //    'end_at'=>'required|date',
+        //    'period'=>'required|numeric',
         ]);
         if ($validator->fails())
         {
@@ -124,9 +124,9 @@ class PackageController extends BaseController
             'monthly_price'=>'required|numeric|gt:0',
             'yearly_price'=>'required|numeric|gt:0',
             'discount'=>'required|numeric|gt:0',
-             'start_at'=>'required|date',
-           'end_at'=>'required|date',
-           'period'=>'required|numeric',
+        //      'start_at'=>'required|date',
+        //    'end_at'=>'required|date',
+        //    'period'=>'required|numeric',
          ]);
          if ($validator->fails())
          {
@@ -141,7 +141,7 @@ class PackageController extends BaseController
 
          ]);
 
-    
+
          if($request->plan!=null){
            $package->plans()->sync(explode(',', $request->plan));
            }

@@ -9,8 +9,10 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','sku','for','description','cover','purchasing_price','selling_price','quantity','less_qty','tags','category_id','store_id','status','is_deleted'];
-
+    protected $fillable = ['name','sku','for','description','cover','purchasing_price','selling_price','quantity','less_qty','tags','discount_price','discount_percent','SEOdescription','category_id','subcategory_id','store_id','status','is_deleted'];
+//     protected $casts = [
+//     'subcategory_id' => 'array',
+// ];
     public function comment()
     {
         return $this->hasMany(Comment::class);
@@ -20,7 +22,10 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-
+   public function subcategory()
+    {
+        return $this->hasMany(Category::class,'subcategory_id','id');
+    }
       public function store()
     {
         return $this->belongsTo(Store::class);

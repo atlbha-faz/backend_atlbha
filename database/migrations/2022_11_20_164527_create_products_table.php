@@ -25,8 +25,13 @@ return new class extends Migration
             $table->integer('less_qty');
             $table->string('cover');
             $table->text("tags")->nullable();
+            $table->double('discount_price')->default(0);
+            $table->integer('discount_percent')->default(0);
+            $table->string('SEOdescription')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->unsignedBigInteger('subcategory_id')->nullable();
+            $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('cascade');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');

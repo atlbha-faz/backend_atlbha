@@ -26,8 +26,8 @@ class PackageResource extends JsonResource
             'plans'=>PlanResource::collection($this->plans),
              'templates'=>TemplateResource::collection($this->templates),
              'stores'=> StoreResource::collection($this->stores),
-           
-            
+
+
         ];
     }
 }

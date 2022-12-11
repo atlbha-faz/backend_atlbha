@@ -21,13 +21,13 @@ class CategoryResource extends JsonResource
             'icon' => $this->icon,
             'for' => $this->for,
             'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
+            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'store' => New StoreResource($this->store),
             'parent_id' => New CategoryResource($this->category)
-            
-            
+
+
           ];
     }
 }

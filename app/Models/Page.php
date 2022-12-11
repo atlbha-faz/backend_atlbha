@@ -8,14 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     use HasFactory;
-    protected $fillable = ['title','page_content','seo_title','user_id','seo_link','seo_desc','tags','status','store_id','is_deleted'];
+    protected $fillable = ['title','page_content','seo_title','seo_link','seo_desc','tags','user_id','status','store_id','is_deleted'];
     public function store()
     {
         return $this->belongsTo(Store::class);
     }
+      public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function page_categories()
     {
-      
+
        return $this->belongsToMany(
         Page_category::class,
             'pages_page_categories',
@@ -23,5 +27,5 @@ class Page extends Model
             'page_category_id'
             );
     }
-   
+
 }

@@ -19,12 +19,12 @@ class Store extends Model
         $product_id=Product::select('id')->where('store_id',$id)->get();
         return Comment::whereIn('product_id',$product_id)->avg('rateing');
      }
-   
+
      public function products()
     {
         return $this->hasMany(Product::class);
     }
-     
+
      public function city()
     {
         return $this->belongsTo(City::class, 'city_id', 'id');

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Coupon extends Model
 {
@@ -26,4 +27,15 @@ class Coupon extends Model
         );
     }
 
+//  public function expireCoupon($coupon)
+//  {
+//     $expire=Coupon::select('expire_date','status')->where('id',$coupon);
+//     $my_time=Carbon::now();
+//     if($expire >= $my_time){
+//   // ok
+//   $expire->
+// } else {
+//   // error, coupon expired
+// }
+//  }
 }
