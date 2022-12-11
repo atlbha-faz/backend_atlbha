@@ -132,6 +132,8 @@ Route::post('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDash
 Route::resource('shippingtype',App\Http\Controllers\api\storeDashboard\ShippingtypeController::class);
 Route::post('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class,'changeStatus']);
 Route::resource('paymenttype',App\Http\Controllers\api\storeDashboard\PaymenttypeController::class);
+Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\OfferController::class,'changeStatus']);
+Route::resource('offer',App\Http\Controllers\api\storeDashboard\OfferController::class);
 
 
 

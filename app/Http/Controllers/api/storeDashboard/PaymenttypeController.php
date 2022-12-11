@@ -41,31 +41,31 @@ class PaymenttypeController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-   {
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+//     public function store(Request $request)
+//    {
+//         $input = $request->all();
+//         $validator =  Validator::make($input ,[
+//             'name'=>'required|string|max:255',
+//             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
 
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $paymenttype = Paymenttype::create([
-            'name' => $request->name,
-            'image' => $request->image,
+//         ]);
+//         if ($validator->fails())
+//          {
+//             return $this->sendError(null,$validator->errors());
+//          }
+//          $paymenttype = Paymenttype::create([
+//             'name' => $request->name,
+//             'image' => $request->image,
 
-          ]);
+//           ]);
 
 
-         $success['paymenttypes']=New PaymenttypeResource($paymenttype);
-        $success['status']= 200;
+//          $success['paymenttypes']=New PaymenttypeResource($paymenttype);
+//          $success['status']= 200;
 
-         return $this->sendResponse($success,'تم إضافة طرق دفع بنجاح',' Payment type Added successfully');
-    }
+//           return $this->sendResponse($success,'تم إضافة طرق دفع بنجاح',' Payment type Added successfully');
+//     }
 
 
     /**
@@ -107,34 +107,34 @@ class PaymenttypeController extends BaseController
      * @param  \App\Models\Paymenttype  $paymenttype
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Paymenttype $paymenttype)
-     {
-         if (is_null($paymenttype) || $paymenttype->is_deleted==1){
-         return $this->sendError("طريقة الدفع غير موجودة","payment type is't exists");
-          }
-         $input = $request->all();
-         $validator =  Validator::make($input ,[
-           'name'=>'required|string|max:255',
-            'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-         ]);
-         if ($validator->fails())
-         {
-            # code...
-            return $this->sendError(null,$validator->errors());
-         }
-         $paymenttype->update([
-            'name' => $request->input('name'),
+    // public function update(Request $request, Paymenttype $paymenttype)
+    //  {
+    //      if (is_null($paymenttype) || $paymenttype->is_deleted==1){
+    //      return $this->sendError("طريقة الدفع غير موجودة","payment type is't exists");
+    //       }
+    //      $input = $request->all();
+    //      $validator =  Validator::make($input ,[
+    //        'name'=>'required|string|max:255',
+    //         'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //      ]);
+    //      if ($validator->fails())
+    //      {
+    //         # code...
+    //         return $this->sendError(null,$validator->errors());
+    //      }
+    //      $paymenttype->update([
+    //         'name' => $request->input('name'),
 
-        'image' => $request->input('image'),
+    //     'image' => $request->input('image'),
 
 
-         ]);
-         //$country->fill($request->post())->update();
-            $success['paymenttypes']=New PaymenttypeResource($paymenttype);
-            $success['status']= 200;
+    //      ]);
+    //      //$country->fill($request->post())->update();
+    //         $success['paymenttypes']=New PaymenttypeResource($paymenttype);
+    //         $success['status']= 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','payment type updated successfully');
-    }
+    //         return $this->sendResponse($success,'تم التعديل بنجاح','payment type updated successfully');
+    // }
 
      public function changeStatus($id)
     {
@@ -162,17 +162,17 @@ class PaymenttypeController extends BaseController
      * @param  \App\Models\Paymenttype  $paymenttype
      * @return \Illuminate\Http\Response
      */
-    public function destroy($paymenttype)
-      {
-       $paymenttype = Paymenttype::query()->find($paymenttype);
-         if (is_null($paymenttype) || $paymenttype->is_deleted==1){
-         return $this->sendError("طريقةالدفع غير موجودة","payment type is't exists");
-         }
-        $paymenttype->update(['is_deleted' => 1]);
+    // public function destroy($paymenttype)
+    //   {
+    //    $paymenttype = Paymenttype::query()->find($paymenttype);
+    //      if (is_null($paymenttype) || $paymenttype->is_deleted==1){
+    //      return $this->sendError("طريقةالدفع غير موجودة","payment type is't exists");
+    //      }
+    //     $paymenttype->update(['is_deleted' => 1]);
 
-        $success['paymenttypes']=New PaymenttypeResource($paymenttype);
-        $success['status']= 200;
+    //     $success['paymenttypes']=New PaymenttypeResource($paymenttype);
+    //     $success['status']= 200;
 
-         return $this->sendResponse($success,'تم حذف طريقةالدفع بنجاح','payment type deleted successfully');
-    }
+    //      return $this->sendResponse($success,'تم حذف طريقةالدفع بنجاح','payment type deleted successfully');
+    // }
 }

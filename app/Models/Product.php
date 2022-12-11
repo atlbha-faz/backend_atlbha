@@ -22,9 +22,9 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-   public function subcategory()
+  public function subcategory()
     {
-        return $this->hasMany(Category::class,'subcategory_id','id');
+        return Category::whereIn('id',explode(',',$this->subcategory_id))->get();
     }
       public function store()
     {

@@ -88,7 +88,7 @@ class ProductController extends BaseController
             'tags' => implode(',', $request->tags),
            'discount_price'=>$request->discount_price,
             'discount_percent'=>$request->discount_percent,
-            'subcategory_id'=>implode(',',$request->subcategory_id),
+            'subcategory_id' => implode(',', $request->subcategory_id),
             'category_id' => $request->category_id,
             // 'store_id' => $request->store_id,
           ]);
