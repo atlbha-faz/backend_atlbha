@@ -48,7 +48,7 @@ class CategoryController extends BaseController
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-                'for'=>'required',
+                // 'for'=>'required',
             ]);
             if ($validator->fails())
             {
@@ -69,8 +69,8 @@ class CategoryController extends BaseController
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'icon' => $request->icon,
                 'parent_id'=>$request->parent_id,
-                'for'=>$request->for,
-                'store_id'=> $request->store_id,
+                // 'for'=>$request->for,
+                // 'store_id'=> $request->store_id,
               ]);
 
         }
@@ -80,8 +80,8 @@ class CategoryController extends BaseController
             $input = $request->all();
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
-                'for'=>'required|in:store,etlobha',
-                'parent_id'=>'required'
+                // 'for'=>'required|in:store,etlobha',
+                'parent_id'=>'required|exists:categories,id'
             ]);
             if ($validator->fails())
             {
@@ -102,8 +102,8 @@ class CategoryController extends BaseController
                 'name' => $request->name,
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'parent_id'=>$request->parent_id,
-                'for'=>$request->for,
-                'store_id'=>$request->store_id,
+                // 'for'=>$request->for,
+                // 'store_id'=>$request->store_id,
               ]);
 
 

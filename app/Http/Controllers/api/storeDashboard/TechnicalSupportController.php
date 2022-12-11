@@ -40,40 +40,40 @@ class TechnicalSupportController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-      $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'title'=>'required|string|max:255',
-            'phoneNumber'=>'required|numeric',
-            'content'=>'required|max:1000',
-            'type'=>'required|in:complaint,enquiry,suggestion',
-            'supportstatus'=>'required|in:finished,not_finished,pending',
-            'user_id' =>'required|exists:users,id'
+    // public function store(Request $request)
+    // {
+    //   $input = $request->all();
+    //     $validator =  Validator::make($input ,[
+    //         'title'=>'required|string|max:255',
+    //         'phoneNumber'=>'required|numeric',
+    //         'content'=>'required|max:1000',
+    //         'type'=>'required|in:complaint,enquiry,suggestion',
+    //         'supportstatus'=>'required|in:finished,not_finished,pending',
+    //         'user_id' =>'required|exists:users,id'
 
 
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $technicalsupport = TechnicalSupport::create([
-            'title' => $request->title,
-            'phoneNumber'=>$request->phoneNumber,
-            'content'=>$request->content,
-             'type' => $request->type,
-            'supportstatus'=>$request->supportstatus,
-            // 'store_id'=>$request->store_id,
+    //     ]);
+    //     if ($validator->fails())
+    //     {
+    //         return $this->sendError(null,$validator->errors());
+    //     }
+    //     $technicalsupport = TechnicalSupport::create([
+    //         'title' => $request->title,
+    //         'phoneNumber'=>$request->phoneNumber,
+    //         'content'=>$request->content,
+    //          'type' => $request->type,
+    //         'supportstatus'=>$request->supportstatus,
+    //         // 'store_id'=>$request->store_id,
 
-          ]);
+    //       ]);
 
-         // return new CountryResource($country);
-         $success['Technicalsupports']=New TechnicalsupportResource($technicalsupport);
-        $success['status']= 200;
+    //      // return new CountryResource($country);
+    //      $success['Technicalsupports']=New TechnicalsupportResource($technicalsupport);
+    //     $success['status']= 200;
 
-         return $this->sendResponse($success,'تم إضافة طلب دعم فني بنجاح','Technical Support Added successfully');
+    //      return $this->sendResponse($success,'تم إضافة طلب دعم فني بنجاح','Technical Support Added successfully');
 
-    }
+    // }
 
     /**
      * Display the specified resource.
@@ -138,7 +138,7 @@ class TechnicalSupportController extends BaseController
             'content' => $request->input('content'),
             'type' => $request->input('type'),
             'supportstatus' => $request->input('supportstatus'),
-            // 'store_id' => $request->input('store_id'),
+            'uder_id' => $request->input('uder_id'),
          ]);
          //$country->fill($request->post())->update();
             $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);

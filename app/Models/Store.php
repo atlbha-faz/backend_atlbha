@@ -9,7 +9,7 @@ class Store extends Model
 {
     use HasFactory;
      protected $fillable = ['store_name','store_email','domain','icon','description','business_license','phonenumber','ID_file','accept_status',
-     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','category_id','status','is_deleted'];
+     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','category_id','start_at','end_at','period','status','is_deleted'];
      public function city()
     {
         return $this->belongsTo(City::class, 'city_id', 'id');

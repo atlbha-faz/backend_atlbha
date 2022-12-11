@@ -18,7 +18,7 @@ class Page_categoryResource extends JsonResource
             'id' =>$this->id,
             'name' => $this->name,
             'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
+            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         ];
     }
 }

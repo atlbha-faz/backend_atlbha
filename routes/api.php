@@ -123,6 +123,12 @@ Route::post('changeUnitStatus/{id}', [App\Http\Controllers\api\storeDashboard\Un
 Route::resource('unit',App\Http\Controllers\api\storeDashboard\UnitController::class);
 Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
 Route::resource('technicalSupport',App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class);
+Route::post('changeCouponStatus/{id}', [App\Http\Controllers\api\storeDashboard\CouponController::class,'changeStatus']);
+Route::resource('coupons',App\Http\Controllers\api\storeDashboard\CouponController::class);
+Route::post('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class,'changeStatus']);
+Route::resource('shippingtype',App\Http\Controllers\api\storeDashboard\ShippingtypeController::class);
+Route::post('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class,'changeStatus']);
+Route::resource('paymenttype',App\Http\Controllers\api\storeDashboard\PaymenttypeController::class);
 
 
 
