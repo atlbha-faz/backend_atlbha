@@ -14,4 +14,14 @@ class Websiteorder extends Model
     {
         return $this->belongsTo(Store::class);
     }
+    public function services_websiteorders()
+    {
+      
+       return $this->belongsToMany(
+        Service::class,
+            'services_websiteorders',
+            'websiteorder_id',
+            'service_id'
+            );
+    }
 }

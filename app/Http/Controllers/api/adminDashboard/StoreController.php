@@ -220,9 +220,7 @@ class StoreController extends BaseController
             'package_id' =>'required|exists:packages,id',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-            'start_at'=>'required|date',
-            'end_at'=>'required|date',
-            'period'=>'required|numeric',
+       
 
            ]);
            if ($validator->fails())

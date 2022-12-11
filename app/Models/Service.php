@@ -37,4 +37,14 @@ class Service extends Model
         }
         return asset('storage/images/service') . '/' . $file;
     }
+    public function services_websiteorders()
+    {
+      
+       return $this->belongsToMany(
+       Websiteorder::class,
+            'services_websiteorders',
+            'service_id',
+            'websiteorder_id'
+            );
+    }
 }
