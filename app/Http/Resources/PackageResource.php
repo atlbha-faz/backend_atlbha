@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\PlanResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PackageResource extends JsonResource
@@ -21,7 +22,12 @@ class PackageResource extends JsonResource
             'yearly_price' => $this->yearly_price,
             'discount' => $this->discount,
             'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+            'is_deleted' => $this->is_deleted!==null ? $this->status:0,
+            'plans'=>PlanResource::collection($this->plans),
+             'templates'=>TemplateResource::collection($this->templates),
+             'stores'=> StoreResource::collection($this->stores),
+
+
         ];
     }
 }

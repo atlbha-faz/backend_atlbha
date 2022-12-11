@@ -4,8 +4,9 @@ namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\User;
 use App\Models\Store;
-use Illuminate\Http\Request;
+use App\Models\Product;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
@@ -125,6 +126,7 @@ class StoreController extends BaseController
             'period'=>$request->period,
 
           ]);
+          $store->packages()->attach(explode(',', $request->package),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
         $store->packages()->attach(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
@@ -154,6 +156,18 @@ class StoreController extends BaseController
         return $this->sendResponse($success,'تم عرض المتجر  بنجاح','store showed successfully');
     }
 
+    public function rateing($store)
+    {
+      $products=Product::where('store_id',$store)->get();
+      $rating=$products->comment->avg('rateing');
+
+       // $rating =$product->comment->avg('rateing');
+
+        $success['rateing']= $rating;
+        $success['status']= 200;
+         return $this->sendResponse($success,'تم عرض التقييم بنجاح',' rateing showrd successfully');
+
+    }
 
 
     /**
@@ -252,7 +266,6 @@ class StoreController extends BaseController
                'entity_type' => $request->input('entity_type'),
                'activity_id' => $request->input('activity_id'),
                'package_id' => $request->input('package_id'),
-
                'accept_status' => $request->input('accept_status'),
                'country_id' => $request->input('country_id'),
                'city_id' => $request->input('city_id'),
@@ -261,9 +274,8 @@ class StoreController extends BaseController
                'end_at' => $request->input('end_at'),
                'period' => $request->input('period'),
            ]);
-  if($request->store!=null){
-           $store->packages()->sync(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
-           }
+           $store->packages()->sync(explode(',', $request->package),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
+
            $success['stores']=New StoreResource($store);
            $success['status']= 200;
 

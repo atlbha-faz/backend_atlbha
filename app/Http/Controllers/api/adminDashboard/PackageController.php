@@ -142,7 +142,6 @@ class PackageController extends BaseController
          ]);
 
 
-
          if($request->plan!=null){
            $package->plans()->sync(explode(',', $request->plan));
            }
