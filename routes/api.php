@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 // change status routers
+Route::prefix('/Admin')->group(function () {
 Route::post('changeCountryStatus/{id}',[App\Http\Controllers\api\adminDashboard\CountryController::class,'changeStatus']);
 Route::post('changeCityStatus/{id}',[App\Http\Controllers\api\adminDashboard\CityController::class,'changeStatus']);
 Route::post('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class,'changeStatus']);
@@ -93,13 +94,18 @@ Route::resource('replaycontact',App\Http\Controllers\api\adminDashboard\Replayco
 Route::resource('seo',App\Http\Controllers\api\adminDashboard\SeoController::class);
 Route::resource('store',App\Http\Controllers\api\adminDashboard\StoreController::class);
 Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController::class);
+});
 Auth::routes();
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 
 });
+<<<<<<< HEAD
+Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
+=======
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
+>>>>>>> c30982c92dcd3265a29347b360984bd2d44a054d

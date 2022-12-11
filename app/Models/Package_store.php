@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Package_store extends Model
 {
     use HasFactory;
+    protected $table="packages_stores";
          protected $fillable = ['package_id','store_id','start_at','end_at','period'];
 
 }

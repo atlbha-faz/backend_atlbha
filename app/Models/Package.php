@@ -39,5 +39,5 @@ class Package extends Model
         'template_id'
         );
     }
+   
 }
-
