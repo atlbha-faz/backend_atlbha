@@ -48,7 +48,7 @@ class ClientController extends BaseController
             'first_name'=>'required|string|max:255',
             'last_name'=>'required|string|max:255',
             'email'=>'required|email|unique:clients',
-            'gender'=>'required|in:male,femal',
+            'gender'=>'required|in:male,female',
             'phonenumber'=>'required|numeric',
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',

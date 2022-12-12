@@ -72,6 +72,7 @@ class OfferController extends BaseController
             'select_product_id'=>"required_if:purchase_type,payment",
             'select_category_id'=>"required_if:purchase_type,payment",
             'select_payment_id'=>"required_if:purchase_type,payment",
+            
         ]);
         if ($validator->fails())
         {

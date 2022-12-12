@@ -109,6 +109,10 @@ Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\Opti
 
 Route::prefix('/Store')->group(function () {
 
+Route::resource('country',App\Http\Controllers\api\storeDashboard\CountryController::class);
+Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::class);
+Route::post('changeCountryStatus/{id}',[App\Http\Controllers\api\storeDashboard\CountryController::class,'changeStatus']);
+Route::post('changeCityStatus/{id}',[App\Http\Controllers\api\storeDashboard\CityController::class,'changeStatus']);
 Route::resource('page',App\Http\Controllers\api\storeDashboard\pageController::class);
 Route::resource('pagecategory',App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
 Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class,'changeStatus']);
@@ -134,6 +138,10 @@ Route::post('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashb
 Route::resource('paymenttype',App\Http\Controllers\api\storeDashboard\PaymenttypeController::class);
 Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\OfferController::class,'changeStatus']);
 Route::resource('offer',App\Http\Controllers\api\storeDashboard\OfferController::class);
+Route::post('changeSeoStatus/{id}', [App\Http\Controllers\api\storeDashboard\SeoController::class,'changeStatus']);
+Route::resource('seo',App\Http\Controllers\api\storeDashboard\SeoController::class);
+Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
+Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 
 
 
