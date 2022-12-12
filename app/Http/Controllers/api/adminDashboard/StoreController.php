@@ -134,7 +134,6 @@ class StoreController extends BaseController
           ]);
           $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
-        $store->packages()->attach(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
          $success['stors']=New StoreResource($store);
         $success['status']= 200;

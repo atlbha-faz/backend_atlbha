@@ -44,6 +44,5 @@ class Unit extends Model
 
 $videoes=$unitid->count();
     return  $videoes;
-// dd($videoes);
   }
 }

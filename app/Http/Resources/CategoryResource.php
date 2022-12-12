@@ -25,7 +25,8 @@ class CategoryResource extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'store' => New StoreResource($this->store),
-            'parent_id' => New CategoryResource($this->category)
+            'parent_id' => New CategoryResource($this->category),
+            'subcategory' =>$this->subcategory,
 
 
           ];

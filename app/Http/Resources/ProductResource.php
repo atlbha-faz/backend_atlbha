@@ -28,7 +28,7 @@ class ProductResource extends JsonResource
             'cover' =>$this->cover,
             'discount_price'=>$this->discount_price,
             'discount_percent'=>$this->discount_percent,
-            'subcategory' => CategoryResource::collection($this->subcategory),
+            'subcategory' => CategoryResource::collection($this->subcategory()),
             'status' => $this->status !== null ? $this->status : 'active',
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
