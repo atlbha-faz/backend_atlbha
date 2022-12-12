@@ -60,6 +60,7 @@ Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard
 Route::post('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
 Route::post('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'changeStatus']);
 Route::post('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
+Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
 
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
@@ -99,6 +100,8 @@ Route::resource('store',App\Http\Controllers\api\adminDashboard\StoreController:
 Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController::class);
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
+Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
+
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
 Route::resource('websiteorder',App\Http\Controllers\api\adminDashboard\WebsiteorderController::class);
@@ -107,7 +110,7 @@ Route::resource('websiteorder',App\Http\Controllers\api\adminDashboard\Websiteor
 Auth::routes();
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
 
 });
 
