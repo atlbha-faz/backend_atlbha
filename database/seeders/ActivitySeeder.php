@@ -16,7 +16,7 @@ class ActivitySeeder extends Seeder
     public function run()
     {
         Activity::create([
-            'name' => 'النشاط الاول',
+            'name' => 'الالكترونيات',
            
         ]);
     }

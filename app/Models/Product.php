@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','sku','for','description','cover','purchasing_price','selling_price','quantity','less_qty','tags','discount_price','discount_percent','SEOdescription','category_id','subcategory_id','store_id','status','is_deleted'];
+    protected $fillable = ['name','sku','for','description','stock','cover','purchasing_price','selling_price','quantity','less_qty','tags','discount_price','discount_percent','SEOdescription','category_id','subcategory_id','store_id','status','is_deleted'];
 //     protected $casts = [
 //     'subcategory_id' => 'array',
 // ];
@@ -22,9 +22,9 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-   public function subcategory()
+    public function subcategory()
     {
-        return $this->hasMany(Category::class,'subcategory_id','id');
+        return Category::whereIn('id',explode(',',$this->subcategory_id))->get();
     }
       public function store()
     {
@@ -44,7 +44,7 @@ class Product extends Model
 
      );
     }
-
+    
     public function setCoverAttribute($cover)
     {
         if (!is_null($cover)) {

@@ -58,11 +58,15 @@ Route::post('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\S
 Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
 Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
 Route::post('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
+Route::post('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'changeStatus']);
+Route::post('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
+Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
 
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
 Route::resource('city',App\Http\Controllers\api\adminDashboard\CityController::class);
 Route::resource('marketer',App\Http\Controllers\api\adminDashboard\MarketerController::class);
+Route::resource('client',App\Http\Controllers\api\adminDashboard\ClientController::class);
 Route::resource('explainVideos',App\Http\Controllers\api\adminDashboard\ExplainVideosController::class);
 Route::resource('course',App\Http\Controllers\api\adminDashboard\CourseController::class);
 Route::resource('unit',App\Http\Controllers\api\adminDashboard\UnitController::class);
@@ -94,17 +98,22 @@ Route::resource('replaycontact',App\Http\Controllers\api\adminDashboard\Replayco
 Route::resource('seo',App\Http\Controllers\api\adminDashboard\SeoController::class);
 Route::resource('store',App\Http\Controllers\api\adminDashboard\StoreController::class);
 Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController::class);
+Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
+Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
+Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
+
+Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
+
+Route::resource('websiteorder',App\Http\Controllers\api\adminDashboard\WebsiteorderController::class);
+
 });
 Auth::routes();
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
 
 });
 
-Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
-Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
-Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
 
 Route::prefix('/Store')->group(function () {
@@ -136,4 +145,3 @@ Route::resource('paymenttype',App\Http\Controllers\api\storeDashboard\Paymenttyp
 
 
 });
-
