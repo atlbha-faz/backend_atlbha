@@ -12,6 +12,12 @@ use function PHPSTORM_META\map;
 
 class PageController extends BaseController
 {
+     
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *

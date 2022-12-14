@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unique()->nullable();;
+            $table->integer('user_id')->unique()->nullable();
             $table->string('name');
             $table->string('user_name')->nullable();;
             $table->string('email')->unique();
@@ -31,6 +31,13 @@ return new class extends Migration
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
+
+            $table->string('device_token')->nullable();
+            $table->boolean('verified')->default(0);
+            $table->integer('code')->nullable();
+            $table->timestamp('code_expires_at')->nullable();
+            $table->integer('verify_code')->nullable();
+            $table->timestamp('verify_code_expires_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
