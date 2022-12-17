@@ -16,11 +16,37 @@ use App\Http\Controllers\CountryController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+
+
+Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
+
+
+Route::post('/login','App\Http\Controllers\api\AuthController@login');
+Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
+
+    
+Route::post('send-verify-message','App\Http\Controllers\api\AuthController@store_verify_message');
+Route::post('verify-user','App\Http\Controllers\api\AuthController@verifyUser');
+
+
+
+Route::group([      
+    'middleware' => 'api',    
+    'prefix' => 'password'
+], function () {    
+    Route::post('create', 'App\Http\Controllers\api\PasswordResetController@create');
+    Route::get('find/{token}', 'App\Http\Controllers\api\PasswordResetController@find');
+    Route::post('verify', 'App\Http\Controllers\api\PasswordResetController@verifyContact');
+    Route::post('reset', 'App\Http\Controllers\api\PasswordResetController@reset');
 });
+
 // change status routers
 Route::prefix('/Admin')->group(function () {
+
+Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
+Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
+
 Route::post('changeCountryStatus/{id}',[App\Http\Controllers\api\adminDashboard\CountryController::class,'changeStatus']);
 Route::post('changeCityStatus/{id}',[App\Http\Controllers\api\adminDashboard\CityController::class,'changeStatus']);
 Route::post('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class,'changeStatus']);

@@ -10,6 +10,13 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class CommentController extends BaseController
 {
+
+     
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
