@@ -10,6 +10,12 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebsiteorderController extends BaseController
 {
+     
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +49,8 @@ class WebsiteorderController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'type'=>'required|string|max:255'
+            'type'=>'required|string|max:255',
+            'sevices'=>'exists:services,id'
         ]);
         if ($validator->fails())
         {
@@ -57,14 +64,15 @@ class WebsiteorderController extends BaseController
         $number=$order_number->number;
         $number= ((int) $number) +1;
         }
-        $Websiteorder = Websiteorder::create([
+        $websiteorder = Websiteorder::create([
             'type' => $request->type,
             'order_number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
             'store_id'=> $request->store_id,
           ]);
 
+          $websiteorder->services_websiteorders()->attach(explode(',', $request->sevices));
 
-         $success['Websiteorders']=New WebsiteorderResource($Websiteorder );
+         $success['Websiteorders']=New WebsiteorderResource($websiteorder );
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافة الطلب بنجاح','Websiteorder Added successfully');
@@ -93,11 +101,11 @@ class WebsiteorderController extends BaseController
         if (is_null($websiteorder) || $websiteorder->is_deleted==1){
          return $this->sendError("الطلب غير موجودة","websiteorder is't exists");
          }
-        if($websiteorder->status === 'active'){
-            $websiteorder->update(['status' => 'not_active']);
+        if($websiteorder->status === 'pending'){
+            $websiteorder->update(['status' => 'accept']);
      }
     else{
-        $websiteorder->update(['status' => 'active']);
+        $websiteorder->update(['status' => 'reject']);
     }
         $success['websiteorders']=New WebsiteorderResource($websiteorder);
         $success['status']= 200;
@@ -129,7 +137,8 @@ class WebsiteorderController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-                'type'=>'required|string|max:255'
+                'type'=>'required|string|max:255',
+                'sevices'=>'exists:services,id'
 
            ]);
            if ($validator->fails())
@@ -139,9 +148,12 @@ class WebsiteorderController extends BaseController
            }
            $websiteorder->update([
                'type' => $request->input('type'),
+               
 
            ]);
-
+           if($request->sevices!=null){
+         $websiteorder->services_websiteorders()->sync(explode(',', $request->sevices));
+           }
            $success['websiteorders']=New WebsiteorderResource($websiteorder);
            $success['status']= 200;
 

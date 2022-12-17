@@ -9,6 +9,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "james-heinrich/getid3": "^1.9",
         "laravel/framework": "^9.19",
+        "laravel/passport": "^11.3",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.1",

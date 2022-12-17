@@ -32,6 +32,9 @@ return new class extends Migration
             $table->string('instegram');
             $table->string('logo');
             $table->string('entity_type');
+            $table->timestamp('start_at')->nullable();
+            $table->timestamp('end_at')->nullable();
+            $table->integer('period')->nullable();
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
             $table->unsignedBigInteger('user_id')->nullable();

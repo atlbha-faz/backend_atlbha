@@ -16,11 +16,37 @@ use App\Http\Controllers\CountryController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+
+
+Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
+
+
+Route::post('/login','App\Http\Controllers\api\AuthController@login');
+Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
+
+
+Route::post('send-verify-message','App\Http\Controllers\api\AuthController@store_verify_message');
+Route::post('verify-user','App\Http\Controllers\api\AuthController@verifyUser');
+
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'password'
+], function () {
+    Route::post('create', 'App\Http\Controllers\api\PasswordResetController@create');
+    Route::get('find/{token}', 'App\Http\Controllers\api\PasswordResetController@find');
+    Route::post('verify', 'App\Http\Controllers\api\PasswordResetController@verifyContact');
+    Route::post('reset', 'App\Http\Controllers\api\PasswordResetController@reset');
 });
+
 // change status routers
 Route::prefix('/Admin')->group(function () {
+
+Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
+Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
+
 Route::post('changeCountryStatus/{id}',[App\Http\Controllers\api\adminDashboard\CountryController::class,'changeStatus']);
 Route::post('changeCityStatus/{id}',[App\Http\Controllers\api\adminDashboard\CityController::class,'changeStatus']);
 Route::post('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class,'changeStatus']);
@@ -59,11 +85,15 @@ Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\O
 Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
 Route::post('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
 Route::post('changeHomeStatus/{name}/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'changeHomeStatus']);
+Route::post('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'changeStatus']);
+Route::post('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
+Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
 
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
 Route::resource('city',App\Http\Controllers\api\adminDashboard\CityController::class);
 Route::resource('marketer',App\Http\Controllers\api\adminDashboard\MarketerController::class);
+Route::resource('client',App\Http\Controllers\api\adminDashboard\ClientController::class);
 Route::resource('explainVideos',App\Http\Controllers\api\adminDashboard\ExplainVideosController::class);
 Route::resource('course',App\Http\Controllers\api\adminDashboard\CourseController::class);
 Route::resource('unit',App\Http\Controllers\api\adminDashboard\UnitController::class);
@@ -95,17 +125,22 @@ Route::resource('replaycontact',App\Http\Controllers\api\adminDashboard\Replayco
 Route::resource('seo',App\Http\Controllers\api\adminDashboard\SeoController::class);
 Route::resource('store',App\Http\Controllers\api\adminDashboard\StoreController::class);
 Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController::class);
+Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
+Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
+Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
+
+Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
+
+Route::resource('websiteorder',App\Http\Controllers\api\adminDashboard\WebsiteorderController::class);
+
 });
 Auth::routes();
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
 
 });
 
-Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
-Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
-Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
 
 Route::prefix('/Store')->group(function () {
@@ -151,4 +186,3 @@ Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageContr
 
 
 });
-

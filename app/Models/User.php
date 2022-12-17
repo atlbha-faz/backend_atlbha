@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -28,7 +28,12 @@ class User extends Authenticatable
         'user_type',
         'phonenumber',
         'city_id',
+        'device_token',
         'country_id',
+        'code',
+        'code_expires_at',
+        'verify_code',
+        'verify_code_expires_at',
          'status',
        'is_deleted'
     ];
@@ -103,5 +108,47 @@ class User extends Authenticatable
         }
         return asset('storage/images/users') . '/' . $image;
     }
+
+
+    public function generateCode()
+    {
+        $this->timestamps = false;
+        $this->code = rand(100000, 999999);
+        $this->code_expires_at = now()->addMinutes(10);
+        $this->save();
+    }
+
+    public function resetCode()
+    {
+        $this->timestamps = false;
+        $this->code = null;
+        $this->code_expires_at = null;
+        $this->save();
+    }
+
+      public function generateVerifyCode()
+    {
+        $this->timestamps = false;
+        $this->verify_code = rand(100000, 999999);
+        $this->verify_code_expires_at = now()->addMinutes(10);
+        $this->save();
+    }
+
+    public function resetVerifyCode()
+    {
+        $this->timestamps = false;
+        $this->verify_code = null;
+        $this->verify_code_expires_at = null;
+        $this->save();
+    }
+
+    
+    public function setPasswordAttribute($password)
+    {
+            $this->attributes['password'] = bcrypt($password);
+    }
+    
+    
+    
 
 }

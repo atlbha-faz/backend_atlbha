@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('selling_price');
             $table->integer('quantity');
             $table->integer('less_qty');
+            $table->integer('stock');
             $table->string('cover');
             $table->text("tags")->nullable();
             $table->double('discount_price')->default(0);

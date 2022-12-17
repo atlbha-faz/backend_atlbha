@@ -14,6 +14,12 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
 {
+     
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -69,6 +75,9 @@ class StoreController extends BaseController
             'entity_type' =>'required',
             'activity_id' =>'required|exists:activities,id',
             'package_id' =>'required|exists:packages,id',
+            'start_at'=>'required|date',
+            'end_at'=>'required|date',
+            'period'=>'required|numeric',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'start_at'=>'required|date',
@@ -118,6 +127,9 @@ class StoreController extends BaseController
              'activity_id' =>$request->activity_id,
             'package_id' => $request->package_id,
             'user_id' => $userid,
+            'start_at'=>$request->start_at,
+            'end_at'=>$request->end_at,
+            'period'=>$request->period,
             'accept_status' => $request->accept_status,
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
@@ -126,9 +138,8 @@ class StoreController extends BaseController
             'period'=>$request->period,
 
           ]);
-          $store->packages()->attach(explode(',', $request->package),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
+          $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
-        $store->packages()->attach(explode(',', $request->store),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
          $success['stors']=New StoreResource($store);
         $success['status']= 200;
@@ -209,15 +220,15 @@ class StoreController extends BaseController
             'icon' =>'required',
             'phonenumber' =>'required|numeric',
             'description' =>'required',
-            // 'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            // 'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
+            'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
+            'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'accept_status' =>'required|in:pending,accepted,rejected',
             'snapchat' =>'required|url',
             'facebook' =>'required|url',
             'twiter' =>'required|url',
             'youtube' =>'required|url',
             'instegram' =>'required|url',
-            //   'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
+            'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'entity_type' =>'required',
             'activity_id' =>'required|exists:activities,id',
             'package_id' =>'required|exists:packages,id',
@@ -274,7 +285,7 @@ class StoreController extends BaseController
                'end_at' => $request->input('end_at'),
                'period' => $request->input('period'),
            ]);
-           $store->packages()->sync(explode(',', $request->package),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
+           $store->packages()->sync(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
            $success['stores']=New StoreResource($store);
            $success['status']= 200;

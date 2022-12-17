@@ -10,6 +10,11 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class CountryController extends  BaseController
 {
+ 
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
 
 
     /**

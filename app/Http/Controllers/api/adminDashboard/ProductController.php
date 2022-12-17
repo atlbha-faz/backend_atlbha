@@ -5,12 +5,19 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
 {
+     
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -54,10 +61,17 @@ class ProductController extends BaseController
             'selling_price'=>['required','numeric','gt:0'],
             'quantity'=>['required','numeric','gt:0'],
             'less_qty'=>['required','numeric','gt:0'],
+            'stock'=>['required','numeric','gt:0'],
             'tags'=>'required',
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'category_id'=>'required|exists:categories,id',
             'store_id'=>'required|exists:stores,id',
+            'subcategory_id'=>['required','array'],
+            'subcategory_id.*'=>['required','numeric',
+            Rule::exists('categories', 'id')->where(function ($query) {
+            return $query->join('categories', 'id', 'parent_id');
+        }),
+            ]
         ]);
         if ($validator->fails())
         {
@@ -72,10 +86,13 @@ class ProductController extends BaseController
             'purchasing_price' => $request->purchasing_price,
             'selling_price' => $request->selling_price,
             'less_qty' => $request->less_qty,
+            'stock' => $request->stock,
             'cover' => $request->cover,
             'tags' => implode(',', $request->tags),
             'category_id' => $request->category_id,
+            'subcategory_id' => implode(',', $request->subcategory_id),
             'store_id' => $request->store_id,
+            
           ]);
  $productid =$product->id;
               if($request->hasFile("images")){
@@ -160,11 +177,17 @@ class ProductController extends BaseController
             'selling_price'=>['required','numeric','gt:0'],
             'quantity'=>['required','numeric','gt:0'],
             'less_qty'=>['required','numeric','gt:0'],
+            'stock'=>['required','numeric','gt:0'],
             'tags'=>'required',
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'category_id'=>'required|exists:categories,id',
             'store_id'=>'required|exists:stores,id',
-
+            'subcategory_id'=>['required','array'],
+            'subcategory_id.*'=>['required','numeric',
+            Rule::exists('categories', 'id')->where(function ($query) {
+            return $query->join('categories', 'id', 'parent_id');
+        }),
+            ]
          ]);
 
          if ($validator->fails())
@@ -180,9 +203,11 @@ class ProductController extends BaseController
             'purchasing_price' => $request->input('purchasing_price'),
             'quantity' => $request->input('quantity'),
             'less_qty' => $request->input('less_qty'),
+            'stock' => $request->input('stock'),
             'tags' =>implode(',',$request->input('tags')),
             'cover' => $request->input('cover'),
             'category_id' => $request->input('category_id'),
+            'subcategory_id' => $request->input('subcategory_id'),
             'store_id' => $request->input('store_id'),
 
 

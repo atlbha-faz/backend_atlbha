@@ -10,6 +10,13 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class PackageController extends BaseController
 {
+
+     
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -47,9 +54,7 @@ class PackageController extends BaseController
             'monthly_price'=>'required|numeric|gt:0',
             'yearly_price'=>'required|numeric|gt:0',
             'discount'=>'required|numeric|gt:0',
-        //    'start_at'=>'required|date',
-        //    'end_at'=>'required|date',
-        //    'period'=>'required|numeric',
+         
         ]);
         if ($validator->fails())
         {
@@ -124,9 +129,7 @@ class PackageController extends BaseController
             'monthly_price'=>'required|numeric|gt:0',
             'yearly_price'=>'required|numeric|gt:0',
             'discount'=>'required|numeric|gt:0',
-        //      'start_at'=>'required|date',
-        //    'end_at'=>'required|date',
-        //    'period'=>'required|numeric',
+           
          ]);
          if ($validator->fails())
          {

@@ -1,14 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
-class UserController extends Controller
+class UserController  extends BaseController
 {
+
+     
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +51,7 @@ class UserController extends Controller
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'user_id'=>'required|string|max:255',
+            'user_id'=>'required|max:255',
             'user_name'=>'required|string|max:255',
             'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
             'email'=>'required|email|unique:users',
@@ -121,13 +129,13 @@ class UserController extends Controller
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'user_id'=>'required|string|max:255',
+            'user_id'=>'required|max:255',
             'user_name'=>'required|string|max:255',
             'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'gender'=>'required|in:male,female',
-            'phoneNumber'=>'required|numeric',
+            'phonenumber'=>'required|numeric',
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',

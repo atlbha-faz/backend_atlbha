@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Country;
+use App\Models\Template;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class CountrySeeder extends Seeder
+class TemplateSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,10 +15,9 @@ class CountrySeeder extends Seeder
      */
     public function run()
     {
-        Country::create([
-            'name' => 'السعودية',
-            'name_en' => 'KSA',
-            'code' => '00966',
+        Template::create([
+            'name' => 'القالب',
+            'parent_id'=> null
         ]);
     }
 }
