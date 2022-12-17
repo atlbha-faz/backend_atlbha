@@ -58,6 +58,7 @@ Route::post('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\S
 Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
 Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
 Route::post('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
+Route::post('changeHomeStatus/{name}/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'changeHomeStatus']);
 
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
@@ -142,6 +143,10 @@ Route::post('changeSeoStatus/{id}', [App\Http\Controllers\api\storeDashboard\Seo
 Route::resource('seo',App\Http\Controllers\api\storeDashboard\SeoController::class);
 Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
 Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
+Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
+
+
+
 
 
 
