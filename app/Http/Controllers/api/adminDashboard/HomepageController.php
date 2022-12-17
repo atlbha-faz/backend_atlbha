@@ -43,26 +43,55 @@ class HomepageController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'key'=>'required|string',
-            'value'=>'required|string'
+            'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'panar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'panarstatus1'=>'required|in:active,not_active',
+            'panar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'panarstatus2'=>'required|in:active,not_active',
+            'panar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'panarstatus3'=>'required|in:active,not_active',
+            'clientstatus'=>'required|in:active,not_active',
+            'commentstatus'=>'required|in:active,not_active',
+            'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'sliderstatus1'=>'required|in:active,not_active',
+            'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'sliderstatus2'=>'required|in:active,not_active',
+            'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'sliderstatus3'=>'required|in:active,not_active',
+        
         ]);
+
         if ($validator->fails())
         {
             return $this->sendError(null,$validator->errors());
         }
-        $Homepage = Homepage::create([
-            'key' => $request->key,
-            'value' => $request->value,
 
-          ]);
+        $Homepage = Homepage::updateOrCreate([
+            'store_id'   => null,
+            ],[
+           'logo' => $request->logo,
+           'panar1' => $request->panar1,
+           'panarstatus1' => $request->panarstatus1,
+           'panar2' => $request->panar2,
+           'panarstatus2' => $request->panarstatus2,
+           'panar3' => $request->panar3,
+           'panarstatus3' => $request->panarstatus3,
+           'clientstatus' => $request->clientstatus,
+           'commentstatus' => $request->commentstatus,
+           'slider1' => $request->slider1,
+           'sliderstatus1' => $request->sliderstatus1,
+           'slider2' => $request->slider2,
+           'sliderstatus2' => $request->sliderstatus2,
+           'slider3' => $request->slider3,
+           'sliderstatus3' => $request->sliderstatus3,
+    
+       ]);
 
-
-         $success['Homepages']=New HomepageResource($Homepage );
+         $success['Homepages']=New HomepageResource($Homepage);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافةالصفحة بنجاح','Homepage Added successfully');
     }
-
     /**
      * Display the specified resource.
      *
@@ -116,32 +145,12 @@ class HomepageController extends BaseController
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Homepage $homepage)
+
+    public function update(Request $request,Homepage $homepage)
     {
-        if (is_null($homepage) || $homepage->is_deleted==1){
-            return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
-       }
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
-               'key'=>'required|string',
-            'value'=>'required|string'
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $homepage->update([
-               'key' => $request->input('key'),
-               'value' => $request->input('value'),
-           ]);
-
-           $success['homepages']=New homepageResource($homepage);
-           $success['status']= 200;
-
-            return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
-    }
-
+        
+       
+        }
     /**
      * Remove the specified resource from storage.
      *
