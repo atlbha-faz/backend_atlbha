@@ -29,6 +29,7 @@ return new class extends Migration
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
              $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
 
@@ -43,7 +44,7 @@ return new class extends Migration
         });
     }
 
-    
+
 
     /**
      * Reverse the migrations.

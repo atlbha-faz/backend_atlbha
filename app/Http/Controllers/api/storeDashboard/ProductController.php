@@ -12,6 +12,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
 {
+     public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +24,7 @@ class ProductController extends BaseController
     public function index()
     {
        {
-       $success['products']=ProductResource::collection(Product::where('is_deleted',0)->get());
+       $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','products return successfully');
@@ -92,7 +96,7 @@ class ProductController extends BaseController
             'discount_percent'=>$request->discount_percent,
             'subcategory_id' => implode(',', $request->subcategory_id),
             'category_id' => $request->category_id,
-            // 'store_id' => $request->store_id,
+            'store_id'=> auth()->user()->store_id,
           ]);
  $productid =$product->id;
               if($request->hasFile("images")){

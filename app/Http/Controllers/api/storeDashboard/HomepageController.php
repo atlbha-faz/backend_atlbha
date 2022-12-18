@@ -10,6 +10,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class HomepageController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +21,7 @@ class HomepageController extends BaseController
      */
     public function index()
     {
-        $success['Homepages']=HomepageResource::collection(Homepage::where('is_deleted',0)->get());
+        $success['Homepages']=HomepageResource::collection(Homepage::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الصفحة الرئبسبة  بنجاح','Homepages return successfully');
@@ -66,7 +70,7 @@ class HomepageController extends BaseController
         }
 
         $Homepage = Homepage::updateOrCreate([
-                'store_id'   => 2,
+                'store_id'=> auth()->user()->store_id,
                 ],[
                'logo' => $request->logo,
                'panar1' => $request->panar1,
@@ -146,7 +150,7 @@ class HomepageController extends BaseController
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
-  
+
 
     /**
      * Remove the specified resource from storage.

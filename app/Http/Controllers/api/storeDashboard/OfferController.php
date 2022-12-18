@@ -12,6 +12,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class OfferController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -72,7 +76,7 @@ class OfferController extends BaseController
             'select_product_id'=>"required_if:purchase_type,payment",
             'select_category_id'=>"required_if:purchase_type,payment",
             'select_payment_id'=>"required_if:purchase_type,payment",
-            
+
         ]);
         if ($validator->fails())
         {

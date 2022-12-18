@@ -34,6 +34,7 @@ class User extends Authenticatable
         'code_expires_at',
         'verify_code',
         'verify_code_expires_at',
+        'store_id',
          'status',
        'is_deleted'
     ];
@@ -142,13 +143,13 @@ class User extends Authenticatable
         $this->save();
     }
 
-    
+
     public function setPasswordAttribute($password)
     {
             $this->attributes['password'] = bcrypt($password);
     }
-    
-    
-    
+
+
+
 
 }

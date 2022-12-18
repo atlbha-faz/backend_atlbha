@@ -22,7 +22,7 @@ use App\Http\Controllers\CountryController;
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
 
-Route::post('/login','App\Http\Controllers\api\AuthController@login');
+Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 
 
@@ -141,8 +141,8 @@ Route::group(['middleware' => ['auth']], function() {
 
 });
 
-
-
+// Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
+Route::middleware([StoreUser::class])->group(function(){
 Route::prefix('/Store')->group(function () {
 
 Route::resource('country',App\Http\Controllers\api\storeDashboard\CountryController::class);
@@ -185,4 +185,5 @@ Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageContr
 
 
 
+});
 });

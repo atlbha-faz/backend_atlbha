@@ -10,6 +10,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class CouponController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +21,7 @@ class CouponController extends BaseController
      */
     public function index()
     {
-        $success['coupons']=CouponResource::collection(Coupon::where('is_deleted',0)->get());
+        $success['coupons']=CouponResource::collection(Coupon::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع الكوبونات بنجاح','coupons return successfully');
@@ -67,7 +71,7 @@ class CouponController extends BaseController
             'user_redemptions' => $request->user_redemptions,
             'free_shipping' => $request->free_shipping,
             'exception_discount_product' => $request->exception_discount_product,
-            // 'store_id' => $request->store_id,
+            'store_id'=> auth()->user()->store_id,
           ]);
 
          $success['coupons']=New CouponResource($coupon);

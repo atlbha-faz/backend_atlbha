@@ -10,6 +10,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class SeoController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +21,7 @@ class SeoController extends BaseController
      */
     public function index()
     {
-        $success['Seo']=SeoResource::collection(Seo::where('is_deleted',0)->get());
+        $success['Seo']=SeoResource::collection(Seo::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الكلمات المفتاحية بنجاح','Seo return successfully');
@@ -62,7 +66,7 @@ class SeoController extends BaseController
             'show_pages' => $request->show_pages,
             'link' => $request->link,
             'robots' => $request->robots,
-            // 'store_id' => $request->store_id,
+            'store_id'=> auth()->user()->store_id,
           ]);
 
 
