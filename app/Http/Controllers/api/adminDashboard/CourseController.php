@@ -48,14 +48,12 @@ class CourseController extends BaseController
     public function store(Request $request)
     {
 
-
-
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'description'=>'required|string',
             'duration' =>'required',
-            'user_id'=>'required|exists:users,id'
+          
         ]);
         if ($validator->fails())
         {
@@ -66,7 +64,7 @@ class CourseController extends BaseController
             'description'=>$request->description,
             'duration' =>$request->duration,
             'tags' =>implode(',', $request->tags),
-             'user_id' => $request->user_id,
+             'user_id' => auth()->user()->id,
           ]);
 
          // return new CountryResource($country);
@@ -125,7 +123,7 @@ class CourseController extends BaseController
            'name'=>'required|string|max:255',
             'description'=>'required|string',
             'duration' =>'required',
-             'user_id'=>'required|exists:users,id'
+             
         ]);
         if ($validator->fails())
         {
@@ -137,7 +135,7 @@ class CourseController extends BaseController
             'description' => $request->input('description'),
             'description' => $request->input('description'),
             'tags' =>implode(',',$request->input('tags')),
-            'user_id' => $request->input('user_id')
+         
         ]);
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);

@@ -22,7 +22,7 @@ use App\Http\Controllers\CountryController;
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
 
-Route::post('/login','App\Http\Controllers\api\AuthController@login');
+Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 
     
@@ -42,7 +42,8 @@ Route::group([
 });
 
 // change status routers
-Route::prefix('/Admin')->group(function () {
+Route::middleware([AdminUser::class])->group(function(){
+    Route::prefix('/Admin')->group(function ()  {
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
@@ -134,6 +135,7 @@ Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\Opti
 
 Route::resource('websiteorder',App\Http\Controllers\api\adminDashboard\WebsiteorderController::class);
 
+});
 });
 Auth::routes();
 Route::group(['middleware' => ['auth']], function() {

@@ -138,6 +138,8 @@ class StoreController extends BaseController
             'period'=>$request->period,
 
           ]);
+          $user->update([
+            'store_id' =>  $store->id]);
           $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period]);
 
 

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -34,6 +34,7 @@ class User extends Authenticatable
         'code_expires_at',
         'verify_code',
         'verify_code_expires_at',
+        'store_id',
          'status',
        'is_deleted'
     ];

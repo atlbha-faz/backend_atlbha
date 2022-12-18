@@ -10,7 +10,6 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class CategoryController extends BaseController
 {
 
-     
     public function __construct()
     {
         $this->middleware('auth:api');
