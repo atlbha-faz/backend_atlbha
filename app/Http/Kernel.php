@@ -66,15 +66,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-<<<<<<< HEAD
-    'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-    'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
-    'AdminUser' => \App\Http\Middleware\AdminUser::class,
-=======
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'StoreUser' => \App\Http\Middleware\StoreUser::class,
+        'AdminUser' => \App\Http\Middleware\AdminUser::class,
 
->>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
     ];
 }

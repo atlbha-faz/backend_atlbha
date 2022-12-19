@@ -31,11 +31,7 @@ class HomepageResource extends JsonResource
             'sliderstatus2' => $this->sliderstatus2,
             'slider3' => $this->slider3,
             'sliderstatus3' => $this->sliderstatus3,
-<<<<<<< HEAD
-            'status' => $this->status !==null ? $this->status:'active',
-=======
             // 'status' => $this->status !==null ? $this->status:'active',
->>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'store' => New StoreResource($this->store),
         ];

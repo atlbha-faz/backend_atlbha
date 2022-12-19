@@ -32,10 +32,7 @@ return new class extends Migration
             $table->enum('sliderstatus3',['active','not_active'])->default('active');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-<<<<<<< HEAD
-=======
           
->>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });

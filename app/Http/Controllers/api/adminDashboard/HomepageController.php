@@ -64,19 +64,13 @@ class HomepageController extends BaseController
             'sliderstatus2'=>'required|in:active,not_active',
             'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'sliderstatus3'=>'required|in:active,not_active',
-<<<<<<< HEAD
-        
-=======
             'store_id'=>'required|exists:stores,id',
->>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
         ]);
 
         if ($validator->fails())
         {
             return $this->sendError(null,$validator->errors());
         }
-<<<<<<< HEAD
-=======
         $Homepage = Homepage::create([
             'logo' => $request->logo,
             'panar1' => $request->panar1,
@@ -96,7 +90,6 @@ class HomepageController extends BaseController
             'store_id' => $request->store_id,
           ]);
 
->>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
 
         $Homepage = Homepage::updateOrCreate([
             'store_id'   => null,
@@ -193,8 +186,6 @@ class HomepageController extends BaseController
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
-<<<<<<< HEAD
-=======
     public function update(Request $request, Homepage $homepage)
     {
         if (is_null($homepage) || $homepage->is_deleted==1){
@@ -250,13 +241,8 @@ class HomepageController extends BaseController
 
             return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
     }
->>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
 
-    public function update(Request $request,Homepage $homepage)
-    {
-        
-       
-        }
+
     /**
      * Remove the specified resource from storage.
      *
