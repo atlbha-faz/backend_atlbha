@@ -12,6 +12,10 @@ use function PHPSTORM_META\map;
 
 class PageController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +23,7 @@ class PageController extends BaseController
      */
     public function index()
     {
-        $success['pages']=PageResource::collection(Page::where('is_deleted',0)->get());
+        $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع  الصفحة بنجاح','Pages return successfully');
@@ -52,7 +56,7 @@ class PageController extends BaseController
             'seo_desc'=>'required',
             'tags'=>'required',
             // 'store_id'=>'required|exists:stores,id',
-            'user_id'=>'required|exists:users,id',
+            // 'user_id'=>'required|exists:users,id',
 
         ]);
         if ($validator->fails())
@@ -66,8 +70,8 @@ class PageController extends BaseController
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
             'tags' => implode(',', $request->tags),
-            // 'store_id' => $request->store_id,
-            'user_id'=>$request->user_id,
+           'store_id'=> auth()->user()->store_id,
+            'user_id'=>auth()->user()->id,
             'name'=> $request->name,
           ]);
            //$request->input('name', []);
@@ -132,7 +136,7 @@ class PageController extends BaseController
             'seo_desc'=>'required',
             'tags'=>'required',
             // 'store_id'=>'required|exists:stores,id',
-            'usre_id'=>'required|exists:users,id',
+            // 'usre_id'=>'required|exists:users,id',
            ]);
            if ($validator->fails())
            {
@@ -146,7 +150,7 @@ class PageController extends BaseController
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
             //    'store_id' => $request->input('store_id'),
-               'user_id' => $request->input('user_id'),
+            //    'user_id' => $request->input('user_id'),
                'tags' => implode(',',$request->input('tags')),
                'name'=> $request->input('name'),
            ]);

@@ -16,10 +16,24 @@ class HomepageResource extends JsonResource
     {
          return [
             'id' =>$this->id,
-            'key' => $this->key,
-            'value' => $this->value,
-            'status' => $this->status !==null ? $this->status:'active',
+            'logo' => $this->logo,
+            'panar1' => $this->panar1,
+            'panarstatus1' => $this->panarstatus1,
+            'panar2' => $this->panar2,
+            'panarstatus2' => $this->panarstatus2,
+            'panar3' => $this->panar3,
+            'panarstatus3' => $this->panarstatus3,
+            'clientstatus' => $this->clientstatus,
+            'commentstatus' => $this->commentstatus,
+            'slider1' => $this->slider1,
+            'sliderstatus1' => $this->sliderstatus1,
+            'slider2' => $this->slider2,
+            'sliderstatus2' => $this->sliderstatus2,
+            'slider3' => $this->slider3,
+            'sliderstatus3' => $this->sliderstatus3,
+            // 'status' => $this->status !==null ? $this->status:'active',
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+            'store' => New StoreResource($this->store),
         ];
     }
 }

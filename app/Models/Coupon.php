@@ -27,15 +27,21 @@ class Coupon extends Model
         );
     }
 
-//  public function expireCoupon($coupon)
-//  {
-//     $expire=Coupon::select('expire_date','status')->where('id',$coupon);
-//     $my_time=Carbon::now();
-//     if($expire >= $my_time){
-//   // ok
-//   $expire->
+ public function expireCoupon($id)
+ {
+    $expire = Coupon::query()->find($id);
+    // $expire=Coupon::select('expire_date')->where('id',$coupon);
+    // dd($expire);
+    $my_time=Carbon::now();
+    if($expire->expire_date < $my_time){
+  // ok
+//   return "active";
+//    $expire->update(['status' => 'active']);
+
 // } else {
-//   // error, coupon expired
-// }
-//  }
+  // error, coupon expired
+// return "expired";
+$expire->update(['status' => 'expired']);
+}
+ }
 }

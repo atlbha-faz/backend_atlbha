@@ -22,7 +22,7 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    public function subcategory()
+  public function subcategory()
     {
         return Category::whereIn('id',explode(',',$this->subcategory_id))->get();
     }
@@ -44,7 +44,7 @@ class Product extends Model
 
      );
     }
-    
+
     public function setCoverAttribute($cover)
     {
         if (!is_null($cover)) {

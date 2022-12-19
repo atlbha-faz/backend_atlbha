@@ -53,4 +53,5 @@ class Category extends Model
         'offer_id'
         )->withPivot("type");
   }
+
 }

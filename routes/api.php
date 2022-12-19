@@ -22,19 +22,19 @@ use App\Http\Controllers\CountryController;
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
 
-Route::post('/login','App\Http\Controllers\api\AuthController@login');
+Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 
-    
+
 Route::post('send-verify-message','App\Http\Controllers\api\AuthController@store_verify_message');
 Route::post('verify-user','App\Http\Controllers\api\AuthController@verifyUser');
 
 
 
-Route::group([      
-    'middleware' => 'api',    
+Route::group([
+    'middleware' => 'api',
     'prefix' => 'password'
-], function () {    
+], function () {
     Route::post('create', 'App\Http\Controllers\api\PasswordResetController@create');
     Route::get('find/{token}', 'App\Http\Controllers\api\PasswordResetController@find');
     Route::post('verify', 'App\Http\Controllers\api\PasswordResetController@verifyContact');
@@ -84,6 +84,7 @@ Route::post('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\S
 Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
 Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
 Route::post('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
+Route::post('changeHomeStatus/{name}/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'changeHomeStatus']);
 Route::post('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'changeStatus']);
 Route::post('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
 Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
@@ -140,10 +141,14 @@ Route::group(['middleware' => ['auth']], function() {
 
 });
 
-
-
+// Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
+Route::middleware([StoreUser::class])->group(function(){
 Route::prefix('/Store')->group(function () {
 
+Route::resource('country',App\Http\Controllers\api\storeDashboard\CountryController::class);
+Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::class);
+Route::post('changeCountryStatus/{id}',[App\Http\Controllers\api\storeDashboard\CountryController::class,'changeStatus']);
+Route::post('changeCityStatus/{id}',[App\Http\Controllers\api\storeDashboard\CityController::class,'changeStatus']);
 Route::resource('page',App\Http\Controllers\api\storeDashboard\pageController::class);
 Route::resource('pagecategory',App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
 Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class,'changeStatus']);
@@ -167,7 +172,18 @@ Route::post('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDash
 Route::resource('shippingtype',App\Http\Controllers\api\storeDashboard\ShippingtypeController::class);
 Route::post('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class,'changeStatus']);
 Route::resource('paymenttype',App\Http\Controllers\api\storeDashboard\PaymenttypeController::class);
+Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\OfferController::class,'changeStatus']);
+Route::resource('offer',App\Http\Controllers\api\storeDashboard\OfferController::class);
+Route::post('changeSeoStatus/{id}', [App\Http\Controllers\api\storeDashboard\SeoController::class,'changeStatus']);
+Route::resource('seo',App\Http\Controllers\api\storeDashboard\SeoController::class);
+Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
+Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
+Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
 
 
 
+
+
+
+});
 });

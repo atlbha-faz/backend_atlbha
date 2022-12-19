@@ -52,7 +52,7 @@ class AuthController extends BaseController
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
-        
+
 
         $user = auth()->user();
 

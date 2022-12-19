@@ -10,6 +10,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class CommentController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +22,7 @@ class CommentController extends BaseController
     public function index()
     {
 
-        $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->get());
+        $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع التعليقات بنجاح','comments return successfully');
@@ -48,7 +52,7 @@ class CommentController extends BaseController
             'comment_text'=>'required|string|max:255',
             'rateing'=>'required|numeric',
             'product_id'=>'required|exists:products,id',
-            'user_id'=>'required|exists:users,id'
+            // 'user_id'=>'required|exists:users,id'
 
 
         ]);
@@ -60,7 +64,7 @@ class CommentController extends BaseController
             'comment_text' => $request->comment_text,
             'rateing' => $request->rateing,
             'product_id' => $request->product_id,
-            'user_id' => $request->user_id,
+            'user_id' => auth()->user()->id,
 
           ]);
 
@@ -120,7 +124,7 @@ class CommentController extends BaseController
            'comment_text'=>'required|string|max:255',
             'rateing'=>'required|numeric',
             'product_id'=>'required|exists:products,id',
-            'user_id'=>'required|exists:users,id'
+            // 'user_id'=>'required|exists:users,id'
          ]);
          if ($validator->fails())
          {
@@ -131,7 +135,7 @@ class CommentController extends BaseController
             'comment_text' => $request->input('comment_text'),
             'rateing' => $request->input('rateing'),
             'product_id' => $request->input('product_id'),
-           'user_id' => $request->input('user_id'),
+        //    'user_id' => $request->input('user_id'),
          ]);
          //$country->fill($request->post())->update();
             $success['comments']=New commentResource($comment);

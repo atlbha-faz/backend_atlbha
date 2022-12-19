@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 class CategoryController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +20,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0)->get());
+        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0,)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع التصنيفات بنجاح','categories return successfully');
@@ -48,7 +52,7 @@ class CategoryController extends BaseController
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-                // 'for'=>'required',
+                 //'for'=>'required',
             ]);
             if ($validator->fails())
             {
@@ -69,8 +73,8 @@ class CategoryController extends BaseController
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'icon' => $request->icon,
                 'parent_id'=>$request->parent_id,
-                // 'for'=>$request->for,
-                // 'store_id'=> $request->store_id,
+                'for'=>'store',
+               'store_id'=> auth()->user()->store_id,
               ]);
 
         }
@@ -102,8 +106,8 @@ class CategoryController extends BaseController
                 'name' => $request->name,
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'parent_id'=>$request->parent_id,
-                // 'for'=>$request->for,
-                // 'store_id'=>$request->store_id,
+                   'for'=>'store',
+               'store_id'=> auth()->user()->store_id,
               ]);
 
 
