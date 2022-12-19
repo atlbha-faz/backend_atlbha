@@ -10,6 +10,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class MaintenanceController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +21,7 @@ class MaintenanceController extends BaseController
      */
     public function index()
     {
-        $success['Maintenances']=MaintenanceResource::collection(Maintenance::where('is_deleted',0)->get());
+        $success['Maintenances']=MaintenanceResource::collection(Maintenance::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع و ضع الصيانة بنجاح','Maintenances return successfully');
@@ -45,7 +49,7 @@ class MaintenanceController extends BaseController
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
             'message'=>'required',
-           'store_id'=>'required|exists:stores,id'
+        //    'store_id'=>'required|exists:stores,id'
         ]);
         if ($validator->fails())
         {
@@ -54,7 +58,7 @@ class MaintenanceController extends BaseController
         $maintenance = Maintenance::create([
             'title' => $request->title,
             'message' => $request->message,
-            'store_id'=>$request->store_id
+            'store_id'=> auth()->user()->store_id,
           ]);
 
 
@@ -130,7 +134,7 @@ class MaintenanceController extends BaseController
            $validator =  Validator::make($input ,[
                 'title'=>'required|string|max:255',
                 'message'=>'required',
-               'store_id'=>'required|exists:stores,id'
+            //    'store_id'=>'required|exists:stores,id'
 
            ]);
            if ($validator->fails())
@@ -141,7 +145,7 @@ class MaintenanceController extends BaseController
            $maintenance->update([
                'title' => $request->input('title'),
                'message' => $request->input('message'),
-                'store_id' => $request->input('store_id'),
+                // 'store_id' => $request->input('store_id'),
            ]);
 
            $success['maintenances']=New MaintenanceResource($maintenance);

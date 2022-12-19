@@ -64,13 +64,39 @@ class HomepageController extends BaseController
             'sliderstatus2'=>'required|in:active,not_active',
             'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'sliderstatus3'=>'required|in:active,not_active',
+<<<<<<< HEAD
         
+=======
+            'store_id'=>'required|exists:stores,id',
+>>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
         ]);
 
         if ($validator->fails())
         {
             return $this->sendError(null,$validator->errors());
         }
+<<<<<<< HEAD
+=======
+        $Homepage = Homepage::create([
+            'logo' => $request->logo,
+            'panar1' => $request->panar1,
+            'panarstatus1' => $request->panarstatus1,
+            'panar2' => $request->panar2,
+            'panarstatus2' => $request->panarstatus2,
+            'panar3' => $request->panar3,
+            'panarstatus3' => $request->panarstatus3,
+            'clientstatus' => $request->clientstatus,
+            'commentstatus' => $request->commentstatus,
+            'slider1' => $request->slider1,
+            'sliderstatus1' => $request->sliderstatus1,
+            'slider2' => $request->slider2,
+            'sliderstatus2' => $request->sliderstatus2,
+            'slider3' => $request->slider3,
+            'sliderstatus3' => $request->sliderstatus3,
+            'store_id' => $request->store_id,
+          ]);
+
+>>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
 
         $Homepage = Homepage::updateOrCreate([
             'store_id'   => null,
@@ -132,7 +158,23 @@ class HomepageController extends BaseController
          return $this->sendResponse($success,'تم تعدبل حالة الصفحة بنجاح',' Homepage status updared successfully');
 
     }
+  public function changeHomeStatus($name,$id)
+    {
+        $Homepage = Homepage::query()->find($id);
+        if (is_null($Homepage) || $Homepage->is_deleted==1){
+         return $this->sendError("الصفحة غير موجودة","Homepage is't exists");
+         }
+        if($Homepage->status === 'active'){
+            $Homepage->update([$name => 'not_active']);
+     }
+    else{
+        $Homepage->update(['status' => 'active']);
+    }
+        $success['homepages']=New HomepageResource($Homepage);
+        $success['status']= 200;
+         return $this->sendResponse($success,'تم تعدبل حالة الصفحة بنجاح',' Homepage status updared successfully');
 
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -151,6 +193,64 @@ class HomepageController extends BaseController
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
+<<<<<<< HEAD
+=======
+    public function update(Request $request, Homepage $homepage)
+    {
+        if (is_null($homepage) || $homepage->is_deleted==1){
+            return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
+       }
+            $input = $request->all();
+           $validator =  Validator::make($input ,[
+            'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'panar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'panarstatus1'=>'required|in:active,not_active',
+            'panar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'panarstatus2'=>'required|in:active,not_active',
+            'panar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'panarstatus3'=>'required|in:active,not_active',
+            'clientstatus'=>'required|in:active,not_active',
+            'commentstatus'=>'required|in:active,not_active',
+            'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'sliderstatus1'=>'required|in:active,not_active',
+            'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'sliderstatus2'=>'required|in:active,not_active',
+            'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'sliderstatus3'=>'required|in:active,not_active',
+            'store_id'=>'required|exists:stores,id',
+           ]);
+           if ($validator->fails())
+           {
+               # code...
+               return $this->sendError(null,$validator->errors());
+           }
+           $homepage->updateOrCreate([
+                'store_id'   => 1,
+                ],[
+               'logo' => $request->input('logo'),
+               'panar1' => $request->input('panar1'),
+               'panarstatus1' => $request->input('panarstatus1'),
+               'panar2' => $request->input('panar2'),
+               'panarstatus2' => $request->input('panarstatus2'),
+               'panar3' => $request->input('panar3'),
+               'panarstatus3' => $request->input('panarstatus3'),
+               'clientstatus' => $request->input('clientstatus'),
+               'commentstatus' => $request->input('commentstatus'),
+               'slider1' => $request->input('slider1'),
+               'sliderstatus1' => $request->input('sliderstatus1'),
+               'slider2' => $request->input('slider2'),
+               'sliderstatus2' => $request->input('sliderstatus2'),
+               'slider3' => $request->input('slider3'),
+               'sliderstatus3' => $request->input('sliderstatus3'),
+            //    'store_id' => $request->input('store_id'),
+           ]);
+
+           $success['homepages']=New homepageResource($homepage);
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
+    }
+>>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b
 
     public function update(Request $request,Homepage $homepage)
     {

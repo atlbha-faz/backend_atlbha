@@ -10,14 +10,11 @@ class Service extends Model
     use HasFactory;
       protected $fillable = ['name','description','file','price','status','is_deleted'];
 
-    //    public function users(){
-    //    return $this->belongsToMany(
-    //     User::class,
-    //     'services_users',
-    //     'service_id',
-    //     'user_id'
-    //     );
-    // }
+  
+    public function pendingServices($id){
+        $pendingServices=Service_Websiteorder::select('*')->where('service_id',$id)->where('status','pending')->count();   
+        return  $pendingServices;
+    }
     public function setFileAttribute($file)
     {
         if (!is_null($file)) {

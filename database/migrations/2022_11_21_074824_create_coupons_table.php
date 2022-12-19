@@ -24,7 +24,7 @@ return new class extends Migration
            $table->unsignedBigInteger('user_redemptions')->nullable();
            $table->boolean('free_shipping')->default(0);
            $table->boolean('exception_discount_product')->default(0);
-           $table->enum('status',['active','not_active'])->default('active');
+           $table->enum('status',['active','not_active','expired'])->default('active');
            $table->boolean('is_deleted')->default(0);
            $table->unsignedBigInteger('store_id')->nullable();
            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');

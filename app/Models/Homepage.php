@@ -147,5 +147,10 @@ class Homepage extends Model
         }
         return asset('storage/images/homepage') . '/' . $slider3;
     }
+<<<<<<< HEAD
 
 }
+=======
+}
+
+>>>>>>> 3a0d838cf6591f78fe755ff6858d0dc85fc2d24b

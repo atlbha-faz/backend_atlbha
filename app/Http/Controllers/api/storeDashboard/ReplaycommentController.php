@@ -10,6 +10,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class ReplaycommentController extends BaseController
 {
+      public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -47,7 +51,7 @@ class ReplaycommentController extends BaseController
         $validator =  Validator::make($input ,[
             'comment_text'=>'required|string|max:255',
             'comment_id'=>'required|exists:comments,id',
-            'user_id'=>'required|exists:users,id'
+            // 'user_id'=>'required|exists:users,id'
 
 
         ]);
@@ -58,7 +62,7 @@ class ReplaycommentController extends BaseController
         $replaycomment = Replaycomment::create([
             'comment_text' => $request->comment_text,
             'comment_id' => $request->comment_id,
-            'user_id' => $request->user_id,
+            'user_id' => auth()->user()->id,
 
           ]);
 
@@ -89,7 +93,7 @@ class ReplaycommentController extends BaseController
 
         return $this->sendResponse($success,'تم عرض رد التعليق بنجاح','replay comment showed successfully');
      }
-     
+
 
     /**
      * Show the form for editing the specified resource.

@@ -27,8 +27,7 @@ class CategoryResource extends JsonResource
             'store' => New StoreResource($this->store),
             'parent_id' => New CategoryResource($this->category),
             'subcategory' =>$this->subcategory,
-
-
+            'countsubcategory' =>$this->subcategory->count(),
           ];
     }
 }

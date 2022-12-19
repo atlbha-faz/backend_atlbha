@@ -12,6 +12,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
 {
+     public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +24,7 @@ class ProductController extends BaseController
     public function index()
     {
        {
-       $success['products']=ProductResource::collection(Product::where('is_deleted',0)->get());
+       $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','products return successfully');
@@ -55,6 +59,7 @@ class ProductController extends BaseController
             'selling_price'=>['required','numeric','gt:0'],
             'quantity'=>['required','numeric','gt:0'],
             'less_qty'=>['required','numeric','gt:0'],
+            'stock'=>['required','numeric','gt:0'],
             'tags'=>'required',
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'discount_price'=>['required','numeric'],
@@ -84,13 +89,14 @@ class ProductController extends BaseController
             'purchasing_price' => $request->purchasing_price,
             'selling_price' => $request->selling_price,
             'less_qty' => $request->less_qty,
+            'stock' => $request->stock,
             'cover' => $request->cover,
             'tags' => implode(',', $request->tags),
            'discount_price'=>$request->discount_price,
             'discount_percent'=>$request->discount_percent,
-            'subcategory_id'=>implode(',',$request->subcategory_id),
+            'subcategory_id' => implode(',', $request->subcategory_id),
             'category_id' => $request->category_id,
-            // 'store_id' => $request->store_id,
+            'store_id'=> auth()->user()->store_id,
           ]);
  $productid =$product->id;
               if($request->hasFile("images")){
@@ -165,6 +171,7 @@ class ProductController extends BaseController
             'selling_price'=>['required','numeric','gt:0'],
             'quantity'=>['required','numeric','gt:0'],
             'less_qty'=>['required','numeric','gt:0'],
+            'stock'=>['required','numeric','gt:0'],
             'tags'=>'required',
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'discount_price'=>['required','numeric'],
@@ -194,6 +201,7 @@ class ProductController extends BaseController
             'purchasing_price' => $request->input('purchasing_price'),
             'quantity' => $request->input('quantity'),
             'less_qty' => $request->input('less_qty'),
+            'stock' => $request->input('stock'),
             'tags' =>implode(',',$request->input('tags')),
             'cover' => $request->input('cover'),
             'discount_price'=>$request->input('discount_price'),
