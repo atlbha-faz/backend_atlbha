@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->longText('description');
             $table->time('duration');
-            $table->text('tags')->nullable();;
+            $table->text('tags')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');

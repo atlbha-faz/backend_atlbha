@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
            $table->bigInteger('websiteorder_id')->unsigned();
            $table->foreign('websiteorder_id')->references('id')->on('websiteorders')->onDelete('cascade');
+             $table->enum('status',['accept','pending','reject'])->default('pending');
             $table->timestamps();
         });
     }

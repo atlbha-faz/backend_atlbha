@@ -20,7 +20,11 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0,)->where('store_id',auth()->user()->store_id)->get());
+        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0,)
+        ->where('parent_id',null)
+        ->where('for','store')
+        ->OrWhere('store_id',null)
+        ->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع التصنيفات بنجاح','categories return successfully');

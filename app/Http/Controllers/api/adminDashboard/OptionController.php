@@ -12,7 +12,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class OptionController extends BaseController
 {
 
-   
+
   public function __construct()
   {
       $this->middleware('auth:api');
@@ -149,6 +149,7 @@ class OptionController extends BaseController
       'data.*.value' => 'required|array',
       'data.*.id' => 'nullable|numeric',
     ]);
+    //
     if ($validator->fails()) {
       # code...
       return $this->sendError(null, $validator->errors());
