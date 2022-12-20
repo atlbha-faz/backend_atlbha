@@ -24,10 +24,18 @@ class DatabaseSeeder extends Seeder
             ActivitySeeder::class,
             CountrySeeder::class,
             CitySeeder::class,
-            PermissionTableSeeder::class,
-            CreateUserSeeder::class,
-            PlanSeeder::class,
-            TemplateSeeder::class,
+            // PermissionTableSeeder::class,
+            // CreateUserSeeder::class,
+            // PlanSeeder::class,
+            // TemplateSeeder::class,
+            // PackageSeeder::class,
+            // PackagePlanSeeder::class,
+            // PackageTemplateSeeder::class,
+            PackageFactoryeSeeder::class,
+            TemplateFactoryeSeeder::class,
+            StoreSeeder::class,
+            StoreUserSeeder::class,
+
         ]);
     }
 }
