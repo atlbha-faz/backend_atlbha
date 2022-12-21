@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Template;
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
-class TemplateSeeder extends Seeder
+class StoreCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,9 +14,6 @@ class TemplateSeeder extends Seeder
      */
     public function run()
     {
-        Template::create([
-            'name' => 'القالب',
-            'parent_id'=> null
-        ]);
+        //
     }
 }
