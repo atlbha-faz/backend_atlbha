@@ -61,7 +61,7 @@ class WebsiteorderController extends BaseController
         $number = 0001;
         }else{
 
-        $number=$order_number->number;
+        $number=$order_number->order_numbergi;
         $number= ((int) $number) +1;
         }
         $websiteorder = Websiteorder::create([
@@ -69,9 +69,9 @@ class WebsiteorderController extends BaseController
             'order_number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
             'store_id'=> $request->store_id,
           ]);
-
-          $websiteorder->services_websiteorders()->attach(explode(',', $request->sevices));
-
+if($request->sevices!=null){
+          $websiteorder->services_websiteorders()->attach(explode(',', $request->sevices),['status'=>$request->status]);
+}
          $success['Websiteorders']=New WebsiteorderResource($websiteorder );
         $success['status']= 200;
 
@@ -152,7 +152,7 @@ class WebsiteorderController extends BaseController
 
            ]);
            if($request->sevices!=null){
-         $websiteorder->services_websiteorders()->sync(explode(',', $request->sevices));
+         $websiteorder->services_websiteorders()->sync(explode(',', $request->sevices),['status'=>$request->status]);
            }
            $success['websiteorders']=New WebsiteorderResource($websiteorder);
            $success['status']= 200;

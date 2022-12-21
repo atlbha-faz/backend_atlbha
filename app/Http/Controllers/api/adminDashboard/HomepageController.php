@@ -66,6 +66,7 @@ class HomepageController extends BaseController
             'sliderstatus3'=>'required|in:active,not_active',
             'store_id'=>'required|exists:stores,id',
         ]);
+
         if ($validator->fails())
         {
             return $this->sendError(null,$validator->errors());
@@ -90,12 +91,32 @@ class HomepageController extends BaseController
           ]);
 
 
-         $success['Homepages']=New HomepageResource($Homepage );
+        $Homepage = Homepage::updateOrCreate([
+            'store_id'   => null,
+            ],[
+           'logo' => $request->logo,
+           'panar1' => $request->panar1,
+           'panarstatus1' => $request->panarstatus1,
+           'panar2' => $request->panar2,
+           'panarstatus2' => $request->panarstatus2,
+           'panar3' => $request->panar3,
+           'panarstatus3' => $request->panarstatus3,
+           'clientstatus' => $request->clientstatus,
+           'commentstatus' => $request->commentstatus,
+           'slider1' => $request->slider1,
+           'sliderstatus1' => $request->sliderstatus1,
+           'slider2' => $request->slider2,
+           'sliderstatus2' => $request->sliderstatus2,
+           'slider3' => $request->slider3,
+           'sliderstatus3' => $request->sliderstatus3,
+    
+       ]);
+
+         $success['Homepages']=New HomepageResource($Homepage);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافةالصفحة بنجاح','Homepage Added successfully');
     }
-
     /**
      * Display the specified resource.
      *
@@ -220,6 +241,7 @@ class HomepageController extends BaseController
 
             return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
     }
+
 
     /**
      * Remove the specified resource from storage.

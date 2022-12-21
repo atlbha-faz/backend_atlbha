@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('order_number')->unique();
             $table->enum('type', ['store', 'service'])->default('store');
-            $table->enum('status',['accept','pending','reject'])->default('accept');
+            $table->enum('status',['accept','pending','reject'])->default('pending');
             $table->boolean('is_deleted')->default(0);
               $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
