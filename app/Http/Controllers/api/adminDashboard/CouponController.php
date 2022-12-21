@@ -23,7 +23,7 @@ class CouponController extends BaseController
      */
     public function index()
     {
-        $success['coupons']=CouponResource::collection(Coupon::where('is_deleted',0)->get());
+        $success['coupons']=CouponResource::collection(Coupon::where('is_deleted',0)->where('store_id',null)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع الكوبونات بنجاح','coupons return successfully');
@@ -72,7 +72,7 @@ class CouponController extends BaseController
             'user_redemptions' => $request->user_redemptions,
             'free_shipping' => $request->free_shipping,
             'exception_discount_product' => $request->exception_discount_product,
-            'store_id' => $request->store_id,
+            'store_id' => null,
           ]);
 
          $success['coupons']=New CouponResource($coupon);
@@ -175,7 +175,7 @@ class CouponController extends BaseController
                'user_redemptions' => $request->input('user_redemptions'),
                'free_shipping' => $request->input('free_shipping'),
                'exception_discount_product' => $request->input('exception_discount_product'),
-               'store_id' => $request->input('store_id'),
+               'store_id' => null,
            ]);
 
            $success['coupons']=New CouponResource($coupon);

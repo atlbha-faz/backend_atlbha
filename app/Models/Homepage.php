@@ -148,4 +148,3 @@ class Homepage extends Model
         return asset('storage/images/homepage') . '/' . $slider3;
     }
 }
-

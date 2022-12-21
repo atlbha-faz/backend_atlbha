@@ -42,7 +42,8 @@ Route::group([
 });
 
 // change status routers
-Route::prefix('/Admin')->group(function () {
+Route::middleware([AdminUser::class])->group(function(){
+    Route::prefix('/Admin')->group(function ()  {
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
@@ -128,11 +129,14 @@ Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController:
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
 Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
+// Route::post('homepage/{id?}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'update']);
+
 
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
 Route::resource('websiteorder',App\Http\Controllers\api\adminDashboard\WebsiteorderController::class);
 
+});
 });
 Auth::routes();
 Route::group(['middleware' => ['auth']], function() {
