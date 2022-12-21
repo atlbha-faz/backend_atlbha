@@ -29,10 +29,8 @@ return new class extends Migration
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
              $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
-            
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
-
             $table->string('device_token')->nullable();
             $table->boolean('verified')->default(0);
             $table->integer('code')->nullable();

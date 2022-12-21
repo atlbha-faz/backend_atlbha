@@ -20,5 +20,10 @@ class CountrySeeder extends Seeder
             'name_en' => 'KSA',
             'code' => '00966',
         ]);
+            Country::create([
+            'name' => 'الامارات',
+            'name_en' => 'UAE',
+            'code' => '00967',
+        ]);
     }
 }

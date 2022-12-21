@@ -69,7 +69,6 @@ class WebsiteorderController extends BaseController
             'order_number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
             'store_id'=> $request->store_id,
           ]);
-
 if($request->sevices!=null){
           $websiteorder->services_websiteorders()->attach(explode(',', $request->sevices),['status'=>$request->status]);
 }

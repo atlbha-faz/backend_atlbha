@@ -10,7 +10,6 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class CategoryController extends BaseController
 {
 
-     
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -24,7 +23,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0)->get());
+        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0)->where('parent_id',null)->where('for','etlobha')->where('store_id',null)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع التصنيفات بنجاح','categories return successfully');
@@ -56,7 +55,7 @@ class CategoryController extends BaseController
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-                'for'=>'required',
+                'for'=>'required|in:store,etlobha',
             ]);
             if ($validator->fails())
             {
@@ -76,9 +75,9 @@ class CategoryController extends BaseController
                 'name' => $request->name,
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'icon' => $request->icon,
-                'parent_id'=>$request->parent_id,
+                'parent_id'=>null,
                 'for'=>$request->for,
-                'store_id'=> $request->store_id,
+                'store_id'=> null,
               ]);
 
         }
@@ -111,7 +110,7 @@ class CategoryController extends BaseController
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'parent_id'=>$request->parent_id,
                 'for'=>$request->for,
-                'store_id'=>$request->store_id,
+                'store_id'=>null,
               ]);
 
 
@@ -208,7 +207,7 @@ class CategoryController extends BaseController
                'name' => $request->input('name'),
                 'icon' =>$request->input('icon'),
                 'for' =>$request->input('for'),
-                'store_id' =>$request->input('store_id')
+                'store_id' =>null
            ]);
            }
            else{
@@ -229,7 +228,7 @@ class CategoryController extends BaseController
                 'icon' =>$request->input('icon'),
                 'parent_id' =>$request->input('parent_id'),
                 'for' =>$request->input('for'),
-                'store_id' =>$request->input('store_id')
+                'store_id' =>null
             ]);
            }
 
