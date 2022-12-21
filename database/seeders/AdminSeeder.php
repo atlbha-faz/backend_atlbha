@@ -17,11 +17,21 @@ class AdminSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name' => 'Admin',
-            'user_name' => 'Admin',
+            'name' => 'superAdmin',
+            'user_name' => 'superAdmin',
             'email' =>'admin@gmail.com' ,
             'password'=>Hash::make('12345678'),
             'user_type' =>'admin',
+            'verified'=>1,
+            'store_id' => null
+           
+        ]);
+        User::create([
+            'name' => 'Admin',
+            'user_name' => 'Admin',
+            'email' =>'admin56@gmail.com' ,
+            'password'=>Hash::make('12345678'),
+            'user_type' =>'admin_employee',
             'verified'=>1,
             'store_id' => null
            
