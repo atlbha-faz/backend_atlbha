@@ -17,7 +17,7 @@ class PaymenttypeSeeder extends Seeder
     {
         Paymenttype::create([
             'name' => 'paypal',
-            'logo' => 'p.png',
+            'image' => 'p.png',
         ]);
     }
 }

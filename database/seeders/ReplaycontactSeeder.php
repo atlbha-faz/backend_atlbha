@@ -16,7 +16,7 @@ class ReplaycontactSeeder extends Seeder
     public function run()
     {
         Replaycontact::create([
-            'title' => 'الرد',
+            'subject' => 'الرد',
             'message' => 'صديقنا التاجر، باقي 20يوم على انتهاء اشتراكك
             تواصل مع الدعم الفني للحصول على كود خصم لتجديد اشتراكك',
             'contact_id' => 1,

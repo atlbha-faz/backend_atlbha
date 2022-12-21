@@ -17,7 +17,7 @@ class ProductSeeder extends Seeder
     {
         Product::create([
             'name' =>'سماعة هيدفدون أصلية',
-             'sku' => '123',
+             'sku' => '1223',
              'for'=>'etlobha',
             'description'=>' سماعة هيدفدون أصلية',
             'purchasing_price'=>10,
@@ -25,7 +25,7 @@ class ProductSeeder extends Seeder
             'quantity'=>1,
             'less_qty'=>10,
             'stock'=>20,
-            'cover'=>'image',
+            'cover'=>'product.png',
             'discount_price'=>0,
             'discount_percent'=>0,
             'category_id' =>1,
@@ -36,7 +36,7 @@ class ProductSeeder extends Seeder
 
             Product::create([
                 'name' =>'سماعة هيدفدون أصلية',
-                 'sku' => '123',
+                 'sku' => '1233',
                  'for'=>'store',
                 'description'=>' سماعة هيدفدون أصلية',
                 'purchasing_price'=>10,
@@ -44,7 +44,7 @@ class ProductSeeder extends Seeder
                 'quantity'=>1,
                 'less_qty'=>10,
                 'stock'=>20,
-                'cover'=>'image',
+                'cover'=>'product.png',
                 'discount_price'=>0,
                 'discount_percent'=>0,
                 'category_id' =>3,

@@ -24,8 +24,8 @@ class CouponSeeder extends Seeder
             'expire_date' => 2022_12_11,
             'total_redemptions' => 1,
             'user_redemptions' => 1,
-            'free_shipping' => null,
-            'exception_discount_product' => null,
+            'free_shipping' => 1,
+            'exception_discount_product' => 0,
             'store_id' => 1,
             
         ]);
@@ -37,8 +37,8 @@ class CouponSeeder extends Seeder
             'expire_date' => 2022_12_11,
             'total_redemptions' => 1,
             'user_redemptions' => 1,
-            'free_shipping' => null,
-            'exception_discount_product' => null,
+            'free_shipping' => 0,
+            'exception_discount_product' => 0,
             'store_id' => 1,
             
         ]);

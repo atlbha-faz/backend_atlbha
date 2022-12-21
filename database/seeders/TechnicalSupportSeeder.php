@@ -22,8 +22,8 @@ class TechnicalSupportSeeder extends Seeder
             'content' => 'ا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد
             النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة
             .عدد الحروف التى يولدها التطبيق',
-            'supportstatus' => 'جاري المعالجة ',
-            'type' => 'استفسار',
+            'supportstatus' => 'not_finished',
+            'type' => 'suggestion',
             'store_id' => 1,
             
         ]);
