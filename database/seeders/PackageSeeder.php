@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Template;
+use App\Models\Package;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class TemplateSeeder extends Seeder
+class PackageSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,9 +15,11 @@ class TemplateSeeder extends Seeder
      */
     public function run()
     {
-        Template::create([
-            'name' => 'القالب',
-            'parent_id'=> null
+         Package::create([
+             'name' => 'التاجر المبتدأ',
+          'monthly_price' =>350,
+          'yearly_price' =>1500,
+          'discount' => 100,
         ]);
     }
 }

@@ -15,10 +15,10 @@ class PlanSeeder extends Seeder
      */
     public function run()
     {
-        Plan::create([
+Plan::create([
             'name' => 'دعم فني ',
-        ]);
-        
+        ]);        
+
         Plan::create([
             'name' => ' منتج 100',
         ]);

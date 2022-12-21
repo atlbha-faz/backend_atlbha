@@ -10,7 +10,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebsiteorderController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -61,7 +61,7 @@ class WebsiteorderController extends BaseController
         $number = 0001;
         }else{
 
-        $number=$order_number->order_numbergi;
+        $number=$order_number->order_number;
         $number= ((int) $number) +1;
         }
         $websiteorder = Websiteorder::create([
@@ -148,10 +148,10 @@ if($request->sevices!=null){
            }
            $websiteorder->update([
                'type' => $request->input('type'),
-               
+
 
            ]);
-           if($request->sevices!=null){
+         if($request->sevices!=null){
          $websiteorder->services_websiteorders()->sync(explode(',', $request->sevices),['status'=>$request->status]);
            }
            $success['websiteorders']=New WebsiteorderResource($websiteorder);
