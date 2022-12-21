@@ -18,21 +18,21 @@ class CourseSeeder extends Seeder
         Course::create([
             'name'=>'الكورس الاول',
             'description' =>'الكورس الاول',
-            'duration' =>4,
+            'duration' =>'04:00:00',
             'tags' =>'كورس تسويقي , متجر ',
             'user_id'=>1
         ]);
          Course::create([
             'name'=>'الكورس الثاني',
             'description' =>'الكورس الثاني',
-            'duration' =>5,
+            'duration' =>'05:00:00',
             'tags' =>'كورس تسويقي , متجر ',
             'user_id'=>1
         ]);
          Course::create([
             'name'=>'الكورس الثالث',
             'description' =>'الكورس الثالث',
-            'duration' =>9,
+            'duration' =>'09:00:00',
             'tags' =>'كورس تسويقي , متجر ',
             'user_id'=>1
         ]);

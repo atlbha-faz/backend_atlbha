@@ -20,8 +20,8 @@ class CategorySeeder extends Seeder
          'name' => 'أجهزة كمبيوتر',
          'parent_id'=>null,
         'for'=>'etlobha',
-   
-  
+
+
         ]);
         Category::create([
             'number' =>0002,
@@ -37,15 +37,15 @@ class CategorySeeder extends Seeder
                  'parent_id'=>null,
                 'for'=>'store',
                 'store_id'=>1
-             
-          
+
+
                 ]);
                 Category::create([
                     'number' =>0004,
                      'name' => 'جوالات',
                      'parent_id'=>3,
                     'for'=>'store',
-                    'store_id'=>1   
+                    'store_id'=>1
                     ]);
 
                   Category::create([
@@ -54,15 +54,15 @@ class CategorySeeder extends Seeder
                          'parent_id'=>null,
                         'for'=>'store',
                         'store_id'=>2
-                     
-                  
+
+
                         ]);
      Category::create([
                             'number' =>0006,
                              'name' => 'العاب اطفال',
                              'parent_id'=>5,
                             'for'=>'store',
-                            'store_id'=>2  
+                            'store_id'=>2
                             ]);
     }
 }

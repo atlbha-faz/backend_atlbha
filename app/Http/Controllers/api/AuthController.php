@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\API\BaseController as BaseController;
 
@@ -29,7 +30,7 @@ class AuthController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-
+//dd(Hash::make($request->password));
 
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password])

@@ -18,16 +18,16 @@ class ServiceSeeder extends Seeder
         Service::create([
             'name' => 'التصميم',
             'description' =>'التصميم',
-            'file'=>'aa',
+            'file'=>'desgin.png',
             'price'=>12
-           
+
         ]);
         Service::create([
             'name' => 'الدعم الفني',
             'description' =>'الدعم الفني',
-            'file'=>'aa',
+            'file'=>'tsupport.png',
             'price'=>12
-           
+
         ]);
     }
 }

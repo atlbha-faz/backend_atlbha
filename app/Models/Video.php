@@ -14,17 +14,17 @@ class Video extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    //  public function setVideoAttribute($video)
-    // {
-    //     if (!is_null($video)) {
-    //         if (gettype($video) != 'string') {
-    //             $i = $video->store('videos/video', 'public');
-    //             $this->attributes['video'] = $video->hashName();
-    //         } else {
-    //             $this->attributes['video'] = $video;
-    //         }
-    //     }
-    // }
+     public function setVideoAttribute($video)
+    {
+        if (!is_null($video)) {
+            if (gettype($video) != 'string') {
+                $i = $video->store('videos/video', 'public');
+                $this->attributes['video'] = $video->hashName();
+            } else {
+                $this->attributes['video'] = $video;
+            }
+        }
+    }
 
     public function getVideoAttribute($video)
     {
