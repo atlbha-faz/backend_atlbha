@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class StoreUserSeeder extends Seeder
@@ -22,7 +22,7 @@ class StoreUserSeeder extends Seeder
         'name' => 'roqia',
         'user_name' =>'roqia',
         'email' =>'roqia@gmail.com',
-        'password' => Hash::make('12345678'),
+        'password' =>'12345678',
         'gender' =>'female',
         'phonenumber' => 05056665,
         'image'=>'image.jpg',
@@ -37,7 +37,7 @@ class StoreUserSeeder extends Seeder
         'name' => 'rawaa',
         'user_name' =>'rawaa',
         'email' =>'rawaa@gmail.com',
-        'password' => Hash::make('12345678'),
+        'password' =>'12345678',
         'gender' =>'female',
         'phonenumber' => 05056665,
         'image'=>'image.jpg',

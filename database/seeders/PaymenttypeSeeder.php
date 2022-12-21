@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Template;
+use App\Models\Paymenttype;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class TemplateSeeder extends Seeder
+class PaymenttypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,9 +15,9 @@ class TemplateSeeder extends Seeder
      */
     public function run()
     {
-        Template::create([
-            'name' => 'القالب',
-            'parent_id'=> null
+        Paymenttype::create([
+            'name' => 'paypal',
+            'logo' => 'p.png',
         ]);
     }
 }
