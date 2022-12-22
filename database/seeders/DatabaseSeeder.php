@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             TemplateFactoryeSeeder::class,
             AdminSeeder::class,
             StoreSeeder::class,
-            AdminSeeder::class,
+            // AdminSeeder::class,
             StoreUserSeeder::class,
             CategorySeeder ::class,
             CurrencySeeder::class,
