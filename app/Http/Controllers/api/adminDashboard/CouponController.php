@@ -51,7 +51,7 @@ class CouponController extends BaseController
         $validator =  Validator::make($input ,[
             'code'=>'required|string|max:255',
             'discount_type'=>'required|in:fixed,percent',
-            'total_price'=>['required_if:discount_type,fixed','numeric','gt:0'],
+            'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
             'expire_date' =>['required','date'],
             'total_redemptions'=>['required','numeric'],
@@ -154,7 +154,7 @@ class CouponController extends BaseController
            $validator =  Validator::make($input ,[
             'code'=>'required|string|max:255',
             'discount_type'=>'required|in:fixed,percent',
-            'total_price'=>['required_if:discount_type,fixed','numeric','gt:0'],
+            'total_price'=>['required','numeric|gt:0'],
             'discount'=>['required','numeric','gt:0'],
             'expire_date' =>['required','date'],
             'total_redemptions'=>['required','numeric'],

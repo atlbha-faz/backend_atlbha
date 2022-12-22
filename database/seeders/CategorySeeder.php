@@ -18,6 +18,7 @@ class CategorySeeder extends Seeder
        Category::create([
         'number' =>0001,
          'name' => 'أجهزة كمبيوتر',
+         'icon'=>'cat.png',
          'parent_id'=>null,
         'for'=>'store',
 
@@ -34,6 +35,7 @@ class CategorySeeder extends Seeder
             Category::create([
                 'number' =>0003,
                  'name' => 'أجهزة كمبيوتر',
+                 'icon'=>'cat.png',
                  'parent_id'=>null,
                 'for'=>'store',
                 'store_id'=>1
@@ -52,6 +54,7 @@ class CategorySeeder extends Seeder
                         'number' =>0005,
                          'name' => 'هدايا والعاب',
                          'parent_id'=>null,
+                         'icon'=>'cat.png',
                         'for'=>'store',
                         'store_id'=>2
 
