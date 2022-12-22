@@ -47,6 +47,21 @@ class StoreUserSeeder extends Seeder
         'verified'=>1,
         'store_id'=>2,
       ]);
+       User::create([
+        'user_id'=>5,
+        'name' => 'ali',
+        'user_name' =>'ali',
+        'email' =>'ali@gmail.com',
+        'password' =>'12345678',
+        'gender' =>'male',
+        'phonenumber' => 05056665,
+        'image'=>'image.jpg',
+        'user_type'=>'customer',
+        'country_id' => 1,
+        'city_id'=> 1,
+        'verified'=>1,
+        'store_id'=>2,
+      ]);
 
 }
 

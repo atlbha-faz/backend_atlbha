@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UnitResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CourseResource extends JsonResource
@@ -26,7 +27,7 @@ class CourseResource extends JsonResource
             'updated_at' => (string) $this->updated_at,
             'user' => New UserResource($this->user),
             'count' => $this->countVideo($this->id),
-            'unit' =>$this->unit
+            'unit' =>UnitResource::collection($this->unit)
         ];
         }
 }

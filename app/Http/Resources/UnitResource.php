@@ -22,7 +22,7 @@ class UnitResource extends JsonResource
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'course' => New CourseResource($this->course),
+            'videos' => VideoResource::collection($this->video),
             'unitvideo' => $this->countVideo($this->id)
         ];
     }

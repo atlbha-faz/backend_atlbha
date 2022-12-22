@@ -16,6 +16,7 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
+
         User::create([
             'user_id'=>1,
             'name' => 'superAdmin',
@@ -42,7 +43,8 @@ class AdminSeeder extends Seeder
             'city_id'=> 1,
             'verified'=>1,
             'store_id' => null
-           
+
         ]);
+
     }
 }
