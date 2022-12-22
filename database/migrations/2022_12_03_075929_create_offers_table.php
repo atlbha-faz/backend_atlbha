@@ -28,7 +28,7 @@ return new class extends Migration
             $table->decimal('discount_percent')->nullable();
             $table->double('discount_value_offer2')->nullable();
             $table->enum('offer_apply',['all','selected_product','selected_category','selected_payment'])->nullable();
-            $table->enum('offer_type_minimum',['amount','percent'])->nullable();
+            $table->enum('offer_type_minimum',['purchase_amount','products_quantity'])->nullable();
             $table->decimal('offer_amount_minimum')->nullable();
             $table->boolean('coupon_status')->nullable();
             $table->double('discount_value_offer3')->nullable();

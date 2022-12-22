@@ -184,7 +184,7 @@ class CourseController extends BaseController
             # code...
             return $this->sendError(null,$validator->errors());
         }
-          $cours->update([
+          $course->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'duration' => $request->input('duration'),

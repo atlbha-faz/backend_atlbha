@@ -22,35 +22,71 @@ class ProductSeeder extends Seeder
             'description'=>' سماعة هيدفدون أصلية',
             'purchasing_price'=>10,
             'selling_price'=>10,
-            'quantity'=>1,
+            'quantity'=>10,
             'less_qty'=>10,
             'stock'=>20,
-            'cover'=>'image',
+            'cover'=>'headphone.png',
             'discount_price'=>0,
             'discount_percent'=>0,
             'category_id' =>1,
             'subcategory_id'=>2,
-         
-               
+
+
             ]);
 
             Product::create([
                 'name' =>'سماعة هيدفدون أصلية',
-                 'sku' => '123',
+                 'sku' => '124',
                  'for'=>'store',
                 'description'=>' سماعة هيدفدون أصلية',
                 'purchasing_price'=>10,
                 'selling_price'=>10,
-                'quantity'=>1,
+                'quantity'=>10,
                 'less_qty'=>10,
                 'stock'=>20,
-                'cover'=>'image',
+                'cover'=>'headphone.png',
                 'discount_price'=>0,
                 'discount_percent'=>0,
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1
-                   
+
+                ]);
+                Product::create([
+                'name' =>'جوال',
+                 'sku' => '125',
+                 'for'=>'store',
+                'description'=>' جوال',
+                'purchasing_price'=>10,
+                'selling_price'=>10,
+                'quantity'=>10,
+                'less_qty'=>10,
+                'stock'=>20,
+                'cover'=>'phone.jpg',
+                'discount_price'=>0,
+                'discount_percent'=>0,
+                'category_id' =>3,
+                'subcategory_id'=>4,
+                'store_id'=>1
+
+                ]);
+                Product::create([
+                'name' =>'لعبة اطفال',
+                 'sku' => '126',
+                 'for'=>'store',
+                'description'=>' لعبة اطفال',
+                'purchasing_price'=>10,
+                'selling_price'=>10,
+                'quantity'=>10,
+                'less_qty'=>10,
+                'stock'=>20,
+                'cover'=>'game.jpg',
+                'discount_price'=>0,
+                'discount_percent'=>0,
+                'category_id' =>5,
+                'subcategory_id'=>6,
+                'store_id'=>2
+
                 ]);
     }
 }

@@ -14,26 +14,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-     
+
+
         $this->call([
             ActivitySeeder::class,
             CountrySeeder::class,
             CitySeeder::class,
             PermissionTableSeeder::class,
             CreateUserSeeder::class,
-            PlanSeeder::class,
-            TemplateSeeder::class,
-            PackageSeeder::class,
-            PackagePlanSeeder::class,
-            PackageTemplateSeeder::class,
             PackageFactoryeSeeder::class,
             TemplateFactoryeSeeder::class,
             StoreSeeder::class,
-            StoreUserSeeder::class,
             AdminSeeder::class,
+            StoreUserSeeder::class,
             CategorySeeder ::class,
             ProductSeeder::class,
             ServiceSeeder::class,
+            CourseSeeder::class,
+            UnitSeeder::class,
+            VideoSeeder::class,
+            ExplainvideoSeeder::class,
+            ClientSeeder::class,
+            OptiontSeeder::class,
+            CommentSeeder::class,
+            ReplayCommentSeeder::class,
+            HomepageSeeder::class,
+            OfferSeeder::class,
         ]);
     }
 }
