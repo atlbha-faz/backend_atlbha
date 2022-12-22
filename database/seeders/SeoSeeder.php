@@ -1,0 +1,28 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Seo;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+class SeoSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        Seo::create([
+            'index_page_title' => 'عنوان الصفحة الرئيسية',
+            'index_page_description' => 'وصف الصفحة الرئيسية ',
+            'key_words' => 'الكلمات المفتاحية ',
+            'show_pages' => 'short_link',
+            'link' => 'ربط جوجل انليتكس Analytics Goo',
+            'robots' => 'إعدادات ملف Robots ',
+
+        ]);
+    }
+}

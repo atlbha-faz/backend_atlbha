@@ -14,7 +14,7 @@ class Platform extends Model
     {
         if (!is_null($logo)) {
             if (gettype($logo) != 'string') {
-                $i = $logo->store('logos/generalshop', 'public');
+                $i = $logo->store('images/generalshop', 'public');
                 $this->attributes['logo'] = $logo->hashName();
             } else {
                 $this->attributes['logo'] = $logo;
@@ -27,7 +27,6 @@ class Platform extends Model
         if (is_null($logo)) {
             return   asset('assets/media/man.png');
         }
-        return asset('storage/logos/generalshop') . '/' . $logo;
+        return asset('storage/images/generalshop') . '/' . $logo;
     }
 }
-
