@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-     
+
+
         $this->call([
             ActivitySeeder::class,
             CountrySeeder::class,
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
             TemplateFactoryeSeeder::class,
             AdminSeeder::class,
             StoreSeeder::class,
+            AdminSeeder::class,
             StoreUserSeeder::class,
             CategorySeeder ::class,
             CurrencySeeder::class,
@@ -44,6 +46,16 @@ class DatabaseSeeder extends Seeder
             ShippingtypeSeeder::class,
             website_socialmediaSeeder::class,
             WebsiteorderSeeder::class,
+            CourseSeeder::class,
+            UnitSeeder::class,
+            VideoSeeder::class,
+            ExplainvideoSeeder::class,
+            ClientSeeder::class,
+            OptiontSeeder::class,
+            CommentSeeder::class,
+            ReplayCommentSeeder::class,
+            HomepageSeeder::class,
+            OfferSeeder::class
         ]);
     }
 }
