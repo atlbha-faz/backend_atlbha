@@ -13,7 +13,6 @@ class CouponSeeder extends Seeder
      *
      * @return void
      */
-    //'code','discount_type','total_price','discount','expire_date','total_redemptions','user_redemptions','free_shipping','exception_discount_product','store_id'
     public function run()
     {
         Coupon::create([
