@@ -20,7 +20,7 @@ class CategorySeeder extends Seeder
          'name' => 'أجهزة كمبيوتر',
          'icon'=>'cat.png',
          'parent_id'=>null,
-        'for'=>'etlobha',
+        'for'=>'store',
 
 
         ]);
@@ -28,8 +28,8 @@ class CategorySeeder extends Seeder
             'number' =>0002,
              'name' => 'جوالات',
              'parent_id'=>1,
-            'for'=>'etlobha',
-         
+            'for'=>'store',
+
             ]);
 
             Category::create([
