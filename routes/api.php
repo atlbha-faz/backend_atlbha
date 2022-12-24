@@ -74,6 +74,7 @@ Route::post('changePlaneStatus/{id}', [App\Http\Controllers\api\adminDashboard\P
 Route::post('changePackageStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
 Route::post('changeTemplateStatus/{id}', [App\Http\Controllers\api\adminDashboard\TemplateController::class,'changeStatus']);
 Route::post('changeCouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\CouponController::class,'changeStatus']);
+Route::post('changePackagecouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackagecouponController::class,'changeStatus']);
 Route::post('changeNotificationStatus/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class,'changeStatus']);
 Route::post('changeNotification_typeStatus/{id}', [App\Http\Controllers\api\adminDashboard\Notification_typesController::class,'changeStatus']);
 Route::post('changeSectionStatus/{id}', [App\Http\Controllers\api\adminDashboard\SectionController::class,'changeStatus']);
@@ -81,6 +82,7 @@ Route::post('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard
 Route::post('changeReplaycontactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycontactController::class,'changeStatus']);
 Route::post('changeContactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ContactController::class,'changeStatus']);
 Route::post('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class,'changeStatus']);
+Route::post('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class,'changeStatus']);
 Route::post('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeStatus']);
 Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
 Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
@@ -118,12 +120,14 @@ Route::resource('plan',App\Http\Controllers\api\adminDashboard\PlanController::c
 Route::resource('package',App\Http\Controllers\api\adminDashboard\PackageController::class);
 Route::resource('template',App\Http\Controllers\api\adminDashboard\TemplateController::class);
 Route::resource('coupons',App\Http\Controllers\api\adminDashboard\CouponController::class);
+Route::resource('packagecoupon',App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
 Route::resource('notification',App\Http\Controllers\api\adminDashboard\NotificationController::class);
 Route::resource('notification_type',App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
 Route::resource('section',App\Http\Controllers\api\adminDashboard\SectionController::class);
 Route::resource('contact',App\Http\Controllers\api\adminDashboard\ContactController::class);
 Route::resource('replaycontact',App\Http\Controllers\api\adminDashboard\ReplaycontactController::class);
 Route::resource('seo',App\Http\Controllers\api\adminDashboard\SeoController::class);
+Route::resource('setting',App\Http\Controllers\api\adminDashboard\SettingController::class);
 Route::resource('store',App\Http\Controllers\api\adminDashboard\StoreController::class);
 Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController::class);
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
@@ -183,10 +187,6 @@ Route::resource('seo',App\Http\Controllers\api\storeDashboard\SeoController::cla
 Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
 Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
-
-
-
-
 
 
 });
