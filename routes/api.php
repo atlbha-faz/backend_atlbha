@@ -133,8 +133,8 @@ Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController:
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
 Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
-// Route::post('homepage/{id?}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'update']);
-
+Route::post('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
+ 
 
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
