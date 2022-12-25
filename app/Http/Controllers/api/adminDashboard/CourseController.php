@@ -202,7 +202,7 @@ class CourseController extends BaseController
       }
     }
 
-    foreach ($request->data as $data) {
+     foreach ($request->data as $data) {
       $units[] = Unit::updateOrCreate([
         'id' => $data['id'],
         'course_id' => $course_id,

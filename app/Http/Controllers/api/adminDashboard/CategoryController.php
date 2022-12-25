@@ -15,7 +15,7 @@ class CategoryController extends BaseController
         $this->middleware('auth:api');
     }
 
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -48,8 +48,8 @@ class CategoryController extends BaseController
     public function store(Request $request)
     {
 
-        if($request->parent_id == null)
-        {
+        // if($request->parent_id == null)
+        // {
 
             $input = $request->all();
             $validator =  Validator::make($input ,[
@@ -65,7 +65,8 @@ class CategoryController extends BaseController
             $cat=Category::orderBy('id', 'desc')->first();
           if(is_null($cat)){
           $number = 0001;
-          }else{
+          }
+          else{
 
           $number=$cat->number;
           $number= ((int) $number) +1;
@@ -80,41 +81,24 @@ class CategoryController extends BaseController
                 'store_id'=> null,
               ]);
 
-        }
-        else{
+if($request->data){
+    foreach($request->data as $data)
+    {
 
-
-            $input = $request->all();
-            $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255',
-                'for'=>'required|in:store,etlobha',
-                'parent_id'=>'required'
-            ]);
-            if ($validator->fails())
-            {
-                return $this->sendError(null,$validator->errors());
-            }
-
-            $cat=Category::orderBy('id', 'desc')->first();
-        if(is_null($cat)){
-          $number = 0001;
-        }else{
-
-          $number=$cat->number;
-          $number= ((int) $number) +1;
-        }
-
-
-            $category =Category::create([
-                'name' => $request->name,
-                'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
-                'parent_id'=>$request->parent_id,
-                'for'=>$request->for,
-                'store_id'=>null,
+        $subcategory= new Category([
+            'name' => $data['name'],
+            'parent_id' => $category->id,
+            'for'=> $data['for'],
+            'store_id'=> null,
               ]);
 
+        $subcategory->save();
 
     }
+}
+
+
+    // }
     // dd($category );
     $success['categories']=New CategoryResource($category);
     $success['status']= 200;
@@ -186,10 +170,11 @@ class CategoryController extends BaseController
      */
     public function update(Request $request, Category $category)
     {
+          $category_id=$category->id;
         if (is_null($category) ||  $category->is_deleted==1){
             return $this->sendError("التصنيف غير موجودة"," Category is't exists");
        }
-        if($request->parent_id == null){
+        // if($request->parent_id == null){
 
             $input = $request->all();
            $validator =  Validator::make($input ,[
@@ -209,29 +194,32 @@ class CategoryController extends BaseController
                 'for' =>$request->input('for'),
                 'store_id' =>null
            ]);
-           }
-           else{
-            $input = $request->all();
-            $validator =  Validator::make($input ,[
-             'name'=>'required|string|max:255',
-             'for'=>'required',
-             'parent_id'=>'required'
 
-            ]);
-            if ($validator->fails())
-            {
-                # code...
-                return $this->sendError(null,$validator->errors());
-            }
-            $category->update([
-                'name' => $request->input('name'),
-                'icon' =>$request->input('icon'),
-                'parent_id' =>$request->input('parent_id'),
-                'for' =>$request->input('for'),
-                'store_id' =>null
-            ]);
-           }
+       $subcategory = Category::where('parent_id', $category_id);
 
+
+       // dd($request->$data['id']);
+        $subcategories_id = Category::where('parent_id', $category_id)->pluck('id')->toArray();
+        foreach ($subcategories_id as $oid) {
+        if (!(in_array($oid, array_column($request->data, 'id')))) {
+            $subcategory = Category::query()->find($oid);
+            $subcategory->update(['is_deleted' => 1]);
+        }
+        }
+
+     foreach ($request->data as $data) {
+      $subcategories[] = Category::updateOrCreate([
+        // 'id' => $data['id'],
+        'parent_id' => $category_id,
+        'for'=>'store',
+        'store_id'=> auth()->user()->store_id,
+        'is_deleted' => 0,
+      ], [
+        'name' => $data['name'],
+        'for' => $data['for'],
+
+      ]);
+    }
            $success['categories']=New CategoryResource($category);
            $success['status']= 200;
 
