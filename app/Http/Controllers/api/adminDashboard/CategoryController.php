@@ -179,7 +179,7 @@ if($request->data){
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'for'=>'required',
 
            ]);
