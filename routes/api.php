@@ -134,7 +134,8 @@ Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductControl
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
 Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
 Route::post('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
- 
+Route::get('registration_status_show', [App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_status_show']);
+Route::post('registration_status_update', [App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_status_update']);
 
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 

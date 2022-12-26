@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\StoreResource;
@@ -142,7 +141,7 @@ class StoreController extends BaseController
           $user->update([
                'store_id' =>  $store->id]);
 
-          $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon'=>$request->packagecoupon]);
+          $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
 
          $success['stors']=New StoreResource($store);
@@ -205,7 +204,6 @@ class StoreController extends BaseController
      */
     public function update(Request $request, Store $store)
     {
-
 
                 $user =$store->user;
 
@@ -289,7 +287,7 @@ class StoreController extends BaseController
                'end_at' => $request->input('end_at'),
                'period' => $request->input('period'),
            ]);
-           $store->packages()->sync(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon'=>$request->packagecoupon]);
+           $store->packages()->sync(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
            $success['stores']=New StoreResource($store);
            $success['status']= 200;
