@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\StoreResource;
@@ -205,7 +204,6 @@ class StoreController extends BaseController
      */
     public function update(Request $request, Store $store)
     {
-
 
                 $user =$store->user;
 

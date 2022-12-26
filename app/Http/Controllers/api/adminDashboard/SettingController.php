@@ -24,7 +24,7 @@ class SettingController extends BaseController
     public function index()
    {
 
-        $success['settings']=SettingResource::collection(Setting::where('is_deleted',0)->get());
+        $success['settings']=SettingResource::collection(Setting::where('is_deleted',0)->first());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الاعدادات بنجاح','settings return successfully');
@@ -40,51 +40,7 @@ class SettingController extends BaseController
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-{
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'description'=>'required|string',
-            'link'=>'required|url',
-            'email'=>'required|email|unique:settings',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'icon'=>'required',
-            'address'=>'required|string',
-            'country_id'=>'required|exists:countries,id',
-            'city_id'=>'required|exists:cities,id',
 
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $setting = Setting::create([
-            'name' => $request->name,
-            'description'=>$request->description,
-            'link' =>$request->link,
-            'email' => $request->email,
-            'phoneNumber' => $request->phoneNumber,
-            'logo'=>$request->logo,
-            'icon' =>$request->icon,
-            'address' => $request->address,
-            'country_id' =>$request->country_id,
-            'city_id' => $request->city_id,
-          ]);
-
-
-         $success['settings']=New SettingResource( $setting);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة الاعدادات بنجاح',' setting Added successfully');
-    }
 
     /**
      * Display the specified resource.
@@ -98,7 +54,6 @@ class SettingController extends BaseController
          if (is_null($setting) || $setting->is_deleted == 1){
          return $this->sendError("الاعدادات غير موجودة","settings is't exists");
          }
-
 
         $success['settings']=New SettingResource($setting);
         $success['status']= 200;
@@ -160,7 +115,7 @@ class SettingController extends BaseController
              'city_id' => $request->input('city_id'),
 
          ]);
-         //$country->fill($request->post())->update();
+
             $success['settings']=New SettingResource($setting);
             $success['status']= 200;
 
@@ -193,17 +148,32 @@ class SettingController extends BaseController
      * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Http\Response
      */
-    public function destroy($setting)
-    {
-       $setting = Setting::query()->find($setting);
-         if (is_null($setting) || $setting->is_deleted==1){
-         return $this->sendError("الاعدادات غير موجودة","setting is't exists");
-         }
-        $setting->update(['is_deleted' => 1]);
 
-        $success['setting']=New SettingResource($setting);
+    public function registration_status_show()
+    {
+        $success['registration_status']=Setting::where('is_deleted',0)->pluck('registration_status')->first();
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم حذف الاعدادات بنجاح','setting deleted successfully');
+         return $this->sendResponse($success,'تم عرض الاعدادات بنجاح','registration_status shown successfully');
+    }
+
+
+    public function registration_status_update(Request $request)
+    {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+           'registration_status'=>'required|in:stop_registration,registration_with_admin,registration_without_admin'
+        ]);
+        if ($validator->fails())
+        {
+           # code...
+           return $this->sendError(null,$validator->errors());
+        }
+        $setting = Setting::where('is_deleted',0)->first();
+        $setting->update(['registration_status' => $request->registration_status]);
+        $success['registration_status']=Setting::where('is_deleted',0)->pluck('registration_status')->first();
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل الاعدادات بنجاح','registration_status update successfully');
     }
 }
