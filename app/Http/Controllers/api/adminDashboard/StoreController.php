@@ -58,10 +58,10 @@ class StoreController extends BaseController
             'store_name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'store_email'=>'required|email|unique:stores',
-            'password'=>'required',
+            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'domain'=>'required|url',
             'icon' =>'required',
-            'phonenumber' =>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'description' =>'required',
             'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
@@ -142,7 +142,7 @@ class StoreController extends BaseController
           $user->update([
                'store_id' =>  $store->id]);
 
-          $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon'=>$request->packagecoupon]);
+          $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
 
          $success['stors']=New StoreResource($store);
@@ -219,10 +219,10 @@ class StoreController extends BaseController
             'store_name'=>'required|string|max:255',
             'email'=>'required|email',
             'store_email'=>'required|email',
-            'password'=>'required',
+            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'domain'=>'required|url',
             'icon' =>'required',
-            'phonenumber' =>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'description' =>'required',
             'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
             'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
@@ -289,7 +289,7 @@ class StoreController extends BaseController
                'end_at' => $request->input('end_at'),
                'period' => $request->input('period'),
            ]);
-           $store->packages()->sync(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon'=>$request->packagecoupon]);
+           $store->packages()->sync(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
            $success['stores']=New StoreResource($store);
            $success['status']= 200;

@@ -10,13 +10,13 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProfileController  extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
     }
 
-    
+
     public function index()
     {
         $success['users']=new UserResource(auth()->user());
@@ -25,7 +25,7 @@ class ProfileController  extends BaseController
          return $this->sendResponse($success,'تم  عرض بنجاح','user showed successfully');
     }
 
-    
+
     public function update(Request $request)
     {
         $user =auth()->user();
@@ -37,7 +37,7 @@ class ProfileController  extends BaseController
             'email'=>'required|email|unique:users,email,'.$user->id,
             'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'confirm_password' => 'required_if:password,required|same:password',
-            'phonenumber'=>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         ]);
         if ($validator->fails())
@@ -57,7 +57,7 @@ if(!is_null($request->password)){
             'password' => $request->input('password'),
         ]);
 }
-       
+
 
         $success['users']=New UserResource($user);
         $success['status']= 200;
@@ -66,5 +66,5 @@ if(!is_null($request->password)){
 
     }
 
-    
+
 }

@@ -10,7 +10,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class SettingController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -54,7 +54,7 @@ class SettingController extends BaseController
             'description'=>'required|string',
             'link'=>'required|url',
             'email'=>'required|email|unique:settings',
-            'phoneNumber'=>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'icon'=>'required',
             'address'=>'required|string',
@@ -135,7 +135,7 @@ class SettingController extends BaseController
             'description'=>'required|string',
             'link'=>'required|url',
              'email'=>'required|email|unique:settings',
-            'phoneNumber'=>'required|numeric',
+           'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'icon'=>['required','image','mimes:ico','max:2048'],
             'address'=>'required|string',
