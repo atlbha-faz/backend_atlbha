@@ -11,7 +11,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class TechnicalSupportController extends BaseController
 {
-   
+
   public function __construct()
   {
       $this->middleware('auth:api');
@@ -51,7 +51,7 @@ class TechnicalSupportController extends BaseController
       $input = $request->all();
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
-            'phoneNumber'=>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'content'=>'required|max:1000',
             'type'=>'required|in:complaint,enquiry,suggestion',
             'supportstatus'=>'required|in:finished,not_finished,pending',
@@ -127,7 +127,7 @@ class TechnicalSupportController extends BaseController
          $input = $request->all();
          $validator =  Validator::make($input ,[
           'title'=>'required|string|max:255',
-            'phoneNumber'=>'required|numeric',
+           'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'content'=>'required|max:1000',
             'type'=>'required|in:complaint,enquiry,suggestion',
             'supportstatus'=>'required|in:finished,not_finished,pending',

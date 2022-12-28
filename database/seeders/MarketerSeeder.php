@@ -20,7 +20,7 @@ class MarketerSeeder extends Seeder
             'email'=>'ahmed@gmail.com',
             'image'=> 'man.png',
             'password'=>'12864',
-            'phoneNumber'=> '55076453',
+            'phoneNumber'=> '0096655076453',
             'snapchat'=>'snapchat',
             'facebook'=>'facebook',
             'twiter'=>'twiter',

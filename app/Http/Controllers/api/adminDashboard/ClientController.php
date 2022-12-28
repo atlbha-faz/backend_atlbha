@@ -11,7 +11,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class ClientController extends BaseController
 {
 
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -56,7 +56,8 @@ class ClientController extends BaseController
             'last_name'=>'required|string|max:255',
             'email'=>'required|email|unique:clients',
             'gender'=>'required|in:male,femal',
-            'phonenumber'=>'required|numeric',
+           'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
@@ -137,7 +138,8 @@ class ClientController extends BaseController
             'last_name'=>'required|string|max:255',
             'email'=>'required|email|unique:clients',
             'gender'=>'required|in:male,femal',
-            'phonenumber'=>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',

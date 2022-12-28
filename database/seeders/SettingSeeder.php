@@ -13,7 +13,7 @@ class SettingSeeder extends Seeder
      *
      * @return void
      */
-  
+
     public function run()
     {
         Setting::create([
@@ -21,7 +21,7 @@ class SettingSeeder extends Seeder
             'description' => 'اهم الاعدادات للموقع',
             'link' => 'http:setting.com',
             'email' => 'site@gmail.com',
-            'phoneNumber' => '55065623',
+            'phoneNumber' => '0096650775433',
             'logo' => 'icon.png',
             'icon' => 'icon.png',
             'address' => 'jeddah KSA',

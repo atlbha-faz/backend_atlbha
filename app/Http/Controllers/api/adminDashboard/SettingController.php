@@ -10,7 +10,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class SettingController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -40,7 +40,7 @@ class SettingController extends BaseController
         //
     }
 
-  
+
 
     /**
      * Display the specified resource.
@@ -90,7 +90,7 @@ class SettingController extends BaseController
             'description'=>'required|string',
             'link'=>'required|url',
              'email'=>'required|email|unique:settings',
-            'phoneNumber'=>'required|numeric',
+           'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'icon'=>['required','image','mimes:ico','max:2048'],
             'address'=>'required|string',
@@ -115,7 +115,7 @@ class SettingController extends BaseController
              'city_id' => $request->input('city_id'),
 
          ]);
- 
+
             $success['settings']=New SettingResource($setting);
             $success['status']= 200;
 
@@ -148,7 +148,7 @@ class SettingController extends BaseController
      * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Http\Response
      */
-   
+
     public function registration_status_show()
     {
         $success['registration_status']=Setting::where('is_deleted',0)->pluck('registration_status')->first();
@@ -156,8 +156,8 @@ class SettingController extends BaseController
 
          return $this->sendResponse($success,'تم عرض الاعدادات بنجاح','registration_status shown successfully');
     }
-    
-    
+
+
     public function registration_status_update(Request $request)
     {
         $input = $request->all();

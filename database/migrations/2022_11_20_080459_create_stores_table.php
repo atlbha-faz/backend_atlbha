@@ -39,8 +39,7 @@ return new class extends Migration
             $table->boolean('is_deleted')->default(0);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('activity_id')->nullable();
-            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
+           
             $table->unsignedBigInteger('package_id')->nullable();
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->unsignedBigInteger('country_id')->nullable();

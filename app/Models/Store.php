@@ -34,9 +34,15 @@ class Store extends Model
         return $this->belongsTo(Country::class, 'country_id', 'id');
 
     }
-    public function activity()
-    {
-        return $this->belongsTo(Activity::class, 'activity_id', 'id');
+    public function activities()
+     {
+          return $this->belongsToMany(
+         Activity::class,
+        'activities_stores',
+        'store_id',
+        'activity_id'
+
+        );
     }
      public function packages()
     {
