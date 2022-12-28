@@ -11,8 +11,14 @@ class Activity extends Model
          protected $fillable = ['name','status','is_deleted'];
 
 
- public function store()
+ public function stores()
     {
-        return $this->hasMany(Store::class);
-    }
+         return $this->belongsToMany(
+         Store::class,
+        'activities_stores',
+        'activity_id',
+        'store_id'
+        );
+  }
 }
+

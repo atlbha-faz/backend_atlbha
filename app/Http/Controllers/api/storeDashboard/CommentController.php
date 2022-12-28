@@ -50,9 +50,10 @@ class CommentController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'comment_text'=>'required|string|max:255',
-            'rateing'=>'required|numeric',
+            'rateing'=>'required|numeric|lt:5',
+            'comment_for'=>'required|in:product,store',
             'product_id'=>'required|exists:products,id',
-            // 'user_id'=>'required|exists:users,id'
+
 
 
         ]);
@@ -63,6 +64,7 @@ class CommentController extends BaseController
         $comment = Comment::create([
             'comment_text' => $request->comment_text,
             'rateing' => $request->rateing,
+            'comment_for' => $request->comment_for,
             'product_id' => $request->product_id,
             'user_id' => auth()->user()->id,
 
@@ -123,6 +125,7 @@ class CommentController extends BaseController
          $validator =  Validator::make($input ,[
            'comment_text'=>'required|string|max:255',
             'rateing'=>'required|numeric',
+            'comment_for'=>'required|in:product,store',
             'product_id'=>'required|exists:products,id',
             // 'user_id'=>'required|exists:users,id'
          ]);
@@ -134,6 +137,7 @@ class CommentController extends BaseController
          $comment->update([
             'comment_text' => $request->input('comment_text'),
             'rateing' => $request->input('rateing'),
+            'comment_for' => $request->comment_for,
             'product_id' => $request->input('product_id'),
         //    'user_id' => $request->input('user_id'),
          ]);

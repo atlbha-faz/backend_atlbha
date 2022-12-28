@@ -188,7 +188,10 @@ Route::resource('seo',App\Http\Controllers\api\storeDashboard\SeoController::cla
 Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
 Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
-
+Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
+Route::resource('replaycomment',App\Http\Controllers\api\adminDashboard\ReplaycommentController::class);
+Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\CommentController::class,'changeStatus']);
+Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycommentController::class,'changeStatus']);
 
 });
 });

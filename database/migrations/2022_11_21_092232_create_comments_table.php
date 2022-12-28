@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->text('comment_text');
             $table->integer('rateing');
+            $table->enum('comment_for',['product','store'])->default('product');
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->unsignedBigInteger('user_id')->nullable();
