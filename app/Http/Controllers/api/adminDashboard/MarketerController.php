@@ -10,7 +10,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class MarketerController extends BaseController
 {
-   
+
   public function __construct()
   {
       $this->middleware('auth:api');
@@ -54,7 +54,8 @@ class MarketerController extends BaseController
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'gender'=>'required|in:male,female',
-            'phoneNumber'=>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+
             'snapchat'=>'required|url',
             'facebook'=>'required|url',
             'twiter'=>'required|url',
@@ -143,7 +144,8 @@ class MarketerController extends BaseController
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'gender'=>'required|in:male,female',
-            'phoneNumber'=>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+
             'snapchat'=>'required',
             'facebook'=>'required',
             'twiter'=>'required',

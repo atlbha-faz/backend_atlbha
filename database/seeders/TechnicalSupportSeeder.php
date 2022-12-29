@@ -13,19 +13,19 @@ class TechnicalSupportSeeder extends Seeder
      *
      * @return void
      */
- 
+
     public function run()
     {
         TechnicalSupport::create([
             'title' => 'خدمات السيرفر',
-            'phoneNumber' => '9663222335',
+            'phoneNumber' => '0096650775433',
             'content' => 'ا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد
             النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة
             .عدد الحروف التى يولدها التطبيق',
             'supportstatus' => 'not_finished',
             'type' => 'suggestion',
             'store_id' => 1,
-            
+
         ]);
     }
 }

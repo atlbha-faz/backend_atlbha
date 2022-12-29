@@ -11,7 +11,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class UserController  extends BaseController
 {
 
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -57,7 +57,7 @@ class UserController  extends BaseController
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'gender'=>'required|in:male,female',
-            'phoneNumber'=>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
@@ -78,7 +78,7 @@ class UserController  extends BaseController
              'image' => $request->image,
              'country_id' =>$request->country_id,
              'city_id' =>$request->city_id,
-             
+
           ]);
 
          $success['activities']=New UserResource($user );
@@ -100,9 +100,9 @@ class UserController  extends BaseController
              }
             $success['users']=New UserResource($user);
             $success['status']= 200;
-    
+
              return $this->sendResponse($success,'تم  عرض بنجاح','user showed successfully');
-            }    
+            }
 
     /**
      * Show the form for editing the specified resource.
@@ -135,7 +135,7 @@ class UserController  extends BaseController
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'gender'=>'required|in:male,female',
-            'phonenumber'=>'required|numeric',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
@@ -151,7 +151,7 @@ class UserController  extends BaseController
             'password' => $request->input('password'),
             'gender' => $request->input('gender'),
             'phoneNumber' => $request->input('phoneNumber'),
-      
+
              'image' => $request->input('image'),
              'country_id' =>$request->input('country_id'),
              'city_id' =>$request->input('city_id'),
@@ -173,7 +173,7 @@ class UserController  extends BaseController
      */
     public function destroy($id)
     {
-        
+
         $user =User::query()->find($id);
         if (is_null($user)||$user->is_deleted==1){
             return $this->sendError("المستخدم غير موجودة","User is't exists");

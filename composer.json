@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "cviebrock/eloquent-sluggable": "^9.0",
         "cyrildewit/eloquent-viewable": "^6.1",
         "guzzlehttp/guzzle": "^7.2",
         "hardevine/shoppingcart": "^3.1",

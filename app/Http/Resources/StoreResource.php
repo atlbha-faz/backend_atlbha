@@ -34,7 +34,7 @@ class StoreResource extends JsonResource
         'logo'=>$this->logo,
         'entity_type'=>$this->entity_type,
         'user' =>New UserResource($this->user),
-        'activity' =>New ActivityResource($this->activity),
+        'activity' =>$this->activities($this->id),
         'package' =>New PackageResource($this->package),
         'category' =>New CategoryResource($this->category),
         'country' => New CountryResource($this->country),
@@ -43,7 +43,7 @@ class StoreResource extends JsonResource
         'period'=>$this->period($this->id),
         'left'=>$this->left($this->id),
         'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+        'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
     ];
     }
 }
