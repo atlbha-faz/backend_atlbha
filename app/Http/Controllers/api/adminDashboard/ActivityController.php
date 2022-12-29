@@ -51,7 +51,7 @@ class ActivityController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255'
+            'name'=>'required|string|max:255|unique:activities,name',
         ]);
         if ($validator->fails())
         {
@@ -102,7 +102,7 @@ class ActivityController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255'
+                'name'=>'required|string|max:255|unique:activites,name,'.$activity->id,
 
            ]);
            if ($validator->fails())
