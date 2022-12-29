@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('store_email')->unique();
             $table->string('domain');
             $table->string('icon');
+            $table->enum('special',['yes','no'])->default('no');
             $table->string('phonenumber');
             $table->string('description');
             $table->string('business_license');
@@ -40,10 +41,6 @@ return new class extends Migration
              $table->enum('special',['yes','no'])->default('no');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-//
-            $table->unsignedBigInteger('activity_id')->nullable();
-            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
-            //
             $table->unsignedBigInteger('package_id')->nullable();
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->unsignedBigInteger('country_id')->nullable();

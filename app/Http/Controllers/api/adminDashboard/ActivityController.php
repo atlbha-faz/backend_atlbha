@@ -59,6 +59,7 @@ class ActivityController extends BaseController
         }
         $activity = Activity::create([
             'name' => $request->name,
+            
           ]);
 
 

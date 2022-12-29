@@ -133,7 +133,10 @@ Route::resource('offer',App\Http\Controllers\api\adminDashboard\OfferController:
 Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductController::class);
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
 Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
-Route::get('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
+Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
+//Route::delete('etlobha/{id}',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
+
+Route::post('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
 Route::get('registration_status_show', [App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_status_show']);
 Route::post('registration_status_update', [App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_status_update']);
 

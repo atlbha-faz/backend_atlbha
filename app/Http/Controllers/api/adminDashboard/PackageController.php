@@ -54,6 +54,8 @@ class PackageController extends BaseController
             'monthly_price'=>'required|numeric|gt:0',
             'yearly_price'=>'required|numeric|gt:0',
             'discount'=>'required|numeric|gt:0',
+            'plan'=>'required|array',
+            'template'=>'required|array',
          
         ]);
         if ($validator->fails())
@@ -67,8 +69,8 @@ class PackageController extends BaseController
              'discount' => $request->discount,
 
           ]);
-          $package->plans()->attach(explode(',', $request->plan));
-         $package->templates()->attach(explode(',', $request->template));
+          $package->plans()->attach($request->plan);
+         $package->templates()->attach($request->template);
 
          $success['packages']=New PackageResource($package);
         $success['status']= 200;
@@ -129,6 +131,8 @@ class PackageController extends BaseController
             'monthly_price'=>'required|numeric|gt:0',
             'yearly_price'=>'required|numeric|gt:0',
             'discount'=>'required|numeric|gt:0',
+            'plan'=>'required|array',
+            'template'=>'required|array',
            
          ]);
          if ($validator->fails())
@@ -146,12 +150,12 @@ class PackageController extends BaseController
 
 
          if($request->plan!=null){
-           $package->plans()->sync(explode(',', $request->plan));
+           $package->plans()->sync($request->plan);
            }
            if($request->template!=null){
-           $package->templates()->sync(explode(',', $request->template));
+           $package->templates()->sync($request->template);
            }
-         //$country->fill($request->post())->update();
+      
             $success['packages']=New PackageResource($package);
             $success['status']= 200;
 
