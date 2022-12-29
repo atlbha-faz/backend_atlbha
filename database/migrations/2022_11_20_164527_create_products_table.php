@@ -17,13 +17,15 @@ return new class extends Migration
           $table->id();
             $table->string('name');
             $table->string('sku')->unique();
+            $table->string('slug');
             $table->enum('for',['store','etlobha'])->default('etlobha');
+            $table->enum('special',['yes','no'])->default('no');
             $table->longText('description');
             $table->double('purchasing_price');
             $table->double('selling_price');
-            $table->integer('quantity');
-            $table->integer('less_qty');
-            $table->integer('stock');
+            $table->integer('quantity')->nullable();
+            $table->integer('less_qty')->nullable();
+            $table->integer('stock')->nullable();
             $table->string('cover');
             $table->text("tags")->nullable();
             $table->double('discount_price')->default(0);

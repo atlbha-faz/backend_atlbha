@@ -69,6 +69,15 @@ class Product extends Model
        return $this->hasMany(Option::class);
     }
 
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'sku'
+            ]
+        ];
+    }
+
     public function offers()
   {
      return $this->belongsToMany(

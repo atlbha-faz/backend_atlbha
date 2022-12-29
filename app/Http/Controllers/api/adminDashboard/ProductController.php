@@ -12,7 +12,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -92,7 +92,7 @@ class ProductController extends BaseController
             'category_id' => $request->category_id,
             'subcategory_id' => implode(',', $request->subcategory_id),
             'store_id' => $request->store_id,
-            
+
           ]);
  $productid =$product->id;
               if($request->hasFile("images")){
@@ -148,7 +148,7 @@ class ProductController extends BaseController
         $product =Product::query()->find($product);
 
         $rating =$product->comment->avg('rateing');
-        
+
         $success['rateing']= $rating;
         $success['status']= 200;
          return $this->sendResponse($success,'تم عرض التقييم بنجاح',' rateing showrd successfully');
