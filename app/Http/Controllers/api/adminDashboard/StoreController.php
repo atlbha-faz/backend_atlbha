@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Models\Note;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\NoteResource;
 use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -118,9 +120,12 @@ class StoreController extends BaseController
           ]);
 
           $user->update([
-         'store_id' =>  $store->id]);
-          $store->activities()->attach($request->activity_id);
-          $store->packages()->attach($request->package_id,['start_at'=>  $store->created_at,'end_at'=>"2022-12-29 15:43:36",'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
+               'store_id' =>  $store->id]);
+
+           $date = strtotime($store->created_at."+ '.$request->period.' months");
+          $end_at=date("Y-m-d",$date);
+          $store->activities()->attach($request->activity);
+          $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
 
          $success['stors']=New StoreResource($store);
@@ -149,18 +154,6 @@ class StoreController extends BaseController
         return $this->sendResponse($success,'تم عرض المتجر  بنجاح','store showed successfully');
     }
 
-    public function rateing($store)
-    {
-      $products=Product::where('store_id',$store)->get();
-      $rating=$products->comment->avg('rateing');
-
-       // $rating =$product->comment->avg('rateing');
-
-        $success['rateing']= $rating;
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم عرض التقييم بنجاح',' rateing showrd successfully');
-
-    }
 
 
     /**
@@ -251,8 +244,10 @@ class StoreController extends BaseController
                'period' => $request->input('period'),
                'periodtype' => $request->input('periodtype'),
            ]);
-             $store->activities()->attach($request->activity_id);
-          $store->packages()->attach($request->package_id,['start_at'=>  $store->created_at,'end_at'=>"2022-12-29 15:43:36",'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
+             $store->activities()->sync($request->activity_id);
+           $date = strtotime($store->created_at."+ '.$request->period.' months");
+           $end_at=date("Y-m-d",$date);
+           $store->packages()->sync($request->package_id,['start_at'=>$store->created_at,'end_at'=>$end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
            $success['stores']=New StoreResource($store);
            $success['status']= 200;

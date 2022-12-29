@@ -18,8 +18,11 @@ class Store extends Model
 
      public function rate($id){
         $product_id=Product::select('id')->where('store_id',$id)->get();
-        return Comment::whereIn('product_id',$product_id)->avg('rateing');
+        return Comment::whereIn('product_id',$product_id)->where('for','store')->avg('rateing');
      }
+     protected $casts = [
+        'activity_id' => 'array',
+    ];
 
      public function products()
     {
@@ -103,8 +106,6 @@ class Store extends Model
         'paymenttypes_stores',
         'store_id',
         'paymenttype_id'
-
-
         );
     }
 
