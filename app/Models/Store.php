@@ -19,6 +19,9 @@ class Store extends Model
         $product_id=Product::select('id')->where('store_id',$id)->get();
         return Comment::whereIn('product_id',$product_id)->avg('rateing');
      }
+     protected $casts = [
+        'activity_id' => 'array',
+    ];
 
      public function products()
     {
@@ -34,10 +37,10 @@ class Store extends Model
         return $this->belongsTo(Country::class, 'country_id', 'id');
 
     }
-    public function activity()
-    {
-        return $this->belongsTo(Activity::class, 'activity_id', 'id');
-    }
+    // public function activity()
+    // {
+    //     return $this->belongsTo(Activity::class, 'activity_id', 'id');
+    // }
      public function packages()
     {
           return $this->belongsToMany(
@@ -87,8 +90,6 @@ class Store extends Model
         'paymenttypes_stores',
         'store_id',
         'paymenttype_id'
-
-
         );
     }
 

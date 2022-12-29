@@ -137,7 +137,7 @@ class StoreController extends BaseController
             'period'=>$request->period,
 
           ]);
-        //    dd($store->id);
+   
           $user->update([
                'store_id' =>  $store->id]);
 

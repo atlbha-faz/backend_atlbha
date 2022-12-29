@@ -96,6 +96,7 @@ class SettingController extends BaseController
             'address'=>'required|string',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
+    
          ]);
          if ($validator->fails())
          {
@@ -113,6 +114,7 @@ class SettingController extends BaseController
              'address' => $request->input('address'),
              'country_id' => $request->input('country_id'),
              'city_id' => $request->input('city_id'),
+           
 
          ]);
  
