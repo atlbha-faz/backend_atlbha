@@ -19,19 +19,19 @@ return new class extends Migration
             $table->string('store_name');
             $table->string('store_email')->unique();
             $table->string('domain');
-            $table->string('icon');
+            // $table->string('icon');
             $table->string('phonenumber');
             $table->string('description');
-            $table->string('business_license');
-            $table->string('ID_file');
+            // $table->string('business_license');
+            // $table->string('ID_file');
             $table->enum('accept_status',['pending','accepted','rejected'])->default('pending');
-            $table->string('snapchat');
-            $table->string('facebook');
-            $table->string('twiter');
-            $table->string('youtube');
-            $table->string('instegram');
-            $table->string('logo');
-            $table->string('entity_type');
+            $table->string('snapchat')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('twiter')->nullable();
+            $table->string('youtube')->nullable();
+            $table->string('instegram')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('entity_type')->nullable();
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();
             $table->integer('period')->nullable();
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->boolean('is_deleted')->default(0);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-           
+
             $table->unsignedBigInteger('package_id')->nullable();
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->unsignedBigInteger('country_id')->nullable();
@@ -47,6 +47,10 @@ return new class extends Migration
             $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
 
+             $table->unsignedBigInteger('user_country_id')->nullable();
+            $table->foreign('user_country_id')->references('id')->on('countries')->onDelete('cascade');
+            $table->unsignedBigInteger('user_city_id')->nullable();
+            $table->foreign('user_city_id')->references('id')->on('cities')->onDelete('cascade');
             $table->timestamps();
         });
     }

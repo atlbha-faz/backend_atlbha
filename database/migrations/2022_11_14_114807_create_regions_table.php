@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::create('regions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('name_en');
-            $table->integer('code');
-            $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
             $table->unsignedBigInteger('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
+            $table->enum('status',['active','not_active'])->default('active');
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cities');
+        Schema::dropIfExists('regions');
     }
 };

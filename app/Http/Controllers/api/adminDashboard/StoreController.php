@@ -92,11 +92,11 @@ class StoreController extends BaseController
         $user = User::create([
             'name' => $request->name,
             'email'=>$request->email,
-            'user_id' =>$request->user_id,
+            // 'user_id' =>$request->user_id,
             'user_name' => $request->user_name,
             'user_type' => "store",
             'password'=>$request->password,
-            'gender' =>$request->gender,
+            // 'gender' =>$request->gender,
             'phonenumber' => $request->phonenumber,
             'image' => $request->image,
             'country_id' =>$request->country_id,
