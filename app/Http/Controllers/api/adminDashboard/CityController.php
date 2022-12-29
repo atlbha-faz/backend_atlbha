@@ -11,7 +11,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class CityController extends BaseController
 {
 
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -55,7 +55,7 @@ class CityController extends BaseController
             'name'=>'required|string|max:255',
             'name_en'=>'required|string|max:255',
             'code' =>'required',
-            'country_id'=>'required|exists:countries,id'
+            'region_id'=>'required|exists:regions,id'
         ]);
         if ($validator->fails())
         {
@@ -65,7 +65,7 @@ class CityController extends BaseController
             'name' => $request->name,
             'name_en'=>$request->name_en,
             'code' =>$request->code,
-            'country_id' => $request->country_id,
+            'region_id' => $request->region_id,
           ]);
 
          $success['cities']=New CityResource($city);
@@ -137,7 +137,7 @@ class CityController extends BaseController
              'name'=>'required|string|max:255',
             'name_en'=>'required|string|max:255',
             'code' =>'required',
-             'country_id'=>'required|exists:countries,id'
+             'region_id'=>'required|exists:regions,id'
         ]);
         if ($validator->fails())
         {
@@ -148,7 +148,7 @@ class CityController extends BaseController
             'name' => $request->input('name'),
             'name_en' => $request->input('name_en'),
             'code' => $request->input('code'),
-            'country_id' => $request->input('country_id')
+            'region_id' => $request->input('region_id')
         ]);
 
         $success['cities']=New CityResource($city);

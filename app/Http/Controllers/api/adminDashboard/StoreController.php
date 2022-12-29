@@ -71,7 +71,7 @@ class StoreController extends BaseController
             'youtube' =>'required|url',
             'instegram' =>'required|url',
             'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'entity_type' =>'required',
+            'entity_type' =>'required|array',
             'activity_id' =>'required',
             'package_id' =>'required|exists:packages,id',
             'start_at'=>'required|date',
@@ -92,11 +92,11 @@ class StoreController extends BaseController
         $user = User::create([
             'name' => $request->name,
             'email'=>$request->email,
-            'user_id' =>$request->user_id,
+            // 'user_id' =>$request->user_id,
             'user_name' => $request->user_name,
             'user_type' => "store",
             'password'=>$request->password,
-            'gender' =>$request->gender,
+            // 'gender' =>$request->gender,
             'phonenumber' => $request->phonenumber,
             'image' => $request->image,
             'country_id' =>$request->country_id,
@@ -123,7 +123,7 @@ class StoreController extends BaseController
              'instegram' =>$request->instegram,
             'logo' => $request->logo,
             'entity_type' => $request->entity_type,
-             'activity_id' =>implode(',',$request->activity_id),
+            //  'activity_id' =>implode(',',$request->activity_id),
             'package_id' => $request->package_id,
             'user_id' => $userid,
             'start_at'=>$request->start_at,
@@ -139,8 +139,8 @@ class StoreController extends BaseController
           ]);
         //    dd($store->id);
           $user->update([
-               'store_id' =>  $store->id]);
-
+         'store_id' =>  $store->id]);
+          $store->activities()->attach($request->activity);
           $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
 
@@ -332,5 +332,31 @@ class StoreController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم حذف المتجر بنجاح','store deleted successfully');
+    }
+
+    public function addNote(Request $request)
+     {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'subject'=>'required|string|max:255',
+            'details'=>'required|string',
+            'store_id'=>'required'
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $note = Note::create([
+            'subject' => $request->subject,
+            'details' => $request->details,
+            'store_id' => $request->store_id,
+            'product_id'=>null
+          ]);
+
+
+         $success['notes']=New NoteResource($note );
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة ملاحظة بنجاح','note Added successfully');
     }
 }

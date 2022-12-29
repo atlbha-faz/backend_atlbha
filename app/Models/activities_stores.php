@@ -10,4 +10,7 @@ class activities_stores extends Model
     use HasFactory;
       protected $table="activities_stores";
     protected $fillable = ['activity_id','store_id'];
+        protected $casts = [
+    'activity_id' => 'array',
+];
 }

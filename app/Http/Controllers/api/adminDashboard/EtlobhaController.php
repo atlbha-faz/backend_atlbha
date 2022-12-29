@@ -3,12 +3,14 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Image;
-use App\Models\Product;
 use App\Models\Option;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
+
 class EtlobhaController extends BaseController
 {
     public function __construct()
@@ -17,12 +19,12 @@ class EtlobhaController extends BaseController
     }
     public function index()
     {
-        {
+
             $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('for','etlobha')->where('store_id',null)->get());
              $success['status']= 200;
 
               return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','products return successfully');
-    }
+
 }
 
 
@@ -156,13 +158,12 @@ class EtlobhaController extends BaseController
            if($request->hasFile("images")){
               $files=$request->file("images");
 
-            //   $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
-            //   foreach ($image_id as $oid) {
-            //     if (!(in_array($oid, array_column($files, 'id')))) {
-            //       $image = Image::query()->find($oid);
-            //       $image->update(['is_deleted' => 1]);
-            //     }
-            //   }
+              $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
+              foreach ($image_id as $oid) {
+                  $image = Image::query()->find($oid);
+                  $image->update(['is_deleted' => 1]);
+
+              }
 
 
               foreach($files as $file){
@@ -205,7 +206,7 @@ class EtlobhaController extends BaseController
               $success['status']= 200;
 
               return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
-          }
+}
 
 
           public function changeSpecial($id)
