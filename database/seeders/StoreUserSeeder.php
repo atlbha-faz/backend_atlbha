@@ -45,7 +45,7 @@ class StoreUserSeeder extends Seeder
         'country_id' => 1,
         'city_id'=> 1,
         'verified'=>1,
-        'store_id'=>2,
+        'store_id'=>1,
       ]);
        User::create([
         'user_id'=>5,
@@ -60,7 +60,7 @@ class StoreUserSeeder extends Seeder
         'country_id' => 1,
         'city_id'=> 1,
         'verified'=>1,
-        'store_id'=>2,
+        'store_id'=>1,
       ]);
 
 }

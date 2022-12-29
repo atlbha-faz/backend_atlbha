@@ -267,4 +267,30 @@ class ProductController extends BaseController
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
     }
+
+     public function addNote(Request $request)
+     {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'subject'=>'required|string|max:255',
+            'details'=>'required|string',
+            'store_id'=>'required'
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $note = Note::create([
+            'subject' => $request->subject,
+            'details' => $request->details,
+            'store_id' => $request->store_id,
+            'product_id'=>$request->product_id,
+          ]);
+
+
+         $success['notes']=New NoteResource($note );
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة ملاحظة بنجاح','note Added successfully');
+    }
 }

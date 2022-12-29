@@ -190,4 +190,9 @@ class Store extends Model
         return asset('storage/images/storebusiness_license') . '/' . $business_license;
     }
 
+      public function note()
+    {
+        return $this->hasMany(Note::class);
+    }
+
 }

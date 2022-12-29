@@ -140,6 +140,14 @@ Route::post('registration_status_update', [App\Http\Controllers\api\adminDashboa
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
 Route::resource('websiteorder',App\Http\Controllers\api\adminDashboard\WebsiteorderController::class);
+Route::resource('stock',App\Http\Controllers\api\adminDashboard\StockController::class);
+Route::get('stockdeleteall',[App\Http\Controllers\api\adminDashboard\StockController::class,'deleteall']);
+Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
+Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::class);
+Route::post('productchangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'changeSpecial']);
+Route::get('activitydeleteall',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'deleteall']);
+Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\StotrController::class,'addNote']);
+Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
 
 });
 });

@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('store_name');
             $table->string('store_email')->unique();
             $table->string('domain');
-            // $table->string('icon');
+            $table->string('icon');
             $table->string('phonenumber');
             $table->string('description');
-            // $table->string('business_license');
-            // $table->string('ID_file');
+            $table->string('business_license');
+            $table->string('ID_file');
             $table->enum('accept_status',['pending','accepted','rejected'])->default('pending');
             $table->string('snapchat')->nullable();
             $table->string('facebook')->nullable();
@@ -37,9 +37,13 @@ return new class extends Migration
             $table->integer('period')->nullable();
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
+             $table->enum('special',['yes','no'])->default('no');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+//
+            $table->unsignedBigInteger('activity_id')->nullable();
+            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
+            //
             $table->unsignedBigInteger('package_id')->nullable();
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->unsignedBigInteger('country_id')->nullable();
