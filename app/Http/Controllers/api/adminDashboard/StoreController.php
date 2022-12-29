@@ -54,34 +54,22 @@ class StoreController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
+            'user_name'=>'required|string|max:255',
             'store_name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'store_email'=>'required|email|unique:stores',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'domain'=>'required|url',
-            'icon' =>'required',
+            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'description' =>'required',
-            'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'accept_status' =>'required|in:pending,accepted,rejected',
-            'snapchat' =>'required|url',
-            'facebook' =>'required|url',
-            'twiter' =>'required|url',
-            'youtube' =>'required|url',
-            'instegram' =>'required|url',
-            'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'entity_type' =>'required|array',
-            'activity_id' =>'required',
-            'package_id' =>'required|exists:packages,id',
-            'start_at'=>'required|date',
-            'end_at'=>'required|date',
+            'activity_id' =>'required|array',
+            'package_id' =>'required',
             'period'=>'required|numeric',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-            'start_at'=>'required|date',
-            'end_at'=>'required|date',
-            'period'=>'required|numeric',
+            'user_country_id'=>'required|exists:countries,id',
+            'user_city_id'=>'required|exists:cities,id',
+            'periodtype'=>'required|in:month,year',
 
         ]);
 
@@ -92,15 +80,13 @@ class StoreController extends BaseController
         $user = User::create([
             'name' => $request->name,
             'email'=>$request->email,
-            // 'user_id' =>$request->user_id,
             'user_name' => $request->user_name,
             'user_type' => "store",
             'password'=>$request->password,
-            // 'gender' =>$request->gender,
-            'phonenumber' => $request->phonenumber,
+            'userphonenumber' => $request->phonenumber,
             'image' => $request->image,
-            'country_id' =>$request->country_id,
-            'city_id' =>$request->city_id,
+            'country_id' =>$request->user_country_id,
+            'city_id' =>$request->user_city_id,
           ]);
 
           $userid =$user->id;
@@ -123,25 +109,18 @@ class StoreController extends BaseController
              'instegram' =>$request->instegram,
             'logo' => $request->logo,
             'entity_type' => $request->entity_type,
-            //  'activity_id' =>implode(',',$request->activity_id),
             'package_id' => $request->package_id,
             'user_id' => $userid,
-            'start_at'=>$request->start_at,
-            'end_at'=>$request->end_at,
             'period'=>$request->period,
-            'accept_status' => $request->accept_status,
+            'periodtype'=>$request->periodtype,
             'country_id' => $request->country_id,
-            'city_id' => $request->city_id,
-             'start_at'=>$request->start_at,
-            'end_at'=>$request->end_at,
-            'period'=>$request->period,
-
+            'city_id' => $request->city_id
           ]);
-        //    dd($store->id);
+
           $user->update([
          'store_id' =>  $store->id]);
-          $store->activities()->attach($request->activity);
-          $store->packages()->attach(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
+          $store->activities()->attach($request->activity_id);
+          $store->packages()->attach($request->package_id,['start_at'=>  $store->created_at,'end_at'=>"2022-12-29 15:43:36",'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
 
          $success['stors']=New StoreResource($store);
