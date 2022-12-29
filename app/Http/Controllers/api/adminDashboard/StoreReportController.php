@@ -18,22 +18,22 @@ class StoreReportController extends  BaseController
     }
     public function index(Request $request)
     {
-        $success['count of stores']=Store::where('is_deleted',0)->count();
-        $success['average of stores']=((Store::whereYear('created_at', Carbon::now()->year)
+        $success['count_of_stores']=Store::where('is_deleted',0)->count();
+        $success['average_of_stores']=((Store::where('is_deleted',0)->whereYear('created_at', Carbon::now()->year)
         ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->count())*100)."%";
-         $success['active of stores']=Store::where('status','active')->count();
-         $success['not_active of stores']=Store::where('status','not_active')->count();
-         $success['latest stores']=Store::latest()->take(5)->get();
-         $success['last 24 hours of stores']=Store::where('created_at', '>=', Carbon::now()->subDay())->count();
-         $success['last 24 hours of pending orders']=Websiteorder::where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','pending')->count();
-         $success['last 24 hours of complete orders']=Websiteorder::where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','accept')->count();
+         $success['active_of_stores']=Store::where('is_deleted',0)->where('status','active')->count();
+         $success['not_active_of_stores']=Store::where('is_deleted',0)->where('status','not_active')->count();
+         $success['latest_stores']=Store::latest()->take(5)->get();
+         $success['last_24_hours_of_stores']=Store::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->count();
+         $success['last_24_hours_of_pending_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','pending')->count();
+         $success['last_24_hours_of_complete_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','accept')->count();
 
         
         $array_store = array(); 
 
         for($i = 1; $i <= 12; $i++){ 
-            $array_store[$i]["active"]= Store::where('status','active')->whereYear('created_at', $request->year)->whereMonth('created_at', $i)->count();
-            $array_store[$i]["not_active"]= Store::where('status','not_active')->whereYear('created_at', $request->year)->whereMonth('created_at', $i)->count();
+            $array_store[$i]["active"]= Store::where('is_deleted',0)->where('status','active')->whereYear('created_at', $request->year)->whereMonth('created_at', $i)->count();
+            $array_store[$i]["not_active"]= Store::where('is_deleted',0)->where('status','not_active')->whereYear('created_at', $request->year)->whereMonth('created_at', $i)->count();
         }
         $success['array_store']= $array_store;
         
