@@ -51,7 +51,7 @@ class PlatformController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'logo'=>'required|string|max:255',
+            'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'link' =>'required|url',
         ]);
         if ($validator->fails())
@@ -137,7 +137,7 @@ class PlatformController extends BaseController
             $input = $request->all();
            $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
-               'logo'=>'required|string|max:255',
+               'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
                'link' =>'required|url'
            ]);
            if ($validator->fails())
