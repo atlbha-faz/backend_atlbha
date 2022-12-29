@@ -19,15 +19,15 @@ class CitySeeder extends Seeder
             'name' => 'جده',
             'name_en' => 'jeddh',
             'code' => '00966',
-            'country_id'=>1
+            'region_id'=>1
         ]);
         City::create([
             'name' => 'الرياض',
             'name_en' => 'Riyadh',
             'code' => '00966',
-            'country_id'=>1
+            'region_id'=>1
         ]);
 
-      
+
     }
 }

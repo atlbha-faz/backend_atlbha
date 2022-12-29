@@ -11,13 +11,13 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class ActivityController extends BaseController
 {
 
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
     }
 
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -51,7 +51,7 @@ class ActivityController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255'
+            'name'=>'required|string|max:255|unique:activities,name',
         ]);
         if ($validator->fails())
         {
@@ -75,34 +75,8 @@ class ActivityController extends BaseController
      * @param  \App\Models\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function show($activity)
-    {
-        $activity= Activity::query()->find($activity);
-        if (is_null($activity) || $activity->is_deleted==1){
-               return $this->sendError("النشاط غير موجودة","Activity is't exists");
-               }
-              $success['activities']=New ActivityResource($activity);
-              $success['status']= 200;
 
-               return $this->sendResponse($success,'تم عرض النشاط بنجاح','Activity showed successfully');
-    }
-    public function changeStatus($id)
-    {
-        $activity = Activity::query()->find($id);
-        if (is_null($activity) || $activity->is_deleted==1){
-         return $this->sendError("النشاط غير موجودة","Activity is't exists");
-         }
-        if($activity->status === 'active'){
-            $activity->update(['status' => 'not_active']);
-     }
-    else{
-        $activity->update(['status' => 'active']);
-    }
-        $success['activities']=New ActivityResource($activity);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة النشاط بنجاح',' Activity status updared successfully');
 
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -129,7 +103,7 @@ class ActivityController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255'
+                'name'=>'required|string|max:255|unique:activites,name,'.$activity->id,
 
            ]);
            if ($validator->fails())
@@ -154,17 +128,21 @@ class ActivityController extends BaseController
      * @param  \App\Models\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function destroy($activity)
+ public function deleteall(Request $request)
     {
-        $activity =Activity::query()->find($activity);
-        if (is_null($activity)||$activity->is_deleted==1){
-            return $this->sendError("النشاط غير موجودة","activity is't exists");
+
+
+            $activities =Activity::whereIn('id',$request->id)->get();
+           foreach($activities as $activity)
+           {
+             if (is_null($activity) || $activity->is_deleted==1){
+                   return $this->sendError("النشاط غير موجودة"," Activity is't exists");
+       }
+               $activity->update(['is_deleted' => 1]);
+        $success['activities']= New ActivityResource($activity);
+
             }
-           $activity->update(['is_deleted' => 1]);
-
-           $success['activities']=New ActivityResource($activity);
-           $success['status']= 200;
-
-            return $this->sendResponse($success,'تم حذف النشاط بنجاح','Activity deleted successfully');
+               $success['status']= 200;
+                return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
     }
 }

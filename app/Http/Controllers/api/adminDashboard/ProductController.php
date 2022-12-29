@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Models\Note;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Http\Resources\NoteResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -266,5 +268,31 @@ class ProductController extends BaseController
                $success['products']= ProductResource::collection($products);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+    }
+
+     public function addNote(Request $request)
+     {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'subject'=>'required|string|max:255',
+            'details'=>'required|string',
+            'store_id'=>'required'
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $note = Note::create([
+            'subject' => $request->subject,
+            'details' => $request->details,
+            'store_id' => $request->store_id,
+            'product_id'=>$request->product_id,
+          ]);
+
+
+         $success['notes']=New NoteResource($note );
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة ملاحظة بنجاح','note Added successfully');
     }
 }

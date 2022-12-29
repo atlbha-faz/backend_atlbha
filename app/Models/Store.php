@@ -13,7 +13,7 @@ class Store extends Model
 {
     use HasFactory;
      protected $fillable = ['store_name','store_email','domain','icon','description','business_license','phonenumber','ID_file','accept_status',
-     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','category_id','start_at','end_at','period','status','is_deleted'];
+     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period','status','is_deleted'];
 
      public function rate($id){
         $product_id=Product::select('id')->where('store_id',$id)->get();
@@ -35,6 +35,15 @@ class Store extends Model
           public function country()
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
+
+    }
+        public function usercity()
+    {
+        return $this->belongsTo(City::class, 'user_city_id', 'id');
+    }
+          public function usercountry()
+    {
+        return $this->belongsTo(Country::class, 'user_country_id', 'id');
 
     }
     public function activities()
@@ -180,6 +189,11 @@ class Store extends Model
             return   asset('assets/media/man.png');
         }
         return asset('storage/images/storebusiness_license') . '/' . $business_license;
+    }
+
+      public function note()
+    {
+        return $this->hasMany(Note::class);
     }
 
 }

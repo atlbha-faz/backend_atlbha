@@ -19,13 +19,14 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ActivitySeeder::class,
             CountrySeeder::class,
+            RegionSeeder::class,
             CitySeeder::class,
             PermissionTableSeeder::class,
             CreateUserSeeder::class,
             PackageFactoryeSeeder::class,
             TemplateFactoryeSeeder::class,
             AdminSeeder::class,
-            StoreSeeder::class,
+            // StoreSeeder::class,
             StoreUserSeeder::class,
             CategorySeeder ::class,
             CurrencySeeder::class,
@@ -56,5 +57,7 @@ class DatabaseSeeder extends Seeder
             HomepageSeeder::class,
             OfferSeeder::class
         ]);
+
+
     }
 }

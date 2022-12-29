@@ -1,119 +1,93 @@
 <?php
 
-
 namespace App\Http\Controllers\api\adminDashboard;
-use App\Models\Image;
-use App\Models\Option;
+
+use Carbon\Carbon;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use App\Http\Resources\ProductResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
-class EtlobhaController extends BaseController
+class StockController extends BaseController
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+
+     public function __construct()
+  {
+      $this->middleware('auth:api');
+  }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
 
-            $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('for','etlobha')->where('store_id',null)->get());
+         $success['total_stock']=Product::where('is_deleted',0)->where('for','etlobha')->count();
+         $success['finished_products']=Product::where('is_deleted',0)->where('for','etlobha')->where('stock','0')->count();
+         $success['finished_soon']=Product::where('is_deleted',0)->where('for','etlobha')->where('stock', '<','20')->count();
+         $date = Carbon::now()->subDays(7);
+         $success['last_week_product_added']=Product::where('is_deleted',0)->where('for','etlobha')->where('created_at', '>=', $date)->count();
+         $success['most_order']=0;
+          $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('for','etlobha')->where('store_id',null)->get());
              $success['status']= 200;
 
               return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','products return successfully');
 
-}
-
-
-
-    public function store(Request $request)
-    {
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'sku'=>'required|string',
-            'description'=>'required|string',
-            'purchasing_price'=>['required','numeric','gt:0'],
-            'selling_price'=>['required','numeric','gt:0'],
-            'stock'=>['required','numeric','gt:0'],
-            'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'data'=>'required|array',
-            'data.*.type'=>'required|in:brand,color,wight,size',
-            'data.*.title'=>'required|string',
-            'data.*.value'=>'required|array',
-            'category_id'=>'required|exists:categories,id',
-            'subcategory_id'=>['required','array'],
-            'subcategory_id.*'=>['required','numeric',
-            Rule::exists('categories', 'id')->where(function ($query) {
-            return $query->join('categories', 'id', 'parent_id');
-        }),
-            ]
-        ]);
-
-
-
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $product = Product::create([
-            'name' => $request->name,
-            'sku' => $request->sku,
-            'for' => 'etlobha',
-            'description' => $request->description,
-            'purchasing_price' => $request->purchasing_price,
-            'selling_price' => $request->selling_price,
-            'stock' => $request->stock,
-            'cover' => $request->cover,
-            'category_id' => $request->category_id,
-            'subcategory_id' => implode(',', $request->subcategory_id),
-            'store_id' => null,
-
-          ]);
- $productid =$product->id;
-              if($request->hasFile("images")){
-                $files=$request->file("images");
-                foreach($files as $file){
-                    $imageName=time().'_'.$file->getClientOriginalName();
-                    $request['product_id']= $productid ;
-                    $request['image']=$imageName;
-                    // $file->move(\public_path("/images"),$imageName);
-                     $file->store('images/product', 'public');
-                    Image::create($request->all());
-
-                }
-            }
-            foreach($request->data as $data)
-            {
-        //$request->input('name', []);
-                $option= new Option([
-                    'type' => $data['type'],
-                    'title' => $data['title'],
-                    'value' => $data['value'],
-                    'product_id' =>  $productid
-                  ]);
-
-                $option->save();
-                $options[]=$option;
-                }
-
-
-         $success['products']=New ProductResource($product);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
     }
 
-
-
-
-
-
-    public function update(Request $request, $id)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+        {
            $product =Product::query()->find($id);
            if (is_null($product) || $product->is_deleted==1  || $product->for=='store'){
            return $this->sendError(" المنتج غير موجود","product is't exists");
@@ -208,38 +182,31 @@ class EtlobhaController extends BaseController
               return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
 }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
-          public function changeSpecial($id)
-          {
-              $product = Product::query()->find($id);
-              if (is_null($product) || $product->is_deleted==1  || $product->for=='store'){
-               return $this->sendError("المنتج غير موجودة","product is't exists");
-               }
-              if($product->special === 'yes'){
-                  $product->update(['special' => 'no']);
-           }
-          else{
-              $product->update(['special' => 'yes']);
-          }
-              $success['products']=New ProductResource($product);
-              $success['status']= 200;
-               return $this->sendResponse($success,'تم تعدبل  بنجاح','product special updared successfully');
-
-          }
-
-
-
-
-    public function destroy(array $id)
+    public function deleteall(Request $request)
     {
 
-            $products =Product::whereIn('id',$id)->get();
+
+            $products =Product::whereIn('id',$request->id)->get();
            foreach($products as $product)
            {
-               $product->update(['is_deleted' => 1]);
+             if (is_null($product) || $product->is_deleted==1 || $product->for=="store"){
+                   return $this->sendError("المنتج غير موجودة"," product is't exists");
+             }
+             $product->update(['is_deleted' => 1]);
+        $success['products']= New ProductResource($product);
+
             }
-               $success['products']= ProductResource::collection($products);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
     }
+
+
+
 }
