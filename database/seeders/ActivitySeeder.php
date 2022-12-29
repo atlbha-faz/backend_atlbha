@@ -24,7 +24,7 @@ class ActivitySeeder extends Seeder
 
         ]);
         Activity::create([
-            'name' => 'هدايا والعاب',
+            'name' => 'هداياhh والعاب',
         ]);
     }
 }

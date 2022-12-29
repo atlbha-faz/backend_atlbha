@@ -193,32 +193,22 @@ class StoreController extends BaseController
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
+            'user_name'=>'required|string|max:255',
             'store_name'=>'required|string|max:255',
-            'email'=>'required|email',
-            'store_email'=>'required|email',
+            'email'=>'required|email|unique:users',
+            'store_email'=>'required|email|unique:stores',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'domain'=>'required|url',
-            'icon' =>'required',
+            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'description' =>'required',
-            'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'accept_status' =>'required|in:pending,accepted,rejected',
-            'snapchat' =>'required|url',
-            'facebook' =>'required|url',
-            'twiter' =>'required|url',
-            'youtube' =>'required|url',
-            'instegram' =>'required|url',
-            'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'entity_type' =>'required',
-            'activity_id' =>'required',
-            'package_id' =>'required|exists:packages,id',
+            'activity_id' =>'required|array',
+            'package_id' =>'required',
+            'period'=>'required|numeric',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-            'start_at'=>'required|date',
-            'end_at'=>'required|date',
-            'period'=>'required|numeric',
-
+            'user_country_id'=>'required|exists:countries,id',
+            'user_city_id'=>'required|exists:cities,id',
+            'periodtype'=>'required|in:month,year',
            ]);
            if ($validator->fails())
            {
@@ -229,14 +219,12 @@ class StoreController extends BaseController
             $user->update([
                'name' => $request->input('name'),
                'email' => $request->input('email'),
-               'user_id' => $request->input('user_id'),
                'user_name' => $request->input('user_name'),
                'password' => $request->input('password'),
-               'gender' => $request->input('gender'),
                 'phonenumber' => $request->input('phonenumber'),
                'image' => $request->input('image'),
-                'country_id' => $request->input('country_id'),
-               'city_id' => $request->input('city_id'),
+                'country_id' => $request->input('user_country_id'),
+               'city_id' => $request->input('user_city_id'),
            ]);
 
            $store->update([
@@ -244,7 +232,6 @@ class StoreController extends BaseController
                'store_email' => $request->input('store_email'),
                'domain' => $request->input('domain'),
                'icon' => $request->input('icon'),
-                 'phonenumber' => $request->input('phonenumber'),
                'description' => $request->input('description'),
                'business_license' => $request->input('business_license'),
                'ID_file' => $request->input('ID_file'),
@@ -261,12 +248,11 @@ class StoreController extends BaseController
                'accept_status' => $request->input('accept_status'),
                'country_id' => $request->input('country_id'),
                'city_id' => $request->input('city_id'),
-                'start_at' => $request->input('start_at'),
-               'end_at' => $request->input('end_at'),
-               'end_at' => $request->input('end_at'),
                'period' => $request->input('period'),
+               'periodtype' => $request->input('periodtype'),
            ]);
-           $store->packages()->sync(explode(',', $request->package_id),['start_at'=>$request->start_at,'end_at'=>$request->end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
+             $store->activities()->attach($request->activity_id);
+          $store->packages()->attach($request->package_id,['start_at'=>  $store->created_at,'end_at'=>"2022-12-29 15:43:36",'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
            $success['stores']=New StoreResource($store);
            $success['status']= 200;
@@ -293,6 +279,60 @@ class StoreController extends BaseController
          return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
 
     }
+
+
+       public function acceptStatus($id)
+    {
+        $store = Store::query()->find($id);
+         if (is_null($store) || $store->is_deleted==1){
+         return $this->sendError("المتجر غير موجود","store is't exists");
+         }
+
+        $store->update(['confirmation_status' => 'accept']);
+
+        $success['store']=New StoreResource($store);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
+
+    }
+
+      public function rejectStatus($id)
+    {
+        $store = Store::query()->find($id);
+         if (is_null($store) || $store->is_deleted==1){
+         return $this->sendError("المتجر غير موجود","store is't exists");
+         }
+
+        $store->update(['confirmation_status' => 'reject']);
+
+        $success['store']=New StoreResource($store);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
+
+    }
+
+      public function specialStatus($id)
+    {
+        $store = Store::query()->find($id);
+         if (is_null($store) || $store->is_deleted==1){
+         return $this->sendError("المتجر غير موجود","store is't exists");
+         }
+
+       if($store->special === 'not_special'){
+        $store->update(['special' => 'special']);
+        }
+        else{
+        $store->update(['special' => 'not_special']);
+        }
+        $success['store']=New StoreResource($store);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *

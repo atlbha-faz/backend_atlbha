@@ -146,7 +146,10 @@ Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaControl
 Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::class);
 Route::post('productchangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'changeSpecial']);
 Route::get('activitydeleteall',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'deleteall']);
-Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\StotrController::class,'addNote']);
+Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\StoreController::class,'addNote']);
+Route::post('acceptStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'acceptStatus']);
+Route::post('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'specialStatus']);
+Route::post('rejectStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'rejectStatus']);
 Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
 
 });

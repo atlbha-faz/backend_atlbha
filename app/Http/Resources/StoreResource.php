@@ -35,15 +35,15 @@ class StoreResource extends JsonResource
         'entity_type'=>$this->entity_type,
         'user' =>New UserResource($this->user),
         'activity' =>ActivityResource::collection($this->activities),
-        // 'package' =>PackageResource::collection($this->packages),
-        'category' =>New CategoryResource($this->category),
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
         'rate'=> $this->rate($this->id),
         'period'=>$this->period($this->id),
+        'periodtype'=>$this->periodtype,
         'left'=>$this->left($this->id),
+        'confirmation_status'=>$this->confirmation_status,
         'status' => $this->status !==null ? $this->status:'active',
-        'status' => $this->status !==null ? $this->status:'active',
+        'special' => $this->special ,
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
     ];
     }
