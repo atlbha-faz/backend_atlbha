@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('store_email')->unique();
             $table->string('domain');
             $table->string('icon');
+            $table->enum('special',['yes','no'])->default('no');
             $table->string('phonenumber');
             $table->string('description');
             $table->string('business_license');

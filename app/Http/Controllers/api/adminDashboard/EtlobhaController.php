@@ -3,12 +3,14 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Image;
-use App\Models\Product;
 use App\Models\Option;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
+
 class EtlobhaController extends BaseController
 {
     public function __construct()
@@ -229,16 +231,15 @@ class EtlobhaController extends BaseController
 
 
 
-    public function destroy($id)
+    public function destroy(array $id)
     {
 
-            $product =Product::query()->find($id);
-            if (is_null($product) || $product->is_deleted==1  || $product->for=='store'){
-                return $this->sendError("المنتج غير موجودة","product is't exists");
-                }
+            $products =Product::whereIn('id',$id)->get();
+           foreach($products as $product)
+           {
                $product->update(['is_deleted' => 1]);
-
-               $success['products']=New ProductResource($product);
+            }
+               $success['products']= ProductResource::collection($products);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
     }
