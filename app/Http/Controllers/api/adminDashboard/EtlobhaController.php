@@ -209,31 +209,33 @@ class EtlobhaController extends BaseController
 }
 
 
-          public function changeSpecial($id)
-          {
-              $product = Product::query()->find($id);
-              if (is_null($product) || $product->is_deleted==1  || $product->for=='store'){
-               return $this->sendError("المنتج غير موجودة","product is't exists");
-               }
-              if($product->special === 'yes'){
-                  $product->update(['special' => 'no']);
-           }
-          else{
-              $product->update(['special' => 'yes']);
-          }
-              $success['products']=New ProductResource($product);
-              $success['status']= 200;
-               return $this->sendResponse($success,'تم تعدبل  بنجاح','product special updared successfully');
+           public function specialStatus($id)
+    {
+        $product = Product::query()->find($id);
+         if (is_null($product) || $product->is_deleted==1){
+         return $this->sendError("المنتج غير موجود","product is't exists");
+         }
 
-          }
+       if($product->special === 'not_special'){
+        $product->update(['special' => 'special']);
+        }
+        else{
+        $product->update(['special' => 'not_special']);
+        }
+        $success['product']=New productResource($product);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
+
+    }
 
 
 
 
-    public function destroy(array $id)
+    public function deleteall(Request $request)
     {
 
-            $products =Product::whereIn('id',$id)->get();
+            $products =Product::whereIn('id',$request->id)->get();
            foreach($products as $product)
            {
                $product->update(['is_deleted' => 1]);
@@ -241,5 +243,23 @@ class EtlobhaController extends BaseController
                $success['products']= ProductResource::collection($products);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+    }
+
+      public function changeStatusall(Request $request)
+    {
+        $products =Product::whereIn('id',$request->id)->get();
+        foreach($products as $product)
+        {
+        if($product->status === 'active'){
+            $product->update(['status' => 'not_active']);
+     }
+    else{
+        $product->update(['status' => 'active']);
+    }
+}
+        $success['products']= ProductResource::collection($products);
+        $success['status']= 200;
+         return $this->sendResponse($success,'تم تعدبل حالة القسم بنجاح',' product status updared successfully');
+
     }
 }

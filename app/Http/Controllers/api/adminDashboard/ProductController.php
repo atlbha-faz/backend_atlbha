@@ -255,9 +255,9 @@ class ProductController extends BaseController
 //         }
 
 
-     public function changeStatus(array $id)
+     public function changeStatusall(Request $request)
     {
-        $products =Product::whereIn('id',$id)->get();
+        $products =Product::whereIn('id',$request->id)->get();
         foreach($products as $product)
         {
         if($product->status === 'active'){
@@ -279,10 +279,10 @@ class ProductController extends BaseController
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(array $id)
+    public function destroy(Request $request)
     {
 
-            $products =Product::whereIn('id',$id)->get();
+            $products =Product::whereIn('id',$request->id)->get();
            foreach($products as $product)
            {
                $product->update(['is_deleted' => 1]);

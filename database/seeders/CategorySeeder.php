@@ -67,5 +67,20 @@ class CategorySeeder extends Seeder
                             'for'=>'store',
                             'store_id'=>2
                             ]);
+
+     Category::create([
+                            'number' =>0007,
+                             'name' => 'مستلزمات طبيه',
+                             'parent_id'=>null,
+                            'for'=>'etlobha',
+                            'store_id'=>null
+                            ]);
+                             Category::create([
+                            // 'number' =>0007,
+                             'name' => 'مستلزمات طبيه',
+                             'parent_id'=>7,
+                            'for'=>'etlobha',
+                            'store_id'=>null
+                            ]);
     }
 }
