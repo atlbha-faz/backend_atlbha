@@ -25,7 +25,7 @@ class StoreSeeder extends Seeder
             'description' => 'this is amazon store',
             'business_license' => 'file.pdf',
             'ID_file' => 'file.pdf',
-            'accept_status' => 'accepted',
+
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
             'twiter' => 'https//www.twiter.com',
@@ -36,7 +36,7 @@ class StoreSeeder extends Seeder
             'start_at' => Carbon::now(),
             'end_at' => '2023-03-01',
             'period' => '3',
-            'activity_id' => 1,
+
             'package_id' => 1,
             'country_id' => 1,
             'city_id' =>1,
@@ -54,7 +54,7 @@ class StoreSeeder extends Seeder
             'description' => 'this is noon store',
             'business_license' => 'file.pdf',
             'ID_file' => 'file.pdf',
-            'accept_status' => 'accepted',
+
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
             'twiter' => 'https//www.twiter.com',
@@ -65,7 +65,7 @@ class StoreSeeder extends Seeder
             'start_at' => Carbon::now(),
             'end_at' => '2023-03-01',
             'period' => '3',
-            'activity_id' => 2,
+           
             'package_id' => 1,
             'country_id' => 1,
             'city_id' =>1,
