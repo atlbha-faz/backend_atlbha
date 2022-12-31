@@ -25,7 +25,6 @@ class StoreResource extends JsonResource
         'description'=>$this->description,
         'business_license'=>$this->business_license,
         'ID_file' =>$this->ID_file,
-
         'snapchat'=>$this->snapchat,
         'facebook' =>$this->facebook,
         'twiter'=>$this->twiter,
@@ -37,7 +36,7 @@ class StoreResource extends JsonResource
         'activity' =>ActivityResource::collection($this->activities),
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
-        'rate'=> $this->rate($this->id),
+        'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
         'period'=>$this->period($this->id),
         'periodtype'=>$this->periodtype,
         'left'=>$this->left($this->id),

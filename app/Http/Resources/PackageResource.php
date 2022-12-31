@@ -25,8 +25,7 @@ class PackageResource extends JsonResource
             'is_deleted' => $this->is_deleted!==null ? $this->status:0,
             'plans'=>PlanResource::collection($this->plans),
             'templates'=>TemplateResource::collection($this->templates),
-            'stores'=> StoreResource::collection($this->stores),
-
+            'stores'=> StoreResource::collection($this->stores)
 
         ];
     }

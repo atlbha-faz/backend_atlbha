@@ -122,9 +122,20 @@ class StoreController extends BaseController
           $user->update([
                'store_id' =>  $store->id]);
 
-           $date = strtotime($store->created_at."+ '.$request->period.' months");
-          $end_at=date("Y-m-d",$date);
-          $store->activities()->attach($request->activity);
+if($request->periodtype =="month"){
+           $end_at = date('Y-m-d',strtotime("+".$request->period." months", strtotime($store->created_at)));
+  $store->update([
+               'start_at'=> $store->created_at,
+                'end_at'=>  $end_at ]);
+        }
+else{
+               $end_at = date('Y-m-d',strtotime("+".$request->period." years", strtotime($store->created_at)));
+        $store->update([
+               'start_at'=> $store->created_at,
+                'end_at'=>  $end_at ]);
+
+            }
+          $store->activities()->attach($request->activity_id);
           $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
 
@@ -236,7 +247,7 @@ class StoreController extends BaseController
                'instegram' => $request->input('instegram'),
                'logo' => $request->input('logo'),
                'entity_type' => $request->input('entity_type'),
-               'activity_id' => implode(',',$request->input('activity_id')),
+               'activity_id' => $request->input('activity_id'),
                'package_id' => $request->input('package_id'),
                'accept_status' => $request->input('accept_status'),
                'country_id' => $request->input('country_id'),
@@ -245,8 +256,21 @@ class StoreController extends BaseController
                'periodtype' => $request->input('periodtype'),
            ]);
              $store->activities()->sync($request->activity_id);
-           $date = strtotime($store->created_at."+ '.$request->period.' months");
-           $end_at=date("Y-m-d",$date);
+
+             if($request->periodtype =="month"){
+           $end_at = date('Y-m-d',strtotime("+".$request->period." months", strtotime($store->created_at)));
+
+                $store->update([
+               'start_at'=> $store->created_at,
+                'end_at'=>  $end_at ]);
+
+        }
+          else{
+               $end_at = date('Y-m-d',strtotime("+".$request->period." years", strtotime($store->created_at)));
+              $store->update([
+               'start_at'=> $store->created_at,
+                'end_at'=>  $end_at ]);
+            }
            $store->packages()->sync($request->package_id,['start_at'=>$store->created_at,'end_at'=>$end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
            $success['stores']=New StoreResource($store);
@@ -334,6 +358,32 @@ class StoreController extends BaseController
      * @param  \App\Models\Store  $store
      * @return \Illuminate\Http\Response
      */
+
+
+
+      public function changeSatusall(Request $request)
+    {
+
+            $stores =Store::whereIn('id',$request->id)->get();
+           foreach($stores as $store)
+           {
+             if (is_null($store) || $store->is_deleted==1){
+                   return $this->sendError("المتجر غير موجودة"," store is't exists");
+       }
+              if($store->status === 'active'){
+        $store->update(['status' => 'not_active']);
+        }
+        else{
+        $store->update(['status' => 'active']);
+        }
+        $success['stores']= New StoreResource($store);
+
+            }
+               $success['status']= 200;
+                return $this->sendResponse($success,'تم تعطيل المتجر بنجاح','store stop successfully');
+    }
+
+
     public function destroy($store)
     {
        $store = Store::query()->find($store);
