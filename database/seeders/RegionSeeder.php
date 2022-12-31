@@ -17,7 +17,6 @@ class RegionSeeder extends Seeder
     {
           Region::create([
             'name' => 'الرياض',
-
             'country_id'=>1
           ]);
     }
