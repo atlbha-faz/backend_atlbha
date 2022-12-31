@@ -56,34 +56,22 @@ class StoreController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
+            'user_name'=>'required|string|max:255',
             'store_name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'store_email'=>'required|email|unique:stores',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'domain'=>'required|url',
-            'icon' =>'required',
+            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'description' =>'required',
-            'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'accept_status' =>'required|in:pending,accepted,rejected',
-            'snapchat' =>'required|url',
-            'facebook' =>'required|url',
-            'twiter' =>'required|url',
-            'youtube' =>'required|url',
-            'instegram' =>'required|url',
-            'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'entity_type' =>'required|array',
-            'activity_id' =>'required',
-            'package_id' =>'required|exists:packages,id',
-            'start_at'=>'required|date',
-            'end_at'=>'required|date',
+            'activity_id' =>'required|array',
+            'package_id' =>'required',
             'period'=>'required|numeric',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-            'start_at'=>'required|date',
-            'end_at'=>'required|date',
-            'period'=>'required|numeric',
+            'user_country_id'=>'required|exists:countries,id',
+            'user_city_id'=>'required|exists:cities,id',
+            'periodtype'=>'required|in:month,year',
 
         ]);
 
@@ -94,15 +82,13 @@ class StoreController extends BaseController
         $user = User::create([
             'name' => $request->name,
             'email'=>$request->email,
-            // 'user_id' =>$request->user_id,
             'user_name' => $request->user_name,
             'user_type' => "store",
             'password'=>$request->password,
-            // 'gender' =>$request->gender,
-            'phonenumber' => $request->phonenumber,
+            'userphonenumber' => $request->phonenumber,
             'image' => $request->image,
-            'country_id' =>$request->country_id,
-            'city_id' =>$request->city_id,
+            'country_id' =>$request->user_country_id,
+            'city_id' =>$request->user_city_id,
           ]);
 
           $userid =$user->id;
@@ -125,27 +111,31 @@ class StoreController extends BaseController
              'instegram' =>$request->instegram,
             'logo' => $request->logo,
             'entity_type' => $request->entity_type,
-            //  'activity_id' =>implode(',',$request->activity_id),
             'package_id' => $request->package_id,
             'user_id' => $userid,
-            'start_at'=>$request->start_at,
-            'end_at'=>$request->end_at,
             'period'=>$request->period,
-            'accept_status' => $request->accept_status,
+            'periodtype'=>$request->periodtype,
             'country_id' => $request->country_id,
-            'city_id' => $request->city_id,
-             'start_at'=>$request->start_at,
-            'end_at'=>$request->end_at,
-            'period'=>$request->period,
-
+            'city_id' => $request->city_id
           ]);
-   
+
           $user->update([
                'store_id' =>  $store->id]);
-               
-           $date = strtotime($store->created_at."+ '.$request->period.' months");
-          $end_at=date("Y-m-d",$date); 
-          $store->activities()->attach($request->activity);
+
+if($request->periodtype =="month"){
+           $end_at = date('Y-m-d',strtotime("+".$request->period." months", strtotime($store->created_at)));
+  $store->update([
+               'start_at'=> $store->created_at,
+                'end_at'=>  $end_at ]);
+        }
+else{
+               $end_at = date('Y-m-d',strtotime("+".$request->period." years", strtotime($store->created_at)));
+        $store->update([
+               'start_at'=> $store->created_at,
+                'end_at'=>  $end_at ]);
+
+            }
+          $store->activities()->attach($request->activity_id);
           $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
 
@@ -207,32 +197,22 @@ class StoreController extends BaseController
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
+            'user_name'=>'required|string|max:255',
             'store_name'=>'required|string|max:255',
-            'email'=>'required|email',
-            'store_email'=>'required|email',
+            'email'=>'required|email|unique:users',
+            'store_email'=>'required|email|unique:stores',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'domain'=>'required|url',
-            'icon' =>'required',
+            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'description' =>'required',
-            'business_license' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'ID_file' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'accept_status' =>'required|in:pending,accepted,rejected',
-            'snapchat' =>'required|url',
-            'facebook' =>'required|url',
-            'twiter' =>'required|url',
-            'youtube' =>'required|url',
-            'instegram' =>'required|url',
-            'logo' =>'required|mimes:jpeg,png,jpg,gif,svg,pdf','max:2048',
-            'entity_type' =>'required',
-            'activity_id' =>'required',
-            'package_id' =>'required|exists:packages,id',
+            'activity_id' =>'required|array',
+            'package_id' =>'required',
+            'period'=>'required|numeric',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-            'start_at'=>'required|date',
-            'end_at'=>'required|date',
-            'period'=>'required|numeric',
-
+            'user_country_id'=>'required|exists:countries,id',
+            'user_city_id'=>'required|exists:cities,id',
+            'periodtype'=>'required|in:month,year',
            ]);
            if ($validator->fails())
            {
@@ -243,14 +223,12 @@ class StoreController extends BaseController
             $user->update([
                'name' => $request->input('name'),
                'email' => $request->input('email'),
-               'user_id' => $request->input('user_id'),
                'user_name' => $request->input('user_name'),
                'password' => $request->input('password'),
-               'gender' => $request->input('gender'),
                 'phonenumber' => $request->input('phonenumber'),
                'image' => $request->input('image'),
-                'country_id' => $request->input('country_id'),
-               'city_id' => $request->input('city_id'),
+                'country_id' => $request->input('user_country_id'),
+               'city_id' => $request->input('user_city_id'),
            ]);
 
            $store->update([
@@ -258,7 +236,6 @@ class StoreController extends BaseController
                'store_email' => $request->input('store_email'),
                'domain' => $request->input('domain'),
                'icon' => $request->input('icon'),
-                 'phonenumber' => $request->input('phonenumber'),
                'description' => $request->input('description'),
                'business_license' => $request->input('business_license'),
                'ID_file' => $request->input('ID_file'),
@@ -270,18 +247,30 @@ class StoreController extends BaseController
                'instegram' => $request->input('instegram'),
                'logo' => $request->input('logo'),
                'entity_type' => $request->input('entity_type'),
-               'activity_id' => implode(',',$request->input('activity_id')),
+               'activity_id' => $request->input('activity_id'),
                'package_id' => $request->input('package_id'),
                'accept_status' => $request->input('accept_status'),
                'country_id' => $request->input('country_id'),
                'city_id' => $request->input('city_id'),
-                'start_at' => $request->input('start_at'),
-               'end_at' => $request->input('end_at'),
-               'end_at' => $request->input('end_at'),
                'period' => $request->input('period'),
+               'periodtype' => $request->input('periodtype'),
            ]);
-           $date = strtotime($store->created_at."+ '.$request->period.' months");
-           $end_at=date("Y-m-d",$date); 
+             $store->activities()->sync($request->activity_id);
+
+             if($request->periodtype =="month"){
+           $end_at = date('Y-m-d',strtotime("+".$request->period." months", strtotime($store->created_at)));
+
+                $store->update([
+               'start_at'=> $store->created_at,
+                'end_at'=>  $end_at ]);
+
+        }
+          else{
+               $end_at = date('Y-m-d',strtotime("+".$request->period." years", strtotime($store->created_at)));
+              $store->update([
+               'start_at'=> $store->created_at,
+                'end_at'=>  $end_at ]);
+            }
            $store->packages()->sync($request->package_id,['start_at'=>$store->created_at,'end_at'=>$end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
 
            $success['stores']=New StoreResource($store);
@@ -309,12 +298,92 @@ class StoreController extends BaseController
          return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
 
     }
+
+
+       public function acceptStatus($id)
+    {
+        $store = Store::query()->find($id);
+         if (is_null($store) || $store->is_deleted==1){
+         return $this->sendError("المتجر غير موجود","store is't exists");
+         }
+
+        $store->update(['confirmation_status' => 'accept']);
+
+        $success['store']=New StoreResource($store);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
+
+    }
+
+      public function rejectStatus($id)
+    {
+        $store = Store::query()->find($id);
+         if (is_null($store) || $store->is_deleted==1){
+         return $this->sendError("المتجر غير موجود","store is't exists");
+         }
+
+        $store->update(['confirmation_status' => 'reject']);
+
+        $success['store']=New StoreResource($store);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
+
+    }
+
+      public function specialStatus($id)
+    {
+        $store = Store::query()->find($id);
+         if (is_null($store) || $store->is_deleted==1){
+         return $this->sendError("المتجر غير موجود","store is't exists");
+         }
+
+       if($store->special === 'not_special'){
+        $store->update(['special' => 'special']);
+        }
+        else{
+        $store->update(['special' => 'not_special']);
+        }
+        $success['store']=New StoreResource($store);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Store  $store
      * @return \Illuminate\Http\Response
      */
+
+
+
+      public function changeSatusall(Request $request)
+    {
+
+            $stores =Store::whereIn('id',$request->id)->get();
+           foreach($stores as $store)
+           {
+             if (is_null($store) || $store->is_deleted==1){
+                   return $this->sendError("المتجر غير موجودة"," store is't exists");
+       }
+              if($store->status === 'active'){
+        $store->update(['status' => 'not_active']);
+        }
+        else{
+        $store->update(['status' => 'active']);
+        }
+        $success['stores']= New StoreResource($store);
+
+            }
+               $success['status']= 200;
+                return $this->sendResponse($success,'تم تعطيل المتجر بنجاح','store stop successfully');
+    }
+
+
     public function destroy($store)
     {
        $store = Store::query()->find($store);

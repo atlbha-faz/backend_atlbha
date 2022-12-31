@@ -12,12 +12,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Store extends Model
 {
     use HasFactory;
-     protected $fillable = ['store_name','store_email','domain','icon','description','business_license','phonenumber','ID_file','accept_status',
-     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period','status','is_deleted'];
+     protected $fillable = ['store_name','store_email','domain','icon','description','business_license','phonenumber','ID_file','confirmation_status',
+     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period',
+     'periodtype','special','status','is_deleted'];
 
      public function rate($id){
         $product_id=Product::select('id')->where('store_id',$id)->get();
-        return Comment::whereIn('product_id',$product_id)->where('for','store')->avg('rateing');
+        return Comment::whereIn('product_id',$product_id)->where('comment_for','store')->avg('rateing');
      }
      protected $casts = [
         'activity_id' => 'array',
@@ -71,7 +72,7 @@ class Store extends Model
         $date1 = new DateTime($day->end_at);
         $now_date= Carbon::now();
         $interval = $date1->diff($now_date);
-        return $interval->d;
+        return $interval->days."days";
     }
     public function period($id){
         $period=Store::select('period')->where('id',$id)->first();

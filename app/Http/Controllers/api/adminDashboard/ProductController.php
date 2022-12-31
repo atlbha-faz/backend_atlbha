@@ -135,6 +135,28 @@ class ProductController extends BaseController
                return $this->sendResponse($success,'تم عرض المنتج بنجاح','product showed successfully');
     }
 
+       public function changeSatusall(Request $request)
+    {
+
+            $products =Product::whereIn('id',$request->id)->get();
+           foreach($products as $product)
+           {
+             if (is_null($product) || $product->is_deleted==1){
+                   return $this->sendError("المنتجات غير موجودة"," product is't exists");
+       }
+              if($product->status === 'active'){
+        $product->update(['status' => 'not_active']);
+        }
+        else{
+        $product->update(['status' => 'active']);
+        }
+        $success['products']= New ProductResource($product);
+
+            }
+               $success['status']= 200;
+                return $this->sendResponse($success,'تم تعطيل المنتجات بنجاح','products stop successfully');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
