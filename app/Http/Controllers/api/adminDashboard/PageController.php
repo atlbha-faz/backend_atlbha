@@ -12,7 +12,7 @@ use function PHPSTORM_META\map;
 
 class PageController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -73,7 +73,7 @@ class PageController extends BaseController
             'seo_desc' => $request->seo_desc,
             'tags' => implode(',', $request->tags),
             'user_id' => auth()->user()->id,
-            'name'=> $request->name,
+           
           ]);
            //$request->input('name', []);
           $page->page_categories()->attach(explode(',', $request->name));
@@ -136,7 +136,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-       
+
            ]);
            if ($validator->fails())
            {

@@ -17,21 +17,26 @@ class VideoSeeder extends Seeder
     {
         Video::create([
         'video'=>'video.mp4',
+        'name'=>'video.mp4',
+        'duration'=>3,
+
+        'unit_id'=>1
+       ]);
+         Video::create([
+        'video'=>'video.mp4',
+        'name'=>'video.mp4',
         'duration'=>3,
         'unit_id'=>1
        ]);
          Video::create([
         'video'=>'video.mp4',
+        'name'=>'video.mp4',
         'duration'=>3,
         'unit_id'=>1
        ]);
          Video::create([
         'video'=>'video.mp4',
-        'duration'=>3,
-        'unit_id'=>1
-       ]);
-         Video::create([
-        'video'=>'video.mp4',
+        'name'=>'video.mp4',
         'duration'=>3,
         'unit_id'=>2
        ]);

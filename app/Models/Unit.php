@@ -9,6 +9,9 @@ class Unit extends Model
 {
     use HasFactory;
     protected $fillable = ['title','file','course_id','status','is_deleted'];
+       protected $casts = [
+    'file' => 'array',
+];
     public function course()
     {
         return $this->belongsTo(Course::class);

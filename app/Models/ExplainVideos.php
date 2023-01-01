@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ExplainVideos extends Model
 {
     use HasFactory;
-    protected $fillable = ['title','video','thumbnail','user_id','status','is_deleted'];
+    protected $fillable = ['title','video','thumbnail','duration','user_id','status','is_deleted'];
     public function user()
     {
         return $this->belongsTo(User::class);

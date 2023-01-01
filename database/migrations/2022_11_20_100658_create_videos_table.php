@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('video');
             $table->time('duration');
+            $table->string('name');
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
