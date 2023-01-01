@@ -53,6 +53,8 @@ class CategoryController extends BaseController
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
                 'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+                'data.*.name'=>'required|string|max:255',
+                'data.*.id' => 'nullable|numeric',
             ]);
             if ($validator->fails())
             {
@@ -185,6 +187,8 @@ if($request->data){
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'data.*.name'=>'required|string|max:255',
+            'data.*.id' => 'nullable|numeric',
            ]);
            if ($validator->fails())
            {
@@ -212,11 +216,12 @@ if($request->data){
      
      foreach ($request->data as $data) {
       $subcategories[] = Category::updateOrCreate([
-        'parent_id' => $category_id,
-        'for'=>'etlobha',
-        'is_deleted' => 0,
+         'id'=>$data['id']
       ], [
         'name' => $data['name'],
+       'parent_id' => $category_id,
+        'for'=>'etlobha',
+        'is_deleted' => 0
 
       ]);
     }
