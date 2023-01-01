@@ -182,9 +182,9 @@ class CourseController extends BaseController
            'name'=>'required|string|max:255',
             'description'=>'required|string',
             'data'=>'array',
-             'data.*.video.*'=>'',
+             'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
-           'data.*.file.*'=>'',
+           'data.*.file.*'=>'mimes:pdf,doc,excel',
            'data.*.id' => 'nullable|numeric',
 
         ]);
