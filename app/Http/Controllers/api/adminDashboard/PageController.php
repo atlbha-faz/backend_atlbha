@@ -73,7 +73,7 @@ class PageController extends BaseController
             'seo_desc' => $request->seo_desc,
             'tags' => implode(',', $request->tags),
             'user_id' => auth()->user()->id,
-            'name'=> $request->name,
+           'status' =>'not_active'
           ]);
            //$request->input('name', []);
           $page->page_categories()->attach(explode(',', $request->name));
@@ -83,7 +83,43 @@ class PageController extends BaseController
 
          return $this->sendResponse($success,'تم إضافة تصنيف الصفحة بنجاح','page_category Added successfully');
     }
+    
+    public function publish(Request $request)
+    {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'title'=>'required|string|max:255',
+            'page_content'=>'required',
+            'seo_title'=>'required',
+            'seo_link'=>'required',
+            'seo_desc'=>'required',
+            'tags'=>'required',
+            'user_id'=>'exists:users,id',
 
+
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $page = Page::create([
+            'title' => $request->title,
+            'page_content' => $request->page_content,
+            'seo_title' => $request->seo_title,
+            'seo_link' => $request->seo_link,
+            'seo_desc' => $request->seo_desc,
+            'tags' => implode(',', $request->tags),
+            'user_id' => auth()->user()->id,
+            'status' =>'active'
+          ]);
+     
+          $page->page_categories()->attach(explode(',', $request->name));
+
+         $success['Pages']=New PageResource($page);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة تصنيف الصفحة بنجاح','page_category Added successfully');
+    }
     /**
      * Display the specified resource.
      *

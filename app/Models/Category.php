@@ -11,7 +11,7 @@ class Category extends Model
     protected $fillable = ['name','for','parent_id','icon','number','store_id','status','is_deleted'];
     public function subcategory()
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id')->where('is_deleted',0);
     }
 
     public function parent()

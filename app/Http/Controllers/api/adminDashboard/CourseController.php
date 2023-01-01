@@ -178,6 +178,9 @@ class CourseController extends BaseController
             'tags'=>'required',
             'data.*.title'=>'required|string|max:255',
            'data.*.file'=>'mimes:pdf,doc,excel',
+           'data.*.id' => 'nullable|numeric',
+           'videodata.*.video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+           'videodata.*.id' => 'nullable|numeric',
         ]);
         if ($validator->fails())
         {
@@ -194,7 +197,7 @@ class CourseController extends BaseController
 
 
     // dd($request->$data['id']);
-    $units_id = unit::where('course_id', $course_id)->pluck('id')->toArray();
+    $units_id = Unit::where('course_id', $course_id)->pluck('id')->toArray();
     foreach ($units_id as $oid) {
       if (!(in_array($oid, array_column($request->data, 'id')))) {
         $unit = Unit::query()->find($oid);
@@ -213,7 +216,26 @@ class CourseController extends BaseController
         'course_id' => $course_id
       ]);
     }
+    $units = Unit::where('course_id', $course_id)->get();
+    foreach ($units as $unit) {
+     $videos_id = video::where('unit_id', $unit->id)->pluck('id')->toArray();
+    foreach ($videos_id as $oid) {
+      if (!(in_array($oid, array_column($request->videodata, 'id')))) {
+        $video = Video::query()->find($oid);
+        $video->update(['is_deleted' => 1]);
+      }
+    }
 
+     foreach ($request->videodata as $videodata) {
+      $videos[] = Video::updateOrCreate([
+        'id' => $videodata['id'],
+        'unit_id' => $unit->id,
+        'is_deleted' => 0,
+      ], [
+        'video' => $request->video
+      ]);
+    }
+  }
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);
         $success['status']= 200;
