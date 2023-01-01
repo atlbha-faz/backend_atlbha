@@ -96,7 +96,7 @@ class SettingController extends BaseController
             'address'=>'required|string',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-    
+
          ]);
          if ($validator->fails())
          {
@@ -114,7 +114,7 @@ class SettingController extends BaseController
              'address' => $request->input('address'),
              'country_id' => $request->input('country_id'),
              'city_id' => $request->input('city_id'),
-           
+
 
          ]);
 
@@ -178,4 +178,43 @@ class SettingController extends BaseController
 
          return $this->sendResponse($success,'تم تعديل الاعدادات بنجاح','registration_status update successfully');
     }
+
+       public function registrationMarketer($id)
+    {
+        $registrationMarketer = Setting::query()->find($id);
+        if (is_null($registrationMarketer) || $registrationMarketer->is_deleted==1){
+         return $this->sendError("الحالة غير موجودة","registrationMarketer is't exists");
+         }
+        if($registrationMarketer->registration_marketer === 'active'){
+         $registrationMarketer->update(['registration_marketer' => 'not_active']);
+        }
+      else{
+      $registrationMarketer->update(['registration_marketer' => 'active']);
+          }
+        $success['$registration_marketers']=New SettingResource($registrationMarketer);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعدبل الحالة  بنجاح','status updated successfully');
+
+    }
+
+        public function statusMarketer($id)
+    {
+        $status_marketer = Setting::query()->find($id);
+        if (is_null($status_marketer) || $status_marketer->is_deleted==1){
+         return $this->sendError("الحالة غير موجودة","status_marketer is't exists");
+         }
+        if($status_marketer->status_marketer === 'active'){
+         $status_marketer->update(['status_marketer' => 'not_active']);
+        }
+      else{
+      $status_marketer->update(['status_marketer' => 'active']);
+          }
+        $success['$status_marketers']=New SettingResource($status_marketer);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعدبل حالة  بنجاح',' status updated successfully');
+
+    }
+
 }

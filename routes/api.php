@@ -156,6 +156,7 @@ Route::get('storechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreC
 Route::get('productchangeSatusall',[App\Http\Controllers\api\adminDashboard\ProductController::class,'changeSatusall']);
 Route::get('etlobhachangeSatusall',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'changeStatusall']);
 Route::get('etlobhadeleteall',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'deleteall']);
+Route::get('productdeleteall',[App\Http\Controllers\api\adminDashboard\ProductController::class,'deleteall']);
 
 
 
@@ -168,6 +169,8 @@ Route::post('acceptStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreCo
 Route::post('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'specialStatus']);
 Route::post('rejectStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'rejectStatus']);
 Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
+Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
+Route::post('registrationMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registrationMarketer']);
 
 });
 });

@@ -19,17 +19,20 @@ class ExplainvideoSeeder extends Seeder
         'title'=>'video1',
         'video'=>'video.mp4',
         'thumbnail'=>'thumbail.jpg',
+        'duration' => '20:00:00',
         'user_id'=>1
        ]);
        ExplainVideos::create([
          'title'=>'video1',
         'video'=>'video.mp4',
+        'duration' => '20:00:00',
         'thumbnail'=>'thumbail.jpg',
         'user_id'=>1
        ]);
        ExplainVideos::create([
        'title'=>'video1',
         'video'=>'video.mp4',
+        'duration' => '20:00:00',
         'thumbnail'=>'thumbail.jpg',
         'user_id'=>1
        ]);

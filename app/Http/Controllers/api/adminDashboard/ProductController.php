@@ -126,7 +126,7 @@ class ProductController extends BaseController
     public function show($product)
     {
         $product= Product::query()->find($product);
-        if (is_null($product) || $product->is_deleted==1){
+        if (is_null($product) || $product->is_deleted==1 || $product->for =='etlobha'){
                return $this->sendError("المنتج غير موجود","product is't exists");
                }
               $success['products']=New ProductResource($product);
@@ -141,7 +141,7 @@ class ProductController extends BaseController
             $products =Product::whereIn('id',$request->id)->get();
            foreach($products as $product)
            {
-             if (is_null($product) || $product->is_deleted==1){
+             if (is_null($product) || $product->is_deleted==1 || $product->for=="etlobha"){
                    return $this->sendError("المنتجات غير موجودة"," product is't exists");
        }
               if($product->status === 'active'){
@@ -255,23 +255,6 @@ class ProductController extends BaseController
 //         }
 
 
-     public function changeStatusall(Request $request)
-    {
-        $products =Product::whereIn('id',$request->id)->get();
-        foreach($products as $product)
-        {
-        if($product->status === 'active'){
-            $product->update(['status' => 'not_active']);
-     }
-    else{
-        $product->update(['status' => 'active']);
-    }
-}
-        $success['products']= ProductResource::collection($products);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة القسم بنجاح',' product status updared successfully');
-
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -279,12 +262,15 @@ class ProductController extends BaseController
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function deleteall(Request $request)
     {
 
             $products =Product::whereIn('id',$request->id)->get();
            foreach($products as $product)
            {
+            if (is_null($product) || $product->is_deleted==1 || $product->for=="etlobha"){
+                   return $this->sendError("المنتج غير موجودة"," product is't exists");
+             }
                $product->update(['is_deleted' => 1]);
             }
                $success['products']= ProductResource::collection($products);

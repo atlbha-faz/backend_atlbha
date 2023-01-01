@@ -58,9 +58,9 @@ class CourseController extends BaseController
             'description'=>'required|string',
             'duration' =>'required',
             'tags'=>'required',
-            'videodata.*.video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
-              'data.*.title'=>'required|string|max:255',
-           'data.*.file'=>'mimes:pdf,doc,excel',
+            'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+            'data.*.title'=>'required|string|max:255',
+           'data.*.file.*'=>'mimes:pdf,doc,excel',
             // 'user_id'=>'required|exists:users,id'
         ]);
         if ($validator->fails())
@@ -77,23 +77,27 @@ class CourseController extends BaseController
 
   foreach($request->data as $data)
     {
+        $file=array();
+        foreach($data['file'] as $filedata)
+    {
+        $file[]=$filedata->getClientOriginalName();
+    }
 
         $unit= new Unit([
             'title' => $data['title'],
-            'file' => $data['file'],
+            'file' =>implode(',',$file),
             'course_id' => $course->id,
               ]);
 
-        $unit->save();
+      $unit->save();
 
-        }
-        foreach($request->videodata as $videodata)
+    foreach($data['video'] as $videodata)
     {
 
-       $fileName =  $videodata['video']->getClientOriginalName();
+       $fileName =  $videodata->getClientOriginalName();
         $filePath = 'videos/' . $fileName;
 
-        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata['video']));
+        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
 
         // File URL to access the video in frontend
         $url = Storage::disk('public')->url($filePath);
@@ -108,6 +112,7 @@ class CourseController extends BaseController
             $video = new Video([
            'duration' => $playtime,
             'video' => $filePath,
+            'name'=> $fileName ,
             'unit_id' => $unit->id,
         ]);
 
@@ -117,6 +122,9 @@ class CourseController extends BaseController
         }
 
     }
+
+        }
+
 
          // return new CountryResource($country);
          $success['courses']=New CourseResource($course);
@@ -176,6 +184,7 @@ class CourseController extends BaseController
             'description'=>'required|string',
             'duration' =>'required',
             'tags'=>'required',
+             'data.*.video.*'=>'mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
            'data.*.file'=>'mimes:pdf,doc,excel',
            'data.*.id' => 'nullable|numeric',
@@ -206,25 +215,68 @@ class CourseController extends BaseController
     }
 
      foreach ($request->data as $data) {
+         $file=array();
+        foreach($data['file'] as $filedata)
+    {
+        $file[]=$filedata->getClientOriginalName();
+    }
       $units[] = Unit::updateOrCreate([
         'id' => $data['id'],
         'course_id' => $course_id,
         'is_deleted' => 0,
       ], [
         'title' => $data['title'],
-        'file' => $data['file'],
+        'file' => implode(',',$file),
         'course_id' => $course_id
       ]);
-    }
-    $units = Unit::where('course_id', $course_id)->get();
-    foreach ($units as $unit) {
-     $videos_id = video::where('unit_id', $unit->id)->pluck('id')->toArray();
+
+      foreach($data['video'] as $videodata)
+    {
+
+       $fileName =  $videodata->getClientOriginalName();
+        $filePath = 'videos/' . $fileName;
+
+        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
+
+        // File URL to access the video in frontend
+        $url = Storage::disk('public')->url($filePath);
+        $getID3 = new \getID3();
+        $pathVideo = 'storage/videos/'. $fileName;
+
+        $fileAnalyze = $getID3->analyze($pathVideo);
+        // dd($fileAnalyze);
+        $playtime = $fileAnalyze['playtime_string'];
+        // dd($playtime);
+        if ($isFileUploaded) {
+              $videos_id = Video::where('unit_id', $unit->id)->pluck('id')->toArray();
     foreach ($videos_id as $oid) {
-      if (!(in_array($oid, array_column($request->videodata, 'id')))) {
         $video = Video::query()->find($oid);
         $video->update(['is_deleted' => 1]);
-      }
+
     }
+            $video = new Video([
+           'duration' => $playtime,
+            'video' => $filePath,
+            'name'=> $fileName ,
+            'unit_id' => $unit->id,
+        ]);
+
+            $video->save();
+
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+    }
+
 
      foreach ($request->videodata as $videodata) {
       $videos[] = Video::updateOrCreate([
@@ -235,7 +287,7 @@ class CourseController extends BaseController
         'video' => $request->video
       ]);
     }
-  }
+  
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);
         $success['status']= 200;

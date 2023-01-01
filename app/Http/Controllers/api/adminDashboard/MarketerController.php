@@ -53,7 +53,7 @@ class MarketerController extends BaseController
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'gender'=>'required|in:male,female',
+            'user_name'>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
 
             'snapchat'=>'required|url',
@@ -74,6 +74,7 @@ class MarketerController extends BaseController
         }
         $marketer = Marketer::create([
             'name'=> $request->name,
+            'user_name'=> $request->user_name,
             'email' => $request->email,
             'password' => $request->password,
             'gender' => $request->gender,
@@ -143,9 +144,8 @@ class MarketerController extends BaseController
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'gender'=>'required|in:male,female',
+            'user_name'>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-
             'snapchat'=>'required',
             'facebook'=>'required',
             'twiter'=>'required',
@@ -153,7 +153,7 @@ class MarketerController extends BaseController
             'youtube'=>'required',
             'instegram'=>'required',
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-          'country_id'=>'required|exists:countries,id',
+             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'socialmediatext' =>'string'
 
@@ -165,6 +165,7 @@ class MarketerController extends BaseController
         }
         $marketer->update([
             'name'=> $request->input('name'),
+            'user_name'=> $request->input('user_name'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
             'gender' => $request->input('gender'),

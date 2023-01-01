@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\ExplainVideos;
 use Illuminate\Http\Request;
-use App\Http\Resources\ExplainVideoResource;
+use App\Models\ExplainVideos;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ExplainVideoResource;
 use App\Http\Controllers\api\BaseController as BaseController;
+
 class ExplainVideosController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -54,18 +56,38 @@ class ExplainVideosController extends BaseController
             'title'=>'required|string|max:255',
             'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-             'user_id'=>'required|exists:users,id'
+            'link'=>'required|url',
+
         ]);
         if ($validator->fails())
         {
             return $this->sendError(null,$validator->errors());
         }
+        $fileName =  $request->video->getClientOriginalName();
+        $filePath = 'videos/' . $fileName;
+
+        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
+
+        // File URL to access the video in frontend
+        $url = Storage::disk('public')->url($filePath);
+        $getID3 = new \getID3();
+        $pathVideo = 'storage/videos/'. $fileName;
+
+        $fileAnalyze = $getID3->analyze($pathVideo);
+        // dd($fileAnalyze);
+        $playtime = $fileAnalyze['playtime_string'];
+        // dd($playtime);
+        if ($isFileUploaded) {
         $explainvideos = ExplainVideos::create([
             'title' => $request->title,
-            'video'=>$request->video,
+            'duration' => $playtime,
+            'video' => $filePath,
+            // 'name'=> $fileName ,
             'thumbnail' =>$request->thumbnail,
-            'user_id' => $request->user_id,
+            'link' =>$request->link,
+            'user_id' => auth()->user()->id,
           ]);
+        }
 
          // return new CountryResource($country);
          $success['explainvideos']=New ExplainVideoResource($explainvideos);
@@ -84,7 +106,7 @@ class ExplainVideosController extends BaseController
     {
           $explainVideos = ExplainVideos::query()->find($explainVideos);
          if (is_null($explainVideos) || $explainVideos->is_deleted == 1){
-         return $this->sendError("المدينه غير موجودة","explainvideo is't exists");
+         return $this->sendError("الشرح غير موجودة","explainvideo is't exists");
          }
 
 
@@ -120,21 +142,40 @@ class ExplainVideosController extends BaseController
          $input = $request->all();
         $validator =  Validator::make($input ,[
              'title'=>'required|string|max:255',
-            'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
-            'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-             'user_id'=>'required|exists:users,id'
+             'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+             'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+             'link'=>'required|url',
         ]);
         if ($validator->fails())
         {
             # code...
             return $this->sendError(null,$validator->errors());
         }
-        $explainVideos->update([
+       $fileName =  $request->video->getClientOriginalName();
+        $filePath = 'videos/' . $fileName;
+
+        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
+
+        // File URL to access the video in frontend
+        $url = Storage::disk('public')->url($filePath);
+        $getID3 = new \getID3();
+        $pathVideo = 'storage/videos/'. $fileName;
+
+        $fileAnalyze = $getID3->analyze($pathVideo);
+        // dd($fileAnalyze);
+        $playtime = $fileAnalyze['playtime_string'];
+        // dd($playtime);
+        if ($isFileUploaded) {
+        $explainvideos = ExplainVideos::update([
             'title' => $request->input('title'),
-            'video' => $request->input('video'),
-            'thumbnail' => $request->input('thumbnail'),
-            'user_id' => $request->input('user_id')
-        ]);
+            'duration' => $playtime,
+             'video' => $filePath,
+             'thumbnail' => $request->input('thumbnail'),
+             'link' => $request->input('link'),
+            'user_id' => auth()->user()->id,
+          ]);
+        }
+
        //$country->fill($request->post())->update();
         $success['explainvideos']=New ExplainVideoResource($explainVideos);
         $success['status']= 200;

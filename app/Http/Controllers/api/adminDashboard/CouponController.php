@@ -53,9 +53,9 @@ class CouponController extends BaseController
             'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
+            'start_at' =>['required','date'],
             'expire_date' =>['required','date'],
             'total_redemptions'=>['required','numeric'],
-            'user_redemptions'=>['required','numeric'],
 
         ]);
         if ($validator->fails())
@@ -67,9 +67,10 @@ class CouponController extends BaseController
             'discount_type' => $request->discount_type,
             'total_price' => $request->total_price,
             'discount' => $request->discount,
+            'start_at' => $request->start_at,
             'expire_date' => $request->expire_date,
             'total_redemptions' => $request->total_redemptions,
-            'user_redemptions' => $request->user_redemptions,
+            
             'free_shipping' => $request->free_shipping,
             'exception_discount_product' => $request->exception_discount_product,
             'store_id' => null,

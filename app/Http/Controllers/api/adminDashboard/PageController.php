@@ -12,7 +12,7 @@ use function PHPSTORM_META\map;
 
 class PageController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -83,7 +83,7 @@ class PageController extends BaseController
 
          return $this->sendResponse($success,'تم إضافة تصنيف الصفحة بنجاح','page_category Added successfully');
     }
-    
+
     public function publish(Request $request)
     {
         $input = $request->all();
@@ -112,7 +112,7 @@ class PageController extends BaseController
             'user_id' => auth()->user()->id,
             'status' =>'active'
           ]);
-     
+
           $page->page_categories()->attach(explode(',', $request->name));
 
          $success['Pages']=New PageResource($page);
@@ -172,7 +172,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-       
+
            ]);
            if ($validator->fails())
            {
