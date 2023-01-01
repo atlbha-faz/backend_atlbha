@@ -17,8 +17,60 @@ class RegionSeeder extends Seeder
     {
           Region::create([
             'name' => 'الرياض',
-
             'country_id'=>1
           ]);
+          Region::create([
+            'name' => ' مكة المكرمة',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'المدينة المنورة',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'القصيم',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'الشرقية',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'عسير',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'تبوك ',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'حائل ',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => ' الحدود الشمالية',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'جازان ',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'نجران ',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'الباحة ',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'الجوف ',
+            'country_id'=>1
+          ]);
+          Region::create([
+            'name' => 'فرسان ',
+            'country_id'=>1
+          ]);
+         
     }
 }

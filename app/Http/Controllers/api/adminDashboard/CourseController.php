@@ -187,6 +187,9 @@ class CourseController extends BaseController
              'data.*.video.*'=>'mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
            'data.*.file'=>'mimes:pdf,doc,excel',
+           'data.*.id' => 'nullable|numeric',
+           'videodata.*.video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+           'videodata.*.id' => 'nullable|numeric',
         ]);
         if ($validator->fails())
         {
@@ -275,6 +278,16 @@ class CourseController extends BaseController
     }
 
 
+     foreach ($request->videodata as $videodata) {
+      $videos[] = Video::updateOrCreate([
+        'id' => $videodata['id'],
+        'unit_id' => $unit->id,
+        'is_deleted' => 0,
+      ], [
+        'video' => $request->video
+      ]);
+    }
+  
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);
         $success['status']= 200;
