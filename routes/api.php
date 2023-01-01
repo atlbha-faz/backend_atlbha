@@ -59,6 +59,7 @@ Route::post('changeActivityStatus/{id}',[App\Http\Controllers\api\adminDashboard
 Route::post('changePlatformStatus/{id}',[App\Http\Controllers\api\adminDashboard\PlatformController::class,'changeStatus']);
 Route::post('changeServiceStatus/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class,'changeStatus']);
 Route::post('changeCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeStatus']);
+Route::post('changeStoreCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeStatus']);
 Route::post('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'changeStatus']);
 Route::post('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\PaymenttypeController::class,'changeStatus']);
 Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\CommentController::class,'changeStatus']);
@@ -92,6 +93,9 @@ Route::post('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDash
 Route::post('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
 Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
 
+Route::post('logoUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'logoUpdate']);
+Route::post('panarUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'panarUpdate']);
+Route::post('sliderUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'sliderUpdate']);
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
 Route::resource('city',App\Http\Controllers\api\adminDashboard\CityController::class);
@@ -105,12 +109,15 @@ Route::resource('activity',App\Http\Controllers\api\adminDashboard\ActivityContr
 Route::resource('platform',App\Http\Controllers\api\adminDashboard\PlatformController::class);
 Route::resource('service',App\Http\Controllers\api\adminDashboard\ServiceController::class);
 Route::resource('category',App\Http\Controllers\api\adminDashboard\CategoryController::class);
+Route::resource('storecategory',App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
+
 Route::resource('shippingtype',App\Http\Controllers\api\adminDashboard\ShippingtypeController::class);
 Route::resource('paymenttype',App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);
 Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
 Route::resource('replaycomment',App\Http\Controllers\api\adminDashboard\ReplaycommentController::class);
 Route::resource('maintenance',App\Http\Controllers\api\adminDashboard\MaintenanceController::class);
 Route::resource('page',App\Http\Controllers\api\adminDashboard\pageController::class);
+Route::post('publish',[App\Http\Controllers\api\adminDashboard\pageController::class,'publish']);
 Route::resource('pagecategory',App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
 Route::resource('technicalSupport',App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class);
 Route::resource('currency',App\Http\Controllers\api\adminDashboard\CurrencyController::class);

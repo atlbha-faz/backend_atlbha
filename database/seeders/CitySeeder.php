@@ -16,17 +16,18 @@ class CitySeeder extends Seeder
     public function run()
     {
         City::create([
-            'name' => 'جده',
-            'name_en' => 'jeddh',
-            'code' => '00966',
-            'region_id'=>1
-        ]);
-        City::create([
             'name' => 'الرياض',
             'name_en' => 'Riyadh',
             'code' => '00966',
             'region_id'=>1
         ]);
+        City::create([
+            'name' => 'جده',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+            'region_id'=>1
+        ]);
+   
 
 
     }

@@ -127,7 +127,10 @@ class EtlobhaController extends BaseController
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
               'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-              'data' => 'required|array',
+              'data'=>'required|array',
+              'data.*.type'=>'required|in:brand,color,wight,size',
+              'data.*.title'=>'required|string',
+              'data.*.value'=>'required|array',
               'category_id'=>'required|exists:categories,id',
               'subcategory_id'=>['required','array'],
               'subcategory_id.*'=>['required','numeric',
@@ -179,7 +182,7 @@ class EtlobhaController extends BaseController
           $option = Option::where('product_id', $id);
 
 
-          // dd($request->$data['id']);
+   
           $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
           foreach ($options_id as $oid) {
             if (!(in_array($oid, array_column($request->data, 'id')))) {

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
-class CategoryController extends BaseController
+class StoreCategoryController extends BaseController
 {
 
     public function __construct()
@@ -23,7 +23,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0)->where('parent_id',null)->where('for','etlobha')->where('store_id',null)->get());
+        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0)->where('parent_id',null)->where('for','store')->where('store_id',null)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع التصنيفات بنجاح','categories return successfully');
@@ -48,13 +48,15 @@ class CategoryController extends BaseController
     public function store(Request $request)
     {
 
-
+     
             $input = $request->all();
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
-                'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+                'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+                'store_id' =>'required|exists:stores,id',
                 'data.*.name'=>'required|string|max:255',
                 'data.*.id' => 'nullable|numeric',
+        
             ]);
             if ($validator->fails())
             {
@@ -76,27 +78,21 @@ class CategoryController extends BaseController
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'icon' => $request->icon,
                 'parent_id'=>null,
-                'for'=>'etlobha',
-                'store_id'=> null,
+                'for'=>'store',
+                'store_id'=>null,
               ]);
 
-              $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255',
-         
-            ]);
-            if ($validator->fails())
-            {
-                return $this->sendError(null,$validator->errors());
-            }
+              
 if($request->data){
+   
     foreach($request->data as $data)
     {
 
         $subcategory= new Category([
             'name' => $data['name'],
             'parent_id' => $category->id,
-            'for'=> 'etlobha',
-            'store_id'=> null,
+            'for'=> 'store',
+            'store_id'=>null,
               ]);
 
         $subcategory->save();
@@ -105,8 +101,6 @@ if($request->data){
 }
 
 
-    // }
-    // dd($category );
     $success['categories']=New CategoryResource($category);
     $success['status']= 200;
 
@@ -121,7 +115,7 @@ if($request->data){
     public function show($category)
     {
         $category= Category::query()->find($category);
-        if ( is_null($category) || $category->is_deleted==1 || $category->for=='store'){
+        if ( is_null($category) || $category->is_deleted==1){
                return $this->sendError("القسم غير موجودة","Category is't exists");
                }
               $success['categories']=New CategoryResource($category);
@@ -154,7 +148,7 @@ if($request->data){
     public function changeStatus($id)
     {
         $category = Category::query()->find($id);
-        if (is_null($category) || $category->is_deleted==1 || $category->for=='store'){
+        if (is_null($category) || $category->is_deleted==1){
          return $this->sendError("القسم غير موجودة","category is't exists");
          }
         if($category->status === 'active'){
@@ -175,61 +169,66 @@ if($request->data){
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-          $category_id=$category->id;
-        if (is_null($category) ||  $category->is_deleted==1 || $category->for=='store'){
-            return $this->sendError("التصنيف غير موجودة"," Category is't exists");
-       }
-        // if($request->parent_id == null){
+        
+        $category=Category::query()->find($id);
+        $category_id=$category->id;
+        // dd($request->data);
+      if (is_null($category) ||  $category->is_deleted==1 || $category->for=='etlobha'){
+          return $this->sendError("التصنيف غير موجودة"," Category is't exists");
+     }
+      // if($request->parent_id == null){
 
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'data.*.name'=>'required|string|max:255',
-            'data.*.id' => 'nullable|numeric',
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $category->update([
-               'name' => $request->input('name'),
-                'icon' =>$request->input('icon'),
-                'for' =>'etlobha',
-                'store_id' =>null
-           ]);
+          $input = $request->all();
+         $validator =  Validator::make($input ,[
+          'name'=>'required|string|max:255',
+          'data.*.name'=>'required|string|max:255',
+          'data.*.id' => 'nullable|numeric',
+          // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+         ]);
+         if ($validator->fails())
+         {
+             # code...
+             return $this->sendError(null,$validator->errors());
+         }
+         $category->update([
+             'name' => $request->input('name'),
+              'icon' =>$request->input('icon'),
+              'for' =>'store',
+              'store_id' =>null
+         ]);
 
-       $subcategory = Category::where('parent_id', $category_id);
+    
 
-
-       // dd($request->$data['id']);
-        $subcategories_id = Category::where('parent_id', $category_id)->pluck('id')->toArray();
-        foreach ($subcategories_id as $oid) {
-        if (!(in_array($oid, array_column($request->data, 'id')))) {
-            $subcategory = Category::query()->find($oid);
-            $subcategory->update(['is_deleted' => 1]);
-        }
-        }
+      $subcategories_id = Category::where('parent_id', $category_id)->pluck('id')->toArray();
+   
+      foreach ($subcategories_id as $oid) {
+      if (!(in_array($oid, array_column($request->data, 'id')))) {
+          $subcategory = Category::query()->find($oid);
+          $subcategory->update(['is_deleted' => 1]);
+      }
+      }
      
-     foreach ($request->data as $data) {
-      $subcategories[] = Category::updateOrCreate([
-         'id'=>$data['id']
-      ], [
-        'name' => $data['name'],
-       'parent_id' => $category_id,
-        'for'=>'etlobha',
-        'is_deleted' => 0
 
-      ]);
-    }
-           $success['categories']=New CategoryResource($category);
-           $success['status']= 200;
+   foreach ($request->data as $data) {
+  
+    $subcategories[] = Category::updateOrCreate([
+        'id'=>$data['id'],
+      
+    ], [
+      'name' => $data['name'],
+      'parent_id' => $category_id,
+      'for'=>'store',
+      'is_deleted' => 0,
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','Category updated successfully');
-    }
+    ]);
+  }
+         $success['categories']=New CategoryResource($category);
+         $success['status']= 200;
+
+          return $this->sendResponse($success,'تم التعديل بنجاح','Category updated successfully');
+  }
 
     /**
      * Remove the specified resource from storage.
