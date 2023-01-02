@@ -39,6 +39,7 @@ class EtlobhaController extends BaseController
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
+            'for' => 'required|in:store,stock.etlobha',
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data'=>'required|array',
             'data.*.type'=>'required|in:brand,color,wight,size',
@@ -73,7 +74,7 @@ class EtlobhaController extends BaseController
             'store_id' => null,
 
           ]);
- $productid =$product->id;
+        $productid =$product->id;
               if($request->hasFile("images")){
                 $files=$request->file("images");
                 foreach($files as $file){
@@ -88,12 +89,14 @@ class EtlobhaController extends BaseController
             }
             foreach($request->data as $data)
             {
+                // dd($data['value']);
         //$request->input('name', []);
                 $option= new Option([
                     'type' => $data['type'],
                     'title' => $data['title'],
-                    'value' => $data['value'],
+                    'value' => implode(',',$data['value']),
                     'product_id' =>  $productid
+
                   ]);
 
                 $option->save();
@@ -114,8 +117,8 @@ class EtlobhaController extends BaseController
 
     public function update(Request $request, $id)
     {
-           $product =Product::query()->find($id);
-           if (is_null($product) || $product->is_deleted==1  || $product->for=='store'){
+           $product =Product::query()->where('for','etlobha')->find($id);
+           if (is_null($product) || $product->is_deleted==1){
            return $this->sendError(" المنتج غير موجود","product is't exists");
             }
            $input = $request->all();
@@ -126,13 +129,13 @@ class EtlobhaController extends BaseController
               'purchasing_price'=>['required','numeric','gt:0'],
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
-              'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            //   'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
               'data'=>'required|array',
               'data.*.type'=>'required|in:brand,color,wight,size',
               'data.*.title'=>'required|string',
               'data.*.value'=>'required|array',
               'category_id'=>'required|exists:categories,id',
-              'subcategory_id'=>['required','array'],
+              'subcategory_id'=>['array'],
               'subcategory_id.*'=>['required','numeric',
               Rule::exists('categories', 'id')->where(function ($query) {
               return $query->join('categories', 'id', 'parent_id');
@@ -182,7 +185,7 @@ class EtlobhaController extends BaseController
           $option = Option::where('product_id', $id);
 
 
-   
+
           $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
           foreach ($options_id as $oid) {
             if (!(in_array($oid, array_column($request->data, 'id')))) {
@@ -214,7 +217,7 @@ class EtlobhaController extends BaseController
 
            public function specialStatus($id)
     {
-        $product = Product::query()->find($id);
+        $product = Product::query()->where('for','etlobha')->find($id);
          if (is_null($product) || $product->is_deleted==1){
          return $this->sendError("المنتج غير موجود","product is't exists");
          }
@@ -238,7 +241,11 @@ class EtlobhaController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $products =Product::whereIn('id',$request->id)->get();
+            $products =Product::whereIn('id',$request->id)->where('for','etlobha')->get();
+            foreach($products as $product){
+              if (is_null($product) || $product->is_deleted==1){
+         return $this->sendError("المنتج غير موجود","product is't exists");}
+              }
            foreach($products as $product)
            {
                $product->update(['is_deleted' => 1]);
@@ -250,7 +257,11 @@ class EtlobhaController extends BaseController
 
       public function changeStatusall(Request $request)
     {
-        $products =Product::whereIn('id',$request->id)->get();
+        $products =Product::whereIn('id',$request->id)->where('for','etlobha')->get();
+        foreach($products as $product){
+          if (is_null($product) || $product->is_deleted==1){
+         return $this->sendError("المنتج غير موجود","product is't exists");
+          }}
         foreach($products as $product)
         {
         if($product->status === 'active'){

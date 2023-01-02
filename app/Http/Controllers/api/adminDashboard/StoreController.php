@@ -66,7 +66,7 @@ class StoreController extends BaseController
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'activity_id' =>'required|array',
             'package_id' =>'required',
-            'period'=>'required|numeric',
+
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'user_country_id'=>'required|exists:countries,id',
@@ -113,7 +113,7 @@ class StoreController extends BaseController
             'entity_type' => $request->entity_type,
             'package_id' => $request->package_id,
             'user_id' => $userid,
-            'period'=>$request->period,
+
             'periodtype'=>$request->periodtype,
             'country_id' => $request->country_id,
             'city_id' => $request->city_id
@@ -199,15 +199,15 @@ else{
             'name'=>'required|string|max:255',
             'user_name'=>'required|string|max:255',
             'store_name'=>'required|string|max:255',
-            'email'=>'required|email|unique:users',
-            'store_email'=>'required|email|unique:stores',
+            'email'=>'required|email',
+            'store_email'=>'required|email',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'domain'=>'required|url',
             'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'activity_id' =>'required|array',
             'package_id' =>'required',
-            'period'=>'required|numeric',
+
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'user_country_id'=>'required|exists:countries,id',
@@ -252,7 +252,7 @@ else{
                'accept_status' => $request->input('accept_status'),
                'country_id' => $request->input('country_id'),
                'city_id' => $request->input('city_id'),
-               'period' => $request->input('period'),
+              
                'periodtype' => $request->input('periodtype'),
            ]);
              $store->activities()->sync($request->activity_id);

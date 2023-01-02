@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('sku')->unique();
             $table->string('slug');
-            $table->enum('for',['store','etlobha'])->default('etlobha');
+            $table->enum('for',['store','etlobha','stock'])->default('etlobha');
            $table->enum('special',['special','not_special'])->default('not_special');
             $table->longText('description');
             $table->double('purchasing_price');
