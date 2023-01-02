@@ -6,6 +6,7 @@ use App\Models\Unit;
 use App\Models\Video;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use App\Http\Resources\VideoResource;
 use App\Http\Resources\CourseResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -51,12 +52,11 @@ class CourseController extends BaseController
      */
     public function store(Request $request)
     {
-
+  
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'description'=>'required|string',
-            'duration' =>'required',
             'tags'=>'required',
             'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
@@ -182,14 +182,13 @@ class CourseController extends BaseController
         $validator =  Validator::make($input ,[
            'name'=>'required|string|max:255',
             'description'=>'required|string',
-            'duration' =>'required',
-            'tags'=>'required',
-             'data.*.video.*'=>'mimes:mp4,ogx,oga,ogv,ogg,webm',
+            'data'=>'array',
+             'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
-           'data.*.file'=>'mimes:pdf,doc,excel',
+           'data.*.file.*'=>'mimes:pdf,doc,excel',
            'data.*.id' => 'nullable|numeric',
-           
         ]);
+        
         if ($validator->fails())
         {
             # code...
@@ -199,7 +198,7 @@ class CourseController extends BaseController
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'duration' => $request->input('duration'),
-            'tags' => implode(',',$request->input('tags')),
+            'tags' =>$request->input('tags'),
         ]);
       $unit = Unit::where('course_id', $course_id);
 
@@ -217,8 +216,10 @@ class CourseController extends BaseController
          $file=array();
         foreach($data['file'] as $filedata)
     {
-        $file[]=$filedata->getClientOriginalName();
+     // $file[]=$filedata;
+         $file[]=$filedata->getClientOriginalName();
     }
+    
       $units[] = Unit::updateOrCreate([
         'id' => $data['id'],
         'course_id' => $course_id,
@@ -228,6 +229,11 @@ class CourseController extends BaseController
         'file' => implode(',',$file),
 
       ]);
+      $videos_id = Video::where('unit_id', $data['id'])->pluck('id')->toArray();
+      foreach ($videos_id as $oid) {
+   $video = Video::query()->find($oid);
+   $video->update(['is_deleted' => 1]);
+}
 
       $units = Unit::where('course_id', $course_id)->get;
 
@@ -257,12 +263,11 @@ class CourseController extends BaseController
         $playtime = $fileAnalyze['playtime_string'];
         // dd($playtime);
         if ($isFileUploaded) {
-
             $video = new Video([
            'duration' => $playtime,
             'video' => $filePath,
             'name'=> $fileName ,
-            'unit_id' => $unit->id,
+            'unit_id' => $data['id'],
         ]);
 
             $video->save();
@@ -272,6 +277,7 @@ class CourseController extends BaseController
 
     }
 
+  }
 
     }
 
@@ -284,7 +290,7 @@ class CourseController extends BaseController
 
          return $this->sendResponse($success,'تم التعديل بنجاح','course updated successfully');
 }
-
+    
    public function changeStatus($id)
     {
         $course = Course::query()->find($id);
@@ -323,5 +329,60 @@ class CourseController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم حذف الكورس بنجاح','course deleted successfully');
+    }
+    public function addvideo(Request $request)
+    {
+      $input = $request->all();
+      $validator =  Validator::make($input ,[
+          'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+          'unit_id' =>'required|exists:units,id'
+      ]);
+      if ($validator->fails())
+      {
+          return $this->sendError(null,$validator->errors());
+      }
+      $fileName =  $request->video->getClientOriginalName();
+      $filePath = 'videos/' . $fileName;
+
+      $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
+
+      // File URL to access the video in frontend
+      $url = Storage::disk('public')->url($filePath);
+      $getID3 = new \getID3();
+      $pathVideo = 'storage/videos/'. $fileName;
+
+      $fileAnalyze = $getID3->analyze($pathVideo);
+      // dd($fileAnalyze);
+      $playtime = $fileAnalyze['playtime_string'];
+      // dd($playtime);
+      if ($isFileUploaded) {
+          $video = new Video([
+         'duration' => $playtime,
+          'video' => $filePath,
+          'name'=> $fileName ,
+          'unit_id' => $request->unit_id,
+      ]);
+
+          $video->save();
+    }
+         $success['videos']=New VideoResource($video);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة فيديو بنجاح','video Added successfully');
+    
+   }
+
+      public function deletevideo(Request $request)
+     {
+          $video = Video::query()->find($request->id);
+         if (is_null($video) || $video->is_deleted == 1){
+         return $this->sendError("الفيديو غير موجودة","video is't exists");
+         }
+
+          $video ->update(['is_deleted' => 1]);
+        $success['videos']=New VideoResource($video);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم عرض بنجاح','video showed successfully');
     }
 }

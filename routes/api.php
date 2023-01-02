@@ -110,6 +110,11 @@ Route::resource('platform',App\Http\Controllers\api\adminDashboard\PlatformContr
 Route::resource('service',App\Http\Controllers\api\adminDashboard\ServiceController::class);
 Route::resource('category',App\Http\Controllers\api\adminDashboard\CategoryController::class);
 Route::resource('storecategory',App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
+Route::post('addvideo',[App\Http\Controllers\api\adminDashboard\CourseController::class,'addvideo']);
+Route::post('deletevideo',[App\Http\Controllers\api\adminDashboard\CourseController::class,'deletevideo']);
+
+
+Route::resource('course',App\Http\Controllers\api\adminDashboard\CourseController::class);
 
 Route::resource('shippingtype',App\Http\Controllers\api\adminDashboard\ShippingtypeController::class);
 Route::resource('paymenttype',App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);

@@ -34,7 +34,6 @@ return new class extends Migration
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();
             $table->enum('periodtype',['month','year'])->default('month');
-            
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
             $table->enum('special',['special','not_special'])->default('not_special');
