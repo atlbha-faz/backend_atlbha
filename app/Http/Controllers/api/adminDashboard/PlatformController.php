@@ -11,7 +11,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class PlatformController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -27,7 +27,7 @@ class PlatformController extends BaseController
         $success['platforms']=PlatformResource::collection(Platform::where('is_deleted',0)->get());
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم ارجاع السوق  بنجاح','Platforms return successfully'); 
+         return $this->sendResponse($success,'تم ارجاع السوق  بنجاح','Platforms return successfully');
     }
 
     /**
@@ -64,7 +64,7 @@ class PlatformController extends BaseController
             'link' =>$request->link,
           ]);
 
-    
+
          $success['platforms']=New PlatformResource($platform);
         $success['status']= 200;
 
@@ -90,7 +90,7 @@ class PlatformController extends BaseController
 
         return $this->sendResponse($success,'تم  عرض بنجاح','platform showed successfully');
     }
-    
+
     public function changeStatus($id)
     {
         $platform = Platform::query()->find($id);
@@ -150,13 +150,13 @@ class PlatformController extends BaseController
                'logo' => $request->input('logo'),
                'link' => $request->input('link'),
            ]);
-          
+
            $success['platforms']=New PlatformResource($platform);
            $success['status']= 200;
-   
+
             return $this->sendResponse($success,'تم التعديل بنجاح','platform updated successfully');
        }
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -171,10 +171,10 @@ class PlatformController extends BaseController
             return $this->sendError("السوق غير موجودة","platform is't exists");
             }
            $platform->update(['is_deleted' => 1]);
-   
+
            $success['platforms']=New PlatformResource($platform);
            $success['status']= 200;
-   
+
             return $this->sendResponse($success,'تم حذف السوق بنجاح','platform deleted successfully');
     }
 }

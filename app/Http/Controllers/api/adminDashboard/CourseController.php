@@ -187,7 +187,6 @@ class CourseController extends BaseController
             'data.*.title'=>'required|string|max:255',
            'data.*.file.*'=>'mimes:pdf,doc,excel',
            'data.*.id' => 'nullable|numeric',
-
         ]);
         
         if ($validator->fails())
@@ -228,7 +227,7 @@ class CourseController extends BaseController
       ], [
         'title' => $data['title'],
         'file' => implode(',',$file),
-        'course_id' => $course_id
+
       ]);
       $videos_id = Video::where('unit_id', $data['id'])->pluck('id')->toArray();
       foreach ($videos_id as $oid) {
@@ -236,6 +235,16 @@ class CourseController extends BaseController
    $video->update(['is_deleted' => 1]);
 }
 
+      $units = Unit::where('course_id', $course_id)->get;
+
+ foreach ($units  as $unit) {
+
+     $videos_id = Video::where('unit_id', $unit->id)->pluck('id')->toArray();
+    foreach ($videos_id as $oid) {
+        $video = Video::query()->find($oid);
+        $video->update(['is_deleted' => 1]);
+
+    }
       foreach($data['video'] as $videodata)
     {
 
@@ -254,7 +263,6 @@ class CourseController extends BaseController
         $playtime = $fileAnalyze['playtime_string'];
         // dd($playtime);
         if ($isFileUploaded) {
-     
             $video = new Video([
            'duration' => $playtime,
             'video' => $filePath,
@@ -271,6 +279,11 @@ class CourseController extends BaseController
 
   }
 
+    }
+
+
+
+     }
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);
         $success['status']= 200;

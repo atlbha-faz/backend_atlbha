@@ -138,10 +138,10 @@ class ProductController extends BaseController
        public function changeSatusall(Request $request)
     {
 
-            $products =Product::whereIn('id',$request->id)->get();
+            $products =Product::whereIn('id',$request->id)->where('for','store')->get();
            foreach($products as $product)
            {
-             if (is_null($product) || $product->is_deleted==1 || $product->for=="etlobha"){
+             if (is_null($product) || $product->is_deleted==1){
                    return $this->sendError("المنتجات غير موجودة"," product is't exists");
        }
               if($product->status === 'active'){
@@ -265,10 +265,10 @@ class ProductController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $products =Product::whereIn('id',$request->id)->get();
+            $products =Product::whereIn('id',$request->id)->where('for','store')->get();
            foreach($products as $product)
            {
-            if (is_null($product) || $product->is_deleted==1 || $product->for=="etlobha"){
+            if (is_null($product) || $product->is_deleted==1){
                    return $this->sendError("المنتج غير موجودة"," product is't exists");
              }
                $product->update(['is_deleted' => 1]);
