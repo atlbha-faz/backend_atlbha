@@ -6,6 +6,7 @@ use App\Models\Unit;
 use App\Models\Video;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use App\Http\Resources\VideoResource;
 use App\Http\Resources\CourseResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -270,9 +271,6 @@ class CourseController extends BaseController
 
   }
 
-
-
-  
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);
         $success['status']= 200;
@@ -318,5 +316,60 @@ class CourseController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم حذف الكورس بنجاح','course deleted successfully');
+    }
+    public function addvideo(Request $request)
+    {
+      $input = $request->all();
+      $validator =  Validator::make($input ,[
+          'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+          'unit_id' =>'required|exists:units,id'
+      ]);
+      if ($validator->fails())
+      {
+          return $this->sendError(null,$validator->errors());
+      }
+      $fileName =  $request->video->getClientOriginalName();
+      $filePath = 'videos/' . $fileName;
+
+      $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
+
+      // File URL to access the video in frontend
+      $url = Storage::disk('public')->url($filePath);
+      $getID3 = new \getID3();
+      $pathVideo = 'storage/videos/'. $fileName;
+
+      $fileAnalyze = $getID3->analyze($pathVideo);
+      // dd($fileAnalyze);
+      $playtime = $fileAnalyze['playtime_string'];
+      // dd($playtime);
+      if ($isFileUploaded) {
+          $video = new Video([
+         'duration' => $playtime,
+          'video' => $filePath,
+          'name'=> $fileName ,
+          'unit_id' => $request->unit_id,
+      ]);
+
+          $video->save();
+    }
+         $success['videos']=New VideoResource($video);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة فيديو بنجاح','video Added successfully');
+    
+   }
+
+      public function deletevideo(Request $request)
+     {
+          $video = Video::query()->find($request->id);
+         if (is_null($video) || $video->is_deleted == 1){
+         return $this->sendError("الفيديو غير موجودة","video is't exists");
+         }
+
+          $video ->update(['is_deleted' => 1]);
+        $success['videos']=New VideoResource($video);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم عرض بنجاح','video showed successfully');
     }
 }
