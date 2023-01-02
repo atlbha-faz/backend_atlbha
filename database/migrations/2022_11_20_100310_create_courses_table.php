@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->longText('description');
-            $table->time('duration');
+            $table->time('duration')->nullable();
             $table->text('tags')->nullable();
             $table->text('image')->nullable();
             $table->text('link')->nullable();

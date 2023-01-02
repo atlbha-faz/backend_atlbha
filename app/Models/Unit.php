@@ -43,7 +43,7 @@ class Unit extends Model
 
       public function countVideo($unitid)
     {
-        $unitid=Video::select('id')->where('unit_id',$unitid)->get();
+        $unitid=Video::select('id')->where('unit_id',$unitid)->where('is_deleted',0)->get();
 
 $videoes=$unitid->count();
     return  $videoes;

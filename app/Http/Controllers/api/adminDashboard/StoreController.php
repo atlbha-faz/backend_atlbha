@@ -66,7 +66,6 @@ class StoreController extends BaseController
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'activity_id' =>'required|array',
             'package_id' =>'required',
-            'period'=>'required|numeric',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'user_country_id'=>'required|exists:countries,id',
@@ -113,7 +112,6 @@ class StoreController extends BaseController
             'entity_type' => $request->entity_type,
             'package_id' => $request->package_id,
             'user_id' => $userid,
-            'period'=>$request->period,
             'periodtype'=>$request->periodtype,
             'country_id' => $request->country_id,
             'city_id' => $request->city_id
@@ -122,14 +120,14 @@ class StoreController extends BaseController
           $user->update([
                'store_id' =>  $store->id]);
 
-if($request->periodtype =="month"){
-           $end_at = date('Y-m-d',strtotime("+".$request->period." months", strtotime($store->created_at)));
-  $store->update([
+         if($request->periodtype =="month"){
+           $end_at = date('Y-m-d',strtotime("+ 1 months", strtotime($store->created_at)));
+         $store->update([
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);
         }
-else{
-               $end_at = date('Y-m-d',strtotime("+".$request->period." years", strtotime($store->created_at)));
+         else{
+               $end_at = date('Y-m-d',strtotime("+ 1 years", strtotime($store->created_at)));
         $store->update([
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);
@@ -207,7 +205,6 @@ else{
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'activity_id' =>'required|array',
             'package_id' =>'required',
-            'period'=>'required|numeric',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'user_country_id'=>'required|exists:countries,id',
@@ -252,13 +249,12 @@ else{
                'accept_status' => $request->input('accept_status'),
                'country_id' => $request->input('country_id'),
                'city_id' => $request->input('city_id'),
-               'period' => $request->input('period'),
                'periodtype' => $request->input('periodtype'),
            ]);
              $store->activities()->sync($request->activity_id);
 
              if($request->periodtype =="month"){
-           $end_at = date('Y-m-d',strtotime("+".$request->period." months", strtotime($store->created_at)));
+           $end_at = date('Y-m-d',strtotime("+ 1 months", strtotime($store->created_at)));
 
                 $store->update([
                'start_at'=> $store->created_at,
@@ -266,7 +262,7 @@ else{
 
         }
           else{
-               $end_at = date('Y-m-d',strtotime("+".$request->period." years", strtotime($store->created_at)));
+               $end_at = date('Y-m-d',strtotime("+1 years", strtotime($store->created_at)));
               $store->update([
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);

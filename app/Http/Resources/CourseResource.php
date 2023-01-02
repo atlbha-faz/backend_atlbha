@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\UnitResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CourseResource extends JsonResource
@@ -31,4 +32,4 @@ class CourseResource extends JsonResource
             'unit' =>UnitResource::collection($this->unit)
         ];
         }
-}
+  }  
