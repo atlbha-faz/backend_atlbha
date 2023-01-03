@@ -108,6 +108,9 @@ Route::resource('video',App\Http\Controllers\api\adminDashboard\VideoController:
 Route::resource('activity',App\Http\Controllers\api\adminDashboard\ActivityController::class);
 Route::resource('platform',App\Http\Controllers\api\adminDashboard\PlatformController::class);
 Route::resource('service',App\Http\Controllers\api\adminDashboard\ServiceController::class);
+
+Route::get('servicedeleteall',[App\Http\Controllers\api\adminDashboard\ServiceController::class,'deleteall']);
+
 Route::resource('category',App\Http\Controllers\api\adminDashboard\CategoryController::class);
 Route::resource('storecategory',App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
 Route::post('addvideo',[App\Http\Controllers\api\adminDashboard\CourseController::class,'addvideo']);
@@ -163,8 +166,18 @@ Route::get('etlobhachangeSatusall',[App\Http\Controllers\api\adminDashboard\Etlo
 Route::get('etlobhadeleteall',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'deleteall']);
 Route::get('productdeleteall',[App\Http\Controllers\api\adminDashboard\ProductController::class,'deleteall']);
 Route::post('addToStore/{id}',[App\Http\Controllers\api\adminDashboard\StockController::class,'addToStore']);
-
-
+Route::get('pagechangeSatusall',[App\Http\Controllers\api\adminDashboard\PageController::class,'changeSatusall']);
+Route::get('pagedeleteall',[App\Http\Controllers\api\adminDashboard\PageController::class,'deleteall']);
+Route::get('userchangeSatusall',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeSatusall']);
+Route::get('userdeleteall',[App\Http\Controllers\api\adminDashboard\UserController::class,'deleteall']);
+Route::get('couponchangeSatusall',[App\Http\Controllers\api\adminDashboard\CouponController::class,'changeSatusall']);
+Route::get('coupondeleteall',[App\Http\Controllers\api\adminDashboard\CouponController::class,'deleteall']);
+Route::get('marketerdeleteall',[App\Http\Controllers\api\adminDashboard\MarketerController::class,'deleteall']);
+Route::get('categorychangeSatusall',[App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeSatusall']);
+Route::get('categorydeleteall',[App\Http\Controllers\api\adminDashboard\CategoryController::class,'deleteall']);
+Route::get('categorystorechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreCategoryController::class,'changeSatusall']);
+Route::get('categorystoredeleteall',[App\Http\Controllers\api\adminDashboard\StoreCategoryController::class,'deleteall']);
+Route::get('cityedeleteall',[App\Http\Controllers\api\adminDashboard\CityController::class,'deleteall']);
 
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::class);

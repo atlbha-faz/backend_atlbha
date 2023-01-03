@@ -49,13 +49,12 @@ class MarketerController extends BaseController
     public function store(Request $request)
     {
          $input = $request->all();
-        $validator =  Validator::make($input ,[
+      $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'user_name'>'required|string|max:255',
+           'user_name'=>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-
             'snapchat'=>'required|url',
             'facebook'=>'required|url',
             'twiter'=>'required|url',
@@ -140,11 +139,11 @@ class MarketerController extends BaseController
     {
 
          $input = $request->all();
-        $validator =  Validator::make($input ,[
+       $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'user_name'>'required|string|max:255',
+            'user_name'=>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'snapchat'=>'required',
             'facebook'=>'required',
@@ -228,5 +227,23 @@ class MarketerController extends BaseController
 
          return $this->sendResponse($success,'تم حذف المسوق  بنجاح','Marketers deleted successfully');
 
+    }
+     public function deleteall(Request $request)
+    {
+
+            $marketers =Marketer::whereIn('id',$request->id)->get();
+           foreach($marketers as $marketer)
+           {
+             if (is_null($marketer) || $marketer->is_deleted==1 ){
+                    return $this->sendError("المندوب غير موجود","marketer is't exists");
+             }
+             $marketer->update(['is_deleted' => 1]);
+            $success['marketers']=New MarketerResource($marketer);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف المندوب بنجاح','marketer deleted successfully');
     }
 }

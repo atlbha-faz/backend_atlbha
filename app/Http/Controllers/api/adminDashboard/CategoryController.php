@@ -82,7 +82,7 @@ class CategoryController extends BaseController
 
               $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
-         
+
             ]);
             if ($validator->fails())
             {
@@ -213,7 +213,7 @@ if($request->data){
             $subcategory->update(['is_deleted' => 1]);
         }
         }
-     
+
      foreach ($request->data as $data) {
       $subcategories[] = Category::updateOrCreate([
          'id'=>$data['id']
@@ -249,4 +249,45 @@ if($request->data){
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف القسم بنجاح','category deleted successfully');
     }
+
+     public function deleteall(Request $request)
+    {
+
+            $categorys =Category::whereIn('id',$request->id)->where('for','etlobha')->get();
+           foreach($categorys as $category)
+           {
+             if (is_null($category) || $category->is_deleted==1 ){
+                    return $this->sendError("التصنيف غير موجودة","category is't exists");
+             }
+             $category->update(['is_deleted' => 1]);
+            $success['categorys']=New CategoryResource($category);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف التصنيف بنجاح','category deleted successfully');
+    }
+       public function changeSatusall(Request $request)
+            {
+
+                    $categorys =Category::whereIn('id',$request->id)->where('for','etlobha')->get();
+                foreach($categorys as $category)
+                {
+                    if (is_null($category) || $category->is_deleted==1){
+                        return $this->sendError("  التصنيف غير موجودة","category is't exists");
+              }
+                    if($category->status === 'active'){
+                $category->update(['status' => 'not_active']);
+                }
+                else{
+                $category->update(['status' => 'active']);
+                }
+                $success['categorys']= New CategoryResource($category);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة التصنيف بنجاح','category updated successfully');
+           }
 }

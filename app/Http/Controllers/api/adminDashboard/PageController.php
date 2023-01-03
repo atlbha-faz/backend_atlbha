@@ -239,4 +239,44 @@ class PageController extends BaseController
 
     }
 
+  public function deleteall(Request $request)
+    {
+
+            $pages =Page::whereIn('id',$request->id)->get();
+           foreach($pages as $page)
+           {
+             if (is_null($page) || $page->is_deleted==1 ){
+                    return $this->sendError("الصفحة غير موجودة","page is't exists");
+             }
+             $page->update(['is_deleted' => 1]);
+            $success['pages']=New PageResource($page);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف الصفحة بنجاح','page deleted successfully');
+    }
+       public function changeSatusall(Request $request)
+            {
+
+                    $pages =Page::whereIn('id',$request->id)->get();
+                foreach($pages as $page)
+                {
+                    if (is_null($page) || $page->is_deleted==1){
+                        return $this->sendError("  الصفحة غير موجودة","page is't exists");
+              }
+                    if($page->status === 'active'){
+                $page->update(['status' => 'not_active']);
+                }
+                else{
+                $page->update(['status' => 'active']);
+                }
+                $success['pages']= New PageResource($page);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','page updated successfully');
+           }
 }

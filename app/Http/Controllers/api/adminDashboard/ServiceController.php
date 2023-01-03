@@ -10,7 +10,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class ServiceController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -178,5 +178,22 @@ class ServiceController extends BaseController
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف الخدمة بنجاح','service deleted successfully');
+    }
+
+     public function deleteall(Request $request)
+    {
+
+            $services =Service::whereIn('id',$request->id)->get();
+           foreach($services as $service)
+           {
+             if (is_null($service) || $service->is_deleted==1 ){
+                   return $this->sendError("الخدمة غير موجودة"," service is't exists");
+             }
+             $service->update(['is_deleted' => 1]);
+             $success['services']= New ServiceResource($service);
+
+            }
+               $success['status']= 200;
+                return $this->sendResponse($success,'تم حذف الخدمة بنجاح','service deleted successfully');
     }
 }

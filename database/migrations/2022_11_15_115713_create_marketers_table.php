@@ -19,17 +19,17 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('image')->nullable();
-            $table->enum('gender',['male','female'])->nullable();
+            $table->string('user_name');
             $table->string('phoneNumber')->nullable();
-            $table->string('snapchat');
-            $table->string('facebook');
-            $table->string('twiter');
-            $table->string('whatsapp');
-            $table->string('youtube');
-            $table->string('instegram');
+            $table->string('snapchat')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('twiter')->nullable();
+            $table->string('whatsapp')->nullable();
+            $table->string('youtube')->nullable();
+            $table->string('instegram')->nullable();
              $table->longText('socialmediatext');
             $table->enum('status',['active','not_active'])->default('active');
-          
+
             $table->boolean("is_deleted")->default(0);
             $table->unsignedBigInteger('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');

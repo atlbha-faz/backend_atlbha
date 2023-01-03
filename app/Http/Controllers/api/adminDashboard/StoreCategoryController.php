@@ -48,7 +48,7 @@ class StoreCategoryController extends BaseController
     public function store(Request $request)
     {
 
-     
+
             $input = $request->all();
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
@@ -56,7 +56,7 @@ class StoreCategoryController extends BaseController
                 'store_id' =>'required|exists:stores,id',
                 'data.*.name'=>'required|string|max:255',
                 'data.*.id' => 'nullable|numeric',
-        
+
             ]);
             if ($validator->fails())
             {
@@ -82,9 +82,9 @@ class StoreCategoryController extends BaseController
                 'store_id'=>null,
               ]);
 
-              
+
 if($request->data){
-   
+
     foreach($request->data as $data)
     {
 
@@ -171,7 +171,7 @@ if($request->data){
      */
     public function update(Request $request, $id)
     {
-        
+
         $category=Category::query()->find($id);
         $category_id=$category->id;
         // dd($request->data);
@@ -199,23 +199,23 @@ if($request->data){
               'store_id' =>null
          ]);
 
-    
+
 
       $subcategories_id = Category::where('parent_id', $category_id)->pluck('id')->toArray();
-   
+
       foreach ($subcategories_id as $oid) {
       if (!(in_array($oid, array_column($request->data, 'id')))) {
           $subcategory = Category::query()->find($oid);
           $subcategory->update(['is_deleted' => 1]);
       }
       }
-     
+
 
    foreach ($request->data as $data) {
-  
+
     $subcategories[] = Category::updateOrCreate([
         'id'=>$data['id'],
-      
+
     ], [
       'name' => $data['name'],
       'parent_id' => $category_id,
@@ -248,4 +248,45 @@ if($request->data){
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف القسم بنجاح','category deleted successfully');
     }
+
+   public function deleteall(Request $request)
+    {
+
+            $categorys =Category::whereIn('id',$request->id)->where('for','store')->get();
+           foreach($categorys as $category)
+           {
+             if (is_null($category) || $category->is_deleted==1 ){
+                    return $this->sendError("التصنيف غير موجودة","category is't exists");
+             }
+             $category->update(['is_deleted' => 1]);
+            $success['categorys']=New CategoryResource($category);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف التصنيف بنجاح','category deleted successfully');
+    }
+       public function changeSatusall(Request $request)
+            {
+
+                    $categorys =Category::whereIn('id',$request->id)->where('for','store')->get();
+                foreach($categorys as $category)
+                {
+                    if (is_null($category) || $category->is_deleted==1){
+                        return $this->sendError("  التصنيف غير موجودة","category is't exists");
+              }
+                    if($category->status === 'active'){
+                $category->update(['status' => 'not_active']);
+                }
+                else{
+                $category->update(['status' => 'active']);
+                }
+                $success['categorys']= New CategoryResource($category);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة التصنيف بنجاح','category updated successfully');
+           }
 }
