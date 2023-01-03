@@ -52,7 +52,7 @@ class CourseController extends BaseController
      */
     public function store(Request $request)
     {
-  
+
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
@@ -188,7 +188,7 @@ class CourseController extends BaseController
            'data.*.file.*'=>'mimes:pdf,doc,excel',
            'data.*.id' => 'nullable|numeric',
         ]);
-        
+
         if ($validator->fails())
         {
             # code...
@@ -219,7 +219,7 @@ class CourseController extends BaseController
      // $file[]=$filedata;
          $file[]=$filedata->getClientOriginalName();
     }
-    
+
       $units[] = Unit::updateOrCreate([
         'id' => $data['id'],
         'course_id' => $course_id,
@@ -283,14 +283,14 @@ class CourseController extends BaseController
 
 
 
-     }
+     
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم التعديل بنجاح','course updated successfully');
 }
-    
+
    public function changeStatus($id)
     {
         $course = Course::query()->find($id);
@@ -369,7 +369,7 @@ class CourseController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافة فيديو بنجاح','video Added successfully');
-    
+
    }
 
       public function deletevideo(Request $request)

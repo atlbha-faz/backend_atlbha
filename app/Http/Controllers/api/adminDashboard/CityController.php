@@ -175,4 +175,23 @@ class CityController extends BaseController
 
          return $this->sendResponse($success,'تم حذف المدينة بنجاح','city deleted successfully');
     }
+
+      public function deleteall(Request $request)
+    {
+
+            $citys =city::whereIn('id',$request->id)->get();
+           foreach($citys as $city)
+           {
+             if (is_null($city) || $city->is_deleted==1 ){
+                    return $this->sendError("المدينة غير موجودة","city is't exists");
+             }
+             $city->update(['is_deleted' => 1]);
+            $success['citys']=New cityResource($city);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف المدينة بنجاح','city deleted successfully');
+    }
 }

@@ -71,6 +71,6 @@ class RegionSeeder extends Seeder
             'name' => 'فرسان ',
             'country_id'=>1
           ]);
-         
+
     }
 }
