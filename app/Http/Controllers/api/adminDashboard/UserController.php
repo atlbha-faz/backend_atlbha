@@ -185,4 +185,46 @@ class UserController  extends BaseController
 
             return $this->sendResponse($success,'تم حذف المستخدم بنجاح','User deleted successfully');
         }
+          public function deleteall(Request $request)
+    {
+
+            $users =User::whereIn('id',$request->id)->get();
+           foreach($users as $user)
+           {
+             if (is_null($user) || $user->is_deleted==1 ){
+                    return $this->sendError("المستخدم غير موجودة","user is't exists");
+             }
+             $user->update(['is_deleted' => 1]);
+            $success['users']=New UserResource($user);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف المستخدم بنجاح','user deleted successfully');
+    }
+       public function changeSatusall(Request $request)
+            {
+
+                    $users =User::whereIn('id',$request->id)->get();
+                foreach($users as $user)
+                {
+                    if (is_null($user) || $user->is_deleted==1){
+                        return $this->sendError("  المستخدم غير موجودة","user is't exists");
+              }
+                    if($user->status === 'active'){
+                $user->update(['status' => 'not_active']);
+                }
+                else{
+                $user->update(['status' => 'active']);
+                }
+                $success['users']= New UserResource($user);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة المستخدم بنجاح','user updated successfully');
+           }
+
+
 }
