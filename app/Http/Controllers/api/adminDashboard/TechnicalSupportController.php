@@ -30,12 +30,12 @@ class TechnicalSupportController extends BaseController
       ->select( DB::raw('count(*) as total'))
       ->groupBy(DB::raw("store_id"))
       ->get());
-      $success['percent of Store_Technicalsupports %']=(count(DB::table('technical_supports')
+      $success['percent_of_Store_Technicalsupports %']=(count(DB::table('technical_supports')
       ->select( DB::raw('count(*) as total'))
       ->groupBy(DB::raw("store_id"))
       ->get())/(TechnicalSupport::where('is_deleted',0)->count())*100)."%";
 
-       $success['Technicalsupports']=TechnicalSupport::where('is_deleted',0)->count();
+       $success['TechnicalsupportsCount']=TechnicalSupport::where('is_deleted',0)->count();
        $success['pending_Technicalsupports']=TechnicalSupport::where('is_deleted',0)->where('supportstatus','pending')->count();
        $success['finished_Technicalsupports']=TechnicalSupport::where('is_deleted',0)->where('supportstatus','finished')->count();
        $success['Technicalsupports']=TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted',0)->get());
@@ -221,8 +221,9 @@ class TechnicalSupportController extends BaseController
     else{
         $technicalSupport->update(['status' => 'active']);
     }
+      $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
 }
-        $success['technicalSupports']= TechnicalSupportResource::collection($technicalSupports);
+
         $success['status']= 200;
          return $this->sendResponse($success,'تم تعدبل حالة الشكوى بنجاح',' technicalSupport status updared successfully');
 
