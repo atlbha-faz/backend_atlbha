@@ -34,7 +34,7 @@ class EtlobhaController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'sku'=>'required|string',
+            'sku'=>'required|string|unique:products',
             'description'=>'required|string',
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
@@ -124,12 +124,12 @@ class EtlobhaController extends BaseController
            $input = $request->all();
            $validator =  Validator::make($input ,[
                'name'=>'required|string|max:255',
-              'sku'=>'required|string',
+              'sku'=>'required|string|unique:products',
               'description'=>'required|string',
               'purchasing_price'=>['required','numeric','gt:0'],
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
-            //   'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
               'data'=>'required|array',
               'data.*.type'=>'required|in:brand,color,wight,size',
               'data.*.title'=>'required|string',

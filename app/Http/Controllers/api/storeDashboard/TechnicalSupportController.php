@@ -144,7 +144,6 @@ class TechnicalSupportController extends BaseController
             'supportstatus' => $request->input('supportstatus'),
             'uder_id' => $request->input('uder_id'),
          ]);
-         //$country->fill($request->post())->update();
             $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
             $success['status']= 200;
 
@@ -181,7 +180,7 @@ class TechnicalSupportController extends BaseController
    {
        $technicalSupport = TechnicalSupport::query()->find($technicalSupport);
          if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
-         return $this->sendError("الوحدة غير موجودة","technicalSupport is't exists");
+         return $this->sendError("الصف غير موجودة","technicalSupport is't exists");
          }
         $technicalSupport->update(['is_deleted' => 1]);
 
@@ -189,5 +188,24 @@ class TechnicalSupportController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم حذف طلب الدعم بنجاح','technical Support deleted successfully');
+    }
+
+       public function deleteall(Request $request)
+    {
+
+            $technicalSupports =technicalSupport::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+           foreach($technicalSupports as $technicalSupport)
+           {
+             if (is_null($technicalSupport) || $technicalSupport->is_deleted==1 ){
+                    return $this->sendError("الصف غير موجودة","technicalSupport is't exists");
+             }
+             $technicalSupport->update(['is_deleted' => 1]);
+            $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف المنتج بنجاح','technicalSupport deleted successfully');
     }
 }
