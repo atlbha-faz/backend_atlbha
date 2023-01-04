@@ -150,6 +150,7 @@ Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionControlle
 Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 //Route::delete('etlobha/{id}',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
+Route::post('sectionupdate',[App\Http\Controllers\api\adminDashboard\SectionController::class,'update']);
 
 Route::post('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
 Route::get('registration_status_show', [App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_status_show']);
