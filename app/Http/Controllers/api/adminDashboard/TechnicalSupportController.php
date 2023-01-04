@@ -79,7 +79,7 @@ class TechnicalSupportController extends BaseController
         }
         $technicalsupport = TechnicalSupport::create([
             'title' => $request->title,
-            'phoneNumber'=>$request->phoneNumber,
+            'phonenumber'=>$request->phonenumber,
             'content'=>$request->content,
              'type' => $request->type,
             'supportstatus'=>$request->supportstatus,
@@ -154,7 +154,7 @@ class TechnicalSupportController extends BaseController
          }
          $technicalSupport->update([
             'title' => $request->input('title'),
-            'phoneNumber' => $request->input('phoneNumber'),
+            'phonenumber' => $request->input('phonencoumber'),
             'content' => $request->input('content'),
             'type' => $request->input('type'),
             'supportstatus' => $request->input('supportstatus'),
