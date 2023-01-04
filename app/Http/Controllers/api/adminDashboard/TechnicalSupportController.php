@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\TechnicalSupport;
+use DB;
 use Illuminate\Http\Request;
+use App\Models\TechnicalSupport;
+use App\Http\Resources\CountryResource;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\TechnicalsupportResource;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class TechnicalSupportController extends BaseController
@@ -24,8 +26,20 @@ class TechnicalSupportController extends BaseController
      */
     public function index()
      {
+      $success[' Store_Technicalsupports']=count(DB::table('technical_supports')
+      ->select( DB::raw('count(*) as total'))
+      ->groupBy(DB::raw("store_id"))
+      ->get());
+      $success['percent of Store_Technicalsupports %']=(count(DB::table('technical_supports')
+      ->select( DB::raw('count(*) as total'))
+      ->groupBy(DB::raw("store_id"))
+      ->get())/(TechnicalSupport::where('is_deleted',0)->count())*100)."%";
+
+       $success['Technicalsupports']=TechnicalSupport::where('is_deleted',0)->count();
+       $success['pending_Technicalsupports']=TechnicalSupport::where('is_deleted',0)->where('supportstatus','pending')->count();
+       $success['finished_Technicalsupports']=TechnicalSupport::where('is_deleted',0)->where('supportstatus','finished')->count();
        $success['Technicalsupports']=TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted',0)->get());
-        $success['status']= 200;
+       $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الدعم الفني بنجاح','Technical Support return successfully');
     }
@@ -191,5 +205,26 @@ class TechnicalSupportController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم حذف طلب الدعم بنجاح','technical Support deleted successfully');
+    }
+    public function changeStatusall(Request $request)
+    {
+        $technicalSupports =TechnicalSupport::whereIn('id',$request->id)->get();
+        foreach($technicalSupports as $technicalSupport){
+          if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
+         return $this->sendError("الشكوى غير موجود","technicalSupport is't exists");
+          }}
+        foreach($technicalSupports as $technicalSupport)
+        {
+        if($technicalSupport->status === 'active'){
+            $technicalSupport->update(['status' => 'not_active']);
+     }
+    else{
+        $technicalSupport->update(['status' => 'active']);
+    }
+}
+        $success['technicalSupports']= TechnicalSupportResource::collection($technicalSupports);
+        $success['status']= 200;
+         return $this->sendResponse($success,'تم تعدبل حالة الشكوى بنجاح',' technicalSupport status updared successfully');
+
     }
 }
