@@ -75,7 +75,7 @@ class Store extends Model
         return $interval->days."days";
     }
     public function period($id){
-        $period=Store::select('period')->where('id',$id)->first();
+        $period=Store::select('periodtype')->where('id',$id)->first();
          return $period->period;
      }
      public function user()

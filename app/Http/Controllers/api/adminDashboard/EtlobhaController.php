@@ -266,11 +266,11 @@ class EtlobhaController extends BaseController
         {
         if($product->status === 'active'){
             $product->update(['status' => 'not_active']);
-     }
-    else{
+         }
+         else{
         $product->update(['status' => 'active']);
     }
-}
+        }
         $success['products']= ProductResource::collection($products);
         $success['status']= 200;
          return $this->sendResponse($success,'تم تعدبل حالة القسم بنجاح',' product status updared successfully');

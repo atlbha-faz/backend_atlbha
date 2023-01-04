@@ -21,7 +21,7 @@ class MarketerResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'password' => $this->password,
-            'gender' => $this->gender,
+            'user_name' => $this->user_name,
             'phoneNumber' => $this->phoneNumber,
             'facebook' => $this->facebook,
             'snapchat' => $this->snapchat,

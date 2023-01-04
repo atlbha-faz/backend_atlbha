@@ -70,7 +70,7 @@ class CouponController extends BaseController
             'start_at' => $request->start_at,
             'expire_date' => $request->expire_date,
             'total_redemptions' => $request->total_redemptions,
-            
+
             'free_shipping' => $request->free_shipping,
             'exception_discount_product' => $request->exception_discount_product,
             'store_id' => null,
@@ -204,5 +204,45 @@ class CouponController extends BaseController
 
             return $this->sendResponse($success,'تم حذف الكوبون بنجاح','coupon deleted successfully');
     }
+      public function deleteall(Request $request)
+    {
+
+            $coupons =Coupon::whereIn('id',$request->id)->get();
+           foreach($coupons as $coupon)
+           {
+             if (is_null($coupon) || $coupon->is_deleted==1 ){
+                    return $this->sendError("الكوبون غير موجودة","coupon is't exists");
+             }
+             $coupon->update(['is_deleted' => 1]);
+            $success['coupons']=New CouponResource($coupon);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف الكوبون بنجاح','coupon deleted successfully');
+    }
+       public function changeSatusall(Request $request)
+            {
+
+                    $coupons =Coupon::whereIn('id',$request->id)->get();
+                foreach($coupons as $coupon)
+                {
+                    if (is_null($coupon) || $coupon->is_deleted==1){
+                        return $this->sendError("  الكوبون غير موجودة","coupon is't exists");
+              }
+                    if($coupon->status === 'active'){
+                $coupon->update(['status' => 'not_active']);
+                }
+                else{
+                $coupon->update(['status' => 'active']);
+                }
+                $success['coupons']= New CouponResource($coupon);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة الكوبون بنجاح','coupon updated successfully');
+           }
 
 }

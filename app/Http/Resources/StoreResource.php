@@ -37,7 +37,6 @@ class StoreResource extends JsonResource
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
         'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
-        'period'=>$this->period($this->id),
         'periodtype'=>$this->periodtype,
         'left'=>$this->left($this->id),
         'confirmation_status'=>$this->confirmation_status,

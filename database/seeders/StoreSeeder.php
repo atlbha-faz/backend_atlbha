@@ -35,7 +35,7 @@ class StoreSeeder extends Seeder
             'entity_type' => 'شركة',
             'start_at' => Carbon::now(),
             'end_at' => '2023-03-01',
-            'period' => '3',
+          
 
             'package_id' => 1,
             'country_id' => 1,
@@ -64,8 +64,8 @@ class StoreSeeder extends Seeder
             'entity_type' => 'شركة',
             'start_at' => Carbon::now(),
             'end_at' => '2023-03-01',
-            'period' => '3',
-           
+
+
             'package_id' => 1,
             'country_id' => 1,
             'city_id' =>1,

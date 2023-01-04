@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('domain');
             $table->string('icon')->nullable();
             $table->string('phonenumber');
-            $table->string('description')->nullable();;
-            $table->string('business_license')->nullable();;
-            $table->string('ID_file')->nullable();;
+            $table->string('description')->nullable();
+            $table->string('business_license')->nullable();
+            $table->string('ID_file')->nullable();
             $table->string('snapchat')->nullable();
             $table->string('facebook')->nullable();
             $table->string('twiter')->nullable();
