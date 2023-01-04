@@ -10,7 +10,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class ContactController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -89,7 +89,7 @@ class ContactController extends BaseController
     }
     public function changeStatus($id)
     {
-        $contact = contact::query()->find($id);
+        $contact = Contact::query()->find($id);
         if ($contact->is_deleted==1){
          return $this->sendError("بيانات التواصل غير موجودة","contact is't exists");
          }
@@ -171,5 +171,24 @@ class ContactController extends BaseController
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف بيانات التواصل بنجاح','contact deleted successfully');
+    }
+
+    public function deleteall(Request $request)
+    {
+
+            $contacts =Contact::whereIn('id',$request->id)->get();
+           foreach($contacts as $contact)
+           {
+             if (is_null($contact) || $contact->is_deleted==1 ){
+                    return $this->sendError("الصفحة غير موجودة","contact is't exists");
+             }
+             $contact->update(['is_deleted' => 1]);
+            $success['contacts']=New ContactResource($contact);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف البريد بنجاح','contact deleted successfully');
     }
 }

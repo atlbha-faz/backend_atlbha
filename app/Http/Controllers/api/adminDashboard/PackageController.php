@@ -11,7 +11,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class PackageController extends BaseController
 {
 
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -56,7 +56,7 @@ class PackageController extends BaseController
             'discount'=>'required|numeric|gt:0',
             'plan'=>'required|array',
             'template'=>'required|array',
-         
+
         ]);
         if ($validator->fails())
         {
@@ -133,7 +133,7 @@ class PackageController extends BaseController
             'discount'=>'required|numeric|gt:0',
             'plan'=>'required|array',
             'template'=>'required|array',
-           
+
          ]);
          if ($validator->fails())
          {
@@ -155,7 +155,7 @@ class PackageController extends BaseController
            if($request->template!=null){
            $package->templates()->sync($request->template);
            }
-      
+
             $success['packages']=New PackageResource($package);
             $success['status']= 200;
 
@@ -201,4 +201,45 @@ class PackageController extends BaseController
 
          return $this->sendResponse($success,'تم حذف الباقة بنجاح','package deleted successfully');
     }
+
+     public function deleteall(Request $request)
+    {
+
+            $packages =Package::whereIn('id',$request->id)->get();
+           foreach($packages as $package)
+           {
+             if (is_null($package) || $package->is_deleted==1 ){
+                    return $this->sendError("الباقة غير موجودة","package is't exists");
+             }
+             $package->update(['is_deleted' => 1]);
+            $success['packages']=New PackageResource($package);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف الباقة بنجاح','package deleted successfully');
+    }
+       public function changeSatusall(Request $request)
+            {
+
+                    $packages =Package::whereIn('id',$request->id)->get();
+                foreach($packages as $package)
+                {
+                    if (is_null($package) || $package->is_deleted==1){
+                        return $this->sendError("  الباقة غير موجودة","package is't exists");
+              }
+                    if($package->status === 'active'){
+                $package->update(['status' => 'not_active']);
+                }
+                else{
+                $package->update(['status' => 'active']);
+                }
+                $success['packages']= New PackageResource($package);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة الباقة بنجاح','package updated successfully');
+           }
 }

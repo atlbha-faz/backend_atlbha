@@ -172,25 +172,24 @@ class SettingController extends BaseController
            return $this->sendError(null,$validator->errors());
         }
         $setting = Setting::where('is_deleted',0)->first();
-        $setting->update(['registration_status' => $request->registration_status]);
+        $setting->update(['registration_status' =>  $request->input('registration_status')]);
         $success['registration_status']=Setting::where('is_deleted',0)->pluck('registration_status')->first();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل الاعدادات بنجاح','registration_status update successfully');
     }
 
-       public function registrationMarketer($id)
+       public function registrationMarketer(Request $request)
     {
-        $registrationMarketer = Setting::query()->find($id);
+        $registrationMarketer = Setting::query()->first();
         if (is_null($registrationMarketer) || $registrationMarketer->is_deleted==1){
          return $this->sendError("الحالة غير موجودة","registrationMarketer is't exists");
          }
-        if($registrationMarketer->registration_marketer === 'active'){
-         $registrationMarketer->update(['registration_marketer' => 'not_active']);
-        }
-      else{
-      $registrationMarketer->update(['registration_marketer' => 'active']);
-          }
+
+
+      $registrationMarketer->update(['registration_marketer' => $request->registration_marketer,
+    'status_marketer'=>$request->status_marketer]);
+
         $success['$registration_marketers']=New SettingResource($registrationMarketer);
         $success['status']= 200;
 
@@ -198,23 +197,13 @@ class SettingController extends BaseController
 
     }
 
-        public function statusMarketer($id)
+       public function registration_marketer_show()
     {
-        $status_marketer = Setting::query()->find($id);
-        if (is_null($status_marketer) || $status_marketer->is_deleted==1){
-         return $this->sendError("الحالة غير موجودة","status_marketer is't exists");
-         }
-        if($status_marketer->status_marketer === 'active'){
-         $status_marketer->update(['status_marketer' => 'not_active']);
-        }
-      else{
-      $status_marketer->update(['status_marketer' => 'active']);
-          }
-        $success['$status_marketers']=New SettingResource($status_marketer);
+        $success['registration_marketer']=Setting::where('is_deleted',0)->pluck('registration_marketer')->first();
+        $success['status_marketer']=Setting::where('is_deleted',0)->pluck('status_marketer')->first();
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم تعدبل حالة  بنجاح',' status updated successfully');
-
+         return $this->sendResponse($success,'تم عرض حالات تسجيل المندوبين بنجاح','registration_marketer shown successfully');
     }
 
 }
