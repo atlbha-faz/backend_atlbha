@@ -55,8 +55,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-            // 'store_id'=>'required|exists:stores,id',
-            // 'user_id'=>'required|exists:users,id',
+      
 
         ]);
         if ($validator->fails())
@@ -72,9 +71,46 @@ class PageController extends BaseController
             'tags' => implode(',', $request->tags),
            'store_id'=> auth()->user()->store_id,
             'user_id'=>auth()->user()->id,
-            'name'=> $request->name,
+            'status'=> "not_active",
+            
           ]);
            //$request->input('name', []);
+          $page->page_categories()->attach(explode(',', $request->name));
+
+         $success['Pages']=New PageResource($page);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة تصنيف الصفحة بنجاح','page_category Added successfully');
+    }
+    public function publish(Request $request)
+    {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'title'=>'required|string|max:255',
+            'page_content'=>'required',
+            'seo_title'=>'required',
+            'seo_link'=>'required',
+            'seo_desc'=>'required',
+            'tags'=>'required',
+            'user_id'=>'exists:users,id',
+
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $page = Page::create([
+            'title' => $request->title,
+            'page_content' => $request->page_content,
+            'seo_title' => $request->seo_title,
+            'seo_link' => $request->seo_link,
+            'seo_desc' => $request->seo_desc,
+            'tags' => implode(',', $request->tags),
+            'store_id'=> auth()->user()->store_id,
+            'user_id' => auth()->user()->id,
+            'status' =>'active'
+          ]);
+
           $page->page_categories()->attach(explode(',', $request->name));
 
          $success['Pages']=New PageResource($page);
@@ -149,10 +185,7 @@ class PageController extends BaseController
                'seo_title' => $request->input('seo_title'),
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
-            //    'store_id' => $request->input('store_id'),
-            //    'user_id' => $request->input('user_id'),
                'tags' => implode(',',$request->input('tags')),
-               'name'=> $request->input('name'),
            ]);
            //$request->input('name', []);
            if($request->name!=null){
@@ -172,7 +205,7 @@ class PageController extends BaseController
      */
     public function destroy($page)
     {
-        $page =Page::query()->find($page);
+        $page =Page::query()->find($page)->where('store_id',auth()->user()->store_id);
         if (is_null($page) || $page->is_deleted==1){
             return $this->sendError("الصفحة غير موجودة","page is't exists");
             }
@@ -186,7 +219,7 @@ class PageController extends BaseController
 
       public function changeStatus($id)
     {
-        $page = Page::query()->find($id);
+        $page = Page::query()->find($id)->where('store_id',auth()->user()->store_id);
          if (is_null($page) || $page->is_deleted==1){
          return $this->sendError("  الصفحة غير موجودة","page is't exists");
          }
@@ -204,5 +237,45 @@ class PageController extends BaseController
 
 
     }
+    public function deleteall(Request $request)
+    {
+
+            $pages =Page::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+           foreach($pages as $page)
+           {
+             if (is_null($page) || $page->is_deleted==1 ){
+                    return $this->sendError("الصفحة غير موجودة","page is't exists");
+             }
+             $page->update(['is_deleted' => 1]);
+            $success['pages']=New PageResource($page);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف الصفحة بنجاح','page deleted successfully');
+    }
+       public function changeSatusall(Request $request)
+            {
+
+                    $pages =Page::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+                foreach($pages as $page)
+                {
+                    if (is_null($page) || $page->is_deleted==1){
+                        return $this->sendError("  الصفحة غير موجودة","page is't exists");
+              }
+                    if($page->status === 'active'){
+                $page->update(['status' => 'not_active']);
+                }
+                else{
+                $page->update(['status' => 'active']);
+                }
+                $success['pages']= New PageResource($page);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','page updated successfully');
+           }
 
 }

@@ -165,7 +165,99 @@ class SeoController extends BaseController
 
             return $this->sendResponse($success,'تم التعديل بنجاح','seo updated successfully');
     }
+    public function updateSeo(Request $request)
+    {
+        $seo =Seo::where('store_id',auth()->user()->store_id)->first();
+        // dd($seo);
+        if (is_null($seo) || $seo->is_deleted==1){
+            return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
+       }
+            $input = $request->all();
+           $validator =  Validator::make($input ,[
+            'index_page_title'=>'required|string|max:255',
+            'index_page_description'=>'required|string',
+           'show_pages'=>'required|in:short_link,name_link',
+           'key_words' =>'required|array',
 
+           ]);
+           if ($validator->fails())
+           {
+               # code...
+               return $this->sendError(null,$validator->errors());
+           }
+           $seo->update([
+               'index_page_title' => $request->input('index_page_title'),
+               'index_page_description' => $request->input('index_page_description'),
+               'key_words' =>implode(',',$request->input('key_words')),
+               'show_pages' => $request->input('show_pages'),
+         
+           ]);
+
+           $success['seos']=New SeoResource($seo);
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم التعديل بنجاح','seo updated successfully');
+    }
+
+    public function updateLink(Request $request)
+    {
+        $seo =Seo::query()->where('store_id',auth()->user()->store_id)->first();
+
+        if (is_null($seo) || $seo->is_deleted==1){
+            return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
+       }
+            $input = $request->all();
+           $validator =  Validator::make($input ,[
+  
+           'link'=>'required|url',
+
+           ]);
+           if ($validator->fails())
+           {
+               # code...
+               return $this->sendError(null,$validator->errors());
+           }
+           $seo->update([
+            
+               'link' => $request->input('link'),
+              
+           ]);
+
+           $success['seos']=New seoResource($seo);
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم التعديل بنجاح','seo updated successfully');
+    }
+
+    public function updateRobots(Request $request)
+    {
+        $seo =Seo::query()->where('store_id',auth()->user()->store_id)->first();
+
+        if (is_null($seo) || $seo->is_deleted==1){
+            return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
+       }
+            $input = $request->all();
+           $validator =  Validator::make($input ,[
+          
+           'robots'=>'required|string',
+      
+           ]);
+           if ($validator->fails())
+           {
+               # code...
+               return $this->sendError(null,$validator->errors());
+           }
+           $seo->update([
+            
+               'robots' => $request->input('robots'),
+
+           ]);
+
+           $success['seos']=New SeoResource($seo);
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم التعديل بنجاح','seo updated successfully');
+    }
     /**
      * Remove the specified resource from storage.
      *
