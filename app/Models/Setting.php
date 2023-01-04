@@ -9,7 +9,7 @@ class Setting extends Model
 {
     use HasFactory;
     protected $fillable = ['name','description','link','email','phoneNumber','logo','icon','address',
-'country_id','city_id','status','registration_marketer','status_marketer','is_deleted'];
+'country_id','city_id','status','registration_marketer','registration_status','status_marketer','is_deleted'];
 public function city()
 {
     return $this->belongsTo(City::class, 'city_id', 'id');

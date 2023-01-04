@@ -55,7 +55,8 @@ class DatabaseSeeder extends Seeder
             CommentSeeder::class,
             ReplayCommentSeeder::class,
             HomepageSeeder::class,
-            OfferSeeder::class
+            OfferSeeder::class,
+            SectionSeeder::class
         ]);
 
 

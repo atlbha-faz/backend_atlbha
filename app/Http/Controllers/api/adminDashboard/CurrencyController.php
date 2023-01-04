@@ -11,7 +11,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class CurrencyController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -53,7 +53,7 @@ class CurrencyController extends BaseController
             'name'=>'required|string|max:255',
             'name_en'=>'required|string|max:255',
             'image' =>'required',
-       
+
         ]);
         if ($validator->fails())
         {
@@ -63,7 +63,7 @@ class CurrencyController extends BaseController
             'name' => $request->name,
             'name_en'=>$request->name_en,
             'image' =>$request->image,
-          
+
           ]);
 
          $success['currencies']=New CurrencyResource($currency);
@@ -80,38 +80,62 @@ class CurrencyController extends BaseController
      */
     public function show(Currency $currency)
     {
-        
+
              $currency = Currency::query()->find($currency->id);
              if (is_null($currency) || $currency->is_deleted==1){
              return $this->sendError("العملة غير موجودة"," Currency is't exists");
              }
-    
-    
+
+
             $success['currencies']=New CurrencyResource($currency);
             $success['status']= 200;
-    
+
              return $this->sendResponse($success,'تم  عرض بنجاح',' Currency showed successfully');
-    
+
         }
-        public function changeStatus($id)
-        {
-            $currency =Currency::query()->find($id);
-             if (is_null($currency) || $currency->is_deleted==1){
-             return $this->sendError("العملة غير موجودة","currency is't exists");
-             }
-    
-            if($currency->status === 'active'){
-            $currency->update(['status' => 'not_active']);
-            }
-            else{
-            $currency->update(['status' => 'active']);
-            }
-            $success['currencies']=New CurrencyResource($currency);
-            $success['status']= 200;
-    
-             return $this->sendResponse($success,'تم تعديل حالة العملة بنجاح','currency updated successfully');
-    
-        }
+        // public function changeStatus($id)
+        // {
+        //     $currency =Currency::query()->find($id);
+        //      if (is_null($currency) || $currency->is_deleted==1){
+        //      return $this->sendError("العملة غير موجودة","currency is't exists");
+        //      }
+
+        //     if($currency->status === 'active'){
+        //     $currency->update(['status' => 'not_active']);
+        //     }
+        //     else{
+        //     $currency->update(['status' => 'active']);
+        //     }
+        //     $success['currencies']=New CurrencyResource($currency);
+        //     $success['status']= 200;
+
+        //      return $this->sendResponse($success,'تم تعديل حالة العملة بنجاح','currency updated successfully');
+
+        // }
+
+public function changeSatusall(Request $request)
+            {
+
+                    $currencys =Currency::whereIn('id',$request->id)->get();
+                foreach($currencys as $currency)
+                {
+                    if (is_null($currency) || $currency->is_deleted==1){
+                        return $this->sendError("  الصفحة غير موجودة","currency is't exists");
+              }
+                    if($currency->status === 'active'){
+                $currency->update(['status' => 'not_active']);
+                }
+                else{
+                $currency->update(['status' => 'active']);
+                }
+                $success['currencys']= New CurrencyResource($currency);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','currency updated successfully');
+           }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -130,35 +154,35 @@ class CurrencyController extends BaseController
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Currency $currency)
-    {
-        if (is_null($currency) || $currency->is_deleted==1){
-         return $this->sendError("العملة غير موجودة","currency is't exists");
-    }
-         $input = $request->all();
-        $validator =  Validator::make($input ,[
-             'name'=>'required|string|max:255',
-            'name_en'=>'required|string|max:255',
-            'image' =>'required',
-         
-        ]);
-        if ($validator->fails())
-        {
-            # code...
-            return $this->sendError(null,$validator->errors());
-        }
-        $currency->update([
-            'name' => $request->input('name'),
-            'name_en' => $request->input('name_en'),
-            'image' => $request->input('image'),
-         
-        ]);
-       
-        $success['Currencies']=New CurrencyResource($currency);
-        $success['status']= 200;
+    // public function update(Request $request, Currency $currency)
+    // {
+    //     if (is_null($currency) || $currency->is_deleted==1){
+    //      return $this->sendError("العملة غير موجودة","currency is't exists");
+    // }
+    //      $input = $request->all();
+    //     $validator =  Validator::make($input ,[
+    //          'name'=>'required|string|max:255',
+    //         'name_en'=>'required|string|max:255',
+    //         'image' =>'required',
 
-         return $this->sendResponse($success,'تم التعديل بنجاح','currency updated successfully');
-    }
+    //     ]);
+    //     if ($validator->fails())
+    //     {
+    //         # code...
+    //         return $this->sendError(null,$validator->errors());
+    //     }
+    //     $currency->update([
+    //         'name' => $request->input('name'),
+    //         'name_en' => $request->input('name_en'),
+    //         'image' => $request->input('image'),
+
+    //     ]);
+
+    //     $success['Currencies']=New CurrencyResource($currency);
+    //     $success['status']= 200;
+
+    //      return $this->sendResponse($success,'تم التعديل بنجاح','currency updated successfully');
+    // }
 
     /**
      * Remove the specified resource from storage.

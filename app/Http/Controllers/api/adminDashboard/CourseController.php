@@ -283,7 +283,7 @@ class CourseController extends BaseController
 
 
 
-     
+
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);
         $success['status']= 200;
@@ -310,6 +310,7 @@ class CourseController extends BaseController
          return $this->sendResponse($success,'تم تعديل حالة الفيديو بنجاح','explainvideo updated successfully');
 
     }
+
 
     /**
      * Remove the specified resource from storage.

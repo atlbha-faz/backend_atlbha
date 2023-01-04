@@ -11,7 +11,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class SectionController extends BaseController
 {
 
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -48,25 +48,7 @@ class SectionController extends BaseController
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'cat_id'=>'required|exists:categories,id'
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $section = Section::create([
-            'name' => $request->name,
-            'cat_id' => $request->cat_id,
-          ]);
 
-
-         $success['sections']=New SectionResource($section );
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة القسم بنجاح','Section Added successfully');
     }
 
     /**
@@ -122,15 +104,17 @@ class SectionController extends BaseController
      * @param  \App\Models\Section  $section
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Section $section)
+    public function update(Request $request)
     {
-        if (is_null($section) || $section->is_deleted==1){
-            return $this->sendError("القسم غير موجودة"," section is't exists");
-       }
+    //     if (is_null($section) || $section->is_deleted==1){
+    //         return $this->sendError("القسم غير موجودة"," section is't exists");
+    //    }
             $input = $request->all();
-           $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255',
-                'cat_id'=>'required|exists:categories,id'
+        $validator =  Validator::make($input ,[
+             'data' => 'required|array',
+           'data.*.name' => 'required|string',
+           'data.*.status' => 'required',
+           'data.*.id' => 'nullable|numeric',
 
            ]);
            if ($validator->fails())
@@ -138,13 +122,16 @@ class SectionController extends BaseController
                # code...
                return $this->sendError(null,$validator->errors());
            }
-           $section->update([
-               'name' => $request->input('name'),
-               'cat_id' => $request->input('cat_id')
+         foreach ($request->data as $data) {
+         $sections[] = Section::updateOrCreate([
+        'id' => $data['id'],
+      ], [
+        'name' => $data['name'],
+        'status' => $data['status']
+      ]);
+    }
 
-           ]);
-
-           $success['sections']=New SectionResource($section);
+           $success['sections']=SectionResource::collection($sections);
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم التعديل بنجاح','section updated successfully');

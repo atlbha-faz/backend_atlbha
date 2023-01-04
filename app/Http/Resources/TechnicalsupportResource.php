@@ -17,7 +17,7 @@ class TechnicalsupportResource extends JsonResource
          return [
             'id' =>$this->id,
             'title'=>$this->title,
-            'phoneNumber' =>$this->phoneNumber,
+            'phonenumber' =>$this->phonenumber,
             'content' =>$this->content,
             'type'=>$this->type,
             'supportstatus'=>$this->supportstatus,
