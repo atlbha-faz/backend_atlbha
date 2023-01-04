@@ -150,6 +150,7 @@ Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionControlle
 Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 //Route::delete('etlobha/{id}',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
+Route::post('sectionupdate',[App\Http\Controllers\api\adminDashboard\SectionController::class,'update']);
 
 Route::post('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
 Route::get('registration_status_show', [App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_status_show']);
@@ -181,6 +182,10 @@ Route::get('categorydeleteall',[App\Http\Controllers\api\adminDashboard\Category
 Route::get('categorystorechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreCategoryController::class,'changeSatusall']);
 Route::get('categorystoredeleteall',[App\Http\Controllers\api\adminDashboard\StoreCategoryController::class,'deleteall']);
 Route::get('cityedeleteall',[App\Http\Controllers\api\adminDashboard\CityController::class,'deleteall']);
+Route::get('currencychangeSatusall',[App\Http\Controllers\api\adminDashboard\CurrencyController::class,'changeSatusall']);
+Route::get('packagechangeSatusall',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeSatusall']);
+Route::get('packagedeleteall',[App\Http\Controllers\api\adminDashboard\PackageController::class,'deleteall']);
+Route::get('registration_marketer_show',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_marketer_show']);
 
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::class);
@@ -191,9 +196,9 @@ Route::post('acceptStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreCo
 Route::post('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'specialStatus']);
 Route::post('rejectStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'rejectStatus']);
 Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
-Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
-Route::post('registrationMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registrationMarketer']);
-
+// Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
+Route::post('registrationMarketer',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registrationMarketer']);
+Route::get('contactdeleteall',[App\Http\Controllers\api\adminDashboard\ContactController::class,'deleteall']);
 });
 });
 Auth::routes();

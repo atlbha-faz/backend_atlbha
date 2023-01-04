@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TechnicalSupport extends Model
 {
     use HasFactory;
-        protected $fillable = ['title','phoneNumber','content','supportstatus','type','store_id','status','is_deleted'];
+        protected $fillable = ['title','phonenumber','content','supportstatus','type','store_id','status','is_deleted'];
 
           public function store()
     {
