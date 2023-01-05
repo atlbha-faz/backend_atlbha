@@ -121,49 +121,7 @@ class ClientController extends BaseController
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    // public function update(Request $request, Client $client)
-    //  {
-    //     if (is_null($client ) ||$client->is_deleted==1){
-    //         return $this->sendError("المندوب غير موجودة","client is't exists");
-    //         }
-
-    //      $input = $request->all();
-    //     $validator =  Validator::make($input ,[
-    //         'ID_number'=>'required|numeric',
-    //         'first_name'=>'required|string|max:255',
-    //         'last_name'=>'required|string|max:255',
-    //         'email'=>'required|email|unique:clients',
-    //         'gender'=>'required|in:male,femal',
-    //         'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-    //         'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-    //         'country_id'=>'required|exists:countries,id',
-    //         'city_id'=>'required|exists:cities,id',
-
-    //     ]);
-    //     if ($validator->fails())
-    //     {
-    //         # code...
-    //         return $this->sendError(null,$validator->errors());
-    //     }
-    //     $client->update([
-    //         'ID_number'=> $request->input('ID_number'),
-    //         'first_name' => $request->input('first_name'),
-    //         'last_name' => $request->input('last_name'),
-    //         'email' => $request->input('email'),
-    //         'gender' => $request->input('gender'),
-    //         'phonenumber' => $request->input('phonenumber'),
-    //         'image' => $request->input('image'),
-    //         'country_id' =>$request->input('country_id'),
-    //         'city_id' =>$request->input('city_id'),
-
-    //     ]);
-
-    //     $success['clients']=New ClientResource($client);
-    //     $success['status']= 200;
-
-    //      return $this->sendResponse($success,'تم التعديل بنجاح','modify  successfully');
-
-    // }
+    
 
       public function changeStatus($id)
     {
@@ -206,5 +164,24 @@ class ClientController extends BaseController
 
          return $this->sendResponse($success,'تم حذف العميل  بنجاح','clients deleted successfully');
 
+    }
+
+       public function deleteall(Request $request)
+    {
+
+            $clients =Client::whereIn('id',$request->id)->get();
+           foreach($clients as $client)
+           {
+             if (is_null($client) || $client->is_deleted==1 ){
+                    return $this->sendError("العميل غير موجود","client is't exists");
+             }
+             $client->update(['is_deleted' => 1]);
+            $success['clients']=New ClientResource($client);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف العميل بنجاح','client deleted successfully');
     }
 }

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('for',['store','etlobha','stock'])->default('etlobha');
            $table->enum('special',['special','not_special'])->default('not_special');
             $table->longText('description');
-            $table->double('purchasing_price');
+            $table->double('purchasing_price')->nullable();
             $table->double('selling_price');
             $table->integer('quantity')->nullable();
             $table->integer('less_qty')->nullable();

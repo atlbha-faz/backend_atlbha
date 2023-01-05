@@ -246,10 +246,16 @@ Route::resource('seo',App\Http\Controllers\api\storeDashboard\SeoController::cla
 Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
 Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
-Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
-Route::resource('replaycomment',App\Http\Controllers\api\adminDashboard\ReplaycommentController::class);
-Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\CommentController::class,'changeStatus']);
-Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycommentController::class,'changeStatus']);
+Route::resource('comment',App\Http\Controllers\api\storeDashboard\CommentController::class);
+Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
+Route::resource('user',App\Http\Controllers\api\storeDashboard\UserController::class);
+Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
+Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
+Route::get('productchangeSatusall',[App\Http\Controllers\api\storeDashboard\ProductController::class,'changeSatusall']);
+Route::get('productdeleteall',[App\Http\Controllers\api\storeDashboard\ProductController::class,'deleteall']);
+Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientController::class,'deleteall']);
+Route::get('socialMedia_store_show',[App\Http\Controllers\api\storeDashboard\storeInformationController::class,'socialMedia_store_show']);
+Route::post('socialMedia_store_update',[App\Http\Controllers\api\storeDashboard\storeInformationController::class,'socialMedia_store_update']);
 
 });
 });
