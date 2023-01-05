@@ -52,20 +52,15 @@ class ProductController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'sku'=>'required|string',
-            'for'=>'required|in:store,etlobha',
+            'sku'=>'required|string|unique:products',
             'description'=>'required|string',
-            'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
-            'quantity'=>['required','numeric','gt:0'],
-            'less_qty'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
-            'tags'=>'required',
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'discount_price'=>['required','numeric'],
             'discount_percent'=>['required','numeric'],
             'category_id'=>'required|exists:categories,id',
-                 'subcategory_id'=>['required','array'],
+            'subcategory_id'=>['array'],
             'subcategory_id.*'=>['required','numeric',
             Rule::exists('categories', 'id')->where(function ($query) {
             return $query->join('categories', 'id', 'parent_id');
@@ -83,34 +78,22 @@ class ProductController extends BaseController
         $product = Product::create([
             'name' => $request->name,
             'sku' => $request->sku,
-            'for' => $request->for,
+            'for' => 'store',
             'description' => $request->description,
-            'quantity' => $request->quantity,
-            'purchasing_price' => $request->purchasing_price,
+
+
             'selling_price' => $request->selling_price,
-            'less_qty' => $request->less_qty,
+
             'stock' => $request->stock,
             'cover' => $request->cover,
-            'tags' => implode(',', $request->tags),
+
            'discount_price'=>$request->discount_price,
             'discount_percent'=>$request->discount_percent,
             'subcategory_id' => implode(',', $request->subcategory_id),
             'category_id' => $request->category_id,
             'store_id'=> auth()->user()->store_id,
           ]);
- $productid =$product->id;
-              if($request->hasFile("images")){
-                $files=$request->file("images");
-                foreach($files as $file){
-                    $imageName=time().'_'.$file->getClientOriginalName();
-                    $request['product_id']= $productid ;
-                    $request['image']=$imageName;
-                    // $file->move(\public_path("/images"),$imageName);
-                     $file->store('images/product', 'public');
-                    Image::create($request->all());
 
-                }
-            }
 
 
          $success['products']=New ProductResource($product);
@@ -164,20 +147,15 @@ class ProductController extends BaseController
          $input = $request->all();
          $validator =  Validator::make($input ,[
              'name'=>'required|string|max:255',
-            'sku'=>'required|string',
-             'for'=>'required|in:store,etlobha',
+            'sku'=>'required|string|unique:products',
             'description'=>'required|string',
-            'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
-            'quantity'=>['required','numeric','gt:0'],
-            'less_qty'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
-            'tags'=>'required',
-            'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            // 'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'discount_price'=>['required','numeric'],
             'discount_percent'=>['required','numeric'],
             'category_id'=>'required|exists:categories,id',
-            'subcategory_id'=>['required','array'],
+            'subcategory_id'=>['array'],
             'subcategory_id.*'=>['required','numeric',
             Rule::exists('categories', 'id')->where(function ($query) {
             return $query->join('categories', 'id', 'parent_id');
@@ -196,13 +174,10 @@ class ProductController extends BaseController
          $product->update([
             'name' => $request->input('name'),
             'sku' => $request->input('sku'),
-            'for' => $request->input('for'),
+            'for' => 'store',
             'description' => $request->input('description'),
-            'purchasing_price' => $request->input('purchasing_price'),
-            'quantity' => $request->input('quantity'),
-            'less_qty' => $request->input('less_qty'),
+            'selling_price' => $request->input('selling_price'),
             'stock' => $request->input('stock'),
-            'tags' =>implode(',',$request->input('tags')),
             'cover' => $request->input('cover'),
             'discount_price'=>$request->input('discount_price'),
             'discount_percent'=>$request->input('discount_percent'),
@@ -212,17 +187,7 @@ class ProductController extends BaseController
 
 
          ]);
-         if($request->hasFile("images")){
-            $files=$request->file("images");
-            foreach($files as $file){
-                $imageName=time().'_'.$file->getClientOriginalName();
-                $request["product_id"]=$id;
-                $request["image"]=$imageName;
-                $file->store('images/product', 'public');
-                Image::create($request->all());
 
-            }
-        }
 
             $success['products']=New ProductResource($product);
             $success['status']= 200;
@@ -267,4 +232,47 @@ class ProductController extends BaseController
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
     }
+
+
+      public function deleteall(Request $request)
+    {
+
+            $products =Product::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+           foreach($products as $product)
+           {
+             if (is_null($product) || $product->is_deleted==1 ){
+                    return $this->sendError("المنتج غير موجودة","product is't exists");
+             }
+             $product->update(['is_deleted' => 1]);
+            $success['products']=New ProductResource($product);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+    }
+
+       public function changeSatusall(Request $request)
+            {
+
+                    $products =Product::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+                foreach($products as $product)
+                {
+                    if (is_null($product) || $product->is_deleted==1){
+                        return $this->sendError("  المنتج غير موجودة","product is't exists");
+              }
+                    if($product->status === 'active'){
+                $product->update(['status' => 'not_active']);
+                }
+                else{
+                $product->update(['status' => 'active']);
+                }
+                $success['products']= New ProductResource($product);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
+           }
 }

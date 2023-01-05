@@ -76,8 +76,9 @@ class PageController extends BaseController
            'status' =>'not_active'
           ]);
            //$request->input('name', []);
+           if($request->name){
           $page->page_categories()->attach(explode(',', $request->name));
-
+           }
          $success['Pages']=New PageResource($page);
         $success['status']= 200;
 
@@ -112,9 +113,9 @@ class PageController extends BaseController
             'user_id' => auth()->user()->id,
             'status' =>'active'
           ]);
-
+         if($request->name){
           $page->page_categories()->attach(explode(',', $request->name));
-
+              }
          $success['Pages']=New PageResource($page);
         $success['status']= 200;
 
