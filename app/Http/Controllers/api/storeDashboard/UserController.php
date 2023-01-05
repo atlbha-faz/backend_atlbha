@@ -53,7 +53,6 @@ class UserController  extends BaseController
             'name'=>'required|string|max:255',
             'user_id'=>'required|max:255',
             'user_name'=>'required|string|max:255',
-            'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'gender'=>'required|in:male,female',
@@ -70,7 +69,7 @@ class UserController  extends BaseController
             'name'=> $request->name,
             'user_id'=> $request->user_id,
             'user_name'=> $request->user_name,
-            'user_type'=>$request->user_type,
+            'user_type'=>'store_employee',
             'email' => $request->email,
             'password' => $request->password,
             'gender' => $request->gender,
@@ -131,7 +130,6 @@ class UserController  extends BaseController
             'name'=>'required|string|max:255',
             'user_id'=>'required|max:255',
             'user_name'=>'required|string|max:255',
-            'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'gender'=>'required|in:male,female',
@@ -151,7 +149,6 @@ class UserController  extends BaseController
             'password' => $request->input('password'),
             'gender' => $request->input('gender'),
             'phoneNumber' => $request->input('phoneNumber'),
-
              'image' => $request->input('image'),
              'country_id' =>$request->input('country_id'),
              'city_id' =>$request->input('city_id'),
@@ -185,7 +182,7 @@ class UserController  extends BaseController
 
             return $this->sendResponse($success,'تم حذف المستخدم بنجاح','User deleted successfully');
         }
-          public function deleteall(Request $request)
+    public function deleteall(Request $request)
     {
 
             $users =User::whereIn('id',$request->id)->get();
@@ -204,7 +201,7 @@ class UserController  extends BaseController
             return $this->sendResponse($success,'تم حذف المستخدم بنجاح','user deleted successfully');
     }
        public function changeSatusall(Request $request)
-            {
+      {
 
                     $users =User::whereIn('id',$request->id)->get();
                 foreach($users as $user)
@@ -224,7 +221,7 @@ class UserController  extends BaseController
                     $success['status']= 200;
 
                 return $this->sendResponse($success,'تم تعديل حالة المستخدم بنجاح','user updated successfully');
-           }
+     }
 
 
 }

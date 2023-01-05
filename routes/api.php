@@ -258,6 +258,8 @@ Route::get('socialMedia_store_show',[App\Http\Controllers\api\storeDashboard\sto
 Route::post('socialMedia_store_update',[App\Http\Controllers\api\storeDashboard\storeInformationController::class,'socialMedia_store_update']);
 Route::get('etlobhaShow',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'etlobhaShow']);
 Route::post('importproduct',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'store']);
+Route::get('verification_show',[App\Http\Controllers\api\storeDashboard\VerificationController::class,'verification_show']);
+Route::post('verification_update',[App\Http\Controllers\api\storeDashboard\VerificationController::class,'verification_update']);
 
 });
 });
