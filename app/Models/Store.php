@@ -28,6 +28,9 @@ class Store extends Model
     {
         return $this->hasMany(Product::class);
     }
+    public function importproduct(){
+              return $this->hasMany(Importproduct::class);
+         }
 
      public function city()
     {

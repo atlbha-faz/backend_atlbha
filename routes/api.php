@@ -256,6 +256,8 @@ Route::get('productdeleteall',[App\Http\Controllers\api\storeDashboard\ProductCo
 Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientController::class,'deleteall']);
 Route::get('socialMedia_store_show',[App\Http\Controllers\api\storeDashboard\storeInformationController::class,'socialMedia_store_show']);
 Route::post('socialMedia_store_update',[App\Http\Controllers\api\storeDashboard\storeInformationController::class,'socialMedia_store_update']);
+Route::get('etlobhaShow',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'etlobhaShow']);
+Route::post('importproduct',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'store']);
 
 });
 });
