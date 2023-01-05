@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Comment;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\CommentResource;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class CommentController extends BaseController
@@ -22,7 +23,14 @@ class CommentController extends BaseController
     public function index()
     {
 
-        $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
+        $success['comment_of_store']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',1)->get());
+        $product_id=array();
+        $products=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->get();
+        foreach($products as $product ){
+            $product_id[]= $product->id;
+        }
+        $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->whereIn('product_id',$product_id)->get());
+
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع التعليقات بنجاح','comments return successfully');
@@ -52,9 +60,8 @@ class CommentController extends BaseController
             'comment_text'=>'required|string|max:255',
             'rateing'=>'required|numeric|lt:5',
             'comment_for'=>'required|in:product,store',
-            'product_id'=>'required|exists:products,id',
-
-
+            'store_id'=>'required_if:comment_for,store',
+            'product_id'=>'required_if:comment_for,product',
 
         ]);
         if ($validator->fails())
@@ -66,6 +73,7 @@ class CommentController extends BaseController
             'rateing' => $request->rateing,
             'comment_for' => $request->comment_for,
             'product_id' => $request->product_id,
+            'store_id' => $request->store_id,
             'user_id' => auth()->user()->id,
 
           ]);
@@ -126,7 +134,8 @@ class CommentController extends BaseController
            'comment_text'=>'required|string|max:255',
             'rateing'=>'required|numeric',
             'comment_for'=>'required|in:product,store',
-            'product_id'=>'required|exists:products,id',
+            'store_id'=>'required_if:comment_for,store',
+            'product_id'=>'required_if:comment_for,product',
             // 'user_id'=>'required|exists:users,id'
          ]);
          if ($validator->fails())
@@ -137,8 +146,8 @@ class CommentController extends BaseController
          $comment->update([
             'comment_text' => $request->input('comment_text'),
             'rateing' => $request->input('rateing'),
-            'comment_for' => $request->comment_for,
             'product_id' => $request->input('product_id'),
+            'store_id' => $request->input('store_id')
         //    'user_id' => $request->input('user_id'),
          ]);
          //$country->fill($request->post())->update();
@@ -187,5 +196,28 @@ class CommentController extends BaseController
 
          return $this->sendResponse($success,'تم حذف التعليق بنجاح',' comment deleted successfully');
     }
+
+    public function changeSatusall(Request $request)
+    {
+
+            $comments =Comment::whereIn('id',$request->id)->get();
+        foreach($comments as $comment)
+        {
+            if (is_null($comment) || $comment->is_deleted==1 ){
+                return $this->sendError("  التعليق غير موجودة","comment is't exists");
+      }
+            if($comment->status === 'active'){
+        $comment->update(['status' => 'not_active']);
+        }
+        else{
+        $comment->update(['status' => 'active']);
+        }
+        $success['comments']= New CommentResource($comment);
+
+            }
+            $success['status']= 200;
+
+        return $this->sendResponse($success,'تم تعديل حالة التعليق بنجاح','comment updated successfully');
+   }
 
 }

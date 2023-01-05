@@ -23,7 +23,8 @@ class CommentResource extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'user' => New UserResource($this->user),
-            'product' => New ProductResource($this->product)
+            'product' => New ProductResource($this->product),
+            'store' => New StoreResource($this->store)
         ];
     }
 }

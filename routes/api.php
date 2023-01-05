@@ -260,8 +260,10 @@ Route::post('updateRobots',[App\Http\Controllers\api\storeDashboard\SeoControlle
 Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
 Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
-Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
-Route::resource('replaycomment',App\Http\Controllers\api\adminDashboard\ReplaycommentController::class);
+Route::resource('comment',App\Http\Controllers\api\storeDashboard\CommentController::class);
+Route::get('commentchangeSatusall',[App\Http\Controllers\api\storeDashboard\CommentController::class,'changeSatusall']);
+
+Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
 Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
 Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
 Route::get('categoryStorechangeSatusall',[App\Http\Controllers\api\storeDashboard\CategoryController::class,'changeSatusall']);

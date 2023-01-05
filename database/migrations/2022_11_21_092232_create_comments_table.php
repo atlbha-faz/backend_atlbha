@@ -20,6 +20,8 @@ return new class extends Migration
             $table->enum('comment_for',['product','store'])->default('product');
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->unsignedBigInteger('store_id')->nullable();
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
