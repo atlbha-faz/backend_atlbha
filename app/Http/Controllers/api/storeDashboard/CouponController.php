@@ -48,7 +48,7 @@ class CouponController extends BaseController
         // dd($request->free_shipping);
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'code'=>'required|string|max:255',
+            'code'=>'required|string|unique:coupons',
             'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
@@ -146,15 +146,15 @@ class CouponController extends BaseController
      */
     public function update(Request $request, Coupon $coupon)
     {
-        if (is_null($coupon ) || $coupon->is_deleted==1){
+        if (is_null($coupon ) || $coupon->is_deleted==1 || $coupon->store_id!=auth()->user()->store_id){
             return $this->sendError("الكوبون غير موجودة"," coupon is't exists");
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-            'code'=>'required|string|max:255',
+            'code'=>'required|string|unique:coupons',
             'discount_type'=>'required|in:fixed,percent',
-            'total_price'=>['required','numeric|gt:0'],
-            'discount'=>['required','numeric|gt:0'],
+            'total_price'=>['required','numeric','gt:0'],
+            'discount'=>['required','numeric','gt:0'],
             'expire_date' =>['required','date'],
             'total_redemptions'=>['required','numeric'],
             'user_redemptions'=>['required','numeric']

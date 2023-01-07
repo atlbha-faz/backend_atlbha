@@ -57,7 +57,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-            'user_id'=>'exists:users,id',
+            // 'user_id'=>'exists:users,id',
 
 
         ]);
@@ -95,7 +95,7 @@ class PageController extends BaseController
             'seo_link'=>'required',
             'seo_desc'=>'required',
             'tags'=>'required',
-            'user_id'=>'exists:users,id',
+            // 'user_id'=>'exists:users,id',
 
 
         ]);
@@ -187,7 +187,7 @@ class PageController extends BaseController
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
                'tags' => implode(',',$request->input('tags')),
-               
+
            ]);
            //$request->input('name', []);
            if($request->name!=null){
