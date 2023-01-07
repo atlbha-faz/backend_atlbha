@@ -187,7 +187,7 @@ class PageController extends BaseController
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
                'tags' => implode(',',$request->input('tags')),
-               'name'=> $request->input('name'),
+               
            ]);
            //$request->input('name', []);
            if($request->name!=null){

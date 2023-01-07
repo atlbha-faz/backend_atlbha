@@ -217,6 +217,15 @@ Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::c
 Route::post('changeCountryStatus/{id}',[App\Http\Controllers\api\storeDashboard\CountryController::class,'changeStatus']);
 Route::post('changeCityStatus/{id}',[App\Http\Controllers\api\storeDashboard\CityController::class,'changeStatus']);
 Route::resource('page',App\Http\Controllers\api\storeDashboard\pageController::class);
+Route::post('publish',[App\Http\Controllers\api\storeDashboard\pageController::class,'publish']);
+Route::get('couponchangeSatusall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'changeSatusall']);
+Route::get('coupondeleteall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'deleteall']);
+   
+Route::post('logoUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'logoUpdate']);
+Route::post('panarUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'panarUpdate']);
+Route::post('sliderUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'sliderUpdate']);
+Route::post('commentUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'commentUpdate']);
+
 Route::resource('pagecategory',App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
 Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class,'changeStatus']);
 Route::post('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class,'changeStatus']);
@@ -243,10 +252,22 @@ Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\O
 Route::resource('offer',App\Http\Controllers\api\storeDashboard\OfferController::class);
 Route::post('changeSeoStatus/{id}', [App\Http\Controllers\api\storeDashboard\SeoController::class,'changeStatus']);
 Route::resource('seo',App\Http\Controllers\api\storeDashboard\SeoController::class);
+Route::post('updateSeo',[App\Http\Controllers\api\storeDashboard\SeoController::class,'updateSeo']);
+Route::post('updateLink',[App\Http\Controllers\api\storeDashboard\SeoController::class,'updateLink']);
+Route::post('updateRobots',[App\Http\Controllers\api\storeDashboard\SeoController::class,'updateRobots']);
+
+
 Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
 Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
 Route::resource('comment',App\Http\Controllers\api\storeDashboard\CommentController::class);
+Route::get('commentchangeSatusall',[App\Http\Controllers\api\storeDashboard\CommentController::class,'changeSatusall']);
+
+Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
+Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
+Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
+Route::get('categoryStorechangeSatusall',[App\Http\Controllers\api\storeDashboard\CategoryController::class,'changeSatusall']);
+Route::get('categoryStoredeleteall',[App\Http\Controllers\api\storeDashboard\CategoryController::class,'deleteall']);
 Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
 Route::resource('user',App\Http\Controllers\api\storeDashboard\UserController::class);
 Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
