@@ -132,7 +132,7 @@ class SeoController extends BaseController
     public function updateSeo(Request $request)
     {
         $seo =Seo::where('store_id',auth()->user()->store_id)->first();
-        // dd($seo);
+ 
         if (is_null($seo) || $seo->is_deleted==1){
             return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
        }
