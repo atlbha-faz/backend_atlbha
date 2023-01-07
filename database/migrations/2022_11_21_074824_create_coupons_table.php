@@ -22,7 +22,8 @@ return new class extends Migration
            $table->timestamp('expire_date')->nullable();
            $table->timestamp('start_at')->nullable();
            $table->unsignedBigInteger('total_redemptions')->nullable();
-          
+           $table->unsignedBigInteger('user_redemptions')->nullable();
+
            $table->boolean('free_shipping')->default(0);
            $table->boolean('exception_discount_product')->default(0);
            $table->enum('status',['active','not_active','expired'])->default('active');
