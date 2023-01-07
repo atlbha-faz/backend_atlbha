@@ -22,10 +22,10 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->string('phonenumber');
             $table->string('description')->nullable();
-            $table->string('business_license')->nullable();
-            $table->string('ID_file')->nullable();
+            $table->string('file')->nullable();
             $table->string('snapchat')->nullable();
             $table->string('facebook')->nullable();
+            $table->string('tiktok')->nullable();
             $table->string('twiter')->nullable();
             $table->string('youtube')->nullable();
             $table->string('instegram')->nullable();
@@ -33,8 +33,11 @@ return new class extends Migration
             $table->string('entity_type')->nullable();
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();
+            $table->enum('verification_status',['pending','admin_waiting','accept','reject'])->default('pending');
             $table->enum('periodtype',['month','year'])->default('month');
             $table->enum('status',['active','not_active'])->default('active');
+            $table->enum('commercialregistertype',['commercialregister','maeruf'])->default('commercialregister');
+            $table->string('link')->nullable();
             $table->boolean('is_deleted')->default(0);
             $table->enum('special',['special','not_special'])->default('not_special');
             $table->enum('confirmation_status',['request','accept','reject','pending'])->default('request');
