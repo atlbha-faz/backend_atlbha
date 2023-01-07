@@ -23,8 +23,8 @@ class StoreSeeder extends Seeder
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is amazon store',
-            'business_license' => 'file.pdf',
-            'ID_file' => 'file.pdf',
+
+
 
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -35,7 +35,7 @@ class StoreSeeder extends Seeder
             'entity_type' => 'شركة',
             'start_at' => Carbon::now(),
             'end_at' => '2023-03-01',
-          
+
 
             'package_id' => 1,
             'country_id' => 1,
@@ -52,8 +52,7 @@ class StoreSeeder extends Seeder
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
-            'business_license' => 'file.pdf',
-            'ID_file' => 'file.pdf',
+       
 
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
