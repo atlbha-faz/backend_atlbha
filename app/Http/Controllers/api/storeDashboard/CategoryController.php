@@ -241,4 +241,45 @@ if($request->data){
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف القسم بنجاح','category deleted successfully');
     }
+    
+    public function deleteall(Request $request)
+    {
+
+            $categorys =Category::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+           foreach($categorys as $category)
+           {
+             if (is_null($category) || $category->is_deleted==1 ){
+                    return $this->sendError("الصفحة غير موجودة","category is't exists");
+             }
+             $category->update(['is_deleted' => 1]);
+            $success['categorys']=New CategoryResource($category);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف الصفحة بنجاح','category deleted successfully');
+    }
+       public function changeSatusall(Request $request)
+            {
+
+                    $categorys =Category::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+                foreach($categorys as $category)
+                {
+                    if (is_null($category) || $category->is_deleted==1 ){
+                        return $this->sendError("  التصغنيف غير موجودة","category is't exists");
+              }
+                    if($category->status === 'active'){
+                $category->update(['status' => 'not_active']);
+                }
+                else{
+                $category->update(['status' => 'active']);
+                }
+                $success['categorys']= New CategoryResource($category);
+
+                    }
+                    $success['status']= 200;
+
+                return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','category updated successfully');
+           }
 }
