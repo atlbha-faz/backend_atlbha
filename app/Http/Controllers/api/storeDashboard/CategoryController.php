@@ -55,8 +55,9 @@ class CategoryController extends BaseController
             $input = $request->all();
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
-                'data.*.name' =>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+                  'data.*.name'=>'required|string|max:255',
+                'data.*.id' => 'nullable|numeric',
                  //'for'=>'required',
             ]);
             if ($validator->fails())
@@ -81,6 +82,14 @@ class CategoryController extends BaseController
                 'for'=>'store',
                'store_id'=> auth()->user()->store_id,
               ]);
+                  $validator =  Validator::make($input ,[
+                'name'=>'required|string|max:255',
+
+            ]);
+            if ($validator->fails())
+            {
+                return $this->sendError(null,$validator->errors());
+            }
 
 if($request->data){
   foreach($request->data as $data)
@@ -177,8 +186,10 @@ if($request->data){
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             // 'for'=>'required',
+             'data.*.name'=>'required|string|max:255',
+            'data.*.id' => 'nullable|numeric',
 
            ]);
            if ($validator->fails())
@@ -189,7 +200,7 @@ if($request->data){
            $category->update([
                'name' => $request->input('name'),
                 'icon' =>$request->input('icon'),
-                // 'for' =>$request->input('for'),
+                'for' =>'store',
                 // 'store_id' =>$request->input('store_id')
            ]);
 
@@ -207,13 +218,14 @@ if($request->data){
 
      foreach ($request->data as $data) {
       $subcategories[] = Category::updateOrCreate([
-        // 'id' => $data['id'],
-        'parent_id' => $category_id,
-        'for'=>'store',
-        'store_id'=> auth()->user()->store_id,
-        'is_deleted' => 0,
+        'id' => $data['id'],
+
       ], [
         'name' => $data['name'],
+         'parent_id' => $category_id,
+        'for'=>'store',
+        // 'store_id'=> auth()->user()->store_id,
+        'is_deleted' => 0,
 
       ]);
       }
@@ -241,7 +253,7 @@ if($request->data){
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف القسم بنجاح','category deleted successfully');
     }
-    
+
     public function deleteall(Request $request)
     {
 
@@ -249,7 +261,7 @@ if($request->data){
            foreach($categorys as $category)
            {
              if (is_null($category) || $category->is_deleted==1 ){
-                    return $this->sendError("الصفحة غير موجودة","category is't exists");
+                    return $this->sendError("التصنيف غير موجودة","category is't exists");
              }
              $category->update(['is_deleted' => 1]);
             $success['categorys']=New CategoryResource($category);
@@ -258,7 +270,7 @@ if($request->data){
 
            $success['status']= 200;
 
-            return $this->sendResponse($success,'تم حذف الصفحة بنجاح','category deleted successfully');
+            return $this->sendResponse($success,'تم حذف التصنيف بنجاح','category deleted successfully');
     }
        public function changeSatusall(Request $request)
             {
@@ -267,7 +279,7 @@ if($request->data){
                 foreach($categorys as $category)
                 {
                     if (is_null($category) || $category->is_deleted==1 ){
-                        return $this->sendError("  التصغنيف غير موجودة","category is't exists");
+                        return $this->sendError("  التصنيف غير موجودة","category is't exists");
               }
                     if($category->status === 'active'){
                 $category->update(['status' => 'not_active']);
@@ -280,6 +292,6 @@ if($request->data){
                     }
                     $success['status']= 200;
 
-                return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','category updated successfully');
+                return $this->sendResponse($success,'تم تعديل حالة التصنيف بنجاح','category updated successfully');
            }
 }

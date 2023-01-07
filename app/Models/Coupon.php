@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Coupon extends Model
 {
     use HasFactory;
-        protected $fillable = ['code','discount_type','total_price','discount','expire_date','total_redemptions','start_at','free_shipping','exception_discount_product','store_id','status','is_deleted'];
+        protected $fillable = ['code','discount_type','total_price','discount','expire_date','total_redemptions','user_redemptions','start_at','free_shipping','exception_discount_product','store_id','status','is_deleted'];
 
 
          public function store()
@@ -33,15 +33,14 @@ class Coupon extends Model
     // $expire=Coupon::select('expire_date')->where('id',$coupon);
     // dd($expire);
     $my_time=Carbon::now();
-    if($expire->expire_date < $my_time){
-  // ok
-//   return "active";
-//    $expire->update(['status' => 'active']);
 
-// } else {
-  // error, coupon expired
-// return "expired";
-$expire->update(['status' => 'expired']);
-}
+    if($expire->status=='active'){
+    if($expire->expire_date < $my_time){
+
+$expire->update(['status' => 'expired']);}
+    }
+
+
+
  }
 }
