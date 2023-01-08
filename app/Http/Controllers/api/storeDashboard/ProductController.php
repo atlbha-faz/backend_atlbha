@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
 use Illuminate\Validation\Rule;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
@@ -100,6 +101,18 @@ class ProductController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
+    }
+
+    public function deleteImport($product)
+    {
+        $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$product)->first();
+        if (is_null($product)){
+            return $this->sendError("المنتج غير موجود","product is't exists");
+            }
+           $product->delete();
+
+           $success['status']= 200;
+            return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
     }
 
     /**
