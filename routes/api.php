@@ -283,6 +283,8 @@ Route::post('importproduct',[App\Http\Controllers\api\storeDashboard\Importprodu
 Route::post('updateimportproduct/{id}',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'updateimportproduct']);
 Route::get('verification_show',[App\Http\Controllers\api\storeDashboard\VerificationController::class,'verification_show']);
 Route::post('verification_update',[App\Http\Controllers\api\storeDashboard\VerificationController::class,'verification_update']);
+Route::get('setting_store_show',[App\Http\Controllers\api\storeDashboard\SettingController::class,'setting_store_show']);
+Route::post('setting_store_update',[App\Http\Controllers\api\storeDashboard\SettingController::class,'setting_store_update']);
 
 Route::get('profile',[App\Http\Controllers\api\storeDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\storeDashboard\ProfileController::class,'update']);
