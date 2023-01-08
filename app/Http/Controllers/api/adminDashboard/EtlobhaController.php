@@ -39,7 +39,7 @@ class EtlobhaController extends BaseController
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
-            'for' => 'required|in:store,stock.etlobha',
+       
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data'=>'required|array',
             'data.*.type'=>'required|in:brand,color,wight,size',
