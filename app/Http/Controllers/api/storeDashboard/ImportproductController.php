@@ -47,7 +47,26 @@ class ImportproductController extends BaseController
          return $this->sendResponse($success,'تم إضافة الاستيراد بنجاح','importproduct Added successfully');
     }
 
+ public function updateimportproduct(Request $request, $id){
 
+     $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'price'=>['required','numeric','gt:0'],
+
+        ]);
+         if ($validator->fails())
+          {
+            return $this->sendError(null,$validator->errors());
+        }
+         $importproduct = Importproduct::where('product_id',$id)->first();
+         $importproduct->update([
+            'price' => $request->price
+         ]);
+        $success['importproducts']=New ImportproductResource($importproduct);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل الاستيراد بنجاح','importproduct updated successfully');
+    }
 
 
 }

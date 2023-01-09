@@ -225,6 +225,7 @@ Route::resource('page',App\Http\Controllers\api\storeDashboard\pageController::c
 Route::post('publish',[App\Http\Controllers\api\storeDashboard\pageController::class,'publish']);
 Route::get('couponchangeSatusall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'changeSatusall']);
 Route::get('coupondeleteall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'deleteall']);
+
 Route::post('changeMaintenanceStatus/{id}', [App\Http\Controllers\api\storeDashboard\MaintenanceController::class,'changeStatus']);
   
 Route::post('logoUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'logoUpdate']);
@@ -283,13 +284,20 @@ Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard
 Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
 Route::get('productchangeSatusall',[App\Http\Controllers\api\storeDashboard\ProductController::class,'changeSatusall']);
 Route::get('productdeleteall',[App\Http\Controllers\api\storeDashboard\ProductController::class,'deleteall']);
+Route::get('deleteImport/{product}',[App\Http\Controllers\api\storeDashboard\ProductController::class,'deleteImport']);
 Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientController::class,'deleteall']);
 Route::get('socialMedia_store_show',[App\Http\Controllers\api\storeDashboard\storeInformationController::class,'socialMedia_store_show']);
 Route::post('socialMedia_store_update',[App\Http\Controllers\api\storeDashboard\storeInformationController::class,'socialMedia_store_update']);
 Route::get('etlobhaShow',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'etlobhaShow']);
 Route::post('importproduct',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'store']);
+Route::post('updateimportproduct/{id}',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'updateimportproduct']);
 Route::get('verification_show',[App\Http\Controllers\api\storeDashboard\VerificationController::class,'verification_show']);
 Route::post('verification_update',[App\Http\Controllers\api\storeDashboard\VerificationController::class,'verification_update']);
+Route::get('setting_store_show',[App\Http\Controllers\api\storeDashboard\SettingController::class,'setting_store_show']);
+Route::post('setting_store_update',[App\Http\Controllers\api\storeDashboard\SettingController::class,'setting_store_update']);
+
+Route::get('profile',[App\Http\Controllers\api\storeDashboard\ProfileController::class,'index']);
+Route::post('profile',[App\Http\Controllers\api\storeDashboard\ProfileController::class,'update']);
 
 });
 });

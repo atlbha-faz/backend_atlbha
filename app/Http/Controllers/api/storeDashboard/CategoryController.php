@@ -20,7 +20,8 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0)
+        $success['categories']=CategoryResource::collection(Category::
+        where('is_deleted',0)
         ->where('parent_id',null)
         ->where('for','store')
         ->where(function($query){
