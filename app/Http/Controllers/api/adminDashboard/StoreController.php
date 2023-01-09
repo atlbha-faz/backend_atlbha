@@ -7,10 +7,13 @@ use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Events\VerificationEvent;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\NoteResource;
 use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
@@ -301,8 +304,23 @@ class StoreController extends BaseController
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
 
-        $store->update(['confirmation_status' => 'accept']);
-
+        // $store->update(['confirmation_status' => 'accept']);
+        $users = User::where('store_id', $store->id)->get();
+  
+        $data = [
+            'message' => ' تم قبول الطلب',
+            'store_id' => auth()->user()->store_id,
+            'user_id'=>auth()->user()->id,
+            'type'=>"store_request",
+            'object_id'=>auth()->user()->store_id
+        ];
+       
+        foreach($users as $user)
+        {
+        Notification::send($user, new verificationNotification($data));
+        }
+        
+        event(new VerificationEvent($data));
         $success['store']=New StoreResource($store);
         $success['status']= 200;
 

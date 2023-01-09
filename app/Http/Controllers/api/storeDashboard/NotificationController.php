@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\api\adminDashboard;
+namespace App\Http\Controllers\api\storeDashboard;
 use Carbon\Carbon;
-
-use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class NotificationController extends BaseController
@@ -22,13 +21,14 @@ class NotificationController extends BaseController
          return $this->sendResponse($success,'تم ارجاع جميع الاشعارات بنجاح','Notifications return successfully');
     }
     public function read($id){
-       
         $userUnreadNotification =  Notification::query()->find($id);
+      
+    if ($userUnreadNotification) {
         $userUnreadNotification->update(['read_at' =>Carbon::now()]);
-    
-        $success['notifications']=$userUnreadNotification;
-        $success['status']= 200;
+    }
+    $success['notifications']=$userUnreadNotification;
+    $success['status']= 200;
 
-         return $this->sendResponse($success,'تم ارجاع  الاشعار بنجاح','Notifications return successfully');
+         return $this->sendResponse($success,'تم ارجاع جميع الاشعارات بنجاح','Notifications return successfully');
     }
 }

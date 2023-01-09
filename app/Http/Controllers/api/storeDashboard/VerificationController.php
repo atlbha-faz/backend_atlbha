@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\api\storeDashboard;
+use Notification;
 use App\Models\User;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use App\Events\VerificationEvent;
 use App\Models\activities_stores;
 use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class VerificationController extends BaseController
@@ -18,6 +21,7 @@ class VerificationController extends BaseController
     }
      public function verification_show()
     {
+        
                 $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->get());
 
         // $success['activity']=Store::where('store_id',auth()->user()->store_id)->activities->first();
@@ -60,10 +64,25 @@ class VerificationController extends BaseController
         }
         $store = Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->first();
 
+
+        
   if ($store->verification_status=="admin_waiting"|| $store->verification_status=="accept"){
             return $this->sendError("الطلب قيد المراجعه","request is in process");
             }
-
+            $users = User::where('store_id',null)->get();
+  
+            $data = [
+                'message' => 'طلب توثيق',
+                'store_id' => auth()->user()->store_id,
+                'user_id'=>auth()->user()->id,
+                'type'=>"verified",
+                'object_id'=>auth()->user()->store_id
+            ];
+            foreach($users as $user)
+            {
+            Notification::send($user, new verificationNotification($data));
+            }
+            event(new VerificationEvent($data));
         $store->update([
             'commercialregistertype' =>  $request->input('commercialregistertype'),
             'store_name' =>  $request->input('store_name'),
@@ -74,11 +93,14 @@ class VerificationController extends BaseController
             'verification_status'=>"admin_waiting"
 
         ]);
+
          $store->activities()->sync($request->activity_id);
        $user = User::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->first();
        $user->update([
          'name' =>  $request->input('name'),
          ]);
+         
+
         $success['store']=store::where('is_deleted',0)->where('id',auth()->user()->store_id)->first();
         $success['status']= 200;
 

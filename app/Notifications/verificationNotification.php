@@ -32,7 +32,7 @@ class verificationNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database','mail'];
+        return ['database'];
     }
 
     /**
@@ -55,12 +55,28 @@ class verificationNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+
+
+     public function toArray($notifiable)
+     {
+         return [
+             'user_id'=>$this->Data['user_id'],
+             'message' => $this->Data['message'],
+             'store_id' => $this->Data['store_id'],
+             'type'=> $this->data['type'],
+             'object_id'=> $this->data['object_id']
+         ];
+     } 
+    public function toDatabase($notifiable)
     {
         return [
-            'id'=>$this->Data['id'],
-            'message' => $this->Data['message'],
-            'store_id' => $this->Data['store_id']
+     
+            'user_id'=>$this->data['user_id'],
+            'message' => $this->data['message'],
+            'store_id' => $this->data['store_id'],
+            'type'=> $this->data['type'],
+            'object_id'=> $this->data['object_id']
+         
         ];
     }
 }

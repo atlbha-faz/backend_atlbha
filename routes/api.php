@@ -111,6 +111,9 @@ Route::resource('service',App\Http\Controllers\api\adminDashboard\ServiceControl
 
 Route::get('servicedeleteall',[App\Http\Controllers\api\adminDashboard\ServiceController::class,'deleteall']);
 
+Route::get('NotificationIndex',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'index']);
+Route::get('NotificationRead/{id}',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'read']);
+
 Route::resource('category',App\Http\Controllers\api\adminDashboard\CategoryController::class);
 Route::resource('storecategory',App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
 Route::post('addvideo',[App\Http\Controllers\api\adminDashboard\CourseController::class,'addvideo']);
@@ -298,6 +301,7 @@ Route::post('setting_store_update',[App\Http\Controllers\api\storeDashboard\Sett
 
 Route::get('profile',[App\Http\Controllers\api\storeDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\storeDashboard\ProfileController::class,'update']);
-
+Route::get('NotificationIndex',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'index']);
+Route::get('NotificationRead/{id}',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'read']);
 });
 });
