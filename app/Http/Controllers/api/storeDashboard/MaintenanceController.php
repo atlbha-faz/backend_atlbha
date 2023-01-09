@@ -99,7 +99,7 @@ class MaintenanceController extends BaseController
     public function changeStatus($id)
     {
         $maintenance= Maintenance::query()->find($id);
-        if (is_null($maintenance) || $maintenance->is_deleted==1){
+        if (is_null($maintenance) || $maintenance->is_deleted==1 ||$maintenance->store_id!=auth()->user()->store_id){
          return $this->sendError("الصيانة غير موجودة","maintenance is't exists");
          }
         if($maintenance->status === 'active'){
@@ -127,7 +127,7 @@ class MaintenanceController extends BaseController
      */
     public function update(Request $request, Maintenance $maintenance)
     {
-        if (is_null($maintenance) || $maintenance->is_deleted==1){
+        if (is_null($maintenance) || $maintenance->is_deleted==1|| $maintenance->store_id!=auth()->user()->store_id){
             return $this->sendError("الصيانة غير موجودة"," Maintenance is't exists");
        }
             $input = $request->all();
@@ -163,7 +163,7 @@ class MaintenanceController extends BaseController
     public function destroy($maintenance)
     {
         $maintenance =Maintenance::query()->find($maintenance);
-        if (is_null($maintenance) || $maintenance->is_deleted==1){
+        if (is_null($maintenance) || $maintenance->is_deleted==1 || $maintenance->store_id!=auth()->user()->store_id){
             return $this->sendError("وضع الصيانة غير موجودة","maintenance is't exists");
             }
            $maintenance->update(['is_deleted' => 1]);

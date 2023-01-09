@@ -211,6 +211,11 @@ Route::group(['middleware' => ['auth']], function() {
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
 Route::middleware([StoreUser::class])->group(function(){
 Route::prefix('/Store')->group(function () {
+   
+    Route::get('pagechangeSatusall',[App\Http\Controllers\api\storeDashboard\PageController::class,'changeSatusall']);
+    Route::get('pagedeleteall',[App\Http\Controllers\api\storeDashboard\PageController::class,'deleteall']);
+
+
 
 Route::resource('country',App\Http\Controllers\api\storeDashboard\CountryController::class);
 Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::class);
@@ -221,10 +226,15 @@ Route::post('publish',[App\Http\Controllers\api\storeDashboard\pageController::c
 Route::get('couponchangeSatusall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'changeSatusall']);
 Route::get('coupondeleteall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'deleteall']);
 
+Route::post('changeMaintenanceStatus/{id}', [App\Http\Controllers\api\storeDashboard\MaintenanceController::class,'changeStatus']);
+  
 Route::post('logoUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'logoUpdate']);
 Route::post('panarUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'panarUpdate']);
 Route::post('sliderUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'sliderUpdate']);
 Route::post('commentUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'commentUpdate']);
+
+
+Route::resource('maintenance',App\Http\Controllers\api\storeDashboard\MaintenanceController::class);
 
 Route::resource('pagecategory',App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
 Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class,'changeStatus']);
