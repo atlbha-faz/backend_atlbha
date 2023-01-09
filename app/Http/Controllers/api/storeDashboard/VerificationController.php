@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use App\Models\activities_stores;
+use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -17,7 +18,9 @@ class VerificationController extends BaseController
     }
      public function verification_show()
     {
-        $success['activity']=activities_stores::where('store_id',auth()->user()->store_id)->pluck('activity_id')->first();
+                $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->get());
+
+        // $success['activity']=Store::where('store_id',auth()->user()->store_id)->activities->first();
         $type=Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->pluck('commercialregistertype')->first();
         if($type == 'maeruf'){
            $success['name']=Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->pluck('name')->first();
@@ -29,6 +32,8 @@ class VerificationController extends BaseController
         $success['link']=Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->pluck('link')->first();
         }
         $success['file']=Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->pluck('file')->first();
+        $success['username']=User::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->pluck('name')->first();
+        $success['phonenumber']=Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->pluck('phonenumber')->first();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم عرض بيانات النوثيق بنجاح','verifiction shown successfully');
@@ -45,8 +50,8 @@ class VerificationController extends BaseController
            'city_id'=>'required',
            'link'=>'required_if:commercialregistertype,maeruf',
            'file'=>'required|mimes:pdf,doc,excel',
-            'name'=>'required|string|max:255',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+           'name'=>'required|string|max:255',
+           'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
         ]);
         if ($validator->fails())
         {
@@ -66,6 +71,7 @@ class VerificationController extends BaseController
             'link' =>  $request->input('link'),
             'file' =>  $request->input('file'),
             'phonenumber' =>  $request->input('phonenumber'),
+            'verification_status'=>"admin_waiting"
 
         ]);
          $store->activities()->sync($request->activity_id);
