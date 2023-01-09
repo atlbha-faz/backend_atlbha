@@ -25,7 +25,7 @@ class PageController extends BaseController
      */
     public function index()
     {
-        $success['pages']=PageResource::collection(Page::where('is_deleted',0)->get());
+        $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',null)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع  الصفحة بنجاح','Pages return successfully');
@@ -243,7 +243,7 @@ class PageController extends BaseController
   public function deleteall(Request $request)
     {
 
-            $pages =Page::whereIn('id',$request->id)->get();
+            $pages =Page::whereIn('id',$request->id)->where('store_id',null)->get();
            foreach($pages as $page)
            {
              if (is_null($page) || $page->is_deleted==1 ){
@@ -261,7 +261,7 @@ class PageController extends BaseController
        public function changeSatusall(Request $request)
             {
 
-                    $pages =Page::whereIn('id',$request->id)->get();
+                    $pages =Page::whereIn('id',$request->id)->where('store_id',null)->get();
                 foreach($pages as $page)
                 {
                     if (is_null($page) || $page->is_deleted==1){
