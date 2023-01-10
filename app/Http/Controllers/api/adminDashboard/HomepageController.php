@@ -10,7 +10,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class HomepageController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -45,15 +45,15 @@ class HomepageController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    
+
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
-   
- 
+
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -72,7 +72,7 @@ class HomepageController extends BaseController
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
-  
+
 
 
     /**
@@ -81,7 +81,7 @@ class HomepageController extends BaseController
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
-   
+
      public function logoUpdate(Request $request)
     {
         $logohomepage =Homepage::where('store_id',null)->first();
@@ -96,7 +96,7 @@ class HomepageController extends BaseController
            if ($validator->fails())
            {
                return $this->sendError(null,$validator->errors());
-           } 
+           }
          $logohomepage->updateOrCreate([
             'store_id'   => null,
                ],[
@@ -111,8 +111,8 @@ class HomepageController extends BaseController
 
 public function panarUpdate(Request $request)
 {
-    $logohomepage =Homepage::where('store_id',null)->first();
-    if (is_null($logohomepage) || $logohomepage->is_deleted==1){
+    $panarhomepage =Homepage::where('store_id',null)->first();
+    if (is_null($panarhomepage) || $panarhomepage->is_deleted==1){
         return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
    }
         $input = $request->all();
@@ -129,9 +129,9 @@ public function panarUpdate(Request $request)
            # code...
            return $this->sendError(null,$validator->errors());
        }
-       
-     
-     $logohomepage->updateOrCreate([
+
+
+     $panarhomepage->updateOrCreate([
         'store_id'   => null,
     ],[
                 'panar1' => $request->panar1,
@@ -142,7 +142,7 @@ public function panarUpdate(Request $request)
                 'panarstatus3' => $request->panarstatus3,
               ]);
 
-       $success['homepages']=New HomepageResource($logohomepage);
+       $success['panarhomepages']=New HomepageResource($panarhomepage);
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
@@ -150,8 +150,8 @@ public function panarUpdate(Request $request)
 
 public function sliderUpdate(Request $request)
 {
-    $logohomepage = Homepage::where('store_id',null)->first();
-    if (is_null($logohomepage) || $logohomepage->is_deleted==1){
+    $sliderhomepage = Homepage::where('store_id',null)->first();
+    if (is_null($sliderhomepage) || $sliderhomepage->is_deleted==1){
         return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
    }
         $input = $request->all();
@@ -168,9 +168,9 @@ public function sliderUpdate(Request $request)
            # code...
            return $this->sendError(null,$validator->errors());
        }
-       
-     
-     $logohomepage->updateOrCreate([
+
+
+     $sliderhomepage->updateOrCreate([
             'store_id'   => null,
             ],[
                 'slider1' => $request->slider1,
@@ -181,7 +181,7 @@ public function sliderUpdate(Request $request)
                 'sliderstatus3' => $request->sliderstatus3,
               ]);
 
-       $success['homepages']=New HomepageResource($logohomepage);
+       $success['sliderhomepages']=New HomepageResource($sliderhomepage);
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');

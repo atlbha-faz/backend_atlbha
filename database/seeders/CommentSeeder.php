@@ -29,6 +29,14 @@ class CommentSeeder extends Seeder
             'user_id' => 3,
             'store_id'=>1
         ]);
-        
+           Comment::create([
+            'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
+            'rateing' => 4,
+           'comment_for'=>'store',
+            'user_id' => 3,
+            'store_id'=>null,
+           'product_id'=>null,
+        ]);
+
     }
 }

@@ -291,3 +291,6 @@ Route::post('profile',[App\Http\Controllers\api\storeDashboard\ProfileController
 
 });
 });
+//  index Ettlobha page
+Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
+

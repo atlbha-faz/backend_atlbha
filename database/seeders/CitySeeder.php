@@ -22,85 +22,149 @@ class CitySeeder extends Seeder
             'country_id'=>1
         ]);
         City::create([
-            'name' => 'مكة المكرمة',
+            'name' => 'الدرعية',
             'name_en' => 'makah',
             'code' => '00966',
            'country_id'=>1
         ]);
           City::create([
-            'name' =>  'المدينة المنورة',
+            'name' =>  'المجمعة',
             'name_en' => 'Riyadh',
             'code' => '00966',
             'country_id'=>1
         ]);
         City::create([
-            'name' => 'القصيم',
+            'name' => 'الخرج',
             'name_en' => 'jeddh',
             'code' => '00966',
            'country_id'=>1
         ]);
           City::create([
-            'name' => 'الشرقية',
+            'name' => 'الدوادمى',
             'name_en' => 'Riyadh',
             'code' => '00966',
            'country_id'=>1
         ]);
         City::create([
-            'name' => 'عسير',
+            'name' => 'القويعية',
             'name_en' => 'jeddh',
             'code' => '00966',
           'country_id'=>1
         ]);
           City::create([
-            'name' => 'تبوك',
+            'name' => 'وادي الدواسر',
             'name_en' => 'Riyadh',
             'code' => '00966',
            'country_id'=>1
         ]);
         City::create([
-            'name' => 'حائل',
+            'name' => 'الأفلاج',
             'name_en' => 'jeddh',
             'code' => '00966',
           'country_id'=>1
         ]);
           City::create([
-            'name' => ' الحدود الشمالية',
+            'name' => '  مكة',
             'name_en' => 'Riyadh',
             'code' => '00966',
            'country_id'=>1
         ]);
         City::create([
-            'name' => 'جازان',
+            'name' => 'جدة',
             'name_en' => 'jeddh',
             'code' => '00966',
             'country_id'=>1
         ]);
           City::create([
-            'name' => 'نجران',
+            'name' => 'الطائف',
             'name_en' => 'Riyadh',
             'code' => '00966',
             'country_id'=>1
         ]);
         City::create([
-            'name' => 'الباحة',
+            'name' => 'الجموم',
             'name_en' => 'jeddh',
             'code' => '00966',
              'country_id'=>1
         ]);
           City::create([
-            'name' => 'الجوف',
+            'name' => 'الليث ',
             'name_en' => 'Riyadh',
             'code' => '00966',
              'country_id'=>1
         ]);
         City::create([
-            'name' => 'فرسان',
+            'name' => 'القنفذة',
             'name_en' => 'jeddh',
             'code' => '00966',
            'country_id'=>1
         ]);
-
-
+   City::create([
+            'name' => 'خليص',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+   ]);
+           City::create([
+            'name' => 'رابغ',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+           City::create([
+            'name' => 'المدينة المنورة',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+           City::create([
+            'name' => 'ينبع',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+           City::create([
+            'name' => 'بدر',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+           City::create([
+            'name' => 'العلا',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+           City::create([
+            'name' => 'الحناكية',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+           City::create([
+            'name' => 'مهد الذهب',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+           City::create([
+            'name' => 'خيبر',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+  City::create([
+            'name' => 'العيص',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
+             City::create([
+            'name' => 'وادي الفرع',
+            'name_en' => 'jeddh',
+            'code' => '00966',
+           'country_id'=>1
+           ]);
 
     }
 }
