@@ -24,6 +24,7 @@ class PageResource extends JsonResource
            'tags' => explode(',',$this->tags),
            'store' => New StoreResource($this->store),
            'user' => New UserResource($this->user),
+           'pageCategory' =>Page_categoryResource::collection($this->page_categories),
            'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'status' => $this->status !==null ? $this->status:'active',

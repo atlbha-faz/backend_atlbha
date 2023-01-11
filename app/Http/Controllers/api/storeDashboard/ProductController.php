@@ -114,6 +114,18 @@ class ProductController extends BaseController
          return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
     }
 
+    public function deleteImport($product)
+    {
+        $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$product)->first();
+        if (is_null($product)){
+            return $this->sendError("المنتج غير موجود","product is't exists");
+            }
+           $product->delete();
+
+           $success['status']= 200;
+            return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+    }
+
     /**
      * Display the specified resource.
      *
