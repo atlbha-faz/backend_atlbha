@@ -73,7 +73,7 @@ class StoreController extends BaseController
             'city_id'=>'required|exists:cities,id',
             'user_country_id'=>'required|exists:countries,id',
             'user_city_id'=>'required|exists:cities,id',
-            'periodtype'=>'required|in:month,year',
+            'periodtype'=>'required|in:6months,year',
 
         ]);
 
@@ -123,8 +123,8 @@ class StoreController extends BaseController
           $user->update([
                'store_id' =>  $store->id]);
 
-         if($request->periodtype =="month"){
-           $end_at = date('Y-m-d',strtotime("+ 1 months", strtotime($store->created_at)));
+         if($request->periodtype =="6months"){
+           $end_at = date('Y-m-d',strtotime("+ 6 months", strtotime($store->created_at)));
          $store->update([
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);
@@ -137,7 +137,7 @@ class StoreController extends BaseController
 
             }
           $store->activities()->attach($request->activity_id);
-          $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
+          $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
 
 
          $success['stors']=New StoreResource($store);
@@ -212,7 +212,7 @@ class StoreController extends BaseController
             'city_id'=>'required|exists:cities,id',
             'user_country_id'=>'required|exists:countries,id',
             'user_city_id'=>'required|exists:cities,id',
-            'periodtype'=>'required|in:month,year',
+            'periodtype'=>'required|in:6months,year',
            ]);
            if ($validator->fails())
            {
@@ -254,8 +254,8 @@ class StoreController extends BaseController
            ]);
              $store->activities()->sync($request->activity_id);
 
-             if($request->periodtype =="month"){
-           $end_at = date('Y-m-d',strtotime("+ 1 months", strtotime($store->created_at)));
+             if($request->periodtype =="6months"){
+           $end_at = date('Y-m-d',strtotime("+ 6 months", strtotime($store->created_at)));
 
                 $store->update([
                'start_at'=> $store->created_at,
@@ -268,7 +268,7 @@ class StoreController extends BaseController
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);
             }
-           $store->packages()->sync($request->package_id,['start_at'=>$store->created_at,'end_at'=>$end_at,'period'=>$request->period,'packagecoupon_id'=>$request->packagecoupon]);
+           $store->packages()->sync($request->package_id,['start_at'=>$store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
 
            $success['stores']=New StoreResource($store);
            $success['status']= 200;
@@ -304,9 +304,8 @@ class StoreController extends BaseController
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
 
-        // $store->update(['confirmation_status' => 'accept']);
+        $store->update(['confirmation_status' => 'accept']);
         $users = User::where('store_id', $store->id)->get();
-  
         $data = [
             'message' => ' تم قبول الطلب',
             'store_id' => auth()->user()->store_id,
@@ -336,7 +335,21 @@ class StoreController extends BaseController
          }
 
         $store->update(['confirmation_status' => 'reject']);
-
+        $users = User::where('store_id', $store->id)->get();
+        $data = [
+            'message' => ' تم رفض الطلب',
+            'store_id' => auth()->user()->store_id,
+            'user_id'=>auth()->user()->id,
+            'type'=>"store_request",
+            'object_id'=>auth()->user()->store_id
+        ];
+       
+        foreach($users as $user)
+        {
+        Notification::send($user, new verificationNotification($data));
+        }
+        
+        event(new VerificationEvent($data));
         $success['store']=New StoreResource($store);
         $success['status']= 200;
 

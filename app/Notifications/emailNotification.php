@@ -7,21 +7,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class verificationNotification extends Notification
+class emailNotification extends Notification
 {
     use Queueable;
-    private $data;
-
+    private $message;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($message)
     {
-        $this->data = $data;
-
+        $this->message= $message;
     }
 
     /**
@@ -44,12 +42,10 @@ class verificationNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject($this->data['type'])
-        ->line($this->data['message'])
-        ->line('شكرا');
+        ->subject($this->message['subject'])
+        ->line($this->message['message'])
+        ->line($this->message['store_id']);
     }
-  
-            
 
     /**
      * Get the array representation of the notification.
@@ -57,28 +53,10 @@ class verificationNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-
-
-     public function toArray($notifiable)
-     {
-         return [
-             'user_id'=>$this->data['user_id'],
-             'message' => $this->data['message'],
-             'store_id' => $this->data['store_id'],
-             'type'=> $this->data['type'],
-             'object_id'=> $this->data['object_id']
-         ];
-     } 
-    public function toDatabase($notifiable)
+    public function toArray($notifiable)
     {
         return [
-     
-            'user_id'=>$this->data['user_id'],
-            'message' => $this->data['message'],
-            'store_id' => $this->data['store_id'],
-            'type'=> $this->data['type'],
-            'object_id'=> $this->data['object_id']
-         
+            //
         ];
     }
 }

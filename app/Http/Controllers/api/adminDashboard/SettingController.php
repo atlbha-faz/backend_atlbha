@@ -108,7 +108,7 @@ class SettingController extends BaseController
              'description' => $request->input('description'),
              'link' => $request->input('link'),
              'email' => $request->input('email'),
-             'phoneNumber' => $request->input('phoneNumber'),
+             'phonenumber' => $request->input('phonenumber'),
              'logo' => $request->input('logo'),
              'icon' => $request->input('icon'),
              'address' => $request->input('address'),

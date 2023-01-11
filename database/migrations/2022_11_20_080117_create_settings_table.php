@@ -19,7 +19,7 @@ return new class extends Migration
             $table->longText('description');
             $table->string('link');
             $table->string('email')->unique();
-            $table->string('phoneNumber')->nullable();
+            $table->string('phonenumber')->nullable();
             $table->string('logo');
             $table->string('icon');
             $table->string('address');

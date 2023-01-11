@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "22f64052a31be0e1429fc39f0cd177af",
+    "content-hash": "84e643400c29841e6afd186585d7ad2b",
     "packages": [
         {
             "name": "brick/math",
@@ -1621,30 +1621,30 @@
         },
         {
             "name": "laravel/passport",
-            "version": "v11.3.1",
+            "version": "v11.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/passport.git",
-                "reference": "835febbfe875ba97306c026fdaa94f58f167363e"
+                "reference": "87dcab8ba37ba3a8c0d4958d251ab87a5c95b329"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/passport/zipball/835febbfe875ba97306c026fdaa94f58f167363e",
-                "reference": "835febbfe875ba97306c026fdaa94f58f167363e",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/87dcab8ba37ba3a8c0d4958d251ab87a5c95b329",
+                "reference": "87dcab8ba37ba3a8c0d4958d251ab87a5c95b329",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "firebase/php-jwt": "^6.3.1",
-                "illuminate/auth": "^9.0",
-                "illuminate/console": "^9.0",
-                "illuminate/container": "^9.0",
-                "illuminate/contracts": "^9.0",
-                "illuminate/cookie": "^9.0",
-                "illuminate/database": "^9.0",
-                "illuminate/encryption": "^9.0",
-                "illuminate/http": "^9.0",
-                "illuminate/support": "^9.0",
+                "illuminate/auth": "^9.0|^10.0",
+                "illuminate/console": "^9.0|^10.0",
+                "illuminate/container": "^9.0|^10.0",
+                "illuminate/contracts": "^9.0|^10.0",
+                "illuminate/cookie": "^9.0|^10.0",
+                "illuminate/database": "^9.0|^10.0",
+                "illuminate/encryption": "^9.0|^10.0",
+                "illuminate/http": "^9.0|^10.0",
+                "illuminate/support": "^9.0|^10.0",
                 "lcobucci/jwt": "^3.4|^4.0",
                 "league/oauth2-server": "^8.2",
                 "nyholm/psr7": "^1.3",
@@ -1654,7 +1654,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^7.0",
+                "orchestra/testbench": "^7.0|^8.0",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -1694,7 +1694,7 @@
                 "issues": "https://github.com/laravel/passport/issues",
                 "source": "https://github.com/laravel/passport"
             },
-            "time": "2022-12-02T18:20:16+00:00"
+            "time": "2023-01-09T16:46:42+00:00"
         },
         {
             "name": "laravel/sanctum",

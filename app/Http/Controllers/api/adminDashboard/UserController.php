@@ -74,7 +74,7 @@ class UserController  extends BaseController
             'email' => $request->email,
             'password' => $request->password,
             'gender' => $request->gender,
-            'phoneNumber' => $request->phoneNumber,
+            'phonenumber' => $request->phonenumber,
              'image' => $request->image,
              'country_id' =>$request->country_id,
              'city_id' =>$request->city_id,
@@ -150,7 +150,7 @@ class UserController  extends BaseController
             'email' => $request->input('email'),
             'password' => $request->input('password'),
             'gender' => $request->input('gender'),
-            'phoneNumber' => $request->input('phoneNumber'),
+            'phonenumber' => $request->input('phonenumber'),
 
              'image' => $request->input('image'),
              'country_id' =>$request->input('country_id'),

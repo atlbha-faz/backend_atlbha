@@ -21,7 +21,7 @@ class MarketerSeeder extends Seeder
             'image'=> 'man.png',
             'password'=>'12864',
             'user_name' =>'ah',
-            'phoneNumber'=> '0096655076453',
+            'phonenumber'=> '0096655076453',
             'snapchat'=>'snapchat',
             'facebook'=>'facebook',
             'twiter'=>'twiter',
