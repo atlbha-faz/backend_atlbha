@@ -121,7 +121,7 @@ class ClientController extends BaseController
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    
+
 
       public function changeStatus($id)
     {

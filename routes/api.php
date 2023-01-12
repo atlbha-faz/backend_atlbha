@@ -23,6 +23,7 @@ Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mo
 
 
 Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
+Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 
 
@@ -211,7 +212,7 @@ Route::group(['middleware' => ['auth']], function() {
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
 Route::middleware([StoreUser::class])->group(function(){
 Route::prefix('/Store')->group(function () {
-   
+
     Route::get('pagechangeSatusall',[App\Http\Controllers\api\storeDashboard\PageController::class,'changeSatusall']);
     Route::get('pagedeleteall',[App\Http\Controllers\api\storeDashboard\PageController::class,'deleteall']);
 
@@ -227,7 +228,7 @@ Route::get('couponchangeSatusall',[App\Http\Controllers\api\storeDashboard\Coupo
 Route::get('coupondeleteall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'deleteall']);
 
 Route::post('changeMaintenanceStatus/{id}', [App\Http\Controllers\api\storeDashboard\MaintenanceController::class,'changeStatus']);
-  
+
 Route::post('logoUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'logoUpdate']);
 Route::post('panarUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'panarUpdate']);
 Route::post('sliderUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'sliderUpdate']);

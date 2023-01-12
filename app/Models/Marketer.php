@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Marketer extends Model
 {
     use HasFactory;
-      protected $fillable = ['name','email','password','image','user_name','mobile','snapchat','facebook','twiter','whatsapp','youtube','instegram','socialmediatext','city_id','country_id','status','is_deleted'];
+      protected $fillable = ['name','email','password','image','user_name','phonenumber','snapchat','facebook','twiter','whatsapp','youtube','instegram','socialmediatext','city_id','country_id','status','is_deleted'];
 
     public function city()
     {
@@ -37,5 +37,9 @@ class Marketer extends Model
             return   asset('assets/media/man.png');
         }
         return asset('storage/images/marketer') . '/' . $image;
+    }
+    public function setPasswordAttribute($password)
+    {
+            $this->attributes['password'] = bcrypt($password);
     }
 }

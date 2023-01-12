@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('image')->nullable();
             $table->string('user_name');
-            $table->string('phoneNumber')->nullable();
+            $table->string('phonenumber')->nullable();
             $table->string('snapchat')->nullable();
             $table->string('facebook')->nullable();
             $table->string('twiter')->nullable();

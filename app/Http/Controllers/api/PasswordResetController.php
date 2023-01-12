@@ -27,7 +27,7 @@ class PasswordResetController extends BaseController
             'username' => 'required|string',
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             # code...
             return $this->sendError($validator->errors());
@@ -37,7 +37,7 @@ class PasswordResetController extends BaseController
         if (!$user){
             return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
         }
-        
+
         $passwordReset = PasswordReset::updateOrCreate(
             ['email' => $user->email],
             [
@@ -45,27 +45,27 @@ class PasswordResetController extends BaseController
                 'token' => Str::random(60)
              ]
         );
-        
+
         if ($user && $passwordReset){
                 $user->generateCode();
                  $data = array(
                 'code'   =>   $user->code,
             );
-            
+
           /*   try{
                  Mail::to($user->email)->send(new SendCode($data));
             }catch(\Exception $e){
             return $this->sendError('صيغة البريد الالكتروني غير صحيحة','The email format is incorrect.');
             }*/
-            
-            
-            
+
+
+
           $request->code = $user->code;
             $request->phonenumber =$user->phonenumber;
-            
+
         $this->sendSms($request); // send and return its response
-            
-            
+
+
         }
 
         $success['status']= 200;
@@ -90,7 +90,7 @@ class PasswordResetController extends BaseController
             $passwordReset->delete();
             return $this->sendError('خطأ في توكين استعادة كلمة المرور','This password reset token is invalid.');
         }
-        
+
         $success['status']= 200;
         $success['passowrdReset']= $passwordReset;
         return $this->sendResponse($success,'توكين استعادة كلمة المرور صحيح','This password reset token is valid.');
@@ -115,35 +115,35 @@ class PasswordResetController extends BaseController
             'token' => 'required|string',
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             # code...
             return $this->sendError($validator->errors());
         }
-        
-       
+
+
         $user = User::where('username', $request->username)->orWhere('email', $request->username)->first();
         if (!$user){
             return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
         }
-        
+
         $passwordReset = PasswordReset::where([
             ['token', $request->token],
             ['email', $user->email]
         ])->first();
         if (!$passwordReset)
             return $this->sendError('خطأ في توكين استعادة كلمة المرور','This password reset token is invalid.');
-        
-        
+
+
         $user = User::where('email', $passwordReset->email)->first();
         if (!$user)
             return $this->sendError('المستخدم غير موجود','We cant find a user with that e-mail address.');
-            
+
         $user->password = $request->password;
         $user->save();
         $passwordReset->delete();
 
-        
+
         $success['status']= 200;
         $success['user']= new UserResource($user);
         return $this->sendResponse($success,'تم استعادة كلمة المرور بنجاح','The password reset success.');
@@ -159,15 +159,15 @@ class PasswordResetController extends BaseController
             'code' => 'required|numeric',
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             # code...
             return $this->sendError($validator->errors());
         }
 
-          
+
         $user = User::where('username', $request->username)->orWhere('email', $request->username)->latest()->first();
-        
+
         if($request->code == $user->code)
         {
             $passwordReset = PasswordReset::where('email',$user->email)->first();
@@ -183,38 +183,38 @@ class PasswordResetController extends BaseController
             return $this->sendResponse($success,'لم يتم التحقق','not verified');
         }
     }
-    
-    
-    
+
+
+
     public function sendSms($request)
     {
-        
+
         try
         {
-$ch = curl_init('https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=hDRvlqGVdSQwsCLPk0bDRJIqs9Vvdi&SenderID=MASHAHER&Body='.$request->code.'&Recipient='.$request->phonenumber); 
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST"); 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-curl_setopt($ch, CURLOPT_HTTPHEADER, array( 
- 'Accept: application/json', 
- 'Content-Type: application/x-www-form-urlencoded') 
-); 
+$ch = curl_init('https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=hDRvlqGVdSQwsCLPk0bDRJIqs9Vvdi&SenderID=MASHAHER&Body='.$request->code.'&Recipient='.$request->phonenumber);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+ 'Accept: application/json',
+ 'Content-Type: application/x-www-form-urlencoded')
+);
 $result = curl_exec($ch);
 $decoded = json_decode($result);
 if ($decoded->success =="true" ) {
     return true;
 }
-    
+
             return $this->sendError("فشل ارسال الرسالة","Failed Send Message");
 
 
-            
+
         }
         catch (Exception $e)
         {
             return $this->sendError($e->getMessage());
         }
-        
+
     }
-    
-    
+
+
 }
