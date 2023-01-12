@@ -31,6 +31,8 @@ class ProductResource extends JsonResource
             'discount_percent'=>$this->discount_percent,
             'subcategory' => CategoryResource::collection($this->subcategory()),
             'status' => $this->status !== null ? $this->status : 'active',
+            'special' => $this->special ,
+            'productRating'=>$this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

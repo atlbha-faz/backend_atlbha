@@ -92,4 +92,9 @@ class Product extends Model
         'offer_id'
         )->withPivot("type");
   }
+
+ public function productrate($product_id){
+
+        return Comment::where('product_id',$product_id)->where('comment_for','product')->avg('rateing');
+     }
 }
