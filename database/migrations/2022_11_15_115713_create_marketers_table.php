@@ -20,16 +20,15 @@ return new class extends Migration
             $table->string('password');
             $table->string('image')->nullable();
             $table->string('user_name');
-            $table->string('phoneNumber')->nullable();
+            $table->string('phonenumber')->nullable();
             $table->string('snapchat')->nullable();
             $table->string('facebook')->nullable();
             $table->string('twiter')->nullable();
             $table->string('whatsapp')->nullable();
             $table->string('youtube')->nullable();
             $table->string('instegram')->nullable();
-             $table->longText('socialmediatext');
+             $table->longText('socialmediatext')->nullable();
             $table->enum('status',['active','not_active'])->default('active');
-
             $table->boolean("is_deleted")->default(0);
             $table->unsignedBigInteger('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');

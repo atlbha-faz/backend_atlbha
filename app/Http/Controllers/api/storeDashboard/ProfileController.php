@@ -49,7 +49,7 @@ class ProfileController  extends BaseController
             'name'=> $request->input('name'),
             'user_name'=> $request->input('user_name'),
             'email' => $request->input('email'),
-            'phoneNumber' => $request->input('phoneNumber'),
+            'phonenumber' => $request->input('phonenumber'),
              'image' => $request->image,
         ]);
 if(!is_null($request->password)){

@@ -23,7 +23,7 @@ return new class extends Migration
         $table->foreign('packagecoupon_id')->references('id')->on('packagecoupons')->onDelete('cascade');
         $table->timestamp('start_at')->nullable();
         $table->timestamp('end_at')->nullable();
-        $table->integer('period');
+        $table->enum('periodtype',['6months','year'])->default('year');
         $table->timestamps();
 
         });

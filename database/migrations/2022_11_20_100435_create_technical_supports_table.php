@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('technical_supports', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
-            $table->string('phoneNumber')->nullable();
+            $table->string('phonenumber')->nullable();
             $table->longText('content')->nullable();
             $table->enum('type',['complaint','enquiry','suggestion'])->default('enquiry');
             $table->enum('supportstatus',['finished','not_finished','pending'])->default('pending');

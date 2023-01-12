@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use Str;
 use App\Models\User;
+use App\Models\Marketer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -16,7 +17,101 @@ class AuthController extends BaseController
 {
     protected $code;
 
+    public function register(Request $request)
+    {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'user_type'=>'required|in:store,marketer',
+            'user_name'=>'required|string|max:255',
+            'store_name'=>'required_if:user_type,store|string|max:255',
+            'email'=>'required|email|unique:users',
+            'password'=>'required',
+            'domain'=>'required_if:user_type,store|url',
+            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'activity_id' =>'required|array|exists:activities,id',
+            'package_id' =>'required_if:user_type,store|exists:packages,id',
+            'country_id'=>'required_if:user_type,store|exists:countries,id',
+            'city_id'=>'required|exists:cities,id',
+            'periodtype'=>'required|in:6months,year',
 
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+        if($request->user_type=="store"){
+            $user = User::create([
+                'name' => $request->user_name,
+                'email'=>$request->email,
+                'user_name' => $request->user_name,
+                'user_type' => "store",
+                'password'=>$request->password,
+                'userphonenumber' => $request->phonenumber,
+            ]);
+
+            $userid =$user->id;
+
+
+            $store = Store::create([
+                'store_name' => $request->store_name,
+                'store_email'=>$request->email,
+                'domain' =>$request->domain,
+                'phonenumber' => $request->phonenumber,
+                'package_id' => $request->package_id,
+                'user_id' => $userid,
+                'periodtype'=>$request->periodtype,
+                'country_id' => $request->country_id,
+                'city_id' => $request->city_id
+            ]);
+
+            $user->update([
+                'store_id' =>  $store->id]);
+
+            if($request->periodtype =="6months"){
+            $end_at = date('Y-m-d',strtotime("+ 6 months", strtotime($store->created_at)));
+            $store->update([
+                'start_at'=> $store->created_at,
+                    'end_at'=>  $end_at ]);
+            }
+            else{
+                $end_at = date('Y-m-d',strtotime("+ 1 years", strtotime($store->created_at)));
+            $store->update([
+                'start_at'=> $store->created_at,
+                    'end_at'=>  $end_at ]);
+
+                }
+            $store->activities()->attach($request->activity_id);
+            $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
+
+        }
+        else{
+            $marketer = Marketer::create([
+                'name'=> $request->user_name,
+                'user_name'=> $request->user_name,
+                'email' => $request->email,
+                'password' => $request->password,
+                'phonenumber' => $request->phonenumber,
+                'city_id' =>$request->city_id,
+            ]);
+            $user = User::create([
+                'name'=> $request->user_name,
+                'user_name'=> $request->user_name,
+                'email' => $request->email,
+                'password' => $request->password,
+                'phonenumber' => $request->phonenumber,
+                'city_id' =>$request->city_id,
+               'user_type' => "marketer",
+            ]);
+        }
+
+
+        $success['user'] = new UserResource($user);
+        $success['token'] = $user->createToken('authToken')->accessToken;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
+}
 
     public function login(Request $request)
     {

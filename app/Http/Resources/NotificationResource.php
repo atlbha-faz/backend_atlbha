@@ -16,14 +16,18 @@ class NotificationResource extends JsonResource
     {
         return [
             'id' =>$this->id,
-            'notification_time' => $this->notification_time,
-            'description' => $this->description,
-            'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
-            'created_at' => (string) $this->created_at,
-             'updated_at' => (string) $this->updated_at,
-             'user' => New UserResource($this->user),
-             'type' => New Notification_typeResource($this->notification_type),
+            'type'=>$this->type,
+            'notifiable_type'=>$this->notifiable_type,
+            'user_id'=>$this->data['user_id'],
+            'message' => $this->data['message'],
+            'store_id' => $this->data['store_id'],
+            'type'=> $this->data['type'],
+            'object_id'=> $this->data['object_id'],
+            'read_at' => $this->read_at,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+
+           
           ];
 
     }

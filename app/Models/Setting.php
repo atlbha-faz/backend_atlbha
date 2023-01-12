@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','description','link','email','phoneNumber','logo','icon','address',
+    protected $fillable = ['name','description','link','email','phonenumber','logo','icon','address',
 'country_id','city_id','status','registration_marketer','registration_status','status_marketer','is_deleted'];
 public function city()
 {

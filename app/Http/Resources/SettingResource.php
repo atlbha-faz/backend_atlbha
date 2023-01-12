@@ -20,7 +20,7 @@ class SettingResource extends JsonResource
             'description' => $this->description,
             'link' => $this->link,
             'email' => $this->email,
-            'phoneNumber' => $this->phoneNumber,
+            'phonenumber' => $this->phonenumber,
             'logo' => $this->logo,
             'icon' => $this->icon,
             'address' => $this->address,
