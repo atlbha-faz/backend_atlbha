@@ -18,7 +18,7 @@ class AuthController extends BaseController
 {
     protected $code;
 
-public function register(Request $request)
+    public function register(Request $request)
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
@@ -92,7 +92,7 @@ public function register(Request $request)
                 'user_name'=> $request->user_name,
                 'email' => $request->email,
                 'password' => $request->password,
-                'phonenumber' => $request->userphonenumber,
+                'phonenumber' => $request->phonenumber,
                 'city_id' =>$request->city_id,
             ]);
             $user = User::create([
@@ -100,7 +100,7 @@ public function register(Request $request)
                 'user_name'=> $request->user_name,
                 'email' => $request->email,
                 'password' => $request->password,
-                'phonenumber' => $request->userphonenumber,
+                'phonenumber' => $request->phonenumber,
                 'city_id' =>$request->city_id,
                'user_type' => "marketer",
             ]);

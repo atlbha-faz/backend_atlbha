@@ -24,7 +24,8 @@ return new class extends Migration
             $table->enum('gender',['male','female'])->nullable();
             $table->string('phonenumber')->nullable();
             $table->string('image')->nullable();
-            $table->enum('user_type',['admin','admin_employee','store','store_employee','customer','marketer'])->default('customer');            $table->unsignedBigInteger('country_id')->nullable();
+            $table->enum('user_type',['admin','admin_employee','store','store_employee','customer','marketer'])->default('customer');
+            $table->unsignedBigInteger('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
              $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');

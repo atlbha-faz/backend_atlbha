@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
-
             $table->string('store_name');
             $table->string('store_email')->unique();
             $table->string('domain');

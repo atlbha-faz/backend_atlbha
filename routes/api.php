@@ -77,8 +77,6 @@ Route::post('changePackageStatus/{id}', [App\Http\Controllers\api\adminDashboard
 Route::post('changeTemplateStatus/{id}', [App\Http\Controllers\api\adminDashboard\TemplateController::class,'changeStatus']);
 Route::post('changeCouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\CouponController::class,'changeStatus']);
 Route::post('changePackagecouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackagecouponController::class,'changeStatus']);
-Route::post('changeNotificationStatus/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class,'changeStatus']);
-Route::post('changeNotification_typeStatus/{id}', [App\Http\Controllers\api\adminDashboard\Notification_typesController::class,'changeStatus']);
 Route::post('changeSectionStatus/{id}', [App\Http\Controllers\api\adminDashboard\SectionController::class,'changeStatus']);
 Route::post('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class,'changeStatus']);
 Route::post('changeReplaycontactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycontactController::class,'changeStatus']);
@@ -111,6 +109,23 @@ Route::resource('platform',App\Http\Controllers\api\adminDashboard\PlatformContr
 Route::resource('service',App\Http\Controllers\api\adminDashboard\ServiceController::class);
 
 Route::get('servicedeleteall',[App\Http\Controllers\api\adminDashboard\ServiceController::class,'deleteall']);
+
+Route::get('NotificationIndex',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'index']);
+Route::get('NotificationRead/{id}',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'read']);
+Route::get('NotificationDelete/{id}',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'deleteNotification']);
+Route::get('NotificationDeleteAll',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'deleteNotificationAll']);
+Route::get('NotificationShow/{id}',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'show']);
+Route::post('addEmail',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'addEmail']);
+
+Route::get('EmailIndex',[App\Http\Controllers\api\adminDashboard\EmailController::class,'index']);
+Route::get('EmailDelete/{id}',[App\Http\Controllers\api\adminDashboard\EmailController::class,'deleteEmail']);
+Route::get('EmailDeleteAll',[App\Http\Controllers\api\adminDashboard\EmailController::class,'deleteEmailAll']);
+Route::get('EmailShow/{id}',[App\Http\Controllers\api\adminDashboard\EmailController::class,'show']);
+Route::post('addEmail',[App\Http\Controllers\api\adminDashboard\EmailController::class,'addEmail']);
+
+
+
+
 
 Route::resource('category',App\Http\Controllers\api\adminDashboard\CategoryController::class);
 Route::resource('storecategory',App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
@@ -299,6 +314,12 @@ Route::post('setting_store_update',[App\Http\Controllers\api\storeDashboard\Sett
 
 Route::get('profile',[App\Http\Controllers\api\storeDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\storeDashboard\ProfileController::class,'update']);
+Route::get('NotificationIndex',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'index']);
+Route::get('NotificationRead/{id}',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'read']);
+Route::get('NotificationDelete/{id}',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'deleteNotification']);
+Route::get('NotificationDeleteAll',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'deleteNotificationAll']);
+Route::get('NotificationShow/{id}',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'show']);
+
 
 });
 });
