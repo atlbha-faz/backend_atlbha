@@ -51,7 +51,7 @@ class AuthController extends BaseController
                 'user_name' => $request->user_name,
                 'user_type' => "store",
                 'password'=>$request->password,
-                'phonenumber' => $request->phonenumber,
+                'phonenumber' => $request->userphonenumber,
             ]);
 
             $userid =$user->id;
