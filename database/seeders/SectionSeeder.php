@@ -16,12 +16,12 @@ class SectionSeeder extends Seeder
     public function run()
     {
         Section::create([
-            'name'=>'القسم الاول',
+            'name'=>' المنتجات المميزة',
             'status'=>'active'
         ]);
 
          Section::create([
-            'name'=>'القسم الثاني',
+            'name'=>'المتاجر المميزة',
             'status'=>'active'
         ]);
           Section::create([
