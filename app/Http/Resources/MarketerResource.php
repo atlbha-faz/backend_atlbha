@@ -18,11 +18,7 @@ class MarketerResource extends JsonResource
         // return parent::toArray($request);
           return [
             'id' =>$this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => $this->password,
-            'user_name' => $this->user_name,
-            'phonenumber' => $this->phonenumber,
+            'user' => New UserResource($this->user),
             'facebook' => $this->facebook,
             'snapchat' => $this->snapchat,
             'twiter' => $this->twiter,
@@ -30,13 +26,9 @@ class MarketerResource extends JsonResource
             'youtube' => $this->youtube,
             'instegram' => $this->instegram,
             'socialmediatext' => $this->socialmediatext,
-            'image' =>$this->image,
-            'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'country' => New CountryResource($this->country),
-            'city' => New CityResource($this->city),
+       
 
 
           ];

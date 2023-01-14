@@ -8,15 +8,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Marketer extends Model
 {
     use HasFactory;
-      protected $fillable = ['name','email','password','image','user_name','phonenumbe','snapchat','facebook','twiter','whatsapp','youtube','instegram','socialmediatext','city_id','country_id','status','is_deleted'];
+      protected $fillable = ['snapchat','facebook','twiter','whatsapp','youtube','instegram','socialmediatext','user_id'];
 
-    public function city()
+   
+    public function user()
     {
-        return $this->belongsTo(City::class, 'city_id', 'id');
-    }
-          public function country()
-    {
-        return $this->belongsTo(Country::class, 'country_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id')->where('is_deleted',0);
     }
 
     public function setImageAttribute($image)
