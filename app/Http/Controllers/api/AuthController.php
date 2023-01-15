@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use Str;
 use App\Models\User;
+use App\Models\Store;
 use App\Models\Marketer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -125,7 +126,7 @@ class AuthController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-//dd(Hash::make($request->password));
+            //dd(Hash::make($request->password));
 
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password])
