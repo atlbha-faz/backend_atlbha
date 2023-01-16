@@ -16,12 +16,7 @@ class MarketerSeeder extends Seeder
     public function run()
     {
         Marketer::create([
-            'name' => 'احمد',
-            'email'=>'ahmed@gmail.com',
-            'image'=> 'man.png',
-            'password'=>'12864',
-            'user_name' =>'ah',
-            'phonenumber'=> '0096655076453',
+           'user_id'=>3,
             'snapchat'=>'snapchat',
             'facebook'=>'facebook',
             'twiter'=>'twiter',
@@ -29,8 +24,6 @@ class MarketerSeeder extends Seeder
             'youtube'=>'youtube',
             'instegram'=>'instegram',
             'socialmediatext'=>'socialmediatext',
-            'city_id'=>1,
-            'country_id'=>1,
 
         ]);
     }

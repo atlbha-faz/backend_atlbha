@@ -15,12 +15,6 @@ return new class extends Migration
     {
         Schema::create('marketers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('image')->nullable();
-            $table->string('user_name');
-            $table->string('phonenumber')->nullable();
             $table->string('snapchat')->nullable();
             $table->string('facebook')->nullable();
             $table->string('twiter')->nullable();
@@ -28,13 +22,8 @@ return new class extends Migration
             $table->string('youtube')->nullable();
             $table->string('instegram')->nullable();
              $table->longText('socialmediatext')->nullable();
-            $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean("is_deleted")->default(0);
-            $table->unsignedBigInteger('country_id')->nullable();
-            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
-             $table->unsignedBigInteger('city_id')->nullable();
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
-
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

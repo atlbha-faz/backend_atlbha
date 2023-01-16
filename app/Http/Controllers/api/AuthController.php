@@ -22,10 +22,13 @@ class AuthController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
+            'checkbox_field' => 'required|in:1',
             'user_type'=>'required|in:store,marketer',
+            'name'=>'required|string|max:255',
             'user_name'=>'required|string|max:255',
             'store_name'=>'required_if:user_type,store|string|max:255',
             'email'=>'required|email|unique:users',
+            'store_email'=>'required|email|unique:stores',
             'password'=>'required',
             'domain'=>'required_if:user_type,store|url',
             'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -43,12 +46,12 @@ class AuthController extends BaseController
         }
         if($request->user_type=="store"){
             $user = User::create([
-                'name' => $request->user_name,
+                'name' => $request->name,
                 'email'=>$request->email,
                 'user_name' => $request->user_name,
                 'user_type' => "store",
                 'password'=>$request->password,
-                'userphonenumber' => $request->phonenumber,
+                'phonenumber' => $request->userphonenumber,
             ]);
 
             $userid =$user->id;
@@ -56,7 +59,7 @@ class AuthController extends BaseController
 
             $store = Store::create([
                 'store_name' => $request->store_name,
-                'store_email'=>$request->email,
+                'store_email'=>$request->store_email,
                 'domain' =>$request->domain,
                 'phonenumber' => $request->phonenumber,
                 'package_id' => $request->package_id,
@@ -87,14 +90,7 @@ class AuthController extends BaseController
 
         }
         else{
-            $marketer = Marketer::create([
-                'name'=> $request->user_name,
-                'user_name'=> $request->user_name,
-                'email' => $request->email,
-                'password' => $request->password,
-                'phonenumber' => $request->phonenumber,
-                'city_id' =>$request->city_id,
-            ]);
+         
             $user = User::create([
                 'name'=> $request->user_name,
                 'user_name'=> $request->user_name,
@@ -104,6 +100,9 @@ class AuthController extends BaseController
                 'city_id' =>$request->city_id,
                'user_type' => "marketer",
             ]);
+            $marketer = Marketer::create([
+              'user_id'=> $user->id
+            ]);
         }
 
 
@@ -111,7 +110,7 @@ class AuthController extends BaseController
         $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
+        return $this->sendResponse($success, 'تم التسجيل بنجاح', 'Register Successfully');
 }
 
     public function login(Request $request)

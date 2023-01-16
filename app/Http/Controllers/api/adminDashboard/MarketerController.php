@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Models\User;
 use App\Models\Marketer;
 use Illuminate\Http\Request;
 use App\Http\Resources\MarketerResource;
@@ -23,7 +24,7 @@ class MarketerController extends BaseController
      */
     public function index()
     {
-      $success['marketers']=MarketerResource::collection(Marketer::where('is_deleted',0)->get());
+      $success['marketers']=MarketerResource::collection(Marketer::all());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المندوبين بنجاح','marketer return successfully');
@@ -71,12 +72,20 @@ class MarketerController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        $marketer = Marketer::create([
-            'name'=> $request->name,
-            'user_name'=> $request->user_name,
-            'email' => $request->email,
-            'password' => $request->password,
-            'gender' => $request->gender,
+        $user = User::create([
+          'name'=> $request->name,
+          'user_name'=> $request->user_name,
+          'email' => $request->email,
+          'password' => $request->password,
+          'phonenumber' => $request->phonenumber,
+          'gender' => $request->gender,
+          'image' => $request->image,
+          'country_id' =>$request->country_id,
+          'city_id' =>$request->city_id,
+         'user_type' => "marketer",
+      ]);
+      $marketer = Marketer::create([
+            'user_id'=> $user->id,
             'phonenumber' => $request->phonenumber,
             'facebook' => $request->facebook,
             'snapchat' => $request->snapchat,
@@ -84,9 +93,6 @@ class MarketerController extends BaseController
             'whatsapp' => $request->whatsapp,
             'youtube' => $request->youtube,
             'instegram' => $request->instegram,
-             'image' => $request->image,
-             'country_id' =>$request->country_id,
-             'city_id' =>$request->city_id,
              'socialmediatext'=>$request->socialmediatext
           ]);
 
@@ -107,7 +113,7 @@ class MarketerController extends BaseController
     public function show(Marketer $marketer)
     {
        $marketer = Marketer::query()->find($marketer->id);
-    if (is_null($marketer) || $marketer->is_deleted==1){
+    if (is_null($marketer)){
          return $this->sendError("المندوب غير موجودة","marketer is't exists");
          }
         $success['$marketers']=New MarketerResource($marketer);
@@ -162,13 +168,20 @@ class MarketerController extends BaseController
             # code...
             return $this->sendError(null,$validator->errors());
         }
+        $user= User::query()->find($marketer->user_id);
+        $user->update([
+          'name'=> $request->name,
+          'user_name'=> $request->user_name,
+          'email' => $request->email,
+          'password' => $request->password,
+          'phonenumber' => $request->phonenumber,
+          'gender' => $request->gender,
+          'image' => $request->image,
+          'country_id' =>$request->country_id,
+          'city_id' =>$request->city_id,
+         'user_type' => "marketer",
+      ]);
         $marketer->update([
-            'name'=> $request->input('name'),
-            'user_name'=> $request->input('user_name'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-            'gender' => $request->input('gender'),
-            'phonenumber' => $request->input('phonenumber'),
             'facebook' => $request->input('facebook'),
             'snapchat' => $request->input('snapchat'),
             'twiter' => $request->input('twiter'),
@@ -176,8 +189,6 @@ class MarketerController extends BaseController
             'youtube' => $request->input('youtube'),
             'instegram' => $request->input('instegram'),
              'image' => $request->input('image'),
-             'country_id' =>$request->input('country_id'),
-             'city_id' =>$request->input('city_id'),
              'socialmediatext' =>$request->input('socialmediatext')
         ]);
 
@@ -191,16 +202,17 @@ class MarketerController extends BaseController
       public function changeStatus($id)
     {
         $marketer = Marketer::query()->find($id);
-        if (is_null($marketer) || $marketer->is_deleted==1){
-         return $this->sendError("المندوب غير موجودة","marketer is't exists");
+        $user= User::query()->find($marketer->user_id);
+        if (is_null($user) || $user->is_deleted==1){
+         return $this->sendError("المندوب غير موجودة","user is't exists");
          }
-        if($marketer->status === 'active'){
-         $marketer->update(['status' => 'not_active']);
+        if($user->status === 'active'){
+         $user->update(['status' => 'not_active']);
         }
       else{
-      $marketer->update(['status' => 'active']);
+      $user->update(['status' => 'active']);
           }
-        $success['$marketers']=New MarketerResource($marketer);
+        $success['marketers']=New MarketerResource($marketer);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعدبل حالة المندوب  بنجاح','marketer status updated successfully');
@@ -215,10 +227,11 @@ class MarketerController extends BaseController
      */
     public function destroy(Marketer $marketer)
     {
-       if (is_null($marketer) || $marketer->is_deleted==1){
-         return $this->sendError("المندوب غير موجودة","marketer is't exists");
+      $user= User::query()->find($marketer->user_id);
+       if (is_null($user) || $user->is_deleted==1){
+         return $this->sendError("المندوب غير موجودة","user is't exists");
          }
-            $marketer->update(['is_deleted' => 1]);
+            $user->update(['is_deleted' => 1]);
 
 
          $success['marketers']=New MarketerResource($marketer);
@@ -230,18 +243,19 @@ class MarketerController extends BaseController
     }
      public function deleteall(Request $request)
     {
-
-            $marketers =Marketer::whereIn('id',$request->id)->get();
-           foreach($marketers as $marketer)
+      $marketers =Marketer::whereIn('id',$request->id)->get();
+      $marketers_id =Marketer::whereIn('id',$request->id)->pluck('user_id')->toArray();
+            $users =User::whereIn('id',$marketers_id)->get();
+           foreach($users as $user)
            {
-             if (is_null($marketer) || $marketer->is_deleted==1 ){
+             if (is_null($user) || $user->is_deleted==1 ){
                     return $this->sendError("المندوب غير موجود","marketer is't exists");
              }
-             $marketer->update(['is_deleted' => 1]);
-            $success['marketers']=New MarketerResource($marketer);
+             $user->update(['is_deleted' => 1]);
+          
 
             }
-
+            $success['marketers']=MarketerResource::collection($marketers);
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف المندوب بنجاح','marketer deleted successfully');
