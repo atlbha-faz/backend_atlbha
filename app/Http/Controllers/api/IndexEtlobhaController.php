@@ -32,15 +32,17 @@ class IndexEtlobhaController extends BaseController
      $success['panar3']=Homepage::where('is_deleted',0)->where('store_id',null)->where('panarstatus3','active')->pluck('slider3')->first();
 
      if(Section::where('id',1)->where('is_deleted',0)->where('status','active')){
+     $success['section1']=Section::pluck('name')->first();
      $success['products']=ProductResource::collection(Product::where('is_deleted',0)
      ->where('store_id',null)->where('special','special')->get());
     }
     if(Section::where('id',2)->where('is_deleted',0)->where('status','active')){
+     $success['section2']=Section::pluck('name')->first();
      $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->where('special','special')->get());}
-     if(Section::where('id',4)->where('is_deleted',0)->where('status','active')){
-     $success['packages']=PackageResource::collection(Package::where('is_deleted',0)->get());}
-     if(Section::where('id',5)->where('is_deleted',0)->where('status','active')){
-     $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',null)->where('product_id',null)->get());}
+
+     $success['packages']=PackageResource::collection(Package::where('is_deleted',0)->get());
+
+     $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',null)->where('product_id',null)->latest()->take(2)->get());
 
 
 

@@ -15,12 +15,12 @@ class PermissionTableSeeder extends Seeder
      */
     public function run()
     {
-       
+
      Permission::create(['name' => 'show_users_of_admin',
               'name_ar'=>'عرض المستخدمين' ,
               'parent_id'=>null,
             'type'=>'admin']);
-            
+
     Permission::create(['name' => 'show_users_of_store',
             'name_ar'=>'عرض المستخدمين' ,
             'parent_id'=>null,
@@ -29,7 +29,7 @@ class PermissionTableSeeder extends Seeder
           'name_ar'=>'الرئيسية' ,
           'parent_id'=>null,
         'type'=>'admin']);
-        
+
 Permission::create(['name' => 'home_of_store',
         'name_ar'=>'الرئيسية' ,
         'parent_id'=>null,
@@ -38,7 +38,7 @@ Permission::create(['name' => 'home_of_store',
       'name_ar'=>'المستخدمين' ,
       'parent_id'=>null,
     'type'=>'admin']);
-    
+
 Permission::create(['name' => 'users_of_store',
     'name_ar'=>'المستخدمين' ,
     'parent_id'=>null,
@@ -66,7 +66,7 @@ Permission::create(['name' => 'email_of_admin',
  Permission::create(['name' => 'email_of_store',
             'name_ar'=>'البريد الالكتروني',
             'parent_id'=> 2,
-          'type'=>'store']);   
+          'type'=>'store']);
  Permission::create(['name' => 'summary_of_admin',
           'name_ar'=>'الملخص' ,
            'parent_id'=> 3,
@@ -74,7 +74,7 @@ Permission::create(['name' => 'email_of_admin',
  Permission::create(['name' => 'summary_of_store',
             'name_ar'=>'الملخص',
             'parent_id'=> 4,
-          'type'=>'store']); 
+          'type'=>'store']);
           Permission::create(['name' => 'package_of_admin',
           'name_ar'=>'ملخص طلبات الاشتراكات',
            'parent_id'=> 3,
@@ -82,7 +82,7 @@ Permission::create(['name' => 'email_of_admin',
  Permission::create(['name' => 'package_of_store',
             'name_ar'=>'ملخص طلبات الاشتراكات',
             'parent_id'=> 4,
-          'type'=>'store']);      
+          'type'=>'store']);
 Permission::create(['name' => 'notifaction_of_admin',
           'name_ar'=>'التنبيهات' ,
            'parent_id'=> 3,
@@ -90,7 +90,7 @@ Permission::create(['name' => 'notifaction_of_admin',
  Permission::create(['name' => 'notifaction_of_store',
             'name_ar'=>'التنبيهات',
             'parent_id'=> 4,
-          'type'=>'store']);   
+          'type'=>'store']);
 Permission::create(['name' => 'index_users_of_admin',
             'name_ar'=>'عرض' ,
             'parent_id'=> 7,
@@ -157,7 +157,7 @@ Permission::create(['name' => 'delete_phonenumber_of_store',
 'name_ar'=>'حذف' ,
 'parent_id'=> 10,
 'type'=>'store']);
-            
+
 Permission::create(['name' => 'index_email_of_admin',
             'name_ar'=>'عرض' ,
             'parent_id'=> 11,
@@ -261,7 +261,7 @@ Permission::create(['name' => 'add_package_of_store',
 Permission::create(['name' => 'delete_package_of_store',
 'name_ar'=>'حذف' ,
 'parent_id'=> 16,
-'type'=>'store']);        
+'type'=>'store']);
  /////
  Permission::create(['name' => 'index_notifaction_of_admin',
             'name_ar'=>'عرض' ,
@@ -295,7 +295,7 @@ Permission::create(['name' => 'add_notifaction_of_store',
 Permission::create(['name' => 'delete_notifaction_of_store',
 'name_ar'=>'حذف' ,
 'parent_id'=> 18,
-'type'=>'store']);         
-  //////       
+'type'=>'store']);
+  //////
     }
 }

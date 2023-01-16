@@ -125,7 +125,7 @@ class AuthController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-//dd(Hash::make($request->password));
+            //dd(Hash::make($request->password));
 
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password])

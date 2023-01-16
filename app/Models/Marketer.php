@@ -35,4 +35,8 @@ class Marketer extends Model
         }
         return asset('storage/images/marketer') . '/' . $image;
     }
+    public function setPasswordAttribute($password)
+    {
+            $this->attributes['password'] = bcrypt($password);
+    }
 }

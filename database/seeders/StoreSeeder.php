@@ -52,7 +52,7 @@ class StoreSeeder extends Seeder
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
-       
+
 
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
