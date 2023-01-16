@@ -23,6 +23,9 @@ class WebsiteorderController extends BaseController
      */
     public function index()
     {
+        $success['count_of_serivces_order']=Websiteorder::where('is_deleted',0)->where('type','service')->count();
+        $success['count_of_store_order']=Websiteorder::where('is_deleted',0)->where('type','store')->count();
+
         $success['Websiteorder']=WebsiteorderResource::collection(Websiteorder::where('is_deleted',0)->get());
         $success['status']= 200;
 

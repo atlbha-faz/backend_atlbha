@@ -448,4 +448,58 @@ class StoreController extends BaseController
 
          return $this->sendResponse($success,'تم إضافة ملاحظة بنجاح','note Added successfully');
     }
+
+    public function request_update(Request $request)
+    {
+      $store = Store::query()->find($request->store_id);
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+           'activity_id' =>'required|array',
+           'store_name'=>'required|string',
+           'link'=>'required|url',
+           'file'=>'required|mimes:pdf,doc,excel',
+           'name'=>'required|string|max:255',
+           'store_id'=>'required'
+        ]);
+        if ($validator->fails())
+        {
+           # code...
+           return $this->sendError(null,$validator->errors());
+        }
+
+            $users = User::where('store_id', $request->store_id)->where('user_type','store')->get();
+  
+            $data = [
+                'message' => 'تعديل توثيق',
+                'store_id' =>  $request->store_id,
+                'user_id'=>auth()->user()->id,
+                'type'=>"store_verified",
+                'object_id'=> $request->store_id
+            ];
+            foreach($users as $user)
+            {
+            Notification::send($user, new verificationNotification($data));
+            }
+            event(new VerificationEvent($data));
+        $store->update([
+            'store_name' =>  $request->input('store_name'),
+            'link' =>  $request->input('link'),
+            'file' =>  $request->input('file'),
+            'confirmation_status'=>"accept"
+
+        ]);
+
+         $store->activities()->sync($request->activity_id);
+       $user = User::where('is_deleted',0)->where('store_id',$request->store_id)->where('user_type','store')->first();
+       $user->update([
+         'name' =>  $request->input('name'),
+         ]);
+         
+
+        $success['store']=store::where('is_deleted',0)->where('id',$request->store_id)->first();
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل المتجر بنجاح','store update successfully');
+    }
+
 }

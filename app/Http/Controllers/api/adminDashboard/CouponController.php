@@ -51,7 +51,6 @@ class CouponController extends BaseController
         $validator =  Validator::make($input ,[
             'code'=>'required|string|max:255',
             'discount_type'=>'required|in:fixed,percent',
-            'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
             'start_at' =>['required','date'],
             'expire_date' =>['required','date'],
@@ -65,14 +64,10 @@ class CouponController extends BaseController
         $coupon = Coupon::create([
             'code' => $request->code,
             'discount_type' => $request->discount_type,
-            'total_price' => $request->total_price,
             'discount' => $request->discount,
             'start_at' => $request->start_at,
             'expire_date' => $request->expire_date,
             'total_redemptions' => $request->total_redemptions,
-
-            'free_shipping' => $request->free_shipping,
-            'exception_discount_product' => $request->exception_discount_product,
             'store_id' => null,
           ]);
 
@@ -153,13 +148,12 @@ class CouponController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-            'code'=>'required|string|max:255',
             'discount_type'=>'required|in:fixed,percent',
-            'total_price'=>['required','numeric|gt:0'],
             'discount'=>['required','numeric','gt:0'],
             'expire_date' =>['required','date'],
+            'start_at' =>['required','date'],
             'total_redemptions'=>['required','numeric'],
-            'user_redemptions'=>['required','numeric']
+         
            ]);
            if ($validator->fails())
            {
@@ -167,15 +161,11 @@ class CouponController extends BaseController
                return $this->sendError(null,$validator->errors());
            }
            $coupon->update([
-               'code' => $request->input('code'),
                'discount_type' => $request->input('discount_type'),
-               'total_price' => $request->input('total_price'),
                'discount' => $request->input('discount'),
+               'start_at' => $request->input('start_at'),
                'expire_date' => $request->input('expire_date'),
                'total_redemptions' => $request->input('total_redemptions'),
-               'user_redemptions' => $request->input('user_redemptions'),
-               'free_shipping' => $request->input('free_shipping'),
-               'exception_discount_product' => $request->input('exception_discount_product'),
                'store_id' => null,
            ]);
 

@@ -215,6 +215,7 @@ Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductCon
 // Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
 Route::post('registrationMarketer',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registrationMarketer']);
 Route::get('contactdeleteall',[App\Http\Controllers\api\adminDashboard\ContactController::class,'deleteall']);
+Route::post('request_update',[App\Http\Controllers\api\adminDashboard\StoreController::class,'request_update']);
 });
 });
 Auth::routes();
