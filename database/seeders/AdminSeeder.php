@@ -45,6 +45,20 @@ class AdminSeeder extends Seeder
             'store_id' => null
 
         ]);
+        User::create([
+            'user_id'=>1456,
+            'name' => 'marketer',
+            'user_name' => 'marketer',
+            'email' =>'marketer6@gmail.com' ,
+            'password'=>'12345678',
+             'gender' =>'male',
+            'user_type' =>'marketer',
+            'country_id' => 1,
+            'city_id'=> 1,
+            'verified'=>1,
+            'store_id' => null
+
+        ]);
 
     }
 }
