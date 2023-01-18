@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Models\User;
+use App\Models\Store;
+use App\Models\Service;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
+use App\Events\VerificationEvent;
+use App\Models\Service_Websiteorder;
+use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\WebsiteorderResource;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebsiteorderController extends BaseController
@@ -25,6 +33,8 @@ class WebsiteorderController extends BaseController
     {
         $success['count_of_serivces_order']=Websiteorder::where('is_deleted',0)->where('type','service')->count();
         $success['count_of_store_order']=Websiteorder::where('is_deleted',0)->where('type','store')->count();
+        $success['count_of_Design']=Service_Websiteorder::where('service_id',1)->count();
+        $success['count_of_TechnicalSupport']=Service_Websiteorder::where('service_id',2)->count();
 
         $success['Websiteorder']=WebsiteorderResource::collection(Websiteorder::where('is_deleted',0)->get());
         $success['status']= 200;
@@ -48,38 +58,7 @@ class WebsiteorderController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'type'=>'required|string|max:255',
-            'sevices'=>'exists:services,id'
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $order_number=Websiteorder::orderBy('id', 'desc')->first();
-        if(is_null($order_number)){
-        $number = 0001;
-        }else{
-
-        $number=$order_number->order_number;
-        $number= ((int) $number) +1;
-        }
-        $websiteorder = Websiteorder::create([
-            'type' => $request->type,
-            'order_number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
-            'store_id'=> $request->store_id,
-          ]);
-if($request->sevices!=null){
-          $websiteorder->services_websiteorders()->attach(explode(',', $request->sevices),['status'=>$request->status]);
-}
-         $success['Websiteorders']=New WebsiteorderResource($websiteorder );
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة الطلب بنجاح','Websiteorder Added successfully');
-    }
+   
 
     /**
      * Display the specified resource.
@@ -98,23 +77,7 @@ if($request->sevices!=null){
 
                return $this->sendResponse($success,'تم عرض  الطلب  بنجاح','websiteorder showed successfully');
     }
-    public function changeStatus($id)
-    {
-        $websiteorder = Websiteorder::query()->find($id);
-        if (is_null($websiteorder) || $websiteorder->is_deleted==1){
-         return $this->sendError("الطلب غير موجودة","websiteorder is't exists");
-         }
-        if($websiteorder->status === 'pending'){
-            $websiteorder->update(['status' => 'accept']);
-     }
-    else{
-        $websiteorder->update(['status' => 'reject']);
-    }
-        $success['websiteorders']=New WebsiteorderResource($websiteorder);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة الطلب بنجاح',' websiteorder status updared successfully');
 
-    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -183,4 +146,158 @@ if($request->sevices!=null){
 
             return $this->sendResponse($success,'تم حذف  الطلب بنجاح','websiteorder deleted successfully');
     }
+
+    public function deleteall(Request $request)
+    {
+            $websiteorders =Websiteorder::whereIn('id',$request->id)->get();
+           foreach($websiteorders as $websiteorder)
+           {
+             if (is_null($websiteorder) || $websiteorder->is_deleted==1 ){
+                    return $this->sendError("الطلب غير موجودة","websiteorder is't exists");
+             }
+             $websiteorder->update(['is_deleted' => 1]);
+            $success['websiteorder']=New WebsiteorderResource($websiteorder);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف الطلب بنجاح','websiteorder deleted successfully');
+    }
+ 
+
+           public function acceptStore($websiteorder)
+           {
+            $websiteorder =Websiteorder::query()->where('type','store')->find($websiteorder);
+            if (is_null($websiteorder) || $websiteorder->is_deleted==1){
+                return $this->sendError("الطلب غير موجود","Order is't exists");
+                }
+               $store = Store::query()->find($websiteorder->store_id);
+         
+               $websiteorder->update(['status' => 'accept']);
+               $store->update(['confirmation_status' => 'accept']);
+               $users = User::where('store_id', $store->id)->get();
+               $data = [
+                   'message' => ' تم قبول الطلب',
+                   'store_id' => $websiteorder->store_id,
+                   'user_id'=>auth()->user()->id,
+                   'type'=>"accept",
+                   'object_id'=>$websiteorder->store_id
+               ];
+              
+               foreach($users as $user)
+               {
+               Notification::send($user, new verificationNotification($data));
+               }
+               
+               event(new VerificationEvent($data));
+               $success['store']=New StoreResource($store);
+               $success['status']= 200;
+       
+                return $this->sendResponse($success,'تم قبول الطلب بنجاح',' accept successfully');
+       
+           }
+
+           public function rejectStore($websiteorder)
+           {
+            $websiteorder =Websiteorder::query()->where('type','store')->find($websiteorder);
+            if (is_null($websiteorder) || $websiteorder->is_deleted==1){
+                return $this->sendError("الطلب غير موجود","Order is't exists");
+                }
+               $store = Store::query()->find($websiteorder->store_id);
+              
+               $websiteorder->update(['status' => 'reject']);
+               $store->update(['confirmation_status' => 'reject']);
+               $users = User::where('store_id', $store->id)->get();
+               $data = [
+                   'message' => ' تم رفض الطلب',
+                   'store_id' => $websiteorder->store_id,
+                   'user_id'=>auth()->user()->id,
+                   'type'=>"reject",
+                   'object_id'=>$websiteorder->store_id
+               ];
+              
+               foreach($users as $user)
+               {
+               Notification::send($user, new verificationNotification($data));
+               }
+               
+               event(new VerificationEvent($data));
+               $success['store']=New StoreResource($store);
+               $success['status']= 200;
+       
+                return $this->sendResponse($success,'تم رفض الطلب بنجاح','reject successfully');
+       
+           }
+
+           public function acceptService($websiteorder)
+           {
+            $websiteorder =Websiteorder::query()->where('type','service')->find($websiteorder);
+            if (is_null($websiteorder) || $websiteorder->is_deleted==1){
+                return $this->sendError("الطلب غير موجود","Order is't exists");
+                }
+               $services= Service_Websiteorder::where('websiteorder_id',$websiteorder->id)->get();
+
+               foreach( $services as  $service){
+                $service->update(['status' => 'accept']);
+              }
+               $websiteorder->update(['status' => 'accept']);
+               
+               $users = User::where('store_id', $websiteorder->store_id)->get();
+               $data = [
+                   'message' => ' تم قبول الخدمة',
+                   'store_id' =>$websiteorder->store_id,
+                   'user_id'=>auth()->user()->id,
+                   'type'=>"service_accept",
+                   'object_id'=>$websiteorder->store_id
+               ];
+              
+               foreach($users as $user)
+               {
+               Notification::send($user, new verificationNotification($data));
+               }
+               
+               event(new VerificationEvent($data));
+               $success['websiteorder']= New WebsiteorderResource($websiteorder);
+               $success['status']= 200;
+       
+                return $this->sendResponse($success,'تم قبول الطلب بنجاح',' accept successfully');
+       
+           }
+
+
+           public function rejectService($websiteorder)
+           {
+            $websiteorder =Websiteorder::query()->where('type','service')->find($websiteorder);
+            if (is_null($websiteorder) || $websiteorder->is_deleted==1){
+                return $this->sendError("الطلب غير موجود","Order is't exists");
+                }
+                $services= Service_Websiteorder::where('websiteorder_id',$websiteorder->id)->get();
+                foreach( $services as  $service){
+                  $service->update(['status' => 'reject']);
+                }
+               $websiteorder->update(['status' => 'reject']);
+               $users = User::where('store_id', $websiteorder->store_id)->get();
+               $data = [
+                   'message' => ' تم رفض الخدمة',
+                   'store_id' =>$websiteorder->store_id,
+                   'user_id'=>auth()->user()->id,
+                   'type'=>"service_reject",
+                   'object_id'=>$websiteorder->store_id
+               ];
+              
+               foreach($users as $user)
+               {
+               Notification::send($user, new verificationNotification($data));
+               }
+               
+               event(new VerificationEvent($data));
+               $success['websiteorder']= New WebsiteorderResource($websiteorder);
+               $success['status']= 200;
+       
+                return $this->sendResponse($success,'تم رفض الطلب بنجاح',' reject successfully');
+       
+           }
+       
+
 }

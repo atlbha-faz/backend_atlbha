@@ -180,13 +180,12 @@ class CourseController extends BaseController
         }
          $input = $request->all();
         $validator =  Validator::make($input ,[
-           'name'=>'required|string|max:255',
-            'description'=>'required|string',
-            'data'=>'array',
-             'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
-            'data.*.title'=>'required|string|max:255',
-           'data.*.file.*'=>'mimes:pdf,doc,excel',
-           'data.*.id' => 'nullable|numeric',
+          'name'=>'required|string|max:255',
+          'description'=>'required|string',
+          'tags'=>'required',
+          'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+          'data.*.title'=>'required|string|max:255',
+         'data.*.file.*'=>'mimes:pdf,doc,excel',
         ]);
 
         if ($validator->fails())

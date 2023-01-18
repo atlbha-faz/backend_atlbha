@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
-      protected $fillable = ['name','description','file','price','status','is_deleted'];
+      protected $fillable = ['name','description','file','status','is_deleted'];
 
   
     public function pendingServices($id){
@@ -36,7 +36,6 @@ class Service extends Model
     }
     public function services_websiteorders()
     {
-
        return $this->belongsToMany(
        Websiteorder::class,
             'services_websiteorders',

@@ -297,21 +297,21 @@ class StoreController extends BaseController
     }
 
 
-       public function acceptStatus($id)
+       public function acceptVerification($id)
     {
         $store = Store::query()->find($id);
          if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
 
-        $store->update(['confirmation_status' => 'accept']);
+        $store->update(['verification_status' => 'accept']);
         $users = User::where('store_id', $store->id)->get();
         $data = [
-            'message' => ' تم قبول الطلب',
-            'store_id' => auth()->user()->store_id,
+            'message' => ' تم قبول توثيق المتجر',
+            'store_id' =>$store->id,
             'user_id'=>auth()->user()->id,
             'type'=>"store_request",
-            'object_id'=>auth()->user()->store_id
+            'object_id'=>$store->id
         ];
        
         foreach($users as $user)
@@ -327,21 +327,21 @@ class StoreController extends BaseController
 
     }
 
-      public function rejectStatus($id)
+      public function rejectVerification($id)
     {
         $store = Store::query()->find($id);
          if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
 
-        $store->update(['confirmation_status' => 'reject']);
+        $store->update(['verification_status' => 'reject']);
         $users = User::where('store_id', $store->id)->get();
         $data = [
-            'message' => ' تم رفض الطلب',
-            'store_id' => auth()->user()->store_id,
+            'message' => ' تم رفض توثيق المتجر',
+            'store_id' =>$store->id,
             'user_id'=>auth()->user()->id,
             'type'=>"store_request",
-            'object_id'=>auth()->user()->store_id
+            'object_id'=>$store->id
         ];
        
         foreach($users as $user)
@@ -449,7 +449,7 @@ class StoreController extends BaseController
          return $this->sendResponse($success,'تم إضافة ملاحظة بنجاح','note Added successfully');
     }
 
-    public function request_update(Request $request)
+    public function verification_update(Request $request)
     {
       $store = Store::query()->find($request->store_id);
         $input = $request->all();

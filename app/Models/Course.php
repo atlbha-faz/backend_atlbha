@@ -10,7 +10,7 @@ class Course extends Model
     use HasFactory;
     protected $fillable = ['name','description','duration','tags','image','link','user_id','status',
     'is_deleted'];
-
+   
     public function user()
     {
         return $this->belongsTo(User::class);

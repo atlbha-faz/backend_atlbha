@@ -20,7 +20,10 @@ class WebsiteorderResource extends JsonResource
             'type' =>$this->type,
             'status'=>$this->status,
             'is_deleted'=>$this->is_deleted,
-            'store' => New StoreResource($this->store)
+            'created_at' => (string) $this->created_at,
+            'store' => New StoreResource($this->store),
+            'services'=>ServiceResource::collection($this->services_websiteorders),
+
 
         ];
     }
