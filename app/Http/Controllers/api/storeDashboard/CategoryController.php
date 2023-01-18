@@ -158,6 +158,18 @@ if($request->data){
         if (is_null($category) || $category->is_deleted==1 || $category->store_id!=auth()->user()->store_id){
          return $this->sendError("القسم غير موجودة","category is't exists");
          }
+         if($category->parent_id == null)
+         $categories = Category::where('parent_id', $category->id)->get();
+
+        foreach ($categories as $subcategory) {
+
+        if($subcategory->status === 'active'){
+            $subcategory->update(['status' => 'not_active']);
+     }
+    else{
+        $subcategory->update(['status' => 'active']);
+    }
+              }
         if($category->status === 'active'){
             $category->update(['status' => 'not_active']);
      }
@@ -245,9 +257,18 @@ if($request->data){
     public function destroy($category)
     {
         $category =Category::query()->find($category);
-        if (is_null($category) || $category->is_deleted==1 || $category->store_id!=auth()->user()->store_id ){
+        if (is_null($category) || $category->is_deleted==1 || $category->store_id!=auth()->user()->store_id )
+        {
             return $this->sendError("القسم غير موجودة","category is't exists");
             }
+           if($category->parent_id == null){
+         $categories = Category::where('parent_id', $category->id)->get();
+
+        foreach ($categories as $subcategory) {
+
+         $subcategory->update(['is_deleted' => 1]);}
+              }
+            //
            $category->update(['is_deleted' => 1]);
 
            $success['activities']=New CategoryResource($category);
@@ -264,6 +285,13 @@ if($request->data){
              if (is_null($category) || $category->is_deleted==1 ){
                     return $this->sendError("التصنيف غير موجودة","category is't exists");
              }
+             if($category->parent_id == null){
+            $categories = Category::where('parent_id', $category->id)->get();
+
+           foreach ($categories as $subcategory) {
+
+            $subcategory->update(['is_deleted' => 1]);
+            }}
              $category->update(['is_deleted' => 1]);
             $success['categorys']=New CategoryResource($category);
 
@@ -281,16 +309,33 @@ if($request->data){
                 {
                     if (is_null($category) || $category->is_deleted==1 ){
                         return $this->sendError("  التصنيف غير موجودة","category is't exists");
-              }
+                      }
                     if($category->status === 'active'){
-                $category->update(['status' => 'not_active']);
-                }
+                      $category->update(['status' => 'not_active']);
+                     }
+                   else{
+                     $category->update(['status' => 'active']);
+                    }
+             if($category->parent_id == null)
+        {
+
+          $categories = Category::where('parent_id', $category->id)->get();
+
+         foreach ($categories as $subcategory)
+            {
+
+            if($subcategory->status === 'active'){
+                $subcategory->update(['status' => 'not_active']);
+            }
                 else{
-                $category->update(['status' => 'active']);
-                }
-                $success['categorys']= New CategoryResource($category);
+            $subcategory->update(['status' => 'active']);
+                    }
+            }
+        }
+                      $success['categorys']= New CategoryResource($category);
 
                     }
+
                     $success['status']= 200;
 
                 return $this->sendResponse($success,'تم تعديل حالة التصنيف بنجاح','category updated successfully');

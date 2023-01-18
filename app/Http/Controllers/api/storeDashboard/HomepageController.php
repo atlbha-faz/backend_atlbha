@@ -43,59 +43,59 @@ class HomepageController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'panar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'panarstatus1'=>'required|in:active,not_active',
-            'panar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'panarstatus2'=>'required|in:active,not_active',
-            'panar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'panarstatus3'=>'required|in:active,not_active',
-            'clientstatus'=>'required|in:active,not_active',
-            'commentstatus'=>'required|in:active,not_active',
-            'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'sliderstatus1'=>'required|in:active,not_active',
-            'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'sliderstatus2'=>'required|in:active,not_active',
-            'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'sliderstatus3'=>'required|in:active,not_active',
-            // 'store_id'=>'required|exists:stores,id',
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
+    // public function store(Request $request)
+    // {
+    //     $input = $request->all();
+    //     $validator =  Validator::make($input ,[
+    //         'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'panar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'panarstatus1'=>'required|in:active,not_active',
+    //         'panar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'panarstatus2'=>'required|in:active,not_active',
+    //         'panar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'panarstatus3'=>'required|in:active,not_active',
+    //         'clientstatus'=>'required|in:active,not_active',
+    //         'commentstatus'=>'required|in:active,not_active',
+    //         'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'sliderstatus1'=>'required|in:active,not_active',
+    //         'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'sliderstatus2'=>'required|in:active,not_active',
+    //         'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'sliderstatus3'=>'required|in:active,not_active',
+    //         // 'store_id'=>'required|exists:stores,id',
+    //     ]);
+    //     if ($validator->fails())
+    //     {
+    //         return $this->sendError(null,$validator->errors());
+    //     }
 
-        $Homepage = Homepage::updateOrCreate([
-                'store_id'=> auth()->user()->store_id,
-                ],[
-               'logo' => $request->logo,
-               'panar1' => $request->panar1,
-               'panarstatus1' => $request->panarstatus1,
-               'panar2' => $request->panar2,
-               'panarstatus2' => $request->panarstatus2,
-               'panar3' => $request->panar3,
-               'panarstatus3' => $request->panarstatus3,
-               'clientstatus' => $request->clientstatus,
-               'commentstatus' => $request->commentstatus,
-               'slider1' => $request->slider1,
-               'sliderstatus1' => $request->sliderstatus1,
-               'slider2' => $request->slider2,
-               'sliderstatus2' => $request->sliderstatus2,
-               'slider3' => $request->slider3,
-               'sliderstatus3' => $request->sliderstatus3,
-            //    'store_id' => $request->input('store_id'),
-           ]);
+    //     $Homepage = Homepage::updateOrCreate([
+    //             'store_id'=> auth()->user()->store_id,
+    //             ],[
+    //            'logo' => $request->logo,
+    //            'panar1' => $request->panar1,
+    //            'panarstatus1' => $request->panarstatus1,
+    //            'panar2' => $request->panar2,
+    //            'panarstatus2' => $request->panarstatus2,
+    //            'panar3' => $request->panar3,
+    //            'panarstatus3' => $request->panarstatus3,
+    //            'clientstatus' => $request->clientstatus,
+    //            'commentstatus' => $request->commentstatus,
+    //            'slider1' => $request->slider1,
+    //            'sliderstatus1' => $request->sliderstatus1,
+    //            'slider2' => $request->slider2,
+    //            'sliderstatus2' => $request->sliderstatus2,
+    //            'slider3' => $request->slider3,
+    //            'sliderstatus3' => $request->sliderstatus3,
+    //         //    'store_id' => $request->input('store_id'),
+    //        ]);
 
 
-         $success['Homepages']=New HomepageResource($Homepage );
-        $success['status']= 200;
+    //      $success['Homepages']=New HomepageResource($Homepage );
+    //     $success['status']= 200;
 
-         return $this->sendResponse($success,'تم إضافةالصفحة بنجاح','Homepage Added successfully');
-    }
+    //      return $this->sendResponse($success,'تم إضافةالصفحة بنجاح','Homepage Added successfully');
+    // }
 
     /**
      * Display the specified resource.
@@ -103,17 +103,17 @@ class HomepageController extends BaseController
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
-    public function show($homepage)
-    {
-        $Homepage= Homepage::query()->find($homepage);
-        if (is_null($Homepage) || $Homepage->is_deleted==1){
-               return $this->sendError("االصفحة غير موجودة","Homepage is't exists");
-               }
-              $success['homepages']=New HomepageResource($Homepage);
-              $success['status']= 200;
+    // public function show($homepage)
+    // {
+    //     $Homepage= Homepage::query()->find($homepage);
+    //     if (is_null($Homepage) || $Homepage->is_deleted==1){
+    //            return $this->sendError("االصفحة غير موجودة","Homepage is't exists");
+    //            }
+    //           $success['homepages']=New HomepageResource($Homepage);
+    //           $success['status']= 200;
 
-               return $this->sendResponse($success,'تم عرض الصفحة بنجاح','Homepage showed successfully');
-    }
+    //            return $this->sendResponse($success,'تم عرض الصفحة بنجاح','Homepage showed successfully');
+    // }
     // public function changeStatus($id)
     // {
     //     $Homepage = Homepage::query()->find($id);
@@ -123,7 +123,7 @@ class HomepageController extends BaseController
     //     if($Homepage->status === 'active'){
     //         $Homepage->update(['status' => 'not_active']);
     //  }
-    // else{
+    //     else{
     //     $Homepage->update(['status' => 'active']);
     // }
     //     $success['homepages']=New HomepageResource($Homepage);
@@ -158,26 +158,25 @@ class HomepageController extends BaseController
      * @param  \App\Models\Homepage  $homepage
      * @return \Illuminate\Http\Response
      */
-    public function destroy($homepage)
-    {
-        $homepage =Homepage::query()->find($homepage);
-        if (is_null($homepage) || $homepage->is_deleted==1){
-            return $this->sendError("الصفحة غير موجودة","Homepage is't exists");
-            }
-           $homepage->update(['is_deleted' => 1]);
+    // public function destroy($homepage)
+    // {
+    //     $homepage =Homepage::query()->find($homepage);
+    //     if (is_null($homepage) || $homepage->is_deleted==1){
+    //         return $this->sendError("الصفحة غير موجودة","Homepage is't exists");
+    //         }
+    //        $homepage->update(['is_deleted' => 1]);
 
-           $success['homepages']=New HomepageResource($homepage);
-           $success['status']= 200;
+    //        $success['homepages']=New HomepageResource($homepage);
+    //        $success['status']= 200;
 
-            return $this->sendResponse($success,'تم حذف الصفحة بنجاح','Homepage deleted successfully');
-    }
+    //         return $this->sendResponse($success,'تم حذف الصفحة بنجاح','Homepage deleted successfully');
+    // }
+
+    // //////////////////////////////////////
     public function logoUpdate(Request $request)
     {
-        $logohomepage =Homepage::where('store_id',auth()->user()->store_id)->first();
 
-        if (is_null($logohomepage) || $logohomepage->is_deleted==1){
-            return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
-       }
+
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
@@ -185,8 +184,8 @@ class HomepageController extends BaseController
            if ($validator->fails())
            {
                return $this->sendError(null,$validator->errors());
-           } 
-         $logohomepage->updateOrCreate([
+           }
+         $logohomepage =Homepage::updateOrCreate([
             'store_id'   => auth()->user()->store_id,
                ],[
                'logo' => $request->logo,
@@ -200,10 +199,7 @@ class HomepageController extends BaseController
 
 public function panarUpdate(Request $request)
 {
-    $logohomepage =Homepage::where('store_id',auth()->user()->store_id)->first();
-    if (is_null($logohomepage) || $logohomepage->is_deleted==1){
-        return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
-   }
+
         $input = $request->all();
        $validator =  Validator::make($input ,[
         'panar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
@@ -218,9 +214,9 @@ public function panarUpdate(Request $request)
            # code...
            return $this->sendError(null,$validator->errors());
        }
-       
-     
-     $logohomepage->updateOrCreate([
+
+
+     $panarhomepage =Homepage::updateOrCreate([
         'store_id'   => auth()->user()->store_id,
     ],[
                 'panar1' => $request->panar1,
@@ -231,57 +227,53 @@ public function panarUpdate(Request $request)
                 'panarstatus3' => $request->panarstatus3,
               ]);
 
-       $success['homepages']=New HomepageResource($logohomepage);
+       $success['homepages']=New HomepageResource($panarhomepage);
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
 }
 
-public function sliderUpdate(Request $request)
-{
-    $logohomepage = Homepage::where('store_id',auth()->user()->store_id)->first();
-    if (is_null($logohomepage) || $logohomepage->is_deleted==1){
-        return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
-   }
-        $input = $request->all();
-       $validator =  Validator::make($input ,[
-        'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'sliderstatus1'=>'required|in:active,not_active',
-        'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'sliderstatus2'=>'required|in:active,not_active',
-        'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'sliderstatus3'=>'required|in:active,not_active',
-          ]);
-       if ($validator->fails())
-       {
-           # code...
-           return $this->sendError(null,$validator->errors());
-       }
-       
-     
-     $logohomepage->updateOrCreate([
-            'store_id'   => auth()->user()->store_id,
-            ],[
-                'slider1' => $request->slider1,
-                'sliderstatus1' => $request->sliderstatus1,
-                'slider2' => $request->slider2,
-                'sliderstatus2' => $request->sliderstatus2,
-                'slider3' => $request->slider3,
-                'sliderstatus3' => $request->sliderstatus3,
-              ]);
+// public function sliderUpdate(Request $request)
+// {
+//     $logohomepage = Homepage::where('store_id',auth()->user()->store_id)->first();
+//     if (is_null($logohomepage) || $logohomepage->is_deleted==1){
+//         return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
+//    }
+//         $input = $request->all();
+//        $validator =  Validator::make($input ,[
+//         'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+//         'sliderstatus1'=>'required|in:active,not_active',
+//         'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+//         'sliderstatus2'=>'required|in:active,not_active',
+//         'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+//         'sliderstatus3'=>'required|in:active,not_active',
+//           ]);
+//        if ($validator->fails())
+//        {
+//            # code...
+//            return $this->sendError(null,$validator->errors());
+//        }
 
-       $success['homepages']=New HomepageResource($logohomepage);
-       $success['status']= 200;
 
-        return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
-}
+//      $logohomepage->updateOrCreate([
+//             'store_id'   => auth()->user()->store_id,
+//             ],[
+//                 'slider1' => $request->slider1,
+//                 'sliderstatus1' => $request->sliderstatus1,
+//                 'slider2' => $request->slider2,
+//                 'sliderstatus2' => $request->sliderstatus2,
+//                 'slider3' => $request->slider3,
+//                 'sliderstatus3' => $request->sliderstatus3,
+//               ]);
+
+//        $success['homepages']=New HomepageResource($logohomepage);
+//        $success['status']= 200;
+
+//         return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
+// }
 public function commentUpdate(Request $request)
 {
-    $logohomepage =Homepage::where('store_id',auth()->user()->store_id)->first();
 
-    if (is_null($logohomepage) || $logohomepage->is_deleted==1){
-        return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
-   }
         $input = $request->all();
        $validator =  Validator::make($input ,[
         'commentstatus'=>'required|in:active,not_active',
@@ -290,15 +282,15 @@ public function commentUpdate(Request $request)
        if ($validator->fails())
        {
            return $this->sendError(null,$validator->errors());
-       } 
-     $logohomepage->updateOrCreate([
+       }
+     $commenthomepage =Homepage::updateOrCreate([
         'store_id'   => auth()->user()->store_id,
            ],[
            'commentstatus' => $request->commentstatus,
            'clientstatus' => $request->clientstatus
               ]);
 
-       $success['homepages']=New HomepageResource($logohomepage);
+       $success['homepages']=New HomepageResource($commenthomepage);
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');

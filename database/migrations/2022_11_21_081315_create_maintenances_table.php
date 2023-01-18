@@ -19,7 +19,7 @@ return new class extends Migration
             $table->longText('message');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-            $table->enum('status',['active','not_active'])->default('active');
+            $table->enum('status',['active','not_active'])->default('not_active');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });

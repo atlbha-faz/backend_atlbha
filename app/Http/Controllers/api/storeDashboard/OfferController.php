@@ -200,18 +200,21 @@ class OfferController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'offer_type'=>'required|in:If_bought_gets,fixed_amount,percent',
+             'offer_type'=>'required|in:If_bought_gets,fixed_amount,percent',
             'offer_title'=>'required|string',
             'offer_view' =>'required|in:store_website,store_application,both',
             'start_at'=>'required|date',
             'end_at'=>'required|date',
             'purchase_quantity' =>"required_if:offer_type,If_bought_gets",
-            'purchase_type' =>'required|in:product,category,payment',
+
+            'purchase_type' =>'required_if:offer_type,If_bought_gets|in:product,category',
             'get_quantity' =>'required_if:offer_type,If_bought_gets|numeric',
+
             'get_type' =>'required_if:offer_type,If_bought_gets|in:product,category',
-            'offer1_type' =>'required_if:offer_type,If_bought_gets|in:percent,free_product',            'discount_percent' =>'required_if:offer1_type,percent',
+            'offer1_type' =>'required_if:offer_type,If_bought_gets|in:percent,free_product',
+            'discount_percent' =>'required_if:offer1_type,percent',
             'discount_value_offer2' =>'required_if:offer_type,fixed_amount',
-            'offer_apply' =>'required_if:offer_type,fixed_amount,percent',
+            'offer_apply' =>'required_if:offer_type,fixed_amount,percent|in:all,selected_product,selected_category,selected_payment',
             'offer_type_minimum' =>'required_if:offer_type,fixed_amount,percent',
              'offer_amount_minimum' =>'required_if:offer_type,fixed_amount,percent',
               'coupon_status' =>'required_if:offer_type,fixed_amount,percent',
@@ -224,7 +227,7 @@ class OfferController extends BaseController
             'select_product_id'=>"required_if:purchase_type,payment",
             'select_category_id'=>"required_if:purchase_type,payment",
             'select_payment_id'=>"required_if:purchase_type,payment",
-        ]);
+             ]);
         if ($validator->fails())
         {
             return $this->sendError(null,$validator->errors());

@@ -43,7 +43,7 @@ class AuthController extends BaseController
         }
         if($request->user_type=="store"){
             $user = User::create([
-                'name' => $request->user_name,
+                'name' => $request->name,
                 'email'=>$request->email,
                 'user_name' => $request->user_name,
                 'user_type' => "store",
