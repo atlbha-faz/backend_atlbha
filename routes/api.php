@@ -25,6 +25,9 @@ Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mo
 Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
 Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
+//  index Ettlobha page
+Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
+
 
 
 Route::post('send-verify-message','App\Http\Controllers\api\AuthController@store_verify_message');
@@ -91,7 +94,7 @@ Route::post('changeHomeStatus/{name}/{id}', [App\Http\Controllers\api\adminDashb
 Route::post('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'changeStatus']);
 Route::post('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
 Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
-
+// home page
 Route::post('logoUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'logoUpdate']);
 Route::post('panarUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'panarUpdate']);
 Route::post('sliderUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'sliderUpdate']);
@@ -138,8 +141,6 @@ Route::resource('course',App\Http\Controllers\api\adminDashboard\CourseControlle
 Route::resource('shippingtype',App\Http\Controllers\api\adminDashboard\ShippingtypeController::class);
 Route::resource('paymenttype',App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);
 Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
-Route::resource('replaycomment',App\Http\Controllers\api\adminDashboard\ReplaycommentController::class);
-Route::resource('maintenance',App\Http\Controllers\api\adminDashboard\MaintenanceController::class);
 Route::resource('page',App\Http\Controllers\api\adminDashboard\pageController::class);
 Route::post('publish',[App\Http\Controllers\api\adminDashboard\pageController::class,'publish']);
 Route::resource('pagecategory',App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
@@ -175,6 +176,17 @@ Route::post('registration_status_update', [App\Http\Controllers\api\adminDashboa
 Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'optionsProduct']);
 
 Route::resource('websiteorder',App\Http\Controllers\api\adminDashboard\WebsiteorderController::class);
+Route::get('websiteorderdeleteall',[App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'deleteall']);
+
+Route::post('acceptStore/{id}',[App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'acceptStore']);
+Route::post('rejectStore/{id}',[App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'rejectStore']);
+Route::post('acceptService/{id}',[App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'acceptService']);
+Route::post('rejectService/{id}',[App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'rejectService']);
+
+
+
+
+
 Route::resource('stock',App\Http\Controllers\api\adminDashboard\StockController::class);
 Route::get('stockdeleteall',[App\Http\Controllers\api\adminDashboard\StockController::class,'deleteall']);
 Route::get('storechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreController::class,'changeSatusall']);
@@ -208,13 +220,14 @@ Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::c
 Route::post('productchangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'specialStatus']);
 Route::get('activitydeleteall',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'deleteall']);
 Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\StoreController::class,'addNote']);
-Route::post('acceptStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'acceptStatus']);
+Route::post('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'acceptVerification']);
 Route::post('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'specialStatus']);
-Route::post('rejectStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'rejectStatus']);
+Route::post('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'rejectVerification']);
 Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
 // Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
 Route::post('registrationMarketer',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registrationMarketer']);
 Route::get('contactdeleteall',[App\Http\Controllers\api\adminDashboard\ContactController::class,'deleteall']);
+Route::post('verification_update',[App\Http\Controllers\api\adminDashboard\StoreController::class,'verification_update']);
 });
 });
 Auth::routes();
@@ -344,6 +357,3 @@ Route::get('marketerRequest', [App\Http\Controllers\api\storeDashboard\Etlobhase
 
 });
 });
-//  index Etlobha page
-Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
-

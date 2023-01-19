@@ -2,6 +2,7 @@
 
 
 namespace App\Http\Controllers\api\adminDashboard;
+use Carbon\Carbon;
 use App\Models\Image;
 use App\Models\Option;
 use App\Models\Product;
@@ -19,7 +20,9 @@ class EtlobhaController extends BaseController
     }
     public function index()
     {
-
+          $success['newProducts']=Product::where('is_deleted',0)->where('for','etlobha')->where('store_id',null)->where('created_at', '>=', Carbon::now()->subDay())->count();
+          $success['not_active_products']=Product::where('is_deleted',0)->where('for','etlobha')->where('store_id',null)->where('status', 'not_active')->count();
+          $success['about_to_finish_products']=Product::where('is_deleted',0)->where('for','etlobha')->where('store_id',null)->where('stock','<', '20')->count();
             $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('for','etlobha')->where('store_id',null)->get());
              $success['status']= 200;
 

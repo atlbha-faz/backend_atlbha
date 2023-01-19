@@ -63,7 +63,6 @@ class StockController extends BaseController
             'name'=>'required|string|max:255',
             'sku'=>'required|string',
             'description'=>'required|string',
-            'for' => 'required|in:store,stock.etlobha',
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],

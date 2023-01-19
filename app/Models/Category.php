@@ -23,6 +23,11 @@ class Category extends Model
     {
         return $this->belongsTo(Store::class, 'store_id','id');
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
     public function setIconAttribute($icon)
     {
         if (!is_null($icon)) {

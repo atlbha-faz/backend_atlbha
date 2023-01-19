@@ -104,9 +104,6 @@ if($request->data){
     }
 }
 
-
-    // }
-    // dd($category );
     $success['categories']=New CategoryResource($category);
     $success['status']= 200;
 
@@ -156,6 +153,20 @@ if($request->data){
         $category = Category::query()->find($id);
         if (is_null($category) || $category->is_deleted==1 || $category->for=='store'){
          return $this->sendError("القسم غير موجودة","category is't exists");
+         }
+         if($category->parent_id == null)
+         {
+         $categories = Category::where('parent_id', $category->id)->get();
+
+        foreach ($categories as $subcategory) {
+
+        if($subcategory->status === 'active'){
+            $subcategory->update(['status' => 'not_active']);
+     }
+    else{
+        $subcategory->update(['status' => 'active']);
+        }
+        }
          }
         if($category->status === 'active'){
             $category->update(['status' => 'not_active']);
@@ -243,9 +254,17 @@ if($request->data){
         if (is_null($category) || $category->is_deleted==1){
             return $this->sendError("القسم غير موجودة","category is't exists");
             }
+            if($category->parent_id == null){
+            $categories = Category::where('parent_id', $category->id)->get();
+   
+           foreach ($categories as $subcategory) {
+   
+            $subcategory->update(['is_deleted' => 1]);
+                 }
+                }
            $category->update(['is_deleted' => 1]);
 
-           $success['activities']=New CategoryResource($category);
+           $success['categories']=New CategoryResource($category);
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف القسم بنجاح','category deleted successfully');
     }
@@ -259,6 +278,7 @@ if($request->data){
              if (is_null($category) || $category->is_deleted==1 ){
                     return $this->sendError("التصنيف غير موجودة","category is't exists");
              }
+
              $category->update(['is_deleted' => 1]);
             $success['categorys']=New CategoryResource($category);
 
