@@ -5,14 +5,18 @@ namespace App\Http\Controllers\api;
 use Str;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\Setting;
 use App\Models\Marketer;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
+use App\Events\VerificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
 use App\Http\Controllers\API\BaseController as BaseController;
 
 class AuthController extends BaseController
@@ -21,6 +25,13 @@ class AuthController extends BaseController
 
     public function register(Request $request)
     {
+        $setting=Setting::orderBy('id', 'desc')->first();
+if($setting->registration_status=="stop_registration"){
+    return $this->sendError('stop_registration', 'تم ايقاف التسجيل');
+
+} 
+else{
+
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'checkbox_field' => 'required|in:1',
@@ -29,16 +40,16 @@ class AuthController extends BaseController
             'user_name'=>'required|string|max:255',
             'store_name'=>'required_if:user_type,store|string|max:255',
             'email'=>'required|email|unique:users',
-            'store_email'=>'required|email|unique:stores',
+            'store_email'=>'required_if:user_type,store|email|unique:stores',
             'password'=>'required',
             'domain'=>'required_if:user_type,store|url',
             'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'activity_id' =>'required|array|exists:activities,id',
+            'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
             'package_id' =>'required_if:user_type,store|exists:packages,id',
             'country_id'=>'required_if:user_type,store|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-            'periodtype'=>'required|in:6months,year',
+            'periodtype'=>'required_if:user_type,store|in:6months,year',
 
         ]);
 
@@ -46,6 +57,7 @@ class AuthController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
         if($request->user_type=="store"){
+         
             $user = User::create([
                 'name' => $request->name,
                 'email'=>$request->email,
@@ -57,7 +69,7 @@ class AuthController extends BaseController
 
             $userid =$user->id;
 
-
+    
             $store = Store::create([
                 'store_name' => $request->store_name,
                 'store_email'=>$request->store_email,
@@ -67,11 +79,14 @@ class AuthController extends BaseController
                 'user_id' => $userid,
                 'periodtype'=>$request->periodtype,
                 'country_id' => $request->country_id,
-                'city_id' => $request->city_id
+                'city_id' => $request->city_id,
+
             ]);
 
             $user->update([
                 'store_id' =>  $store->id]);
+
+
 
             if($request->periodtype =="6months"){
             $end_at = date('Y-m-d',strtotime("+ 6 months", strtotime($store->created_at)));
@@ -88,7 +103,27 @@ class AuthController extends BaseController
                 }
             $store->activities()->attach($request->activity_id);
             $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
- 
+           
+            if($setting->registration_status=="registration_with_admin"){
+                $store->update([
+                    'confirmation_status' =>'accept']);
+                $order_number=Websiteorder::orderBy('id', 'desc')->first();
+                if(is_null($order_number)){
+                $number = 0001;
+                }else{
+        
+                $number=$order_number->order_number;
+                $number= ((int) $number) +1;
+                }
+                $websiteorder = Websiteorder::create([
+                    'type' => 'store',
+                    'order_number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
+                    'store_id'=> $store->id,
+                    'status'=>'accept'
+                  ]);
+                }
+                else{
+
         $order_number=Websiteorder::orderBy('id', 'desc')->first();
         if(is_null($order_number)){
         $number = 0001;
@@ -118,7 +153,7 @@ class AuthController extends BaseController
           }
           event(new VerificationEvent($data));
         
-        
+         }       
         
         }
         else{
@@ -144,7 +179,7 @@ class AuthController extends BaseController
 
         return $this->sendResponse($success, 'تم التسجيل بنجاح', 'Register Successfully');
 }
-
+    }
     public function login(Request $request)
     {
         $input = $request->all();
