@@ -6,6 +6,7 @@ use Str;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Marketer;
+use App\Models\Websiteorder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -87,7 +88,38 @@ class AuthController extends BaseController
                 }
             $store->activities()->attach($request->activity_id);
             $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
+ 
+        $order_number=Websiteorder::orderBy('id', 'desc')->first();
+        if(is_null($order_number)){
+        $number = 0001;
+        }else{
 
+        $number=$order_number->order_number;
+        $number= ((int) $number) +1;
+        }
+        $websiteorder = Websiteorder::create([
+            'type' => 'store',
+            'order_number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
+            'store_id'=> $store->id,
+          ]);
+
+          $users = User::where('store_id',null)->get();
+  
+          $data = [
+              'message' => 'طلب متجر',
+              'store_id' => $store->id,
+              'user_id'=>$store->user_id,
+              'type'=>"store_request",
+              'object_id'=>$store->id
+          ];
+          foreach($users as $user)
+          {
+          Notification::send($user, new verificationNotification($data));
+          }
+          event(new VerificationEvent($data));
+        
+        
+        
         }
         else{
          
