@@ -16,7 +16,7 @@ class WebsiteorderSeeder extends Seeder
      */
     public function run()
     {
-   
+
         Websiteorder::create([
             'order_number' => '0001',
             'type' => 'service',
@@ -27,17 +27,20 @@ class WebsiteorderSeeder extends Seeder
             'order_number' => '0002',
             'type' => 'store',
             'status' =>'pending',
-        
+            'store_id' => 1,
+
         ]);
         Service_Websiteorder::create([
             'service_id' =>1,
             'websiteorder_id'=>1,
             'status'=>'pending',
+
         ]);
         Service_Websiteorder::create([
             'service_id' =>2,
             'websiteorder_id'=>1,
             'status'=>'pending',
+          
         ]);
     }
 }

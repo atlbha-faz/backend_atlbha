@@ -23,7 +23,7 @@ class NotificationController extends BaseController
     public function read($id){
         $userUnreadNotification =  NotificationModel::query()->find($id);
         $userUnreadNotification->update(['read_at' =>Carbon::now()]);
-    
+
         $success['notifications']=$userUnreadNotification;
         $success['status']= 200;
 
@@ -31,7 +31,7 @@ class NotificationController extends BaseController
     }
     public function show($id){
         $userNotification =  NotificationModel::query()->find($id);
-       
+
         $success['notifications']=$userNotification;
         $success['status']= 200;
 
@@ -58,6 +58,6 @@ class NotificationController extends BaseController
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف الاشعار بنجاح','notification deleted successfully');
     }
-   
+
     }
 
