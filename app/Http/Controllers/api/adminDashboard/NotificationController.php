@@ -4,10 +4,12 @@ namespace App\Http\Controllers\api\adminDashboard;
 use Notification;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Alert;
 use App\Models\Store;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Models\NotificationModel;
+use App\Http\Resources\AlertResource;
 use App\Http\Resources\ContactResource;
 use App\Notifications\emailNotification;
 use Illuminate\Support\Facades\Validator;
@@ -93,6 +95,54 @@ class NotificationController extends BaseController
           Notification::send($user , new emailNotification($data));
        }
          $success['contacts']=New ContactResource($contact);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة بنجاح',' Added successfully');
+    }
+
+    public function addAlert(Request $request)
+    {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'type'=>'required|in:now,after',
+            'subject'=>'required|string|max:255',
+            'message'=>'required|string',
+            'store_id'=>'exists:stores,id',
+
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        
+        $data = [
+            'subject' => $request->subject,
+            'message' => $request->message,
+            'store_id' => $request->store_id,
+      
+        ];
+        if($request->type =="now"){
+        $alert= Alert::create( [ 
+        'subject' => $request->subject,
+        'message' => $request->message,
+        'store_id' => $request->store_id]);
+        }
+        else{
+            $alert= Alert::create( [ 
+            'subject' => $request->subject,
+            'message' => $request->message,
+            'store_id' => $request->store_id,
+            'start_at' =>$request->start_at,
+            'end_at' =>$request->end_at,
+        ]);
+
+        }
+        $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
+       foreach($users as  $user)
+       {
+          Notification::send($user , new emailNotification($data));
+       }
+         $success['alerts']=New AlertResource($alert);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافة بنجاح',' Added successfully');

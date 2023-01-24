@@ -28,6 +28,9 @@ Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 //  index Ettlobha page
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
 
+Route::get('posts',[App\Http\Controllers\api\PostController::class,'index']);
+Route::get('show/{id}',[App\Http\Controllers\api\PostController::class,'show']);
+Route::get('show_post/{id}',[App\Http\Controllers\api\PostController::class,'show_post']);
 
 
 Route::post('send-verify-message','App\Http\Controllers\api\AuthController@store_verify_message');
@@ -119,6 +122,7 @@ Route::get('NotificationDelete/{id}',[App\Http\Controllers\api\adminDashboard\No
 Route::get('NotificationDeleteAll',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'deleteNotificationAll']);
 Route::get('NotificationShow/{id}',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'show']);
 Route::post('addEmail',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'addEmail']);
+Route::post('addAlert',[App\Http\Controllers\api\adminDashboard\NotificationController::class,'addAlert']);
 
 Route::get('EmailIndex',[App\Http\Controllers\api\adminDashboard\EmailController::class,'index']);
 Route::get('EmailDelete/{id}',[App\Http\Controllers\api\adminDashboard\EmailController::class,'deleteEmail']);
@@ -228,6 +232,8 @@ Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductCon
 Route::post('registrationMarketer',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registrationMarketer']);
 Route::get('contactdeleteall',[App\Http\Controllers\api\adminDashboard\ContactController::class,'deleteall']);
 Route::post('verification_update',[App\Http\Controllers\api\adminDashboard\StoreController::class,'verification_update']);
+Route::post('shippOrder',[App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'shippOrder']);
+
 });
 });
 Auth::routes();

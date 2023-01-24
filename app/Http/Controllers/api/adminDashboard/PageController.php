@@ -75,9 +75,16 @@ class PageController extends BaseController
             'user_id' => auth()->user()->id,
            'status' =>'not_active'
           ]);
-           //$request->input('name', []);
-           if($request->name){
-          $page->page_categories()->attach(explode(',', $request->name));
+         
+           if($request->pageCategory){
+          $page->page_categories()->attach($request->pageCategory);
+          if (in_array(1, $request->pageCategory))
+          {
+            $page->update([
+                'image'=>$request->image,
+                 'postcategory_id'=>$request->postCategory_id,
+            ]);
+          }
            }
          $success['Pages']=New PageResource($page);
         $success['status']= 200;
@@ -113,9 +120,16 @@ class PageController extends BaseController
             'user_id' => auth()->user()->id,
             'status' =>'active'
           ]);
-         if($request->name){
-          $page->page_categories()->attach(explode(',', $request->name));
-              }
+          if($request->pageCategory){
+            $page->page_categories()->attach($request->pageCategory);
+            if (in_array(1, $request->pageCategory))
+            {
+              $page->update([
+                  'image'=>$request->image,
+                   'postcategory_id'=>$request->postCategory_id,
+              ]);
+            }
+             }
          $success['Pages']=New PageResource($page);
         $success['status']= 200;
 
@@ -189,10 +203,16 @@ class PageController extends BaseController
                'tags' => implode(',',$request->input('tags')),
 
            ]);
-           //$request->input('name', []);
-           if($request->name!=null){
-           $page->page_categories()->sync(explode(',', $request->name));
-           }
+           if($request->pageCategory){
+            $page->page_categories()->attach($request->pageCategory);
+            if (in_array(1, $request->pageCategory))
+            {
+              $page->update([
+                  'image'=>$request->image,
+                   'postcategory_id'=>$request->postCategory_id,
+              ]);
+            }
+             }
            $success['pages']=New PageResource($page);
            $success['status']= 200;
 
