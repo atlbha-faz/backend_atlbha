@@ -23,9 +23,6 @@ class StoreSeeder extends Seeder
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is amazon store',
-
-
-
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
             'twiter' => 'https//www.twiter.com',
@@ -52,8 +49,6 @@ class StoreSeeder extends Seeder
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
-
-
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
             'twiter' => 'https//www.twiter.com',
@@ -63,13 +58,12 @@ class StoreSeeder extends Seeder
             'entity_type' => 'شركة',
             'start_at' => Carbon::now(),
             'end_at' => '2023-03-01',
-
-
             'package_id' => 1,
             'country_id' => 1,
             'city_id' =>1,
             'user_id'=>null
 
         ]);
+
     }
 }

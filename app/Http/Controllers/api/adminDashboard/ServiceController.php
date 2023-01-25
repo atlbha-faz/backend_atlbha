@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Models\Store;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use App\Http\Resources\StoreResource;
 use App\Http\Resources\ServiceResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -53,6 +55,8 @@ class ServiceController extends BaseController
             'name'=>'required|string|max:255',
             'description'=>'required|string',
             'file'=>'required',
+            'price'=>['required','numeric','gt:0'],
+
         ]);
         if ($validator->fails())
         {
@@ -62,6 +66,7 @@ class ServiceController extends BaseController
             'name' => $request->name,
             'description'=>$request->description,
             'file' =>$request->file,
+            'price' =>$request->price,
           ]);
 
 
@@ -138,6 +143,8 @@ class ServiceController extends BaseController
             'name'=>'required|string|max:255',
             'description'=>'required|string',
             'file'=>'required',
+            'price'=>['required','numeric','gt:0'],
+
            ]);
            if ($validator->fails())
            {
@@ -148,6 +155,7 @@ class ServiceController extends BaseController
                'name' => $request->input('name'),
                'description' => $request->input('description'),
                'file' => $request->input('file'),
+               'price' => $request->input('price'),
            ]);
 
            $success['services']=New ServiceResource($service);
@@ -191,5 +199,25 @@ class ServiceController extends BaseController
             }
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف الخدمة بنجاح','service deleted successfully');
+    }
+    public function showDetail($service)
+    {
+        $service = Service::query()->find($service);
+        $orders=  $service->services_websiteorders;
+        $store_id=[];
+        foreach($orders as $order)
+        {
+            $store_id[]=$order->store_id;
+        }
+        if (is_null($service) || $service->is_deleted==1){
+        return $this->sendError("الخدمة غير موجودة","service is't exists");
+        }
+    
+        $stores =Store::whereIn('id',$store_id)->get();
+ 
+       $success['stores']=  StoreResource::collection($stores);
+       $success['status']= 200;
+
+        return $this->sendResponse($success,'تم عرض الخدمة  بنجاح','service showed successfully');
     }
 }

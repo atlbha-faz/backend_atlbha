@@ -113,6 +113,7 @@ Route::resource('video',App\Http\Controllers\api\adminDashboard\VideoController:
 Route::resource('activity',App\Http\Controllers\api\adminDashboard\ActivityController::class);
 Route::resource('platform',App\Http\Controllers\api\adminDashboard\PlatformController::class);
 Route::resource('service',App\Http\Controllers\api\adminDashboard\ServiceController::class);
+Route::get('showDetail/{id}',[App\Http\Controllers\api\adminDashboard\ServiceController::class,'showDetail']);
 
 Route::get('servicedeleteall',[App\Http\Controllers\api\adminDashboard\ServiceController::class,'deleteall']);
 

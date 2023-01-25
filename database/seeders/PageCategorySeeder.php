@@ -27,6 +27,12 @@ class PageCategorySeeder extends Seeder
         Page_category::create([
             'name' => ' عام ',
         ]);
+        Page_category::create([
+            'name' => 'كيف ابدأ',
+        ]);
+        Page_category::create([
+            'name' => ' سياسة الدفع ',
+        ]);
       
     }
 }
