@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api\adminDashboard;
 
 use Carbon\Carbon;
 use App\Models\Store;
+use App\Models\Service;
+use App\Models\Marketer;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
 use App\Http\Resources\StoreResource;
@@ -40,6 +42,18 @@ class StoreReportController extends  BaseController
         $success['status']= 200;
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
     }
+    public function home(){
+        $success['count_of_stores']=Store::where('is_deleted',0)->count();
+        $success['average_of_stores']=((Store::where('is_deleted',0)->whereYear('created_at', Carbon::now()->year)
+        ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->count())*100)."%";
+        
+         $success['count_of_marketers']=Marketer::all()->count();
+         $success['count_of_services']=Service::where('is_deleted',0)->count();
+        $success['status']= 200;
+        return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
+
+    }
+
    
     
 }
