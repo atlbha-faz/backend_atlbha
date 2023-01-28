@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->longText('description');
             $table->string('file');
+            $table->double('price');
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();

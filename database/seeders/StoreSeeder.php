@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use App\Models\Store;
+use App\Models\activities_stores;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -61,6 +62,14 @@ class StoreSeeder extends Seeder
             'city_id' =>1,
             'user_id'=>null
 
+        ]);
+        activities_stores::create([
+       'activity_id'=>1,
+         'store_id'=>1
+        ]);
+          activities_stores::create([
+       'activity_id'=>1,
+         'store_id'=>2
         ]);
     }
 }
