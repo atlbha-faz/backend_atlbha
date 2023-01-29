@@ -37,6 +37,7 @@ Route::post('send-verify-message','App\Http\Controllers\api\AuthController@store
 Route::post('verify-user','App\Http\Controllers\api\AuthController@verifyUser');
 
 Route::get('page/{id}',[App\Http\Controllers\api\SubpageController::class,"show"]);
+Route::get('packages',[App\Http\Controllers\api\SubpageController::class,"packages"]);
 
 Route::group([
     'middleware' => 'api',
