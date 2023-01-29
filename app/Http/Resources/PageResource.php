@@ -23,6 +23,7 @@ class PageResource extends JsonResource
             'seo_desc' => $this->seo_desc,
            'tags' => explode(',',$this->tags),
            'store' => New StoreResource($this->store),
+           'postCategory' => New PostCategoryResource($this->postcategory),
            'user' => New UserResource($this->user),
            'pageCategory' =>Page_categoryResource::collection($this->page_categories),
            'created_at' => (string) $this->created_at,

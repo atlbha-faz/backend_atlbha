@@ -18,7 +18,6 @@ class SeoResource extends JsonResource
             'id' =>$this->id,
             'index_page_title' => $this->index_page_title,
             'index_page_description' => $this->index_page_description,
-
             'show_pages' => $this->show_pages,
             'link' => $this->link,
            'robots' => $this->robots,

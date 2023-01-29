@@ -40,6 +40,7 @@ class ShippingtypeController extends BaseController
     {
         //
     }
+ 
 
     /**
      * Store a newly created resource in storage.

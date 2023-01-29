@@ -10,7 +10,6 @@ class Service extends Model
     use HasFactory;
       protected $fillable = ['name','description','file','price','status','is_deleted'];
 
-
     public function pendingServices($id){
         $pendingServices=Service_Websiteorder::select('*')->where('service_id',$id)->where('status','pending')->count();
         return  $pendingServices;
@@ -43,4 +42,5 @@ class Service extends Model
             'websiteorder_id'
             );
     }
+
 }

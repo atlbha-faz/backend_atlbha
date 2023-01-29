@@ -32,7 +32,9 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             ProductSeeder::class,
             ServiceSeeder::class,
-            PageFactorySeeder::class,
+            PageCategorySeeder::class,
+            PostCategorySeeder::class,
+            
             ContactSeeder::class,
             CouponSeeder::class,
             MaintenanceSeeder::class,
@@ -56,7 +58,8 @@ class DatabaseSeeder extends Seeder
             ReplayCommentSeeder::class,
             HomepageSeeder::class,
             OfferSeeder::class,
-            SectionSeeder::class
+            SectionSeeder::class,
+           
         ]);
 
 

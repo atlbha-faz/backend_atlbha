@@ -13,23 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create('alerts', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->longText('page_content');
-            $table->string('seo_title');
-            $table->string('seo_link');
-            $table->longText('seo_desc');
-            $table->text('tags');
-            $table->string('image')->nullable();
-            $table->unsignedBigInteger('postcategory_id')->nullable();
-            $table->foreign('postcategory_id')->references('id')->on('postcategories')->onDelete('cascade');
-           $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('subject');
+            $table->text('message');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
+            $table->timestamp('start_at')->nullable();
+            $table->timestamp('end_at')->nullable();
             $table->timestamps();
         });
     }
@@ -41,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('alerts');
     }
 };

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ServiceResource extends JsonResource
+class PostCategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,14 +17,8 @@ class ServiceResource extends JsonResource
         return [
             'id' =>$this->id,
             'name' => $this->name,
-            'description' => $this->description,
-            'file' => $this->file,
-            'price' => $this->price,
-            'pendingServices' => $this->pendingServices($this->id),
             'status' => $this->status !==null ? $this->status:'active',
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
-            // 'store' =>$this->getStore($this->services_websiteorders)
-
         ];
     }
 }
