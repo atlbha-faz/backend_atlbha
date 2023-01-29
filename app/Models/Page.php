@@ -19,7 +19,6 @@ class Page extends Model
     }
     public function page_categories()
     {
-
        return $this->belongsToMany(
         Page_category::class,
             'pages_page_categories',
@@ -27,6 +26,7 @@ class Page extends Model
             'page_category_id'
             );
     }
+
     public function postcategory()
     {
         return $this->belongsTo(Postcategory::class);

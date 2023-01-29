@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Models\Page;
 use App\Models\Store;
 use App\Models\Comment;
 use App\Models\Package;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Homepage;
-use App\Models\website_socialmedia;
 use Illuminate\Http\Request;
+use App\Models\Page_page_category;
+use App\Models\website_socialmedia;
+use App\Http\Resources\PageResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PackageResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\HomepageResource;
-use App\Http\Resources\website_socialmediaResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\website_socialmediaResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexEtlobhaController extends BaseController
@@ -44,8 +47,8 @@ class IndexEtlobhaController extends BaseController
 
      $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',null)->where('product_id',null)->latest()->take(2)->get());
 
-
-
+      $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
+     $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
     $success['website_socialmedia']=website_socialmediaResource::collection(website_socialmedia::where('is_deleted',0)->where('status','active')->get());
 
         $success['status']= 200;

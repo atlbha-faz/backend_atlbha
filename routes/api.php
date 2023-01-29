@@ -36,7 +36,8 @@ Route::get('show_post/{id}',[App\Http\Controllers\api\PostController::class,'sho
 Route::post('send-verify-message','App\Http\Controllers\api\AuthController@store_verify_message');
 Route::post('verify-user','App\Http\Controllers\api\AuthController@verifyUser');
 
-
+Route::get('page/{id}',[App\Http\Controllers\api\adminDashboard\pageController::class,"show"]);
+Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\pageController::class,"relatedPage"]);
 
 Route::group([
     'middleware' => 'api',
@@ -147,6 +148,7 @@ Route::resource('shippingtype',App\Http\Controllers\api\adminDashboard\Shippingt
 Route::resource('paymenttype',App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);
 Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
 Route::resource('page',App\Http\Controllers\api\adminDashboard\pageController::class);
+Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\pageController::class,"relatedPage"]);
 Route::post('publish',[App\Http\Controllers\api\adminDashboard\pageController::class,'publish']);
 Route::resource('pagecategory',App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
 Route::resource('technicalSupport',App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class);
