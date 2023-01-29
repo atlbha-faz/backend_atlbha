@@ -18,21 +18,17 @@ class PageCategorySeeder extends Seeder
         Page_category::create([
             'name' => '  المدونه',
         ]);
+         Page_category::create([
+            'name' => ' عام ',
+        ]);
         Page_category::create([
             'name' => ' سياسة الخصوصية ',
         ]);
         Page_category::create([
             'name' => ' من نحن',
         ]);
-        Page_category::create([
-            'name' => ' عام ',
-        ]);
-        Page_category::create([
-            'name' => 'كيف ابدأ',
-        ]);
-        Page_category::create([
-            'name' => ' سياسة الدفع ',
-        ]);
-      
+
+
+
     }
 }

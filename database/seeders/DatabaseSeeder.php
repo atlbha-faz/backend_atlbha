@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             PageCategorySeeder::class,
             PostCategorySeeder::class,
-            
+        
             ContactSeeder::class,
             CouponSeeder::class,
             MaintenanceSeeder::class,
@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
             HomepageSeeder::class,
             OfferSeeder::class,
             SectionSeeder::class,
-           
+
         ]);
 
 
