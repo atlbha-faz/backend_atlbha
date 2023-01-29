@@ -25,11 +25,10 @@ class PageCategorySeeder extends Seeder
             'name' => ' سياسة الخصوصية ',
         ]);
         Page_category::create([
-            'name' => 'كيف ابدأ',
+            'name' => ' من نحن',
         ]);
-        Page_category::create([
-            'name' => ' سياسة الدفع ',
-        ]);
-      
+
+
+
     }
 }
