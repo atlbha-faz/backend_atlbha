@@ -9,10 +9,9 @@ use App\Models\Package;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Homepage;
-use Illuminate\Http\Request;
 use App\Models\Page_page_category;
+use Illuminate\Http\Request;
 use App\Models\website_socialmedia;
-use App\Http\Resources\PageResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PackageResource;
@@ -21,6 +20,7 @@ use App\Http\Resources\HomepageResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\website_socialmediaResource;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\PageResource;
 
 class IndexEtlobhaController extends BaseController
 {
