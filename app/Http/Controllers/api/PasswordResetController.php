@@ -70,7 +70,7 @@ class PasswordResetController extends BaseController
 
         $success['status']= 200;
         $success['user']= new UserResource($user);
-        return $this->sendResponse($success,'تم ارسال البريد بنجاح','Email send successfully');
+        return $this->sendResponse($success,'تم ارسال الرسالة بنجاح','massege send successfully');
     }
     /**
      * Find token password reset
