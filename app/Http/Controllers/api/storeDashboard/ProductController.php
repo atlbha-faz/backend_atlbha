@@ -9,6 +9,7 @@ use App\Models\Importproduct;
 use Illuminate\Validation\Rule;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
@@ -27,15 +28,19 @@ class ProductController extends BaseController
 
 
         //  dd($id);
-       $success['products']=ProductResource::collection(Product::where('is_deleted',0)
-        ->where(function($query){
-        $import=Importproduct::where('store_id',auth()->user()->store_id)->pluck('product_id')->toArray();
-        $query->where('store_id',auth()->user()->store_id)
-        ->OrWhere('store_id',null)->whereIn('id', $import);
-        })->get());
+       $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
+        // ->where(function($query){
+        // $import=Importproduct::where('store_id',auth()->user()->store_id)->pluck('product_id')->toArray();
+        // $query->where('store_id',auth()->user()->store_id)
+        // ->OrWhere('store_id',null)->whereIn('id', $import);
+        // })->get());
 
-    //   $success['importproducts']=ProductResource::collection(Product::where('is_deleted',0)->whereIn('product_id',$id->product_id)->get());
+    //   $success['importproducts']=ImportproductResource::collection(Importproduct::where('store_id',auth()->user()->store_id)->get());
 
+$import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)
+               ->get(['products.*', 'importproducts.price']);
+         $import->makeHidden(['selling_price','purchasing_price','store_id']);
+      $success['importproducts']=$import;
 
        $success['status']= 200;
 
@@ -71,6 +76,7 @@ class ProductController extends BaseController
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'discount_price'=>['required','numeric'],
             'discount_percent'=>['required','numeric'],
+            'SEOdescription'=>'required',
             'category_id'=>'required|exists:categories,id',
             'subcategory_id'=>['array'],
             'subcategory_id.*'=>['required','numeric',
@@ -98,7 +104,7 @@ class ProductController extends BaseController
 
             'stock' => $request->stock,
             'cover' => $request->cover,
-
+            'SEOdescription'=> $request->SEOdescription,
            'discount_price'=>$request->discount_price,
             'discount_percent'=>$request->discount_percent,
             'subcategory_id' => implode(',', $request->subcategory_id),
@@ -164,20 +170,22 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $id)
   {
-         $product =Product::where('id',$id)->where('store_id',auth()->user()->store_id)->get();
+         $product =Product::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
          if (is_null($product) || $product->is_deleted==1 ){
          return $this->sendError(" المنتج غير موجود","product is't exists");
           }
+
          $input = $request->all();
          $validator =  Validator::make($input ,[
              'name'=>'required|string|max:255',
-            'sku'=>'required|string|unique:products',
+
             'description'=>'required|string',
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
-            'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            // 'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'discount_price'=>['required','numeric'],
             'discount_percent'=>['required','numeric'],
+            'SEOdescription'=>'required',
             'category_id'=>'required|exists:categories,id',
             'subcategory_id'=>['array'],
             'subcategory_id.*'=>['required','numeric',
@@ -197,12 +205,13 @@ class ProductController extends BaseController
          }
          $product->update([
             'name' => $request->input('name'),
-            'sku' => $request->input('sku'),
+
             'for' => 'store',
             'description' => $request->input('description'),
             'selling_price' => $request->input('selling_price'),
             'stock' => $request->input('stock'),
             'cover' => $request->input('cover'),
+            'SEOdescription' => $request->input('SEOdescription'),
             'discount_price'=>$request->input('discount_price'),
             'discount_percent'=>$request->input('discount_percent'),
             'category_id' => $request->input('category_id'),
@@ -222,7 +231,7 @@ class ProductController extends BaseController
 
      public function changeStatus($id)
     {
-        $product = Product::where('id',$id)->where('store_id',auth()->user()->store_id)->get();
+        $product = Product::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
         if (is_null($product) || $product->is_deleted==1 ){
          return $this->sendError("القسم غير موجودة","product is't exists");
          }
@@ -246,7 +255,7 @@ class ProductController extends BaseController
      */
     public function destroy($product)
     {
-        $product =Product::where('id',$product)->where('store_id',auth()->user()->store_id)->get();
+        $product =Product::where('id',$product)->where('store_id',auth()->user()->store_id)->first();
         if (is_null($product) || $product->is_deleted==1){
             return $this->sendError("المنتج غير موجود","product is't exists");
             }
@@ -257,7 +266,7 @@ class ProductController extends BaseController
             return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
     }
 
-   
+
 
       public function deleteall(Request $request)
     {

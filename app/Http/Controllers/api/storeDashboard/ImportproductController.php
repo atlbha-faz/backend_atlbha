@@ -26,7 +26,10 @@ class ImportproductController extends BaseController
 
 }
   public function store(Request $request){
-
+ $importedproduct = Importproduct::where('product_id',$request->product_id)->first();
+  if ($importedproduct){
+         return $this->sendError(" تم استيراده مسبقا ","imported");
+         }
      $input = $request->all();
         $validator =  Validator::make($input ,[
             'price'=>['required','numeric','gt:0'],

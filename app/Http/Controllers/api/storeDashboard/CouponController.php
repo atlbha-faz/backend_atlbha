@@ -110,7 +110,9 @@ class CouponController extends BaseController
 
            public function changeStatus($id)
           {
-              $coupon = Coupon::query()->find($id);
+                   $coupon = Coupon::where('id',$coupon)->where('store_id',auth()->user()->store_id)->first();
+
+            
               if (is_null($coupon ) || $coupon->is_deleted==1){
                return $this->sendError("الكوبون غير موجودة","coupon is't exists");
                }
@@ -191,7 +193,9 @@ class CouponController extends BaseController
      */
     public function destroy($coupon)
     {
-        $coupon =  Coupon::query()->find($coupon);
+                $coupon =Coupon::where('id',$coupon)->where('store_id',auth()->user()->store_id)->first();
+
+        // $coupon =  Coupon::query()->find($coupon);
         if (is_null($coupon ) || $coupon->is_deleted==1){
             return $this->sendError("الكوبون غير موجودة","coupon is't exists");
             }

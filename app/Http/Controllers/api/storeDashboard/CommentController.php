@@ -5,8 +5,10 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Replaycomment;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ReplaycommentResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class CommentController extends BaseController
@@ -94,7 +96,7 @@ class CommentController extends BaseController
      */
     public function show($comment)
    {
-        $comment = Comment::query()->find($comment);
+       $comment = Comment::where('id',$comment)->where('store_id',auth()->user()->store_id)->first();
         if (is_null($comment) ||$comment->is_deleted==1){
         return $this->sendError("'طريقة الدفع غير موجودة","comment type is't exists");
         }
@@ -157,9 +159,9 @@ class CommentController extends BaseController
             return $this->sendResponse($success,'تم التعديل بنجاح','comment updated successfully');
     }
 
-    public function changeStatus($id)
+    public function changeStatus($comment)
     {
-        $comment = Comment::query()->find($id);
+       $comment = Comment::where('id',$comment)->where('store_id',auth()->user()->store_id)->first();
          if (is_null($comment) ||$comment->is_deleted==1){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
@@ -185,7 +187,7 @@ class CommentController extends BaseController
      */
     public function destroy($comment)
       {
-       $comment = Comment::query()->find($comment);
+       $comment = Comment::where('id',$comment)->where('store_id',auth()->user()->store_id)->first();
          if (is_null($comment) ||$comment->is_deleted==1){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
@@ -200,7 +202,7 @@ class CommentController extends BaseController
     public function changeSatusall(Request $request)
     {
 
-            $comments =Comment::whereIn('id',$request->id)->get();
+            $comments =Comment::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
         foreach($comments as $comment)
         {
             if (is_null($comment) || $comment->is_deleted==1 ){
@@ -219,5 +221,32 @@ class CommentController extends BaseController
 
         return $this->sendResponse($success,'تم تعديل حالة التعليق بنجاح','comment updated successfully');
    }
+    public function replayComment(Request $request)
+    {
+    $input = $request->all();
+        $validator =  Validator::make($input ,[
+            // 'subject'=>'required|string|max:255',
+            'comment_text'=>'required|string|max:255',
+            'comment_id'=>'exists:comments,id',
+
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+
+
+        $replay = Replaycomment::create([
+            'comment_text' => $request->comment_text,
+            'comment_id' => $request->comment_id,
+
+            'user_id' => auth()->user()->id,
+        ]);
+
+         $success['replays']=New ReplaycommentResource($replay);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم اضافة رد بنجاح',' Added successfully');
+    }
 
 }

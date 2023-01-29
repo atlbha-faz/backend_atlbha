@@ -29,7 +29,7 @@ class AdminSeeder extends Seeder
             'city_id'=> 1,
             'verified'=>1,
             'store_id' => null
-           
+
         ]);
         User::create([
             'user_id'=>2,

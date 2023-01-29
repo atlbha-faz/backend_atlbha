@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use App\Models\Store;
+use App\Models\activities_stores;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -23,24 +24,19 @@ class StoreSeeder extends Seeder
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is amazon store',
-
-
-
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
             'twiter' => 'https//www.twiter.com',
             'youtube' => 'https//www.youtube.com',
             'instegram' => 'https//www.instegram.com',
             'logo' => 'Amazon_logo.png',
-            'entity_type' => 'شركة',
-            'start_at' => Carbon::now(),
+            'periodtype' => 'year',
+            'start_at' => '2022-03-01',
             'end_at' => '2023-03-01',
-
-
             'package_id' => 1,
             'country_id' => 1,
             'city_id' =>1,
-            'user_id'=>null
+             'user_id'=>null
 
         ]);
 
@@ -52,24 +48,28 @@ class StoreSeeder extends Seeder
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
-
-
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
             'twiter' => 'https//www.twiter.com',
             'youtube' => 'https//www.youtube.com',
             'instegram' => 'https//www.instegram.com',
             'logo' => 'noon.png',
-            'entity_type' => 'شركة',
-            'start_at' => Carbon::now(),
+           'periodtype' => 'year',
+            'start_at' => '2022-03-01',
             'end_at' => '2023-03-01',
-
-
             'package_id' => 1,
             'country_id' => 1,
             'city_id' =>1,
             'user_id'=>null
 
+        ]);
+        activities_stores::create([
+       'activity_id'=>1,
+         'store_id'=>1
+        ]);
+          activities_stores::create([
+       'activity_id'=>1,
+         'store_id'=>2
         ]);
     }
 }

@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
-      protected $fillable = ['name','description','file','status','is_deleted'];
+      protected $fillable = ['name','description','file','price','status','is_deleted'];
 
-  
+
     public function pendingServices($id){
-        $pendingServices=Service_Websiteorder::select('*')->where('service_id',$id)->where('status','pending')->count();   
+        $pendingServices=Service_Websiteorder::select('*')->where('service_id',$id)->where('status','pending')->count();
         return  $pendingServices;
     }
     public function setFileAttribute($file)

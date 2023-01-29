@@ -53,6 +53,7 @@ class ServiceController extends BaseController
             'name'=>'required|string|max:255',
             'description'=>'required|string',
             'file'=>'required',
+            'price'=>['required','numeric','gt:0'],
         ]);
         if ($validator->fails())
         {
@@ -62,6 +63,7 @@ class ServiceController extends BaseController
             'name' => $request->name,
             'description'=>$request->description,
             'file' =>$request->file,
+            'price' =>$request->price,
           ]);
 
 
@@ -138,6 +140,7 @@ class ServiceController extends BaseController
             'name'=>'required|string|max:255',
             'description'=>'required|string',
             'file'=>'required',
+            'price'=>['required','numeric','gt:0'],
            ]);
            if ($validator->fails())
            {
@@ -148,6 +151,7 @@ class ServiceController extends BaseController
                'name' => $request->input('name'),
                'description' => $request->input('description'),
                'file' => $request->input('file'),
+               'price' => $request->input('price'),
            ]);
 
            $success['services']=New ServiceResource($service);

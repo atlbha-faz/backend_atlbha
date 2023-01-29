@@ -19,13 +19,12 @@ class ServiceSeeder extends Seeder
             'name' => 'التصميم',
             'description' =>'التصميم',
             'file'=>'desgin.png',
-    
+
         ]);
         Service::create([
             'name' => 'الدعم الفني',
             'description' =>'الدعم الفني',
             'file'=>'tsupport.png',
-        
         ]);
     }
 }

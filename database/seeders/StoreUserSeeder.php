@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 
-use Illuminate\Database\Seeder;
+use App\Models\Store;
 
+use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class StoreUserSeeder extends Seeder
@@ -17,9 +18,9 @@ class StoreUserSeeder extends Seeder
      */
     public function run()
     {
-    User::create([
+   $user= User::create([
         'user_id'=>4,
-        'name' => 'roqia',
+        'name' => 'رقيه',
         'user_name' =>'roqia',
         'email' =>'roqia@gmail.com',
         'password' =>'12345678',
@@ -32,9 +33,12 @@ class StoreUserSeeder extends Seeder
         'verified'=>1,
         'store_id'=>1,
       ]);
- User::create([
+
+        $userid =$user->id;
+      Store::where('id', 1)->update(['user_id'=> $userid]);
+ $user1=User::create([
         'user_id'=>3,
-        'name' => 'rawaa',
+        'name' => 'روعه',
         'user_name' =>'rawaa',
         'email' =>'rawaa@gmail.com',
         'password' =>'12345678',
@@ -43,25 +47,29 @@ class StoreUserSeeder extends Seeder
         'image'=>'image.jpg',
         'user_type'=>'store',
         'country_id' => 1,
-        'city_id'=> 1,
+        'city_id'=> 2,
         'verified'=>1,
-        'store_id'=>1,
+        'store_id'=>2,
       ]);
-       User::create([
+         $userid1 =$user1->id;
+      Store::where('id', 2)->update(['user_id'=> $userid1]);
+      $user2= User::create([
         'user_id'=>5,
-        'name' => 'ali',
-        'user_name' =>'ali',
-        'email' =>'ali@gmail.com',
+        'name' => 'احمد',
+        'user_name' =>'ahmed',
+        'email' =>'ahmed@gmail.com',
         'password' =>'12345678',
         'gender' =>'male',
         'phonenumber' => '0096650775433',
         'image'=>'image.jpg',
         'user_type'=>'customer',
         'country_id' => 1,
-        'city_id'=> 1,
+        'city_id'=> 3,
         'verified'=>1,
-        'store_id'=>1,
+        // 'store_id'=>1,
       ]);
+    //         $userid2 =$user2->id;
+    //   Store::where('id', 1)->update(['user_id'=> $userid2]);
 
 }
 

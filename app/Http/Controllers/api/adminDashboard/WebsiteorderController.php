@@ -58,7 +58,7 @@ class WebsiteorderController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   
+
 
     /**
      * Display the specified resource.
@@ -164,7 +164,7 @@ class WebsiteorderController extends BaseController
 
             return $this->sendResponse($success,'تم حذف الطلب بنجاح','websiteorder deleted successfully');
     }
- 
+
 
            public function acceptStore($websiteorder)
            {
@@ -173,7 +173,7 @@ class WebsiteorderController extends BaseController
                 return $this->sendError("الطلب غير موجود","Order is't exists");
                 }
                $store = Store::query()->find($websiteorder->store_id);
-         
+
                $websiteorder->update(['status' => 'accept']);
                $store->update(['confirmation_status' => 'accept']);
                $users = User::where('store_id', $store->id)->get();
@@ -184,18 +184,18 @@ class WebsiteorderController extends BaseController
                    'type'=>"accept",
                    'object_id'=>$websiteorder->store_id
                ];
-              
+
                foreach($users as $user)
                {
                Notification::send($user, new verificationNotification($data));
                }
-               
+
                event(new VerificationEvent($data));
                $success['store']=New StoreResource($store);
                $success['status']= 200;
-       
+
                 return $this->sendResponse($success,'تم قبول الطلب بنجاح',' accept successfully');
-       
+
            }
 
            public function rejectStore($websiteorder)
@@ -205,7 +205,7 @@ class WebsiteorderController extends BaseController
                 return $this->sendError("الطلب غير موجود","Order is't exists");
                 }
                $store = Store::query()->find($websiteorder->store_id);
-              
+
                $websiteorder->update(['status' => 'reject']);
                $store->update(['confirmation_status' => 'reject']);
                $users = User::where('store_id', $store->id)->get();
@@ -216,18 +216,18 @@ class WebsiteorderController extends BaseController
                    'type'=>"reject",
                    'object_id'=>$websiteorder->store_id
                ];
-              
+
                foreach($users as $user)
                {
                Notification::send($user, new verificationNotification($data));
                }
-               
+
                event(new VerificationEvent($data));
                $success['store']=New StoreResource($store);
                $success['status']= 200;
-       
+
                 return $this->sendResponse($success,'تم رفض الطلب بنجاح','reject successfully');
-       
+
            }
 
            public function acceptService($websiteorder)
@@ -242,7 +242,7 @@ class WebsiteorderController extends BaseController
                 $service->update(['status' => 'accept']);
               }
                $websiteorder->update(['status' => 'accept']);
-               
+
                $users = User::where('store_id', $websiteorder->store_id)->get();
                $data = [
                    'message' => ' تم قبول الخدمة',
@@ -251,18 +251,18 @@ class WebsiteorderController extends BaseController
                    'type'=>"service_accept",
                    'object_id'=>$websiteorder->store_id
                ];
-              
+
                foreach($users as $user)
                {
                Notification::send($user, new verificationNotification($data));
                }
-               
+
                event(new VerificationEvent($data));
                $success['websiteorder']= New WebsiteorderResource($websiteorder);
                $success['status']= 200;
-       
+
                 return $this->sendResponse($success,'تم قبول الطلب بنجاح',' accept successfully');
-       
+
            }
 
 
@@ -285,19 +285,19 @@ class WebsiteorderController extends BaseController
                    'type'=>"service_reject",
                    'object_id'=>$websiteorder->store_id
                ];
-              
+
                foreach($users as $user)
                {
                Notification::send($user, new verificationNotification($data));
                }
-               
+
                event(new VerificationEvent($data));
                $success['websiteorder']= New WebsiteorderResource($websiteorder);
                $success['status']= 200;
-       
+
                 return $this->sendResponse($success,'تم رفض الطلب بنجاح',' reject successfully');
-       
+
            }
-       
+
 
 }

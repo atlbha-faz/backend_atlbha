@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
              $table->unsignedBigInteger('comment_id')->nullable();
+             
             $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);

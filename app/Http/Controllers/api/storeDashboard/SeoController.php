@@ -82,34 +82,7 @@ class SeoController extends BaseController
      * @param  \App\Models\Seo  $seo
      * @return \Illuminate\Http\Response
      */
-    // public function show($seo)
-    // {
-    //     $seo= Seo::query()->find($seo);
-    //     if (is_null($seo) || $seo->is_deleted==1){
-    //            return $this->sendError("االكلمات المفتاحية غير موجودة","Seo is't exists");
-    //            }
-    //           $success['seos']=New SeoResource($seo);
-    //           $success['status']= 200;
 
-    //            return $this->sendResponse($success,'تم عرض االكلمات المفتاحية بنجاح','Seo showed successfully');
-    // }
-    // public function changeStatus($id)
-    // {
-    //     $seo = Seo::query()->find($id);
-    //     if (is_null($seo) || $seo->is_deleted==1){
-    //      return $this->sendError("الكلمات المفتاحية غير موجودة","seo is't exists");
-    //      }
-    //     if($seo->status === 'active'){
-    //         $seo->update(['status' => 'not_active']);
-    //  }
-    // else{
-    //     $seo->update(['status' => 'active']);
-    // }
-    //     $success['seo']=New seoResource($seo);
-    //     $success['status']= 200;
-    //      return $this->sendResponse($success,'تم تعدبل حالة الكلمات المفتاحية بنجاح',' seo status updared successfully');
-
-    // }
     /**
      * Show the form for editing the specified resource.
      *
@@ -131,11 +104,7 @@ class SeoController extends BaseController
 
     public function updateSeo(Request $request)
     {
-        $seo =Seo::where('store_id',auth()->user()->store_id)->first();
- 
-        if (is_null($seo) || $seo->is_deleted==1){
-            return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
-       }
+
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'index_page_title'=>'required|string|max:255',
@@ -149,11 +118,13 @@ class SeoController extends BaseController
                # code...
                return $this->sendError(null,$validator->errors());
            }
-           $seo->update([
-               'index_page_title' => $request->input('index_page_title'),
-               'index_page_description' => $request->input('index_page_description'),
-               'key_words' =>implode(',',$request->input('key_words')),
-               'show_pages' => $request->input('show_pages'),
+           $seo=Seo::updateOrCreate([
+                'store_id'=> auth()->user()->store_id,
+                ],[
+               'index_page_title' => $request->index_page_title,
+               'index_page_description' => $request->index_page_description,
+               'key_words' =>implode(',',$request->key_words),
+               'show_pages' => $request->show_pages,
 
            ]);
 
@@ -165,11 +136,7 @@ class SeoController extends BaseController
 
     public function updateLink(Request $request)
     {
-        $seo =Seo::query()->where('store_id',auth()->user()->store_id)->first();
 
-        if (is_null($seo) || $seo->is_deleted==1){
-            return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
-       }
             $input = $request->all();
            $validator =  Validator::make($input ,[
 
@@ -181,7 +148,9 @@ class SeoController extends BaseController
                # code...
                return $this->sendError(null,$validator->errors());
            }
-           $seo->update([
+           $seo=Seo::updateOrCreate([
+                'store_id'=> auth()->user()->store_id,
+                ],[
 
                'link' => $request->input('link'),
 
@@ -195,11 +164,7 @@ class SeoController extends BaseController
 
     public function updateRobots(Request $request)
     {
-        $seo =Seo::query()->where('store_id',auth()->user()->store_id)->first();
 
-        if (is_null($seo) || $seo->is_deleted==1){
-            return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
-       }
             $input = $request->all();
            $validator =  Validator::make($input ,[
 
@@ -211,7 +176,9 @@ class SeoController extends BaseController
                # code...
                return $this->sendError(null,$validator->errors());
            }
-           $seo->update([
+           $seo=Seo::updateOrCreate([
+                'store_id'=> auth()->user()->store_id,
+                ],[
 
                'robots' => $request->input('robots'),
 

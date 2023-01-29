@@ -43,7 +43,8 @@ class MaintenanceController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+
+    public function updateMaintenance(Request $request)
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
@@ -55,10 +56,14 @@ class MaintenanceController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        $maintenance = Maintenance::create([
+         $maintenance =Maintenance::updateOrCreate([
+            'store_id'   => auth()->user()->store_id,
+               ],[
+
             'title' => $request->title,
             'message' => $request->message,
-            'store_id'=> auth()->user()->store_id,
+            'status' => $request->status,
+
           ]);
 
 
@@ -74,17 +79,17 @@ class MaintenanceController extends BaseController
      * @param  \App\Models\Maintenance  $maintenance
      * @return \Illuminate\Http\Response
      */
-    public function show( $maintenance)
-    {
-        $maintenance= Maintenance::query()->find($maintenance);
-        if (is_null($maintenance) || $maintenance->is_deleted==1){
-               return $this->sendError("وضع الصيانة غير موجودة","Maintenance is't exists");
-               }
-              $success['maintenances']=New MaintenanceResource($maintenance);
-              $success['status']= 200;
+    // public function show( $maintenance)
+    // {
+    //     $maintenance= Maintenance::query()->find($maintenance);
+    //     if (is_null($maintenance) || $maintenance->is_deleted==1){
+    //            return $this->sendError("وضع الصيانة غير موجودة","Maintenance is't exists");
+    //            }
+    //           $success['maintenances']=New MaintenanceResource($maintenance);
+    //           $success['status']= 200;
 
-               return $this->sendResponse($success,'تم عرض وضع الصيانة بنجاح','Maintenance showed successfully');
-    }
+    //            return $this->sendResponse($success,'تم عرض وضع الصيانة بنجاح','Maintenance showed successfully');
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -96,23 +101,23 @@ class MaintenanceController extends BaseController
     {
         //
     }
-    public function changeStatus($id)
-    {
-        $maintenance= Maintenance::query()->find($id);
-        if (is_null($maintenance) || $maintenance->is_deleted==1 ||$maintenance->store_id!=auth()->user()->store_id){
-         return $this->sendError("الصيانة غير موجودة","maintenance is't exists");
-         }
-        if($maintenance->status === 'active'){
-            $maintenance->update(['status' => 'not_active']);
-     }
-    else{
-        $maintenance->update(['status' => 'active']);
-    }
-        $success['maintenances']=New MaintenanceResource($maintenance);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة الصيانة بنجاح',' maintenance status updared successfully');
+    // public function changeStatus($maintenance)
+    // {
+    //     $maintenance = Maintenance::where('id',$maintenance)->where('store_id',auth()->user()->store_id)->first();
+    //     if (is_null($maintenance) || $maintenance->is_deleted==1 ||$maintenance->store_id!=auth()->user()->store_id){
+    //      return $this->sendError("الصيانة غير موجودة","maintenance is't exists");
+    //      }
+    //     if($maintenance->status === 'active'){
+    //         $maintenance->update(['status' => 'not_active']);
+    //   }
+    //    else{
+    //     $maintenance->update(['status' => 'active']);
+    //  }
+    //     $success['maintenances']=New MaintenanceResource($maintenance);
+    //     $success['status']= 200;
+    //      return $this->sendResponse($success,'تم تعدبل حالة الصيانة بنجاح',' maintenance status updared successfully');
 
-    }
+    // }
 
 
 
@@ -125,34 +130,34 @@ class MaintenanceController extends BaseController
      * @param  \App\Models\Maintenance  $maintenance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Maintenance $maintenance)
-    {
-        if (is_null($maintenance) || $maintenance->is_deleted==1|| $maintenance->store_id!=auth()->user()->store_id){
-            return $this->sendError("الصيانة غير موجودة"," Maintenance is't exists");
-       }
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
-                'title'=>'required|string|max:255',
-                'message'=>'required',
-            //    'store_id'=>'required|exists:stores,id'
+    // public function update(Request $request, Maintenance $maintenance)
+    // {
+    //     if (is_null($maintenance) || $maintenance->is_deleted==1|| $maintenance->store_id!=auth()->user()->store_id){
+    //         return $this->sendError("الصيانة غير موجودة"," Maintenance is't exists");
+    //    }
+    //         $input = $request->all();
+    //        $validator =  Validator::make($input ,[
+    //             'title'=>'required|string|max:255',
+    //             'message'=>'required',
+    //         //    'store_id'=>'required|exists:stores,id'
 
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $maintenance->update([
-               'title' => $request->input('title'),
-               'message' => $request->input('message'),
-                // 'store_id' => $request->input('store_id'),
-           ]);
+    //        ]);
+    //        if ($validator->fails())
+    //        {
+    //            # code...
+    //            return $this->sendError(null,$validator->errors());
+    //        }
+    //        $maintenance->update([
+    //            'title' => $request->input('title'),
+    //            'message' => $request->input('message'),
+    //             // 'store_id' => $request->input('store_id'),
+    //        ]);
 
-           $success['maintenances']=New MaintenanceResource($maintenance);
-           $success['status']= 200;
+    //        $success['maintenances']=New MaintenanceResource($maintenance);
+    //        $success['status']= 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','Maintenance updated successfully');
-    }
+    //         return $this->sendResponse($success,'تم التعديل بنجاح','Maintenance updated successfully');
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -160,17 +165,17 @@ class MaintenanceController extends BaseController
      * @param  \App\Models\Maintenance  $maintenance
      * @return \Illuminate\Http\Response
      */
-    public function destroy($maintenance)
-    {
-        $maintenance =Maintenance::query()->find($maintenance);
-        if (is_null($maintenance) || $maintenance->is_deleted==1 || $maintenance->store_id!=auth()->user()->store_id){
-            return $this->sendError("وضع الصيانة غير موجودة","maintenance is't exists");
-            }
-           $maintenance->update(['is_deleted' => 1]);
+    // public function destroy($maintenance)
+    // {
+    //     $maintenance =Maintenance::query()->find($maintenance);
+    //     if (is_null($maintenance) || $maintenance->is_deleted==1 || $maintenance->store_id!=auth()->user()->store_id){
+    //         return $this->sendError("وضع الصيانة غير موجودة","maintenance is't exists");
+    //         }
+    //        $maintenance->update(['is_deleted' => 1]);
 
-           $success['maintenances']=New MaintenanceResource($maintenance);
-           $success['status']= 200;
+    //        $success['maintenances']=New MaintenanceResource($maintenance);
+    //        $success['status']= 200;
 
-            return $this->sendResponse($success,'تم حذف و ضع الصيانة بنجاح','Maintenance deleted successfully');
-    }
+    //         return $this->sendResponse($success,'تم حذف و ضع الصيانة بنجاح','Maintenance deleted successfully');
+    // }
 }

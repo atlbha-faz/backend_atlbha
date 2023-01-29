@@ -39,8 +39,15 @@ class Coupon extends Model
 
 $expire->update(['status' => 'expired']);}
     }
+//
+if($expire->status=='expired'){
+    if($expire->expire_date > $my_time){
+
+$expire->update(['status' => 'active']);}
+    }
 
 
 
  }
+
 }

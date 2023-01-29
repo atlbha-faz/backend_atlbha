@@ -19,6 +19,7 @@ class ServiceResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'file' => $this->file,
+            'price' => $this->price,
             'pendingServices' => $this->pendingServices($this->id),
             'status' => $this->status !==null ? $this->status:'active',
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
