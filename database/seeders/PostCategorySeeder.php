@@ -90,6 +90,18 @@ class PostCategorySeeder extends Seeder
             'user_id'=>1,
 
         ]);
+
+        Page::create([
+            'title' => '22التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
         Page_page_category::create([
             'page_id'=>1,
             'page_category_id'=>1,
@@ -106,11 +118,7 @@ class PostCategorySeeder extends Seeder
             'page_category_id'=>3,
 
            ]);
-           Page_page_category::create([
-            'page_id'=>4,
-            'page_category_id'=>5,
-
-           ]);
+         
             Page_page_category::create([
             'page_id'=>5,
             'page_category_id'=>3,
@@ -119,6 +127,21 @@ class PostCategorySeeder extends Seeder
             Page_page_category::create([
             'page_id'=>6,
             'page_category_id'=>3,
+
+           ]);
+           Page_page_category::create([
+            'page_id'=>5,
+            'page_category_id'=>2,
+
+           ]);
+            Page_page_category::create([
+            'page_id'=>6,
+            'page_category_id'=>2,
+
+           ]);
+           Page_page_category::create([
+            'page_id'=>7,
+            'page_category_id'=>1,
 
            ]);
     }

@@ -302,27 +302,5 @@ class PageController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','page updated successfully');
            }
-           public function relatedPage($page_id)
-           {
-               $page = Page::query()->find($page_id);
-               $categories= Page_page_category::where('page_id',$page->id)->get();
-               $categories_id=array();
-               foreach($categories as $category)
-               {
-                
-                   $categories_id[]=$category->page_category_id;
-               }
-             
-               if (is_null($page) || $page->is_deleted==1){
-               return $this->sendError("الصفحة غير موجودة","page is't exists");
-               }
-           
-               $pages_id =Page_page_category::whereIn('page_category_id',$categories_id)->pluck('page_id')->toArray();
-                   $pages=Page::whereIn('id',$pages_id)->where('id','!=',$page_id)->get();
-              $success['pages']=  PageResource::collection($pages);
-            
-              $success['status']= 200;
-       
-               return $this->sendResponse($success,'تم عرض الصفحة  بنجاح','page showed successfully');
-           }
+    
 }

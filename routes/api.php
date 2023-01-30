@@ -36,8 +36,8 @@ Route::get('show_post/{id}',[App\Http\Controllers\api\PostController::class,'sho
 Route::post('send-verify-message','App\Http\Controllers\api\AuthController@store_verify_message');
 Route::post('verify-user','App\Http\Controllers\api\AuthController@verifyUser');
 
-Route::get('page/{id}',[App\Http\Controllers\api\adminDashboard\pageController::class,"show"]);
-Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\pageController::class,"relatedPage"]);
+Route::get('page/{id}',[App\Http\Controllers\api\SubpageController::class,"show"]);
+Route::get('packages',[App\Http\Controllers\api\SubpageController::class,"packages"]);
 
 Route::group([
     'middleware' => 'api',
