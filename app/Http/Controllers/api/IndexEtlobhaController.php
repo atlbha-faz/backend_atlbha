@@ -35,12 +35,12 @@ class IndexEtlobhaController extends BaseController
      $success['panar3']=Homepage::where('is_deleted',0)->where('store_id',null)->where('panarstatus3','active')->pluck('slider3')->first();
 
      if(Section::where('id',1)->where('is_deleted',0)->where('status','active')){
-     $success['section1']=Section::pluck('name')->first();
+     $success['section1']=Section::where('id',1)->pluck('name')->first();
      $success['products']=ProductResource::collection(Product::where('is_deleted',0)
      ->where('store_id',null)->where('special','special')->get());
     }
     if(Section::where('id',2)->where('is_deleted',0)->where('status','active')){
-     $success['section2']=Section::pluck('name')->first();
+     $success['section2']=Section::where('id',2)->pluck('name')->first();
      $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->where('special','special')->get());}
 
      $success['packages']=PackageResource::collection(Package::where('is_deleted',0)->get());
