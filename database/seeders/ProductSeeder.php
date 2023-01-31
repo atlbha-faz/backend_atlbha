@@ -30,7 +30,7 @@ class ProductSeeder extends Seeder
             'discount_percent'=>0,
             'category_id' =>1,
             'subcategory_id'=>2,
-
+            'special'=>'special'
 
             ]);
 
@@ -49,8 +49,8 @@ class ProductSeeder extends Seeder
                 'discount_percent'=>0,
                 'category_id' =>3,
                 'subcategory_id'=>4,
-                'store_id'=>1
-
+                'store_id'=>1,
+                'special'=>'special'
                 ]);
                 Product::create([
                 'name' =>'جوال',
@@ -67,8 +67,8 @@ class ProductSeeder extends Seeder
                 'discount_percent'=>0,
                 'category_id' =>3,
                 'subcategory_id'=>4,
-                'store_id'=>1
-
+                'store_id'=>1,
+                'special'=>'special',
                 ]);
                 Product::create([
                 'name' =>'لعبة اطفال',
@@ -85,8 +85,8 @@ class ProductSeeder extends Seeder
                 'discount_percent'=>0,
                 'category_id' =>5,
                 'subcategory_id'=>6,
-                'store_id'=>2
-
+                'store_id'=>2,
+                'special'=>'special',
                 ]);
     }
 }
