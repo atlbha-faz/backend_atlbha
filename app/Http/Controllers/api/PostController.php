@@ -6,6 +6,7 @@ use App\Models\Page;
 use App\Models\Postcategory;
 use Illuminate\Http\Request;
 use App\Http\Resources\PageResource;
+use App\Models\Page_page_category;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class PostController extends BaseController
