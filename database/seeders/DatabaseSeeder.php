@@ -59,6 +59,7 @@ class DatabaseSeeder extends Seeder
             HomepageSeeder::class,
             OfferSeeder::class,
             SectionSeeder::class,
+            PartnerSeeder::class,
 
         ]);
 
