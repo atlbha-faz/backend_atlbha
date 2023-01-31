@@ -23,12 +23,14 @@ class PostController extends BaseController
 
         $success['pages']= PageResource::collection(Page::where('is_deleted',0)->where('store_id',null)->where('postcategory_id',$postCategory_id)->get());
         $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
+        $success['postCategory']=Postcategory::where('is_deleted',0)->get();
         $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
         return $this->sendResponse($success,'تم ارجاع الصفحة بنجاح',' post return successfully');
     }
     public function show_post($id){
         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',null)->where('postcategory_id','!=',null)->where('id',$id)->get());
         $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
+        $success['postCategory']=Postcategory::where('is_deleted',0)->get();
         $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
         return $this->sendResponse($success,'تم ارجاع الصفحة بنجاح',' post return successfully');
     }
