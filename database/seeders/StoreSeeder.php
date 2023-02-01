@@ -8,7 +8,6 @@ use App\Models\Package;
 use App\Models\Package_store;
 use App\Models\activities_stores;
 use Illuminate\Database\Seeder;
-use App\Models\activities_stores;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class StoreSeeder extends Seeder
