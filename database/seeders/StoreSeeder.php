@@ -63,6 +63,7 @@ class StoreSeeder extends Seeder
             'user_id'=>null
 
         ]);
+        
         activities_stores::create([
        'activity_id'=>1,
          'store_id'=>1
