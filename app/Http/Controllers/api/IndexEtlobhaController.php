@@ -32,9 +32,9 @@ class IndexEtlobhaController extends BaseController
      $success['slider2']=Homepage::where('is_deleted',0)->where('store_id',null)->where('sliderstatus2','active')->pluck('slider2')->first();
      $success['slider3']=Homepage::where('is_deleted',0)->where('store_id',null)->where('sliderstatus3','active')->pluck('slider3')->first();
 
-     $success['panar1']=Homepage::where('is_deleted',0)->where('store_id',null)->where('panarstatus1','active')->pluck('slider1')->first();
-     $success['panar2']=Homepage::where('is_deleted',0)->where('store_id',null)->where('panarstatus2','active')->pluck('slider2')->first();
-     $success['panar3']=Homepage::where('is_deleted',0)->where('store_id',null)->where('panarstatus3','active')->pluck('slider3')->first();
+     $success['banar1']=Homepage::where('is_deleted',0)->where('store_id',null)->where('banarstatus1','active')->pluck('banar1')->first();
+     $success['banar2']=Homepage::where('is_deleted',0)->where('store_id',null)->where('banarstatus2','active')->pluck('banar2')->first();
+     $success['banar3']=Homepage::where('is_deleted',0)->where('store_id',null)->where('banarstatus3','active')->pluck('banar3')->first();
 
      if(Section::where('id',1)->where('is_deleted',0)->where('status','active')){
      $success['section1']=Section::where('id',1)->pluck('name')->first();
