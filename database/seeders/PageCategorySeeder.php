@@ -18,7 +18,7 @@ class PageCategorySeeder extends Seeder
         Page_category::create([
             'name' => '  المدونه',
         ]);
-         Page_category::create([
+        Page_category::create([
             'name' => ' عام ',
         ]);
         Page_category::create([

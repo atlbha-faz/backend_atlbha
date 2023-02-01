@@ -36,7 +36,8 @@ class StoreSeeder extends Seeder
             'package_id' => 1,
             'country_id' => 1,
             'city_id' =>1,
-             'user_id'=>null
+             'user_id'=>null,
+             'special'=>'special',
 
         ]);
 
@@ -60,7 +61,8 @@ class StoreSeeder extends Seeder
             'package_id' => 1,
             'country_id' => 1,
             'city_id' =>1,
-            'user_id'=>null
+            'user_id'=>null,
+            'special'=>'special',
 
         ]);
         

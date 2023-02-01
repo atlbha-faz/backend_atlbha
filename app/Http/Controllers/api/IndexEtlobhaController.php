@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Models\Page;
 use App\Models\Store;
 use App\Models\Comment;
 use App\Models\Package;
+use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Homepage;
-use App\Models\website_socialmedia;
 use Illuminate\Http\Request;
+use App\Models\Page_page_category;
+use App\Models\website_socialmedia;
+use App\Http\Resources\PageResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PackageResource;
+use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\HomepageResource;
-use App\Http\Resources\website_socialmediaResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\website_socialmediaResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexEtlobhaController extends BaseController
@@ -32,20 +37,21 @@ class IndexEtlobhaController extends BaseController
      $success['panar3']=Homepage::where('is_deleted',0)->where('store_id',null)->where('panarstatus3','active')->pluck('slider3')->first();
 
      if(Section::where('id',1)->where('is_deleted',0)->where('status','active')){
-     $success['section1']=Section::pluck('name')->first();
+     $success['section1']=Section::where('id',1)->pluck('name')->first();
      $success['products']=ProductResource::collection(Product::where('is_deleted',0)
      ->where('store_id',null)->where('special','special')->get());
     }
     if(Section::where('id',2)->where('is_deleted',0)->where('status','active')){
-     $success['section2']=Section::pluck('name')->first();
+     $success['section2']=Section::where('id',2)->pluck('name')->first();
      $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->where('special','special')->get());}
 
      $success['packages']=PackageResource::collection(Package::where('is_deleted',0)->get());
 
      $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',null)->where('product_id',null)->latest()->take(2)->get());
+     $success['partners']=PartnerResource::collection(Partner::where('is_deleted',0)->get());
 
-
-
+      $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
+     $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
     $success['website_socialmedia']=website_socialmediaResource::collection(website_socialmedia::where('is_deleted',0)->where('status','active')->get());
 
         $success['status']= 200;

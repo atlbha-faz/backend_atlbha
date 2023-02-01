@@ -19,7 +19,6 @@ class Page extends Model
     }
     public function page_categories()
     {
-
        return $this->belongsToMany(
         Page_category::class,
             'pages_page_categories',
@@ -27,9 +26,30 @@ class Page extends Model
             'page_category_id'
             );
     }
+
     public function postcategory()
     {
         return $this->belongsTo(Postcategory::class);
     }
+    public function setImageAttribute($image)
+    {
+        if (!is_null($image)) {
+            if (gettype($image) != 'string') {
+                $i = $image->store('images/posts', 'public');
+                $this->attributes['image'] = $image->hashName();
+            } else {
+                $this->attributes['image'] = $image;
+            }
+        }
+    }
+
+    public function getImageAttribute($image)
+    {
+        if (is_null($image)) {
+            return   asset('assets/media/man.png');
+        }
+        return asset('storage/images/posts') . '/' . $image;
+    }
+  
 
 }

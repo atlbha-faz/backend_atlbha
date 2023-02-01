@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\Page;
+use App\Models\Page_page_category;
 use Illuminate\Http\Request;
 use App\Http\Resources\PageResource;
 use Illuminate\Support\Facades\Validator;
@@ -301,4 +302,5 @@ class PageController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','page updated successfully');
            }
+    
 }

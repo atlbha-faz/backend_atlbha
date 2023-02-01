@@ -16,27 +16,27 @@ class website_socialmediaSeeder extends Seeder
     {
         website_socialmedia::create([
             'name' => 'facebook',
-            'logo' => 'icon.png',
+            'logo' => 'f.png',
             'link' =>'http:facebook.com',
         ]);
           website_socialmedia::create([
             'name' => 'Instegram',
-            'logo' => 'icon.png',
+            'logo' => 'i.png',
             'link' =>'http//:Instegram.com',
         ]);
           website_socialmedia::create([
             'name' => 'twitter',
-            'logo' => 'icon.png',
+            'logo' => 'tw.png',
             'link' =>'http//:twitter.com',
         ]);
           website_socialmedia::create([
             'name' => 'Tik Tok',
-            'logo' => 'icon.png',
+            'logo' => 't.png',
             'link' =>'http//:Tik.com',
         ]);
           website_socialmedia::create([
             'name' => 'Snapchat',
-            'logo' => 'icon.png',
+            'logo' => 's.png',
             'link' =>'http//:Snapchat.com',
         ]);
     }
