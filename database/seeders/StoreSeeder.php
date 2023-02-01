@@ -348,7 +348,7 @@ class StoreSeeder extends Seeder
         activities_stores::create([
        'activity_id'=>1,
          'store_id'=>1
-         
+         ]);
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'n@gmail.com',
