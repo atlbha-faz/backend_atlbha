@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Homepage extends Model
 {
     use HasFactory;
-    protected $fillable = ['logo','panar1','panarstatus1','panar2','panarstatus2','panar3','panarstatus3','clientstatus','commentstatus',
+    protected $fillable = ['logo','banar1','banarstatus1','banar2','banarstatus2','banar3','banarstatus3','clientstatus','commentstatus',
     'slider1','sliderstatus1','slider2','sliderstatus2','slider3','sliderstatus3','store_id','is_deleted'];
      public function store()
     {
@@ -33,62 +33,63 @@ class Homepage extends Model
         }
         return asset('storage/images/homepage') . '/' . $logo;
     }
-     public function setPanar1Attribute($panar1)
+     public function setBanar1Attribute($banar1)
     {
-        if (!is_null($panar1)) {
-            if (gettype($panar1) != 'string') {
-                $i = $panar1->store('images/homepage', 'public');
-                $this->attributes['panar1'] = $panar1->hashName();
+        if (!is_null($banar1)) {
+            if (gettype($banar1) != 'string') {
+                $i = $banar1->store('images/homepage', 'public');
+                $this->attributes['banar1'] = $banar1->hashName();
             } else {
-                $this->attributes['panar1'] = $panar1;
+                $this->attributes['banar1'] = $banar1;
             }
         }
     }
 
-    public function getPanar1Attribute($panar1)
+    public function getBanar1Attribute($banar1)
     {
-        if (is_null($panar1)) {
+        if (is_null($banar1)) {
             return   asset('assets/media/man.png');
         }
-        return asset('storage/images/homepage') . '/' . $panar1;
+        return asset('storage/images/homepage') . '/' . $banar1;
     }
-      public function setPanar2Attribute($panar2)
+
+      public function setBanar2Attribute($banar2)
     {
-        if (!is_null($panar2)) {
-            if (gettype($panar2) != 'string') {
-                $i = $panar2->store('images/homepage', 'public');
-                $this->attributes['panar2'] = $panar2->hashName();
+        if (!is_null($banar2)) {
+            if (gettype($banar2) != 'string') {
+                $i = $banar2->store('images/homepage', 'public');
+                $this->attributes['banar2'] = $anar2->hashName();
             } else {
-                $this->attributes['panar2'] = $panar2;
+                $this->attributes['banar2'] = $banar2;
             }
         }
     }
 
-    public function getPanar2Attribute($panar2)
+    public function getBanar2Attribute($banar2)
     {
-        if (is_null($panar2)) {
+        if (is_null($banar2)) {
             return   asset('assets/media/man.png');
         }
-        return asset('storage/images/homepage') . '/' . $panar2;
+        return asset('storage/images/homepage') . '/' . $banar2;
     }
-       public function setPanar3Attribute($panar3)
+       public function setBanar3Attribute($banar3)
     {
-        if (!is_null($panar3)) {
-            if (gettype($panar3) != 'string') {
-                $i = $panar3->store('images/homepage', 'public');
-                $this->attributes['panar3'] = $panar3->hashName();
+        if (!is_null($banar3)) {
+            if (gettype($banar3) != 'string') {
+                $i = $banar3->store('images/homepage', 'public');
+                $this->attributes['banar3'] = $banar3->hashName();
             } else {
-                $this->attributes['panar3'] = $panar3;
+                $this->attributes['banar3'] = $banar3;
             }
         }
     }
 
-    public function getPanar3Attribute($panar3)
+    public function getBanar3Attribute($banar3)
     {
-        if (is_null($panar3)) {
+        if (is_null($banar3)) {
             return   asset('assets/media/man.png');
         }
-        return asset('storage/images/homepage') . '/' . $panar3;
+        return asset('storage/images/homepage') . '/' . $banar3;
     }
         public function setSlider1Attribute($slider1)
     {

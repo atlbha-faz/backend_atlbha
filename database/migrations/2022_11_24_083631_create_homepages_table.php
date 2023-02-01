@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('homepages', function (Blueprint $table) {
             $table->id();
             $table->string('logo');
-            $table->string('panar1');
-            $table->enum('panarstatus1',['active','not_active'])->default('active');
-            $table->string('panar2');
-            $table->enum('panarstatus2',['active','not_active'])->default('active');
-            $table->string('panar3');
-            $table->enum('panarstatus3',['active','not_active'])->default('active');
+            $table->string('banar1');
+            $table->enum('banarstatus1',['active','not_active'])->default('active');
+            $table->string('banar2');
+            $table->enum('banarstatus2',['active','not_active'])->default('active');
+            $table->string('banar3');
+            $table->enum('banarstatus3',['active','not_active'])->default('active');
             $table->enum('clientstatus',['active','not_active'])->default('active');
             $table->enum('commentstatus',['active','not_active'])->default('active');
             $table->string('slider1');
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->enum('sliderstatus3',['active','not_active'])->default('active');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-          
+
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
