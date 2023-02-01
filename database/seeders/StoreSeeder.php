@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use App\Models\Store;
-use App\Models\activities_stores;
+use App\Models\Package;
+use App\Models\Package_store;
 use Illuminate\Database\Seeder;
+use App\Models\activities_stores;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class StoreSeeder extends Seeder
@@ -64,6 +66,27 @@ class StoreSeeder extends Seeder
             'user_id'=>null,
             'special'=>'special',
 
+        ]);
+        Package_store::create([
+          'package_id'=>1,
+          'store_id'=>1,
+          'periodtype' => 'year',
+            'start_at' => '2022-03-01',
+            'end_at' => '2023-03-01',
+        ]);
+        Package_store::create([
+          'package_id'=>2,
+          'store_id'=>2,
+          'periodtype' => 'year',
+            'start_at' => '2022-03-01',
+            'end_at' => '2023-03-01',
+        ]);
+        Package_store::create([
+          'package_id'=>3,
+          'store_id'=>2,
+          'periodtype' => 'year',
+            'start_at' => '2022-03-01',
+            'end_at' => '2023-03-01',
         ]);
         activities_stores::create([
        'activity_id'=>1,

@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Package;
-use App\Models\Template;
+use App\Models\Package_Template;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class PackageTemplateSeeder extends Seeder
@@ -17,12 +16,21 @@ class PackageTemplateSeeder extends Seeder
      */
     public function run()
     {
-        $package=Package::where('id',1)->first()->id;
-        $template=Template::where('id',1)->first()->id;
-        $package_template =[
-            'package_id' => $package,
-            'template_id' => $template
-        ];
-        DB::table('packages_templates')->insert($package_template);
+        $pt1= new Package_Template([
+           'package_id'=>1,
+           'template_id'=>1 
+        ]);
+        $pt1->save();
+        $pt2= new Package_Template([
+            'package_id'=>2,
+            'template_id'=>2 
+         ]);
+         $pt2->save();
+         $pt3= new Package_Template([
+            'package_id'=>3,
+            'template_id'=>3
+         ]);
+         $pt3->save();
+       
     }
 }

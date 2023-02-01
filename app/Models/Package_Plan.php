@@ -13,4 +13,6 @@ class Package_Plan extends Model
     protected $casts = [
         'plan_id' => 'array',
     ];
+    public $timestamps = false;
+
 }
