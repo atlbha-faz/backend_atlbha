@@ -13,4 +13,6 @@ class Package_Template extends Model
     protected $casts = [
         'template_id' => 'array',
     ];
+    public $timestamps = false;
+
 }
