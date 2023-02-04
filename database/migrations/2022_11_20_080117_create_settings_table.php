@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phonenumber')->nullable();
             $table->string('logo');
-            $table->string('logo_footer');
             $table->string('icon');
             $table->string('address');
             $table->unsignedBigInteger('country_id')->nullable();
