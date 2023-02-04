@@ -8,12 +8,17 @@ use App\Models\Comment;
 use App\Models\Package;
 use App\Models\Partner;
 use App\Models\Product;
+use App\Models\City;
+use App\Models\Activity;
 use App\Models\Section;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Models\Page_page_category;
 use App\Models\website_socialmedia;
 use App\Http\Resources\PageResource;
+
+use App\Http\Resources\CityResource;
+use App\Http\Resources\ActivityResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PackageResource;
@@ -37,6 +42,12 @@ class IndexEtlobhaController extends BaseController
      $success['banar2']=Homepage::where('is_deleted',0)->where('store_id',null)->where('banarstatus2','active')->pluck('banar2')->first();
      $success['banar3']=Homepage::where('is_deleted',0)->where('store_id',null)->where('banarstatus3','active')->pluck('banar3')->first();
 
+       
+        $success['store_activities']=ActivityResource::collection(Activity::where('is_deleted',0)->where('status','active')->get());
+       
+        $success['cities']=CityResource::collection(City::where('is_deleted',0)->where('status','active')->get());
+       
+       
      if(Section::where('id',1)->where('is_deleted',0)->where('status','active')){
      $success['section1']=Section::where('id',1)->pluck('name')->first();
      $success['products']=ProductResource::collection(Product::where('is_deleted',0)
