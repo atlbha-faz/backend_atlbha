@@ -17,6 +17,7 @@ class HomepageSeeder extends Seeder
     {
        Homepage::create([
         'logo'=>'logo.png',
+        'logo_footer'=>'logo_footer.png',
         'banar1'=>'banar1.png',
         'banarstatus1'=>1,
         'banar2'=>'baner2.png',
