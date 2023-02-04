@@ -36,5 +36,26 @@ class PartnerSeeder extends Seeder
             'logo' => 'ms.png',
             'link' =>'http//:Snapchat.com',
         ]);
+          Partner::create([
+            'name' => 'stc',
+            'logo' => 'stc.jpg',
+            'link' =>'http:facebook.com',
+        ]);
+        Partner::create([
+            'name' => 'stc',
+            'logo' => 'stc.jpg',
+            'link' =>'http//:Instegram.com',
+        ]);
+        Partner::create([
+            'name' => 'mashaheer',
+            'logo' => 'ms.png',
+            'link' =>'http//:twitter.com',
+        ]);
+      
+        Partner::create([
+            'name' => 'mashaheer',
+            'logo' => 'ms.png',
+            'link' =>'http//:Snapchat.com',
+        ]);
     }
 }
