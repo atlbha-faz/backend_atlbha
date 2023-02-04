@@ -49,7 +49,7 @@ class CommentSeeder extends Seeder
         
            Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
-            'rateing' => 5,
+            'rateing' => 1,
            'comment_for'=>'store',
             'user_id' => 3,
             'store_id'=>null,
@@ -58,7 +58,7 @@ class CommentSeeder extends Seeder
         
          Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
-            'rateing' => 5,
+            'rateing' => 4,
            'comment_for'=>'store',
             'user_id' => 3,
             'store_id'=>null,
@@ -68,7 +68,7 @@ class CommentSeeder extends Seeder
         
          Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
-            'rateing' => 5,
+            'rateing' => 3,
            'comment_for'=>'store',
             'user_id' => 3,
             'store_id'=>null,
