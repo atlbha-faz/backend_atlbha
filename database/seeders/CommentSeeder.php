@@ -38,16 +38,7 @@ class CommentSeeder extends Seeder
            'product_id'=>null,
         ]);
         
-           Comment::create([
-            'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
-            'rateing' => 2,
-           'comment_for'=>'store',
-            'user_id' => 3,
-            'store_id'=>null,
-           'product_id'=>null,
-        ]);
-        
-           Comment::create([
+          Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
             'rateing' => 1,
            'comment_for'=>'store',
@@ -74,6 +65,18 @@ class CommentSeeder extends Seeder
             'store_id'=>null,
            'product_id'=>null,
         ]);
+        
+        
+           Comment::create([
+            'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
+            'rateing' => 2,
+           'comment_for'=>'store',
+            'user_id' => 3,
+            'store_id'=>null,
+           'product_id'=>null,
+        ]);
+        
+         
 
     }
 }
