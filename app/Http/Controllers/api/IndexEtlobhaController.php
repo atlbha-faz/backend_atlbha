@@ -28,6 +28,7 @@ class IndexEtlobhaController extends BaseController
 {
    public function index(){
      $success['logo']=Homepage::where('is_deleted',0)->where('store_id',null)->pluck('logo')->first();
+     $success['logo_footer']=Homepage::where('is_deleted',0)->where('store_id',null)->pluck('logo_footer')->first();
      $success['slider1']=Homepage::where('is_deleted',0)->where('store_id',null)->where('sliderstatus1','active')->pluck('slider1')->first();
      $success['slider2']=Homepage::where('is_deleted',0)->where('store_id',null)->where('sliderstatus2','active')->pluck('slider2')->first();
      $success['slider3']=Homepage::where('is_deleted',0)->where('store_id',null)->where('sliderstatus3','active')->pluck('slider3')->first();
