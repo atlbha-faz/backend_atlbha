@@ -77,7 +77,7 @@ class StoreUserSeeder extends Seeder
         'user_id'=>$i+3,
         'name' => 'روعه',
         'user_name' =>'rawaa',
-        'email' =>'rawaa@gmail.com',
+        'email' =>'rawaa'.$i.'@gmail.com',
         'password' =>'12345678',
         'gender' =>'female',
         'phonenumber' => '0096650775433',
