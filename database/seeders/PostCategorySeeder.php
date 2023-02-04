@@ -139,6 +139,997 @@ class PostCategorySeeder extends Seeder
             'postcategory_id'=>3
         ]);
         
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+          Page::create([
+            'title' => 'التجارةالالكترونية',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>1
+        ]);
+        Page::create([
+            'title' => 'التسويق الرقمي',
+            'page_content' => 'التسويق الرقمي',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>2
+        ]);
+         Page::create([
+            'title' => 'ادارة السوق',
+            'page_content' => 'التجارةالالكترونية',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'seo_desc'=>"this is description",
+            'tags'=>'about us',
+            'user_id'=>1,
+            'image'=>"image.png",
+            'postcategory_id'=>3
+        ]);
+        
         Page_page_category::create([
             'page_id'=>1,
             'page_category_id'=>1,
@@ -202,12 +1193,13 @@ class PostCategorySeeder extends Seeder
 
            ]);
         
-        
+        for($i =10 ; $i<101 ; $i++){
            Page_page_category::create([
-            'page_id'=>10,
+            'page_id'=>$i,
             'page_category_id'=>1,
 
            ]);
+        }
         
     }
 }
