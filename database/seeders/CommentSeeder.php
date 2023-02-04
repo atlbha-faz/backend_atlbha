@@ -65,6 +65,7 @@ class CommentSeeder extends Seeder
            'product_id'=>null,
         ]);
         
+        
          Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
             'rateing' => 5,
