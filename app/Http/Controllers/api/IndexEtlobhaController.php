@@ -47,7 +47,7 @@ class IndexEtlobhaController extends BaseController
 
      $success['packages']=PackageResource::collection(Package::where('is_deleted',0)->get());
 
-     $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',null)->where('product_id',null)->latest()->take(2)->get());
+     $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',null)->where('product_id',null)->latest()->take(10)->get());
      $success['partners']=PartnerResource::collection(Partner::where('is_deleted',0)->get());
 
       $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
