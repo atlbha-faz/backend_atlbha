@@ -17,6 +17,7 @@ class HomepageResource extends JsonResource
          return [
             'id' =>$this->id,
             'logo' => $this->logo,
+            'logo_footer' => $this->logo_footer,
             'panar1' => $this->panar1,
             'panarstatus1' => $this->panarstatus1,
             'panar2' => $this->panar2,
