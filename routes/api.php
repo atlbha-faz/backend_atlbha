@@ -98,6 +98,8 @@ Route::post('changeHomeStatus/{name}/{id}', [App\Http\Controllers\api\adminDashb
 Route::post('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'changeStatus']);
 Route::post('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
 Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
+Route::post('planOfPackage/{id}', [App\Http\Controllers\api\adminDashboard\PackageController::class,'planOfPackage']);
+
 // home page
 Route::post('logoUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'logoUpdate']);
 Route::post('panarUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'panarUpdate']);

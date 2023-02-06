@@ -15,6 +15,15 @@ class PackageResource extends JsonResource
      */
     public function toArray($request)
     {
+        $plans = array();
+        foreach(\App\Models\Plan::all() as $p){
+            if(in_array($p->id,json_decode($this->plans->pluck('id')))){
+               $pp =collect($p)->merge(['selected' => true]);
+            }else{
+                $pp = collect($p)->merge(['selected' => false]);
+            }
+            $plans[] = json_decode($pp);
+        }
         return [
             'id' =>$this->id,
             'name' => $this->name,
@@ -23,10 +32,12 @@ class PackageResource extends JsonResource
             'discount' => $this->discount,
             'status' => $this->status !==null ? $this->status:'active',
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
-            'plans'=>PlanResource::collection($this->plans),
+            'plans'=>PlanResource::collection($plans),
             'templates'=>TemplateResource::collection($this->templates),
-            'stores'=> StoreResource::collection($this->stores)
+            'stores'=> StoreResource::collection($this->stores),
+          
 
         ];
     }
 }
+
