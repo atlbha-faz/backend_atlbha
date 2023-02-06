@@ -56,49 +56,48 @@ Route::middleware([AdminUser::class])->group(function(){
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
 
-Route::post('changeCountryStatus/{id}',[App\Http\Controllers\api\adminDashboard\CountryController::class,'changeStatus']);
-Route::post('changeCityStatus/{id}',[App\Http\Controllers\api\adminDashboard\CityController::class,'changeStatus']);
-Route::post('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class,'changeStatus']);
-Route::post('changeExplainVideosStatus/{id}', [App\Http\Controllers\api\adminDashboard\ExplainVideosController::class,'changeStatus']);
-Route::post('changeCourseStatus/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class,'changeStatus']);
-Route::post('changeUnitStatus/{id}', [App\Http\Controllers\api\adminDashboard\UnitController::class,'changeStatus']);
-Route::post('changeVideoStatus/{id}', [App\Http\Controllers\api\adminDashboard\VideoController::class,'changeStatus']);
-Route::post('changeActivityStatus/{id}',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'changeStatus']);
-Route::post('changePlatformStatus/{id}',[App\Http\Controllers\api\adminDashboard\PlatformController::class,'changeStatus']);
-Route::post('changeServiceStatus/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class,'changeStatus']);
-Route::post('changeCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeStatus']);
-Route::post('changeStoreCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeStatus']);
-Route::post('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'changeStatus']);
-Route::post('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\PaymenttypeController::class,'changeStatus']);
-Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\CommentController::class,'changeStatus']);
-Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycommentController::class,'changeStatus']);
-Route::post('changeMaintenanceStatus/{id}', [App\Http\Controllers\api\adminDashboard\MaintenanceController::class,'changeStatus']);
-Route::post('changePageStatus/{id}', [App\Http\Controllers\api\adminDashboard\PageController::class,'changeStatus']);
-Route::post('changePageCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\PageCategoryController::class,'changeStatus']);
-Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class,'changeStatus']);
-Route::post('changeCurrencyStatus/{id}', [App\Http\Controllers\api\adminDashboard\CurrencyController::class,'changeStatus']);
-Route::post('changewebsite_socialmediaStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteSocialmediaController::class,'changeStatus']);
-Route::post('changeHomepageStatus/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'changeStatus']);
-Route::post('changePlaneStatus/{id}', [App\Http\Controllers\api\adminDashboard\PlanController::class,'changeStatus']);
-Route::post('changePackageStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
-Route::post('changeTemplateStatus/{id}', [App\Http\Controllers\api\adminDashboard\TemplateController::class,'changeStatus']);
-Route::post('changeCouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\CouponController::class,'changeStatus']);
-Route::post('changePackagecouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackagecouponController::class,'changeStatus']);
-Route::post('changeSectionStatus/{id}', [App\Http\Controllers\api\adminDashboard\SectionController::class,'changeStatus']);
-Route::post('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class,'changeStatus']);
-Route::post('changeReplaycontactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycontactController::class,'changeStatus']);
-Route::post('changeContactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ContactController::class,'changeStatus']);
-Route::post('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class,'changeStatus']);
-Route::post('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class,'changeStatus']);
-Route::post('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeStatus']);
-Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
-Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
-Route::post('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
-Route::post('changeHomeStatus/{name}/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'changeHomeStatus']);
-Route::post('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'changeStatus']);
-Route::post('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
-Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
-Route::post('planOfPackage/{id}', [App\Http\Controllers\api\adminDashboard\PackageController::class,'planOfPackage']);
+Route::get('changeCountryStatus/{id}',[App\Http\Controllers\api\adminDashboard\CountryController::class,'changeStatus']);
+Route::get('changeCityStatus/{id}',[App\Http\Controllers\api\adminDashboard\CityController::class,'changeStatus']);
+Route::get('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class,'changeStatus']);
+Route::get('changeExplainVideosStatus/{id}', [App\Http\Controllers\api\adminDashboard\ExplainVideosController::class,'changeStatus']);
+Route::get('changeCourseStatus/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class,'changeStatus']);
+Route::get('changeUnitStatus/{id}', [App\Http\Controllers\api\adminDashboard\UnitController::class,'changeStatus']);
+Route::get('changeVideoStatus/{id}', [App\Http\Controllers\api\adminDashboard\VideoController::class,'changeStatus']);
+Route::get('changeActivityStatus/{id}',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'changeStatus']);
+Route::get('changePlatformStatus/{id}',[App\Http\Controllers\api\adminDashboard\PlatformController::class,'changeStatus']);
+Route::get('changeServiceStatus/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class,'changeStatus']);
+Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeStatus']);
+Route::get('changeStoreCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeStatus']);
+Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'changeStatus']);
+Route::get('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\PaymenttypeController::class,'changeStatus']);
+Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\CommentController::class,'changeStatus']);
+Route::get('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycommentController::class,'changeStatus']);
+Route::get('changeMaintenanceStatus/{id}', [App\Http\Controllers\api\adminDashboard\MaintenanceController::class,'changeStatus']);
+Route::get('changePageStatus/{id}', [App\Http\Controllers\api\adminDashboard\PageController::class,'changeStatus']);
+Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\PageCategoryController::class,'changeStatus']);
+Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class,'changeStatus']);
+Route::get('changeCurrencyStatus/{id}', [App\Http\Controllers\api\adminDashboard\CurrencyController::class,'changeStatus']);
+Route::get('changewebsite_socialmediaStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteSocialmediaController::class,'changeStatus']);
+Route::get('changeHomepageStatus/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'changeStatus']);
+Route::get('changePlaneStatus/{id}', [App\Http\Controllers\api\adminDashboard\PlanController::class,'changeStatus']);
+Route::get('changePackageStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
+Route::get('changeTemplateStatus/{id}', [App\Http\Controllers\api\adminDashboard\TemplateController::class,'changeStatus']);
+Route::get('changeCouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\CouponController::class,'changeStatus']);
+Route::get('changePackagecouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackagecouponController::class,'changeStatus']);
+Route::get('changeSectionStatus/{id}', [App\Http\Controllers\api\adminDashboard\SectionController::class,'changeStatus']);
+Route::get('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class,'changeStatus']);
+Route::get('changeReplaycontactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycontactController::class,'changeStatus']);
+Route::get('changeContactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ContactController::class,'changeStatus']);
+Route::get('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class,'changeStatus']);
+Route::get('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class,'changeStatus']);
+Route::get('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeStatus']);
+Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
+Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
+Route::get('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
+Route::get('changeHomeStatus/{name}/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class,'changeHomeStatus']);
+Route::get('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class,'changeStatus']);
+Route::get('changeclientStatus/{id}',[App\Http\Controllers\api\adminDashboard\ClientController::class,'changeStatus']);
+Route::get('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\UserController::class,'changeStatus']);
 
 // home page
 Route::post('logoUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'logoUpdate']);
@@ -227,11 +226,11 @@ Route::get('registration_marketer_show',[App\Http\Controllers\api\adminDashboard
 
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::class);
-Route::post('productchangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'specialStatus']);
+Route::get('productchangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'specialStatus']);
 Route::get('activitydeleteall',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'deleteall']);
 Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\StoreController::class,'addNote']);
 Route::post('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'acceptVerification']);
-Route::post('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'specialStatus']);
+Route::get('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'specialStatus']);
 Route::post('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'rejectVerification']);
 Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
 // Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
@@ -277,12 +276,12 @@ Route::resource('maintenance',App\Http\Controllers\api\storeDashboard\Maintenanc
 Route::post('updateMaintenance', [App\Http\Controllers\api\storeDashboard\MaintenanceController::class,'updateMaintenance']);
 
 Route::resource('pagecategory',App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
-Route::post('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class,'changeStatus']);
+Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class,'changeStatus']);
 // product
 Route::resource('product',App\Http\Controllers\api\storeDashboard\ProductController::class);
 Route::get('productchangeSatusall',[App\Http\Controllers\api\storeDashboard\ProductController::class,'changeSatusall']);
 Route::get('productdeleteall',[App\Http\Controllers\api\storeDashboard\ProductController::class,'deleteall']);
-Route::post('changeProductStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class,'changeStatus']);
+Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class,'changeStatus']);
 Route::get('deleteImport/{product}',[App\Http\Controllers\api\storeDashboard\ProductController::class,'deleteImport']);
 
 // importProduct
@@ -293,9 +292,9 @@ Route::post('updateimportproduct/{id}',[App\Http\Controllers\api\storeDashboard\
 Route::resource('category',App\Http\Controllers\api\storeDashboard\CategoryController::class);
 Route::get('categoryStorechangeSatusall',[App\Http\Controllers\api\storeDashboard\CategoryController::class,'changeSatusall']);
 Route::get('categoryStoredeleteall',[App\Http\Controllers\api\storeDashboard\CategoryController::class,'deleteall']);
-Route::post('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class,'changeStatus']);
+Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class,'changeStatus']);
 // coupon
-Route::post('changeCouponStatus/{id}', [App\Http\Controllers\api\storeDashboard\CouponController::class,'changeStatus']);
+Route::get('changeCouponStatus/{id}', [App\Http\Controllers\api\storeDashboard\CouponController::class,'changeStatus']);
 Route::resource('coupons',App\Http\Controllers\api\storeDashboard\CouponController::class);
 Route::get('couponchangeSatusall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'changeSatusall']);
 Route::get('coupondeleteall',[App\Http\Controllers\api\storeDashboard\CouponController::class,'deleteall']);
@@ -307,20 +306,20 @@ Route::get('socialMedia_store_show',[App\Http\Controllers\api\storeDashboard\sto
 Route::post('socialMedia_store_update',[App\Http\Controllers\api\storeDashboard\storeInformationController::class,'socialMedia_store_update']);
 
 Route::resource('video',App\Http\Controllers\api\storeDashboard\VideoController::class);
-Route::post('changeUnitStatus/{id}', [App\Http\Controllers\api\storeDashboard\UnitController::class,'changeStatus']);
+Route::get('changeUnitStatus/{id}', [App\Http\Controllers\api\storeDashboard\UnitController::class,'changeStatus']);
 Route::resource('unit',App\Http\Controllers\api\storeDashboard\UnitController::class);
 // technical Support
 // Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
 Route::resource('technicalSupport',App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class);
 Route::get('technicalSupportStoredeleteall',[App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'deleteall']);
 // Shipping company
-Route::post('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class,'changeStatus']);
+Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class,'changeStatus']);
 Route::resource('shippingtype',App\Http\Controllers\api\storeDashboard\ShippingtypeController::class);
 // payment type
-Route::post('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class,'changeStatus']);
+Route::get('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class,'changeStatus']);
 Route::resource('paymenttype',App\Http\Controllers\api\storeDashboard\PaymenttypeController::class);
 //offer
-Route::post('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\OfferController::class,'changeStatus']);
+Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\OfferController::class,'changeStatus']);
 Route::resource('offer',App\Http\Controllers\api\storeDashboard\OfferController::class);
 // SEO keywords
 Route::resource('seo',App\Http\Controllers\api\storeDashboard\SeoController::class);
@@ -330,7 +329,7 @@ Route::post('updateRobots',[App\Http\Controllers\api\storeDashboard\SeoControlle
 
 //  clients
 Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
-Route::post('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
+Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientController::class,'deleteall']);
 //
 // Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
@@ -338,17 +337,17 @@ Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientCont
 Route::resource('comment',App\Http\Controllers\api\storeDashboard\CommentController::class);
 Route::get('commentchangeSatusall',[App\Http\Controllers\api\storeDashboard\CommentController::class,'changeSatusall']);
 Route::post('replaycomment',[App\Http\Controllers\api\storeDashboard\CommentController::class,'replayComment']);
-Route::post('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
+Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
 // Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
 
 // Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
 // users
 Route::resource('user',App\Http\Controllers\api\storeDashboard\UserController::class);
-Route::post('changeuserStatus/{id}',[App\Http\Controllers\api\storeDashboard\UserController::class,'changeStatus']);
+Route::get('changeuserStatus/{id}',[App\Http\Controllers\api\storeDashboard\UserController::class,'changeStatus']);
 Route::get('userchangeSatusall',[App\Http\Controllers\api\storeDashboard\UserController::class,'changeSatusall']);
 Route::get('userdeleteall',[App\Http\Controllers\api\storeDashboard\UserController::class,'deleteall']);
 //
-Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
+Route::get('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
 
 //  setting
 Route::get('setting_store_show',[App\Http\Controllers\api\storeDashboard\SettingController::class,'setting_store_show']);
