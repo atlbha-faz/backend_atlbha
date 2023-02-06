@@ -186,7 +186,7 @@ else{
         $validator =  Validator::make($input, [
             'user_name' => 'string|required',
             'password' => 'string|required',
-            'device_token' => 'string|required',
+            //'device_token' => 'string|required',
         ]);
 
         if ($validator->fails()) {
