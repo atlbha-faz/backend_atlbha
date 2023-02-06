@@ -29,7 +29,9 @@ class StoreReportController extends  BaseController
          $success['last_24_hours_of_stores']=Store::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->count();
          $success['last_24_hours_of_pending_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','pending')->count();
          $success['last_24_hours_of_complete_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','accept')->count();
-
+     $success['last_month_of_stores']=Store::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->month())->count();
+           $success['last_month_of_complete_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->month())->where('type','store')->where('status','accept')->count();
+   
         
         $array_store = array(); 
 
