@@ -175,7 +175,7 @@ Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::c
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 Route::post('sectionupdate',[App\Http\Controllers\api\adminDashboard\SectionController::class,'update']);
 
-Route::post('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
+Route::get('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
 Route::get('home', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'home']);
 
 Route::get('registration_status_show', [App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_status_show']);
