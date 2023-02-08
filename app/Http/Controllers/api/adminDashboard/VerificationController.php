@@ -168,7 +168,6 @@ class VerificationController extends BaseController
             'store_name' =>  $request->input('store_name'),
             'link' =>  $request->input('link'),
             'file' =>  $request->input('file'),
-            'confirmation_status'=>"accept"
 
         ]);
 
