@@ -74,6 +74,7 @@ class StoreController extends BaseController
             'user_country_id'=>'required|exists:countries,id',
             'user_city_id'=>'required|exists:cities,id',
             'periodtype'=>'required|in:6months,year',
+            'status'=>'required|in:active,inactive',
             'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
 
