@@ -32,11 +32,12 @@ class StoreController extends BaseController
     public function index()
     {
 
-        $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->get());
+        $success['stores']=StoreResource::collection(Store::where('is_deleted',0,)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
     }
+  
 
     /**
      * Show the form for creating a new resource.
@@ -307,65 +308,7 @@ class StoreController extends BaseController
     }
 
 
-       public function acceptVerification($id)
-    {
-        $store = Store::query()->find($id);
-         if (is_null($store) || $store->is_deleted==1){
-         return $this->sendError("المتجر غير موجود","store is't exists");
-         }
-
-        $store->update(['verification_status' => 'accept']);
-        $users = User::where('store_id', $store->id)->get();
-        $data = [
-            'message' => ' تم قبول توثيق المتجر',
-            'store_id' =>$store->id,
-            'user_id'=>auth()->user()->id,
-            'type'=>"store_request",
-            'object_id'=>$store->id
-        ];
-       
-        foreach($users as $user)
-        {
-        Notification::send($user, new verificationNotification($data));
-        }
-        
-        event(new VerificationEvent($data));
-        $success['store']=New StoreResource($store);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
-
-    }
-
-      public function rejectVerification($id)
-    {
-        $store = Store::query()->find($id);
-         if (is_null($store) || $store->is_deleted==1){
-         return $this->sendError("المتجر غير موجود","store is't exists");
-         }
-
-        $store->update(['verification_status' => 'reject']);
-        $users = User::where('store_id', $store->id)->get();
-        $data = [
-            'message' => ' تم رفض توثيق المتجر',
-            'store_id' =>$store->id,
-            'user_id'=>auth()->user()->id,
-            'type'=>"store_request",
-            'object_id'=>$store->id
-        ];
-       
-        foreach($users as $user)
-        {
-        Notification::send($user, new verificationNotification($data));
-        }
-        
-        event(new VerificationEvent($data));
-        $success['store']=New StoreResource($store);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
-
-    }
+     
 
       public function specialStatus($id)
     {
@@ -506,10 +449,25 @@ class StoreController extends BaseController
          ]);
          
 
-        $success['store']=store::where('is_deleted',0)->where('id',$request->store_id)->first();
+        $success['store']=Store::where('is_deleted',0)->where('id',$request->store_id)->first();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل المتجر بنجاح','store update successfully');
+    }
+    public function deleteall(Request $request)
+    {
+
+            $stores =Store::whereIn('id',$request->id)->where('for','store')->get();
+           foreach($stores as $store)
+           {
+            if (is_null($store) || $store->is_deleted==1){
+                   return $this->sendError("المتجر غير موجودة"," store is't exists");
+             }
+               $store->update(['is_deleted' => 1]);
+            }
+               $success['stores']= StoreResource::collection($stores);
+               $success['status']= 200;
+                return $this->sendResponse($success,'تم حذف المتجر بنجاح','store deleted successfully');
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTime;
 use Carbon\Carbon;
+use App\Models\Package;
 use App\Models\Product;
 use App\Models\Package_store;
 use Illuminate\Database\Eloquent\Model;
@@ -80,6 +81,12 @@ class Store extends Model
     public function period($id){
         $period=Store::select('periodtype')->where('id',$id)->first();
          return $period->period;
+     }
+     public function packagee($id){
+        if (is_null($id))
+        return "no_subscription";
+        $package=Package::select('name')->where('id',$id)->first();
+         return $package->name;
      }
      public function user()
     {
