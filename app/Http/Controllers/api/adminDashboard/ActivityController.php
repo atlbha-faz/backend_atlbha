@@ -143,6 +143,6 @@ class ActivityController extends BaseController
 
             }
                $success['status']= 200;
-                return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+                return $this->sendResponse($success,'تم حذف الأنشطة بنجاح','Activity deleted successfully');
     }
 }
