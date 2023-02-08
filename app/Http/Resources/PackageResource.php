@@ -34,7 +34,7 @@ class PackageResource extends JsonResource
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'plans'=>PlanResource::collection($plans),
             'templates'=>TemplateResource::collection($this->templates),
-            'stores'=> StoreResource::collection($this->stores),
+            // 'stores'=> StoreResource::collection($this->stores),
           
 
         ];
