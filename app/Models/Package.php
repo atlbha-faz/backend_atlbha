@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Http\Resources\PlanResource;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Package extends Model
 {
@@ -27,7 +28,6 @@ class Package extends Model
         'packages_plans',
         'package_id',
         'plan_id'
-
         );
     }
      public function templates()
@@ -40,4 +40,6 @@ class Package extends Model
         );
     }
    
+   
+
 }

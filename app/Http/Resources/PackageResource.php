@@ -24,7 +24,6 @@ class PackageResource extends JsonResource
             }
             $plans[] = json_decode($pp);
         }
-        
         return [
             'id' =>$this->id,
             'name' => $this->name,
@@ -40,3 +39,4 @@ class PackageResource extends JsonResource
         ];
     }
 }
+

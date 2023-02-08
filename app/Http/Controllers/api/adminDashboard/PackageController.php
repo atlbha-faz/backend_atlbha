@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Models\Plan;
 use App\Models\Package;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PackageResource;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class PackageController extends BaseController
@@ -242,4 +243,28 @@ class PackageController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة الباقة بنجاح','package updated successfully');
            }
+
+           public function planOfPackage($package_id){
+            $arrayplan=array();
+           $plans= Plan::where('is_deleted',0)->get()->toArray();
+           $package = Package::query()->find($package_id);
+           $packageplans=$package->plans->pluck("id")->toArray();
+ 
+                 foreach($plans as $plan){
+           
+                 if(in_array($plan["id"] , $packageplans))
+                 {
+                 $arrayplan[$plan["name"]]="on";
+                 }
+                 else{
+                    $arrayplan[$plan["name"]]="off"; 
+                 }
+           
+           }
+           $success['plans_of_package']= $arrayplan;
+           $success['status']= 200;
+
+                return $this->sendResponse($success,'تم عرض الباقة بنجاح','package showed successfully');
+           }
+
 }

@@ -74,6 +74,8 @@ class StoreController extends BaseController
             'user_country_id'=>'required|exists:countries,id',
             'user_city_id'=>'required|exists:cities,id',
             'periodtype'=>'required|in:6months,year',
+            'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+
 
         ]);
 
@@ -91,6 +93,7 @@ class StoreController extends BaseController
             'image' => $request->image,
             'country_id' =>$request->user_country_id,
             'city_id' =>$request->user_city_id,
+            'status' =>$request->status,
           ]);
 
           $userid =$user->id;

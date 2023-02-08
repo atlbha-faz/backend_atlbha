@@ -19,4 +19,5 @@ class Plan extends Model
         'package_id'
         );
     }
+
 }
