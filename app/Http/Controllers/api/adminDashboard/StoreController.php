@@ -296,7 +296,6 @@ class StoreController extends BaseController
         else{
         $store->update(['status' => 'active']);
         }
-        $success['stores']= New StoreResource($store);
 
             }
          
