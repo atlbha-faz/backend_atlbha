@@ -90,7 +90,7 @@ class StoreController extends BaseController
             'user_name' => $request->user_name,
             'user_type' => "store",
             'password'=>$request->password,
-            'userphonenumber' => $request->phonenumber,
+            'phonenumber' => $request->userphonenumber,
             'image' => $request->image,
             'country_id' =>$request->user_country_id,
             'city_id' =>$request->user_city_id,
