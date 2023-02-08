@@ -39,6 +39,7 @@ class StoreResource extends JsonResource
         'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
         'periodtype'=>$this->periodtype,
         'left'=>$this->left($this->id),
+        'verification_status'=>$this->verification_status !==null ? $this->verification_status:'pending',
         'confirmation_status'=>$this->confirmation_status !==null ? $this->confirmation_status:'request',
         'status' => $this->status !==null ? $this->status:'active',
         'special' => $this->special !==null ? $this->special:'not_special' ,

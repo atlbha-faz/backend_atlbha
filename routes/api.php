@@ -226,18 +226,23 @@ Route::get('registration_marketer_show',[App\Http\Controllers\api\adminDashboard
 
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::class);
+Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
 Route::get('productchangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'specialStatus']);
 Route::get('activitydeleteall',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'deleteall']);
-Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\StoreController::class,'addNote']);
-Route::post('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'acceptVerification']);
-Route::get('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'specialStatus']);
-Route::post('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'rejectVerification']);
-Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
+
 // Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
 Route::post('registrationMarketer',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registrationMarketer']);
 Route::get('contactdeleteall',[App\Http\Controllers\api\adminDashboard\ContactController::class,'deleteall']);
-Route::post('verification_update',[App\Http\Controllers\api\adminDashboard\StoreController::class,'verification_update']);
 Route::post('shippOrder',[App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'shippOrder']);
+// 
+Route::get('verification',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'index']);
+Route::get('storedeleteall',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'deleteall']);
+Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'addNote']);
+Route::post('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'acceptVerification']);
+Route::get('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'specialStatus']);
+Route::post('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'rejectVerification']);
+Route::post('verification_update',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'verification_update']);
+Route::delete('delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
 
 });
 });
