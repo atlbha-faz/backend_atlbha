@@ -280,20 +280,27 @@ class StoreController extends BaseController
             return $this->sendResponse($success,'تم التعديل بنجاح','store updated successfully');
     }
 
-     public function changeStatus($id)
+     public function changeStatus(Request $request)
     {
-        $store = Store::query()->find($id);
-         if (is_null($store) || $store->is_deleted==1){
-         return $this->sendError("المتجر غير موجود","store is't exists");
-         }
-
+         
+          $stores =Store::whereIn('id',$request->id)->get();
+           foreach($stores as $store)
+           {
+             if (is_null($store) || $store->is_deleted==1){
+                   return $this->sendError("المتجر غير موجود"," Store is't exists");
+       }
+               
         if($store->status === 'active'){
         $store->update(['status' => 'not_active']);
         }
         else{
         $store->update(['status' => 'active']);
         }
-        $success['store']=New StoreResource($store);
+        $success['stores']= New StoreResource($store);
+
+            }
+         
+       
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
