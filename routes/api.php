@@ -249,7 +249,7 @@ Route::get('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\Ve
 Route::get('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'specialStatus']);
 Route::get('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'rejectVerification']);
 Route::post('verification_update',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'verification_update']);
-Route::delete('delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
+Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
 // 
 Route::get('subscriptions',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'index']);
 Route::post('addAlert',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'addAlert']);
