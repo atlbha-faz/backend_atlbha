@@ -245,9 +245,9 @@ Route::post('shippOrder',[App\Http\Controllers\api\adminDashboard\ShippingtypeCo
 Route::get('verification',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'index']);
 Route::get('storedeleteall',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'deleteall']);
 Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'addNote']);
-Route::post('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'acceptVerification']);
+Route::get('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'acceptVerification']);
 Route::get('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'specialStatus']);
-Route::post('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'rejectVerification']);
+Route::get('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'rejectVerification']);
 Route::post('verification_update',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'verification_update']);
 Route::delete('delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
 // 
