@@ -6,11 +6,15 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Package;
 use App\Models\Activity;
+use App\Models\Plan;
+use App\Models\Template;
 use Illuminate\Http\Request;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\ActivityResource;
 use App\Http\Resources\PackageResource;
+use App\Http\Resources\PlanResource;
+use App\Http\Resources\TemplateResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -55,6 +59,24 @@ class SelectorController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الباقات بنجاح','packages return successfully');
+    }
+
+    
+  public function plans()
+    {
+        $success['plans']=PalnResource::collection(Plan::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع المميزات بنجاح','plans return successfully');
+    }
+
+    
+  public function templates()
+    {
+        $success['templates']=TemplateResource::collection(Template::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع القوالب بنجاح','templates return successfully');
     }
 
 }
