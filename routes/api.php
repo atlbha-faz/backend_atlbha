@@ -243,7 +243,7 @@ Route::get('contactdeleteall',[App\Http\Controllers\api\adminDashboard\ContactCo
 Route::post('shippOrder',[App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'shippOrder']);
 // 
 Route::get('verification',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'index']);
-Route::get('storedeleteall',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'deleteall']);
+Route::get('verificationdeleteall',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'deleteall']);
 Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'addNote']);
 Route::get('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'acceptVerification']);
 Route::get('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'specialStatus']);
