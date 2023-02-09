@@ -92,7 +92,7 @@ class VerificationController extends BaseController
          return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
 
     }
-    public function destroy($store)
+   /* public function destroy($store)
     {
        $store = Store::query()->find($store);
          if (is_null($store) || $store->is_deleted==1){
@@ -104,7 +104,7 @@ class VerificationController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم حذف المتجر بنجاح','store deleted successfully');
-    }
+    }*/
 
     public function addNote(Request $request)
      {
@@ -192,7 +192,11 @@ class VerificationController extends BaseController
             if (is_null($store) || $store->is_deleted==1){
                    return $this->sendError("المتجر غير موجودة"," store is't exists");
              }
-               $store->update(['is_deleted' => 1]);
+               $store->update([
+            'link' =>  null,
+            'file' =>  null,
+               'verification_status'=>'pending'
+               ]);
             }
                $success['stores']= VerificationResource::collection($stores);
                $success['status']= 200;
