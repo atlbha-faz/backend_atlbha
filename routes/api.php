@@ -57,6 +57,8 @@ Route::get('selector/cities',[App\Http\Controllers\api\adminDashboard\SelectorCo
 Route::get('selector/countries',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'countries']);
 Route::get('selector/activities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'activities']);
 Route::get('selector/packages',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'packages']);
+Route::get('selector/plans',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'plans']);
+Route::get('selector/templates',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'templates']);
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 
