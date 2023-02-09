@@ -53,6 +53,13 @@ Route::group([
 Route::middleware([AdminUser::class])->group(function(){
     Route::prefix('/Admin')->group(function ()  {
 
+Route::get('selector/cities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'cities']);
+Route::get('selector/countries',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'countries']);
+Route::get('selector/activities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'activities']);
+Route::get('selector/packages',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'packages']);
+
+Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
+
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
 
