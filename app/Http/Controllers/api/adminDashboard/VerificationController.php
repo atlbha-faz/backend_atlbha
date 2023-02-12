@@ -167,9 +167,7 @@ class VerificationController extends BaseController
         $store->update([
             'store_name' =>  $request->input('store_name'),
             'link' =>  $request->input('link'),
-            'file' =>  $request->input('file'),
-            'confirmation_status'=>"accept"
-
+            'file' =>  $request->input('file')
         ]);
 
          $store->activities()->sync($request->activity_id);
