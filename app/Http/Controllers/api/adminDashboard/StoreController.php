@@ -75,6 +75,7 @@ class StoreController extends BaseController
             'user_country_id'=>'required|exists:countries,id',
             'user_city_id'=>'required|exists:cities,id',
             'periodtype'=>'required|in:6months,year',
+            'status'=>'required|in:active,inactive',
             'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
 
@@ -90,7 +91,7 @@ class StoreController extends BaseController
             'user_name' => $request->user_name,
             'user_type' => "store",
             'password'=>$request->password,
-            'userphonenumber' => $request->phonenumber,
+            'phonenumber' => $request->userphonenumber,
             'image' => $request->image,
             'country_id' =>$request->user_country_id,
             'city_id' =>$request->user_city_id,
@@ -280,20 +281,26 @@ class StoreController extends BaseController
             return $this->sendResponse($success,'تم التعديل بنجاح','store updated successfully');
     }
 
-     public function changeStatus($id)
+     public function changeStatus(Request $request)
     {
-        $store = Store::query()->find($id);
-         if (is_null($store) || $store->is_deleted==1){
-         return $this->sendError("المتجر غير موجود","store is't exists");
-         }
-
+         
+          $stores =Store::whereIn('id',$request->id)->get();
+           foreach($stores as $store)
+           {
+             if (is_null($store) || $store->is_deleted==1){
+                   return $this->sendError("المتجر غير موجود"," Store is't exists");
+       }
+               
         if($store->status === 'active'){
         $store->update(['status' => 'not_active']);
         }
         else{
         $store->update(['status' => 'active']);
         }
-        $success['store']=New StoreResource($store);
+
+            }
+         
+       
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');

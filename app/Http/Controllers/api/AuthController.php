@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\verificationNotification;
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class AuthController extends BaseController
 {
@@ -186,7 +186,7 @@ else{
         $validator =  Validator::make($input, [
             'user_name' => 'string|required',
             'password' => 'string|required',
-            'device_token' => 'string|required',
+            //'device_token' => 'string|required',
         ]);
 
         if ($validator->fails()) {

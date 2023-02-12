@@ -25,6 +25,7 @@ class StoreResource extends JsonResource
         'description'=>$this->description,
         'business_license'=>$this->business_license,
         'ID_file' =>$this->ID_file,
+        'link' =>$this->link,
         'snapchat'=>$this->snapchat,
         'facebook' =>$this->facebook,
         'twiter'=>$this->twiter,

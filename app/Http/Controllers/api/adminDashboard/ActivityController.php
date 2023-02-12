@@ -103,7 +103,7 @@ class ActivityController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255|unique:activites,name,'.$activity->id,
+                'name'=>'required|string|max:255|unique:activities,name,'.$activity->id,
 
            ]);
            if ($validator->fails())
@@ -143,6 +143,6 @@ class ActivityController extends BaseController
 
             }
                $success['status']= 200;
-                return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+                return $this->sendResponse($success,'تم حذف الأنشطة بنجاح','Activity deleted successfully');
     }
 }

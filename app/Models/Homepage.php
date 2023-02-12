@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Homepage extends Model
 {
     use HasFactory;
-    protected $fillable = ['logo','banar1','banarstatus1','banar2','banarstatus2','banar3','banarstatus3','clientstatus','commentstatus',
+    protected $fillable = ['logo','logo_footer','banar1','banarstatus1','banar2','banarstatus2','banar3','banarstatus3','clientstatus','commentstatus',
     'slider1','sliderstatus1','slider2','sliderstatus2','slider3','sliderstatus3','store_id','is_deleted'];
      public function store()
     {
@@ -33,6 +33,28 @@ class Homepage extends Model
         }
         return asset('storage/images/homepage') . '/' . $logo;
     }
+    
+    
+      public function setLogoFooterAttribute($logo_footer)
+    {
+        if (!is_null($logo_footer)) {
+            if (gettype($logo_footer) != 'string') {
+                $i = $logo->store('images/homepage', 'public');
+                $this->attributes['logo_footer'] = $logo_footer->hashName();
+            } else {
+                $this->attributes['logo_footer'] = $logo_footer;
+            }
+        }
+    }
+
+    public function getLogoFooterAttribute($logo_footer)
+    {
+        if (is_null($logo_footer)) {
+            return   asset('assets/media/man.png');
+        }
+        return asset('storage/images/homepage') . '/' . $logo_footer;
+    }
+    
      public function setBanar1Attribute($banar1)
     {
         if (!is_null($banar1)) {

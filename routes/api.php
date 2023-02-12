@@ -53,6 +53,15 @@ Route::group([
 Route::middleware([AdminUser::class])->group(function(){
     Route::prefix('/Admin')->group(function ()  {
 
+Route::get('selector/cities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'cities']);
+Route::get('selector/countries',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'countries']);
+Route::get('selector/activities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'activities']);
+Route::get('selector/packages',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'packages']);
+Route::get('selector/plans',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'plans']);
+Route::get('selector/templates',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'templates']);
+
+Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
+
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
 
@@ -90,7 +99,7 @@ Route::get('changeReplaycontactStatus/{id}', [App\Http\Controllers\api\adminDash
 Route::get('changeContactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ContactController::class,'changeStatus']);
 Route::get('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class,'changeStatus']);
 Route::get('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class,'changeStatus']);
-Route::get('changeStoreStatus/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeStatus']);
+Route::get('changeStoreStatus', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeStatus']);
 Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
 Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
 Route::get('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);
@@ -176,7 +185,7 @@ Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::c
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 Route::post('sectionupdate',[App\Http\Controllers\api\adminDashboard\SectionController::class,'update']);
 
-Route::post('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
+Route::get('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
 Route::get('home', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'home']);
 
 Route::get('registration_status_show', [App\Http\Controllers\api\adminDashboard\SettingController::class,'registration_status_show']);
@@ -236,13 +245,13 @@ Route::get('contactdeleteall',[App\Http\Controllers\api\adminDashboard\ContactCo
 Route::post('shippOrder',[App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'shippOrder']);
 // 
 Route::get('verification',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'index']);
-Route::get('storedeleteall',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'deleteall']);
+Route::get('verificationdeleteall',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'deleteall']);
 Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'addNote']);
-Route::post('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'acceptVerification']);
-Route::get('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'specialStatus']);
-Route::post('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'rejectVerification']);
+Route::get('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'acceptVerification']);
+//Route::get('specialStatus/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'specialStatus']);
+Route::get('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'rejectVerification']);
 Route::post('verification_update',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'verification_update']);
-Route::delete('delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
+//Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
 // 
 Route::get('subscriptions',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'index']);
 Route::post('addAlert',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'addAlert']);

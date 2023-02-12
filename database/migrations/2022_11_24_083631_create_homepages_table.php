@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('homepages', function (Blueprint $table) {
             $table->id();
             $table->string('logo');
+            $table->string('logo_footer');
             $table->string('banar1');
             $table->enum('banarstatus1',['active','not_active'])->default('active');
             $table->string('banar2');
