@@ -76,7 +76,124 @@ class PostCategorySeeder extends Seeder
         
           Page::create([
             'title' => 'الخدمات المقدمة لنجاح مشروعك',
-            'page_content' => '<h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); width: 935.987px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</p></h4><h4 style="text-align: right; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 453px; font-family: Tajawal, sans-serif !important; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><div class="box-1 box" style="align-items: center; display: flex; gap: 30px; justify-content: start; color: rgb(33, 37, 41); font-size: 16px; text-align: start; scroll-behavior: smooth !important;"><div class="info" style="align-items: flex-start; display: flex; flex: 1 1 0%; flex-direction: column; gap: 40px; justify-content: start; scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); font-weight: var(--font-weight-02); width: 453px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك</p></div><div class="box-img" style="text-align: right; flex: 1 1 0%; scroll-behavior: smooth !important;"><img src="http://home.atlbha.com/static/media/image%20blog2.1fe8e7452db60d6aa538.png" alt="" style="max-width: 100%; scroll-behavior: smooth !important;"></div></div></h4><h6 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-02); line-height: 1.2; margin: 0px; font-size: var(--font-size-20); letter-spacing: 0.2px; width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</h6><h4 style="text-align: right; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 453px; font-family: Tajawal, sans-serif !important; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><div class="box-2 box" style="align-items: center; display: flex; gap: 30px; justify-content: start; flex-direction: row-reverse; color: rgb(33, 37, 41); font-size: 16px; text-align: start; scroll-behavior: smooth !important;"><div class="info" style="align-items: flex-start; display: flex; flex: 1 1 0%; flex-direction: column; gap: 40px; justify-content: start; scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); font-weight: var(--font-weight-02); width: 453px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك</p></div><div class="box-img" style="text-align: right; flex: 1 1 0%; scroll-behavior: smooth !important;"><img src="http://home.atlbha.com/static/media/image%20blog13.66ac4eb621ada1d784d0.png" alt="" style="max-width: 100%; scroll-behavior: smooth !important;"></div></div></h4><h6 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-02); line-height: 1.2; margin: 0px; font-size: var(--font-size-20); letter-spacing: 0.2px; width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</h6>',
+            'page_content' => '<p style="text-align:center"><img src="https://ckeditor.com/apps/ckfinder/userfiles/files/image-20230214115619-2.jpeg" style="height:398px; width:536px" /></p>
+
+<p style="text-align:right">&nbsp;</p>
+
+<p style="text-align:right">&nbsp;</p>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><u><span style="font-size:20.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#c00000">مميزات و خدمات منصة اطلبها؟</span></span></span></u></strong></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">إنشاء المتاجر الالكترونية</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="margin-right:24px; text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">منصة اطلبها تضمن تقديم حلول ذكية وبسيطة وشاملة لإنشاء متجر الكتروني للعملاء بشكل سلس و بعيد عن التعقيد بحيث تكون الأمور مفهومة لكل الأشخاص من خلال توفير ادوات و وسائل عمل و لوحة تحكم احترافية و بسيطة في العمل لتمكّن التاجر من ادارة اعماله بشكل بسيط و احترافي.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">التصميم</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="margin-right:24px; text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">توفر لكم منصة اطلبها أحدث و أجمل القوالب لتصميم متجركم الالكتروني و طرق عرض مميزة للمنتجات <strong>إضافة</strong> إلى توفير خدمات</span></span></span> <span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">تصميم الهوية البصرية و الفاتورة الخاصة بمتجرك و تصميم الاعلانات بطرق تجذب انتباه الفئة المستهدفة في حملاتك التسويقية</span></span></span><span style="font-size:18.0pt"><span style="color:black">.</span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">توفير المنتجات</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">منصة اطلبها حريصة على تقديم الخدمات للتجار الذين يمتلكون منتجات خاصة بهم و بنفس الوقت حريصة على التجار والاشخاص الجدد بالمجال الذين لا يمتلكون منتج خاص بهم أو ليس عندهم القدرة على الاستيراد بحيث نوفر لهم عدد كبير من المنتجات المتنوعة ذات الجودة العالية وبسعر الجملة فيمكنهم شرائها و وضع هامش ربح و اعادة بيعها في متجرهم الخاص وهنا <strong>يجب ان نوضح</strong> ان الطريقة ليست دروب شيبينج بل هي قائمة على مبدأ جديد و خاص بمنصة اطلبها بحيث نستورد حاويات خاصة بنا من المصنع الرئيسي بشكل أسبوعي و نوفر المنتجات الأعلى طلباً في السوق لعملائنا من اجل الاستفادة منها و بيعها وتحقيق ربح يرضيهم و هذه الطريقة تقوم على مبدأ الاقتصاد التشاركي</span></span></span><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"> ويكون فيها منفعة للجميع لان بمنصة اطلبها لا مكان للأعذار و لن تكون وحدك بل سنكون معك بكل الخطوات و نساعدك لتأسيس تجارة ناجحة. </span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">إنشاء براند خاص</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">هذه الميزة تفيد كل من عنده الرغبة بإنشاء براند خاص به و لأن مع منصة اطلبها كل شيئ متاح وفرنا لكم هذه الميزة ويمكن انشاء براند خاص باسم متجركم و المنتجات الخاصة بكم وايضاً بإمكانكم اختيار منتج معين ليتم استيراده من قبل المنصة أو تصنيعه حصرياً باسم متجرك بتكاليف مناسبة وعقود رسمية تضمن لك حق ملكية البراند و إضافة على ذلك لمن يمتلك براند خاص مسبقاً ويرغب بتطويره نقدم لك في منصة اطلبها دراسة للبراند الخاص بك لنعمل على تطويره و إطلاقه بحلة جديدة ومميزة. </span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">التسويق</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="margin-right:24px; text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">نوفر لك في منصة اطلبها كل ما تحتاجه من أدوات تسويقية (ادوات تحليل الموقع ، خدمات </span></span></span><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">SEO</span></span></span><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black"> ، خدمات التسويق بالمحتوى </span></span></span><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">، التسويق عبر مواقع التواصل الاجتماعي ، الربط مع المشاهير)</span></span></span><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">، ولن نتركك هنا وحدك بل وفرنا لك خدمات تنفيذ الحملات التسويقية من فريق مختص.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">الربط مع المشاهير</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">منصة اطلبها ستكون هي الأولى في مجال عملها تقدم مثل هذه الفكرة وهي أن يتم ربط عملائنا مع المشاهير بشكل مباشر وهذا سيتم عن طريق التعاقد مع <strong>منصات المشاهير</strong> بحيث نمكّن عملائنا من الوصول للمشاهير بأبسط وأسرع الطرق و الإعلان عندهم بمبالغ مميزة وخاصة.</span></span></span></span></span></p>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">إضافة على ذلك سيكون لمتاجر عملاء منصة اطلبها الأولوية في الظهور ببنر إعلاني في منصات المشاهير و الأولوية في حجز اسم بصفحة إعلانية ضخمة في منصات المشاهير. </span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">ادخال البيانات</span></span></span></strong><strong> </strong></span></span></li>
+</ul>
+
+<p style="margin-right:24px; text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">بالرغم من سهولة ادخال البيانات في منصة اطلبها الى انها تأخذ منكم وقت ممكن تستثمروه في مهمات أكثر أهمية لذلك وفرنا لكم موظف متخصص في ادخال البيانات مثل الصور والوصف و المحتوى لنساعد على وضع تركيزك على مهمات اكثر أهمية.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">خدمات تجارية وقانونية </span></span></span></strong></span></span></li>
+</ul>
+
+<p style="margin-right:24px; text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">مع منصة اطلبها عملك سيكون له الأولوية في النمو وهنا ستحتاج الى كتابة عقود وعقد صفقات تجارية لذلك سيكون هناك موظف مختص بكتابة العقود بشكل قانوني ليحفظ الحقوق لجميع الاطراف.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">خدمات استشارية</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="margin-right:24px; text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">تشمل هذه الخدمة العديد من الأمور المهمة مثل دراسة الجدوى لمشروعك ، دراسة المنتج ، البحث عن منتج مناسب لسوق محدد ، تحليل السوق ، تحليل المنافسين ، الدراسات التسويقية وغيرها من الخدمات التي تساعد في نجاح تجارتك.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">إدارة المتجر</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="margin-right:24px; text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">التجارة الالكترونية عالم سريع و متطور لذلك يجب ان تتماشى معه لكي لا تخرج من السوق وتتعرض لضفط من المنافسين و من واجبنا في منصة اطلبها الحفاظ على عملائنا وجعلهم مميزين في المجال لذلك وفرنا لكم خدمة المساعد الإداري ليعمل على الأمور الإدارية مثل (ادارة المتجر ، ادارة صفحات مواقع التواصل ، ادارة المدونة و تحرير المقالات ، جمع البيانات عن الشركات والمتاجر المنافسة ، تقديم التقارير الدورية عن سير العمل).</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">الربط مع شركات الشحن</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">أهم نقطة في عملية البيع هي الشحن لذلك قمنا بعقد اتفاقيات مع افضل شركات الشحن بأسعار شحن مناسبة وحصرية للطلبات الخاصة بمنصة اطلبها و أولوية في التنفيذ.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">الربط مع وسائل الدفع</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">نوفر لكم في منصة اطلبها أفضل طرق الدفع وأكثر الطرق المتعامل بها عالمياً.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">توفير المخازن</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">معظم المستوردين و التجار يكون عندهم مشكلة مساحة التخزين و تكاليفها لذلك وفرنا لكم خدمة تخزين منتجانكم في مخازن خاصة بتكلفة مناسبة لنيسر لكم الاستيراد دون التفكير بمشكلة التخزين.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">أكاديمية تعليمية</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">معظم الموجودين في المجال عندهم إما نقص معلومات أو معلومات مغلوطة عن طرق إنشاء و إدارة المشاريع التجارية الالكترونية لذلك قمنا بإنشاء أكاديمية خاصة نقدم من خلالها دورات تعليمية بمساعدة أفضل المدربين بالمجال من أجل تصحيح المفاهيم الخاطئة و زيادة الوعي في المعلومات الجديدة و الصحيحة عن المجال ويهذا نضمن تحقيق نجاح كبير على مستوى المملكة.</span></span></span></span></span></p>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">محتوى الدورات سيكون عن طرق التفكير في انشاء المشاريع و التجارة الالكترونية و التسويق و صنع البراند و إدارة المشاريع وكيفية توسيعها وكل ما يخص مجال الأعمال.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">مرجع تعليمي عن المنصة</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">القصد من المرجع هو تسهيل العمل بحيث يمكن لأي عميل أن يشاهد فيديو توضيحي عن أي موضوع يخص لوحة تحكم المتجر أو المنصة أو الاشتراك في الباقات و المشاكل والحلول (أي سيكون دليل للمستخدم عن طريق فيديوهات قصيرة) لتوضيح عمل المنصة.</span></span></span></span></span></p>
+
+<ul>
+	<li style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#4472c4">دعم فني و تقني</span></span></span></strong></span></span></li>
+</ul>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">في منصة اطلبها سيكون هناك دعم فني متميز على مدار ٢٤ ساعة ليساعدك في بناء متجرك و يوضح لك كل الاستفسارات التي تسئل عنها.</span></span></span></span></span></p>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">وايضاً سيكون هناك دعم تقني في حال حدوث أي مشكلة في المتجر فيمكنه التدخل وحل المشكلة بأسرع وقت.</span></span></span></span></span></p>
+
+<p style="text-align:right">&nbsp;</p>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><strong><u><span style="font-size:20.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:#c00000">ثقة و تأكيد</span></span></span></u></strong></span></span></p>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">اطلبها تسعى لتحقيق نقلة غير مسبوقة بعالم التجارة الالكترونية لذلك يهمنا أن تكون من ضمن عملائنا لتبدأ معنا رحلة ممتعة و جديدة من نوعها في عالم البزنس..</span></span></span></span></p>
+
+<p style="text-align:right"><span style="font-size:11pt"><span style="font-family:Calibri,sans-serif"><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">كما ذكرنا في بداية المقال أن منصة اطلبها تم تأسيسها على مبدأ قراءة السوق و المشاكل الموجودة فيه و تقديم حلول لها لذلك عملنا على سد الثغرات بطريقة تضمن لك النجاح </span></span><span style="font-size:18.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">و أي عقبة ستظهر نحن نؤكد لك بأننا سنسعى لحلها و نساعد مجتمع اطلبها بالتميز دائماً.</span></span></span></span></p>
+',
             'seo_title' => 'الخدمات المقدمة لنجاح مشروعك',
             'seo_link'=>'http',
             'seo_desc'=>"this is description",
