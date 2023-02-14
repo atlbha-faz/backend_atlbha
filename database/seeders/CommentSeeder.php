@@ -37,7 +37,7 @@ class CommentSeeder extends Seeder
             'store_id'=>null,
            'product_id'=>null,
         ]);
-        
+
           Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
             'rateing' => 1,
@@ -46,7 +46,7 @@ class CommentSeeder extends Seeder
             'store_id'=>null,
            'product_id'=>null,
         ]);
-        
+
          Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
             'rateing' => 4,
@@ -55,8 +55,8 @@ class CommentSeeder extends Seeder
             'store_id'=>null,
            'product_id'=>null,
         ]);
-        
-        
+
+
          Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
             'rateing' => 3,
@@ -65,8 +65,8 @@ class CommentSeeder extends Seeder
             'store_id'=>null,
            'product_id'=>null,
         ]);
-        
-        
+
+
            Comment::create([
             'comment_text' => 'منصة رائعة تساعدك لبدء اعمالك في التجارة الالكترونية',
             'rateing' => 2,
@@ -75,8 +75,15 @@ class CommentSeeder extends Seeder
             'store_id'=>null,
            'product_id'=>null,
         ]);
-        
-         
+           Comment::create([
+            'comment_text' => 'منتج جيد ',
+            'rateing' => 2,
+           'comment_for'=>'product',
+            'user_id' => 6,
+            'store_id'=>1,
+           'product_id'=>1,
+        ]);
+
 
     }
 }

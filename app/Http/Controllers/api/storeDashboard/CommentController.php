@@ -4,9 +4,11 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Comment;
 use App\Models\Product;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Models\Replaycomment;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\HomepageResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ReplaycommentResource;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -32,6 +34,7 @@ class CommentController extends BaseController
             $product_id[]= $product->id;
         }
         $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->whereIn('product_id',$product_id)->get());
+        $success['commentActivation']=Homepage::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->pluck('commentstatus')->first();
 
         $success['status']= 200;
 
@@ -248,5 +251,29 @@ class CommentController extends BaseController
 
          return $this->sendResponse($success,'تم اضافة رد بنجاح',' Added successfully');
     }
+    public function commentActivation(Request $request)
+{
+
+        $input = $request->all();
+       $validator =  Validator::make($input ,[
+        'commentstatus'=>'required|in:active,not_active',
+
+          ]);
+       if ($validator->fails())
+       {
+           return $this->sendError(null,$validator->errors());
+       }
+     $commentactivation =Homepage::updateOrCreate([
+        'store_id'   => auth()->user()->store_id,
+           ],[
+           'commentstatus' => $request->commentstatus,
+
+              ]);
+
+       $success['homepages']=New HomepageResource($commentactivation);
+       $success['status']= 200;
+
+        return $this->sendResponse($success,'تم التعديل بنجاح',' updated successfully');
+}
 
 }
