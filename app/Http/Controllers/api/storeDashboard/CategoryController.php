@@ -59,7 +59,7 @@ class CategoryController extends BaseController
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
                   'data.*.name'=>'required|string|max:255',
                 'data.*.id' => 'nullable|numeric',
-                 //'for'=>'required',
+             
             ]);
             if ($validator->fails())
             {

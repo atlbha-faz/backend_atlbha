@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\adminDashboard;
+namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Replaycomment;
 use Illuminate\Http\Request;

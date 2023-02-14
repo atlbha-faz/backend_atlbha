@@ -50,6 +50,18 @@ class ImportproductController extends BaseController
          return $this->sendResponse($success,'تم إضافة الاستيراد بنجاح','importproduct Added successfully');
     }
 
+    public function show($product)
+    {
+        $product= Product::query()->find($product);
+        if (is_null($product) || $product->is_deleted==1 ){
+               return $this->sendError("المنتج غير موجود","product is't exists");
+               }
+              $success['products']=New ProductResource($product);
+              $success['status']= 200;
+
+               return $this->sendResponse($success,'تم عرض المنتج بنجاح','product showed successfully');
+    }
+
  public function updateimportproduct(Request $request, $id){
 
      $input = $request->all();
