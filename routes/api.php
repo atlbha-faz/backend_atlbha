@@ -53,6 +53,7 @@ Route::group([
 Route::middleware([AdminUser::class])->group(function(){
     Route::prefix('/Admin')->group(function ()  {
 
+Route::get('selector/years',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'years']);
 Route::get('selector/cities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'cities']);
 Route::get('selector/countries',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'countries']);
 Route::get('selector/activities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'activities']);
