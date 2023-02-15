@@ -21,6 +21,7 @@ class PageResource extends JsonResource
             'seo_title' => $this->seo_title,
             'seo_link' => $this->seo_link,
             'seo_desc' => $this->seo_desc,
+            'page_desc' => $this->page_desc,
             'image' => $this->image,
            'tags' => explode(',',$this->tags),
            'store' => New StoreResource($this->store),
