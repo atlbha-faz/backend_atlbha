@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class offers_products extends Model
+class categories_offers extends Model
 {
     use HasFactory;
-     protected $table="offers_products";
-    protected $fillable = ['offer_id','product_id','type'];
+    protected $table="categories_offers";
+    protected $fillable = ['offer_id','category_id','type'];
     protected $casts = [
-        'product_id' => 'array',
+        'category_id' => 'array',
     ];
 }

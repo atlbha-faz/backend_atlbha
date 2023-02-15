@@ -59,7 +59,7 @@ class CourseController extends BaseController
          }
 
 
-        $success['$courses']=New CourseResource($course);
+        $success['course']=New CourseResource($course);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم عرض بنجاح','course showed successfully');

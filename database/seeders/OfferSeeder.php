@@ -27,7 +27,7 @@ class OfferSeeder extends Seeder
      'get_quantity' =>1,
      'get_type' => 'product',
      'offer1_type'=>'free_product',
-    //  'product_id'=>3,
+      'store_id'=>1,
     //  'get_product_id'=>2
      ]);
    offers_products::create([
@@ -52,6 +52,7 @@ class OfferSeeder extends Seeder
      'offer_type_minimum' =>'purchase_amount',
      'offer_amount_minimum' => 80,
      'coupon_status'=>1,
+     'store_id'=>1,
 
      ]);
        Offer::create([ //العرض الثالث
@@ -65,7 +66,8 @@ class OfferSeeder extends Seeder
      'offer_amount_minimum' =>80,
      'discount_value_offer3' => 20,
      'maximum_discount'=>65,
-     'coupon_status'=>1
+     'coupon_status'=>1,
+     'store_id'=>1,
      ]);
     }
 }

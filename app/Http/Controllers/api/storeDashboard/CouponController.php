@@ -52,9 +52,11 @@ class CouponController extends BaseController
             'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
+            'start_at' =>['required','date'],
             'expire_date' =>['required','date'],
             'total_redemptions'=>['required','numeric'],
             'user_redemptions'=>['required','numeric'],
+            'status'=>'required|in:active,not_active',
 
         ]);
         if ($validator->fails())
@@ -66,12 +68,14 @@ class CouponController extends BaseController
             'discount_type' => $request->discount_type,
             'total_price' => $request->total_price,
             'discount' => $request->discount,
+            'start_at' => $request->start_at,
             'expire_date' => $request->expire_date,
             'total_redemptions' => $request->total_redemptions,
             'user_redemptions' => $request->user_redemptions,
             'free_shipping' => $request->free_shipping,
             'exception_discount_product' => $request->exception_discount_product,
             'store_id'=> auth()->user()->store_id,
+            'status'=> $request->status
           ]);
 
          $success['coupons']=New CouponResource($coupon);
@@ -146,9 +150,11 @@ class CouponController extends BaseController
      * @param  \App\Models\Coupon  $coupon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Coupon $coupon)
+    public function update(Request $request, $coupon)
     {
-        if (is_null($coupon ) || $coupon->is_deleted==1 || $coupon->store_id!=auth()->user()->store_id){
+         $coupon =Coupon::where('id',$coupon)->where('store_id',auth()->user()->store_id)->first();
+
+        if (is_null($coupon) || $coupon->is_deleted==1 || $coupon->store_id!=auth()->user()->store_id){
             return $this->sendError("الكوبون غير موجودة"," coupon is't exists");
        }
             $input = $request->all();

@@ -80,7 +80,7 @@ class Homepage extends Model
         if (!is_null($banar2)) {
             if (gettype($banar2) != 'string') {
                 $i = $banar2->store('images/homepage', 'public');
-                $this->attributes['banar2'] = $anar2->hashName();
+                $this->attributes['banar2'] = $banar2->hashName();
             } else {
                 $this->attributes['banar2'] = $banar2;
             }

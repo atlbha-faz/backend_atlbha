@@ -111,7 +111,7 @@ Route::get('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\User
 
 // home page
 Route::post('logoUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'logoUpdate']);
-Route::post('panarUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'panarUpdate']);
+Route::post('banarUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'banarUpdate']);
 Route::post('sliderUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'sliderUpdate']);
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
@@ -287,7 +287,7 @@ Route::resource('course',App\Http\Controllers\api\storeDashboard\CourseControlle
 
 // template
 Route::post('logoUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'logoUpdate']);
-Route::post('panarUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'panarUpdate']);
+Route::post('banarUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'banarUpdate']);
 Route::post('sliderUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'sliderUpdate']);
 Route::post('commentUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'commentUpdate']);
 
@@ -306,6 +306,8 @@ Route::get('deleteImport/{product}',[App\Http\Controllers\api\storeDashboard\Pro
 
 // importProduct
 Route::get('etlobhaShow',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'etlobhaShow']);
+Route::get('etlobhaProductShow/{id}',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'show']);
+
 Route::post('importproduct',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'store']);
 Route::post('updateimportproduct/{id}',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'updateimportproduct']);
 // category
@@ -385,6 +387,11 @@ Route::get('NotificationShow/{id}',[App\Http\Controllers\api\storeDashboard\Noti
 Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'store']);
 Route::get('marketerRequest', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'marketerRequest']);
 
+Route::get('selector/cities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'cities']);
+Route::get('selector/countries',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'countries']);
+Route::get('selector/activities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'activities']);
+Route::get('selector/mainCategories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'mainCategories']);
+Route::get('selector/children/{id}',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'children']);
 
 });
 });

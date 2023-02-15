@@ -17,8 +17,8 @@ class ImportproductResource extends JsonResource
          return [
             'id' =>$this->id,
             'price' => $this->price,
-            'store' =>$this->store($this->id),
-            'product' =>$this->product($this->id)
+            'store' =>New StoreResource($this->store),
+            'product' =>New ProductResource($this->product)
         ];
     }
 }

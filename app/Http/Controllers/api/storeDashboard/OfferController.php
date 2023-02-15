@@ -23,7 +23,7 @@ class OfferController extends BaseController
      */
     public function index()
       {
-        $success['offers']=OfferResource::collection(Offer::where('is_deleted',0)->get());
+        $success['offers']=OfferResource::collection(Offer::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع العروض بنجاح','offers return successfully');
@@ -55,22 +55,20 @@ class OfferController extends BaseController
             'start_at'=>'required|date',
             'end_at'=>'required|date',
             'purchase_quantity' =>"required_if:offer_type,If_bought_gets",
-
             'purchase_type' =>'required_if:offer_type,If_bought_gets|in:product,category',
             'get_quantity' =>'required_if:offer_type,If_bought_gets|numeric',
-
             'get_type' =>'required_if:offer_type,If_bought_gets|in:product,category',
             'offer1_type' =>'required_if:offer_type,If_bought_gets|in:percent,free_product',
             'discount_percent' =>'required_if:offer1_type,percent',
             'discount_value_offer2' =>'required_if:offer_type,fixed_amount',
             'offer_apply' =>'required_if:offer_type,fixed_amount,percent|in:all,selected_product,selected_category,selected_payment',
             'offer_type_minimum' =>'required_if:offer_type,fixed_amount,percent',
-             'offer_amount_minimum' =>'required_if:offer_type,fixed_amount,percent',
-              'coupon_status' =>'required_if:offer_type,fixed_amount,percent',
-             'discount_value_offer3' =>'required_if:offer_type,percent',
+            'offer_amount_minimum' =>'required_if:offer_type,fixed_amount,percent',
+            'coupon_status' =>'required_if:offer_type,fixed_amount,percent',
+            'discount_value_offer3' =>'required_if:offer_type,percent',
             'maximum_discount' =>'required_if:offer_type,percent',
-            'product_id'=>'required_if:purchase_type,product',
-            'get_product_id' =>'required_if:get_type,product',
+            'product_id'=>'required_if:purchase_type,product|array',
+            'get_product_id' =>'required_if:get_type,product|array',
             'category_id'=>'required_if:purchase_type,category',
             'get_category_id'=>'required_if:get_type,category',
             'select_product_id'=>"required_if:purchase_type,payment",
@@ -101,17 +99,18 @@ class OfferController extends BaseController
              'coupon_status' => $request->coupon_status,
              'discount_value_offer3' => $request->discount_value_offer3,
              'maximum_discount' => $request->maximum_discount,
+             'store_id'=>auth()->user()->store_id,
           ]);
           if($request->offer_type=="If_bought_gets"){
           switch($request->purchase_type) {
             case('category'):
-                $offer->categories()->attach(explode(',', $request->category_id),["type" => "buy"]);
-                $offer->categories()->attach(explode(',', $request->get_category_id),["type" =>"get" ]);
+                $offer->categories()->attach( $request->category_id,["type" => "buy"]);
+                $offer->categories()->attach($request->get_category_id,["type" =>"get" ]);
 
                 break;
             case('product'):
-               $offer->products()->attach(explode(',', $request->product_id),["type" => "buy"]);
-                $offer->products()->attach(explode(',', $request->get_product_id),["type" => "get"]);
+               $offer->products()->attach( $request->product_id,["type" => "buy"]);
+                $offer->products()->attach( $request->get_product_id,["type" => "get"]);
             break;
 
             }
@@ -119,13 +118,13 @@ class OfferController extends BaseController
         else{
             switch($request->offer_apply) {
             case('selected_product'):
-                $offer->products()->attach(explode(',', $request->select_product_id),["type" => "select"]);
+                $offer->products()->attach( $request->select_product_id,["type" => "select"]);
                 break;
             case('selected_category'):
-            $offer->categories()->attach(explode(',', $request->select_category_id),["type" => "select"]);
+            $offer->categories()->attach( $request->select_category_id,["type" => "select"]);
             break;
              case('selected_payment'):
-            $offer->paymenttypes()->attach(explode(',', $request->select_payment_id),["type" => "select"]);
+            $offer->paymenttypes()->attach( $request->select_payment_id,["type" => "select"]);
             break;
 
           }
@@ -146,7 +145,7 @@ class OfferController extends BaseController
     public function show($offer)
    {
         $offer = Offer::query()->find($offer);
-        if (is_null($offer) || $offer->is_deleted==1){
+        if (is_null($offer) || $offer->is_deleted==1 ||$offer->store_id != auth()->user()->store_id){
         return $this->sendError("العرض غير موجود","offer is't exists");
         }
 
@@ -161,7 +160,7 @@ class OfferController extends BaseController
       public function changeStatus($id)
     {
         $offer = Offer::query()->find($id);
-         if (is_null($offer) || $offer->is_deleted==1){
+         if (is_null($offer) || $offer->is_deleted==1 ||$offer->store_id != auth()->user()->store_id){
          return $this->sendError(" العرض غير موجود","offer is't exists");
          }
 
