@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('seo_title');
             $table->string('seo_link');
             $table->longText('seo_desc');
+            $table->longText('page_desc')->nullable();
             $table->text('tags');
             $table->string('image')->nullable();
             $table->unsignedBigInteger('postcategory_id')->nullable();
