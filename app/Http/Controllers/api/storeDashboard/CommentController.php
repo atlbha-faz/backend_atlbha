@@ -190,8 +190,8 @@ class CommentController extends BaseController
      */
     public function destroy($comment)
       {
-       $comment = Comment::where('id',$comment)->where('store_id',auth()->user()->store_id)->first();
-         if (is_null($comment) ||$comment->is_deleted==1){
+       $comment = Comment::where('id',$comment)->first();
+         if (is_null($comment) ||$comment->is_deleted==1 ||$comment->store_id != auth()->user()->store_id){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
         $comment->update(['is_deleted' => 1]);
@@ -251,26 +251,22 @@ class CommentController extends BaseController
 
          return $this->sendResponse($success,'تم اضافة رد بنجاح',' Added successfully');
     }
-    public function commentActivation(Request $request)
+    public function commentActivation($id)
 {
 
-        $input = $request->all();
-       $validator =  Validator::make($input ,[
-        'commentstatus'=>'required|in:active,not_active',
+     $commentActivation = Homepage::where('id',$id)->first();
+        if (is_null($commentActivation) || $commentActivation->is_deleted==1 ||$commentActivation->store_id != auth()->user()->store_id){
+         return $this->sendError("قسم التعليقات غير موجودة","comment's section is't exists");
+         }
+        if($commentActivation->	commentstatus === 'active'){
+            $commentActivation->update(['commentstatus' => 'not_active']);
+            
+     }
+    else{
 
-          ]);
-       if ($validator->fails())
-       {
-           return $this->sendError(null,$validator->errors());
-       }
-     $commentactivation =Homepage::updateOrCreate([
-        'store_id'   => auth()->user()->store_id,
-           ],[
-           'commentstatus' => $request->commentstatus,
-
-              ]);
-
-       $success['homepages']=New HomepageResource($commentactivation);
+        $commentActivation->update(['commentstatus' => 'active']);
+    }
+        $success['commentActivation']=Homepage::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->pluck('commentstatus')->first();
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم التعديل بنجاح',' updated successfully');

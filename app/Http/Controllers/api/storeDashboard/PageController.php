@@ -50,12 +50,12 @@ class PageController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
-            'page_content'=>'required',
-            'seo_title'=>'required',
-            'seo_link'=>'required',
-            'seo_desc'=>'required',
+            'page_content'=>'required|string',
+            'seo_title'=>'required|string',
+            'seo_link'=>'required|url',
+            'seo_desc'=>'required|string',
             'tags'=>'required',
-      
+            'name'=>'required|exists:page_categories,id'
 
         ]);
         if ($validator->fails())
@@ -69,10 +69,10 @@ class PageController extends BaseController
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
             'tags' => implode(',', $request->tags),
-           'store_id'=> auth()->user()->store_id,
+            'store_id'=> auth()->user()->store_id,
             'user_id'=>auth()->user()->id,
             'status'=> "not_active",
-            
+
           ]);
            //$request->input('name', []);
           $page->page_categories()->attach(explode(',', $request->name));
@@ -87,12 +87,12 @@ class PageController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
-            'page_content'=>'required',
-            'seo_title'=>'required',
-            'seo_link'=>'required',
-            'seo_desc'=>'required',
+            'page_content'=>'required|string',
+            'seo_title'=>'required|string',
+            'seo_link'=>'required|url',
+            'seo_desc'=>'required|string',
             'tags'=>'required',
-            'user_id'=>'exists:users,id',
+            'name'=>'required|exists:page_categories,id'
 
         ]);
         if ($validator->fails())
@@ -127,7 +127,7 @@ class PageController extends BaseController
      */
     public function show($page)
     {
-        $page= Page::query()->find($page);
+        $page=Page::query()->find($page);
         if (is_null($page) || $page->is_deleted==1){
                return $this->sendError("الصفحة غير موجودة","Page is't exists");
                }
@@ -159,18 +159,19 @@ class PageController extends BaseController
      */
     public function update(Request $request, Page $page)
     {
-        if ($page->is_deleted==1 ||$page->store_id==null){
+         if ($page->is_deleted==1 ||$page->store_id==null ||$page->store_id != auth()->user()->store_id ){
             return $this->sendError("الصفحة غير موجودة","Page is't exists");
        }
 
             $input = $request->all();
            $validator =  Validator::make($input ,[
-            'title'=>'required|string|max:255',
-            'page_content'=>'required',
-            'seo_title'=>'required',
-            'seo_link'=>'required',
-            'seo_desc'=>'required',
-            'tags'=>'required',
+             'title'=>'required|string|max:255',
+             'page_content'=>'required|string',
+             'seo_title'=>'required|string',
+             'seo_link'=>'required|url',
+             'seo_desc'=>'required|string',
+             'tags'=>'required',
+             'name'=>'required|exists:page_categories,id'
             // 'store_id'=>'required|exists:stores,id',
             // 'usre_id'=>'required|exists:users,id',
            ]);
@@ -221,7 +222,7 @@ class PageController extends BaseController
     {
         $page = Page::where('store_id',auth()->user()->store_id)->where('id',$id)->first();
          if (is_null($page) || $page->is_deleted==1){
-         return $this->sendError("  الصفحة غير موجودة","page is't exists");
+         return $this->sendError("الصفحة غير موجودة","page is't exists");
          }
 
         if($page->status === 'active'){
@@ -240,10 +241,10 @@ class PageController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $pages =Page::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+            $pages =Page::whereIn('id',$request->id)->get();
            foreach($pages as $page)
            {
-             if (is_null($page) || $page->is_deleted==1 ){
+             if (is_null($page) || $page->is_deleted==1 ||$page->store_id != auth()->user()->store_id){
                     return $this->sendError("الصفحة غير موجودة","page is't exists");
              }
              $page->update(['is_deleted' => 1]);
@@ -258,10 +259,10 @@ class PageController extends BaseController
        public function changeSatusall(Request $request)
             {
 
-                    $pages =Page::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+                    $pages =Page::whereIn('id',$request->id)->get();
                 foreach($pages as $page)
                 {
-                    if (is_null($page) || $page->is_deleted==1){
+                    if (is_null($page) || $page->is_deleted==1 ||$page->store_id != auth()->user()->store_id){
                         return $this->sendError("  الصفحة غير موجودة","page is't exists");
               }
                     if($page->status === 'active'){
