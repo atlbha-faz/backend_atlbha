@@ -27,6 +27,13 @@ class SelectorController extends BaseController
         $this->middleware('auth:api');
     }
 
+     public function years()
+    {
+        $success['years']=[2023,2022,2021,2020,2019,2018];
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع السنوات بنجاح','years return successfully');
+    }
     public function cities()
     {
         $success['cities']=CityResource::collection(City::where('is_deleted',0)->where('status','active')->get());
