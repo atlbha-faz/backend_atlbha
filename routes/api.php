@@ -244,7 +244,7 @@ Route::get('activitydeleteall',[App\Http\Controllers\api\adminDashboard\Activity
 Route::post('registrationMarketer',[App\Http\Controllers\api\adminDashboard\SettingController::class,'registrationMarketer']);
 Route::get('contactdeleteall',[App\Http\Controllers\api\adminDashboard\ContactController::class,'deleteall']);
 Route::post('shippOrder',[App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'shippOrder']);
-// 
+//
 Route::get('verification',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'index']);
 Route::get('verificationdeleteall',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'deleteall']);
 Route::post('addStoreNote',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'addNote']);
@@ -253,7 +253,7 @@ Route::get('acceptVerification/{id}',[App\Http\Controllers\api\adminDashboard\Ve
 Route::get('rejectVerification/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'rejectVerification']);
 Route::post('verification_update',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'verification_update']);
 //Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
-// 
+//
 Route::get('subscriptions',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'index']);
 Route::post('addAlert',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'addAlert']);
 Route::get('subscriptionsdeleteall',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'deleteall']);
@@ -360,6 +360,7 @@ Route::resource('comment',App\Http\Controllers\api\storeDashboard\CommentControl
 Route::get('commentchangeSatusall',[App\Http\Controllers\api\storeDashboard\CommentController::class,'changeSatusall']);
 Route::post('replaycomment',[App\Http\Controllers\api\storeDashboard\CommentController::class,'replayComment']);
 Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
+Route::get('commentActivation/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'commentActivation']);
 // Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
 
 // Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);

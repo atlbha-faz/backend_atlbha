@@ -4,9 +4,11 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Comment;
 use App\Models\Product;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Models\Replaycomment;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\HomepageResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ReplaycommentResource;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -32,6 +34,7 @@ class CommentController extends BaseController
             $product_id[]= $product->id;
         }
         $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->whereIn('product_id',$product_id)->get());
+        $success['commentActivation']=Homepage::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->pluck('commentstatus')->first();
 
         $success['status']= 200;
 
@@ -187,8 +190,8 @@ class CommentController extends BaseController
      */
     public function destroy($comment)
       {
-       $comment = Comment::where('id',$comment)->where('store_id',auth()->user()->store_id)->first();
-         if (is_null($comment) ||$comment->is_deleted==1){
+       $comment = Comment::where('id',$comment)->first();
+         if (is_null($comment) ||$comment->is_deleted==1 ||$comment->store_id != auth()->user()->store_id){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
         $comment->update(['is_deleted' => 1]);
@@ -248,5 +251,25 @@ class CommentController extends BaseController
 
          return $this->sendResponse($success,'تم اضافة رد بنجاح',' Added successfully');
     }
+    public function commentActivation($id)
+{
+
+     $commentActivation = Homepage::where('id',$id)->first();
+        if (is_null($commentActivation) || $commentActivation->is_deleted==1 ||$commentActivation->store_id != auth()->user()->store_id){
+         return $this->sendError("قسم التعليقات غير موجودة","comment's section is't exists");
+         }
+        if($commentActivation->	commentstatus === 'active'){
+            $commentActivation->update(['commentstatus' => 'not_active']);
+            
+     }
+    else{
+
+        $commentActivation->update(['commentstatus' => 'active']);
+    }
+        $success['commentActivation']=Homepage::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->pluck('commentstatus')->first();
+       $success['status']= 200;
+
+        return $this->sendResponse($success,'تم التعديل بنجاح',' updated successfully');
+}
 
 }
