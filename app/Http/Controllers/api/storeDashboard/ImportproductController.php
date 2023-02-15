@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -19,6 +21,7 @@ class ImportproductController extends BaseController
     public function etlobhaShow()
     {
             $success['count_products']=(Importproduct::where('store_id', auth()->user()->store_id)->count());
+            $success['categories']=CategoryResource::collection(Category::where('is_deleted',0)->where('for','store')->where('parent_id',null)->where('store_id',null)->get());
             $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('for','etlobha')->where('store_id',null)->get());
              $success['status']= 200;
 

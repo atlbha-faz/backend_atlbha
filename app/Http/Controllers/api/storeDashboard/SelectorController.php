@@ -78,6 +78,12 @@ class SelectorController extends BaseController
                return $this->sendResponse($success,'تم عرض الاقسام الفرعية بنجاح','sub_Category showed successfully');
     }
   
-  
+    public function etlobahCategory()
+    {
+        $success['categories']=CategoryResource::collection(Category::where('is_deleted',0)->where('for','store')->where('parent_id',null)->where('store_id',null)->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع جميع التصنيفات بنجاح','categories return successfully');
+    }
  
 }

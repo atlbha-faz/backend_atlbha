@@ -33,6 +33,8 @@ return new class extends Migration
             $table->boolean('coupon_status')->nullable();
             $table->double('discount_value_offer3')->nullable();
             $table->double('maximum_discount')->nullable();
+            $table->unsignedBigInteger('store_id')->nullable();
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();

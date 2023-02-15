@@ -48,12 +48,12 @@ class HomepageController extends BaseController
     //     $input = $request->all();
     //     $validator =  Validator::make($input ,[
     //         'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-    //         'panar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-    //         'panarstatus1'=>'required|in:active,not_active',
-    //         'panar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-    //         'panarstatus2'=>'required|in:active,not_active',
-    //         'panar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-    //         'panarstatus3'=>'required|in:active,not_active',
+    //         'banar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'banarstatus1'=>'required|in:active,not_active',
+    //         'banar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'banarstatus2'=>'required|in:active,not_active',
+    //         'banar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'banarstatus3'=>'required|in:active,not_active',
     //         'clientstatus'=>'required|in:active,not_active',
     //         'commentstatus'=>'required|in:active,not_active',
     //         'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
@@ -73,12 +73,12 @@ class HomepageController extends BaseController
     //             'store_id'=> auth()->user()->store_id,
     //             ],[
     //            'logo' => $request->logo,
-    //            'panar1' => $request->panar1,
-    //            'panarstatus1' => $request->panarstatus1,
-    //            'panar2' => $request->panar2,
-    //            'panarstatus2' => $request->panarstatus2,
-    //            'panar3' => $request->panar3,
-    //            'panarstatus3' => $request->panarstatus3,
+    //            'banar1' => $request->banar1,
+    //            'banarstatus1' => $request->banarstatus1,
+    //            'banar2' => $request->banar2,
+    //            'banarstatus2' => $request->banarstatus2,
+    //            'banar3' => $request->banar3,
+    //            'banarstatus3' => $request->banarstatus3,
     //            'clientstatus' => $request->clientstatus,
     //            'commentstatus' => $request->commentstatus,
     //            'slider1' => $request->slider1,
@@ -176,7 +176,6 @@ class HomepageController extends BaseController
     public function logoUpdate(Request $request)
     {
 
-
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
@@ -197,17 +196,17 @@ class HomepageController extends BaseController
             return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
 }
 
-public function panarUpdate(Request $request)
+public function banarUpdate(Request $request)
 {
 
         $input = $request->all();
        $validator =  Validator::make($input ,[
-        'panar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'panarstatus1'=>'required|in:active,not_active',
-        'panar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'panarstatus2'=>'required|in:active,not_active',
-        'panar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'panarstatus3'=>'required|in:active,not_active',
+        'banar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'banarstatus1'=>'required|in:active,not_active',
+        'banar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'banarstatus2'=>'required|in:active,not_active',
+        'banar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'banarstatus3'=>'required|in:active,not_active',
           ]);
        if ($validator->fails())
        {
@@ -216,18 +215,18 @@ public function panarUpdate(Request $request)
        }
 
 
-     $panarhomepage =Homepage::updateOrCreate([
+     $banarhomepage =Homepage::updateOrCreate([
         'store_id'   => auth()->user()->store_id,
     ],[
-                'panar1' => $request->panar1,
-                'panarstatus1' => $request->panarstatus1,
-                'panar2' => $request->panar2,
-                'panarstatus2' => $request->panarstatus2,
-                'panar3' => $request->panar3,
-                'panarstatus3' => $request->panarstatus3,
+                'banar1' => $request->banar1,
+                'banarstatus1' => $request->banarstatus1,
+                'banar2' => $request->banar2,
+                'banarstatus2' => $request->banarstatus2,
+                'banar3' => $request->banar3,
+                'banarstatus3' => $request->banarstatus3,
               ]);
 
-       $success['homepages']=New HomepageResource($panarhomepage);
+       $success['homepages']=New HomepageResource($banarhomepage);
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');

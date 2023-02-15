@@ -48,7 +48,7 @@ class ExplainVideosController extends BaseController
          }
 
 
-        $success['$explainvideos']=New ExplainVideoResource($explainVideos);
+        $success['explainvideos']=New ExplainVideoResource($explainVideos);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم  عرض بنجاح','explainvideo showed successfully');

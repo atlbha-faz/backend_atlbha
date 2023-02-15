@@ -110,7 +110,7 @@ Route::get('changeuserStatus/{id}',[App\Http\Controllers\api\adminDashboard\User
 
 // home page
 Route::post('logoUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'logoUpdate']);
-Route::post('panarUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'panarUpdate']);
+Route::post('banarUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'banarUpdate']);
 Route::post('sliderUpdate',[App\Http\Controllers\api\adminDashboard\HomepageController::class,'sliderUpdate']);
 
 Route::resource('country',App\Http\Controllers\api\adminDashboard\CountryController::class);
@@ -286,7 +286,7 @@ Route::resource('course',App\Http\Controllers\api\storeDashboard\CourseControlle
 
 // template
 Route::post('logoUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'logoUpdate']);
-Route::post('panarUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'panarUpdate']);
+Route::post('banarUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'banarUpdate']);
 Route::post('sliderUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'sliderUpdate']);
 Route::post('commentUpdate',[App\Http\Controllers\api\storeDashboard\HomepageController::class,'commentUpdate']);
 
