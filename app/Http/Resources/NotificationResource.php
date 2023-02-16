@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotificationResource extends JsonResource
@@ -18,7 +19,7 @@ class NotificationResource extends JsonResource
             'id' =>$this->id,
             'type'=>$this->type,
             'notifiable_type'=>$this->notifiable_type,
-            'user_id'=>$this->data['user_id'],
+             'user'=>User::where('id',$this->data['user_id'])->get(),
             'message' => $this->data['message'],
             'store_id' => $this->data['store_id'],
             'type'=> $this->data['type'],

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 use Carbon\Carbon;
-use App\Models\NotificationModel;
 use Illuminate\Http\Request;
+use App\Models\NotificationModel;
+use App\Http\Resources\NotificationResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class NotificationController extends BaseController
@@ -15,7 +16,8 @@ class NotificationController extends BaseController
     public function index()
     {
         $success['count_of_notifications']=auth()->user()->Notifications->count();
-        $success['notifications']=auth()->user()->Notifications;
+        $success['notifications']=NotificationResource::collection(auth()->user()->Notifications);
+
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع الاشعارات بنجاح','Notifications return successfully');
@@ -24,7 +26,7 @@ class NotificationController extends BaseController
         $userUnreadNotification =  NotificationModel::query()->find($id);
         $userUnreadNotification->update(['read_at' =>Carbon::now()]);
 
-        $success['notifications']=$userUnreadNotification;
+        $success['notifications']=New NotificationResource($userUnreadNotification);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع  الاشعار بنجاح','Notifications return successfully');
@@ -32,7 +34,7 @@ class NotificationController extends BaseController
     public function show($id){
         $userNotification =  NotificationModel::query()->find($id);
 
-        $success['notifications']=$userNotification;
+        $success['notifications']=New NotificationResource($userNotification);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع  الاشعار بنجاح','Notifications return successfully');
