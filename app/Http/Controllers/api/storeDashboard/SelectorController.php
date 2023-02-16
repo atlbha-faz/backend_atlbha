@@ -132,5 +132,12 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع تصنيف الصفحات بنجاح','Page_category return successfully');
     }
-    
+
+    public function serrvices()
+    {
+        $success['serrvices']=ServiceResource::collection(Service::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع الخدمات بنجاح','serrvices return successfully');
+    }
 }
