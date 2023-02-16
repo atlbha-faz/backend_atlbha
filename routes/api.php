@@ -393,6 +393,7 @@ Route::get('selector/countries',[App\Http\Controllers\api\storeDashboard\Selecto
 Route::get('selector/activities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'activities']);
 Route::get('selector/mainCategories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'mainCategories']);
 Route::get('selector/children/{id}',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'children']);
+Route::get('selector/roles',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'roles']);
 
 });
 });

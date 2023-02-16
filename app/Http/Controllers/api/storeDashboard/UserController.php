@@ -75,7 +75,7 @@ class UserController  extends BaseController
 
           ]);
 
-         $success['activities']=New UserResource($user );
+         $success['users']=New UserResource($user );
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافة المستخدم بنجاح','User Added successfully');
@@ -123,7 +123,6 @@ class UserController  extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-
             'user_name'=>'required|string|max:255',
             'email'=>'required|email',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',

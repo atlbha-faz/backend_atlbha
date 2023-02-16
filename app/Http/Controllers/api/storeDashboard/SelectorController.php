@@ -11,6 +11,7 @@ use App\Models\Plan;
 use App\Models\Template;
 use App\Models\Page_category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\ActivityResource;
@@ -88,6 +89,13 @@ class SelectorController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع التصنيفات بنجاح','categories return successfully');
+    }
+    public function roles()
+    {
+        $success['roles']=DB::table('roles')->get();
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع الأدوار بنجاح','roles return successfully');
     }
  
 

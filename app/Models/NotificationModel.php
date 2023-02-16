@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class NotificationModel extends Model
 {
@@ -13,6 +14,7 @@ class NotificationModel extends Model
     'type',
     'notifiable_type','read_at',
     'store_id',
+    'user_id',
     'data',
     'created_at',
     'updated_at'
@@ -20,5 +22,13 @@ class NotificationModel extends Model
 protected $casts = [
     'data' => 'array',
 ];
-
+// public function usetInfo($id)
+// {
+//    $user=User::where('id',$id)->get();
+//    return $user;
+// }
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }
