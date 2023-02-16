@@ -55,7 +55,7 @@ class ClientController extends BaseController
             'gender'=>'required|in:male,female',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'country_id'=>'required|exists:countries,id',
+            // 'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
 
 

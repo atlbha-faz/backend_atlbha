@@ -10,7 +10,7 @@ class Marketer extends Model
     use HasFactory;
       protected $fillable = ['snapchat','facebook','twiter','whatsapp','youtube','instegram','socialmediatext','user_id'];
 
-   
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->where('is_deleted',0);

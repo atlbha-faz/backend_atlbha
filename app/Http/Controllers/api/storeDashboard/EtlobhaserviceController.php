@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Models\User;
+use App\Models\Store;
 use App\Models\Marketer;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\StoreResource;
 use App\Http\Resources\MarketerResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\WebsiteorderResource;
@@ -17,6 +21,15 @@ class EtlobhaserviceController extends BaseController
     {
         $this->middleware('auth:api');
      }
+
+       public function show($id)
+    {
+
+      $success['stores']=New StoreResource(Store::where('is_deleted',0,)->where('id',$id)->first());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
+    }
       public function store(Request $request)
     {
         $input = $request->all();
@@ -49,8 +62,8 @@ class EtlobhaserviceController extends BaseController
 
          return $this->sendResponse($success,'تم إضافة الطلب بنجاح','Websiteorder Added successfully');
     }
-    public function marketerRequest(){
-         $success['marketers']=MarketerResource::collection(Marketer::where('is_deleted',0)->get());
+    public function marketerRequest($id){
+         $success['marketers']=UserResource::collection(User::where('is_deleted',0)->where('city_id',$id)->where('user_type',"marketer")->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المندوبين بنجاح','marketer return successfully');
