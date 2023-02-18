@@ -88,7 +88,7 @@ class UserController  extends BaseController
      */
     public function show($id)
     {
-        $user = User::query()->find($id);
+        $user = User::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
         if (is_null($user) || $user->is_deleted==1){
              return $this->sendError("المستخدم غير موجودة","user is't exists");
              }
@@ -118,7 +118,7 @@ class UserController  extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $user =User::query()->find($id);
+        $user =User::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
 
         $input = $request->all();
         $validator =  Validator::make($input ,[
