@@ -14,6 +14,12 @@ class SettingResource extends JsonResource
      */
     public function toArray($request)
     {
+         if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        
         return [
             'id' =>$this->id,
             'name' => $this->name,
@@ -24,7 +30,7 @@ class SettingResource extends JsonResource
             'logo' => $this->logo,
             'icon' => $this->icon,
             'address' => $this->address,
-            'status' => $this->status !==null ? $this->status:'active',
+            'status' => $status,
             'registration_status' => $this->registration_status ,
             'registrationMarketer' => $this->registration_marketer ,
             'statusMarketer' => $this->status_marketer ,
