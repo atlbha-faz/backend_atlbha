@@ -52,6 +52,7 @@ class ActivityController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255|unique:activities,name',
+                'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         ]);
         if ($validator->fails())
         {
@@ -59,6 +60,7 @@ class ActivityController extends BaseController
         }
         $activity = Activity::create([
             'name' => $request->name,
+            'icon' => $request->icon,
             
           ]);
 
@@ -104,6 +106,7 @@ class ActivityController extends BaseController
             $input = $request->all();
            $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255|unique:activities,name,'.$activity->id,
+                'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
            ]);
            if ($validator->fails())
@@ -113,6 +116,7 @@ class ActivityController extends BaseController
            }
            $activity->update([
                'name' => $request->input('name'),
+                'icon' =>$request->input('icon'),
 
            ]);
 
