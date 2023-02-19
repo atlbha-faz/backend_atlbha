@@ -76,7 +76,7 @@ class Store extends Model
         $date1 = new DateTime($day->end_at);
         $now_date= Carbon::now();
         $interval = $date1->diff($now_date);
-        return $interval->days."days";
+        return $interval->days."يوم";
     }
     public function period($id){
         $period=Store::select('periodtype')->where('id',$id)->first();
