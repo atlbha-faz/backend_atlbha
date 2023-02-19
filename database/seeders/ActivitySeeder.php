@@ -17,17 +17,17 @@ class ActivitySeeder extends Seeder
     {
         Activity::create([
             'name' => 'الالكترونيات',
-            'icon' => 'activity.png',
+            'icon' => 'activity.svg',
 
         ]);
          Activity::create([
             'name' => 'هدايا والعاب',
-            'icon' => 'activity.png',
+            'icon' => 'activity.svg',
 
         ]);
         Activity::create([
             'name' => 'ملابس',
-            'icon' => 'activity.png',
+            'icon' => 'activity.svg',
         ]);
     }
 }
