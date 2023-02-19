@@ -14,12 +14,18 @@ class CurrencyResource extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        
         return [
             'id' =>$this->id,
             'name' => $this->name,
             'name_en' => $this->name_en,
             'image' => $this->image,
-            'status' => $this->status !==null ? $this->status:'active',
+            'status' => $status,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         ];
     }
