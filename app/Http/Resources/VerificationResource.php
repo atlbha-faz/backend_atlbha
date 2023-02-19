@@ -14,6 +14,13 @@ class VerificationResource extends JsonResource
      */
     public function toArray($request)
     {
+        
+        if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        
         return [
        'id' =>$this->id,
        'store_name'=>$this->store_name,
@@ -40,7 +47,7 @@ class VerificationResource extends JsonResource
        'periodtype'=>$this->periodtype,
        'left'=>$this->left($this->id),
        'verification_status'=>$this->verification_status !==null ? $this->verification_status:'pending',
-       'status' => $this->status !==null ? $this->status:'active',
+       'status' => $status,
        'special' => $this->special !==null ? $this->special:'not_special' ,
        'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
    ];
