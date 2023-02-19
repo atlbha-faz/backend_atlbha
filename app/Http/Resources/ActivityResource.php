@@ -16,9 +16,9 @@ class ActivityResource extends JsonResource
     {
         
         if($this->status ==null || $this->status == 'active'){
-            $status = 'نشط',
+            $status = 'نشط';
         }else{
-            $status = 'غير نشط',
+            $status = 'غير نشط';
         }
         return [
             'id' =>$this->id,
