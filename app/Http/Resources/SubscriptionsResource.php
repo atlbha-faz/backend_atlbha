@@ -26,23 +26,26 @@ class SubscriptionsResource extends JsonResource
             $special = 'غير مميز';
         }
         
-           if($this->confirmation_status ==null || $this->confirmation_status == 'request'){
-            $confirmation_status = 'لم يتم الطلب';
+     
+          if($this->confirmation_status ==null || $this->confirmation_status == 'request'){
+            $confirmation_status = 'قيد المعالجة';
         }elseif($this->confirmation_status == 'pending'){
-            $confirmation_status = 'جاري التوثيق';
+            $confirmation_status = 'قيد المعالجة';
         }elseif($this->confirmation_status == 'accept'){
-            $confirmation_status = 'تم التوثيق';
+            $confirmation_status = 'منتهي';
         }elseif($this->confirmation_status == 'reject'){
-            $confirmation_status = 'التوثيق مرفوض';
+            $confirmation_status = 'مرفوض';
         }
         
         
          if($this->verification_status ==null || $this->verification_status == 'pending'){
-            $verification_status = 'قيد المعالجة';
+            $verification_status = 'لم يتم الطلب';
+        }elseif($this->verification_status == 'admin_waiting'){
+            $verification_status = 'جاري التوثيق';
         }elseif($this->verification_status == 'accept'){
-            $verification_status = 'منتهي';
+            $verification_status = 'تم التوثيق';
         }elseif($this->verification_status == 'reject'){
-            $verification_status = 'مرفوض';
+            $verification_status = 'التوثيق مرفوض';
         }
         
         return [
