@@ -14,6 +14,11 @@ class PackagecouponResource extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
         return [
             'id' =>$this->id,
             'code' => $this->code,
@@ -22,7 +27,7 @@ class PackagecouponResource extends JsonResource
             'start_date' => $this->start_date,
             'expire_date' => $this->expire_date,
             'total_redemptions' => $this->total_redemptions,
-            'status' => $this->status !==null ? $this->status:'active',
+            'status' => $status,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0
         ];
     }
