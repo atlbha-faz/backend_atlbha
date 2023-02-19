@@ -17,6 +17,7 @@ class ActivityResource extends JsonResource
         return [
             'id' =>$this->id,
             'name' => $this->name,
+            'icon' => $this->icon,
             'status' => $this->status !==null ? $this->status:'active',
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'storeCount' =>$this->stores($this->id)->count()
