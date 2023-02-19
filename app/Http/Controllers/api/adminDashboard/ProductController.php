@@ -135,6 +135,28 @@ class ProductController extends BaseController
                return $this->sendResponse($success,'تم عرض المنتج بنجاح','product showed successfully');
     }
 
+    
+    
+      public function specialStatus($id)
+    {
+        $product = Product::query()->find($id);
+         if (is_null($product) || $product->is_deleted==1|| $product->for =='etlobha'){
+         return $this->sendError("المتجر غير موجود","store is't exists");
+         }
+
+       if($product->special === 'not_special'){
+        $product->update(['special' => 'special']);
+        }
+        else{
+        $product->update(['special' => 'not_special']);
+        }
+        $success['store']=New ProductResource($product);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','Product updated successfully');
+
+    }
+    
        public function changeSatusall(Request $request)
     {
 
