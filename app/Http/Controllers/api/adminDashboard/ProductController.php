@@ -141,7 +141,7 @@ class ProductController extends BaseController
     {
         $product = Product::query()->find($id);
          if (is_null($product) || $product->is_deleted==1|| $product->for =='etlobha'){
-         return $this->sendError("المتجر غير موجود","store is't exists");
+         return $this->sendError("المنتج غير موجود","product is't exists");
          }
 
        if($product->special === 'not_special'){
