@@ -24,13 +24,20 @@ class PackageResource extends JsonResource
             }
             $plans[] = json_decode($pp);
         }
+         if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        
+        
         return [
             'id' =>$this->id,
             'name' => $this->name,
             'monthly_price' => $this->monthly_price,
             'yearly_price' => $this->yearly_price,
             'discount' => $this->discount,
-            'status' => $this->status !==null ? $this->status:'active',
+            'status' => $status,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'plans'=>PlanResource::collection($plans),
             'templates'=>TemplateResource::collection($this->templates),
