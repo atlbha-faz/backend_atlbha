@@ -14,6 +14,37 @@ class SubscriptionsResource extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        
+        if($this->special ==null || $this->special == 'special'){
+            $special = 'مميز';
+        }else{
+            $special = 'غير مميز';
+        }
+        
+           if($this->confirmation_status ==null || $this->confirmation_status == 'request'){
+            $confirmation_status = 'لم يتم الطلب';
+        }elseif($this->confirmation_status == 'pending'){
+            $confirmation_status = 'جاري التوثيق';
+        }elseif($this->confirmation_status == 'accept'){
+            $confirmation_status = 'تم التوثيق';
+        }elseif($this->confirmation_status == 'reject'){
+            $confirmation_status = 'التوثيق مرفوض';
+        }
+        
+        
+         if($this->verification_status ==null || $this->verification_status == 'pending'){
+            $verification_status = 'قيد المعالجة';
+        }elseif($this->verification_status == 'accept'){
+            $verification_status = 'منتهي';
+        }elseif($this->verification_status == 'reject'){
+            $verification_status = 'مرفوض';
+        }
+        
         return [
        'id' =>$this->id,
        'store_name'=>$this->store_name,
@@ -26,10 +57,10 @@ class SubscriptionsResource extends JsonResource
        'left'=>$this->left($this->id),
        'package_name' => $this->packagee($this->package_id),
        'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
-       'verification_status'=>$this->verification_status !==null ? $this->verification_status:'pending',
-       'confirmation_status'=>$this->confirmation_status !==null ? $this->confirmation_status:'request',
-       'status' => $this->status !==null ? $this->status:'active',
-       'special' => $this->special !==null ? $this->special:'not_special' ,
+       'verification_status'=>$verification_status,
+       'confirmation_status'=>$confirmation_status,
+       'status' => $status,
+       'special' => $special ,
        'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
    ];
    }
