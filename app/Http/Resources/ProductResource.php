@@ -14,6 +14,18 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
+            if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        
+        if($this->special ==null || $this->special == 'special'){
+            $special = 'مميز';
+        }else{
+            $special = 'غير مميز';
+        }
+        
        return [
             'id' =>$this->id,
             'name' => $this->name,
@@ -32,8 +44,8 @@ class ProductResource extends JsonResource
             'discount_percent'=>$this->discount_percent,
             'importproduct'=>$this->importproduct->count(),
             'subcategory' => CategoryResource::collection($this->subcategory()),
-            'status' => $this->status !== null ? $this->status : 'active',
-            'special' => $this->special ,
+            'status' => $status,
+            'special' => $special ,
             'productRating'=>$this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
