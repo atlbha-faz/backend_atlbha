@@ -75,7 +75,7 @@ class CategoryController extends BaseController
                 'name' => $request->name,
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'icon' => $request->icon,
-                'parent_id'=>null,
+                'parent_id'=>null, 
                 'for'=>'etlobha',
                 'store_id'=> null,
               ]);
