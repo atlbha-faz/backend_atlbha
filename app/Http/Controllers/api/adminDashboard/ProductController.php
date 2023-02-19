@@ -150,7 +150,7 @@ class ProductController extends BaseController
         else{
         $product->update(['special' => 'not_special']);
         }
-        $success['store']=New ProductResource($product);
+        $success['product']=New ProductResource($product);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','Product updated successfully');
