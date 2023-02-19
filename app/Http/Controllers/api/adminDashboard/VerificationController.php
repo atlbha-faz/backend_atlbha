@@ -28,7 +28,7 @@ class VerificationController extends BaseController
     public function index()
     {
 
-        $success['stores']=VerificationResource::collection(Store::where('is_deleted',0,)->where('confirmation_status','!=','request')->get());
+        $success['stores']=VerificationResource::collection(Store::where('is_deleted',0,)->where('verification_status','!=','request')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
