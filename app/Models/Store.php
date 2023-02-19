@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Store extends Model
 {
     use HasFactory;
-     protected $fillable = ['store_name','store_email','domain','icon','description','business_license','phonenumber','commercialregistertype','confirmation_status','link','verification_status',
+     protected $fillable = ['store_name','store_email','domain','icon','description','business_license','phonenumber','commercialregistertype','confirmation_status','confirmation_date','link','verification_status',
      'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period',
      'periodtype','special','file','tiktok','status','is_deleted'];
 
