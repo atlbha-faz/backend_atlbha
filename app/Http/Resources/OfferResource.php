@@ -14,6 +14,12 @@ class OfferResource extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        
         return [
             'id' =>$this->id,
             'offer_type' => $this->offer_type,
@@ -34,7 +40,7 @@ class OfferResource extends JsonResource
             'coupon_status' => $this->coupon_status,
             'discount_value_offer3' =>$this->discount_value_offer3,
             'maximum_discount' => $this->maximum_discount,
-            'status' => $this->status !==null ? $this->status:'active',
+            'status' => $status,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0
         ];
     }
