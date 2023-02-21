@@ -438,5 +438,5 @@ class CourseController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم عرض بنجاح','video showed successfully');
-    }
+    } 
 }
