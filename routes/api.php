@@ -75,7 +75,7 @@ Route::get('changeUnitStatus/{id}', [App\Http\Controllers\api\adminDashboard\Uni
 Route::get('changeVideoStatus/{id}', [App\Http\Controllers\api\adminDashboard\VideoController::class,'changeStatus']);
 Route::get('changeActivityStatus/{id}',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'changeStatus']);
 Route::get('changePlatformStatus/{id}',[App\Http\Controllers\api\adminDashboard\PlatformController::class,'changeStatus']);
-Route::get('changeServiceStatus/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class,'changeStatus']);
+//Route::get('changeServiceStatus/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class,'changeStatus']);
 Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeStatus']);
 Route::get('changeStoreCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class,'changeStatus']);
 Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class,'changeStatus']);
@@ -125,7 +125,7 @@ Route::resource('video',App\Http\Controllers\api\adminDashboard\VideoController:
 Route::resource('activity',App\Http\Controllers\api\adminDashboard\ActivityController::class);
 Route::resource('platform',App\Http\Controllers\api\adminDashboard\PlatformController::class);
 Route::resource('service',App\Http\Controllers\api\adminDashboard\ServiceController::class);
-Route::get('showDetail/{id}',[App\Http\Controllers\api\adminDashboard\ServiceController::class,'showDetail']);
+Route::get('service/showDetail/{id}',[App\Http\Controllers\api\adminDashboard\ServiceController::class,'showDetail']);
 
 Route::get('servicedeleteall',[App\Http\Controllers\api\adminDashboard\ServiceController::class,'deleteall']);
 
