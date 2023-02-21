@@ -91,4 +91,6 @@ public function setImageAttribute($image)
         return asset('storage/images/courses') . '/' . $image;
     }
     
+    
+    
 }
