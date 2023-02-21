@@ -26,6 +26,12 @@ class SubscriptionsResource extends JsonResource
             $special = 'غير مميز';
         }
         
+       if($this->periodtype ==null || $this->periodtype == 'year'){
+            $periodtype = 'سنوي';
+        }else{
+            $periodtype = '6 شهور';
+        }
+        
      
           if($this->confirmation_status ==null || $this->confirmation_status == 'request'){
             $confirmation_status = 'قيد المعالجة';
@@ -56,7 +62,7 @@ class SubscriptionsResource extends JsonResource
        'activity' =>ActivityResource::collection($this->activities),
        'country' => New CountryResource($this->country),
        'city' => New CityResource($this->city),
-       'periodtype'=>$this->periodtype,
+       'periodtype'=>$periodtype,
        'left'=>$this->left($this->id),
        'package_name' => $this->packagee($this->package_id),
        'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
