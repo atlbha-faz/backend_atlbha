@@ -18,7 +18,7 @@ class Unit extends Model
     }
     public function video()
     {
-        return $this->hasMany(video::class);
+        return $this->hasMany(Video::class);
     }
 
        public function setFileAttribute($file)
