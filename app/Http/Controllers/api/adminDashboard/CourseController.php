@@ -58,6 +58,7 @@ class CourseController extends BaseController
             'name'=>'required|string|max:255',
             'description'=>'required|string',
             'tags'=>'required',
+                'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
            'data.*.file.*'=>'mimes:pdf,doc,excel',
@@ -72,6 +73,7 @@ class CourseController extends BaseController
             'description'=>$request->description,
             'duration' =>$request->duration,
             'tags' =>implode(',', $request->tags),
+            'image'=>$request->image,
              'user_id' => auth()->user()->id,
           ]);
 
@@ -183,6 +185,7 @@ class CourseController extends BaseController
           'name'=>'required|string|max:255',
           'description'=>'required|string',
           'tags'=>'required',
+           'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
           'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
           'data.*.title'=>'required|string|max:255',
          'data.*.file.*'=>'mimes:pdf,doc,excel',
@@ -196,6 +199,7 @@ class CourseController extends BaseController
           $course->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
+            'image' => $request->input('image'),
             'duration' => $request->input('duration'),
             'tags' =>$request->input('tags'),
         ]);
