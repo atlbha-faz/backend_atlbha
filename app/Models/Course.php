@@ -21,11 +21,11 @@ class Course extends Model
     }
       public function countVideo($course_id)
     {
-       $unitid=Unit::select('id')->where('course_id',$course_id)->get();
+       $unitid=Unit::select('id')->where('course_id',$course_id)->where('is_deleted',0)->get();
 
     //    $unitid=count($unitid);
        //$video=Unit::select('id')->where('id',$course_id)->get()
-    $videoes = Video::whereIn('unit_id',$unitid)->get();
+    $videoes = Video::whereIn('unit_id',$unitid)->where('is_deleted',0)->get();
     $videoes = count($videoes);
     return  $videoes;
   }
