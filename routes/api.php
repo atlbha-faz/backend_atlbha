@@ -60,6 +60,7 @@ Route::get('selector/activities',[App\Http\Controllers\api\adminDashboard\Select
 Route::get('selector/packages',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'packages']);
 Route::get('selector/plans',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'plans']);
 Route::get('selector/templates',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'templates']);
+Route::get('selector/course/units',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'units']);
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 
