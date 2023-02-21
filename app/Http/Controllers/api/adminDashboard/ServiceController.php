@@ -81,7 +81,7 @@ class ServiceController extends BaseController
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show($service)
+   /* public function show($service)
     {
         $service = Service::query()->find($service);
         if (is_null($service) || $service->is_deleted==1){
@@ -113,7 +113,7 @@ class ServiceController extends BaseController
          return $this->sendResponse($success,'تم تعديل حالة الخدمة بنجاح','service updated successfully');
 
     }
-
+*/
     /**
      * Show the form for editing the specified resource.
      *
@@ -132,7 +132,7 @@ class ServiceController extends BaseController
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+/*    public function update(Request $request, Service $service)
     {
         if (is_null($service) || $service->is_deleted==1){
             return $this->sendError("الخدمة غير موجودة","service is't exists");
@@ -161,14 +161,14 @@ class ServiceController extends BaseController
 
             return $this->sendResponse($success,'تم التعديل بنجاح','service updated successfully');
     }
-
+*/
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy($service)
+/*    public function destroy($service)
     {
         $service = Service::query()->find($service);
         if (is_null($service) || $service->is_deleted==1){
@@ -181,7 +181,7 @@ class ServiceController extends BaseController
 
             return $this->sendResponse($success,'تم حذف الخدمة بنجاح','service deleted successfully');
     }
-
+*/
      public function deleteall(Request $request)
     {
 
