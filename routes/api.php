@@ -70,7 +70,7 @@ Route::get('changeCountryStatus/{id}',[App\Http\Controllers\api\adminDashboard\C
 Route::get('changeCityStatus/{id}',[App\Http\Controllers\api\adminDashboard\CityController::class,'changeStatus']);
 Route::get('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class,'changeStatus']);
 Route::get('changeExplainVideosStatus/{id}', [App\Http\Controllers\api\adminDashboard\ExplainVideosController::class,'changeStatus']);
-Route::get('changeCourseStatus/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class,'changeStatus']);
+//Route::get('changeCourseStatus/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class,'changeStatus']);
 Route::get('changeUnitStatus/{id}', [App\Http\Controllers\api\adminDashboard\UnitController::class,'changeStatus']);
 Route::get('changeVideoStatus/{id}', [App\Http\Controllers\api\adminDashboard\VideoController::class,'changeStatus']);
 Route::get('changeActivityStatus/{id}',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'changeStatus']);
@@ -150,7 +150,7 @@ Route::post('addEmail',[App\Http\Controllers\api\adminDashboard\EmailController:
 Route::resource('category',App\Http\Controllers\api\adminDashboard\CategoryController::class);
 Route::resource('storecategory',App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
 Route::post('addvideo',[App\Http\Controllers\api\adminDashboard\CourseController::class,'addvideo']);
-Route::post('deletevideo',[App\Http\Controllers\api\adminDashboard\CourseController::class,'deletevideo']);
+Route::get('deletevideo/{id}',[App\Http\Controllers\api\adminDashboard\CourseController::class,'deletevideo']);
 
 
 Route::resource('course',App\Http\Controllers\api\adminDashboard\CourseController::class);
