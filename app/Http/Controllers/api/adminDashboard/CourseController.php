@@ -283,7 +283,7 @@ class CourseController extends BaseController
   }
 
     }*/
-      if(!is_null($request->data){
+      if(!is_null($request->data)){
          foreach($request->data as $data)
     {
         $file=array();
