@@ -6,9 +6,11 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Package;
 use App\Models\Activity;
+use App\Models\Unit;
 use App\Models\Plan;
 use App\Models\Template;
 use Illuminate\Http\Request;
+use App\Http\Resources\UnitResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\ActivityResource;
@@ -81,6 +83,15 @@ class SelectorController extends BaseController
   public function templates()
     {
         $success['templates']=TemplateResource::collection(Template::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع القوالب بنجاح','templates return successfully');
+    }
+    
+    
+  public function units($id)
+    {
+        $success['units']=UnitResource::collection(Unit::where('course_id',$id)->where('is_deleted',0)->where('status','active')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع القوالب بنجاح','templates return successfully');
