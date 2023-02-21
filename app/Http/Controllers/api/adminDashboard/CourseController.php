@@ -207,7 +207,7 @@ class CourseController extends BaseController
 
 
     // dd($request->$data['id']);
-    $units_id = Unit::where('course_id', $course_id)->pluck('id')->toArray();
+ /*   $units_id = Unit::where('course_id', $course_id)->pluck('id')->toArray();
     foreach ($units_id as $oid) {
       if (!(in_array($oid, array_column($request->data, 'id')))) {
         $unit = Unit::query()->find($oid);
@@ -282,10 +282,60 @@ class CourseController extends BaseController
 
   }
 
+    }*/
+      if(!is_null($request->data){
+         foreach($request->data as $data)
+    {
+        $file=array();
+        foreach($data['file'] as $filedata)
+    {
+        $file[]=$filedata->getClientOriginalName();
     }
 
+        $unit= new Unit([
+            'title' => $data['title'],
+            'file' =>implode(',',$file),
+            'course_id' => $course->id,
+              ]);
+
+      $unit->save();
+
+    foreach($data['video'] as $videodata)
+    {
+
+       $fileName =  $videodata->getClientOriginalName();
+        $filePath = 'videos/' . $fileName;
+
+        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
+
+        // File URL to access the video in frontend
+        $url = Storage::disk('public')->url($filePath);
+        $getID3 = new \getID3();
+        $pathVideo = 'storage/videos/'. $fileName;
+
+        $fileAnalyze = $getID3->analyze($pathVideo);
+        // dd($fileAnalyze);
+        $playtime = $fileAnalyze['playtime_string'];
+        // dd($playtime);
+        if ($isFileUploaded) {
+            $video = new Video([
+           'duration' => $playtime,
+            'video' => $filePath,
+            'name'=> $fileName ,
+            'unit_id' => $unit->id,
+        ]);
+
+            $video->save();
 
 
+        }
+
+    }
+
+        }
+
+
+      }
 
        //$country->fill($request->post())->update();
         $success['courses']=New CourseResource($course);
@@ -294,7 +344,7 @@ class CourseController extends BaseController
          return $this->sendResponse($success,'تم التعديل بنجاح','course updated successfully');
 }
 
-   public function changeStatus($id)
+  /* public function changeStatus($id)
     {
         $course = Course::query()->find($id);
          if (is_null($course ) || $course->is_deleted==1){
@@ -312,7 +362,7 @@ class CourseController extends BaseController
 
          return $this->sendResponse($success,'تم تعديل حالة الفيديو بنجاح','explainvideo updated successfully');
 
-    }
+    }*/
 
 
     /**
@@ -376,9 +426,9 @@ class CourseController extends BaseController
 
    }
 
-      public function deletevideo(Request $request)
+      public function deletevideo($video_id)
      {
-          $video = Video::query()->find($request->id);
+          $video = Video::query()->find($video_id);
          if (is_null($video) || $video->is_deleted == 1){
          return $this->sendError("الفيديو غير موجودة","video is't exists");
          }
