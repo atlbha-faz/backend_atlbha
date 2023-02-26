@@ -61,6 +61,8 @@ Route::get('selector/packages',[App\Http\Controllers\api\adminDashboard\Selector
 Route::get('selector/plans',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'plans']);
 Route::get('selector/templates',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'templates']);
 Route::get('selector/course/units/{id}',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'units']);
+Route::get('selector/page-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'page_categories']);
+Route::get('selector/post-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'post_categories']);
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 
