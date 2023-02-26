@@ -33,20 +33,24 @@ class Coupon extends Model
     // $expire=Coupon::select('expire_date')->where('id',$coupon);
    
     $my_time=Carbon::now();
-
+$status = "غير نشط";
     if($expire->status=='active'){
-       
+       $status = "نشط";
     if($expire->expire_date < $my_time){
 $expire->update(['status' => 'expired']);
+        $status = "منتهي";
 }
     }
 //
 if($expire->status=='expired'){
+    $status = "منتهي";
     if($expire->expire_date > $my_time){
-
+$status = "نشط";
 $expire->update(['status' => 'active']);}
     }
-return $expire->status;
+     
+     
+return $status;
 
 
  }
