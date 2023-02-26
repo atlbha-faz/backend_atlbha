@@ -53,6 +53,7 @@ class PageController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
+            'page_desc'=>'required',
             'page_content'=>'required',
             'seo_title'=>'required',
             'seo_link'=>'required',
@@ -69,6 +70,7 @@ class PageController extends BaseController
         $page = Page::create([
             'title' => $request->title,
             'page_content' => $request->page_content,
+            'page_desc' => $request->page_desc,
             'seo_title' => $request->seo_title,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
@@ -99,6 +101,7 @@ class PageController extends BaseController
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
             'page_content'=>'required',
+            'page_desc'=>'required',
             'seo_title'=>'required',
             'seo_link'=>'required',
             'seo_desc'=>'required',
@@ -114,6 +117,7 @@ class PageController extends BaseController
         $page = Page::create([
             'title' => $request->title,
             'page_content' => $request->page_content,
+            'page_desc' => $request->page_desc,
             'seo_title' => $request->seo_title,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
@@ -183,6 +187,7 @@ class PageController extends BaseController
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
+            'page_desc'=>'required',
             'page_content'=>'required',
             'seo_title'=>'required',
             'seo_link'=>'required',
@@ -198,6 +203,7 @@ class PageController extends BaseController
            $page->update([
                'title' => $request->input('title'),
                'page_content' => $request->input('page_content'),
+               'page_desc' => $request->input('page_desc'),
                'seo_title' => $request->input('seo_title'),
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
