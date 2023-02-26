@@ -15,9 +15,9 @@ class PageResource extends JsonResource
     public function toArray($request)
     {
         if($this->status ==null || $this->status == 'active'){
-            $status = 'نشط';
+            $status = 'تم النشر';
         }else{
-            $status = 'غير نشط';
+            $status = 'محظور';
         }
         return [
             'id' =>$this->id,
