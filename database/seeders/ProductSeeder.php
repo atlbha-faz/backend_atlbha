@@ -2196,7 +2196,7 @@ class ProductSeeder extends Seeder
                 ]);
         
         for($i=0 ; $i<121 ; $i++){
-               Product::create([
+               Image::create([
                 'image'=>'game.jpg',
                 'product_id'=>$i,
                 ]);
