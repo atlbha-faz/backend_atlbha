@@ -8,8 +8,12 @@ use App\Models\Package;
 use App\Models\Activity;
 use App\Models\Unit;
 use App\Models\Plan;
+use App\Models\Page_category;
+use App\Models\Postcategory;
 use App\Models\Template;
 use Illuminate\Http\Request;
+use App\Http\Resources\PostCategoryResource;
+use App\Http\Resources\Page_categoryResource;
 use App\Http\Resources\UnitResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
@@ -96,5 +100,23 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع القوالب بنجاح','templates return successfully');
     }
+    
+     public function post_categories()
+    {
+        $success['categories']=PostCategoryResource::collection(Postcategory::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع تصنيفات المقالات بنجاح','Post Categories return successfully');
+    }
+    
+    
+     public function page_categories()
+    {
+        $success['categories']=Page_categoryResource::collection(Page_category::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع تصنيفات الصفحات بنجاح','Page Categories return successfully');
+    }
+    
 
 }
