@@ -21,6 +21,8 @@ class CouponResource extends JsonResource
             $discount_type = 'نسبة مئوية';
         }
         
+        
+        
          return [
             'id' =>$this->id,
             'code' => $this->code,
