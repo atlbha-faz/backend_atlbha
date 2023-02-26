@@ -33,6 +33,7 @@ class ProductSeeder extends Seeder
             'special'=>'special'
 
             ]);
+        
             Product::create([
                 'name' =>'ساعة يد ماركة سكيمي ضد الماء',
                  'sku' => '1223b',
@@ -2193,5 +2194,12 @@ class ProductSeeder extends Seeder
                 'store_id'=>10,
                 'special'=>'special',
                 ]);
+        
+        for($i=0 ; $i<121 ; $i++){
+               Product::create([
+                'image'=>'game.jpg',
+                'product_id'=>$i,
+                ]);
+        }
     }
 }
