@@ -52,7 +52,7 @@ class ProductResource extends JsonResource
             'updated_at' => (string) $this->updated_at,
             'category' => New CategoryResource($this->category),
             'store' => New StoreResource($this->store),
-            'images' => ImageResource::collection($this->image()),
+            'images' => ImageResource::collection($this->image),
             // 'importproduct' =>$this->importproduct
 
 
