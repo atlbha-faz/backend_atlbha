@@ -162,7 +162,7 @@ Route::resource('shippingtype',App\Http\Controllers\api\adminDashboard\Shippingt
 Route::resource('paymenttype',App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);
 Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
 Route::resource('page',App\Http\Controllers\api\adminDashboard\PageController::class);
-Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\PageController::class,"relatedPage"]);
+//Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\PageController::class,"relatedPage"]);
 Route::post('publish',[App\Http\Controllers\api\adminDashboard\PageController::class,'publish']);
 Route::resource('pagecategory',App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
 Route::resource('technicalSupport',App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class);
