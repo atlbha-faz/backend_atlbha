@@ -2196,7 +2196,7 @@ class ProductSeeder extends Seeder
                 'special'=>'special',
                 ]);
         
-        for($i=0 ; $i<121 ; $i++){
+        for($i=1 ; $i<121 ; $i++){
                Image::create([
                 'image'=>'game.jpg',
                 'product_id'=>$i,
