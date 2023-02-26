@@ -17,4 +17,12 @@ class Image extends Model
     public function product(){
         return $this->belongsTo(Product::class);
     }
+    
+      public function getImageAttribute($image)
+    {
+        if (is_null($image)) {
+            return   asset('assets/media/man.png');
+        }
+        return asset('storage/images/product') . '/' . $image;
+    }
 }
