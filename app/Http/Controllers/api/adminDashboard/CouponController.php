@@ -49,7 +49,7 @@ class CouponController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'code'=>'required|string|max:255|unique',
+            'code'=>'required|string|max:255|unique:coupons',
             'discount_type'=>'required|in:fixed,percent',
             'discount'=>['required','numeric','gt:0'],
             'start_at' =>['required','date'],
