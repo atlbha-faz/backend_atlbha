@@ -56,7 +56,7 @@ class ExplainVideosController extends BaseController
             'title'=>'required|string|max:255',
             'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'link'=>'required|url',
+           // 'link'=>'required|url',
 
         ]);
         if ($validator->fails())
@@ -84,7 +84,7 @@ class ExplainVideosController extends BaseController
             'video' => $filePath,
             // 'name'=> $fileName ,
             'thumbnail' =>$request->thumbnail,
-            'link' =>$request->link,
+            //'link' =>$request->link,
             'user_id' => auth()->user()->id,
           ]);
         }
@@ -144,7 +144,7 @@ class ExplainVideosController extends BaseController
              'title'=>'required|string|max:255',
              'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
              'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-             'link'=>'required|url',
+             //'link'=>'required|url',
         ]);
         if ($validator->fails())
         {
@@ -171,7 +171,7 @@ class ExplainVideosController extends BaseController
             'duration' => $playtime,
              'video' => $filePath,
              'thumbnail' => $request->input('thumbnail'),
-             'link' => $request->input('link'),
+             //'link' => $request->input('link'),
             'user_id' => auth()->user()->id,
           ]);
         }
