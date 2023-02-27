@@ -136,6 +136,7 @@ class ExplainVideosController extends BaseController
      */
     public function update(Request $request, ExplainVideos $explainVideos)
  {
+        
         if (is_null($explainVideos) || $explainVideos->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","explainvideo is't exists");
     }
@@ -180,7 +181,7 @@ class ExplainVideosController extends BaseController
         }
 
        //$country->fill($request->post())->update();
-        $success['explainvideos']=New ExplainVideoResource($explainvideos);
+        $success['explainvideos']=New ExplainVideoResource($explainVideos);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم التعديل بنجاح','explainvideo updated successfully');
@@ -200,7 +201,7 @@ class ExplainVideosController extends BaseController
         else{
         $explainvideos->update(['status' => 'active']);
         }
-        $success['$explainvideos']=New ExplainVideoResource($explainvideos);
+        $success['$explainvideos']=New ExplainVideoResource(ExplainVideo::find($explainVideos->id));
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة الفيديو بنجاح','explainvideo updated successfully');
