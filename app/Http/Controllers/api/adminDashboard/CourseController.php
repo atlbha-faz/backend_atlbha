@@ -69,15 +69,13 @@ class CourseController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        $x = array();
-        $x = $request->tags;
-        dd(implode(',', $x));
+        
         
         $course = Course::create([
             'name' => $request->name,
             'description'=>$request->description,
             'duration' =>$request->duration,
-            'tags' =>implode(',', $request->tags),
+            'tags' =>$request->tags,
             'image'=>$request->image,
              'user_id' => auth()->user()->id,
           ]);
