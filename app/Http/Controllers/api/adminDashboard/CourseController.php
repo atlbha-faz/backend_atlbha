@@ -71,7 +71,7 @@ class CourseController extends BaseController
         }
         $x = array();
         $x = $request->tags;
-        dd($x);
+        dd(implode(',', $x));
         
         $course = Course::create([
             'name' => $request->name,
