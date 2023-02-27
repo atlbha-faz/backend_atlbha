@@ -69,7 +69,7 @@ class CourseController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        dd(json_decode(json_encode($request->tags)));
+        dd(implode(',', json_decode(json_encode($request->tags))));
         
         $course = Course::create([
             'name' => $request->name,
