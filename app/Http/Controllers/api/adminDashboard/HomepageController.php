@@ -131,9 +131,7 @@ public function banarUpdate(Request $request)
        }
 
 
-     $banarhomepage->updateOrCreate([
-        'store_id'   => null,
-    ],[
+     $banarhomepage = $banarhomepage->update([
                 'banarstatus1' => $request->banarstatus1,
                 'banarstatus2' => $request->banarstatus2,
                 'banarstatus3' => $request->banarstatus3,
@@ -181,9 +179,7 @@ public function sliderUpdate(Request $request)
        }
 
 
-     $sliderhomepage->updateOrCreate([
-            'store_id'   => null,
-            ],[
+     $sliderhomepage = $sliderhomepage->update([
                 'slider1' => $request->slider1,
                 'sliderstatus1' => $request->sliderstatus1,
                 'slider2' => $request->slider2,
@@ -191,7 +187,21 @@ public function sliderUpdate(Request $request)
                 'slider3' => $request->slider3,
                 'sliderstatus3' => $request->sliderstatus3,
               ]);
-
+if(!is_null($request->slider1)){
+    $sliderhomepage->update([
+                'slider1' => $request->slider1,
+              ]);
+}
+    if(!is_null($request->slider2)){
+    $sliderhomepage->update([
+                'slider1' => $request->slider2,
+              ]);
+}
+    if(!is_null($request->slider3)){
+    $sliderhomepage->update([
+                'slider1' => $request->slider3,
+              ]);
+}
        $success['sliderhomepages']=New HomepageResource($sliderhomepage);
        $success['status']= 200;
 
