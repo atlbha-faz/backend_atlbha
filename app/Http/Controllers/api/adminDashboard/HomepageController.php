@@ -117,11 +117,11 @@ public function banarUpdate(Request $request)
    }
         $input = $request->all();
        $validator =  Validator::make($input ,[
-        'banar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'banar1'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         'banarstatus1'=>'required|in:active,not_active',
-        'banar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'banar2'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         'banarstatus2'=>'required|in:active,not_active',
-        'banar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'banar3'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         'banarstatus3'=>'required|in:active,not_active',
           ]);
        if ($validator->fails())
@@ -156,11 +156,11 @@ public function sliderUpdate(Request $request)
    }
         $input = $request->all();
        $validator =  Validator::make($input ,[
-        'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'slider1'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         'sliderstatus1'=>'required|in:active,not_active',
-        'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'slider2'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         'sliderstatus2'=>'required|in:active,not_active',
-        'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        'slider3'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         'sliderstatus3'=>'required|in:active,not_active',
           ]);
        if ($validator->fails())
