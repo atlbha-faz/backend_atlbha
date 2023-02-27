@@ -58,7 +58,7 @@ class CourseController extends BaseController
             'name'=>'required|string|max:255',
             'description'=>'required|string',
             'tags'=>'required',
-                'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
            'data.*.file.*'=>'mimes:pdf,doc,excel',
@@ -438,5 +438,5 @@ class CourseController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم عرض بنجاح','video showed successfully');
-    } 
+    }
 }
