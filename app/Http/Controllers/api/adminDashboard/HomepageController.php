@@ -135,22 +135,11 @@ public function banarUpdate(Request $request)
                 'banarstatus1' => $request->banarstatus1,
                 'banarstatus2' => $request->banarstatus2,
                 'banarstatus3' => $request->banarstatus3,
-              ]);
-if($request->banner1 !=""){
-    $banarhomepage->update([
+                'banar3' => $request->banar3,
+                'banar2' => $request->banar2,
                 'banar1' => $request->banar1,
               ]);
-}
-    if($request->banner2 !=""){
-    $banarhomepage->update([
-                'banar2' => $request->banar2,
-              ]);
-}
-    if($request->banner3 !=""){
-    $banarhomepage->update([
-                'banar3' => $request->banar3,
-              ]);
-}
+
        $success['banarhomepages']=New HomepageResource($banarhomepage);
        $success['status']= 200;
 
