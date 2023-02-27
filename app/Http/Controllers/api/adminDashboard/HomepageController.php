@@ -141,14 +141,14 @@ if($request->banner1 !=""){
                 'banar1' => $request->banar1,
               ]);
 }
-    if($request->banner1 !=""){
+    if($request->banner2 !=""){
     $banarhomepage->update([
-                'banar1' => $request->banar2,
+                'banar2' => $request->banar2,
               ]);
 }
-    if($request->banner1 !=""){
+    if($request->banner3 !=""){
     $banarhomepage->update([
-                'banar1' => $request->banar3,
+                'banar3' => $request->banar3,
               ]);
 }
        $success['banarhomepages']=New HomepageResource($banarhomepage);
