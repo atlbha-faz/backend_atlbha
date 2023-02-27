@@ -3,25 +3,26 @@
 namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\City;
+use App\Models\Plan;
+use App\Models\Unit;
+use App\Models\Video;
 use App\Models\Country;
 use App\Models\Package;
 use App\Models\Activity;
-use App\Models\Unit;
-use App\Models\Plan;
-use App\Models\Page_category;
-use App\Models\Postcategory;
 use App\Models\Template;
+use App\Models\Postcategory;
 use Illuminate\Http\Request;
-use App\Http\Resources\PostCategoryResource;
-use App\Http\Resources\Page_categoryResource;
-use App\Http\Resources\UnitResource;
+use App\Models\Page_category;
 use App\Http\Resources\CityResource;
-use App\Http\Resources\CountryResource;
-use App\Http\Resources\ActivityResource;
-use App\Http\Resources\PackageResource;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\UnitResource;
+use App\Http\Resources\CountryResource;
+use App\Http\Resources\PackageResource;
+use App\Http\Resources\ActivityResource;
 use App\Http\Resources\TemplateResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PostCategoryResource;
+use App\Http\Resources\Page_categoryResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class SelectorController extends BaseController
@@ -47,7 +48,7 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع المدن بنجاح','cities return successfully');
     }
-  
+
   public function countries()
     {
         $success['countries']=CountryResource::collection(Country::where('is_deleted',0)->where('status','active')->get());
@@ -55,8 +56,8 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الدول بنجاح','countries return successfully');
     }
-  
-  
+
+
   public function activities()
     {
         $success['activities']=ActivityResource::collection(Activity::where('is_deleted',0)->where('status','active')->get());
@@ -64,8 +65,8 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الأنشطة بنجاح','activities return successfully');
     }
-  
-  
+
+
   public function packages()
     {
         $success['packages']=PackageResource::collection(Package::where('is_deleted',0)->where('status','active')->get());
@@ -74,7 +75,7 @@ class SelectorController extends BaseController
          return $this->sendResponse($success,'تم ارجاع الباقات بنجاح','packages return successfully');
     }
 
-    
+
   public function plans()
     {
         $success['plans']=PlanResource::collection(Plan::where('is_deleted',0)->where('status','active')->get());
@@ -83,7 +84,7 @@ class SelectorController extends BaseController
          return $this->sendResponse($success,'تم ارجاع المميزات بنجاح','plans return successfully');
     }
 
-    
+
   public function templates()
     {
         $success['templates']=TemplateResource::collection(Template::where('is_deleted',0)->where('status','active')->get());
@@ -91,8 +92,8 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع القوالب بنجاح','templates return successfully');
     }
-    
-    
+
+
   public function units($id)
     {
         $success['units']=UnitResource::collection(Unit::where('course_id',$id)->where('is_deleted',0)->where('status','active')->get());
@@ -100,7 +101,7 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع القوالب بنجاح','templates return successfully');
     }
-    
+
      public function post_categories()
     {
         $success['categories']=PostCategoryResource::collection(Postcategory::where('is_deleted',0)->where('status','active')->get());
@@ -108,8 +109,8 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع تصنيفات المقالات بنجاح','Post Categories return successfully');
     }
-    
-    
+
+
      public function page_categories()
     {
         $success['categories']=Page_categoryResource::collection(Page_category::where('is_deleted',0)->where('status','active')->get());
@@ -117,6 +118,7 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع تصنيفات الصفحات بنجاح','Page Categories return successfully');
     }
-    
+
+
 
 }
