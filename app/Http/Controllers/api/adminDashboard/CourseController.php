@@ -57,7 +57,8 @@ class CourseController extends BaseController
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'description'=>'required|string',
-            'tags'=>'required',
+            'tags'=>'required|array',
+            'tags.*'=>'required|string',
                 'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
