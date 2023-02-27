@@ -152,7 +152,7 @@ class ExplainVideosController extends BaseController
             return $this->sendError(null,$validator->errors());
         }
         
-        $explainvideos =$explainvideos->update([
+        $explainvideos =$explainVideos->update([
             'title' => $request->input('title'),
              'thumbnail' => $request->input('thumbnail'),
             'user_id' => auth()->user()->id,
@@ -173,7 +173,7 @@ class ExplainVideosController extends BaseController
         $playtime = $fileAnalyze['playtime_string'];
         // dd($playtime);
         if ($isFileUploaded) {
-        $explainvideos = $explainvideos->update([
+        $explainvideos = $explainVideos->update([
             'duration' => $playtime,
              'video' => $filePath,
           ]);
