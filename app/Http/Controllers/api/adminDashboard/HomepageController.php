@@ -134,14 +134,25 @@ public function banarUpdate(Request $request)
      $banarhomepage->updateOrCreate([
         'store_id'   => null,
     ],[
-                'banar1' => $request->banar1,
                 'banarstatus1' => $request->banarstatus1,
-                'banar2' => $request->banar2,
                 'banarstatus2' => $request->banarstatus2,
-                'banar3' => $request->banar3,
                 'banarstatus3' => $request->banarstatus3,
               ]);
-
+if(!is_null($request->banner1)){
+    $banarhomepage->update([
+                'banar1' => $request->banar1,
+              ]);
+}
+    if(!is_null($request->banner2)){
+    $banarhomepage->update([
+                'banar1' => $request->banar2,
+              ]);
+}
+    if(!is_null($request->banner3)){
+    $banarhomepage->update([
+                'banar1' => $request->banar3,
+              ]);
+}
        $success['banarhomepages']=New HomepageResource($banarhomepage);
        $success['status']= 200;
 
