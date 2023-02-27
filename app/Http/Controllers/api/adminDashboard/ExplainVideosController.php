@@ -134,7 +134,7 @@ class ExplainVideosController extends BaseController
      * @param  \App\Models\ExplainVideos  $explainVideos
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ExplainVideos $explainVideos)
+    public function update(Request $request, $explainVideos)
  {
          $explainVideos = ExplainVideos::query()->find($explainVideos);
         if (is_null($explainVideos) || $explainVideos->is_deleted==1){
