@@ -131,7 +131,7 @@ public function banarUpdate(Request $request)
        }
 
 
-     $banarhomepage = $banarhomepage->update([
+     $banarhomepage->update([
                 'banarstatus1' => $request->banarstatus1,
                 'banarstatus2' => $request->banarstatus2,
                 'banarstatus3' => $request->banarstatus3,
@@ -179,12 +179,9 @@ public function sliderUpdate(Request $request)
        }
 
 
-     $sliderhomepage = $sliderhomepage->update([
-                'slider1' => $request->slider1,
+      $sliderhomepage->update([
                 'sliderstatus1' => $request->sliderstatus1,
-                'slider2' => $request->slider2,
                 'sliderstatus2' => $request->sliderstatus2,
-                'slider3' => $request->slider3,
                 'sliderstatus3' => $request->sliderstatus3,
               ]);
 if(!is_null($request->slider1)){
