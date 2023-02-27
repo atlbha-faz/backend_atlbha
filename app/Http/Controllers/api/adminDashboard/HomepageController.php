@@ -172,22 +172,11 @@ public function sliderUpdate(Request $request)
                 'sliderstatus1' => $request->sliderstatus1,
                 'sliderstatus2' => $request->sliderstatus2,
                 'sliderstatus3' => $request->sliderstatus3,
-              ]);
-if($request->slider1 !=""){
-    $sliderhomepage->update([
                 'slider1' => $request->slider1,
+                'slider2' => $request->slider2,
+                'slider3' => $request->slider3,
               ]);
-}
-    if(!is_null($request->slider2)){
-    $sliderhomepage->update([
-                'slider1' => $request->slider2,
-              ]);
-}
-    if(!is_null($request->slider3)){
-    $sliderhomepage->update([
-                'slider1' => $request->slider3,
-              ]);
-}
+
        $success['sliderhomepages']=New HomepageResource($sliderhomepage);
        $success['status']= 200;
 
