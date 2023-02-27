@@ -38,7 +38,7 @@ Route::post('verify-user','App\Http\Controllers\api\AuthController@verifyUser');
 
 Route::get('page/{id}',[App\Http\Controllers\api\SubpageController::class,"show"]);
 Route::get('packages',[App\Http\Controllers\api\SubpageController::class,"packages"]);
-Route::get('video/{id}',[App\Http\Controllers\api\VideoController::class,"showVideo"]);
+Route::post('showVideoDuration',[App\Http\Controllers\api\VideoController::class,"showVideo"]);
 
 Route::group([
     'middleware' => 'api',
