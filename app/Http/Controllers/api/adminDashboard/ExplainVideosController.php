@@ -180,7 +180,7 @@ class ExplainVideosController extends BaseController
         }
 
        //$country->fill($request->post())->update();
-        $success['explainvideos']=New ExplainVideoResource($explainVideos);
+        $success['explainvideos']=New ExplainVideoResource($explainvideos);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم التعديل بنجاح','explainvideo updated successfully');
