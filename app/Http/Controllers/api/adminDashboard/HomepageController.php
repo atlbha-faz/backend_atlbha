@@ -136,17 +136,17 @@ public function banarUpdate(Request $request)
                 'banarstatus2' => $request->banarstatus2,
                 'banarstatus3' => $request->banarstatus3,
               ]);
-if(!is_null($request->banner1)){
+if($request->banner1 !=""){
     $banarhomepage->update([
                 'banar1' => $request->banar1,
               ]);
 }
-    if(!is_null($request->banner2)){
+    if($request->banner1 !=""){
     $banarhomepage->update([
                 'banar1' => $request->banar2,
               ]);
 }
-    if(!is_null($request->banner3)){
+    if($request->banner1 !=""){
     $banarhomepage->update([
                 'banar1' => $request->banar3,
               ]);
@@ -184,7 +184,7 @@ public function sliderUpdate(Request $request)
                 'sliderstatus2' => $request->sliderstatus2,
                 'sliderstatus3' => $request->sliderstatus3,
               ]);
-if(!is_null($request->slider1)){
+if($request->slider1 !=""){
     $sliderhomepage->update([
                 'slider1' => $request->slider1,
               ]);
