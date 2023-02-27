@@ -142,8 +142,8 @@ class ExplainVideosController extends BaseController
          $input = $request->all();
         $validator =  Validator::make($input ,[
              'title'=>'required|string|max:255',
-             'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
-             'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+             'video'=>'nullable|mimes:mp4,ogx,oga,ogv,ogg,webm',
+             'thumbnail' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
              //'link'=>'required|url',
         ]);
         if ($validator->fails())
@@ -151,6 +151,13 @@ class ExplainVideosController extends BaseController
             # code...
             return $this->sendError(null,$validator->errors());
         }
+        
+        $explainvideos = ExplainVideos::update([
+            'title' => $request->input('title'),
+             'thumbnail' => $request->input('thumbnail'),
+            'user_id' => auth()->user()->id,
+          ]);
+        if(!is_null($request->video)){
        $fileName =  $request->video->getClientOriginalName();
         $filePath = 'videos/' . $fileName;
 
@@ -167,13 +174,10 @@ class ExplainVideosController extends BaseController
         // dd($playtime);
         if ($isFileUploaded) {
         $explainvideos = ExplainVideos::update([
-            'title' => $request->input('title'),
             'duration' => $playtime,
              'video' => $filePath,
-             'thumbnail' => $request->input('thumbnail'),
-             //'link' => $request->input('link'),
-            'user_id' => auth()->user()->id,
           ]);
+        }
         }
 
        //$country->fill($request->post())->update();
