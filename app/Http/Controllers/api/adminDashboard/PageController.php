@@ -74,7 +74,7 @@ class PageController extends BaseController
             'seo_title' => $request->seo_title,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
-            'tags' => implode(',', $request->tags),
+            'tags' => $request->tags,
             'user_id' => auth()->user()->id,
            'status' =>'not_active'
           ]);
@@ -121,7 +121,7 @@ class PageController extends BaseController
             'seo_title' => $request->seo_title,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
-            'tags' => implode(',', $request->tags),
+            'tags' => $request->tags,
             'user_id' => auth()->user()->id,
             'status' =>'active'
           ]);
@@ -207,7 +207,7 @@ class PageController extends BaseController
                'seo_title' => $request->input('seo_title'),
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
-               'tags' => implode(',',$request->input('tags')),
+               'tags' => $request->input('tags'),
 
            ]);
            //$request->input('name', []);
