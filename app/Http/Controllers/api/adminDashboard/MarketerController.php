@@ -66,6 +66,7 @@ class MarketerController extends BaseController
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
+            'status'=>'required|in:active,not_active',
              'socialmediatext' =>'string'
 
         ]);
@@ -83,11 +84,11 @@ class MarketerController extends BaseController
           'image' => $request->image,
           'country_id' =>$request->country_id,
           'city_id' =>$request->city_id,
+            'status' => $request->status,
          'user_type' => "marketer",
       ]);
       $marketer = Marketer::create([
             'user_id'=> $user->id,
-            'phonenumber' => $request->phonenumber,
             'facebook' => $request->facebook,
             'snapchat' => $request->snapchat,
             'twiter' => $request->twiter,
@@ -161,6 +162,7 @@ class MarketerController extends BaseController
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
              'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
+            'status'=>'required|in:active,not_active',
             'socialmediatext' =>'string'
 
         ]);
@@ -180,7 +182,7 @@ class MarketerController extends BaseController
           'image' => $request->image,
           'country_id' =>$request->country_id,
           'city_id' =>$request->city_id,
-         'user_type' => "marketer",
+          'status' =>$request->status,
       ]);
         $marketer->update([
             'facebook' => $request->input('facebook'),
@@ -189,7 +191,6 @@ class MarketerController extends BaseController
             'whatsapp' => $request->input('whatsapp'),
             'youtube' => $request->input('youtube'),
             'instegram' => $request->input('instegram'),
-             'image' => $request->input('image'),
              'socialmediatext' =>$request->input('socialmediatext')
         ]);
 
