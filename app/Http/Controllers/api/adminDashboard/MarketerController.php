@@ -159,7 +159,7 @@ class MarketerController extends BaseController
             'whatsapp'=>'required',
             'youtube'=>'required',
             'instegram'=>'required',
-            'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
              'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'status'=>'required|in:active,not_active',
