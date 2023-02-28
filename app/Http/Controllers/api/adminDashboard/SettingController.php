@@ -185,6 +185,18 @@ class SettingController extends BaseController
         if (is_null($registrationMarketer) || $registrationMarketer->is_deleted==1){
          return $this->sendError("الحالة غير موجودة","registrationMarketer is't exists");
          }
+           
+            $input = $request->all();
+        $validator =  Validator::make($input ,[
+           'registration_marketer'=>'required|in:active,not_active',
+           'status_marketer'=>'required|in:active,not_active'
+        ]);
+        if ($validator->fails())
+        {
+           # code...
+           return $this->sendError(null,$validator->errors());
+        }
+           
 
 
       $registrationMarketer->update(['registration_marketer' => $request->registration_marketer,
