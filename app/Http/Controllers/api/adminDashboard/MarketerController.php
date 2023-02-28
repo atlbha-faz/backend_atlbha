@@ -55,7 +55,7 @@ class MarketerController extends BaseController
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-             'password_confirm' => 'required|same:password' 
+             'password_confirm' => 'required|same:password',
             'user_name'=>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'snapchat'=>'required|url',
