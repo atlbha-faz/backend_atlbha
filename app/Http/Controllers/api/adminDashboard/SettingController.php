@@ -190,7 +190,8 @@ class SettingController extends BaseController
       $registrationMarketer->update(['registration_marketer' => $request->registration_marketer,
     'status_marketer'=>$request->status_marketer]);
 
-        $success['$registration_marketers']=New SettingResource($registrationMarketer);
+        $success['registration_marketer']=Setting::where('is_deleted',0)->pluck('registration_marketer')->first();
+        $success['status_marketer']=Setting::where('is_deleted',0)->pluck('status_marketer')->first();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعدبل الحالة  بنجاح','status updated successfully');
