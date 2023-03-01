@@ -235,9 +235,10 @@ if($request->data){
         }
 
      foreach ($request->data as $data) {
-         if(!is_null(Category::find($data['id'])){
+         $sub_cat = Category::find($data['id']);
+         if(!is_null($sub_cat){
              
-             $number = Category::find($data['id'])->number;
+             $number = $sub_cat->number;
          }else{
              $cat=Category::orderBy('id', 'desc')->first();
           $number=$cat->number;
