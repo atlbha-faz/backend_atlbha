@@ -92,6 +92,7 @@ if($request->data){
     foreach($request->data as $data)
     {
 
+            $cat=Category::orderBy('id', 'desc')->first();
           $number=$cat->number;
           $number= ((int) $number) +1;
         
@@ -210,6 +211,10 @@ if($request->data){
                # code...
                return $this->sendError(null,$validator->errors());
            }
+        
+        
+           
+        
            $category->update([
                'name' => $request->input('name'),
                 'icon' =>$request->input('icon'),
@@ -230,8 +235,18 @@ if($request->data){
         }
 
      foreach ($request->data as $data) {
+         if(!is_null(Category::find($data['id'])){
+             
+             $number = Category::find($data['id'])->number;
+         }else{
+             $cat=Category::orderBy('id', 'desc')->first();
+          $number=$cat->number;
+          $number= ((int) $number) +1;
+             $number = str_pad($number, 4, '0', STR_PAD_LEFT)
+         }
       $subcategories[] = Category::updateOrCreate([
-         'id'=>$data['id']
+         'id'=>$data['id'],
+         'number'=> $number,
       ], [
         'name' => $data['name'],
        'parent_id' => $category_id,
