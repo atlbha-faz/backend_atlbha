@@ -243,7 +243,7 @@ if($request->data){
              $cat=Category::orderBy('id', 'desc')->first();
           $number=$cat->number;
           $number= ((int) $number) +1;
-             $number = str_pad($number, 4, '0', STR_PAD_LEFT)
+             $number = str_pad($number, 4, '0', STR_PAD_LEFT);
          }
               
        
