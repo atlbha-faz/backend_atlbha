@@ -236,7 +236,16 @@ if($request->data){
 
      foreach ($request->data as $data) {
          $sub_cat = Category::find($data['id']);
-         dd($sub_cat);
+         
+           if(!is_null($sub_cat)){
+             $number = $sub_cat->number;
+         }else{
+             $cat=Category::orderBy('id', 'desc')->first();
+          $number=$cat->number;
+          $number= ((int) $number) +1;
+             $number = str_pad($number, 4, '0', STR_PAD_LEFT)
+         }
+              
        
       $subcategories[] = Category::updateOrCreate([
          'id'=>$data['id'],
