@@ -62,7 +62,7 @@ class TechnicalSupportController extends BaseController
      */
     public function store(Request $request)
     {
-      $input = $request->all();
+     /* $input = $request->all();
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -92,7 +92,7 @@ class TechnicalSupportController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافة طلب دعم فني بنجاح','Technical Support Added successfully');
-
+*/
     }
 
     /**
@@ -135,7 +135,7 @@ class TechnicalSupportController extends BaseController
      */
     public function update(Request $request, TechnicalSupport $technicalSupport)
     {
-         if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
+      /*   if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
          return $this->sendError("طلب الدعم غير موجود","technicalSupport is't exists");
           }
          $input = $request->all();
@@ -165,21 +165,28 @@ class TechnicalSupportController extends BaseController
             $success['status']= 200;
 
             return $this->sendResponse($success,'تم التعديل بنجاح','technical Support updated successfully');
+            */
         }
 
-         public function changeStatus($id)
+         public function changeStatus($id , Request $request)
     {
+              $input = $request->all();
+         $validator =  Validator::make($input ,[
+            'supportstatus'=>'required|in:finished,not_finished,pending',
+         ]);
+         if ($validator->fails())
+         {
+            # code...
+            return $this->sendError(null,$validator->errors());
+         }
+             
         $technicalSupport = TechnicalSupport::query()->find($id);
          if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
          return $this->sendError("طلب الدعم غير موجود","technical Support is't exists");
          }
 
-        if($technicalSupport->status === 'active'){
-        $technicalSupport->update(['status' => 'not_active']);
-        }
-        else{
-        $technicalSupport->update(['status' => 'active']);
-        }
+        $technicalSupport->update(['supportstatus' => $request->supportstatus]);
+        
         $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
         $success['status']= 200;
 
