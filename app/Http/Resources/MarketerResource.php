@@ -38,7 +38,7 @@ class MarketerResource extends JsonResource
         'phonenumber' => $this->user->phonenumber,
         'image' =>$this->user->image,
         'status' => $status,
-        'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+        'is_deleted' => $this->user->is_deleted!==null ? $this->user->is_deleted:0,
         'country' => New CountryResource($this->user->country),
         'city' => New CityResource($this->user->city),
          
