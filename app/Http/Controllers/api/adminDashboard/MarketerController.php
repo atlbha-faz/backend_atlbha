@@ -68,7 +68,7 @@ class MarketerController extends BaseController
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'status'=>'required|in:active,not_active',
-             'socialmediatext' =>'string'
+            // 'socialmediatext' =>'string'
 
         ]);
         if ($validator->fails())
@@ -96,7 +96,7 @@ class MarketerController extends BaseController
             'whatsapp' => $request->whatsapp,
             'youtube' => $request->youtube,
             'instegram' => $request->instegram,
-             'socialmediatext'=>$request->socialmediatext
+            // 'socialmediatext'=>$request->socialmediatext
           ]);
 
          // return new CountryResource($country);
@@ -165,7 +165,7 @@ class MarketerController extends BaseController
              'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'status'=>'required|in:active,not_active',
-            'socialmediatext' =>'string'
+           // 'socialmediatext' =>'string'
 
         ]);
         if ($validator->fails())
@@ -193,7 +193,7 @@ class MarketerController extends BaseController
             'whatsapp' => $request->input('whatsapp'),
             'youtube' => $request->input('youtube'),
             'instegram' => $request->input('instegram'),
-             'socialmediatext' =>$request->input('socialmediatext')
+            // 'socialmediatext' =>$request->input('socialmediatext')
         ]);
         
         if(!is_null($request->password)){
