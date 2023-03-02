@@ -249,9 +249,9 @@ if($request->data){
        
       $subcategories[] = Category::updateOrCreate([
          'id'=>$data['id'],
-         'number'=> $number,
       ], [
         'name' => $data['name'],
+         'number'=> $number,
        'parent_id' => $category_id,
         'for'=>'etlobha',
         'is_deleted' => 0
