@@ -287,7 +287,7 @@ Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::c
 
 // page
 Route::resource('page',App\Http\Controllers\api\storeDashboard\PageController::class);
-Route::post('publish',[App\Http\Controllers\api\storeDashboard\PageController::class,'publish']);
+Route::post('page/publish',[App\Http\Controllers\api\storeDashboard\PageController::class,'publish']);
 Route::get('pagechangeSatusall',[App\Http\Controllers\api\storeDashboard\PageController::class,'changeSatusall']);
 Route::get('pagedeleteall',[App\Http\Controllers\api\storeDashboard\PageController::class,'deleteall']);
 Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class,'changeStatus']);
