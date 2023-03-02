@@ -68,7 +68,7 @@ return ("$h:$m:$s");
 
 
 
-    return  $$durationVideo;
+    return  $durationVideo;
   }
 
 public function setImageAttribute($image)
