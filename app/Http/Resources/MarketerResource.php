@@ -22,6 +22,7 @@ class MarketerResource extends JsonResource
         }else{
             $status = 'غير نشط';
         }
+        */
         
         // return parent::toArray($request);
           return [
