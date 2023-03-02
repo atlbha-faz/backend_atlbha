@@ -24,7 +24,7 @@ class SettingController extends BaseController
     public function index()
    {
 
-        $success['settings']=SettingResource::collection(Setting::where('is_deleted',0)->first());
+        $success['settings']= new SettingResource(Setting::where('is_deleted',0)->first());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الاعدادات بنجاح','settings return successfully');
