@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('whatsapp')->nullable();
             $table->string('youtube')->nullable();
             $table->string('instegram')->nullable();
-             $table->longText('socialmediatext')->nullable();
+           //  $table->longText('socialmediatext')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
