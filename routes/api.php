@@ -233,6 +233,7 @@ Route::get('categorydeleteall',[App\Http\Controllers\api\adminDashboard\Category
 Route::get('categorystorechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreCategoryController::class,'changeSatusall']);
 Route::get('categorystoredeleteall',[App\Http\Controllers\api\adminDashboard\StoreCategoryController::class,'deleteall']);
 Route::get('cityedeleteall',[App\Http\Controllers\api\adminDashboard\CityController::class,'deleteall']);
+Route::get('countryedeleteall',[App\Http\Controllers\api\adminDashboard\CountryController::class,'deleteall']);
 Route::get('currencychangeSatusall',[App\Http\Controllers\api\adminDashboard\CurrencyController::class,'changeSatusall']);
 Route::get('packagechangeSatusall',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeSatusall']);
 Route::get('packagedeleteall',[App\Http\Controllers\api\adminDashboard\PackageController::class,'deleteall']);
