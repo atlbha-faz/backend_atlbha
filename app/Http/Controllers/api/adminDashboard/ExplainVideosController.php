@@ -155,7 +155,7 @@ class ExplainVideosController extends BaseController
         
         $explainvideos =$explainVideos->update([
             'title' => $request->input('title'),
-             'thumbnail' => $request->input('thumbnail'),
+             'thumbnail' => $request->thumbnail,
           ]);
         if(!is_null($request->video)){
        $fileName =  $request->video->getClientOriginalName();
