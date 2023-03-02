@@ -17,7 +17,7 @@ class MarketerResource extends JsonResource
     {
         
         
-        if($this->user->status ==null || $this->user->status == 'active'){
+    /*    if($this->user->status ==null || $this->user->status == 'active'){
             $status = 'نشط';
         }else{
             $status = 'غير نشط';
@@ -26,11 +26,11 @@ class MarketerResource extends JsonResource
         // return parent::toArray($request);
           return [
             'id' =>$this->id,
-            //'user' => New UserResource($this->user),
+            'user' => New UserResource($this->user),
               
               
               
-        'user_id' =>$this->user->user_id,
+     /*   'user_id' =>$this->user->user_id,
         'name' => $this->user->name,
         'user_name' => $this->user->user_name,
         'user_type' => $this->user->user_type,
@@ -42,7 +42,7 @@ class MarketerResource extends JsonResource
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'country' => New CountryResource($this->user->country),
         'city' => New CityResource($this->user->city),
-              
+          */    
               
               
             'facebook' => $this->facebook,
