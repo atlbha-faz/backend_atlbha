@@ -20,13 +20,33 @@ class TechnicalsupportResource extends JsonResource
             $status = 'غير نشط';
         }
         
+      
+          if($this->supportstatus ==null || $this->supportstatus == 'pending'){
+            $supportstatus = 'قيد المعالجة';
+        }elseif($this->supportstatus == 'finished'){
+            $supportstatus = 'منتهية';
+        }elseif($this->supportstatus == 'not_finished'){
+            $supportstatus = 'غير منتهية';
+        }
+        
+        
+        
+          if($this->type ==null || $this->type == 'enquiry'){
+            $type = 'استفسار';
+        }elseif($this->type == 'complaint'){
+            $type = 'شكوى';
+        }elseif($this->type == 'suggestion'){
+            $type = 'اقتراح';
+        }
+        
+        
          return [
             'id' =>$this->id,
             'title'=>$this->title,
             'phonenumber' =>$this->phonenumber,
             'content' =>$this->content,
-            'type'=>$this->type,
-            'supportstatus'=>$this->supportstatus,
+            'type'=>$type,
+            'supportstatus'=>$supportstatus,
             'status' => $status,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'created_at' => (string) $this->created_at,
