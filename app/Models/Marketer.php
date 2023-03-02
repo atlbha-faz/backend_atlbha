@@ -13,7 +13,7 @@ class Marketer extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id')->where('is_deleted',0);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function setImageAttribute($image)
