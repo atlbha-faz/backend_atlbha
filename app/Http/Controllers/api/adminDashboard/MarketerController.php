@@ -152,7 +152,7 @@ class MarketerController extends BaseController
          $input = $request->all();
        $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'email'=>'required|email|unique:users,email,'.$marketer->id,
+            'email'=>'required|email|unique:users,email,'.$marketer->user->id,
             'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
              'password_confirm' => 'nullable|same:password',
             'user_name'=>'required|string|max:255',
