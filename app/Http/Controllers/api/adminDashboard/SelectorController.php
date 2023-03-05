@@ -118,6 +118,13 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع تصنيفات الصفحات بنجاح','Page Categories return successfully');
     }
+ public function roles()
+    {
+        $success['roles']=RoleResource::collection(Role::where('is_deleted',0)->where('type','admin')->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع الأدوار بنجاح','Roles return successfully');
+    }
 
 
 
