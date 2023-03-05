@@ -24,7 +24,7 @@ class SettingController extends BaseController
     public function index()
    {
 
-        $success['settings']=SettingResource::collection(Setting::where('is_deleted',0)->first());
+        $success['settings']= new SettingResource(Setting::where('is_deleted',0)->first());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الاعدادات بنجاح','settings return successfully');
@@ -89,13 +89,13 @@ class SettingController extends BaseController
             'name'=>'required|string|max:255',
             'description'=>'required|string',
             'link'=>'required|url',
-             'email'=>'required|email|unique:settings',
+             'email'=>'required|email|unique:settings,email,'.$setting->id,
            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'icon'=>['required','image','mimes:ico','max:2048'],
+            'logo'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+           // 'icon'=>['required','image','mimes:ico','max:2048'],
             'address'=>'required|string',
-            'country_id'=>'required|exists:countries,id',
-            'city_id'=>'required|exists:cities,id',
+            //'country_id'=>'required|exists:countries,id',
+            //'city_id'=>'required|exists:cities,id',
 
          ]);
          if ($validator->fails())
@@ -110,10 +110,10 @@ class SettingController extends BaseController
              'email' => $request->input('email'),
              'phonenumber' => $request->input('phonenumber'),
              'logo' => $request->input('logo'),
-             'icon' => $request->input('icon'),
+             // 'icon' => $request->input('icon'),
              'address' => $request->input('address'),
-             'country_id' => $request->input('country_id'),
-             'city_id' => $request->input('city_id'),
+             // 'country_id' => $request->input('country_id'),
+            // 'city_id' => $request->input('city_id'),
 
 
          ]);
@@ -185,12 +185,25 @@ class SettingController extends BaseController
         if (is_null($registrationMarketer) || $registrationMarketer->is_deleted==1){
          return $this->sendError("الحالة غير موجودة","registrationMarketer is't exists");
          }
+           
+            $input = $request->all();
+        $validator =  Validator::make($input ,[
+           'registration_marketer'=>'required|in:active,not_active',
+           'status_marketer'=>'required|in:active,not_active'
+        ]);
+        if ($validator->fails())
+        {
+           # code...
+           return $this->sendError(null,$validator->errors());
+        }
+           
 
 
       $registrationMarketer->update(['registration_marketer' => $request->registration_marketer,
     'status_marketer'=>$request->status_marketer]);
 
-        $success['$registration_marketers']=New SettingResource($registrationMarketer);
+        $success['registration_marketer']=Setting::where('is_deleted',0)->pluck('registration_marketer')->first();
+        $success['status_marketer']=Setting::where('is_deleted',0)->pluck('status_marketer')->first();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعدبل الحالة  بنجاح','status updated successfully');

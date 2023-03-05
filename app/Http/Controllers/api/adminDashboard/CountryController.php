@@ -176,4 +176,23 @@ class CountryController extends  BaseController
          return $this->sendResponse($success,'تم حذف الدولة بنجاح','country deleted successfully');
 
     }
+    
+     public function deleteall(Request $request)
+    {
+
+            $countries =Country::whereIn('id',$request->id)->get();
+           foreach($countries as $country)
+           {
+             if (is_null($country) || $country->is_deleted==1 ){
+                    return $this->sendError("الدولة غير موجودة","country is't exists");
+             }
+             $country->update(['is_deleted' => 1]);
+            $success['$country']=New CountryResource($country);
+
+            }
+
+           $success['status']= 200;
+
+            return $this->sendResponse($success,'تم حذف المدينة بنجاح','city deleted successfully');
+    }
 }

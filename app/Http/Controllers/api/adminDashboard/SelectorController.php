@@ -13,6 +13,8 @@ use App\Models\Template;
 use App\Models\Postcategory;
 use Illuminate\Http\Request;
 use App\Models\Page_category;
+use Spatie\Permission\Models\Role;
+use App\Http\Resources\RoleResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\UnitResource;
@@ -117,6 +119,13 @@ class SelectorController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع تصنيفات الصفحات بنجاح','Page Categories return successfully');
+    }
+ public function roles()
+    {
+        $success['roles']=RoleResource::collection(Role::where('type','admin')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع الأدوار بنجاح','Roles return successfully');
     }
 
 

@@ -53,7 +53,7 @@ class StoreCategoryController extends BaseController
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-                'store_id' =>'required|exists:stores,id',
+               // 'store_id' =>'required|exists:stores,id',
                 'data.*.name'=>'required|string|max:255',
                 'data.*.id' => 'nullable|numeric',
 
@@ -87,9 +87,13 @@ if($request->data){
 
     foreach($request->data as $data)
     {
-
+ $cat=Category::orderBy('id', 'desc')->first();
+          $number=$cat->number;
+          $number= ((int) $number) +1;
+              
         $subcategory= new Category([
             'name' => $data['name'],
+            'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'parent_id' => $category->id,
             'for'=> 'store',
             'store_id'=>null,
@@ -212,12 +216,21 @@ if($request->data){
 
 
    foreach ($request->data as $data) {
-
+ if(!is_null($sub_cat)){
+             $number = $sub_cat->number;
+         }else{
+             $cat=Category::orderBy('id', 'desc')->first();
+          $number=$cat->number;
+          $number= ((int) $number) +1;
+             $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+         }
+       
     $subcategories[] = Category::updateOrCreate([
         'id'=>$data['id'],
 
     ], [
       'name' => $data['name'],
+         'number'=> $number,
       'parent_id' => $category_id,
       'for'=>'store',
       'is_deleted' => 0,

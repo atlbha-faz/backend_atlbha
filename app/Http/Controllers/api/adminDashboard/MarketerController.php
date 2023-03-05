@@ -24,7 +24,9 @@ class MarketerController extends BaseController
      */
     public function index()
     {
-      $success['marketers']=MarketerResource::collection(Marketer::all());
+      $success['marketers']=MarketerResource::collection(Marketer::whereHas('user', function($q){
+    $q->where('is_deleted', 0);
+})->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المندوبين بنجاح','marketer return successfully');
@@ -55,6 +57,7 @@ class MarketerController extends BaseController
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+             'password_confirm' => 'required|same:password',
             'user_name'=>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'snapchat'=>'required|url',
@@ -66,7 +69,8 @@ class MarketerController extends BaseController
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-             'socialmediatext' =>'string'
+            'status'=>'required|in:active,not_active',
+            // 'socialmediatext' =>'string'
 
         ]);
         if ($validator->fails())
@@ -83,18 +87,18 @@ class MarketerController extends BaseController
           'image' => $request->image,
           'country_id' =>$request->country_id,
           'city_id' =>$request->city_id,
+            'status' => $request->status,
          'user_type' => "marketer",
       ]);
       $marketer = Marketer::create([
             'user_id'=> $user->id,
-            'phonenumber' => $request->phonenumber,
             'facebook' => $request->facebook,
             'snapchat' => $request->snapchat,
             'twiter' => $request->twiter,
             'whatsapp' => $request->whatsapp,
             'youtube' => $request->youtube,
             'instegram' => $request->instegram,
-             'socialmediatext'=>$request->socialmediatext
+            // 'socialmediatext'=>$request->socialmediatext
           ]);
 
          // return new CountryResource($country);
@@ -148,8 +152,9 @@ class MarketerController extends BaseController
          $input = $request->all();
        $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'email'=>'required|email|unique:users,email,'.$marketer->user->id,
+            'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+             'password_confirm' => 'nullable|same:password',
             'user_name'=>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'snapchat'=>'required',
@@ -158,10 +163,11 @@ class MarketerController extends BaseController
             'whatsapp'=>'required',
             'youtube'=>'required',
             'instegram'=>'required',
-            'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
              'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
-            'socialmediatext' =>'string'
+            'status'=>'required|in:active,not_active',
+           // 'socialmediatext' =>'string'
 
         ]);
         if ($validator->fails())
@@ -180,7 +186,7 @@ class MarketerController extends BaseController
           'image' => $request->image,
           'country_id' =>$request->country_id,
           'city_id' =>$request->city_id,
-         'user_type' => "marketer",
+          'status' =>$request->status,
       ]);
         $marketer->update([
             'facebook' => $request->input('facebook'),
@@ -189,9 +195,14 @@ class MarketerController extends BaseController
             'whatsapp' => $request->input('whatsapp'),
             'youtube' => $request->input('youtube'),
             'instegram' => $request->input('instegram'),
-             'image' => $request->input('image'),
-             'socialmediatext' =>$request->input('socialmediatext')
+            // 'socialmediatext' =>$request->input('socialmediatext')
         ]);
+        
+        if(!is_null($request->password)){
+            $user->update([
+          'password'=> $request->password,
+      ]);
+        }
 
         $success['marketers']=New MarketerResource($marketer);
         $success['status']= 200;

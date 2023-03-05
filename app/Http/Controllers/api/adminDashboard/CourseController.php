@@ -201,7 +201,7 @@ class CourseController extends BaseController
           $course->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'image' => $request->input('image'),
+            'image' => $request->image,
             'duration' => $request->input('duration'),
             'tags' =>$request->input('tags'),
         ]);

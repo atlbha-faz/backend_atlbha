@@ -134,16 +134,17 @@ class ExplainVideosController extends BaseController
      * @param  \App\Models\ExplainVideos  $explainVideos
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ExplainVideos $explainVideos)
+    public function update(Request $request, $explainVideos)
  {
+         $explainVideos = ExplainVideos::query()->find($explainVideos);
         if (is_null($explainVideos) || $explainVideos->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","explainvideo is't exists");
     }
          $input = $request->all();
         $validator =  Validator::make($input ,[
              'title'=>'required|string|max:255',
-             'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
-             'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+             'video'=>'nullable|mimes:mp4,ogx,oga,ogv,ogg,webm',
+             'thumbnail' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
              //'link'=>'required|url',
         ]);
         if ($validator->fails())
@@ -151,6 +152,12 @@ class ExplainVideosController extends BaseController
             # code...
             return $this->sendError(null,$validator->errors());
         }
+        
+        $explainvideos =$explainVideos->update([
+            'title' => $request->input('title'),
+             'thumbnail' => $request->thumbnail,
+          ]);
+        if(!is_null($request->video)){
        $fileName =  $request->video->getClientOriginalName();
         $filePath = 'videos/' . $fileName;
 
@@ -166,14 +173,11 @@ class ExplainVideosController extends BaseController
         $playtime = $fileAnalyze['playtime_string'];
         // dd($playtime);
         if ($isFileUploaded) {
-        $explainvideos = ExplainVideos::update([
-            'title' => $request->input('title'),
+        $explainvideos = $explainVideos->update([
             'duration' => $playtime,
              'video' => $filePath,
-             'thumbnail' => $request->input('thumbnail'),
-             //'link' => $request->input('link'),
-            'user_id' => auth()->user()->id,
           ]);
+        }
         }
 
        //$country->fill($request->post())->update();
@@ -197,7 +201,7 @@ class ExplainVideosController extends BaseController
         else{
         $explainvideos->update(['status' => 'active']);
         }
-        $success['$explainvideos']=New ExplainVideoResource($explainvideos);
+        $success['$explainvideos']=New ExplainVideoResource($explainVideos);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة الفيديو بنجاح','explainvideo updated successfully');

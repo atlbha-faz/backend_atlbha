@@ -67,6 +67,7 @@ Route::get('selector/templates',[App\Http\Controllers\api\adminDashboard\Selecto
 Route::get('selector/course/units/{id}',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'units']);
 Route::get('selector/page-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'page_categories']);
 Route::get('selector/post-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'post_categories']);
+Route::get('selector/roles',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'roles']);
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 
@@ -167,7 +168,7 @@ Route::resource('paymenttype',App\Http\Controllers\api\adminDashboard\Paymenttyp
 Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
 Route::resource('page',App\Http\Controllers\api\adminDashboard\PageController::class);
 //Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\PageController::class,"relatedPage"]);
-Route::post('publish',[App\Http\Controllers\api\adminDashboard\PageController::class,'publish']);
+Route::post('page-publish',[App\Http\Controllers\api\adminDashboard\PageController::class,'publish']);
 Route::resource('pagecategory',App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
 Route::resource('technicalSupport',App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class);
 Route::resource('currency',App\Http\Controllers\api\adminDashboard\CurrencyController::class);
@@ -236,6 +237,7 @@ Route::get('categorydeleteall',[App\Http\Controllers\api\adminDashboard\Category
 Route::get('categorystorechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreCategoryController::class,'changeSatusall']);
 Route::get('categorystoredeleteall',[App\Http\Controllers\api\adminDashboard\StoreCategoryController::class,'deleteall']);
 Route::get('cityedeleteall',[App\Http\Controllers\api\adminDashboard\CityController::class,'deleteall']);
+Route::get('countryedeleteall',[App\Http\Controllers\api\adminDashboard\CountryController::class,'deleteall']);
 Route::get('currencychangeSatusall',[App\Http\Controllers\api\adminDashboard\CurrencyController::class,'changeSatusall']);
 Route::get('packagechangeSatusall',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeSatusall']);
 Route::get('packagedeleteall',[App\Http\Controllers\api\adminDashboard\PackageController::class,'deleteall']);
@@ -293,7 +295,7 @@ Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::c
 
 // page
 Route::resource('page',App\Http\Controllers\api\storeDashboard\PageController::class);
-Route::post('publish',[App\Http\Controllers\api\storeDashboard\PageController::class,'publish']);
+Route::post('page-publish',[App\Http\Controllers\api\storeDashboard\PageController::class,'publish']);
 Route::get('pagechangeSatusall',[App\Http\Controllers\api\storeDashboard\PageController::class,'changeSatusall']);
 Route::get('pagedeleteall',[App\Http\Controllers\api\storeDashboard\PageController::class,'deleteall']);
 Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class,'changeStatus']);

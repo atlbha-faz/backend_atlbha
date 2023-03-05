@@ -23,7 +23,7 @@ class MarketerSeeder extends Seeder
             'whatsapp'=>'whatsapp',
             'youtube'=>'youtube',
             'instegram'=>'instegram',
-            'socialmediatext'=>'socialmediatext',
+           // 'socialmediatext'=>'socialmediatext',
 
         ]);
     }

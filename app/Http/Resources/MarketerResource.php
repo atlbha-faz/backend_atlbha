@@ -15,17 +15,40 @@ class MarketerResource extends JsonResource
      */
     public function toArray($request)
     {
+        
+        
+       if($this->user->status ==null || $this->user->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        
+        
         // return parent::toArray($request);
           return [
             'id' =>$this->id,
-            'user' => New UserResource($this->user),
+           // 'user' => New UserResource($this->user),
+              
+      'user_id' =>$this->user->user_id,
+        'name' => $this->user->name,
+        'user_name' => $this->user->user_name,
+        'user_type' => $this->user->user_type,
+        'email' => $this->user->email,
+        //'password' => $this->password,
+        'phonenumber' => $this->user->phonenumber,
+        'image' =>$this->user->image,
+        'status' => $status,
+        'is_deleted' => $this->user->is_deleted!==null ? $this->user->is_deleted:0,
+        'country' => New CountryResource($this->user->country),
+        'city' => New CityResource($this->user->city),
+         
             'facebook' => $this->facebook,
             'snapchat' => $this->snapchat,
             'twiter' => $this->twiter,
             'whatsapp' => $this->whatsapp,
             'youtube' => $this->youtube,
             'instegram' => $this->instegram,
-            'socialmediatext' => $this->socialmediatext,
+           // 'socialmediatext' => $this->socialmediatext,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
        

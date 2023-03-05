@@ -52,7 +52,7 @@ class CategoryController extends BaseController
             $input = $request->all();
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
-                'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+                'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
                 'data.*.name'=>'required|string|max:255',
                 'data.*.id' => 'nullable|numeric',
             ]);
@@ -92,7 +92,12 @@ if($request->data){
     foreach($request->data as $data)
     {
 
+            $cat=Category::orderBy('id', 'desc')->first();
+          $number=$cat->number;
+          $number= ((int) $number) +1;
+        
         $subcategory= new Category([
+                'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
             'name' => $data['name'],
             'parent_id' => $category->id,
             'for'=> 'etlobha',
@@ -197,7 +202,7 @@ if($request->data){
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+             'icon'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data.*.name'=>'required|string|max:255',
             'data.*.id' => 'nullable|numeric',
            ]);
@@ -206,6 +211,10 @@ if($request->data){
                # code...
                return $this->sendError(null,$validator->errors());
            }
+        
+        
+           
+        
            $category->update([
                'name' => $request->input('name'),
                 'icon' =>$request->input('icon'),
@@ -226,10 +235,23 @@ if($request->data){
         }
 
      foreach ($request->data as $data) {
+         $sub_cat = Category::find($data['id']);
+         
+           if(!is_null($sub_cat)){
+             $number = $sub_cat->number;
+         }else{
+             $cat=Category::orderBy('id', 'desc')->first();
+          $number=$cat->number;
+          $number= ((int) $number) +1;
+             $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+         }
+              
+       
       $subcategories[] = Category::updateOrCreate([
-         'id'=>$data['id']
+         'id'=>$data['id'],
       ], [
         'name' => $data['name'],
+         'number'=> $number,
        'parent_id' => $category_id,
         'for'=>'etlobha',
         'is_deleted' => 0
