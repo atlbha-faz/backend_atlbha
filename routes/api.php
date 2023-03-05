@@ -52,7 +52,7 @@ Route::group([
 
 // change status routers
 Route::middleware([AdminUser::class])->group(function(){
-    Route::prefix('/Admin')->group(function ()  {
+    Route::prefix('/store')->group(function ()  {
 
 Route::get('selector/years',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'years']);
 Route::get('selector/cities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'cities']);
@@ -407,6 +407,10 @@ Route::get('selector/activities',[App\Http\Controllers\api\storeDashboard\Select
 Route::get('selector/mainCategories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'mainCategories']);
 Route::get('selector/children/{id}',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'children']);
 Route::get('selector/roles',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'roles']);
-
+//  payment
+Route::post('payment',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'payment']);
+Route::get('callback',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'callback'])->name('callback');
+Route::post('updateCharge/{id}',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'updateCharge']);
+Route::get('list',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'list'])->name('list');
 });
 });
