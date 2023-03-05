@@ -61,6 +61,7 @@ class UserController  extends BaseController
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
+            'role' => 'required|string|max:255|exists:roles,name',
         ]);
         if ($validator->fails())
         {
@@ -80,6 +81,9 @@ class UserController  extends BaseController
              'city_id' =>$request->city_id,
 
           ]);
+        
+        
+    $user->assignRole($request->role);
 
          $success['activities']=New UserResource($user );
         $success['status']= 200;
@@ -139,6 +143,7 @@ class UserController  extends BaseController
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
+            'role' => 'required|string|max:255|exists:roles,name',
         ]);
         if ($validator->fails())
         {
@@ -157,6 +162,9 @@ class UserController  extends BaseController
              'city_id' =>$request->input('city_id'),
              'socialmediatext' =>$request->input('socialmediatext')
         ]);
+        
+        
+  $user->assignRole($request->role);
 
         $success['users']=New UserResource($user);
         $success['status']= 200;
