@@ -26,8 +26,7 @@ class RoleResource extends JsonResource
         'status' => $status,
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'created_at' => (string) $this->created_at,
-        'updated_at' => (string) $this->updated_at,
-         '
+        'updated_at' => (string) $this->updated_at
         ];
     }
 }
