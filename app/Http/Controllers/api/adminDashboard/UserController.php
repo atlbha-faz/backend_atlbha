@@ -129,7 +129,7 @@ class UserController  extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'user_name'=>'required|string|max:255|unique:users,user_name'.$user->id,
+            'user_name'=>'required|string|max:255',
             'email'=>'required|email|unique:users,email'.$user->id,
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users,phonenumber'.$user->id],
