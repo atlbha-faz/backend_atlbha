@@ -48,7 +48,7 @@ class WebsiteorderController extends BaseController
         $i = date("Y-m");
         $x = 1;
         while($x <= 6){ 
-            $array_store[$i]["store"]= Websiteorder::where('is_deleted',0)->where('type','store')->whereYear('created_at', date('Y', strtotime($i)))->whereMonth('created_at', date('M', strtotime($i)))->count();
+            $array_store[$i]["store"]= Websiteorder::where('is_deleted',0)->where('type','store')->whereYear('created_at', date('Y', strtotime($i)))->whereMonth('created_at', date('m', strtotime($i)))->count();
            $i = date("Y-m", strtotime("-1 month", strtotime($i)));
             $x++;
         }
