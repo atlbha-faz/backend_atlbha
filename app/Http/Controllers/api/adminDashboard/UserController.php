@@ -135,7 +135,7 @@ class UserController  extends BaseController
             'email'=>'required|email|unique:users,email'.$user->id,
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             //'gender'=>'required|in:male,female',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users,phonenumber'.$user->id],
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             //'country_id'=>'required|exists:countries,id',
             //'city_id'=>'required|exists:cities,id',
