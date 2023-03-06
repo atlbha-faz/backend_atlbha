@@ -16,8 +16,7 @@ use App\Http\Controllers\CountryController;
 |
 */
 
-
-
+   
 
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
@@ -52,8 +51,13 @@ Route::group([
 
 // change status routers
 Route::middleware([AdminUser::class])->group(function(){
-    Route::prefix('/store')->group(function ()  {
 
+    Route::prefix('/Admin')->group(function ()  {
+Route::post('payment',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'payment']);
+Route::get('callback',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'callback'])->name('callback');
+Route::post('updateCharge/{id}',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'updateCharge']);
+Route::get('list',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'list'])->name('list');       
+     
 Route::get('selector/years',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'years']);
 Route::get('selector/cities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'cities']);
 Route::get('selector/countries',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'countries']);
@@ -264,6 +268,9 @@ Route::get('subscriptions',[App\Http\Controllers\api\adminDashboard\Subscription
 Route::post('addAlert',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'addAlert']);
 Route::get('subscriptionsdeleteall',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'deleteall']);
 Route::get('subscriptionschangeSatusall',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'changeSatusall']);
+  
+
+
 
 });
 });
