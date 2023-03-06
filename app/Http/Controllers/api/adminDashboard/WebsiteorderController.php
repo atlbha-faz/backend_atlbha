@@ -34,7 +34,7 @@ class WebsiteorderController extends BaseController
         $success['count_of_serivces_order']=Websiteorder::where('is_deleted',0)->where('type','service')->count();
         $success['count_of_store_order']=Websiteorder::where('is_deleted',0)->where('type','store')->count();
         $success['count_of_Design']=Service_Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services_websiteorders', function($q){
-   // $q->where('service_id',1);
+   $q->where('service_id',1);
 })->count();
         $success['count_of_TechnicalSupport']=Service_Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services_websiteorders', function($q){
     $q->where('service_id',2);
