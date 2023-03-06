@@ -51,16 +51,16 @@ class UserController  extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'user_id'=>'required|max:255',
-            'user_name'=>'required|string|max:255',
-            'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
+            //'user_id'=>'required|max:255|unique:users',
+            'user_name'=>'required|string|max:255|unique:users',
+            //'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'gender'=>'required|in:male,female',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            //'gender'=>'required|in:male,female',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users'],
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'country_id'=>'required|exists:countries,id',
-            'city_id'=>'required|exists:cities,id',
+            //'country_id'=>'required|exists:countries,id',
+            //'city_id'=>'required|exists:cities,id',
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
         if ($validator->fails())
@@ -69,16 +69,12 @@ class UserController  extends BaseController
         }
         $user = User::create([
             'name'=> $request->name,
-            'user_id'=> $request->user_id,
             'user_name'=> $request->user_name,
-            'user_type'=>$request->user_type,
+            'user_type'=>'admin_employee',
             'email' => $request->email,
             'password' => $request->password,
-            'gender' => $request->gender,
             'phonenumber' => $request->phonenumber,
              'image' => $request->image,
-             'country_id' =>$request->country_id,
-             'city_id' =>$request->city_id,
 
           ]);
         
@@ -133,16 +129,11 @@ class UserController  extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'user_id'=>'required|max:255',
-            'user_name'=>'required|string|max:255',
-            'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
-            'email'=>'required|email|unique:users',
+            'user_name'=>'required|string|max:255|unique:users,user_name,'.$user->id,
+            'email'=>'required|email|unique:users,email,'.$user->id,
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'gender'=>'required|in:male,female',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'country_id'=>'required|exists:countries,id',
-            'city_id'=>'required|exists:cities,id',
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users,phonenumber,'.$user->id],
+            'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
         if ($validator->fails())
@@ -153,14 +144,11 @@ class UserController  extends BaseController
         $user->update([
             'name'=> $request->input('name'),
             'email' => $request->input('email'),
+            'user_name' => $request->input('user_name'),
             'password' => $request->input('password'),
-            'gender' => $request->input('gender'),
             'phonenumber' => $request->input('phonenumber'),
-
              'image' => $request->input('image'),
-             'country_id' =>$request->input('country_id'),
-             'city_id' =>$request->input('city_id'),
-             'socialmediatext' =>$request->input('socialmediatext')
+             
         ]);
         
         
