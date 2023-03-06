@@ -216,6 +216,8 @@ if($request->data){
 
 
    foreach ($request->data as $data) {
+       
+       $sub_cat = Category::find($data['id']);
  if(!is_null($sub_cat)){
              $number = $sub_cat->number;
          }else{
