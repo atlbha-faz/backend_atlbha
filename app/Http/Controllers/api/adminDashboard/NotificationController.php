@@ -59,9 +59,9 @@ class NotificationController extends BaseController
             return $this->sendResponse($success,'تم حذف الاشعار بنجاح','notification deleted successfully');
     }
 
-    public function deleteNotificationAll()
+    public function deleteNotificationAll(Request $request)
     {
-        $notifications = auth()->user()->Notifications;
+        $notifications = NotificationModel::whereIn('id',$request->id)->get();
      foreach($notifications  as $notification ){
            $notification->delete();
      }
