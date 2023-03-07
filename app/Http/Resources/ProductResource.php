@@ -42,6 +42,7 @@ class ProductResource extends JsonResource
             'cover' =>$this->cover,
             'discount_price'=>$this->discount_price,
             'discount_percent'=>$this->discount_percent,
+            'SEOdescription'=>$this->SEOdescription,
             'importproduct'=>$this->importproduct->count(),
             'subcategory' => CategoryResource::collection($this->subcategory()),
             'status' => $status,
