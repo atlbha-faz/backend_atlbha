@@ -140,7 +140,7 @@ class EtlobhaController extends BaseController
               'purchasing_price'=>['required','numeric','gt:0'],
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
-            'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'images'=>'nullable|array',
             'images.*'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
               'data'=>'required|array',
