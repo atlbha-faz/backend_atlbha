@@ -305,8 +305,8 @@ class StockController extends BaseController
          return $this->sendError("المنتج غير موجودة","product is't exists");
          }
 
-        if($product->for === 'etlobha'){
-        $product->update(['for' => 'stock']);
+        if($product->for === 'stock'){
+        $product->update(['for' => 'etlobha']);
         }
 
         $success['products']=New ProductResource($product);
