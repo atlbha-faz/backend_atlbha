@@ -188,7 +188,7 @@ class StockController extends BaseController
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
              'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'images'=>'required|array',
+            'images'=>'nullable|array',
             'images.*'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
               'data' => 'required|array',
               'category_id'=>'required|exists:categories,id',
