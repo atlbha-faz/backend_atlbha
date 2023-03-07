@@ -230,9 +230,9 @@ class EtlobhaController extends BaseController
 }
     
     
-    public function show(Product $product)
+    public function show($product)
     {
-         $product = Product::query()->where('for','etlobha')->find($product->id);
+         $product = Product::query()->where('for','etlobha')->find($product);
          if (is_null($product) || $product->is_deleted==1){
            return $this->sendError(" المنتج غير موجود","product is't exists");
          }
