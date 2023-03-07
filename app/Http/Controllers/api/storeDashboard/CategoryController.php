@@ -83,21 +83,18 @@ class CategoryController extends BaseController
                 'for'=>'store',
                'store_id'=> auth()->user()->store_id,
               ]);
-                  $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255',
-
-            ]);
-            if ($validator->fails())
-            {
-                return $this->sendError(null,$validator->errors());
-            }
+            
 
 if($request->data){
   foreach($request->data as $data)
     {
+         $cat=Category::orderBy('id', 'desc')->first();
+          $number=$cat->number;
+          $number= ((int) $number) +1;
 
         $subcategory= new Category([
             'name' => $data['name'],
+                'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
             'parent_id' => $category->id,
             'for'=>'store',
             'store_id'=> auth()->user()->store_id,
@@ -131,9 +128,9 @@ if($request->data){
                return $this->sendResponse($success,'تم عرض القسم بنجاح','Category showed successfully');
     }
 
-     public function children($parnet)
+     public function children($parent)
     {
-        $category= Category::where('parent_id',$parnet)->where('is_deleted',0)->get();
+        $category= Category::where('parent_id',$parent)->where('is_deleted',0)->get();
 
               $success['categories']=New CategoryResource($category);
               $success['status']= 200;
@@ -199,7 +196,7 @@ if($request->data){
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'icon'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             // 'for'=>'required',
              'data.*.name'=>'required|string|max:255',
             'data.*.id' => 'nullable|numeric',
@@ -212,9 +209,7 @@ if($request->data){
            }
            $category->update([
                'name' => $request->input('name'),
-                'icon' =>$request->input('icon'),
-                'for' =>'store',
-                // 'store_id' =>$request->input('store_id')
+                'icon' =>$request->icon
            ]);
 
           $subcategory = Category::where('parent_id', $category_id);
@@ -230,12 +225,26 @@ if($request->data){
         }
 
      foreach ($request->data as $data) {
+          $sub_cat = Category::find($data['id']);
+         
+           if(!is_null($sub_cat)){
+             $number = $sub_cat->number;
+         }else{
+             $cat=Category::orderBy('id', 'desc')->first();
+          $number=$cat->number;
+          $number= ((int) $number) +1;
+             $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+         }
+              
+       
+         
       $subcategories[] = Category::updateOrCreate([
         'id' => $data['id'],
 
       ], [
         'name' => $data['name'],
          'parent_id' => $category_id,
+         'number'=> $number,
         'for'=>'store',
         // 'store_id'=> auth()->user()->store_id,
         'is_deleted' => 0,
