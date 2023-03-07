@@ -232,10 +232,10 @@ class EtlobhaController extends BaseController
 
            public function specialStatus($id)
     {
-        $product = Product::query()->where('for','etlobha')->find($id);
-         if (is_null($product) || $product->is_deleted==1){
-         return $this->sendError("المنتج غير موجود","product is't exists");
-         }
+        $product =Product::query()->where('for','etlobha')->find($id);
+           if (is_null($product) || $product->is_deleted==1){
+           return $this->sendError(" المنتج غير موجود","product is't exists");
+            }
 
        if($product->special === 'not_special'){
         $product->update(['special' => 'special']);
