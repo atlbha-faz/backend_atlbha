@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Store;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use App\Models\Replaycontact;
 use App\Http\Resources\ContactResource;
 use App\Notifications\emailNotification;
 use Illuminate\Support\Facades\Validator;
@@ -74,13 +75,18 @@ class EmailController extends BaseController
         $data = [
             'subject' => $request->subject,
             'message' => $request->message,
+            'contact_id' => $request->store_id,
+        ];
+        $data1= [
+            'subject' => $request->subject,
+            'message' => $request->message,
             'store_id' => $request->store_id,
         ];
-        $contact = Contact::create($data);
+        $contact = Replaycontact::create($data);
         $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
        foreach($users as  $user)
        {
-        Notification::send($user , new emailNotification($data));
+        Notification::send($user , new emailNotification($data1));
        }
          $success['contacts']=New ContactResource($contact);
         $success['status']= 200;
