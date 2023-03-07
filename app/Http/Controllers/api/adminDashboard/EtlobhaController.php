@@ -228,6 +228,22 @@ class EtlobhaController extends BaseController
 
               return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
 }
+    
+    
+    public function show(Product $product)
+    {
+         $product = Product::query()->where('for','etlobha')->find($product->id);
+         if (is_null($product) || $product->is_deleted==1){
+           return $this->sendError(" المنتج غير موجود","product is't exists");
+         }
+
+
+          $success['product']=New productResource($product);
+        $success['status']= 200;
+
+        return $this->sendResponse($success,'تم عرض المنتج بنجاح','product showed successfully');
+
+    }
 
 
            public function specialStatus($id)
