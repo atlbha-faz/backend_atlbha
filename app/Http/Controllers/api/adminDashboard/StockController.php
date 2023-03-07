@@ -283,7 +283,7 @@ class StockController extends BaseController
     {
 
 
-            $products =Product::whereIn('id',$request->id)->where('for','etlobha')->get();
+            $products =Product::whereIn('id',$request->id)->where('for','stock')->get();
            foreach($products as $product)
            {
              if (is_null($product) || $product->is_deleted==1 || $product->for=="store"){
@@ -299,7 +299,7 @@ class StockController extends BaseController
 
  public function addToStore($id)
  {
-        $product = Product::query()->where('for','etlobha')->find($id);
+        $product = Product::query()->where('for','stock')->find($id);
         // dd($product);
          if (is_null($product ) || $product->is_deleted==1){
          return $this->sendError("المنتج غير موجودة","product is't exists");
