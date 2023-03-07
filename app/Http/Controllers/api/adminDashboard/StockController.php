@@ -216,7 +216,7 @@ class StockController extends BaseController
               'stock' => $request->input('stock'),
               'cover' => $request->cover,
               'category_id' => $request->input('category_id'),
-              'subcategory_id' => $request->input('subcategory_id'),
+              'subcategory_id' =>  implode(',', $request->subcategory_id),
 
            ]);
            if($request->hasFile("images")){
