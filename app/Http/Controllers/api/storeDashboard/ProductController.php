@@ -215,7 +215,7 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
             'discount_price'=>$request->input('discount_price'),
             'discount_percent'=>$request->input('discount_percent'),
             'category_id' => $request->input('category_id'),
-             'subcategory_id' => $request->input('subcategory_id'),
+             'subcategory_id' =>  implode(',', $request->subcategory_id),
             // 'store_id' => $request->input('store_id'),
 
 
