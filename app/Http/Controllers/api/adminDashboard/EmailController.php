@@ -47,9 +47,10 @@ class EmailController extends BaseController
             return $this->sendResponse($success,'تم حذف الرسالة بنجاح','contact  deleted successfully');
     }
 
-    public function deleteEmailAll()
+    public function deleteEmailAll(Request $request)
     {
-        $contacts = Contact::where('is_deleted',0)->get();
+        
+          $contacts =Contact::whereIn('id',$request->id)->get();
      foreach($contacts  as $contact ){
         $contact->update(['is_deleted' => 1]);
      }
