@@ -84,11 +84,11 @@ class EmailController extends BaseController
             'store_id' => $request->store_id,
         ];
         $contact = Replaycontact::create($data);
-        $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
+      /*  $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
        foreach($users as  $user)
        {
         Notification::send($user , new emailNotification($data1));
-       }
+       }*/
          $success['contacts']=New ContactResource($contact);
         $success['status']= 200;
 
