@@ -9,6 +9,7 @@ use App\Models\Store;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Models\NotificationModel;
+use App\Http\Resources\NotificationResource;
 use App\Http\Resources\AlertResource;
 use App\Http\Resources\ContactResource;
 use App\Notifications\emailNotification;
@@ -24,7 +25,7 @@ class NotificationController extends BaseController
     public function index()
     {
         $success['count_of_notifications']=auth()->user()->Notifications->count();
-        $success['notifications']=auth()->user()->Notifications;
+        $success['notifications']=NotificationResource::collection(auth()->user()->Notifications);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع الاشعارات بنجاح','Notifications return successfully');
@@ -42,7 +43,7 @@ class NotificationController extends BaseController
     public function show($id){
         $userNotification =  NotificationModel::query()->find($id);
        
-        $success['notifications']=$userNotification;
+        $success['notifications']=new NotificationResource($userNotification);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع  الاشعار بنجاح','Notifications return successfully');
