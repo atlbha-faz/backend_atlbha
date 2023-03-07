@@ -22,7 +22,7 @@ class EmailController extends BaseController
     public function index()
     {
        
-        $success['emails']=Contact::where('is_deleted',0)->get();
+        $success['emails']=ContactResource::collection(Contact::where('is_deleted',0)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع االرسائل بنجاح','email return successfully');
@@ -31,7 +31,7 @@ class EmailController extends BaseController
     public function show($id){
         $contact =  Contact::query()->find($id);
        
-        $success['contact']=$contact;
+        $success['contact']=new ContactResource($contact);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع  الرسالة بنجاح','email  return successfully');
