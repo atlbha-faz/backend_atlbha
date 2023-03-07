@@ -27,11 +27,11 @@ class StockController extends BaseController
     public function index()
     {
 
-         $success['total_stock']=Product::where('is_deleted',0)->where('for','etlobha')->count();
-         $success['finished_products']=Product::where('is_deleted',0)->where('for','etlobha')->where('stock','0')->count();
-         $success['finished_soon']=Product::where('is_deleted',0)->where('for','etlobha')->where('stock', '<','20')->count();
+         $success['total_stock']=Product::where('is_deleted',0)->where('for','stock')->count();
+         $success['finished_products']=Product::where('is_deleted',0)->where('for','stock')->where('stock','0')->count();
+         $success['finished_soon']=Product::where('is_deleted',0)->where('for','stock')->where('stock', '<','20')->count();
          $date = Carbon::now()->subDays(7);
-         $success['last_week_product_added']=Product::where('is_deleted',0)->where('for','etlobha')->where('created_at', '>=', $date)->count();
+         $success['last_week_product_added']=Product::where('is_deleted',0)->where('for','stock')->where('created_at', '>=', $date)->count();
          $success['most_order']=0;
           $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('for','stock')->where('store_id',null)->get());
              $success['status']= 200;
@@ -65,9 +65,13 @@ class StockController extends BaseController
             'description'=>'required|string',
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
+            'quantity'=>['required','numeric','gt:0'],
+            'less_qty'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data'=>'required|array',
+            'images'=>'required|array',
+            'images.*'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data.*.type'=>'required|in:brand,color,wight,size',
             'data.*.title'=>'required|string',
             'data.*.value'=>'required|array',
@@ -89,6 +93,8 @@ class StockController extends BaseController
         $product = Product::create([
             'name' => $request->name,
             'sku' => $request->sku,
+            'quantity' => $request->quantity,
+            'less_qty' => $request->less_qty,
             'for' => 'stock',
             'description' => $request->description,
             'purchasing_price' => $request->purchasing_price,
