@@ -55,8 +55,12 @@ class emailNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+         return [
+             'user_id'=>$this->data['user_id'],
+             'message' => $this->data['message'],
+             'store_id' => $this->data['store_id'],
+             'type'=> $this->data['type'],
+             'object_id'=> $this->data['object_id']
+         ];
     }
 }
