@@ -145,7 +145,7 @@ class StoreController extends BaseController
           $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
 
 
-         $success['stors']=New StoreResource($store);
+         $success['stores']=New StoreResource($store);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافة متجر بنجاح',' store Added successfully');
