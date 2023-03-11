@@ -61,7 +61,7 @@ class StockController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'sku'=>'required|string|unique',
+            'sku'=>'required|string|unique:products',
             'description'=>'required|string',
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
