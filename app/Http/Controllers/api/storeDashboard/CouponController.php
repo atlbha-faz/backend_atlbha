@@ -161,7 +161,7 @@ class CouponController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-            'code'=>'required|string|unique:coupons',
+            'code'=>'required|string|unique:coupons,code,'.$coupon->id,
             'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
