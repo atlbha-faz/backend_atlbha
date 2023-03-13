@@ -254,7 +254,7 @@ class CommentController extends BaseController
     public function commentActivation()
 {
 
-     $commentActivation = Homepage::where('store_id',auth()->user()->store->id)->first();
+     $commentActivation = Homepage::where('store_id',auth()->user()->store_id)->first();
         if (is_null($commentActivation) || $commentActivation->is_deleted==1 ){
          return $this->sendError("قسم التعليقات غير موجودة","comment's section is't exists");
          }
