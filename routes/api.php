@@ -380,7 +380,7 @@ Route::resource('comment',App\Http\Controllers\api\storeDashboard\CommentControl
 Route::get('commentchangeSatusall',[App\Http\Controllers\api\storeDashboard\CommentController::class,'changeSatusall']);
 Route::post('replaycomment',[App\Http\Controllers\api\storeDashboard\CommentController::class,'replayComment']);
 Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
-Route::get('commentActivation/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'commentActivation']);
+Route::get('commentActivation', [App\Http\Controllers\api\storeDashboard\CommentController::class,'commentActivation']);
 // Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
 
 // Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
