@@ -409,6 +409,7 @@ Route::get('show/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceC
 Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'store']);
 Route::get('marketerRequest/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'marketerRequest']);
 
+Route::get('selector/auth_user',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'auth_user']);
 Route::get('selector/cities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'cities']);
 Route::get('selector/countries',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'countries']);
 Route::get('selector/activities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'activities']);
