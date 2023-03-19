@@ -56,7 +56,7 @@ class PageController extends BaseController
             'seo_link'=>'required|url',
             'seo_desc'=>'required|string',
             'tags'=>'required',
-            'name'=>'required|exists:page_categories,id'
+            //'name'=>'required|exists:page_categories,id'
 
         ]);
         if ($validator->fails())
