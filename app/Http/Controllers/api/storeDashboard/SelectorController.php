@@ -13,6 +13,7 @@ use App\Models\Template;
 use App\Models\Page_category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
