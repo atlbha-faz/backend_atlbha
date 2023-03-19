@@ -210,9 +210,7 @@ if($request->data){
         
            $category->update([
                'name' => $request->input('name'),
-                'icon' =>$request->input('icon'),
-                'for' =>'etlobha',
-                'store_id' =>null
+                'icon' =>$request->icon,
            ]);
 
        $subcategory = Category::where('parent_id', $category_id);
