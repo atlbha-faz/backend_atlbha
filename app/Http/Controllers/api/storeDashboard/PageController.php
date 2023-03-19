@@ -50,6 +50,7 @@ class PageController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
+            'page_desc'=>'required',
             'page_content'=>'required|string',
             'seo_title'=>'required|string',
             'seo_link'=>'required|url',
@@ -66,6 +67,7 @@ class PageController extends BaseController
             'title' => $request->title,
             'page_content' => $request->page_content,
             'seo_title' => $request->seo_title,
+            'page_desc' => $request->page_desc,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
             'tags' => implode(',', $request->tags),
@@ -75,7 +77,16 @@ class PageController extends BaseController
 
           ]);
            //$request->input('name', []);
-          $page->page_categories()->attach(explode(',', $request->name));
+          if($request->pageCategory){
+            $page->page_categories()->attach($request->pageCategory);
+            if (in_array(1, $request->pageCategory))
+            {
+              $page->update([
+                  'image'=>$request->image,
+                   'postcategory_id'=>$request->postCategory_id,
+              ]);
+            }
+             }
 
          $success['Pages']=New PageResource($page);
         $success['status']= 200;
@@ -88,11 +99,12 @@ class PageController extends BaseController
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
             'page_content'=>'required|string',
+            'page_desc'=>'required',
             'seo_title'=>'required|string',
             'seo_link'=>'required|url',
             'seo_desc'=>'required|string',
             'tags'=>'required',
-            'name'=>'required|exists:page_categories,id'
+           // 'name'=>'required|exists:page_categories,id'
 
         ]);
         if ($validator->fails())
@@ -102,17 +114,25 @@ class PageController extends BaseController
         $page = Page::create([
             'title' => $request->title,
             'page_content' => $request->page_content,
+            'page_desc' => $request->page_desc,
             'seo_title' => $request->seo_title,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
-            'tags' => implode(',', $request->tags),
+            'tags' => $request->tags,
             'store_id'=> auth()->user()->store_id,
             'user_id' => auth()->user()->id,
             'status' =>'active'
           ]);
-
-          $page->page_categories()->attach(explode(',', $request->name));
-
+   if($request->pageCategory){
+            $page->page_categories()->attach($request->pageCategory);
+            if (in_array(1, $request->pageCategory))
+            {
+              $page->update([
+                  'image'=>$request->image,
+                   'postcategory_id'=>$request->postCategory_id,
+              ]);
+            }
+             }
          $success['Pages']=New PageResource($page);
         $success['status']= 200;
 
@@ -167,6 +187,7 @@ class PageController extends BaseController
            $validator =  Validator::make($input ,[
              'title'=>'required|string|max:255',
              'page_content'=>'required|string',
+            'page_desc'=>'required',
              'seo_title'=>'required|string',
              'seo_link'=>'required|url',
              'seo_desc'=>'required|string',
@@ -183,15 +204,23 @@ class PageController extends BaseController
            $page->update([
                'title' => $request->input('title'),
                'page_content' => $request->input('page_content'),
+               'page_desc' => $request->input('page_desc'),
                'seo_title' => $request->input('seo_title'),
                'seo_link' => $request->input('seo_link'),
                'seo_desc' => $request->input('seo_desc'),
-               'tags' => implode(',',$request->input('tags')),
+               'tags' => $request->input('tags'),
            ]);
            //$request->input('name', []);
-           if($request->name!=null){
-           $page->page_categories()->sync(explode(',', $request->name));
-           }
+            if($request->pageCategory){
+            $page->page_categories()->attach($request->pageCategory);
+            if (in_array(1, $request->pageCategory))
+            {
+              $page->update([
+                  'image'=>$request->image,
+                   'postcategory_id'=>$request->postCategory_id,
+              ]);
+            }
+             }
            $success['pages']=New PageResource($page);
            $success['status']= 200;
 
