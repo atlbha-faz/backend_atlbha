@@ -33,6 +33,15 @@ class SelectorController extends BaseController
         $this->middleware('auth:api');
     }
 
+    public function auth_user()
+    {
+        $success['auth_user']=UserResource::collection(auth()->user());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع المستخدم بنجاح','Auth User return successfully');
+    }
+
+
     public function cities()
     {
         $success['cities']=CityResource::collection(City::where('is_deleted',0)->where('status','active')->get());
@@ -40,7 +49,6 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع المدن بنجاح','cities return successfully');
     }
-
 
 
   public function countries()
