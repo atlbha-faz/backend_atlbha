@@ -125,10 +125,10 @@ class UserController  extends BaseController
             'name'=>'required|string|max:255',
             'user_name'=>'required|string|max:255',
             'email'=>'required|email',
-            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'status'=>'required|in:active,not_active',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
         ]);
         if ($validator->fails())
@@ -140,13 +140,18 @@ class UserController  extends BaseController
             'name'=> $request->input('name'),
             'user_name'=> $request->input('user_name'),
             'email' => $request->input('email'),
-            'password' => $request->input('password'),
             'status' => $request->input('status'),
             'phonenumber' => $request->input('phonenumber'),
-             'image' => $request->input('image'),
+             'image' => $request->image,
           'store_id' => auth()->user()->store_id
 
         ]);
+        
+        if(!is_null($request->password)){
+             $user->update([
+            'password' => $request->input('password'),
+                 ]);
+        }
 
         $success['users']=New UserResource($user);
         $success['status']= 200;
