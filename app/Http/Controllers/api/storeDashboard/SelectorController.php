@@ -37,7 +37,7 @@ class SelectorController extends BaseController
 
     public function auth_user()
     {
-        $success['auth_user']=StoreResource::collection(Store::find(1));
+        $success['auth_user']=new StoreResource(Store::find(auth()->user()->store_id));
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المستخدم بنجاح','Auth User return successfully');
