@@ -6,6 +6,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Package;
+use App\Models\User;
 use App\Models\Activity;
 use App\Models\Plan;
 use App\Models\Category;
@@ -36,7 +37,7 @@ class SelectorController extends BaseController
 
     public function auth_user()
     {
-        $success['auth_user']=UserResource::collection(auth()->user());
+        $success['auth_user']=UserResource::collection(User::find(auth()->user()->id));
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المستخدم بنجاح','Auth User return successfully');
