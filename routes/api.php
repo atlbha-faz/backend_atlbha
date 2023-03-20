@@ -374,7 +374,7 @@ Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientControlle
 Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientController::class,'deleteall']);
 //
-// Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
+Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
 // comments
 Route::resource('comment',App\Http\Controllers\api\storeDashboard\CommentController::class);
 Route::get('commentchangeSatusall',[App\Http\Controllers\api\storeDashboard\CommentController::class,'changeSatusall']);
