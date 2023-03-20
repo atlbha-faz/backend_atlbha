@@ -12,6 +12,7 @@ use App\Models\Plan;
 use App\Models\Category;
 use App\Models\Template;
 use App\Models\Page_category;
+use App\Models\Postcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\StoreResource;
@@ -23,6 +24,7 @@ use App\Http\Resources\PackageResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\TemplateResource;
 use App\Http\Resources\Page_categoryResource;
+use App\Http\Resources\PostCategoryResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -152,4 +154,16 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الخدمات بنجاح','serrvices return successfully');
     }
+    
+      public function post_categories()
+    {
+        $success['categories']=PostCategoryResource::collection(Postcategory::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع تصنيفات المقالات بنجاح','Post Categories return successfully');
+    }
+
+
+    
+    
 }
