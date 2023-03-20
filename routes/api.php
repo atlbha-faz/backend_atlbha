@@ -418,8 +418,8 @@ Route::get('selector/children/{id}',[App\Http\Controllers\api\storeDashboard\Sel
 Route::get('selector/roles',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'roles']);
     
     
-Route::get('selector/page-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'pagesCategory']);
-Route::get('selector/post-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'post_categories']);
+Route::get('selector/page-categories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'pagesCategory']);
+Route::get('selector/post-categories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'post_categories']);
     
 //  payment
 Route::post('payment',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'payment']);
