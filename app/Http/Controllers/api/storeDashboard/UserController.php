@@ -126,6 +126,7 @@ class UserController  extends BaseController
             'user_name'=>'required|string|max:255',
             'email'=>'required|email',
             'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+             'password_confirm' => 'nullable|same:password',
             'status'=>'required|in:active,not_active',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
