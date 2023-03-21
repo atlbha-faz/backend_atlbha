@@ -41,7 +41,7 @@ class SelectorController extends BaseController
 
     public function services()
     {
-        $success['services']=ServiceResource::collection(Service::all());
+        $success['services']=ServiceResource::collection(Service::where('is_deleted',0)->where('status','active')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الخدمات بنجاح','Services return successfully');
