@@ -414,6 +414,7 @@ Route::get('selector/cities',[App\Http\Controllers\api\storeDashboard\SelectorCo
 Route::get('selector/countries',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'countries']);
 Route::get('selector/activities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'activities']);
 Route::get('selector/mainCategories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'mainCategories']);
+Route::get('selector/services',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'services']);
 Route::get('selector/children/{id}',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'children']);
 Route::get('selector/roles',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'roles']);
     
