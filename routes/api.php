@@ -405,7 +405,7 @@ Route::get('NotificationDelete/{id}',[App\Http\Controllers\api\storeDashboard\No
 Route::get('NotificationDeleteAll',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'deleteNotificationAll']);
 Route::get('NotificationShow/{id}',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'show']);
 //  Etlobha services
-Route::get('show/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'show']);
+Route::get('etlobhaservice/show', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'show']);
 Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'store']);
 Route::get('marketerRequest/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'marketerRequest']);
 
