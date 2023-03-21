@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Package;
 use App\Models\Store;
 use App\Models\Activity;
+use App\Models\Service;
 use App\Models\Plan;
 use App\Models\Category;
 use App\Models\Template;
@@ -21,6 +22,7 @@ use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\ActivityResource;
 use App\Http\Resources\PackageResource;
+use App\Http\Resources\ServiceResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\TemplateResource;
 use App\Http\Resources\Page_categoryResource;
@@ -35,6 +37,14 @@ class SelectorController extends BaseController
     public function __construct()
     {
         $this->middleware('auth:api');
+    }
+
+    public function services()
+    {
+        $success['services']=ServiceResource::collection(Service::all());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع الخدمات بنجاح','Services return successfully');
     }
 
     public function auth_user()
