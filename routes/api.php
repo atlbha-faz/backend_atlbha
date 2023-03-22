@@ -427,5 +427,9 @@ Route::post('payment',[App\Http\Controllers\api\storeDashboard\PaymentController
 Route::get('callback',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'callback'])->name('callback');
 Route::post('updateCharge/{id}',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'updateCharge']);
 Route::get('list',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'list'])->name('list');
+    
+    
+    
+Route::get('Permissions',[App\Http\Controllers\api\storeDashboard\PermissionController::class,'index'])->name('permissions');
 });
 });
