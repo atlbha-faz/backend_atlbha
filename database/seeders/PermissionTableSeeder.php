@@ -310,19 +310,19 @@ Permission::create(['name' => 'academy-show',
      
            //////////////////////////////////////////////////////////////// 50
         
-          Permission::create(['name' => 'academy-template',
+          Permission::create(['name' => 'template',
                          'action_type' => 'template',
           'name_ar'=>'القالب' ,
           'parent_id'=>null,
         'type'=>'store']);
 
-Permission::create(['name' => 'academy-show',
+Permission::create(['name' => 'template-show',
                          'action_type' => 'show',
         'name_ar'=>'عرض' ,
         'parent_id'=>50,
       'type'=>'store']);
 
-Permission::create(['name' => 'academy-update',
+Permission::create(['name' => 'template-update',
                          'action_type' => 'update',
     'name_ar'=>'تعديل' ,
     'parent_id'=>50,
