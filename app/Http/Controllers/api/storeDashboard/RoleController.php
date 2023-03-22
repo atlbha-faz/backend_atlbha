@@ -24,6 +24,28 @@ class RoleController extends BaseController
 
          return $this->sendResponse($success,'تم عرض الأدوار بنجاح','Roles shown successfully');
     }
+    
+    
+  public function store(Request $request)
+  {
+    $this->validate(
+      $request,
+      [
+        'role_name' => 'required|string|max:255|unique:roles,name',
+        'permissions' => 'required|array',
+        'permissions.*' => 'nullable|numeric',
+      ]
+    );
+      
+    $role = Role::create(['name'=>$request->role_name , 'type'=>'store']);
+      
+    $role->syncPermissions($request->permissions);
+
+    $success['role']=New RoleResource($role);
+    $success['status']= 200;
+
+     return $this->sendResponse($success,'تم إضافة الأدوار بنجاح','Role Added successfully');
+  }
 
 
    
