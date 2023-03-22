@@ -430,6 +430,6 @@ Route::get('list',[App\Http\Controllers\api\storeDashboard\PaymentController::cl
     
     
     
-Route::get('Permissions',[App\Http\Controllers\api\storeDashboard\PermissionController::class,'index'])->name('permissions');
+Route::get('permissions',[App\Http\Controllers\api\storeDashboard\PermissionController::class,'index'])->name('permissions');
 });
 });
