@@ -25,6 +25,19 @@ class RoleController extends BaseController
          return $this->sendResponse($success,'تم عرض الأدوار بنجاح','Roles shown successfully');
     }
     
+    public function show($role)
+    {
+        $role= Role::query()->find($role);
+        if ( is_null($role) || $role->type!='store'){
+               return $this->sendError("الدور غير موجود","Role is't exists");
+               }
+              $success['role']=New RoleResource($role);
+              $success['status']= 200;
+
+               return $this->sendResponse($success,'تم عرض الدور بنجاح','Role showed successfully');
+    }
+
+    
     
   public function store(Request $request)
   {
