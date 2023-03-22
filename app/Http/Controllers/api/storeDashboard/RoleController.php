@@ -28,6 +28,7 @@ class RoleController extends BaseController
     
   public function store(Request $request)
   {
+      dd('dfdff');
     $this->validate(
       $request,
       [
