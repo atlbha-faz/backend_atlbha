@@ -8,7 +8,7 @@ use App\Http\Resources\PermissionResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
-class VerificationController extends BaseController
+class PermissionController extends BaseController
 {
 
        public function __construct()
