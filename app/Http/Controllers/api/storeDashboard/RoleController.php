@@ -100,7 +100,7 @@ class RoleController extends BaseController
     
        public function destroy( Role $role)
     {
-        if (is_null($role) ||  $category->type!= 'store'){
+        if (is_null($role) ||  $role->type!= 'store'){
             return $this->sendError("الدور غير موجود"," Role is't exists");
        }
            
