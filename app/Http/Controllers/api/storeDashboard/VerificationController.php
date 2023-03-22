@@ -54,7 +54,7 @@ class VerificationController extends BaseController
            'city_id'=>'required',
            'link'=>'required_if:commercialregistertype,maeruf',
            'file'=>'required|mimes:pdf',
-           'name'=>'required|string|max:255',
+           'name'=>'nullable|string|max:255',
            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
         ]);
         if ($validator->fails())
