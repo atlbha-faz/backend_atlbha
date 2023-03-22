@@ -192,7 +192,7 @@ class PageController extends BaseController
              'seo_link'=>'required|url',
              'seo_desc'=>'required|string',
              'tags'=>'required',
-             'name'=>'required|exists:page_categories,id'
+            // 'name'=>'required|exists:page_categories,id'
             // 'store_id'=>'required|exists:stores,id',
             // 'usre_id'=>'required|exists:users,id',
            ]);
