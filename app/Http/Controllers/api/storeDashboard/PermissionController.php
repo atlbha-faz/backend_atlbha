@@ -18,7 +18,7 @@ class VerificationController extends BaseController
      public function index()
     {
 
-                $success['permissions']=PermissionResource::collection(Permission::where('type','store')where('parent_id',null)->get());
+                $success['permissions']=PermissionResource::collection(Permission::where('type','store')->where('parent_id',null)->get());
 
         $success['status']= 200;
 
