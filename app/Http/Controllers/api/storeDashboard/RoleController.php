@@ -28,15 +28,20 @@ class RoleController extends BaseController
     
   public function store(Request $request)
   {
-      dd('dfdff');
-    $this->validate(
-      $request,
-      [
-        'role_name' => 'required|string|max:255|unique:roles,name',
+      
+      
+      $input = $request->all();
+            $validator =  Validator::make($input ,[
+                 'role_name' => 'required|string|max:255|unique:roles,name',
         'permissions' => 'required|array',
         'permissions.*' => 'nullable|numeric',
-      ]
-    );
+             
+            ]);
+            if ($validator->fails())
+            {
+                return $this->sendError(null,$validator->errors());
+            }
+      
       
     $role = Role::create(['name'=>$request->role_name , 'type'=>'store']);
       
