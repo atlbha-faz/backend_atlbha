@@ -69,7 +69,7 @@ class RoleController extends BaseController
     
      public function update(Request $request, Role $role)
     {
-        if (is_null($role) ||  $category->type!= 'store'){
+        if (is_null($role) ||  $role->type!= 'store'){
             return $this->sendError("الدور غير موجود"," Role is't exists");
        }
             $input = $request->all();
@@ -88,7 +88,7 @@ class RoleController extends BaseController
          
          
       
-    $role = Role::create(['name'=>$request->role_name , 'type'=>'store']);
+    $role->update(['name'=>$request->role_name ]);
       
     $role->syncPermissions($request->permissions);
          
