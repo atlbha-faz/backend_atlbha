@@ -30,8 +30,8 @@ class OrderItemSeeder extends Seeder
         ]);
       OrderItem::create([
             'order_id' => 1,
-            'product_id' => 2,
-            'store_id' => 7,
+            'product_id' => 7,
+            'store_id' => 1,
             'user_id' => 6,
             'price' => 300,
             'discount' => 0,
