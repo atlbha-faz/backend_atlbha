@@ -14,20 +14,28 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
-            $status = 'نشط';
-        }else{
-            $status = 'غير نشط';
+        if($this->status ==null || $this->status == 'new'){
+            $status = 'جديد';
+        }elseif($this->status == 'completed'){
+            $status = 'مكتمل';
+        }elseif($this->status == 'delivery_in_progress'){
+            $status = 'جاري التجهيز';
+        }elseif($this->status == 'ready'){
+            $status = 'جاهز';
+        }elseif($this->status == 'canceled'){
+            $status = 'ملغي';
         }
+        
+        
         
         return [
             'id' =>$this->id,
             'order_number' => $this->order_number,
             'user' => New UserResource($this->user),
-            'quantity' => $this->quantity,
-            'total_price' => $this->total_price,
+            'products' => ProductResource::collection($this->products),
+            'quantity' => $this->items()->sum('quantity'),
+            'total_price' => $this->items()->sum('total_price'),
             'status' => $status,
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         ];
     }
 }
