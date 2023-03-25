@@ -19,10 +19,11 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('quantity');
+            $table->integer('city_id');
             $table->double('total_price');
             $table->double('tax');
             $table->double('discount');
-            $table->enum('order_status',['pending','completed','delivery_in_progress','ready','canceled'])->default('pending');
+            $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled'])->default('new');
   $table->enum('payment_status', ['pending', 'paid', 'failed'])
                 ->default('pending');
             $table->timestamps();
