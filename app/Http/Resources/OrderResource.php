@@ -14,15 +14,15 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'new'){
+        if($this->order_status ==null || $this->order_status == 'new'){
             $status = 'جديد';
-        }elseif($this->status == 'completed'){
+        }elseif($this->order_status == 'completed'){
             $status = 'مكتمل';
-        }elseif($this->status == 'delivery_in_progress'){
+        }elseif($this->order_status == 'delivery_in_progress'){
             $status = 'جاري التجهيز';
-        }elseif($this->status == 'ready'){
+        }elseif($this->order_status == 'ready'){
             $status = 'جاهز';
-        }elseif($this->status == 'canceled'){
+        }elseif($this->order_status == 'canceled'){
             $status = 'ملغي';
         }
         
