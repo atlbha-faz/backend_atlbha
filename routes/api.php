@@ -430,6 +430,7 @@ Route::get('list',[App\Http\Controllers\api\storeDashboard\PaymentController::cl
     
     
     
+Route::get('orders',[App\Http\Controllers\api\storeDashboard\OrderController::class,'index'])->name('orders');
 Route::get('permissions',[App\Http\Controllers\api\storeDashboard\PermissionController::class,'index'])->name('permissions');
 Route::resource('roles',App\Http\Controllers\api\storeDashboard\RoleController::class);
 });
