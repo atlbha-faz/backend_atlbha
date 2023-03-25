@@ -33,8 +33,8 @@ class OrderResource extends JsonResource
             'order_number' => $this->order_number,
             'user' => New UserResource($this->user),
             'products' => ProductResource::collection($this->products),
-            'quantity' => $this->items()->sum('quantity'),
-            'total_price' => $this->items()->sum('total_price'),
+            'quantity' => $this->items()->where('store_id',auth()->user()->store_id)->sum('quantity'),
+            'total_price' => $this->items()->where('store_id',auth()->user()->store_id)->sum('total_price'),
             'status' => $status,
         ];
     }
