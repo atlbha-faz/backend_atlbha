@@ -32,7 +32,7 @@ class OrderSeeder extends Seeder
             'user_id' => 6,
             'city_id' => 3,
             'quantity' => 5,
-            'total_price' => 1200,
+            'total_price' => 1100,
             'tax' => 2.3,
             'discount' => 400,
             'order_status' => 'new',
