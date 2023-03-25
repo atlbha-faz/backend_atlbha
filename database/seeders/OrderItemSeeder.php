@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Seo;
+use App\Models\OrderItem;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
