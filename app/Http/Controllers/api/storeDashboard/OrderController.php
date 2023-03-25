@@ -23,7 +23,7 @@ class OrderController extends BaseController
      */
     public function index()
       {
-        $success['orders']=OrderResource::collection(Order::where('is_deleted',0)->whereHas('posts', function($q){
+        $success['orders']=OrderResource::collection(Order::where('is_deleted',0)->whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
 })->get());
         $success['status']= 200;
