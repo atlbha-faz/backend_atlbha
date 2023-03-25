@@ -29,4 +29,9 @@ class Order extends Model
           'product_id'
      );
     }
+    
+     public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }
