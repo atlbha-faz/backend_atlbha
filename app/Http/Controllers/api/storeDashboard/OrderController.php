@@ -45,9 +45,9 @@ public function show($order)
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم عرض الطلب بنجاح','Order showed successfully');
-     
+}
     
-     public function update(Request $request, Comment $comment)
+     public function update(Request $request, Order $order)
       {
               $order = Order::where('id',$order)->whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
