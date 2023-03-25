@@ -34,7 +34,7 @@ class OrderSeeder extends Seeder
             'quantity' => 5,
             'total_price' => 1200,
             'tax' => 2.3,
-            'discount' => 300,
+            'discount' => 400,
             'order_status' => 'new',
             'payment_status' => 1,
 
