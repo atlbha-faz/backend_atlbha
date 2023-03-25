@@ -45,6 +45,37 @@ public function show($order)
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم عرض الطلب بنجاح','Order showed successfully');
-     }
+     
+    
+     public function update(Request $request, Comment $comment)
+      {
+              $order = Order::where('id',$order)->whereHas('items', function($q){
+    $q->where('store_id',auth()->user()->store_id);
+})->first();
+        if (is_null($order)){
+        return $this->sendError("'الطلب غير موجود","Order is't exists");
+        }
+         
+         $input = $request->all();
+         $validator =  Validator::make($input ,[
+           'status'=>'required|in:new,completed,delivery_in_progress,ready,canceled',
+         ]);
+         if ($validator->fails())
+         {
+            # code...
+            return $this->sendError(null,$validator->errors());
+         }
+         $order->update([
+            'order_status' => $request->input('status'),
+         ]);
+         
+          $order->items()->update([
+            'order_status' => $request->input('status'),
+         ]);
+            $success['orders']=New OrderResource($order);
+            $success['status']= 200;
+
+            return $this->sendResponse($success,'تم التعديل بنجاح','Order updated successfully');
+    }
     
 }
