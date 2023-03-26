@@ -5,10 +5,12 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Product;
 use App\Models\Package;
 use App\Models\Store;
 use App\Models\Activity;
 use App\Models\Service;
+use App\Models\PaymentType;
 use App\Models\Plan;
 use App\Models\Category;
 use App\Models\Template;
@@ -18,12 +20,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\PaymentTypeResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\ActivityResource;
 use App\Http\Resources\PackageResource;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\TemplateResource;
 use App\Http\Resources\Page_categoryResource;
 use App\Http\Resources\PostCategoryResource;
@@ -39,6 +43,23 @@ class SelectorController extends BaseController
         $this->middleware('auth:api');
     }
 
+     public function products()
+    {
+        $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('status','active')->where('store_id',auth()->user()->store_id)->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','Products return successfully');
+    }
+    
+    
+     public function payment_types()
+    {
+        $success['payment_types']=PaymentTypeResource::collection(PaymentType::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع طرق الدفع بنجاح','Payment Types return successfully');
+    }
+    
     public function services()
     {
         $success['services']=ServiceResource::collection(Service::where('is_deleted',0)->where('status','active')->get());
