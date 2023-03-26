@@ -23,7 +23,7 @@ return new class extends Migration
             $table->double('total_price');
             $table->double('tax');
             $table->double('discount');
-            $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled'])->default('new');
+            $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled','not_completed'])->default('new');
   $table->enum('payment_status', ['pending', 'paid', 'failed'])
                 ->default('pending');
             $table->timestamps();
