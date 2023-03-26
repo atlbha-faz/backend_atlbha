@@ -285,12 +285,6 @@ Route::group(['middleware' => ['auth']], function() {
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
 Route::middleware([StoreUser::class])->group(function(){
 Route::prefix('/Store')->group(function () {
-    // selector
-    Route::get('selector/cities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'cities']);
-Route::get('selector/countries',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'countries']);
-Route::get('selector/activities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'activities']);
-Route::get('selector/packages',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'packages']);
-Route::get('selector/serrvices',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'serrvices']);
 // country
 Route::resource('country',App\Http\Controllers\api\storeDashboard\CountryController::class);
 Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::class);
@@ -409,6 +403,13 @@ Route::get('etlobhaservice/show', [App\Http\Controllers\api\storeDashboard\Etlob
 Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'store']);
 Route::get('marketerRequest/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'marketerRequest']);
 
+    
+    
+    // selector
+Route::get('selector/packages',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'packages']);
+Route::get('selector/products',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'products']);
+Route::get('selector/payment_types',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'payment_types']);
+    
 Route::get('selector/auth_user',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'auth_user']);
 Route::get('selector/cities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'cities']);
 Route::get('selector/countries',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'countries']);
