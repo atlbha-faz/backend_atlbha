@@ -23,6 +23,24 @@ class OrderController extends BaseController
      */
     public function index()
       {
+         $success['new']=Order::whereHas('items', function($q){
+    $q->where('store_id',auth()->user()->store_id)->where('order_status','new');
+})->count();
+        $success['completed']=Order::whereHas('items', function($q){
+    $q->where('store_id',auth()->user()->store_id)->where('order_status','completed');
+})->count();
+        
+         $success['not_completed']=Order::whereHas('items', function($q){
+    $q->where('store_id',auth()->user()->store_id)->where('order_status','not_completed');
+})->count();
+          $success['canceled']=Order::whereHas('items', function($q){
+    $q->where('store_id',auth()->user()->store_id)->where('order_status','canceled');
+})->count();
+        
+           $success['all']=Order::whereHas('items', function($q){
+    $q->where('store_id',auth()->user()->store_id);
+})->count();
+        
         $success['orders']=OrderResource::collection(Order::whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
 })->get());
