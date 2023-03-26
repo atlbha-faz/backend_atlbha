@@ -18,6 +18,8 @@ class OrderResource extends JsonResource
             $status = 'جديد';
         }elseif($this->order_status == 'completed'){
             $status = 'مكتمل';
+        }elseif($this->order_status == 'not_completed'){
+            $status = 'غير مكتمل';
         }elseif($this->order_status == 'delivery_in_progress'){
             $status = 'جاري التجهيز';
         }elseif($this->order_status == 'ready'){
