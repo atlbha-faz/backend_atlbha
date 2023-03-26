@@ -36,6 +36,7 @@ class OrderResource extends JsonResource
             'quantity' => $this->items()->where('store_id',auth()->user()->store_id)->sum('quantity'),
             'total_price' => $this->items()->where('store_id',auth()->user()->store_id)->sum('total_price'),
             'status' => $status,
+            'created_at' => $this->created_at,
         ];
     }
 }
