@@ -10,7 +10,7 @@ use App\Models\Package;
 use App\Models\Store;
 use App\Models\Activity;
 use App\Models\Service;
-use App\Models\PaymentType;
+use App\Models\Paymenttype;
 use App\Models\Plan;
 use App\Models\Category;
 use App\Models\Template;
@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
-use App\Http\Resources\PaymentTypeResource;
+use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\ActivityResource;
@@ -54,7 +54,7 @@ class SelectorController extends BaseController
     
      public function payment_types()
     {
-        $success['payment_types']=PaymentTypeResource::collection(PaymentType::where('is_deleted',0)->where('status','active')->get());
+        $success['payment_types']=PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->where('status','active')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع طرق الدفع بنجاح','Payment Types return successfully');
