@@ -96,4 +96,27 @@ public function show($order)
             return $this->sendResponse($success,'تم التعديل بنجاح','Order updated successfully');
     }
     
+     public function deleteall(Request $request)
+    {
+
+            $orders =Order::whereIn('id',$request->id)->whereHas('items', function($q){
+    $q->where('store_id',auth()->user()->store_id);
+})->get();
+           foreach($orders as $order)
+           {
+            if (is_null($order)){
+                   return $this->sendError("الطلب غير موجود"," Order is't exists");
+             }
+               $items = OrderItem::where('store_id' , auth()->user()->store_id)->where('order_id', $order->id)->get();
+               foreach($items as $item)
+           {
+               $item->delete();
+               }
+            }
+               $success['orders']= OrderResource::collection($orders);
+               $success['status']= 200;
+                return $this->sendResponse($success,'تم حذف الطلبات بنجاح','Order deleted successfully');
+    }
+    
+    
 }
