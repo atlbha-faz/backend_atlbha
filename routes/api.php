@@ -22,6 +22,7 @@ Route::get('selector/cities',[App\Http\Controllers\api\SelectorController::class
 Route::get('selector/countries',[App\Http\Controllers\api\SelectorController::class,'countries']);
 Route::get('selector/activities',[App\Http\Controllers\api\SelectorController::class,'activities']);
 Route::get('selector/packages',[App\Http\Controllers\api\SelectorController::class,'packages']);
+Route::get('selector/addToCart',[App\Http\Controllers\api\SelectorController::class,'addToCart']);
 
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
