@@ -18,6 +18,11 @@ use App\Http\Controllers\CountryController;
 
    
 
+Route::get('selector/cities',[App\Http\Controllers\api\SelectorController::class,'cities']);
+Route::get('selector/countries',[App\Http\Controllers\api\SelectorController::class,'countries']);
+Route::get('selector/activities',[App\Http\Controllers\api\SelectorController::class,'activities']);
+Route::get('selector/packages',[App\Http\Controllers\api\SelectorController::class,'packages']);
+
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
 
