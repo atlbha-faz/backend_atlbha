@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use in;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
 use Illuminate\Contracts\Validation\Rule;
