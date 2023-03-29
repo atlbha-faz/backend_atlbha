@@ -122,7 +122,8 @@ class StoreController extends BaseController
             'user_id' => $userid,
             'periodtype'=>$request->periodtype,
             'country_id' => $request->country_id,
-            'city_id' => $request->city_id
+            'city_id' => $request->city_id,
+            'confirmation_status' => 'accept',
           ]);
 
           $user->update([
