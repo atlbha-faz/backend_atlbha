@@ -69,6 +69,7 @@ class SelectorController extends BaseController
 
  public function addToCart()
     {
+     dd(\Cart::content());
       $success['contents']=CartResource::collection(\Cart::content());
         $success['status']= 200;
 
