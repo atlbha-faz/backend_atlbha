@@ -17,6 +17,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\CartResource;
 use App\Http\Resources\UnitResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\PackageResource;
