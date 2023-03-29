@@ -68,12 +68,7 @@ class SelectorController extends BaseController
 
  public function addToCart()
     {
-     
-     \Cart::add([
-  ['id' => '293ad', 'name' => 'Product 1', 'qty' => 1, 'price' => 10.00],
-  ['id' => '4832k', 'name' => 'Product 2', 'qty' => 1, 'price' => 10.00, 'options' => ['size' => 'large']]
-]);
-     \Cart::store('wafaa');
+      $success['contents']=CartResource::collection(\Cart::content());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الباقات بنجاح','packages return successfully');
