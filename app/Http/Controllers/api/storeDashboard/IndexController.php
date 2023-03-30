@@ -34,7 +34,10 @@ class IndexController extends BaseController
         $success['orders']=OrderResource::collection(Order::whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
 })->orderBy('created_at', 'DESC')->take(5)->get());
-        
+          $success['products']=DB::table('order_items')->where('store_id',auth()->user()->store_id)
+              ->select('product_id', DB::raw('count(*) as total'))
+                 ->groupBy('product_id')->orderBy('total', 'desc')->get();
+       
         
         $success['status']= 200;
 
