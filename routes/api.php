@@ -16,7 +16,9 @@ use App\Http\Controllers\CountryController;
 |
 */
 
-   
+//  test sms
+Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
+
 
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
