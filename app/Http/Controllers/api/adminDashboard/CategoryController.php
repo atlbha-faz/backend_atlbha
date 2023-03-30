@@ -80,14 +80,7 @@ class CategoryController extends BaseController
                 'store_id'=> null,
               ]);
 
-              $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255',
-
-            ]);
-            if ($validator->fails())
-            {
-                return $this->sendError(null,$validator->errors());
-            }
+           
 if($request->data){
     foreach($request->data as $data)
     {
@@ -217,9 +210,7 @@ if($request->data){
         
            $category->update([
                'name' => $request->input('name'),
-                'icon' =>$request->input('icon'),
-                'for' =>'etlobha',
-                'store_id' =>null
+                'icon' =>$request->icon,
            ]);
 
        $subcategory = Category::where('parent_id', $category_id);

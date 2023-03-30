@@ -55,8 +55,7 @@ class emailNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+         return [
+         ];
     }
 }

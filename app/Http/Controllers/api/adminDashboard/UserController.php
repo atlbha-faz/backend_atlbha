@@ -56,6 +56,7 @@ class UserController  extends BaseController
             //'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+             'password_confirm' => 'required|same:password',
             //'gender'=>'required|in:male,female',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users'],
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
@@ -131,7 +132,8 @@ class UserController  extends BaseController
             'name'=>'required|string|max:255',
             'user_name'=>'required|string|max:255|unique:users,user_name,'.$user->id,
             'email'=>'required|email|unique:users,email,'.$user->id,
-            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+             'password_confirm' => 'nullable|same:password',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users,phonenumber,'.$user->id],
             'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
@@ -145,11 +147,16 @@ class UserController  extends BaseController
             'name'=> $request->input('name'),
             'email' => $request->input('email'),
             'user_name' => $request->input('user_name'),
-            'password' => $request->input('password'),
             'phonenumber' => $request->input('phonenumber'),
-             'image' => $request->input('image'),
+             'image' => $request->image,
              
         ]);
+          if(!is_null($request->password)){
+            $user->update([
+          'password'=> $request->password,
+      ]);
+        }
+
         
         
   $user->assignRole($request->role);

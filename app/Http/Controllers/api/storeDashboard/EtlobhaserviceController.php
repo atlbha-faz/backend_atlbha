@@ -22,10 +22,10 @@ class EtlobhaserviceController extends BaseController
         $this->middleware('auth:api');
      }
 
-       public function show($id)
+       public function show()
     {
 
-      $success['stores']=New StoreResource(Store::where('is_deleted',0,)->where('id',$id)->first());
+      $success['stores']=New StoreResource(Store::where('is_deleted',0,)->where('id',auth()->user()->store_id)->first());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');

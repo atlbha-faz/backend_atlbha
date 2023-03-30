@@ -43,6 +43,10 @@ class EtlobhaController extends BaseController
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
        
+            'quantity'=>['required','numeric','gt:0'],
+            'less_qty'=>['required','numeric','gt:0'],
+            'images'=>'required|array',
+            'images.*'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data'=>'required|array',
             'data.*.type'=>'required|in:brand,color,wight,size',
@@ -67,6 +71,8 @@ class EtlobhaController extends BaseController
             'name' => $request->name,
             'sku' => $request->sku,
             'for' => 'etlobha',
+            'quantity' => $request->quantity,
+            'less_qty' => $request->less_qty,
             'description' => $request->description,
             'purchasing_price' => $request->purchasing_price,
             'selling_price' => $request->selling_price,
@@ -129,10 +135,14 @@ class EtlobhaController extends BaseController
                'name'=>'required|string|max:255',
               'sku'=>'required|string|unique:products',
               'description'=>'required|string',
+            'quantity'=>['required','numeric','gt:0'],
+            'less_qty'=>['required','numeric','gt:0'],
               'purchasing_price'=>['required','numeric','gt:0'],
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
-            'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'images'=>'nullable|array',
+            'images.*'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
               'data'=>'required|array',
               'data.*.type'=>'required|in:brand,color,wight,size',
               'data.*.title'=>'required|string',
@@ -158,10 +168,12 @@ class EtlobhaController extends BaseController
               'purchasing_price' => $request->input('purchasing_price'),
               'selling_price' => $request->input('selling_price'),
               'slug' =>$request->input('slug'),
+              'quantity' =>$request->input('quantity'),
+              'less_qty' =>$request->input('less_qty'),
               'stock' => $request->input('stock'),
-              'cover' => $request->input('cover'),
+              'cover' => $request->cover,
               'category_id' => $request->input('category_id'),
-              'subcategory_id' => $request->input('subcategory_id'),
+              'subcategory_id' =>  implode(',', $request->subcategory_id),
 
            ]);
            if($request->hasFile("images")){
@@ -216,14 +228,30 @@ class EtlobhaController extends BaseController
 
               return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
 }
+    
+    
+    public function show($product)
+    {
+         $product = Product::query()->where('for','etlobha')->find($product);
+         if (is_null($product) || $product->is_deleted==1){
+           return $this->sendError(" المنتج غير موجود","product is't exists");
+         }
+
+
+          $success['product']=New productResource($product);
+        $success['status']= 200;
+
+        return $this->sendResponse($success,'تم عرض المنتج بنجاح','product showed successfully');
+
+    }
 
 
            public function specialStatus($id)
     {
-        $product = Product::query()->where('for','etlobha')->find($id);
-         if (is_null($product) || $product->is_deleted==1){
-         return $this->sendError("المنتج غير موجود","product is't exists");
-         }
+        $product =Product::query()->where('for','etlobha')->find($id);
+           if (is_null($product) || $product->is_deleted==1){
+           return $this->sendError(" المنتج غير موجود","product is't exists");
+            }
 
        if($product->special === 'not_special'){
         $product->update(['special' => 'special']);

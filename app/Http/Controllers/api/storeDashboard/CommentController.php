@@ -251,11 +251,11 @@ class CommentController extends BaseController
 
          return $this->sendResponse($success,'تم اضافة رد بنجاح',' Added successfully');
     }
-    public function commentActivation($id)
+    public function commentActivation()
 {
 
-     $commentActivation = Homepage::where('id',$id)->first();
-        if (is_null($commentActivation) || $commentActivation->is_deleted==1 ||$commentActivation->store_id != auth()->user()->store_id){
+     $commentActivation = Homepage::where('store_id',auth()->user()->store_id)->first();
+        if (is_null($commentActivation) || $commentActivation->is_deleted==1 ){
          return $this->sendError("قسم التعليقات غير موجودة","comment's section is't exists");
          }
         if($commentActivation->	commentstatus === 'active'){

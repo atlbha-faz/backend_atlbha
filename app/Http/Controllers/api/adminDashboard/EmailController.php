@@ -22,7 +22,7 @@ class EmailController extends BaseController
     public function index()
     {
        
-        $success['emails']=Contact::where('is_deleted',0)->get();
+        $success['emails']=ContactResource::collection(Contact::where('is_deleted',0)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع االرسائل بنجاح','email return successfully');
@@ -31,7 +31,7 @@ class EmailController extends BaseController
     public function show($id){
         $contact =  Contact::query()->find($id);
        
-        $success['contact']=$contact;
+        $success['contact']=new ContactResource($contact);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع  الرسالة بنجاح','email  return successfully');
@@ -48,9 +48,10 @@ class EmailController extends BaseController
             return $this->sendResponse($success,'تم حذف الرسالة بنجاح','contact  deleted successfully');
     }
 
-    public function deleteEmailtAll()
+    public function deleteEmailAll(Request $request)
     {
-        $contacts = Contact::where('is_deleted',0)->get();
+        
+          $contacts =Contact::whereIn('id',$request->id)->get();
      foreach($contacts  as $contact ){
         $contact->update(['is_deleted' => 1]);
      }
@@ -83,11 +84,11 @@ class EmailController extends BaseController
             'store_id' => $request->store_id,
         ];
         $contact = Replaycontact::create($data);
-        $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
+      /*  $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
        foreach($users as  $user)
        {
         Notification::send($user , new emailNotification($data1));
-       }
+       }*/
          $success['contacts']=New ContactResource($contact);
         $success['status']= 200;
 

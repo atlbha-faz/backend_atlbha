@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call([
-            ActivitySeeder::class,
+         /*   ActivitySeeder::class,
             CountrySeeder::class,
             RegionSeeder::class,
             CitySeeder::class,
@@ -42,8 +42,11 @@ class DatabaseSeeder extends Seeder
             MaintenanceSeeder::class,
             TechnicalSupportSeeder::class,
             MarketerSeeder::class,
+            */
             PaymenttypeSeeder::class,
-            PlatformSeeder::class,
+            OrderSeeder::class,
+            OrderItemSeeder::class,
+           /* PlatformSeeder::class,
             ReplaycontactSeeder::class,
             SeoSeeder::class,
             SettingSeeder::class,
@@ -61,7 +64,10 @@ class DatabaseSeeder extends Seeder
             HomepageSeeder::class,
             OfferSeeder::class,
             SectionSeeder::class,
-            PartnerSeeder::class,
+            PartnerSeeder::class, 
+            
+            
+            PermissionTableSeeder::class,*/
 
         ]);
 

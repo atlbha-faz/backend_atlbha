@@ -182,7 +182,7 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
             'description'=>'required|string',
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
-            // 'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'discount_price'=>['required','numeric'],
             'discount_percent'=>['required','numeric'],
             'SEOdescription'=>'required',
@@ -210,12 +210,12 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
             'description' => $request->input('description'),
             'selling_price' => $request->input('selling_price'),
             'stock' => $request->input('stock'),
-            'cover' => $request->input('cover'),
+            'cover' => $request->cover,
             'SEOdescription' => $request->input('SEOdescription'),
             'discount_price'=>$request->input('discount_price'),
             'discount_percent'=>$request->input('discount_percent'),
             'category_id' => $request->input('category_id'),
-             'subcategory_id' => $request->input('subcategory_id'),
+             'subcategory_id' =>  implode(',', $request->subcategory_id),
             // 'store_id' => $request->input('store_id'),
 
 

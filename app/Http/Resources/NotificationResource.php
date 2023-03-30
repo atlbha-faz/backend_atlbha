@@ -22,6 +22,7 @@ class NotificationResource extends JsonResource
              'user'=>User::where('id',$this->data['user_id'])->get(),
             'message' => $this->data['message'],
             'store_id' => $this->data['store_id'],
+            'store_name' => \App\Models\Store::find($this->data['store_id'])->store_name,
             'type'=> $this->data['type'],
             'object_id'=> $this->data['object_id'],
             'read_at' => $this->read_at,
