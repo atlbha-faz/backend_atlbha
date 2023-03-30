@@ -29,11 +29,13 @@ class IndexController extends BaseController
         $success['customers']=User::where('user_type', 'customer')->where('status','active')->where('is_deleted',0)->where('verified',1)->count();
         
         $success['sales']=DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
-          $success['products']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count();
+          $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count();
         
         $success['orders']=OrderResource::collection(Order::whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
 })->orderBy('created_at', 'DESC')->take(5)->get());
+        
+        
           $success['products']=DB::table('order_items')->where('store_id',auth()->user()->store_id)
               ->select('product_id', DB::raw('count(*) as total'))
                  ->groupBy('product_id')->orderBy('total', 'desc')->get();
