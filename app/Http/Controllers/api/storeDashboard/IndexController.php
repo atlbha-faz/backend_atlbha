@@ -36,10 +36,10 @@ class IndexController extends BaseController
 })->orderBy('created_at', 'DESC')->take(5)->get());
         
         
-          $success['products']=DB::table('order_items')->where('store_id',auth()->user()->store_id)
-              ->join('products', 'order_items.product_id', '=', 'products.id')
+          $success['products']=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('order_items.store_id',auth()->user()->store_id)
               
-              ->select('order_items.product_id','products.name', DB::raw('count(*) as total'))
+              
+              ->select('order_items.product_id',DB::raw('count(*) as total'),'products.name')
                  ->groupBy('order_items.product_id')->orderBy('total', 'desc')->get();
        
         
