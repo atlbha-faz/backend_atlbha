@@ -37,6 +37,10 @@ class IndexController extends BaseController
         
         
           $success['products']=DB::table('order_items')->where('store_id',auth()->user()->store_id)
+              ->with(['product' => function ($query) {
+        $query->select('id', 'image','name','price');
+    }])
+              
               ->select('product_id', DB::raw('count(*) as total'))
                  ->groupBy('product_id')->orderBy('total', 'desc')->get();
        
