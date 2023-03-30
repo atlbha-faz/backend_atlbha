@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use in;
+use DB;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Product;
