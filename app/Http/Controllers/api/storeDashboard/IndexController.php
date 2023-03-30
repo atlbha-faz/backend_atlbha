@@ -33,7 +33,7 @@ class IndexController extends BaseController
         
         $success['orders']=OrderResource::collection(Order::whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
-})->orderBy('created_at', 'DESC')->get());
+})->orderBy('created_at', 'DESC')->take(5)->get());
         
         
         $success['status']= 200;
