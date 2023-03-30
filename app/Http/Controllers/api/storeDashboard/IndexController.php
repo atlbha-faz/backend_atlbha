@@ -23,29 +23,17 @@ class IndexController extends BaseController
      */
     public function index()
       {
-         $success['new']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id)->where('order_status','new');
-})->count();
-        $success['completed']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id)->where('order_status','completed');
-})->count();
+         $success['visits']=10
+        $success['customers']=User::where('user_type', 'customer')->where('status','active')->where('is_deleted',0)->where('verified',1)->count();
         
-         $success['not_completed']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id)->where('order_status','not_completed');
-})->count();
-          $success['canceled']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id)->where('order_status','canceled');
-})->count();
-        
-           $success['all']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id);
-})->count();
+         $success['sales']=DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->select(DB::raw('SUM(total_price - discount) as total'));
+          $success['products']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count();
         
         $success['orders']=OrderResource::collection(Order::whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
-})->get());
+})->orderBy('desc','created_at')->take(5));
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم ارجاع الطلبات بنجاح','Orders return successfully');
+         return $this->sendResponse($success,'تم ارجاع بنجاح','return successfully');
     }
 }
