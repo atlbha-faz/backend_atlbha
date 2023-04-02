@@ -56,7 +56,7 @@ class IndexController extends BaseController
        }
         
          for($i = 1; $i <= 12; $i++){ 
-            $array_sales_daily[(date('Y-m-d', strtotime("-".$i-1." days")))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , strtotime('-1 days')))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+            $array_sales_daily[(date('Y-m-d', strtotime("-".$i--." days")))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , strtotime('-1 days')))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
        }
         
         
