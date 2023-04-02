@@ -16,7 +16,7 @@ class CartResource extends JsonResource
     {
         $user = \App\Models\User::where('user_name',$this->identifier)->first();
         return [
-            'username' => $user->img,
+            'image' => $user->image,
             'name' => $user->name,
             'status' => 'غير مكتمل',
             'content' =>($this->content)
