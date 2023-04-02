@@ -70,7 +70,7 @@ class SelectorController extends BaseController
  public function addToCart()
     {
      dd(\Cart::content());
-      $success['contents']=CartResource::collection(\Cart::content());
+      $success['contents']=CartResource::collection(DB::table('shoppingcarts')->all());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الباقات بنجاح','packages return successfully');
