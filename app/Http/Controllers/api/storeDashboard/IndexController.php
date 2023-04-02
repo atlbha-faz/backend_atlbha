@@ -43,6 +43,17 @@ class IndexController extends BaseController
                  ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
        
         
+         $array_sales_monthly = array(); 
+         $array_sales_weekly = array(); 
+         $array_sales_daily = array(); 
+
+        for($i = 1; $i <= 12; $i++){ 
+            $array_sales_monthly[date('M', mktime(0, 0, 0, $i, 10))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereYear('created_at', date('Y'))->whereMonth('created_at', $i)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+       }
+        
+        
+        $success['array_sales_monthly']= $array_sales_monthly;
+        
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع بنجاح','return successfully');
