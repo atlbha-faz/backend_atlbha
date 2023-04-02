@@ -51,8 +51,18 @@ class IndexController extends BaseController
             $array_sales_monthly[date('M', mktime(0, 0, 0, $i, 10))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereYear('created_at', date('Y'))->whereMonth('created_at', $i)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
        }
         
+         for($i = 1; $i <= 12; $i++){ 
+            $array_sales_weekly[date('M', mktime(0, 0, 0, $i, 10))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereYear('created_at', date('Y'))->whereMonth('created_at', $i)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+       }
+        
+         for($i = 1; $i <= 12; $i++){ 
+            $array_sales_daily[date('Y-m-d', strtotime("-".$i-1." days"))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , , strtotime("-".$i-1." days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+       }
+        
         
         $success['array_sales_monthly']= $array_sales_monthly;
+        $success['array_sales_weekly']= $array_sales_weekly;
+        $success['array_sales_daily']= $array_sales_daily;
         
         $success['status']= 200;
 
