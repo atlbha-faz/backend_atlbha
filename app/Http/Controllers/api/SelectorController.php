@@ -26,6 +26,7 @@ use App\Http\Resources\TemplateResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PostCategoryResource;
 use App\Http\Resources\Page_categoryResource;
+use DB;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class SelectorController extends BaseController
@@ -69,7 +70,7 @@ class SelectorController extends BaseController
 
  public function addToCart()
     {
-     dd(\Cart::content());
+     
       $success['contents']=CartResource::collection(DB::table('shoppingcarts')->all());
         $success['status']= 200;
 
