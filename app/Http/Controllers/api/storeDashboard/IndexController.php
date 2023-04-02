@@ -48,18 +48,22 @@ class IndexController extends BaseController
          $array_sales_daily = array(); 
 
         for($i = 1; $i <= 12; $i++){ 
-            $array_sales_monthly[date('M', mktime(0, 0, 0, $i, 10))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereYear('created_at', date('Y'))->whereMonth('created_at', $i)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+           
+            $result= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereYear('created_at', date('Y'))->whereMonth('created_at', $i)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+       $array_sales_monthly[date('M', mktime(0, 0, 0, $i, 10))]= $result==null ? $result:0;
        }
         
          for($i = 1; $i <= 12; $i++){ 
                $x = ($i-1)*7;
              $xx = ($i*7)-1;
-            $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=',(date('Y-m-d' , strtotime("-".$xx." days"))))->whereDate('created_at','<=' ,(date('Y-m-d' , strtotime("-".$x." days"))))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+           $result = DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=',(date('Y-m-d' , strtotime("-".$xx." days"))))->whereDate('created_at','<=' ,(date('Y-m-d' , strtotime("-".$x." days"))))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+              $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= $result==null ? $result:0;
        }
         
          for($i = 1; $i <= 12; $i++){ 
              $x = $i-1;
-            $array_sales_daily[(date('Y-m-d', strtotime("-".$x." days")))]= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , strtotime("-".$x." days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+           $result= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , strtotime("-".$x." days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+               $array_sales_daily[(date('Y-m-d', strtotime("-".$x." days")))]= $result==null ? $result:0;
        }
         
         
