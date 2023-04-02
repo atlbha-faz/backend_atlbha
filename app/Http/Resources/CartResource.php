@@ -14,8 +14,12 @@ class CartResource extends JsonResource
      */
     public function toArray($request)
     {
+        $user = \App\Models\User::where('username',$this->identifier)->first();
         return [
-            'content' =>($this->content)->sum('qty')
+            'username' => $user->img,
+            'name' => $user->name,
+            'status' => 'غير مكتمل',
+            'content' =>($this->content)
         ];
     }
 }
