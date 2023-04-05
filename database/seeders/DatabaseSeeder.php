@@ -66,8 +66,6 @@ class DatabaseSeeder extends Seeder
             SectionSeeder::class,
             PartnerSeeder::class, 
             
-            
-            PermissionTableSeeder::class,
 
         ]);
 
