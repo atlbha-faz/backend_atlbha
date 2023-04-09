@@ -45,6 +45,10 @@ Route::get('page/{id}',[App\Http\Controllers\api\SubpageController::class,"show"
 Route::get('packages',[App\Http\Controllers\api\SubpageController::class,"packages"]);
 Route::post('showVideoDuration',[App\Http\Controllers\api\VideoController::class,"showVideo"]);
 
+
+Route::get('profile',[App\Http\Controllers\api\ProfileController::class,'index']);
+Route::post('profile',[App\Http\Controllers\api\ProfileController::class,'update']);
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'password'
@@ -76,7 +80,7 @@ Route::get('selector/page-categories',[App\Http\Controllers\api\adminDashboard\S
 Route::get('selector/post-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'post_categories']);
 Route::get('selector/roles',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'roles']);
 
-Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
+//Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
