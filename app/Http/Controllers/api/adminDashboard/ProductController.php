@@ -56,7 +56,6 @@ class ProductController extends BaseController
 //         $input = $request->all();
 //         $validator =  Validator::make($input ,[
 //             'name'=>'required|string|max:255',
-//             'sku'=>'required|string',
 //             'for'=>'required|in:store,etlobha',
 //             'description'=>'required|string',
 //             'purchasing_price'=>['required','numeric','gt:0'],
@@ -81,7 +80,6 @@ class ProductController extends BaseController
 //         }
 //         $product = Product::create([
 //             'name' => $request->name,
-//             'sku' => $request->sku,
 //             'for' => $request->for,
 //             'description' => $request->description,
 //             'quantity' => $request->quantity,
@@ -216,7 +214,6 @@ class ProductController extends BaseController
 //          $input = $request->all();
 //          $validator =  Validator::make($input ,[
 //              'name'=>'required|string|max:255',
-//             'sku'=>'required|string',
 //              'for'=>'required|in:store,etlobha',
 //             'description'=>'required|string',
 //             'purchasing_price'=>['required','numeric','gt:0'],
@@ -243,7 +240,6 @@ class ProductController extends BaseController
 //          }
 //          $product->update([
 //             'name' => $request->input('name'),
-//             'sku' => $request->input('sku'),
 //             'for' => $request->input('for'),
 //             'description' => $request->input('description'),
 //             'purchasing_price' => $request->input('purchasing_price'),
