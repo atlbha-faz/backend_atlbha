@@ -24,7 +24,7 @@ class SettingController extends BaseController
 
     public function setting_store_show()
     {
-        dd(auth()->user()->store_id);
+        dd(Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->first());
         $success['setting_store']=new StoreResource(Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->first());
         $success['status']= 200;
 
