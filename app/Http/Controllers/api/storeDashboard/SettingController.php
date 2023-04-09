@@ -24,7 +24,7 @@ class SettingController extends BaseController
 
     public function setting_store_show()
     {
-        $success['setting_store']=StoreResource::collection(Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->get());
+        $success['setting_store']=new StoreResource(Store::where('is_deleted',0)->where('id',auth()->user()->store_id)->first());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم عرض الاعدادات بنجاح','registration_status shown successfully');
