@@ -94,6 +94,7 @@ class EtlobhaController extends BaseController
 
                 }
             }
+        if(!is_null($request->data)){
             foreach($request->data as $data)
             {
                 // dd($data['value']);
@@ -109,7 +110,7 @@ class EtlobhaController extends BaseController
                 $option->save();
                 $options[]=$option;
                 }
-
+        }
 
          $success['products']=New ProductResource($product);
         $success['status']= 200;
@@ -196,7 +197,7 @@ class EtlobhaController extends BaseController
           $option = Option::where('product_id', $id);
 
 
-
+ if(!is_null($request->data)){
           $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
           foreach ($options_id as $oid) {
             if (!(in_array($oid, array_column($request->data, 'id')))) {
@@ -217,7 +218,7 @@ class EtlobhaController extends BaseController
               'product_id' => $id
             ]);
           }
-
+    }
 
               $success['products']=New ProductResource($product);
               $success['status']= 200;
