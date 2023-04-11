@@ -66,6 +66,9 @@ class EtlobhaController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
+        
+        implode(',', $request->subcategory_id);
+            
         $product = Product::create([
             'name' => $request->name,
             'for' => 'etlobha',
