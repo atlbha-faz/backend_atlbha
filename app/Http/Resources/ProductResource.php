@@ -44,7 +44,7 @@ class ProductResource extends JsonResource
             'discount_percent'=>$this->discount_percent,
             'SEOdescription'=>$this->SEOdescription,
             'importproduct'=>$this->importproduct->count(),
-            'subcategory' => CategoryResource::collection($this->subcategory()),
+            'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id',explode(',',$this->subcategory_id)->get()),
             'status' => $status,
             'special' => $special ,
             'productRating'=>$this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
