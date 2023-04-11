@@ -55,7 +55,7 @@ class ProductResource extends JsonResource
             'store' => New StoreResource($this->store),
             'images' => ImageResource::collection($this->image),
             // 'importproduct' =>$this->importproduct
-           'options'=>OptionResource::collection($this->option)
+           'options'=>OptionResource::collection($this->option),
 
 
        ];
