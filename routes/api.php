@@ -16,7 +16,7 @@ use App\Http\Controllers\CountryController;
 |
 */
 
-
+Route::post('sendMessagePost', 'App\Http\Controllers\api\AuthController@sendMessagePost');
 
 
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
