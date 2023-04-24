@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Spatie\Permission\Models\Role;
 
-class RoleResource extends JsonResource
+class CartResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,13 +13,12 @@ class RoleResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    { 
+    {
+        $user = \App\Models\User::where('user_name',$this->identifier)->first();
         return [
-            'id' =>$this->id,
-            'name' => $this->name,
-            'permissions' => PermissionResource::collection($this->permissions),
+            'user' => new UserResource ($user),
+            'status' => 'غير مكتمل',
+            'content' =>($this->content)
         ];
-            
-       
     }
 }

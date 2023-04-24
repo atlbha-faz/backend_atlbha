@@ -31,6 +31,7 @@ class CreatePermissionTables extends Migration
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
             $table->BigInteger('parent_id')->nullable();
              $table->string('name_ar');  
+             $table->string('action_type');  
             $table->enum('type',['store','admin'])->default('store');
             
 

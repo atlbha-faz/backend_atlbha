@@ -23,7 +23,7 @@ class OptionResource extends JsonResource
          return [
             'id' =>$this->id,
             'type' => $this->type,
-            'product' => New ProductResource($this->product),
+            //'product' => New ProductResource($this->product),
             'title' => $this->title,
             'value' => $this->value,
 'status' => $status,

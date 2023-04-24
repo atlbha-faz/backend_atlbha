@@ -1,24 +1,36 @@
 <?php
 
 
-namespace App\Http\Controllers\api\adminDashboard;
+namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Product;
 use App\Models\Package;
+use App\Models\Store;
 use App\Models\Activity;
+use App\Models\Service;
+use App\Models\Paymenttype;
 use App\Models\Plan;
+use App\Models\Category;
 use App\Models\Template;
 use App\Models\Page_category;
+use App\Models\Postcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\ActivityResource;
 use App\Http\Resources\PackageResource;
+use App\Http\Resources\ServiceResource;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\TemplateResource;
 use App\Http\Resources\Page_categoryResource;
+use App\Http\Resources\PostCategoryResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -31,6 +43,40 @@ class SelectorController extends BaseController
         $this->middleware('auth:api');
     }
 
+     public function products()
+    {
+        $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('status','active')->where('store_id',auth()->user()->store_id)->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','Products return successfully');
+    }
+    
+    
+     public function payment_types()
+    {
+        $success['payment_types']=PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع طرق الدفع بنجاح','Payment Types return successfully');
+    }
+    
+    public function services()
+    {
+        $success['services']=ServiceResource::collection(Service::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع الخدمات بنجاح','Services return successfully');
+    }
+
+    public function auth_user()
+    {
+        $success['auth_user']=new StoreResource(Store::find(auth()->user()->store_id));
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع المستخدم بنجاح','Auth User return successfully');
+    }
+
+
     public function cities()
     {
         $success['cities']=CityResource::collection(City::where('is_deleted',0)->where('status','active')->get());
@@ -38,7 +84,6 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع المدن بنجاح','cities return successfully');
     }
-
 
 
   public function countries()
@@ -140,4 +185,16 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الخدمات بنجاح','serrvices return successfully');
     }
+    
+      public function post_categories()
+    {
+        $success['categories']=PostCategoryResource::collection(Postcategory::where('is_deleted',0)->where('status','active')->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع تصنيفات المقالات بنجاح','Post Categories return successfully');
+    }
+
+
+    
+    
 }

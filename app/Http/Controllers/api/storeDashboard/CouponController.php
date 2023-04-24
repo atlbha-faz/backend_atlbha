@@ -52,10 +52,12 @@ class CouponController extends BaseController
             'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
-            'start_at' =>['required','date'],
+            //'start_at' =>['required','date'],
             'expire_date' =>['required','date'],
             'total_redemptions'=>['required','numeric'],
             'user_redemptions'=>['required','numeric'],
+            'free_shipping'=>['required','in:0,1'],
+            'exception_discount_product'=>['required','in:0,1'],
             'status'=>'required|in:active,not_active',
 
         ]);
@@ -68,7 +70,7 @@ class CouponController extends BaseController
             'discount_type' => $request->discount_type,
             'total_price' => $request->total_price,
             'discount' => $request->discount,
-            'start_at' => $request->start_at,
+            //'start_at' => $request->start_at,
             'expire_date' => $request->expire_date,
             'total_redemptions' => $request->total_redemptions,
             'user_redemptions' => $request->user_redemptions,
@@ -159,11 +161,14 @@ class CouponController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-            'code'=>'required|string|unique:coupons',
+            'code'=>'required|string|unique:coupons,code,'.$coupon->id,
             'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
             'expire_date' =>['required','date'],
+            'free_shipping'=>['required','in:0,1'],
+            'exception_discount_product'=>['required','in:0,1'],
+            'status'=>'required|in:active,not_active',
             'total_redemptions'=>['required','numeric'],
             'user_redemptions'=>['required','numeric']
            ]);
@@ -182,6 +187,7 @@ class CouponController extends BaseController
                'user_redemptions' => $request->input('user_redemptions'),
                'free_shipping' => $request->input('free_shipping'),
                'exception_discount_product' => $request->input('exception_discount_product'),
+               'status' => $request->input('status'),
             //    'store_id' => $request->input('store_id'),
            ]);
 

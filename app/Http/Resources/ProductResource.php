@@ -29,7 +29,7 @@ class ProductResource extends JsonResource
        return [
             'id' =>$this->id,
             'name' => $this->name,
-            'sku' => $this->sku,
+            //'sku' => $this->sku,
             'for' => $this->for,
              'slug' => $this->slug,
             'description' => $this->description,
@@ -42,8 +42,9 @@ class ProductResource extends JsonResource
             'cover' =>$this->cover,
             'discount_price'=>$this->discount_price,
             'discount_percent'=>$this->discount_percent,
+            'SEOdescription'=>$this->SEOdescription,
             'importproduct'=>$this->importproduct->count(),
-            'subcategory' => CategoryResource::collection($this->subcategory()),
+            'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id',explode(',',$this->subcategory_id))->get()),
             'status' => $status,
             'special' => $special ,
             'productRating'=>$this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
@@ -53,7 +54,7 @@ class ProductResource extends JsonResource
             'category' => New CategoryResource($this->category),
             'store' => New StoreResource($this->store),
             'images' => ImageResource::collection($this->image),
-            // 'importproduct' =>$this->importproduct
+           'options'=>OptionResource::collection($this->option),
 
 
        ];

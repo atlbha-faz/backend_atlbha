@@ -16,8 +16,13 @@ use App\Http\Controllers\CountryController;
 |
 */
 
-Route::post('sendMessagePost', 'App\Http\Controllers\api\AuthController@sendMessagePost');
 
+
+Route::get('selector/cities',[App\Http\Controllers\api\SelectorController::class,'cities']);
+Route::get('selector/countries',[App\Http\Controllers\api\SelectorController::class,'countries']);
+Route::get('selector/activities',[App\Http\Controllers\api\SelectorController::class,'activities']);
+Route::get('selector/packages',[App\Http\Controllers\api\SelectorController::class,'packages']);
+Route::get('selector/addToCart',[App\Http\Controllers\api\SelectorController::class,'addToCart']);
 
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
@@ -40,6 +45,10 @@ Route::get('page/{id}',[App\Http\Controllers\api\SubpageController::class,"show"
 Route::get('packages',[App\Http\Controllers\api\SubpageController::class,"packages"]);
 Route::post('showVideoDuration',[App\Http\Controllers\api\VideoController::class,"showVideo"]);
 
+
+Route::get('profile',[App\Http\Controllers\api\ProfileController::class,'index']);
+Route::post('profile',[App\Http\Controllers\api\ProfileController::class,'update']);
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'password'
@@ -52,7 +61,12 @@ Route::group([
 
 // change status routers
 Route::middleware([AdminUser::class])->group(function(){
-    Route::prefix('/store')->group(function ()  {
+
+    Route::prefix('/Admin')->group(function ()  {
+Route::post('payment',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'payment']);
+Route::get('callback',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'callback'])->name('callback');
+Route::post('updateCharge/{id}',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'updateCharge']);
+Route::get('list',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'list'])->name('list');
 
 Route::get('selector/years',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'years']);
 Route::get('selector/cities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'cities']);
@@ -66,7 +80,7 @@ Route::get('selector/page-categories',[App\Http\Controllers\api\adminDashboard\S
 Route::get('selector/post-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'post_categories']);
 Route::get('selector/roles',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'roles']);
 
-Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
+//Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
@@ -217,6 +231,7 @@ Route::get('storechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreC
 Route::get('productchangeSatusall',[App\Http\Controllers\api\adminDashboard\ProductController::class,'changeSatusall']);
 Route::get('etlobhachangeSatusall',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'changeStatusall']);
 Route::get('etlobhadeleteall',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'deleteall']);
+Route::get('etlobhachangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'specialStatus']);
 Route::get('productdeleteall',[App\Http\Controllers\api\adminDashboard\ProductController::class,'deleteall']);
 Route::post('addToStore/{id}',[App\Http\Controllers\api\adminDashboard\StockController::class,'addToStore']);
 Route::get('technicalSupportchangeStatusall',[App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class,'changeStatusall']);
@@ -265,6 +280,9 @@ Route::post('addAlert',[App\Http\Controllers\api\adminDashboard\SubscriptionsCon
 Route::get('subscriptionsdeleteall',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'deleteall']);
 Route::get('subscriptionschangeSatusall',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'changeSatusall']);
 
+
+
+
 });
 });
 Auth::routes();
@@ -277,12 +295,6 @@ Route::group(['middleware' => ['auth']], function() {
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
 Route::middleware([StoreUser::class])->group(function(){
 Route::prefix('/Store')->group(function () {
-    // selector
-    Route::get('selector/cities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'cities']);
-Route::get('selector/countries',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'countries']);
-Route::get('selector/activities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'activities']);
-Route::get('selector/packages',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'packages']);
-Route::get('selector/serrvices',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'serrvices']);
 // country
 Route::resource('country',App\Http\Controllers\api\storeDashboard\CountryController::class);
 Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::class);
@@ -366,13 +378,13 @@ Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientControlle
 Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientController::class,'deleteall']);
 //
-// Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
+Route::resource('homepage',App\Http\Controllers\api\storeDashboard\HomepageController::class);
 // comments
 Route::resource('comment',App\Http\Controllers\api\storeDashboard\CommentController::class);
 Route::get('commentchangeSatusall',[App\Http\Controllers\api\storeDashboard\CommentController::class,'changeSatusall']);
 Route::post('replaycomment',[App\Http\Controllers\api\storeDashboard\CommentController::class,'replayComment']);
 Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'changeStatus']);
-Route::get('commentActivation/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class,'commentActivation']);
+Route::get('commentActivation', [App\Http\Controllers\api\storeDashboard\CommentController::class,'commentActivation']);
 // Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
 
 // Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
@@ -397,20 +409,42 @@ Route::get('NotificationDelete/{id}',[App\Http\Controllers\api\storeDashboard\No
 Route::get('NotificationDeleteAll',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'deleteNotificationAll']);
 Route::get('NotificationShow/{id}',[App\Http\Controllers\api\storeDashboard\NotificationController::class,'show']);
 //  Etlobha services
-Route::get('show/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'show']);
+Route::get('etlobhaservice/show', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'show']);
 Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'store']);
 Route::get('marketerRequest/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class,'marketerRequest']);
 
+
+
+    // selector
+Route::get('selector/packages',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'packages']);
+Route::get('selector/products',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'products']);
+Route::get('selector/payment_types',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'payment_types']);
+
+Route::get('selector/auth_user',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'auth_user']);
 Route::get('selector/cities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'cities']);
 Route::get('selector/countries',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'countries']);
 Route::get('selector/activities',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'activities']);
 Route::get('selector/mainCategories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'mainCategories']);
+Route::get('selector/services',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'services']);
 Route::get('selector/children/{id}',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'children']);
 Route::get('selector/roles',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'roles']);
+
+
+Route::get('selector/page-categories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'pagesCategory']);
+Route::get('selector/post-categories',[App\Http\Controllers\api\storeDashboard\SelectorController::class,'post_categories']);
+
 //  payment
 Route::post('payment',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'payment']);
 Route::get('callback',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'callback'])->name('callback');
 Route::post('updateCharge/{id}',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'updateCharge']);
 Route::get('list',[App\Http\Controllers\api\storeDashboard\PaymentController::class,'list'])->name('list');
+
+
+
+Route::resource('orders',App\Http\Controllers\api\storeDashboard\OrderController::class);
+Route::get('index',[App\Http\Controllers\api\storeDashboard\IndexController::class,'index']);
+Route::get('ordersdeleteall',[App\Http\Controllers\api\storeDashboard\OrderController::class,'deleteall']);
+Route::get('permissions',[App\Http\Controllers\api\storeDashboard\PermissionController::class,'index'])->name('permissions');
+Route::resource('roles',App\Http\Controllers\api\storeDashboard\RoleController::class);
 });
 });

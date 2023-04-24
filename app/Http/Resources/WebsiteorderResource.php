@@ -14,11 +14,20 @@ class WebsiteorderResource extends JsonResource
      */
     public function toArray($request)
     {
+        
+          if($this->status ==null || $this->status == 'pending'){
+            $status = 'قيد المعالجة';
+        }elseif($this->status == 'accept'){
+            $status = 'منتهي';
+        }elseif($this->status == 'reject'){
+            $status = 'غير منتهي';
+        }
+        
         return [
             'id' =>$this->id,
             'order_number'=>$this->order_number,
             'type' =>$this->type,
-            'status'=>$this->status,
+            'status'=>$status,
             'is_deleted'=>$this->is_deleted,
             'created_at' => (string) $this->created_at,
             'store' => New StoreResource($this->store),
