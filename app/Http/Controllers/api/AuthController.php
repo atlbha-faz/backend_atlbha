@@ -180,7 +180,7 @@ else{
         return $this->sendResponse($success, 'تم التسجيل بنجاح', 'Register Successfully');
 }
     }
-    public function login(Request $request)
+    public function login_admin(Request $request)
     {
         $input = $request->all();
         $validator =  Validator::make($input, [
@@ -195,8 +195,11 @@ else{
             //dd(Hash::make($request->password));
 
         if (
-            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password])
+            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin'])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin'])
+            
+            && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin_employee'])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin_employee'])
         ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
         } elseif (
@@ -228,7 +231,56 @@ else{
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
     }
 
+ public function login(Request $request)
+    {
+        $input = $request->all();
+        $validator =  Validator::make($input, [
+            'user_name' => 'string|required',
+            'password' => 'string|required',
+            //'device_token' => 'string|required',
+        ]);
 
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+            //dd(Hash::make($request->password));
+
+        if (
+             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
+            
+            && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
+        ) {
+            return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
+        } elseif (
+            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'verified' => 1])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'verified' => 1])
+        ) {
+            $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
+
+            if ($user) {
+
+                $user->generateVerifyCode();
+                $request->code = $user->verify_code;
+                $request->phonenumber = $user->phonenumber;
+                $this->sendSms($request); // send and return its response
+            }
+
+            return $this->sendError('الحساب غير محقق', 'User not verified');
+        }
+
+
+        $user = auth()->user();
+
+        $user->update(['device_token' => $request->device_token]);
+
+        $success['user'] = new UserResource($user);
+        $success['token'] = $user->createToken('authToken')->accessToken;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
+    }
     public function logout()
     {
         $user = auth("api")->user()->token();
