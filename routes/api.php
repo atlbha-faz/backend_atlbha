@@ -289,12 +289,7 @@ Route::get('subscriptionschangeSatusall',[App\Http\Controllers\api\adminDashboar
 });
 });
 Auth::routes();
-/*Route::group(['middleware' => ['auth']], function() {
-    Route::resource('roles', RoleController::class);
-    // Route::resource('users', UserController::class);
 
-});
-*/
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
 Route::middleware([StoreUser::class])->group(function(){
 Route::prefix('/Store')->group(function () {
