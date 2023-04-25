@@ -28,6 +28,7 @@ Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mo
 
 
 Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
+Route::post('/loginadminapi','App\Http\Controllers\api\AuthController@login_admin');
 Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 //  index Ettlobha page
