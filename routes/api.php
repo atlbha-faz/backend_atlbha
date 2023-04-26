@@ -284,6 +284,7 @@ Route::get('subscriptionsdeleteall',[App\Http\Controllers\api\adminDashboard\Sub
 Route::get('subscriptionschangeSatusall',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'changeSatusall']);
   
 
+Route::get('permissions',[App\Http\Controllers\api\adminDashboard\PermissionController::class,'index'])->name('permissions');
 
 
 });
