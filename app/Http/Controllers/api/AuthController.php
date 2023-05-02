@@ -47,7 +47,7 @@ else{
             'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
             'package_id' =>'required_if:user_type,store|exists:packages,id',
-            'country_id'=>'required_if:user_type,store|exists:countries,id',
+            //'country_id'=>'required_if:user_type,store|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'periodtype'=>'required_if:user_type,store|in:6months,year',
 
@@ -78,7 +78,7 @@ else{
                 'package_id' => $request->package_id,
                 'user_id' => $userid,
                 'periodtype'=>$request->periodtype,
-                'country_id' => $request->country_id,
+                //'country_id' => $request->country_id,
                 'city_id' => $request->city_id,
 
             ]);
