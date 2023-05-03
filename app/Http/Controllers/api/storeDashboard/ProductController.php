@@ -69,7 +69,6 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'sku'=>'required|string|unique:products',
             'description'=>'required|string',
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
@@ -95,7 +94,6 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
         }
         $product = Product::create([
             'name' => $request->name,
-            'sku' => $request->sku,
             'for' => 'store',
             'description' => $request->description,
 

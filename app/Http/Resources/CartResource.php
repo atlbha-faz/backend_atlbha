@@ -15,6 +15,7 @@ class CartResource extends JsonResource
      */
     public function toArray($request)
     {
+        // $user = \App\Models\User::where('user_name',$this->identifier)->first();
         return [
           
             'id' => $this->id,

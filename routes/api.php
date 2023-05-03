@@ -31,6 +31,7 @@ Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mo
 
 
 Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
+Route::post('/loginadminapi','App\Http\Controllers\api\AuthController@login_admin');
 Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 //  index Ettlobha page
@@ -47,6 +48,10 @@ Route::post('verify-user','App\Http\Controllers\api\AuthController@verifyUser');
 Route::get('page/{id}',[App\Http\Controllers\api\SubpageController::class,"show"]);
 Route::get('packages',[App\Http\Controllers\api\SubpageController::class,"packages"]);
 Route::post('showVideoDuration',[App\Http\Controllers\api\VideoController::class,"showVideo"]);
+
+
+Route::get('profile',[App\Http\Controllers\api\ProfileController::class,'index']);
+Route::post('profile',[App\Http\Controllers\api\ProfileController::class,'update']);
 
 Route::group([
     'middleware' => 'api',
@@ -85,7 +90,7 @@ Route::get('selector/page-categories',[App\Http\Controllers\api\adminDashboard\S
 Route::get('selector/post-categories',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'post_categories']);
 Route::get('selector/roles',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'roles']);
 
-Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
+//Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 
 Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
 Route::post('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'update']);
@@ -262,6 +267,8 @@ Route::get('registration_marketer_show',[App\Http\Controllers\api\adminDashboard
 
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::class);
+        
+Route::resource('roles',App\Http\Controllers\api\adminDashboard\RoleController::class);
 Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
 Route::get('productchangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\ProductController::class,'specialStatus']);
 Route::get('activitydeleteall',[App\Http\Controllers\api\adminDashboard\ActivityController::class,'deleteall']);
@@ -286,16 +293,12 @@ Route::get('subscriptionsdeleteall',[App\Http\Controllers\api\adminDashboard\Sub
 Route::get('subscriptionschangeSatusall',[App\Http\Controllers\api\adminDashboard\SubscriptionsController::class,'changeSatusall']);
   
 
+Route::get('permissions',[App\Http\Controllers\api\adminDashboard\PermissionController::class,'index'])->name('permissions');
 
 
 });
 });
 Auth::routes();
-Route::group(['middleware' => ['auth']], function() {
-    Route::resource('roles', RoleController::class);
-    // Route::resource('users', UserController::class);
-
-});
 
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
 Route::middleware([StoreUser::class])->group(function(){
@@ -453,6 +456,7 @@ Route::get('list',[App\Http\Controllers\api\storeDashboard\PaymentController::cl
     
     
 Route::resource('orders',App\Http\Controllers\api\storeDashboard\OrderController::class);
+Route::get('index',[App\Http\Controllers\api\storeDashboard\IndexController::class,'index']);
 Route::get('ordersdeleteall',[App\Http\Controllers\api\storeDashboard\OrderController::class,'deleteall']);
 Route::get('permissions',[App\Http\Controllers\api\storeDashboard\PermissionController::class,'index'])->name('permissions');
 Route::resource('roles',App\Http\Controllers\api\storeDashboard\RoleController::class);

@@ -37,7 +37,6 @@ class EtlobhaController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
-            'sku'=>'required|string|unique:products',
             'description'=>'required|string',
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
@@ -48,7 +47,7 @@ class EtlobhaController extends BaseController
             'images'=>'required|array',
             'images.*'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'data'=>'required|array',
+            'data'=>'nullable|array',
             'data.*.type'=>'required|in:brand,color,wight,size',
             'data.*.title'=>'required|string',
             'data.*.value'=>'required|array',
@@ -67,9 +66,10 @@ class EtlobhaController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
+        
+            
         $product = Product::create([
             'name' => $request->name,
-            'sku' => $request->sku,
             'for' => 'etlobha',
             'quantity' => $request->quantity,
             'less_qty' => $request->less_qty,
@@ -96,6 +96,7 @@ class EtlobhaController extends BaseController
 
                 }
             }
+        if(!is_null($request->data)){
             foreach($request->data as $data)
             {
                 // dd($data['value']);
@@ -111,7 +112,7 @@ class EtlobhaController extends BaseController
                 $option->save();
                 $options[]=$option;
                 }
-
+        }
 
          $success['products']=New ProductResource($product);
         $success['status']= 200;
@@ -133,7 +134,6 @@ class EtlobhaController extends BaseController
            $input = $request->all();
            $validator =  Validator::make($input ,[
                'name'=>'required|string|max:255',
-              'sku'=>'required|string|unique:products',
               'description'=>'required|string',
             'quantity'=>['required','numeric','gt:0'],
             'less_qty'=>['required','numeric','gt:0'],
@@ -143,7 +143,7 @@ class EtlobhaController extends BaseController
             'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'images'=>'nullable|array',
             'images.*'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-              'data'=>'required|array',
+              'data'=>'nullable|array',
               'data.*.type'=>'required|in:brand,color,wight,size',
               'data.*.title'=>'required|string',
               'data.*.value'=>'required|array',
@@ -163,7 +163,6 @@ class EtlobhaController extends BaseController
            }
            $product->update([
               'name' => $request->input('name'),
-              'sku' => $request->input('sku'),
               'description' => $request->input('description'),
               'purchasing_price' => $request->input('purchasing_price'),
               'selling_price' => $request->input('selling_price'),
@@ -200,7 +199,7 @@ class EtlobhaController extends BaseController
           $option = Option::where('product_id', $id);
 
 
-
+ if(!is_null($request->data)){
           $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
           foreach ($options_id as $oid) {
             if (!(in_array($oid, array_column($request->data, 'id')))) {
@@ -221,7 +220,7 @@ class EtlobhaController extends BaseController
               'product_id' => $id
             ]);
           }
-
+    }
 
               $success['products']=New ProductResource($product);
               $success['status']= 200;

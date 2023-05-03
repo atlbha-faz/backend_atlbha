@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use in;
+use DB;
 use App\Models\Order;
+use App\Models\User;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
 use Illuminate\Contracts\Validation\Rule;
@@ -23,29 +25,54 @@ class IndexController extends BaseController
      */
     public function index()
       {
-         $success['new']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id)->where('order_status','new');
-})->count();
-        $success['completed']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id)->where('order_status','completed');
-})->count();
+         $success['visits']=10;
+        $success['customers']=User::where('user_type', 'customer')->where('status','active')->where('is_deleted',0)->where('verified',1)->count();
         
-         $success['not_completed']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id)->where('order_status','not_completed');
-})->count();
-          $success['canceled']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id)->where('order_status','canceled');
-})->count();
-        
-           $success['all']=Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id);
-})->count();
+        $success['sales']=DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+          $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count();
         
         $success['orders']=OrderResource::collection(Order::whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
-})->get());
+})->orderBy('created_at', 'DESC')->take(5)->get());
+        
+        
+          $success['products']=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('order_items.store_id',auth()->user()->store_id)
+              
+              
+              ->select('products.id','products.cover','products.name','products.selling_price',DB::raw('sum(order_items.total_price - order_items.discount) as sales'),DB::raw('sum(order_items.quantity) as count'))
+                 ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
+       
+        
+         $array_sales_monthly = array(); 
+         $array_sales_weekly = array(); 
+         $array_sales_daily = array(); 
+
+        for($i = 1; $i <= 12; $i++){ 
+           
+            $result= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereYear('created_at', date('Y'))->whereMonth('created_at', $i)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+       $array_sales_monthly[date('M', mktime(0, 0, 0, $i, 10))]= $result!==null ? $result:0;
+       }
+        
+         for($i = 1; $i <= 12; $i++){ 
+               $x = ($i-1)*7;
+             $xx = ($i*7)-1;
+           $result = DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=',(date('Y-m-d' , strtotime("-".$xx." days"))))->whereDate('created_at','<=' ,(date('Y-m-d' , strtotime("-".$x." days"))))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+              $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= $result!==null ? $result:0;
+       }
+        
+         for($i = 1; $i <= 12; $i++){ 
+             $x = $i-1;
+           $result= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , strtotime("-".$x." days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+               $array_sales_daily[(date('Y-m-d', strtotime("-".$x." days")))]= $result!==null ? $result:0;
+       }
+        
+        
+        $success['array_sales_monthly']= $array_sales_monthly;
+        $success['array_sales_weekly']= $array_sales_weekly;
+        $success['array_sales_daily']= $array_sales_daily;
+        
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم ارجاع الطلبات بنجاح','Orders return successfully');
+         return $this->sendResponse($success,'تم ارجاع بنجاح','return successfully');
     }
 }
