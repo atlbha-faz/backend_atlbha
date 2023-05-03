@@ -22,7 +22,10 @@ return new class extends Migration
             $table->integer('city_id');
             $table->double('total_price');
             $table->double('tax');
+            $table->double('shipping_price');
             $table->double('discount');
+             $table->bigInteger('store_id')->unsigned();
+           $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled','not_completed'])->default('new');
   $table->enum('payment_status', ['pending', 'paid', 'failed'])
                 ->default('pending');

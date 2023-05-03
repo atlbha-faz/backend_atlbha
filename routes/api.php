@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\api\storeDashboard\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -446,5 +447,8 @@ Route::get('index',[App\Http\Controllers\api\storeDashboard\IndexController::cla
 Route::get('ordersdeleteall',[App\Http\Controllers\api\storeDashboard\OrderController::class,'deleteall']);
 Route::get('permissions',[App\Http\Controllers\api\storeDashboard\PermissionController::class,'index'])->name('permissions');
 Route::resource('roles',App\Http\Controllers\api\storeDashboard\RoleController::class);
+// reports
+Route::get('reports',[ReportController::class,'index']);
+
 });
 });
