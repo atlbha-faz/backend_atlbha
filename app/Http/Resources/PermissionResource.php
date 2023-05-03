@@ -30,7 +30,7 @@ class PermissionResource extends JsonResource
             'name' => $this->name,
             'action_type' => $this->action_type,
             'name_ar' => $this->name_ar,
-               'subpermissions' => PermissionResource::collection(Permission::where('parent_id',$this->id)->where('type','store')->get()),
+               'subpermissions' => PermissionResource::collection(Permission::where('parent_id',$this->id)->get()),
         ];
         }
     }
