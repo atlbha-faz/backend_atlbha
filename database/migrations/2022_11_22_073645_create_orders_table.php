@@ -18,14 +18,16 @@ return new class extends Migration
             $table->string('order_number')->unique();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('quantity');
-            $table->integer('city_id');
-            $table->double('total_price');
-            $table->double('tax');
-            $table->double('discount');
-            $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled','not_completed'])->default('new');
-  $table->enum('payment_status', ['pending', 'paid', 'failed'])
-                ->default('pending');
+            $table->unsignedBigInteger('store_id')->nullable();
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->integer('quantity')->nullable();
+            $table->double('total_price')->nullable();
+            $table->double('tax')->nullable();
+            $table->string('discount_type')->nullable();
+            $table->double('discount')->nullable();
+            $table->enum('order_status',['not_completed','completed','delivery_in_progress','ready','canceled','refund'])->default('not_completed');
+            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->enum('shipping_status', ['pending', 'delivery', 'failed'])->default('pending');
             $table->timestamps();
         });
     }
