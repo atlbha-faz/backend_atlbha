@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Models;
+use Gloudemans\Shoppingcart\Contracts\Buyable;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
-
-
 
 class Product extends Model
 {
@@ -18,6 +17,10 @@ class Product extends Model
 //     protected $casts = [
 //     'subcategory_id' => 'array',
 // ];
+
+public function cart(){
+    return $this->hasMany(Cart::class);
+}
     public function comment()
     {
         return $this->hasMany(Comment::class);
@@ -46,12 +49,13 @@ class Product extends Model
     {
           return $this->belongsToMany(
           Order::class,
-          'order_items',
+          'orders_products',
           'product_id',
           'order_id'
 
      );
     }
+
 
     public function setCoverAttribute($cover)
     {

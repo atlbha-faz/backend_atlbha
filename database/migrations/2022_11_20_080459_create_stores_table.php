@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('store_name');
             $table->string('store_email')->unique();
-            $table->string('domain');
+            $table->string('domain')->unique();
             $table->string('icon')->nullable();
             $table->string('phonenumber');
             $table->string('description')->nullable();

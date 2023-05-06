@@ -2,20 +2,31 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Cart extends Model
 {
     use HasFactory;
-      protected $fillable = ['key', 'user_id', 'product_id','status','is_deleted'];
+    protected $table="carts";
+      protected $fillable = ['user_id','store_id','count','total','discount_type','discount_value','discount_total','free_shipping','discount_expire_date','is_deleted'];
       public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    public function product()
+  
+    public function store()
     {
-        return $this->belongsTo(Product::class);
+         return $this->belongsTo(Store::class);
+        
     }
+    public function cartDetails()
+    {
+        return $this->hasMany(CartDetail::class);
+    }
+  
+    
+   
+     
 }

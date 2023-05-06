@@ -29,7 +29,7 @@ class Order extends Model
     {
           return $this->belongsToMany(
           Product::class,
-          'order_items',
+          'orders_products',
           'order_id',
           'product_id'
      );

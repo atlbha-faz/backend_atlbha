@@ -197,7 +197,7 @@ else{
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin'])
-            
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin_employee'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin_employee'])
         ) {
@@ -248,15 +248,15 @@ else{
         if (
              !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
-            
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
-            
-            
+
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer'])
-            
-            
+
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'])
         ) {
@@ -402,23 +402,65 @@ public function sendMessagePost()
     {
         $curl = curl_init();
 
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'http://REST.GATEWAY.SA/api/SendSMS',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS => array('api_id' => 'API72154753454','api_password' => 'Fazit@123','sms_type' => 'T','encoding' => 'T','sender_id' => 'MASHAHIR','phonenumber' => '966507717470','textmessage' => 'text','uid' => 'xyz'),
-));
+    // public function sendMessage()
+    // {
+    //     $curl = curl_init();
 
-$response = curl_exec($curl);
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => 'http://REST.GATEWAY.SA/api/SendSMS?api_id=API72154753454&api_password=Fazit@123&sms_type=T&encoding=T&sender_id=MASHAHIR&phonenumber=966550295508&textmessage=test&uid=xyz',
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => '',
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_TIMEOUT => 0,
+    //       CURLOPT_FOLLOWLOCATION => true,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => 'GET',
+    //     ));
 
-curl_close($curl);
-echo $response;
+    //     $response = curl_exec($curl);
+
+    //     curl_close($curl);
+    //     echo $response;
+
+    // }
+    // public function sendMessagePost()
+    // {
+    //     $curl = curl_init();
+
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => 'https://rest.gateway.sa/api/SendSMS',
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => '',
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_TIMEOUT => 0,
+    //       CURLOPT_FOLLOWLOCATION => true,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => 'POST',
+    //       CURLOPT_POSTFIELDS =>'{
+    //     "api_id":"API72154753454",
+    //     "api_password":"Gateway@123",
+    //     "sms_type": "T",
+    //     "encoding":"T",
+    //     "sender_id": "MASHAHIR",
+    //     "phonenumber": "966507717470",
+    //     "textmessage":"test message",
+    //     "uid":"xyz"
+
+    //     }
+    //     ',
+    //       CURLOPT_HTTPHEADER => array(
+    //         'Content-Type: application/json'
+    //       ),
+    //     ));
+
+    //     $response = curl_exec($curl);
+
+    //     curl_close($curl);
+    //     echo $response;
+
     }
+
+
 
     public function social_mobile(Request $request)
     {

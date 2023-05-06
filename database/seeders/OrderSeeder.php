@@ -17,23 +17,19 @@ class OrderSeeder extends Seeder
     {
         Order::create([
             'order_number' => '0001',
-            'user_id' => 6,
-             'store_id' => 1,
-            'city_id' => 3,
+            'user_id' => 1,
             'quantity' => 4,
             'total_price' => 1000,
             'tax' => 1.2,
              'shipping_price' => 10,
             'discount' => 0,
             'order_status' => 'new',
-            'payment_status' => 1,
+            'payment_status' => "new",
 
         ]);
           Order::create([
             'order_number' => '0002',
-            'user_id' => 6,
-             'store_id' => 1,
-            'city_id' => 3,
+            'user_id' => 2,
             'quantity' => 5,
             'total_price' => 1100,
             'tax' => 2.3,
@@ -54,7 +50,7 @@ class OrderSeeder extends Seeder
              'shipping_price' => 10,
             'discount' => 400,
             'order_status' => 'new',
-            'payment_status' => 1,
+            'payment_status' => "t",
 
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\CartDetailResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CartResource extends JsonResource
@@ -14,11 +15,25 @@ class CartResource extends JsonResource
      */
     public function toArray($request)
     {
-        $user = \App\Models\User::where('user_name',$this->identifier)->first();
+        // $user = \App\Models\User::where('user_name',$this->identifier)->first();
         return [
-            'user' => new UserResource ($user),
-            'status' => 'غير مكتمل',
-            'content' =>($this->content)
+          
+            'id' => $this->id,
+            'count'=>  $this->count,
+            'total'=>  $this->total,
+            'discount_type'=>  $this->discount_type,
+            'discount_value'=>  $this->discount_value,
+            'discount_total'=>  $this->discount_total,
+            'free_shipping'=>  $this->free_shipping,
+            'free_shipping'=>  $this->discount_expire_date,
+            'user' => New UserResource($this->user),
+            // 'store' => New StoreResource($this->store),
+            'cartDetail' =>CartDetailResource::collection($this->cartDetails),
+            'status' => "غير مكتمل",
+            'created_at' => (string) $this->created_at,
+            'updated_at' => (string) $this->updated_at,
+       
         ];
+
     }
 }
