@@ -29,7 +29,7 @@ class AuthController extends BaseController
 if($setting->registration_status=="stop_registration"){
     return $this->sendError('stop_registration', 'تم ايقاف التسجيل');
 
-} 
+}
 else{
 
         $input = $request->all();
@@ -57,7 +57,7 @@ else{
             return $this->sendError('Validation Error.', $validator->errors());
         }
         if($request->user_type=="store"){
-         
+
             $user = User::create([
                 'name' => $request->name,
                 'email'=>$request->email,
@@ -69,7 +69,7 @@ else{
 
             $userid =$user->id;
 
-    
+
             $store = Store::create([
                 'store_name' => $request->store_name,
                 'store_email'=>$request->store_email,
@@ -103,7 +103,7 @@ else{
                 }
             $store->activities()->attach($request->activity_id);
             $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
-           
+
             if($setting->registration_status=="registration_with_admin"){
                 $store->update([
                     'confirmation_status' =>'accept']);
@@ -111,7 +111,7 @@ else{
                 if(is_null($order_number)){
                 $number = 0001;
                 }else{
-        
+
                 $number=$order_number->order_number;
                 $number= ((int) $number) +1;
                 }
@@ -139,7 +139,7 @@ else{
           ]);
 
           $users = User::where('store_id',null)->get();
-  
+
           $data = [
               'message' => 'طلب متجر',
               'store_id' => $store->id,
@@ -152,12 +152,12 @@ else{
           Notification::send($user, new verificationNotification($data));
           }
           event(new VerificationEvent($data));
-        
-         }       
-        
+
+         }
+
         }
         else{
-         
+
             $user = User::create([
                 'name'=> $request->user_name,
                 'user_name'=> $request->user_name,
@@ -197,7 +197,7 @@ else{
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin'])
-            
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin_employee'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'admin_employee'])
         ) {
@@ -248,15 +248,15 @@ else{
         if (
              !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
-            
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
-            
-            
+
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer'])
-            
-            
+
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'])
         ) {
@@ -397,6 +397,10 @@ else{
             return $this->sendError($e->getMessage());
         }
     }
+// test
+public function sendMessagePost()
+    {
+        $curl = curl_init();
 
     // public function sendMessage()
     // {
@@ -412,12 +416,12 @@ else{
     //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     //       CURLOPT_CUSTOMREQUEST => 'GET',
     //     ));
-        
+
     //     $response = curl_exec($curl);
-        
+
     //     curl_close($curl);
     //     echo $response;
-       
+
     // }
     // public function sendMessagePost()
     // {
@@ -432,30 +436,30 @@ else{
     //       CURLOPT_FOLLOWLOCATION => true,
     //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     //       CURLOPT_CUSTOMREQUEST => 'POST',
-    //       CURLOPT_POSTFIELDS =>'{ 
-    //     "api_id":"API72154753454", 
-    //     "api_password":"Gateway@123", 
-    //     "sms_type": "T", 
-    //     "encoding":"T", 
-    //     "sender_id": "MASHAHIR", 
-    //     "phonenumber": "966507717470", 
-    //     "textmessage":"test message", 
+    //       CURLOPT_POSTFIELDS =>'{
+    //     "api_id":"API72154753454",
+    //     "api_password":"Gateway@123",
+    //     "sms_type": "T",
+    //     "encoding":"T",
+    //     "sender_id": "MASHAHIR",
+    //     "phonenumber": "966507717470",
+    //     "textmessage":"test message",
     //     "uid":"xyz"
-        
-    //     } 
+
+    //     }
     //     ',
     //       CURLOPT_HTTPHEADER => array(
     //         'Content-Type: application/json'
     //       ),
     //     ));
-        
+
     //     $response = curl_exec($curl);
-        
+
     //     curl_close($curl);
     //     echo $response;
-  
-    // }
-     
+
+    }
+
 
 
     public function social_mobile(Request $request)

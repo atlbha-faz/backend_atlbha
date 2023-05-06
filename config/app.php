@@ -195,8 +195,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-        Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class
-
+        Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
+       CyrildeWit\EloquentViewable\EloquentViewableServiceProvider::class,
     ],
 
     /*

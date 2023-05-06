@@ -7,16 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 
-class Product extends Model 
+class Product extends Model
 {
     use HasFactory;
     use Sluggable;
+
 
     protected $fillable = ['name','slug','for','special','description','stock','cover','purchasing_price','selling_price','quantity','less_qty','tags','discount_price','discount_percent','SEOdescription','category_id','subcategory_id','store_id','status','is_deleted'];
 //     protected $casts = [
 //     'subcategory_id' => 'array',
 // ];
-     
+
 public function cart(){
     return $this->hasMany(Cart::class);
 }
