@@ -16,7 +16,10 @@ use App\Http\Controllers\CountryController;
 |
 */
 
-   
+//  test sms
+Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
+Route::get('sendMessage', 'App\Http\Controllers\api\AuthController@sendMessage');
+Route::post('sendMessagePost', 'App\Http\Controllers\api\AuthController@sendMessagePost');
 
 Route::get('selector/cities',[App\Http\Controllers\api\SelectorController::class,'cities']);
 Route::get('selector/countries',[App\Http\Controllers\api\SelectorController::class,'countries']);
@@ -60,6 +63,10 @@ Route::group([
     Route::post('reset', 'App\Http\Controllers\api\PasswordResetController@reset');
 });
 
+
+
+
+
 // change status routers
 Route::middleware([AdminUser::class])->group(function(){
 
@@ -68,7 +75,9 @@ Route::post('payment',[App\Http\Controllers\api\adminDashboard\PaymentController
 Route::get('callback',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'callback'])->name('callback');
 Route::post('updateCharge/{id}',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'updateCharge']);
 Route::get('list',[App\Http\Controllers\api\adminDashboard\PaymentController::class,'list'])->name('list');       
-     
+ 
+
+
 Route::get('selector/years',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'years']);
 Route::get('selector/cities',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'cities']);
 Route::get('selector/countries',[App\Http\Controllers\api\adminDashboard\SelectorController::class,'countries']);
@@ -297,6 +306,12 @@ Route::prefix('/Store')->group(function () {
 // country
 Route::resource('country',App\Http\Controllers\api\storeDashboard\CountryController::class);
 Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::class);
+
+//cart
+Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'show']);
+Route::get('admin', [App\Http\Controllers\api\storeDashboard\CartController::class, 'admin']);
+Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
+Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class,'delete']);
 
 // page
 Route::resource('page',App\Http\Controllers\api\storeDashboard\PageController::class);

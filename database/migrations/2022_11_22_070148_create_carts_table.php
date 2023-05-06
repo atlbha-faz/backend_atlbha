@@ -15,14 +15,20 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-             $table->uuid('key');
-                $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
-             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('pruduct_id')->nullable();
-            $table->foreign('pruduct_id')->references('id')->on('products')->onDelete('cascade');
+            $table->unsignedBigInteger('store_id')->nullable();
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->double('total')->nullable();
+            $table->integer('count')->nullable();
+            $table->enum('discount_type',['fixed','percent','null'])->default('null');
+            $table->double('discount_value')->nullable();
+            $table->double('discount_total')->nullable();
+            $table->timestamp('discount_expire_date')->nullable();
+            $table->boolean('free_shipping')->default(0);
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
+            $table->unique('user_id','store_id');
         });
     }
 

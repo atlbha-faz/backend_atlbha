@@ -87,8 +87,9 @@ class PaymentController extends BaseController
 if ($err) {
   echo "cURL Error #:" . $err;
 } 
- return redirect($response->transaction->url);
-    // echo   $response;
+
+//  return redirect($response->transaction->url);
+     echo   $response;
     }
 
     
@@ -129,9 +130,10 @@ if ($err) {
                   'paymenDate'=>Carbon::now(),
                   'paymentType' =>$responseTap->source->payment_method,
                   'paymentTransectionID'=>$responseTap->id,
-                  'paymentCardID'=>$responseTap->card->id
+                  'paymentCardID'=>$responseTap->card->id,
                 ]);
 
+              
                 $success['payments']=New PaymentResource($payment);
                 $success['status']= 200;
         

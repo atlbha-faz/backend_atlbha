@@ -398,6 +398,65 @@ else{
         }
     }
 
+    // public function sendMessage()
+    // {
+    //     $curl = curl_init();
+
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => 'http://REST.GATEWAY.SA/api/SendSMS?api_id=API72154753454&api_password=Fazit@123&sms_type=T&encoding=T&sender_id=MASHAHIR&phonenumber=966550295508&textmessage=test&uid=xyz',
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => '',
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_TIMEOUT => 0,
+    //       CURLOPT_FOLLOWLOCATION => true,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => 'GET',
+    //     ));
+        
+    //     $response = curl_exec($curl);
+        
+    //     curl_close($curl);
+    //     echo $response;
+       
+    // }
+    // public function sendMessagePost()
+    // {
+    //     $curl = curl_init();
+
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => 'https://rest.gateway.sa/api/SendSMS',
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => '',
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_TIMEOUT => 0,
+    //       CURLOPT_FOLLOWLOCATION => true,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => 'POST',
+    //       CURLOPT_POSTFIELDS =>'{ 
+    //     "api_id":"API72154753454", 
+    //     "api_password":"Gateway@123", 
+    //     "sms_type": "T", 
+    //     "encoding":"T", 
+    //     "sender_id": "MASHAHIR", 
+    //     "phonenumber": "966507717470", 
+    //     "textmessage":"test message", 
+    //     "uid":"xyz"
+        
+    //     } 
+    //     ',
+    //       CURLOPT_HTTPHEADER => array(
+    //         'Content-Type: application/json'
+    //       ),
+    //     ));
+        
+    //     $response = curl_exec($curl);
+        
+    //     curl_close($curl);
+    //     echo $response;
+  
+    // }
+     
+
 
     public function social_mobile(Request $request)
     {

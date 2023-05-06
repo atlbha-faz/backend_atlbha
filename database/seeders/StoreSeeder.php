@@ -22,7 +22,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'امازون',
             'store_email' => 'a@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a1.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is amazon store',
@@ -45,7 +45,7 @@ class StoreSeeder extends Seeder
  Store::create([
             'store_name' => 'امازون',
             'store_email' => 'a1@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a2.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775499',
             'description' => 'this is amazon store',
@@ -68,7 +68,7 @@ class StoreSeeder extends Seeder
  Store::create([
             'store_name' => 'امازون',
             'store_email' => 'a2@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a3.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775498',
             'description' => 'this is amazon store',
@@ -91,7 +91,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'امازون',
             'store_email' => 'a3@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a4.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775497',
             'description' => 'this is amazon store',
@@ -114,7 +114,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'امازون',
             'store_email' => 'a4@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a5.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775496',
             'description' => 'this is amazon store',
@@ -137,7 +137,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'امازون',
             'store_email' => 'a5@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a6.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775495',
             'description' => 'this is amazon store',
@@ -160,7 +160,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'امازون',
             'store_email' => 'a6@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a7.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775494',
             'description' => 'this is amazon store',
@@ -183,7 +183,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'امازون',
             'store_email' => 'a7@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a8.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775493',
             'description' => 'this is amazon store',
@@ -206,7 +206,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'b@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n1.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775492',
             'description' => 'this is noon store',
@@ -229,7 +229,7 @@ class StoreSeeder extends Seeder
              Store::create([
             'store_name' => 'نون',
             'store_email' => 'c@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n2.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775491',
             'description' => 'this is noon store',
@@ -252,7 +252,7 @@ class StoreSeeder extends Seeder
           Store::create([
             'store_name' => 'نون',
             'store_email' => 'd@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n3.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775490',
             'description' => 'this is noon store',
@@ -275,7 +275,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'e@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n4.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775489',
             'description' => 'this is noon store',
@@ -298,7 +298,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'f@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n5.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775488',
             'description' => 'this is noon store',
@@ -321,7 +321,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'g@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n6.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775487',
             'description' => 'this is noon store',
@@ -344,7 +344,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'امازون',
             'store_email' => 'h@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a10.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775486',
             'description' => 'this is amazon store',
@@ -369,7 +369,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'i@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n8.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775485',
             'description' => 'this is noon store',
@@ -392,7 +392,7 @@ class StoreSeeder extends Seeder
              Store::create([
             'store_name' => 'نون',
             'store_email' => 'j@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n9.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775484',
             'description' => 'this is noon store',
@@ -415,7 +415,7 @@ class StoreSeeder extends Seeder
           Store::create([
             'store_name' => 'نون',
             'store_email' => 'k@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n10.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775483',
             'description' => 'this is noon store',
@@ -438,7 +438,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'l@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n11.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775482',
             'description' => 'this is noon store',
@@ -461,7 +461,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'm@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n12.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775481',
             'description' => 'this is noon store',
@@ -510,7 +510,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'نون',
             'store_email' => 'n@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n13.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775470',
             'description' => 'this is noon store',
@@ -534,7 +534,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b2@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n14.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -557,7 +557,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b23@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n15.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -580,7 +580,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b3@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n16.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -603,7 +603,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b4@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n17.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -626,7 +626,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b5@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n18.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -649,7 +649,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b6@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n19.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -672,7 +672,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b7@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n20.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -695,7 +695,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b8@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n21.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -718,7 +718,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b9@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n24.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -741,7 +741,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b10@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n25.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -764,7 +764,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b11@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n26.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -787,7 +787,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b12@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n27.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -810,7 +810,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b13@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n28.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -833,7 +833,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b14@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n29.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -856,7 +856,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b15@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n30.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -879,7 +879,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b16@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n31.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -902,7 +902,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b17@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n32.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -925,7 +925,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b18@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n33.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -948,7 +948,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b19@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n34.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -971,7 +971,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b20@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n35.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -994,7 +994,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b21@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n36.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -1017,7 +1017,7 @@ class StoreSeeder extends Seeder
             Store::create([
             'store_name' => 'نون',
             'store_email' => 'b22@gmail.com',
-            'domain' => 'https//www.n.com',
+            'domain' => 'https//www.n37.com',
             'icon' => 'noon.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is noon store',
@@ -1040,7 +1040,7 @@ class StoreSeeder extends Seeder
          Store::create([
             'store_name' => 'امازون',
             'store_email' => 'o@gmail.com',
-            'domain' => 'https//www.a.com',
+            'domain' => 'https//www.a30.com',
             'icon' => 'Amazon_logo.png',
             'phonenumber' => '0096650775433',
             'description' => 'this is amazon store',
