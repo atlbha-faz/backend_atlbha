@@ -12,7 +12,7 @@ class ClientController extends BaseController
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -93,9 +93,11 @@ class ClientController extends BaseController
     public function show($client)
     {
        $client = Client::query()->find($client);
-       if (is_null($client ) ||$client->is_deleted==1){
+       if (is_null($client) ||$client->is_deleted==1){
          return $this->sendError("المندوب غير موجودة","client is't exists");
          }
+       views($client)->record();
+        dd(views($client)->count());
         $success['$clients']=New ClientResource($client);
         $success['status']= 200;
 

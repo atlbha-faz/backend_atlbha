@@ -260,7 +260,7 @@ class CommentController extends BaseController
          }
         if($commentActivation->	commentstatus === 'active'){
             $commentActivation->update(['commentstatus' => 'not_active']);
-            
+
      }
     else{
 

@@ -16,8 +16,11 @@ use App\Http\Controllers\api\storeDashboard\ReportController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-
+Route::group([
+    'middleware' => 'web',
+], function () {
+Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
+});
 
 Route::get('selector/cities',[App\Http\Controllers\api\SelectorController::class,'cities']);
 Route::get('selector/countries',[App\Http\Controllers\api\SelectorController::class,'countries']);
@@ -259,7 +262,7 @@ Route::get('registration_marketer_show',[App\Http\Controllers\api\adminDashboard
 
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
 Route::resource('note',App\Http\Controllers\api\adminDashboard\NoteController::class);
-        
+
 Route::resource('roles',App\Http\Controllers\api\adminDashboard\RoleController::class);
 Route::post('addProductNote',[App\Http\Controllers\api\adminDashboard\ProductController::class,'addNote']);
 Route::get('productchangeSpecial/{id}',[App\Http\Controllers\api\adminDashboard\ProductController::class,'specialStatus']);
@@ -374,7 +377,6 @@ Route::post('updateLink',[App\Http\Controllers\api\storeDashboard\SeoController:
 Route::post('updateRobots',[App\Http\Controllers\api\storeDashboard\SeoController::class,'updateRobots']);
 
 //  clients
-Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
 Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientController::class,'deleteall']);
 //
