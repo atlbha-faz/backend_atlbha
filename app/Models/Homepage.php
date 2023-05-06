@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use CyrildeWit\EloquentViewable\InteractsWithViews;
+use CyrildeWit\EloquentViewable\Contracts\Viewable;
 
-class Homepage extends Model
+class Homepage extends Model implements Viewable
 {
     use HasFactory;
+     use InteractsWithViews;
     protected $fillable = ['logo','logo_footer','banar1','banarstatus1','banar2','banarstatus2','banar3','banarstatus3','clientstatus','commentstatus',
     'slider1','sliderstatus1','slider2','sliderstatus2','slider3','sliderstatus3','store_id','is_deleted'];
      public function store()
@@ -33,8 +36,8 @@ class Homepage extends Model
         }
         return asset('storage/images/homepage') . '/' . $logo;
     }
-    
-    
+
+
       public function setLogoFooterAttribute($logo_footer)
     {
         if (!is_null($logo_footer)) {
@@ -54,7 +57,7 @@ class Homepage extends Model
         }
         return asset('storage/images/homepage') . '/' . $logo_footer;
     }
-    
+
      public function setBanar1Attribute($banar1)
     {
         if (!is_null($banar1)) {

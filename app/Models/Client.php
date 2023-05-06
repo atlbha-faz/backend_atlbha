@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use CyrildeWit\EloquentViewable\InteractsWithViews;
+use CyrildeWit\EloquentViewable\Contracts\Viewable;
 
-class Client extends Model
+class Client extends Model implements Viewable
 {
     use HasFactory;
+      use InteractsWithViews;
     protected $fillable = ['ID_number','first_name','last_name','email','image','gender','phonenumber','city_id','country_id','status','is_deleted'];
 
     public function city()

@@ -18,7 +18,7 @@ class OrderItemSeeder extends Seeder
         OrderItem::create([
             'order_id' => 1,
             'product_id' => 6,
-            'store_id' => 1,
+
             'user_id' => 6,
             'price' => 200,
             'discount' => 0,
@@ -31,7 +31,7 @@ class OrderItemSeeder extends Seeder
       OrderItem::create([
             'order_id' => 1,
             'product_id' => 7,
-            'store_id' => 1,
+
             'user_id' => 6,
             'price' => 300,
             'discount' => 0,
@@ -41,11 +41,11 @@ class OrderItemSeeder extends Seeder
             'payment_status' => 1,
 
         ]);
-       
+
        OrderItem::create([
             'order_id' => 2,
             'product_id' => 6,
-            'store_id' => 1,
+
             'user_id' => 6,
             'price' => 200,
             'discount' => 0,
@@ -58,7 +58,7 @@ class OrderItemSeeder extends Seeder
       OrderItem::create([
             'order_id' => 2,
             'product_id' => 8,
-            'store_id' => 2,
+
             'user_id' => 6,
             'price' => 500,
             'discount' => 400,

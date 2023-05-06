@@ -142,6 +142,7 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
         if (is_null($product) || $product->is_deleted==1){
                return $this->sendError("المنتج غير موجود","product is't exists");
                }
+           
               $success['products']=New ProductResource($product);
               $success['status']= 200;
 
