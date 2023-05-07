@@ -115,7 +115,7 @@ class Store extends Model
         Paymenttype::class,
         'paymenttypes_stores',
         'store_id',
-        'paymenttype_id'
+        'paymentype_id'
         );
     }
 

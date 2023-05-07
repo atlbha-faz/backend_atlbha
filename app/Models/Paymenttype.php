@@ -15,7 +15,7 @@ class Paymenttype extends Model
      return $this->belongsToMany(
         Store::class,
         'paymenttypes_stores',
-        'paymenttype_id',
+        'paymentype_id',
         'store_id'
 
         );
