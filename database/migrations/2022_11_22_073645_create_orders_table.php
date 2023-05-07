@@ -19,15 +19,14 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('quantity');
-            $table->integer('city_id');
             $table->double('total_price');
             $table->double('tax');
             $table->double('shipping_price');
-            $table->double('discount');
+            $table->double('discount')->nullable();
              $table->bigInteger('store_id')->unsigned();
            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled','not_completed'])->default('new');
-  $table->enum('payment_status', ['pending', 'paid', 'failed'])
+             $table->enum('payment_status', ['pending', 'paid', 'failed','completed'])
                 ->default('pending');
             $table->timestamps();
         });

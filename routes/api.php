@@ -313,6 +313,7 @@ Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartControl
 Route::get('admin', [App\Http\Controllers\api\storeDashboard\CartController::class, 'admin']);
 Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
 Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class,'delete']);
+Route::post('sendOfferCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class,'sendOffer']);
 
 // page
 Route::resource('page',App\Http\Controllers\api\storeDashboard\PageController::class);

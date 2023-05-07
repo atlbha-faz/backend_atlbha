@@ -21,12 +21,13 @@ return new class extends Migration
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->double('total')->nullable();
             $table->integer('count')->nullable();
-            $table->enum('discount_type',['fixed','percent','null'])->default('null');
+            $table->enum('discount_type',['fixed','percent'])->nullable();
             $table->double('discount_value')->nullable();
             $table->double('discount_total')->nullable();
             $table->timestamp('discount_expire_date')->nullable();
             $table->boolean('free_shipping')->default(0);
             $table->boolean('is_deleted')->default(0);
+            $table->string('message')->nullable();
             $table->timestamps();
             $table->unique('user_id','store_id');
         });

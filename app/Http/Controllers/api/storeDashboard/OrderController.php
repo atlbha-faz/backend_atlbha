@@ -101,8 +101,8 @@ public function show($order)
     {
 
             $orders =Order::whereIn('id',$request->id)->whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id);
-})->get();
+           $q->where('store_id',auth()->user()->store_id);
+                                       })->get();
            foreach($orders as $order)
            {
             if (is_null($order)){
