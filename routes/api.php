@@ -37,7 +37,9 @@ Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 //  index Ettlobha page
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
-Route::get('storeIndex/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
+//  index store page
+Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
+
 
 Route::get('posts',[App\Http\Controllers\api\PostController::class,'index']);
 Route::get('show/{id}',[App\Http\Controllers\api\PostController::class,'show']);
@@ -314,6 +316,7 @@ Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartControl
 Route::get('admin', [App\Http\Controllers\api\storeDashboard\CartController::class, 'admin']);
 Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
 Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class,'delete']);
+Route::post('sendOfferCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class,'sendOffer']);
 
 // page
 Route::resource('page',App\Http\Controllers\api\storeDashboard\PageController::class);

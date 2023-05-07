@@ -4,13 +4,16 @@ namespace App\Http\Controllers\api\storeDashboard;
 use Session;
 use Carbon\Carbon;
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Product;
 use App\Models\CartDetail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CartResource;
+use App\Notifications\emailNotification;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\AbandonedCartResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -35,9 +38,8 @@ class CartController extends BaseController
     }
     
     public function admin(){
-       
-      //update
-        $success['cart']=CartResource::collection(Cart::where('store_id',1)->whereDate('updated_at','<=',Carbon::now()->subHours(24)->format('Y-m-d'))->get());
+ 
+        $success['cart']=CartResource::collection(Cart::where('store_id',auth()->user()->store_id)->whereDate('updated_at','<=',Carbon::now()->subHours(24)->format('Y-m-d'))->get());
           $success['status']= 200;
            return $this->sendResponse($success,'تم عرض  السلة بنجاح','Cart Showed successfully');
         
@@ -66,8 +68,8 @@ class CartController extends BaseController
                     'id' => [
                         'required',
                          Rule::exists('products')->where(function($query){
-                            //update
-                                    $query->where('store_id', 1)
+                          
+                                    $query->where('store_id', auth()->user()->store_id)
                                           ->where('id', request()->id);
                          })
                     ]
@@ -82,7 +84,6 @@ class CartController extends BaseController
         {
                 $cart =Cart::updateOrCreate([
                     'user_id' =>auth()->user()->id,
-                    //update
                     'store_id' =>auth()->user()->store_id,
                 ],[
                     'total' =>0,
@@ -139,6 +140,47 @@ class CartController extends BaseController
     {
         //
     }
+
+    public function sendOffer(Request $request,$id)
+    {
+    
+        $cart =Cart::where('id',$id)->first();
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'message'=>'required|string',
+            'discount_total' =>"required_if:discount_type,fixed,percent",
+            'discount_value' =>"required_if:discount_type,fixed,percent",
+            'discount_expire_date' =>"required_if:discount_type,fixed,percent",
+            'free_shipping'=>'in:0,1'
+
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $cart->update([
+            'message' => $request->message,
+            'free_shipping'=> $request->free_shipping,
+            'discount_type'=>$request->discount_type,
+            'discount_value'=>$request->discount_value,
+            'discount_total'=>$request->discount_total,
+            'discount_expire_date'=>$request->discount_expire_date
+        ]);
+
+        $data = [
+            'subject' =>"cart offer",
+            'message' => $request->message,
+            'store_id' => $cart->store_id,
+        ];
+        
+        $user = User::where('id',$cart->user_id)->first();
+           Notification::send($user , new emailNotification($data));
+           $success=New CartResource($cart);
+           $success['status']= 200;
+            return $this->sendResponse($success,'تم إرسال العرض بنجاح','Offer Cart Send successfully');
+        
+    }
+
 
     /**
      * Store a newly created resource in storage.

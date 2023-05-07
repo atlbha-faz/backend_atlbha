@@ -4,11 +4,16 @@ namespace App\Http\Controllers\api;
 
 use Carbon\Carbon;
 use App\Models\Order;
-use App\Models\Category;
+use App\Http\Resources\ProductResource;
+use App\Models\Page;
+use App\Models\Offer;
+use App\Models\Store;
+use App\Models\Comment;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
-use App\Http\Resources\ProductResource;
+use App\Http\Resources\PageResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController extends BaseController
@@ -55,7 +60,31 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
  $success['resent_arrivede_by_category'][]=collect($category)->merge(Product::where('is_deleted',0)
      ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get());
   }
- $success['status']= 200;
+
+         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->get());
+         $success['category']=Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
+         $success['products_offers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
+        $success['products_ratings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
+
+
+        $productsCategories=Product::where('store_id',$id)->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total','DESC')->take(6)->get();
+       foreach( $productsCategories as  $productsCategory){
+        $success['Popular_categories'][]=Category::where('is_deleted',0)->where('store_id',$id)->where('id', $productsCategory->category_id)->first();
+       }
+         $success['store_name']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
+         $success['store_email ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+         $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
+         $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
+
+         $success['snapchat']=Store::where('is_deleted',0)->where('id',$id)->pluck('snapchat')->first();
+         $success['facebook']=Store::where('is_deleted',0)->where('id',$id)->pluck('facebook')->first();
+         $success['twiter']=Store::where('is_deleted',0)->where('id',$id)->pluck('twiter')->first();
+         $success['youtube']=Store::where('is_deleted',0)->where('id',$id)->pluck('youtube')->first();
+         $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
+         $store=Store::where('is_deleted',0)->where('id',$id)->first();
+         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['status']= 200;
+
          return $this->sendResponse($success,'تم ارجاع الرئيسية للمتجر بنجاح','Store index return successfully');
 
     }
