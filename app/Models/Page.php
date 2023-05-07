@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use CyrildeWit\EloquentViewable\InteractsWithViews;
+use CyrildeWit\EloquentViewable\Contracts\Viewable;
 
-class Page extends Model
+class Page extends Model implements Viewable
 {
     use HasFactory;
+     use InteractsWithViews;
     protected $fillable = ['title','page_content','page_desc','seo_title','seo_link','seo_desc','tags','user_id','status','image','postcategory_id','store_id','is_deleted'];
     public function store()
     {
@@ -50,6 +53,6 @@ class Page extends Model
         }
         return asset('storage/images/posts') . '/' . $image;
     }
-  
+
 
 }
