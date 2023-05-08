@@ -39,6 +39,7 @@ Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
 //  index store page
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
+Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 
 
 Route::get('posts',[App\Http\Controllers\api\PostController::class,'index']);
