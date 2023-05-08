@@ -19,5 +19,17 @@ class PaymenttypeSeeder extends Seeder
             'name' => 'paypal',
             'image' => 'p.png',
         ]);
+        Paymenttype::create([
+            'name' => 'masterCard',
+            'image' => 'm.png',
+        ]);
+        paymenttype_store::create([
+            'paymentype_id' => 1,
+            'store_id' => 1,
+        ]);
+        paymenttype_store::create([
+            'paymentype_id' => 2,
+            'store_id' => 1,
+        ]);
     }
 }
