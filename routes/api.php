@@ -39,7 +39,12 @@ Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
 //  index store page
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
-
+Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
+Route::group([
+    'middleware' => 'auth:api'  
+], function () {
+Route::post('addComment/{id}',[App\Http\Controllers\api\IndexStoreController::class,'addComment']);
+});
 
 Route::get('posts',[App\Http\Controllers\api\PostController::class,'index']);
 Route::get('show/{id}',[App\Http\Controllers\api\PostController::class,'show']);

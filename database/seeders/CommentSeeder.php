@@ -20,8 +20,18 @@ class CommentSeeder extends Seeder
             'rateing' => 4,
             'comment_for'=>'product',
             'user_id' => 3,
-            'product_id'=>2
+            'product_id'=>6,
+            'store_id'=>1
         ]);
+        Comment::create([
+         'comment_text' => 'منتج جيد',
+         'rateing' => 5,
+         'comment_for'=>'product',
+         'user_id' => 10,
+         'product_id'=>6,
+         'store_id'=>1
+     ]);
+    
           Comment::create([
             'comment_text' => 'متجر جيد',
             'rateing' => 4,
