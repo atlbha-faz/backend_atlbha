@@ -90,11 +90,10 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          return $this->sendResponse($success,'تم ارجاع الرئيسية للمتجر بنجاح','Store index return successfully');
    
     } 
+
     public function productPage($id){
-
-
         $product=Product::where('is_deleted',0)->where('id',$id)->first();
-        $success['product']=ProductResource::collection(Product::where('is_deleted',0)->where('id',$id)->get());
+        $success['product']=NEW ProductResource(Product::where('is_deleted',0)->where('id',$id)->first());
         $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
                 ->where('store_id',$product->store_id)->where('category_id',$product->category_id)->whereNotIn('id', [$id])->get());
  
