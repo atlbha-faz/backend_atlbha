@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\api;
 
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Http\Resources\ProductResource;
 use App\Models\Page;
 use App\Models\Offer;
 use App\Models\Store;
@@ -28,18 +31,44 @@ class IndexStoreController extends BaseController
          $success['slider1']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus1','active')->pluck('slider1')->first();
          $success['slider2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus2','active')->pluck('slider2')->first();
          $success['slider3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus3','active')->pluck('slider3')->first();
-    
+
          $success['banar1']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus1','active')->pluck('banar1')->first();
          $success['banar2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus2','active')->pluck('banar2')->first();
          $success['banar3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus3','active')->pluck('banar3')->first();
+// special products
+  $success['specialProducts']=ProductResource::collection(Product::where('is_deleted',0)
+     ->where('store_id',$id)->where('special','special')->orderBy('created_at', 'desc')->take(4)->get());
+
+
+///////////////////////////
+$success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->whereHas('products', function ($query) {
+  $query->where('special', 'special');
+})->get();
+//
+    // more sale
+     $success['more_sales']=Order::where('store_id',$id)->where('order_status','completed')->orderBy('created_at', 'desc')->take(7)->get();
+// resent arrivede
+
+$oneWeekAgo = Carbon::now()->subWeek();
+
+$success['resent_arrivede']=Product::where('is_deleted',0)
+     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->take(6)->get();
+////////////////////////////////////////
+$resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$id)->whereHas('products', function ($query) {
+  $query->whereDate('created_at', '>=', Carbon::now()->subWeek());
+})->get();
+
+  foreach($resent_arrivede_by_category as $category){
+ $success['resent_arrivede_by_category'][]=collect($category)->merge(Product::where('is_deleted',0)
+     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get());
+  }
 
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->get());
- 
          $success['category']=Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
          $success['products_offers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
         $success['products_ratings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
-     
-      
+
+
         $productsCategories=Product::where('store_id',$id)->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total','DESC')->take(6)->get();
        foreach( $productsCategories as  $productsCategory){
         $success['Popular_categories'][]=Category::where('is_deleted',0)->where('store_id',$id)->where('id', $productsCategory->category_id)->first();
@@ -64,14 +93,11 @@ class IndexStoreController extends BaseController
     public function productPage($id){
 
 
-
-
-
-
-
-
-
-        $product= Product::query()->find($id);
+        $product=Product::where('is_deleted',0)->where('id',$id)->first();
+        $success['product']=ProductResource::collection(Product::where('is_deleted',0)->where('id',$id)->get());
+        $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
+                ->where('store_id',$product->store_id)->where('category_id',$product->category_id)->whereNotIn('id', [$id])->get());
+ 
         $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id', $product->store_id)->where('product_id',$product->id)->get());
         $success['status']= 200;
 
@@ -109,4 +135,7 @@ class IndexStoreController extends BaseController
          return $this->sendResponse($success,'تم إضافة تعليق بنجاح','comment Added successfully');
 
     }  
-}
+
+    }
+ 
+

@@ -12,7 +12,11 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class PostController extends BaseController
 {
     public function index(){
-
+ // visit count
+    $postVisit=Page::where('is_deleted',0)->where('store_id',null)->where('postcategory_id','!=',null)->orderBy('created_at', 'desc')->first();
+      views($postVisit)->record();
+       $success['countVisitPost']= views($postVisit)->count();
+        //
         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',null)->where('postcategory_id','!=',null)->orderBy('created_at', 'desc')->get());
         $success['postCategory']=Postcategory::where('is_deleted',0)->get();
         $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
