@@ -14,6 +14,8 @@ use App\Models\Category;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Http\Resources\PageResource;
+use App\Http\Resources\CommentResource;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController extends BaseController
@@ -86,16 +88,53 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الرئيسية للمتجر بنجاح','Store index return successfully');
+   
+    } 
+
+    public function productPage($id){
+        $product=Product::where('is_deleted',0)->where('id',$id)->first();
+        $success['product']=NEW ProductResource(Product::where('is_deleted',0)->where('id',$id)->first());
+        $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
+                ->where('store_id',$product->store_id)->where('category_id',$product->category_id)->whereNotIn('id', [$id])->get());
+ 
+        $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id', $product->store_id)->where('product_id',$product->id)->get());
+        $success['status']= 200;
+
+        return $this->sendResponse($success,'تم ارجاع صفحة المنتج للمتجر بنجاح',' Product page return successfully');
+  
+    } 
+    public function addComment(Request $request,$id)
+    {
+    
+        $product= Product::query()->find($id);
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'comment_text'=>'required|string|max:255',
+            'rateing'=>'required|numeric|lt:5',
+
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $comment = Comment::create([
+            'comment_text' => $request->comment_text,
+            'rateing' => $request->rateing,
+            'comment_for' =>'product',
+            'product_id' => $id,
+            'store_id' => $product->store_id,
+            'user_id' => auth()->user()->id,
+
+          ]);
+
+
+         $success['comments']=New CommentResource($comment);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة تعليق بنجاح','comment Added successfully');
+
+    }  
 
     }
-     public function productPage($id){
-        $product=Product::where('is_deleted',0)->where('id',$id)->first();
-    $success['product']=ProductResource::collection(Product::where('is_deleted',0)->where('id',$id)->get());
-    $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
-            ->where('store_id',$product->store_id)->where('category_id',$product->category_id)->whereNotIn('id', [$id])->get());
-$success['status']= 200;
+ 
 
-         return $this->sendResponse($success,'تم ارجاع الرئيسية للمتجر بنجاح','Store index return successfully');
-
-     }
-}
