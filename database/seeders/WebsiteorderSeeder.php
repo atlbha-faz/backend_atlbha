@@ -20,26 +20,26 @@ class WebsiteorderSeeder extends Seeder
         Websiteorder::create([
             'order_number' => '0001',
             'type' => 'service',
-            'status' =>'pending',
+            'status' =>'accept',
             'store_id' => 1,
         ]);
         Websiteorder::create([
             'order_number' => '0002',
             'type' => 'store',
-            'status' =>'pending',
+            'status' =>'accept',
             'store_id' => 1,
 
         ]);
         Service_Websiteorder::create([
             'service_id' =>1,
             'websiteorder_id'=>1,
-            'status'=>'pending',
+            'status'=>'accept',
 
         ]);
         Service_Websiteorder::create([
             'service_id' =>2,
             'websiteorder_id'=>1,
-            'status'=>'pending',
+            'status'=>'accept',
           
         ]);
     }

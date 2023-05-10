@@ -14,7 +14,7 @@ class Websiteorder extends Model
     {
         return $this->belongsTo(Store::class);
     }
-    public function services_websiteorders()
+    public function services()
     {
       
        return $this->belongsToMany(
