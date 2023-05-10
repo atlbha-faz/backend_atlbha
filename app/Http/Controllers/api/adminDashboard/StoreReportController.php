@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\api\adminDashboard;
 
 use Carbon\Carbon;
+use App\Models\Order;
 use App\Models\Store;
+use App\Models\Product;
 use App\Models\Service;
 use App\Models\Marketer;
 use App\Models\Websiteorder;
@@ -13,7 +15,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreReportController extends  BaseController
 {
-    
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -31,16 +33,16 @@ class StoreReportController extends  BaseController
          $success['last_24_hours_of_complete_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','accept')->count();
      $success['last_month_of_stores']=Store::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->month())->count();
            $success['last_month_of_complete_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->month())->where('type','store')->where('status','accept')->count();
-   
-        
-        $array_store = array(); 
 
-        for($i = 1; $i <= 12; $i++){ 
+
+        $array_store = array();
+
+        for($i = 1; $i <= 12; $i++){
             $array_store[$i]["active"]= Store::where('is_deleted',0)->where('status','active')->whereYear('created_at', $request->year)->whereMonth('created_at', $i)->count();
             $array_store[$i]["not_active"]= Store::where('is_deleted',0)->where('status','not_active')->whereYear('created_at', $request->year)->whereMonth('created_at', $i)->count();
         }
         $success['array_store']= $array_store;
-        
+
         $success['status']= 200;
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
     }
@@ -48,14 +50,37 @@ class StoreReportController extends  BaseController
         $success['count_of_stores']=Store::where('is_deleted',0)->count();
         $success['average_of_stores']=((Store::where('is_deleted',0)->whereYear('created_at', Carbon::now()->year)
         ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->count())*100)."%";
-        
+
          $success['count_of_marketers']=Marketer::all()->count();
          $success['count_of_services']=Service::where('is_deleted',0)->count();
+
+       $success['more_product_visit']=Product::where('is_deleted',0)->where('status','active')->latest()->take(3)->get();
+        $success['more_store_visit']=Store::where('is_deleted',0)->where('status','active')->latest()->take(3)->get();
+       //  ايرادات اطلبها خلال شهر
+                $sum_service=0;
+                $p=Service::where('is_deleted',0)->count();
+                $websiteorders=Websiteorder::where('type','service')->where('status','accept')->get();
+                foreach ($websiteorders as $websiteorder){
+                foreach ($websiteorder->services as $service)
+              {
+               $sum_service=$sum_service+$service->price;
+              }
+              }
+              $etlobha_income=Order::where('store_id',null)->where('order_status','completed')->where('created_at', '>=', Carbon::now()->subDays(30)->toDateTimeString())->sum('total_price');
+
+                $success['Etlobha_income']=$sum_service+$etlobha_income;
+
+              // إجمالي الإيرادات
+                 $success['all_income']=Order::where('order_status','completed')->where('created_at', '>=', Carbon::now()->subDays(30)->toDateTimeString())->sum('total_price');
+
+               //  اجمالي الطلبات خلال 6 شهور
+                $success['Total_orders']=Order::where('store_id',null)->where('order_status','completed')->where('created_at', '>=', Carbon::now()->subMonths(6)->month)->count();
+
         $success['status']= 200;
         return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
 
     }
 
-   
-    
+
+
 }
