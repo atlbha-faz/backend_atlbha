@@ -132,7 +132,15 @@ class StoreReportController extends  BaseController
 
                //  اجمالي الطلبات خلال 6 شهور
                 $success['Total_orders']=Order::where('store_id',null)->where('order_status','completed')->where('created_at', '>=', Carbon::now()->subMonths(6)->month)->count();
+                //مخطط الطلبات خلال 6 شهور
+                $count_month=6;
+                $array_count_Etlobha = array(); 
+                while($count_month >= 0) {
+                    $array_count_Etlobha[$count_month]["count orders of Etlobha before ".$count_month." month"]= Order::where('store_id',null)->where('order_status','completed')->whereMonth('created_at', Carbon::now()->subMonths($count_month)->month)->count();
+                    $count_month--;
+                  }
 
+                  $success['count orders of Etlobha']=   $array_count_Etlobha;
         $success['status']= 200;
         return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
         
