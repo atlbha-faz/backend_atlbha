@@ -150,7 +150,7 @@ class CartController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'message'=>'required|string',
-            'discount_total' =>"required_if:discount_type,fixed,percent",
+            //'discount_total' =>"required_if:discount_type,fixed,percent",
             'discount_value' =>"required_if:discount_type,fixed,percent",
             'discount_expire_date' =>"required_if:discount_type,fixed,percent",
             'free_shipping'=>'in:0,1'
@@ -160,12 +160,16 @@ class CartController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
+        $discount_total = $cart->total - $request->discount_value;
+        if($request->discount_type =="percent"){
+            $discount_total = $cart->total - ($cart->total * ($request->discount_value/100));
+        }
         $cart->update([
             'message' => $request->message,
             'free_shipping'=> $request->free_shipping,
             'discount_type'=>$request->discount_type,
             'discount_value'=>$request->discount_value,
-            'discount_total'=>$request->discount_total,
+            'discount_total'=>$discount_total,
             'discount_expire_date'=>$request->discount_expire_date
         ]);
 
