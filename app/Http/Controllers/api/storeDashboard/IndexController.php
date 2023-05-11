@@ -34,7 +34,7 @@ class IndexController extends BaseController
         $success['orders']=OrderResource::collection(Order::where('store_id',auth()->user()->store_id)->orderBy('created_at', 'DESC')->take(5)->get());
         
         
-          $success['products']=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')
+          $success['products']=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',auth()->user()->store_id)
               
               
               ->select('products.id','products.cover','products.name','products.selling_price',DB::raw('sum(order_items.total_price - order_items.discount) as sales'),DB::raw('sum(order_items.quantity) as count'))
