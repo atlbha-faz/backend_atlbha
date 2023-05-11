@@ -31,8 +31,7 @@ class IndexController extends BaseController
         $success['sales']=DB::table('order')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->sum('total');
           $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count();
         
-        $success['orders']=OrderResource::collection(Order::where('store_id',auth()->user()->store_id)
-})->orderBy('created_at', 'DESC')->take(5)->get());
+        $success['orders']=OrderResource::collection(Order::where('store_id',auth()->user()->store_id)->orderBy('created_at', 'DESC')->take(5)->get());
         
         
           $success['products']=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('order_items.store_id',auth()->user()->store_id)
