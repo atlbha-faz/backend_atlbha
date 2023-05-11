@@ -26,13 +26,12 @@ class IndexController extends BaseController
     public function index()
       {
          $success['visits']=10;
-        $success['customers']=User::where('user_type', 'customer')->where('status','active')->where('is_deleted',0)->where('verified',1)->count();
+        $success['customers']=User::where('user_type', 'customer')->where('store_id', auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->where('verified',1)->count();
         
-        $success['sales']=DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+        $success['sales']=DB::table('order')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->sum('total');
           $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count();
         
-        $success['orders']=OrderResource::collection(Order::whereHas('items', function($q){
-    $q->where('store_id',auth()->user()->store_id);
+        $success['orders']=OrderResource::collection(Order::where('store_id',auth()->user()->store_id)
 })->orderBy('created_at', 'DESC')->take(5)->get());
         
         
@@ -49,20 +48,20 @@ class IndexController extends BaseController
 
         for($i = 1; $i <= 12; $i++){ 
            
-            $result= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereYear('created_at', date('Y'))->whereMonth('created_at', $i)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+            $result= DB::table('order')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereYear('created_at', date('Y'))->whereMonth('created_at', $i)->select(DB::raw('SUM(total - discount) as total'))->pluck('total')->first();
        $array_sales_monthly[date('M', mktime(0, 0, 0, $i, 10))]= $result!==null ? $result:0;
        }
         
          for($i = 1; $i <= 12; $i++){ 
                $x = ($i-1)*7;
              $xx = ($i*7)-1;
-           $result = DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=',(date('Y-m-d' , strtotime("-".$xx." days"))))->whereDate('created_at','<=' ,(date('Y-m-d' , strtotime("-".$x." days"))))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+           $result = DB::table('order')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=',(date('Y-m-d' , strtotime("-".$xx." days"))))->whereDate('created_at','<=' ,(date('Y-m-d' , strtotime("-".$x." days"))))->select(DB::raw('SUM(total - discount) as total'))->pluck('total')->first();
               $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= $result!==null ? $result:0;
        }
         
          for($i = 1; $i <= 12; $i++){ 
              $x = $i-1;
-           $result= DB::table('order_items')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , strtotime("-".$x." days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+           $result= DB::table('order')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , strtotime("-".$x." days")))->select(DB::raw('SUM(total - discount) as total'))->pluck('total')->first();
                $array_sales_daily[(date('Y-m-d', strtotime("-".$x." days")))]= $result!==null ? $result:0;
        }
         
