@@ -10,6 +10,8 @@ use App\Models\CartDetail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendOfferCart;
 use App\Http\Resources\CartResource;
 use App\Notifications\emailNotification;
 use Illuminate\Support\Facades\Validator;
@@ -174,7 +176,8 @@ class CartController extends BaseController
         ];
         
         $user = User::where('id',$cart->user_id)->first();
-           Notification::send($user , new emailNotification($data));
+         //  Notification::send($user , new emailNotification($data));
+         Mail::to($user->email)->send(new SendOfferCart($data));
            $success=New CartResource($cart);
            $success['status']= 200;
             return $this->sendResponse($success,'تم إرسال العرض بنجاح','Offer Cart Send successfully');
