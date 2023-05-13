@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Paymenttype;
+use App\Models\paymenttype_store;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
