@@ -55,7 +55,7 @@ class EtlobhaserviceController extends BaseController
             'store_id'=>auth()->user()->store_id,
           ]);
          if($request->service_id!=null){
-          $websiteorder->services_websiteorders()->attach($request->service_id);
+          $websiteorder->services()->attach($request->service_id);
          }
          $success['Websiteorders']=New WebsiteorderResource($websiteorder );
         $success['status']= 200;

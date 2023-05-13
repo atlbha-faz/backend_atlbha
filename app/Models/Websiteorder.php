@@ -16,7 +16,7 @@ class Websiteorder extends Model
     }
     public function services()
     {
-      
+
        return $this->belongsToMany(
         Service::class,
          'services_websiteorders',

@@ -32,32 +32,32 @@ class WebsiteorderController extends BaseController
     public function index()
     {
         $success['count_of_store_order']=Websiteorder::where('is_deleted',0)->where('type','store')->count();
-        
+
          $array_store = array();
         $i = date("Y-m");
         $x = 1;
-        while($x <= 6){ 
+        while($x <= 6){
             $array_store[$i]["store"]= Websiteorder::where('is_deleted',0)->where('type','store')->whereYear('created_at', date('Y', strtotime($i)))->whereMonth('created_at', date('m', strtotime($i)))->count();
            $i = date("Y-m", strtotime("-1 month", strtotime($i)));
             $x++;
         }
         $success['array_store']= $array_store;
-        
-        
-        
-        
+
+
+
+
         $success['count_of_serivces_order']=Websiteorder::where('is_deleted',0)->where('type','service')->count();
-        $success['count_of_Design']=Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services_websiteorders', function($q){
+        $success['count_of_Design']=Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services', function($q){
    $q->where('service_id',1);
 })->count();
-        $success['count_of_TechnicalSupport']=Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services_websiteorders', function($q){
+        $success['count_of_TechnicalSupport']=Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services', function($q){
     $q->where('service_id',2);
 })->count();
-        $success['count_of_celebrities']=Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services_websiteorders', function($q){
+        $success['count_of_celebrities']=Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services', function($q){
     $q->where('service_id',3);
 })->count();
-        
-        
+
+
 
         $success['Websiteorder']=WebsiteorderResource::collection(Websiteorder::where('is_deleted',0)->get());
         $success['status']= 200;
