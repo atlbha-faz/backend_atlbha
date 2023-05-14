@@ -45,7 +45,48 @@ class Unit extends Model
     {
         $unitid=Video::select('id')->where('unit_id',$unitid)->where('is_deleted',0)->get();
 
-$videoes=$unitid->count();
-    return  $videoes;
+        $videoes=$unitid->count();
+        return  $videoes;
+    }
+        public function durationUnit($unit_id)
+   {
+        $sum = strtotime('00:00:00');
+
+        $totaltime = 0;
+        $videoid=Video::select('id')->where('unit_id',$unit_id)->get();
+
+       //    $unitid=count($unitid);
+       //$video=Unit::select('id')->where('id',$course_id)->get()
+       $videoes = Video::whereIn('id',$videoid)->get();
+       foreach($videoes as $video){
+           // Converting the time into seconds
+        $timeinsec = strtotime($video->duration) - $sum;
+
+       // Sum the time with previous value
+       $totaltime = $totaltime + $timeinsec;
+          }
+
+        // Totaltime is the summation of all
+        // time in seconds
+
+        // Hours is obtained by dividing
+        // totaltime with 3600
+        $h = intval($totaltime / 3600);
+
+        $totaltime = $totaltime - ($h * 3600);
+
+        // Minutes is obtained by dividing
+        // remaining total time with 60
+        $m = intval($totaltime / 60);
+
+        // Remaining value is seconds
+        $s = $totaltime - ($m * 60);
+
+        // Printing the result
+        return ("$h:$m:$s");
+
+
+
+        
   }
 }

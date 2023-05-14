@@ -19,7 +19,7 @@ class UnitResource extends JsonResource
         }else{
             $status = 'غير نشط';
         }
-        
+
         return [
             'id' =>$this->id,
             'title' => $this->title,
@@ -29,7 +29,8 @@ class UnitResource extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'videos' => VideoResource::collection($this->video),
-            'unitvideo' => $this->countVideo($this->id)
+            'unitvideo' => $this->countVideo($this->id),
+            'durationUnit' => $this->durationUnit($this->id)
         ];
     }
 }

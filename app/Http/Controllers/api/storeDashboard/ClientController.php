@@ -12,7 +12,7 @@ class ClientController extends BaseController
 {
     public function __construct()
     {
-        // $this->middleware('auth:api');
+        $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -74,6 +74,7 @@ class ClientController extends BaseController
             'image' => $request->image,
              'country_id' =>$request->country_id,
              'city_id' =>$request->city_id,
+              'store_id'   => auth()->user()->store_id,
 
           ]);
 

@@ -14,7 +14,7 @@ class WebsiteorderResource extends JsonResource
      */
     public function toArray($request)
     {
-        
+
           if($this->status ==null || $this->status == 'pending'){
             $status = 'قيد المعالجة';
         }elseif($this->status == 'accept'){
@@ -22,7 +22,7 @@ class WebsiteorderResource extends JsonResource
         }elseif($this->status == 'reject'){
             $status = 'غير منتهي';
         }
-        
+
         return [
             'id' =>$this->id,
             'order_number'=>$this->order_number,
@@ -31,7 +31,7 @@ class WebsiteorderResource extends JsonResource
             'is_deleted'=>$this->is_deleted,
             'created_at' => (string) $this->created_at,
             'store' => New StoreResource($this->store),
-            'services'=>ServiceResource::collection($this->services_websiteorders),
+            'services'=>ServiceResource::collection($this->services),
 
 
         ];
