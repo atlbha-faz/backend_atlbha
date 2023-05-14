@@ -23,8 +23,9 @@ class ClientSeeder extends Seeder
             'gender'=>'male',
             'phonenumber'=>'0096650775433',
             'image'=>'man.png',
-            'country_id'=>'1',
-            'city_id'=>'1',
+            'country_id'=>1,
+            'city_id'=>1,
+            'store_id'=>1
         ]);
          Client::create([
             'ID_number'=>12345678,
@@ -34,8 +35,9 @@ class ClientSeeder extends Seeder
             'gender'=>'male',
             'phonenumber'=>'0096650775433',
             'image'=>'man.png',
-            'country_id'=>'1',
-            'city_id'=>'1',
+            'country_id'=>1,
+            'city_id'=>1,
+                'store_id'=>1
         ]);
     }
 }

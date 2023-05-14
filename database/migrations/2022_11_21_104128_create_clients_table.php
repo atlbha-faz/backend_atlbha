@@ -26,6 +26,8 @@ return new class extends Migration
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
              $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+             $table->unsignedBigInteger('store_id')->nullable();
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
