@@ -97,8 +97,9 @@ class ClientController extends BaseController
        if (is_null($client) ||$client->is_deleted==1){
          return $this->sendError("المندوب غير موجودة","client is't exists");
          }
-       views($client)->record();
-        dd(views($client)->count());
+        //  visit count
+    //    views($client)->record();
+    //     dd(views($client)->count());
         $success['$clients']=New ClientResource($client);
         $success['status']= 200;
 
