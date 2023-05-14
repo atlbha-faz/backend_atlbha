@@ -94,7 +94,7 @@ class VerificationController extends BaseController
 
         ]);
         if($store->commercialregistertype == "commercialregister")
- $store->update([  'store_name' =>  $request->input('store_name'), ]);
+        $store->update(['store_name' =>  $request->input('store_name'), ]);
          $store->activities()->sync($request->activity_id);
 
        $user = User::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->first();

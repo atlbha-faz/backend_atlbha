@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\NotificationSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -66,8 +67,8 @@ class DatabaseSeeder extends Seeder
             SectionSeeder::class,
             PartnerSeeder::class, 
             CartSeeder::class,
-            CartDetailSeeder::class  
-            
+            CartDetailSeeder::class,  
+            NotificationSeeder::class
             
             
             // PermissionTableSeeder::class,
