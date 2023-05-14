@@ -45,7 +45,7 @@ class RoleController extends BaseController
       
       $input = $request->all();
             $validator =  Validator::make($input ,[
-                 'role_name' => 'required|string|max:255|unique:roles,name',
+        'role_name' => 'required|string|max:255|unique:roles,name',
         'permissions' => 'required|array',
         'permissions.*' => 'nullable|exists:permissions,id',
              
