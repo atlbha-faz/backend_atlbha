@@ -57,6 +57,7 @@ class UserController  extends BaseController
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'role' => 'required|string|max:255|exists:roles,name',
         ]);
         if ($validator->fails())
         {
@@ -74,6 +75,9 @@ class UserController  extends BaseController
              'store_id' => auth()->user()->store_id
 
           ]);
+        
+        
+    $user->assignRole($request->role);
 
          $success['users']=New UserResource($user );
         $success['status']= 200;
@@ -130,6 +134,7 @@ class UserController  extends BaseController
             'status'=>'required|in:active,not_active',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'role' => 'required|string|max:255|exists:roles,name',
 
         ]);
         if ($validator->fails())
@@ -154,6 +159,7 @@ class UserController  extends BaseController
                  ]);
         }
 
+  $user->assignRole($request->role);
         $success['users']=New UserResource($user);
         $success['status']= 200;
 
