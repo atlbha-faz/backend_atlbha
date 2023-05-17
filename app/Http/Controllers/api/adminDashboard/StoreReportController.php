@@ -107,12 +107,12 @@ class StoreReportController extends  BaseController
         }
         }
         }
-
-        $success['Subscriptions-city']=  $array_city_store;
+arsort($array_city_store);
+        $success['Subscriptions-city']=  array_slice($array_city_store, 0, 6, true);
            $success['Subscriptions']=  $sum;
 
-       $success['more_product_visit']=Product::where('is_deleted',0)->where('status','active')->latest()->take(3)->get();
-        $success['more_store_visit']=Store::where('is_deleted',0)->where('status','active')->latest()->take(3)->get();
+       $success['more_product_visit']=Product::where('is_deleted',0)->where('status','active')->latest()->take(5)->get();
+        $success['more_store_visit']=Store::where('is_deleted',0)->where('status','active')->latest()->take(5)->get();
        //  ايرادات اطلبها خلال شهر
                 $sum_service=0;
                 $p=Service::where('is_deleted',0)->count();

@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call([
-            ActivitySeeder::class,
+          /*  ActivitySeeder::class,
             CountrySeeder::class,
             RegionSeeder::class,
             CitySeeder::class,
@@ -41,7 +41,6 @@ class DatabaseSeeder extends Seeder
             ContactSeeder::class,
             CouponSeeder::class,
             MaintenanceSeeder::class,
-            TechnicalSupportSeeder::class,
             MarketerSeeder::class,
             
             PaymenttypeSeeder::class,
@@ -67,10 +66,11 @@ class DatabaseSeeder extends Seeder
             SectionSeeder::class,
             PartnerSeeder::class, 
             CartSeeder::class,
-            CartDetailSeeder::class,  
-            NotificationSeeder::class
+            CartDetailSeeder::class,  */
+            NotificationSeeder::class,
             
             
+            TechnicalSupportSeeder::class,
             // PermissionTableSeeder::class,
 
         ]);
