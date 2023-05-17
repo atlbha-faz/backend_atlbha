@@ -64,8 +64,8 @@ class Course extends Model
         $s = $totaltime - ($m * 60);
 
         // Printing the result
-        return ("$h:$m:$s");
-
+         return ("$h:$m:$s");
+    
 
 
   }

@@ -147,7 +147,7 @@ class PlatformController extends BaseController
            }
            $platform->update([
                'name' => $request->input('name'),
-               'logo' => $request->input('logo'),
+               'logo' => $request->logo,
                'link' => $request->input('link'),
            ]);
 

@@ -55,7 +55,7 @@ class UserController  extends BaseController
             'email'=>'required|email|unique:users',
             'status'=>'required|in:active,not_active',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
@@ -132,7 +132,7 @@ class UserController  extends BaseController
             'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
              'password_confirm' => 'nullable|same:password',
             'status'=>'required|in:active,not_active',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
 

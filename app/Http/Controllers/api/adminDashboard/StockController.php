@@ -58,89 +58,91 @@ class StockController extends BaseController
      */
   public function store(Request $request)
     {
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'sku'=>'required|string|unique:products',
-            'description'=>'required|string',
-            'purchasing_price'=>['required','numeric','gt:0'],
-            'selling_price'=>['required','numeric','gt:0'],
-            'quantity'=>['required','numeric','gt:0'],
-            'less_qty'=>['required','numeric','gt:0'],
-            'stock'=>['required','numeric','gt:0'],
-            'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'data'=>'required|array',
-            'images'=>'required|array',
-            'images.*'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'data.*.type'=>'required|in:brand,color,wight,size',
-            'data.*.title'=>'required|string',
-            'data.*.value'=>'required|array',
-            'category_id'=>'required|exists:categories,id',
-            'subcategory_id'=>['required','array'],
-            'subcategory_id.*'=>['required','numeric',
-            Rule::exists('categories', 'id')->where(function ($query) {
-            return $query->join('categories', 'id', 'parent_id');
-        }),
-            ]
+      $input = $request->all();
+      $validator =  Validator::make($input ,[
+          'name'=>'required|string|max:255',
+          'description'=>'required|string',
+          'purchasing_price'=>['required','numeric','gt:0'],
+          'selling_price'=>['required','numeric','gt:0'],
+          'stock'=>['required','numeric','gt:0'],
+          'quantity'=>['required','numeric','gt:0'],
+          'less_qty'=>['required','numeric','gt:0'],
+          'images'=>'required|array',
+          'images.*'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+          'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+          'data'=>'nullable|array',
+          'data.*.type'=>'required|in:brand,color,wight,size',
+          'data.*.title'=>'required|string',
+          'data.*.value'=>'required|array',
+          'category_id'=>'required|exists:categories,id',
+          'subcategory_id'=>['required','array'],
+          'subcategory_id.*'=>['required','numeric',
+          Rule::exists('categories', 'id')->where(function ($query) {
+          return $query->join('categories', 'id', 'parent_id');
+      }),
+          ]
+      ]);
+
+
+
+      if ($validator->fails())
+      {
+          return $this->sendError(null,$validator->errors());
+      }
+      
+          
+      $product = Product::create([
+          'name' => $request->name,
+          'for' => 'etlobha',
+          'quantity' => $request->quantity,
+          'less_qty' => $request->less_qty,
+          'description' => $request->description,
+          'purchasing_price' => $request->purchasing_price,
+          'selling_price' => $request->selling_price,
+          'stock' => $request->stock,
+          'cover' => $request->cover,
+          'category_id' => $request->category_id,
+          'subcategory_id' => implode(',', $request->subcategory_id),
+          'store_id' => null,
+
         ]);
+      $productid =$product->id;
+            if($request->hasFile("images")){
+              $files=$request->file("images");
+              foreach($files as $file){
+                  $imageName=time().'_'.$file->getClientOriginalName();
+                  $request['product_id']= $productid ;
+                  $request['image']=$imageName;
+                  // $file->move(\public_path("/images"),$imageName);
+                   $file->store('images/product', 'public');
+                  Image::create($request->all());
 
+              }
+          }
+      if(!is_null($request->data)){
+          foreach($request->data as $data)
+          {
+              // dd($data['value']);
+      //$request->input('name', []);
+              $option= new Option([
+                  'type' => $data['type'],
+                  'title' => $data['title'],
+                  'value' => implode(',',$data['value']),
+                  'product_id' =>  $productid
 
+                ]);
 
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $product = Product::create([
-            'name' => $request->name,
-            'sku' => $request->sku,
-            'quantity' => $request->quantity,
-            'less_qty' => $request->less_qty,
-            'for' => 'stock',
-            'description' => $request->description,
-            'purchasing_price' => $request->purchasing_price,
-            'selling_price' => $request->selling_price,
-            'stock' => $request->stock,
-            'cover' => $request->cover,
-            'category_id' => $request->category_id,
-            'subcategory_id' => implode(',', $request->subcategory_id),
-            'store_id' => null,
+              $option->save();
+              $options[]=$option;
+              }
+      }
 
-          ]);
-        $productid =$product->id;
-              if($request->hasFile("images")){
-                $files=$request->file("images");
-                foreach($files as $file){
-                    $imageName=time().'_'.$file->getClientOriginalName();
-                    $request['product_id']= $productid ;
-                    $request['image']=$imageName;
-                    // $file->move(\public_path("/images"),$imageName);
-                     $file->store('images/product', 'public');
-                    Image::create($request->all());
+       $success['products']=New ProductResource($product);
+      $success['status']= 200;
 
-                }
-            }
-            foreach($request->data as $data)
-            {
-                // dd($data['value']);
-        //$request->input('name', []);
-                $option= new Option([
-                    'type' => $data['type'],
-                    'title' => $data['title'],
-                    'value' => implode(',',$data['value']),
-                    'product_id' =>  $productid
-
-                  ]);
-
-                $option->save();
-                $options[]=$option;
-                }
-
-
-         $success['products']=New ProductResource($product);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
-    }
+       return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
+  }
+    
 
     /**
      * Display the specified resource.
@@ -173,24 +175,26 @@ class StockController extends BaseController
      */
     public function update(Request $request, $id)
         {
-           $product =Product::query()->where('for','stock')->find($id);
-           if (is_null($product) || $product->is_deleted==1 ){
+          $product =Product::query()->where('for','etlobha')->find($id);
+           if (is_null($product) || $product->is_deleted==1){
            return $this->sendError(" المنتج غير موجود","product is't exists");
             }
            $input = $request->all();
            $validator =  Validator::make($input ,[
                'name'=>'required|string|max:255',
-              'sku'=>'required|string',
               'description'=>'required|string',
             'quantity'=>['required','numeric','gt:0'],
             'less_qty'=>['required','numeric','gt:0'],
               'purchasing_price'=>['required','numeric','gt:0'],
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
-             'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'images'=>'nullable|array',
             'images.*'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-              'data' => 'required|array',
+              'data'=>'nullable|array',
+              'data.*.type'=>'required|in:brand,color,wight,size',
+              'data.*.title'=>'required|string',
+              'data.*.value'=>'required|array',
               'category_id'=>'required|exists:categories,id',
               'subcategory_id'=>['array'],
               'subcategory_id.*'=>['required','numeric',
@@ -207,10 +211,10 @@ class StockController extends BaseController
            }
            $product->update([
               'name' => $request->input('name'),
-              'sku' => $request->input('sku'),
               'description' => $request->input('description'),
               'purchasing_price' => $request->input('purchasing_price'),
               'selling_price' => $request->input('selling_price'),
+              'slug' =>$request->input('slug'),
               'quantity' =>$request->input('quantity'),
               'less_qty' =>$request->input('less_qty'),
               'stock' => $request->input('stock'),
@@ -243,7 +247,7 @@ class StockController extends BaseController
           $option = Option::where('product_id', $id);
 
 
-          // dd($request->$data['id']);
+      if(!is_null($request->data)){
           $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
           foreach ($options_id as $oid) {
             if (!(in_array($oid, array_column($request->data, 'id')))) {
@@ -264,7 +268,7 @@ class StockController extends BaseController
               'product_id' => $id
             ]);
           }
-
+    }
 
               $success['products']=New ProductResource($product);
               $success['status']= 200;

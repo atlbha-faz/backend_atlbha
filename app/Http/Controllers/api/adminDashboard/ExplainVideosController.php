@@ -75,7 +75,9 @@ class ExplainVideosController extends BaseController
 
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
-        $playtime = $fileAnalyze['playtime_string'];
+        $playtimes = $fileAnalyze['playtime_seconds'];
+        $playtime=gmdate("H:i:s", $playtimes);
+
         // dd($playtime);
         if ($isFileUploaded) {
         $explainvideos = ExplainVideos::create([
@@ -170,7 +172,8 @@ class ExplainVideosController extends BaseController
 
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
-        $playtime = $fileAnalyze['playtime_string'];
+        $playtimes = $fileAnalyze['playtime_seconds'];
+        $playtime=gmdate("H:i:s", $playtimes);
         // dd($playtime);
         if ($isFileUploaded) {
         $explainvideos = $explainVideos->update([
