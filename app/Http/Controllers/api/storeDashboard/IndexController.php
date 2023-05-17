@@ -69,6 +69,33 @@ class IndexController extends BaseController
         $success['array_sales_weekly']= $array_sales_weekly;
         $success['array_sales_daily']= $array_sales_daily;
         
+        
+        
+        
+        $success['sales_monthly']= DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=', date('Y-m-d' , strtotime("-30 days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+        $success['sales_monthly_compare']= 0;
+        $sales_monthly_prev = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=', date('Y-m-d' , strtotime("-60 days")))->whereDate('created_at', '<=', date('Y-m-d' , strtotime("-30 days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+            if( $success['sales_monthly'] > $sales_monthly_prev){
+            $success['sales_monthly_compare']= 1;
+            }
+        $success['sales_weekly']= DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=', date('Y-m-d' , strtotime("-7 days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+        $success['sales_weekly_compare']= 0;
+       $sales_weekly_prev = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=', date('Y-m-d' , strtotime("-14 days")))->whereDate('created_at', '<=', date('Y-m-d' , strtotime("-7 days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+          if( $success['sales_weekly'] > $sales_weekly_prev){
+            $success['sales_weekly_compare']= 1;
+            }
+        $success['sales_percent']= $success['sales_weekly'] /$success['sales_monthly'] *100;
+        
+        
+        $success['sales_avg']= $success['sales_weekly'] /$success['sales_monthly'];
+        $sales_avg_prev = $sales_weekly_prev /$sales_monthly_prev;
+            $success['sales_avg_compare']= 0;
+         if( $success['sales_avg'] > $sales_avg_prev){
+            $success['sales_avg_compare']= 1;
+            }
+        
+        
+        
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع بنجاح','return successfully');
