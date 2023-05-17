@@ -107,8 +107,8 @@ class StoreReportController extends  BaseController
         }
         }
         }
-
-        $success['Subscriptions-city']=  arsort($array_city_store);
+arsort($array_city_store);
+        $success['Subscriptions-city']=  $array_city_store;
            $success['Subscriptions']=  $sum;
 
        $success['more_product_visit']=Product::where('is_deleted',0)->where('status','active')->latest()->take(5)->get();
