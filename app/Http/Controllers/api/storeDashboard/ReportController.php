@@ -32,10 +32,10 @@ class ReportController extends BaseController
              $success['total_sales']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('total_price');
         $success['products_costs']=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->sum('purchasing_price');
         $success['discount_coupons']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('discount');
-        // $success['shipping_price']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('tax');
+        $success['shipping_price']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('tax');
         $success['taxs']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('tax');
         $success['payment']=0;
-        $success['sales']=$success['total_sales']+$success['products_costs']+  $success['discount_coupons']+$success['taxs']+$success['payment'];
+        $success['sales']=$success['total_sales']+$success['products_costs']+  $success['discount_coupons']+$success['taxs']+$success['payment']+$success['shipping_price'];
         $success['status']= 200;
          return $this->sendResponse($success,'تم ارجاع التقارير بنجاح','Reports all return successfully');
 
