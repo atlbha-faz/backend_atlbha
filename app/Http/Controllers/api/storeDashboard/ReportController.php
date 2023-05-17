@@ -45,10 +45,10 @@ class ReportController extends BaseController
              $success['total_sales']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('total_price');
         $success['products_costs']=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('purchasing_price');
         $success['discount_coupons']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('discount');
-        // $success['shipping_price']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('tax');
+         $success['shipping_price']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('tax');
         $success['taxs']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('tax');
         $success['payment']=0;
-        $success['sales']=$success['total_sales']+$success['products_costs']+  $success['discount_coupons']+$success['taxs']+$success['payment'];
+        $success['sales']=$success['total_sales']+$success['products_costs']+  $success['discount_coupons']+$success['taxs']+$success['payment']+$success['shipping_price'];
         $success['status']= 200;
          return $this->sendResponse($success,'تم ارجاع التقارير بنجاح','Reports return successfully');
 
