@@ -37,7 +37,7 @@ class ProfileController  extends BaseController
             'email'=>'required|email|unique:users,email,'.$user->id,
             'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'confirm_password' => 'required_if:password,required|same:password',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         ]);
         if ($validator->fails())

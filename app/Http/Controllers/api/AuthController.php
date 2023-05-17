@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\api;
 
 use Str;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Setting;
 use App\Models\Marketer;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
+use Laravel\Passport\Passport;
 use App\Events\VerificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -18,7 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
-
+use Cookie;
 class AuthController extends BaseController
 {
     protected $code;
@@ -43,8 +45,8 @@ else{
             'store_email'=>'required_if:user_type,store|email|unique:stores',
             'password'=>'required',
             'domain'=>'required_if:user_type,store|url',
-            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users,phonenumber'],
-            'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users,phonenumber'],
+            'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
             'package_id' =>'required_if:user_type,store|exists:packages,id',
             //'country_id'=>'required_if:user_type,store|exists:countries,id',
@@ -218,9 +220,11 @@ else{
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
-
-
+        $remember = request('remember');
+        if (auth()->guard()->attempt(request(['user_name', 'password']), 
+        $remember)) {
         $user = auth()->user();
+        }
 
         $user->update(['device_token' => $request->device_token]);
 
@@ -229,11 +233,13 @@ else{
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
-    }
+    
+}
 
  public function login(Request $request)
     {
         $input = $request->all();
+
         $validator =  Validator::make($input, [
             'user_name' => 'string|required',
             'password' => 'string|required',
@@ -260,7 +266,7 @@ else{
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer'])
 
 
-            && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'])
+            && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'] )
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'])
         ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
@@ -280,18 +286,23 @@ else{
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
-
-
+        $remember = request('remember');
+        if (auth()->guard()->attempt(request(['user_name', 'password']), 
+        $remember)) {
         $user = auth()->user();
-
+        }
+      
         $user->update(['device_token' => $request->device_token]);
+     
+
 
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
-    }
+    // }
+}
     public function logout()
     {
         $user = auth("api")->user()->token();

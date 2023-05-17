@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\api\adminDashboard;
 use Carbon\Carbon;
 use App\Models\Image;
+use App\Models\Order;
 use App\Models\Option;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -41,7 +42,6 @@ class EtlobhaController extends BaseController
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
-       
             'quantity'=>['required','numeric','gt:0'],
             'less_qty'=>['required','numeric','gt:0'],
             'images'=>'required|array',
@@ -306,4 +306,17 @@ class EtlobhaController extends BaseController
          return $this->sendResponse($success,'تم تعدبل حالة القسم بنجاح',' product status updared successfully');
 
     }
+    public function statistics($product){
+
+      $product =Product::where('id',$product)->where('for','etlobha')->first();
+      $success['product']=New productResource($product);
+      $success['import_count']=  $product->importproduct->count();
+      $success['number_of_sold_product']=Order::whereHas('items', function($q) use ($product) {
+        $q->where('product_id',$product->id)->where('order_status','completed');
+    })->count();
+    $success['total']= $success['number_of_sold_product']*  $product->selling_price;
+      $success['status']= 200;
+       return $this->sendResponse($success,'تم العرض بنجاح',' product show successfully');
+
+  }
 }

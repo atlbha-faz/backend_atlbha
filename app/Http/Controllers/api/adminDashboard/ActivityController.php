@@ -116,7 +116,7 @@ class ActivityController extends BaseController
            }
            $activity->update([
                'name' => $request->input('name'),
-                'icon' =>$request->input('icon'),
+                'icon' =>$request->icon,
 
            ]);
 

@@ -222,6 +222,8 @@ Route::resource('product',App\Http\Controllers\api\adminDashboard\ProductControl
 Route::resource('option',App\Http\Controllers\api\adminDashboard\OptionController::class);
 Route::resource('user',App\Http\Controllers\api\adminDashboard\UserController::class);
 Route::resource('etlobha',App\Http\Controllers\api\adminDashboard\EtlobhaController::class);
+Route::get('statistics/{id}',[App\Http\Controllers\api\adminDashboard\EtlobhaController::class,'statistics']);
+
 Route::post('sectionupdate',[App\Http\Controllers\api\adminDashboard\SectionController::class,'update']);
 
 Route::get('storeReport', [App\Http\Controllers\api\adminDashboard\StoreReportController::class,'index']);
@@ -321,7 +323,7 @@ Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartControl
 Route::get('admin', [App\Http\Controllers\api\storeDashboard\CartController::class, 'admin']);
 Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
 Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class,'delete']);
-Route::post('sendOfferCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class,'sendOffer']);
+Route::post('sendOfferCart', [App\Http\Controllers\api\storeDashboard\CartController::class,'sendOffer']);
 
 // page
 Route::resource('page',App\Http\Controllers\api\storeDashboard\PageController::class);

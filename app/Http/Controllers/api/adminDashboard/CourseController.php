@@ -110,8 +110,9 @@ class CourseController extends BaseController
 
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
-        $playtime = $fileAnalyze['playtime_string'];
-        // dd($playtime);
+        $playtimes = $fileAnalyze['playtime_seconds'];
+        $playtime=gmdate("H:i:s", $playtimes);
+      
         if ($isFileUploaded) {
             $video = new Video([
            'duration' => $playtime,
@@ -317,7 +318,9 @@ class CourseController extends BaseController
 
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
-        $playtime = $fileAnalyze['playtime_string'];
+        $playtimes = $fileAnalyze['playtime_seconds'];
+        $playtime=gmdate("H:i:s", $playtimes);
+
         // dd($playtime);
         if ($isFileUploaded) {
             $video = new Video([

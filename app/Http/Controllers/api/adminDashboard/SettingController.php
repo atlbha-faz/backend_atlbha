@@ -90,7 +90,7 @@ class SettingController extends BaseController
             'description'=>'required|string',
             'link'=>'required|url',
              'email'=>'required|email|unique:settings,email,'.$setting->id,
-           'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+           'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'logo'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
            // 'icon'=>['required','image','mimes:ico','max:2048'],
             'address'=>'required|string',

@@ -10,7 +10,7 @@ class Platform extends Model
     use HasFactory;
       protected $fillable = ['name','logo','link','status','is_deleted'];
 
- public function setlogoAttribute($logo)
+ public function setLogoAttribute($logo)
     {
         if (!is_null($logo)) {
             if (gettype($logo) != 'string') {
@@ -22,7 +22,7 @@ class Platform extends Model
         }
     }
 
-    public function getlogoAttribute($logo)
+    public function getLogoAttribute($logo)
     {
         if (is_null($logo)) {
             return   asset('assets/media/man.png');

@@ -143,12 +143,13 @@ class CartController extends BaseController
         //
     }
 
-    public function sendOffer(Request $request,$id)
+    public function sendOffer(Request $request)
     {
     
-        $cart =Cart::where('id',$id)->first();
+       
         $input = $request->all();
         $validator =  Validator::make($input ,[
+            'id'=>'required|exists:carts,id',
             'message'=>'required|string',
             //'discount_total' =>"required_if:discount_type,fixed,percent",
             'discount_value' =>"required_if:discount_type,fixed,percent",
@@ -160,10 +161,12 @@ class CartController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
+        $cart =Cart::where('id',$request->id)->first();
         $discount_total = $cart->total - $request->discount_value;
         if($request->discount_type =="percent"){
             $discount_total = $cart->total - ($cart->total * ($request->discount_value/100));
         }
+
         $cart->update([
             'message' => $request->message,
             'free_shipping'=> $request->free_shipping,
@@ -180,7 +183,7 @@ class CartController extends BaseController
         ];
         
         $user = User::where('id',$cart->user_id)->first();
-         //  Notification::send($user , new emailNotification($data));
+           Notification::send($user , new emailNotification($data));
          //Mail::to($user->email)->send(new SendOfferCart($data));
            $success=New CartResource($cart);
            $success['status']= 200;
