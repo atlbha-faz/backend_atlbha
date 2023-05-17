@@ -88,7 +88,7 @@ class IndexController extends BaseController
         
         
         $success['sales_avg']= $success['sales_weekly'] /$success['sales_monthly'];
-        $sales_avg_prev = $sales_weekly_prev /$sales_monthly_prev;
+        $sales_avg_prev = $sales_weekly_prev /50;
             $success['sales_avg_compare']= 0;
          if( $success['sales_avg'] > $sales_avg_prev){
             $success['sales_avg_compare']= 1;
