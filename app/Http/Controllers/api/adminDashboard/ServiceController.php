@@ -203,9 +203,11 @@ class ServiceController extends BaseController
         $service = Service::query()->find($service);
         $orders=  $service->services_websiteorders;
         $store_id=[];
+          if(!is_null($orders)){
         foreach($orders as $order)
         {
             $store_id[]=$order->store_id;
+        }
         }
         if (is_null($service) || $service->is_deleted==1){
         return $this->sendError("الخدمة غير موجودة","service is't exists");

@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-use Gloudemans\Shoppingcart\Contracts\Buyable;
+use App\Models\Order;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Gloudemans\Shoppingcart\Contracts\Buyable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -103,5 +104,14 @@ public function cart(){
  public function productrate($product_id){
 
         return Comment::where('product_id',$product_id)->where('comment_for','product')->avg('rateing');
+     }
+     public function getOrderTotal($product_id){
+
+        $product=Product::where('id',$product_id)->first();
+        $orderCount=Order::whereHas('items', function($q) use ($product) {
+            $q->where('product_id',$product->id)->where('order_status','completed');
+        })->count();
+         $total= $orderCount * $product->selling_price;
+         return  $total;
      }
 }
