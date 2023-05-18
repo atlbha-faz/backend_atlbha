@@ -112,8 +112,8 @@ arsort($array_city_store);
         $success['Subscriptions-city']=  array_slice($array_city_store, 0, 6, true);
            $success['Subscriptions']=  $sum;
 
-       $success['more_product_visit']=ProductResource::collection(Product::where('is_deleted',0)->where('status','active')->get());
-        $success['more_store_visit']=ProductResource::collection(Store::where('is_deleted',0)->where('status','active')->get());
+       $success['more_product_visit']=ProductResource::collection(Product::where('is_deleted',0)->where('status','active')->latest()->take(5)->get());
+        $success['more_store_visit']=ProductResource::collection(Store::where('is_deleted',0)->where('status','active')->latest()->take(5)->get());
        //  ايرادات اطلبها خلال شهر
                 $sum_service=0;
                 $p=Service::where('is_deleted',0)->count();
