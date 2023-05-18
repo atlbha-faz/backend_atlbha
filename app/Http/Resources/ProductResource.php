@@ -53,8 +53,8 @@ class ProductResource extends JsonResource
             'updated_at' => (string) $this->updated_at,
             'category' => New CategoryResource($this->category),
             'store' => New StoreResource($this->store),
-            'images' => ImageResource::collection($this->image),
-           'options'=>OptionResource::collection($this->option),
+          //  'images' => ImageResource::collection($this->image),
+           //'options'=>OptionResource::collection($this->option),
 
 
        ];
