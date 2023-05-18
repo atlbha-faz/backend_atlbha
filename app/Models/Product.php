@@ -102,6 +102,6 @@ public function cart(){
 
  public function productrate(){
 
-        return Comment::where('product_id',$this->id)->where('comment_for','product')->avg('rateing')->first();
+        return Comment::where('product_id',$this->id)->where('comment_for','product')->avg('rateing');
      }
 }
