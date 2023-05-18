@@ -100,8 +100,8 @@ public function cart(){
         )->withPivot("type");
   }
 
- public function productrate(){
+ public function productrate($product_id){
 
-        return Comment::where('product_id',$this->id)->where('comment_for','product')->avg('rateing');
+        return Comment::where('product_id',$product_id)->where('comment_for','product')->avg('rateing');
      }
 }
