@@ -47,7 +47,7 @@ class ProductResource extends JsonResource
             'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id',explode(',',$this->subcategory_id))->get()),
             'status' => $status,
             'special' => $special ,
-            'productRating'=>\App\Models\Product::find($this->id)->productrate() !== null ? \App\Models\Product::find($this->id)->productrate() : 0,
+            'productRating'=>\App\Models\Comment::where('product_id',$this->id)->where('comment_for','product')->avg('rateing') !== null ? \App\Models\Comment::where('product_id',$this->id)->where('comment_for','product')->avg('rateing') : 0,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
