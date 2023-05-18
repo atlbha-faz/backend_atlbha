@@ -442,6 +442,6 @@ class CourseController extends BaseController
         $success['videos']=New VideoResource($video);
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم عرض بنجاح','video showed successfully');
+         return $this->sendResponse($success,'تم حذف بنجاح','video deleted successfully');
     }
 }

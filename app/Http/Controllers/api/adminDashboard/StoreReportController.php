@@ -13,6 +13,7 @@ use App\Models\Marketer;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
 use App\Http\Resources\StoreResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreReportController extends  BaseController
@@ -111,7 +112,7 @@ arsort($array_city_store);
         $success['Subscriptions-city']=  array_slice($array_city_store, 0, 6, true);
            $success['Subscriptions']=  $sum;
 
-       $success['more_product_visit']=Product::where('is_deleted',0)->where('status','active')->latest()->take(5)->get();
+       $success['more_product_visit']=ProductResource::collection(Product::where('is_deleted',0)->where('status','active')->latest()->take(5)->get());
         $success['more_store_visit']=Store::where('is_deleted',0)->where('status','active')->latest()->take(5)->get();
        //  ايرادات اطلبها خلال شهر
                 $sum_service=0;
