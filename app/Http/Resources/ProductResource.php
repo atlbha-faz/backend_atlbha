@@ -51,9 +51,7 @@ class ProductResource extends JsonResource
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'category' => New CategoryResource($this->category),
-            'store' => New StoreResource($this->store),
-         //'images' => ImageResource::collection($this->image),
+         'images' => ImageResource::collection($this->image),
            'options'=>OptionResource::collection($this->option),
 
 
