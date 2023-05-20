@@ -53,47 +53,23 @@ class IndexController extends BaseController
        $array_sales_monthly[date('M', mktime(0, 0, 0, $i, 10))]= $result!==null ? $result:0;
        }
         $start_date = date('Y-m-d', strtotime('last saturday', strtotime(date('Y-m-d'))));
+        $end_date =  date('Y-m-d', strtotime('next friday', strtotime(date('Y-m-d'))));
         if(date('l') == "Saturday"){
             $start_date = date('Y-m-d');
+        }
+        if(date('l') == "Friday"){
+            $end_date = date('Y-m-d');
         }
           for($i = 1; $i <= 7; $i++){
             $result = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereBetween('created_at', [$start_date, $end_date])->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
                $array_sales_weekly["".$i." الاسبوع"]= $result!==null ? $result:0;
-  //  $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= $result!==null ? $result:0;
-      // $array_sales_weekly[]= $result!==null ? $result:0;
+              $start_date = date('Y-m-d', strtotime('-7 days', strtotime($start_date)));
+              $end_date = date('Y-m-d', strtotime('-7 days', strtotime($end_date)));
         }
-    $currentDay=now()->format('l');
-    // dd($currentDay);
-    //  dd(date('Y-m-d',strtotime("last Monday")));
-   /* if($currentDay ==="Saturday"){
-         for($i = 1; $i <= 4; $i++){
-               $x = ($i-1)*7;
-             $xx = ($i*7)-1;
-           $result = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=',(date('Y-m-d' , strtotime("-".$xx." days"))))->whereDate('created_at','<=' ,(date('Y-m-d' , strtotime("-".$x." days"))))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
-              $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= $result!==null ? $result:0;
-       }
-
-    }
-    else{
-    //   dd(strtotime("last Saturday"));
-       $result = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=', Carbon::now()->format('d-m-Y'))->whereDate('created_at','<=' ,(date('Y-m-d' , strtotime("last Saturday"))))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
-            $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= $result!==null ? $result:0;
- for($i = 1; $i <= 3; $i++){
-               $x = ($i-1)*7;
-             $xx = ($i*7)-1;
-           $result = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', '>=',(date('Y-m-d' , strtotime("-".$xx." days"))))->whereDate('created_at','<=' ,(date('Y-m-d' , strtotime("-".$x." days"))))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
-              $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= $result!==null ? $result:0;
-       }
-    }*/
-
-
-
          for($i = 1; $i <= 7; $i++){
              $x = $i-1;
            $result= DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at', date('Y-m-d' , strtotime("-".$x." days")))->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
            $array_sales_daily[(date('D', strtotime("-".$x." days")))]= $result!==null ? $result:0;
-
-            //  $array_sales_daily[(date('Y-m-d', strtotime("-".$x." days")))]= $result!==null ? $result:0;
        }
 
 
