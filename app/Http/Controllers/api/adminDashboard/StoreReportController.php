@@ -222,7 +222,7 @@ class StoreReportController extends  BaseController
         }
         }
         arsort($array_city_store);
-        $success['Subscriptions-city']=  array_slice($array_city_store, 0, 6, true);
+        $success['Subscriptions_city']=  array_slice($array_city_store, 0, 6, true);
 
 
 
