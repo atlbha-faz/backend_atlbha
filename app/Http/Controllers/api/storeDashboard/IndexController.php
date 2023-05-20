@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use DB;
-use App\Models\Order;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\ProductResource;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -33,14 +34,14 @@ class IndexController extends BaseController
         
         $success['orders']=OrderResource::collection(Order::where('store_id',auth()->user()->store_id)->orderBy('created_at', 'DESC')->take(5)->get());
         
-        
-          $success['products']=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',auth()->user()->store_id)
-              
-              
-              ->select('products.id','products.cover','products.name','products.selling_price',DB::raw('sum(order_items.total_price - order_items.discount) as sales'),DB::raw('sum(order_items.quantity) as count'))
+        $product_id = array(); 
+         $products=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',auth()->user()->store_id)
+              ->select('products.id',DB::raw('sum(order_items.total_price) as sales'),DB::raw('sum(order_items.quantity) as count'))
                  ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
-       
-        
+                 foreach($products as $product){
+                $product_id[]=$product->id;
+                       }
+                 $success['products']=ProductResource::collection(Product::whereIn('id',$product_id)->where('is_deleted',0)->get());
          $array_sales_monthly = array(); 
          $array_sales_weekly = array(); 
          $array_sales_daily = array(); 

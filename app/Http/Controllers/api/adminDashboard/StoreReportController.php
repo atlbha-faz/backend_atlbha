@@ -13,6 +13,7 @@ use App\Models\Marketer;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
 use App\Http\Resources\StoreResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreReportController extends  BaseController
@@ -66,7 +67,7 @@ class StoreReportController extends  BaseController
         $count=6;
         $array_count_store = array(); 
         while($count >= 0) {
-            $array_count_store[$count]["count of store before ".$count." month"]= Store::where('is_deleted',0)->where('status','active')->whereMonth('created_at','=',Carbon::now()->subMonths($count)->month)->count();
+            $array_count_store[mb_substr(Carbon::now()->subMonths($count)->format('F'),0,3)]= Store::where('is_deleted',0)->where('status','active')->whereMonth('created_at','=',Carbon::now()->subMonths($count)->month)->count();
             $count--;
           }
           
@@ -106,13 +107,13 @@ class StoreReportController extends  BaseController
          }
         }
         }
-        }
-arsort($array_city_store);
+        } 
+        arsort($array_city_store);
         $success['Subscriptions-city']=  array_slice($array_city_store, 0, 6, true);
            $success['Subscriptions']=  $sum;
 
-       $success['more_product_visit']=Product::where('is_deleted',0)->where('status','active')->latest()->take(5)->get();
-        $success['more_store_visit']=Store::where('is_deleted',0)->where('status','active')->latest()->take(5)->get();
+       $success['more_product_visit']=ProductResource::collection(Product::where('is_deleted',0)->where('status','active')->latest()->take(5)->get());
+        $success['more_store_visit']=StoreResource::collection(Store::where('is_deleted',0)->where('status','active')->latest()->take(5)->get());
        //  ايرادات اطلبها خلال شهر
                 $sum_service=0;
                 $p=Service::where('is_deleted',0)->count();
@@ -136,11 +137,11 @@ arsort($array_city_store);
                 $count_month=6;
                 $array_count_Etlobha = array(); 
                 while($count_month >= 0) {
-                    $array_count_Etlobha[$count_month]["count orders of Etlobha before ".$count_month." month"]= Order::where('store_id',null)->where('order_status','completed')->whereMonth('created_at', Carbon::now()->subMonths($count_month)->month)->count();
+                    $array_count_Etlobha[mb_substr(Carbon::now()->subMonths($count_month)->format('F'),0, 3)]= Order::where('store_id',null)->where('order_status','completed')->whereMonth('created_at', Carbon::now()->subMonths($count_month)->month)->count();
                     $count_month--;
                   }
 
-                  $success['count orders of Etlobha']=   $array_count_Etlobha;
+                  $success['count_orders_of_Etlobha']=   $array_count_Etlobha;
         $success['status']= 200;
         return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
         
