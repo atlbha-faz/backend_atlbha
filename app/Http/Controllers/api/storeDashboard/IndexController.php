@@ -61,7 +61,7 @@ class IndexController extends BaseController
             $end_date = date('Y-m-d');
         }
           for($i = 1; $i <= 7; $i++){
-            $result = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereBetween('created_at', [$start_date, $end_date])->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
+            $result = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereDate('created_at','>=' ,$start_date)->whereDate('created_at','<=' ,$end_date)->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
                $array_sales_weekly["".$i." الاسبوع"]= $result!==null ? $result:0;
               $start_date = date('Y-m-d', strtotime('-7 days', strtotime($start_date)));
               $end_date = date('Y-m-d', strtotime('-7 days', strtotime($end_date)));
