@@ -50,6 +50,7 @@ class importsResource extends JsonResource
             'updated_at' => (string) $this->updated_at,
             'category' => New CategoryResource($this->category),
              'images' => ImageResource::collection($this->image),
+             'is_import' =>1,
           
        ];
     }
