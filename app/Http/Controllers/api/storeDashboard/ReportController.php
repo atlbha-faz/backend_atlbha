@@ -42,7 +42,7 @@ class ReportController extends BaseController
 
         }
         else{
-             $success['total_sales']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('total_price');
+         $success['total_sales']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('total_price');
         $success['products_costs']=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('purchasing_price');
         $success['discount_coupons']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('discount');
         // $success['shipping_price']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->whereBetween('created_at', [$startDate.' 00:00:00',$endDate.' 23:59:59'])->sum('tax');
