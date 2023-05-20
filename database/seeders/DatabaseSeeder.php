@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call([
-          /*  ActivitySeeder::class,
+          ActivitySeeder::class,
             CountrySeeder::class,
             RegionSeeder::class,
             CitySeeder::class,
@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
             SectionSeeder::class,
             PartnerSeeder::class, 
             CartSeeder::class,
-            CartDetailSeeder::class,  */
+            CartDetailSeeder::class,  
             NotificationSeeder::class,
             
             

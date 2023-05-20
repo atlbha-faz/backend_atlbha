@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
 use App\Models\Image;
+use App\Models\Product;
+use App\Models\Importproduct;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -2082,5 +2083,12 @@ class ProductSeeder extends Seeder
                 'product_id'=>$i,
                 ]);
         }
+        
+        Importproduct::create([
+            'product_id'=>1,
+            'store_id'=>1,
+            'price'=>20,
+            'status'=>'active'
+        ]);
     }
 }
