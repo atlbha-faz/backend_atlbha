@@ -141,7 +141,7 @@ class StoreReportController extends  BaseController
                     $count_month--;
                   }
 
-                  $success['count orders of Etlobha']=   $array_count_Etlobha;
+                  $success['count_orders_of_Etlobha']=   $array_count_Etlobha;
         $success['status']= 200;
         return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
         
