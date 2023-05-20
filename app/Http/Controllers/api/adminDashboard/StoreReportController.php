@@ -67,7 +67,7 @@ class StoreReportController extends  BaseController
         $count=6;
         $array_count_store = array(); 
         while($count >= 0) {
-            $array_count_store[$count]["count of store before ".$count." month"]= Store::where('is_deleted',0)->where('status','active')->whereMonth('created_at','=',Carbon::now()->subMonths($count)->month)->count();
+            $array_count_store[mb_substr(Carbon::now()->subMonths($count)->format('F'),0,3)]= Store::where('is_deleted',0)->where('status','active')->whereMonth('created_at','=',Carbon::now()->subMonths($count)->month)->count();
             $count--;
           }
           
@@ -107,9 +107,9 @@ class StoreReportController extends  BaseController
          }
         }
         }
-        }
-arsort($array_city_store);
-        $success['Subscriptions_city']=  array_slice($array_city_store, 0, 6, true);
+        } 
+        arsort($array_city_store);
+        $success['Subscriptions-city']=  array_slice($array_city_store, 0, 6, true);
            $success['Subscriptions']=  $sum;
 
        $success['more_product_visit']=ProductResource::collection(Product::where('is_deleted',0)->where('status','active')->latest()->take(5)->get());
@@ -137,7 +137,7 @@ arsort($array_city_store);
                 $count_month=6;
                 $array_count_Etlobha = array(); 
                 while($count_month >= 0) {
-                    $array_count_Etlobha[$count_month]["count orders of Etlobha before ".$count_month." month"]= Order::where('store_id',null)->where('order_status','completed')->whereMonth('created_at', Carbon::now()->subMonths($count_month)->month)->count();
+                    $array_count_Etlobha[mb_substr(Carbon::now()->subMonths($count_month)->format('F'),0, 3)]= Order::where('store_id',null)->where('order_status','completed')->whereMonth('created_at', Carbon::now()->subMonths($count_month)->month)->count();
                     $count_month--;
                   }
 

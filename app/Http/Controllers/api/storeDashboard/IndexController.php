@@ -36,7 +36,7 @@ class IndexController extends BaseController
         
         $product_id = array(); 
          $products=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',auth()->user()->store_id)
-              ->select('products.id',DB::raw('sum(order_items.total_price - order_items.discount) as sales'),DB::raw('sum(order_items.quantity) as count'))
+              ->select('products.id',DB::raw('sum(order_items.total_price) as sales'),DB::raw('sum(order_items.quantity) as count'))
                  ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
                  foreach($products as $product){
                 $product_id[]=$product->id;

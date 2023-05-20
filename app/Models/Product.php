@@ -3,6 +3,7 @@
 namespace App\Models;
 use App\Models\Order;
 
+use App\Models\OrderItem;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Gloudemans\Shoppingcart\Contracts\Buyable;
@@ -105,13 +106,29 @@ public function cart(){
 
         return Comment::where('product_id',$product_id)->where('comment_for','product')->avg('rateing');
      }
+     //اجمالي المبيعات
      public function getOrderTotal($product_id){
 
         $product=Product::where('id',$product_id)->first();
-        $orderCount=Order::whereHas('items', function($q) use ($product) {
-            $q->where('product_id',$product->id)->where('order_status','completed');
-        })->count();
-         $total= $orderCount * $product->selling_price;
+        $orders=Order::whereHas('items', function($q) use ($product) {
+            $q->where('product_id',$product->id);
+        })->where('order_status','completed')->get();
+   
+          $sum=0;
+        foreach( $orders as $order){
+        $orderItems=OrderItem::where('order_id', $order->id)->where('product_id',$product->id)->get();
+     
+      foreach( $orderItems as $orderItem){
+        
+        if($order->discount!=0){
+        $sum= $sum+($order->discount * $orderItem->total_price/$order->total_price);
+        }
+        else
+        $sum= $sum+$orderItem->total_price;
+        //    dd($sum);
+      }
+    }
+         $total=  $sum;
          return  $total;
      }
 }
