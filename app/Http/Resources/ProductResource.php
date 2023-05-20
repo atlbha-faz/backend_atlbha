@@ -28,6 +28,7 @@ class ProductResource extends JsonResource
         
        return [
             'id' =>$this->id,
+           
             'name' => $this->name,
             //'sku' => $this->sku,
             'for' => $this->for,
@@ -57,6 +58,8 @@ class ProductResource extends JsonResource
             'store' => New StoreResource($this->store),
          'images' => ImageResource::collection($this->image),
            'options'=>OptionResource::collection($this->option),
+           
+             'is_import' =>0,
 
 
        ];
