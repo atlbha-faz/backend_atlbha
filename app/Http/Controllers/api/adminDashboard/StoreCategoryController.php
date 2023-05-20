@@ -90,7 +90,7 @@ if($request->data){
  $cat=Category::orderBy('id', 'desc')->first();
           $number=$cat->number;
           $number= ((int) $number) +1;
-              
+
         $subcategory= new Category([
             'name' => $data['name'],
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
@@ -216,7 +216,7 @@ if($request->data){
 
 
    foreach ($request->data as $data) {
-       
+
        $sub_cat = Category::find($data['id']);
  if(!is_null($sub_cat)){
              $number = $sub_cat->number;
@@ -226,13 +226,13 @@ if($request->data){
           $number= ((int) $number) +1;
              $number = str_pad($number, 4, '0', STR_PAD_LEFT);
          }
-       
+
     $subcategories[] = Category::updateOrCreate([
         'id'=>$data['id'],
 
     ], [
       'name' => $data['name'],
-         'number'=> $number,
+       'number'=> $number,
       'parent_id' => $category_id,
       'for'=>'store',
       'is_deleted' => 0,

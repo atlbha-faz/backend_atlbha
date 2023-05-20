@@ -41,7 +41,7 @@ Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'inde
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
 Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 Route::group([
-    'middleware' => 'auth:api'  
+    'middleware' => 'auth:api'
 ], function () {
 Route::post('addComment/{id}',[App\Http\Controllers\api\IndexStoreController::class,'addComment']);
 });
