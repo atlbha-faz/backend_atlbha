@@ -29,7 +29,7 @@ class ReportController extends BaseController
         if(is_null($request->startDate) || is_null($request->endDate)){
 
 
-             $success['total_sales']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('total_price');
+        $success['total_sales']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('total_price');
         $success['products_costs']=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->sum('purchasing_price');
         $success['discount_coupons']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('discount');
         $success['shipping_price']=Order::where('store_id',auth()->user()->store_id)->where('order_status','completed')->sum('tax');
