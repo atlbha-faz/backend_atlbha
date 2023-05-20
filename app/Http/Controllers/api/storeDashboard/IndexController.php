@@ -55,7 +55,7 @@ class IndexController extends BaseController
         Carbon::setWeekStartsAt(Carbon::SATURDAY);
         Carbon::setWeekEndsAt(Carbon::FRIDAY);
           for($i = 1; $i <= 7; $i++){
-              dd(date('Y-m-d', strtotime('last saturday', strtotime($date))));
+              dd(date('Y-m-d', strtotime('last saturday', strtotime(date('Y-m-d')))));
             $result = DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->select(DB::raw('SUM(total_price - discount) as total'))->pluck('total')->first();
                $array_sales_weekly["".$i." الاسبوع"]= $result!==null ? $result:0;
   //  $array_sales_weekly[(date('Y-m-d', strtotime("-".$x." days"))).'/'.(date('Y-m-d', strtotime("-".$xx." days")))]= $result!==null ? $result:0;
