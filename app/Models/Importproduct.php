@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Importproduct extends Model
 {
     use HasFactory;
-     protected $fillable = ['product_id','store_id','price'];
+     protected $fillable = ['product_id','store_id','price','status'];
        public function store()
     {
         return $this->belongsTo(Store::class);

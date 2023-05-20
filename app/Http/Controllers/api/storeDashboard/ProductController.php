@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use Illuminate\Validation\Rule;
+use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ImportproductResource;
@@ -26,22 +27,14 @@ class ProductController extends BaseController
     public function index()
     {
 
+       $products= ProductResource::collection(Product::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
+        
 
-        //  dd($id);
-       $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
-        // ->where(function($query){
-        // $import=Importproduct::where('store_id',auth()->user()->store_id)->pluck('product_id')->toArray();
-        // $query->where('store_id',auth()->user()->store_id)
-        // ->OrWhere('store_id',null)->whereIn('id', $import);
-        // })->get());
+    $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)
+               ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['products.*status','selling_price','purchasing_price','store_id']);
+               $imports=importsResource::collection($import);
 
-    //   $success['importproducts']=ImportproductResource::collection(Importproduct::where('store_id',auth()->user()->store_id)->get());
-
-$import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)
-               ->get(['products.*', 'importproducts.price']);
-         $import->makeHidden(['selling_price','purchasing_price','store_id']);
-      $success['importproducts']=$import;
-
+               $success['products']=$products->merge($imports);
        $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','products return successfully');
@@ -96,10 +89,7 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
             'name' => $request->name,
             'for' => 'store',
             'description' => $request->description,
-
-
             'selling_price' => $request->selling_price,
-
             'stock' => $request->stock,
             'cover' => $request->cover,
             'SEOdescription'=> $request->SEOdescription,
@@ -118,17 +108,17 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
          return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
     }
 
-    public function deleteImport($product)
-    {
-        $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$product)->first();
-        if (is_null($product)){
-            return $this->sendError("المنتج غير موجود","product is't exists");
-            }
-           $product->delete();
+    // public function deleteImport($product)
+    // {
+    //     $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$product)->first();
+    //     if (is_null($product)){
+    //         return $this->sendError("المنتج غير موجود","product is't exists");
+    //         }
+    //        $product->delete();
 
-           $success['status']= 200;
-            return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
-    }
+    //        $success['status']= 200;
+    //         return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+    // }
 
     /**
      * Display the specified resource.
@@ -269,9 +259,27 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
 
       public function deleteall(Request $request)
     {
-
-            $products =Product::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
-           foreach($products as $product)
+   
+        
+        $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)->whereIn('importproducts.product_id',$request->id)
+                   ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['selling_price','purchasing_price','store_id']);
+               if(!is_null($importproducts))
+               {
+            foreach($importproducts as $importproduct)
+            {
+              
+                    $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$importproduct->id)->first();
+                    if (is_null($product)){
+                        return $this->sendError("المنتج غير موجود","product is't exists");
+                        }
+                       $product->delete();
+                
+              
+            }
+           }
+           
+         $products =Product::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+         foreach($products as $product)
            {
              if (is_null($product) || $product->is_deleted==1 ){
                     return $this->sendError("المنتج غير موجودة","product is't exists");
@@ -288,6 +296,27 @@ $import = Product::join('importproducts', 'products.id', '=', 'importproducts.pr
 
        public function changeSatusall(Request $request)
             {
+                $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)->whereIn('importproducts.product_id',$request->id)
+                ->get(['products.*', 'importproducts.price','importproducts.status'])->makeHidden(['selling_price','purchasing_price','store_id']);
+            if(!is_null($importproducts))
+            {
+         foreach($importproducts as $importproduct)
+         {
+             
+                 $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$importproduct->id)->first();
+                 if (is_null($product)){
+                     return $this->sendError("المنتج غير موجود","product is't exists");
+                     }
+                     if($product->status === 'active'){
+                        $product->update(['status' => 'not_active']);
+                        }
+                        else{
+                        $product->update(['status' => 'active']);
+                        }
+                
+           
+             }
+           }
 
                     $products =Product::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
                 foreach($products as $product)

@@ -24,7 +24,7 @@ class TechnicalSupportSeeder extends Seeder
             .عدد الحروف التى يولدها التطبيق',
             'supportstatus' => 'not_finished',
             'type' => 'suggestion',
-            'store_id' => 1,
+            'store_id'=>1
 
         ]);
     }

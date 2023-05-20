@@ -31,7 +31,9 @@ class NotificationSeeder extends Seeder
             'object_id'=>1
         ];
         $user = User::where('store_id',1)->first();
-        Notification::send($user, new verificationNotification($data));
-        Notification::send($user, new verificationNotification($data1));
+         Notification::send($user, new verificationNotification($data));
+        //  Notification::route('mail', "rawaa.faz.it@gmail.com")->notify(new verificationNotification($data));
+        //  Notification::route('mail', "rawaa.faz.it@gmail.com")->notify(new verificationNotification($data1));
+         Notification::send($user, new verificationNotification($data1));
     }
 }
