@@ -48,7 +48,7 @@ class CouponController extends BaseController
         // dd($request->free_shipping);
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'code'=>'required|string|unique:coupons',
+             'code'=>'required|regex:/^[a-zA-Z0-9]+$/|max:255|unique:coupons',
             'discount_type'=>'required|in:fixed,percent',
             'total_price'=>['required','numeric','gt:0'],
             'discount'=>['required','numeric','gt:0'],
@@ -118,7 +118,7 @@ class CouponController extends BaseController
           {
                    $coupon = Coupon::where('id',$coupon)->where('store_id',auth()->user()->store_id)->first();
 
-            
+
               if (is_null($coupon ) || $coupon->is_deleted==1){
                return $this->sendError("الكوبون غير موجودة","coupon is't exists");
                }
