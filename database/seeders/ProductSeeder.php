@@ -363,6 +363,23 @@ class ProductSeeder extends Seeder
             
                         ]);
                         Product::create([
+                            'name' =>'حقيبة هاند باج ماركة اصلية',
+                             'for'=>'stock',
+                            'description'=>'حقيبة هاند باج ماركة اصلية',
+                            'purchasing_price'=>10,
+                            'selling_price'=>10,
+                            'quantity'=>10,
+                            'less_qty'=>10,
+                            'stock'=>20,
+                            'cover'=>'product.png',
+                            'discount_price'=>0,
+                            'discount_percent'=>0,
+                            'category_id' =>1,
+                            'subcategory_id'=>2,
+                            'special'=>'special'
+                
+                            ]);
+                        Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
                              'for'=>'etlobha',
                             'description'=>'ساعة يد ماركة سكيمي ضد الماء',
@@ -379,6 +396,23 @@ class ProductSeeder extends Seeder
                             'special'=>'special'
                 
                             ]);
+                            Product::create([
+                                'name' =>'ساعة يد ماركة سكيمي ضد الماء',
+                                 'for'=>'stock',
+                                'description'=>'ساعة يد ماركة سكيمي ضد الماء',
+                                'purchasing_price'=>10,
+                                'selling_price'=>10,
+                                'quantity'=>10,
+                                'less_qty'=>10,
+                                'stock'=>20,
+                                'cover'=>'product.png',
+                                'discount_price'=>0,
+                                'discount_percent'=>0,
+                                'category_id' =>1,
+                                'subcategory_id'=>2,
+                                'special'=>'special'
+                    
+                                ]);
 
             Product::create([
                 'name' =>'سماعة هيدفدون أصلية',
