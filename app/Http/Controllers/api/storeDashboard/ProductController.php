@@ -159,6 +159,23 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $id)
   {
+
+    $importproduct= Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)->whereIn('importproducts.product_id',$id)
+    ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['selling_price','purchasing_price','store_id']);
+          if(!is_null($importproduct))
+           {    
+
+            $importproduct = Importproduct::where('product_id',$id)->first();
+            $importproduct->update([
+               'price' => $request->selling_price
+            ]);
+            $success['products']=New importsResource($importproduct);
+            $success['status']= 200;
+
+            return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
+        }
+           
+           else{
          $product =Product::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
          if (is_null($product) || $product->is_deleted==1 ){
          return $this->sendError(" المنتج غير موجود","product is't exists");
@@ -194,7 +211,6 @@ class ProductController extends BaseController
          }
          $product->update([
             'name' => $request->input('name'),
-
             'for' => 'store',
             'description' => $request->input('description'),
             'selling_price' => $request->input('selling_price'),
@@ -216,7 +232,7 @@ class ProductController extends BaseController
 
             return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
         }
-
+    }
 
      public function changeStatus($id)
     {

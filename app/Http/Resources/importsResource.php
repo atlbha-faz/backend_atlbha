@@ -27,13 +27,14 @@ class importsResource extends JsonResource
         }
         
        return [
+           "type" =>"importProduct",
             'id' =>$this->id,
             'name' => $this->name,
             //'sku' => $this->sku,
             'for' => $this->for,
              'slug' => $this->slug,
             'description' => $this->description,
-            'price' => $this->price,
+            'selling_price' => $this->price,
             'quantity' => $this->quantity,
             'less_qty' => $this->less_qty,
             'stock' => $this->stock,

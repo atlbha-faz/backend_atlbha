@@ -93,7 +93,7 @@ class StockController extends BaseController
           
       $product = Product::create([
           'name' => $request->name,
-          'for' => 'etlobha',
+          'for' => 'stock',
           'quantity' => $request->quantity,
           'less_qty' => $request->less_qty,
           'description' => $request->description,
