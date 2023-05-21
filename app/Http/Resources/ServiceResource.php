@@ -19,7 +19,7 @@ class ServiceResource extends JsonResource
         }else{
             $status = 'غير نشط';
         }
-        
+
         return [
             'id' =>$this->id,
             'name' => $this->name,
@@ -29,7 +29,7 @@ class ServiceResource extends JsonResource
             'pendingServices' => $this->pendingServices($this->id),
             'status' => $status,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
-            // 'store' =>$this->getStore($this->websiteorders)
+          
 
         ];
     }
