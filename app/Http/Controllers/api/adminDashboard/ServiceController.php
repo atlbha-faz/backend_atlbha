@@ -201,7 +201,7 @@ class ServiceController extends BaseController
     public function showDetail($service)
     {
         $service = Service::query()->find($service);
-        $orders=  $service->services_websiteorders;
+        $orders=  $service->websiteorders;
         $store_id=[];
           if(!is_null($orders)){
         foreach($orders as $order)
@@ -212,9 +212,9 @@ class ServiceController extends BaseController
         if (is_null($service) || $service->is_deleted==1){
         return $this->sendError("الخدمة غير موجودة","service is't exists");
         }
-    
+
         $stores =Store::whereIn('id',$store_id)->get();
- 
+
        $success['stores']=  StoreResource::collection($stores);
        $success['status']= 200;
 
