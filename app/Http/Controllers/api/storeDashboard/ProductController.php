@@ -13,6 +13,7 @@ use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
+use Excel;
 
 class ProductController extends BaseController
 {
