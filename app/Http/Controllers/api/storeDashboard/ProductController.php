@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Image;
 use App\Models\Product;
-use App\Import\ProductsImport;
+use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use Illuminate\Validation\Rule;
