@@ -92,7 +92,7 @@ class IndexController extends BaseController
           if( $success['sales_weekly'] > $sales_weekly_prev){
             $success['sales_weekly_compare']= 1;
             }
-        $success['sales_percent']= (double)number_format( $success['sales_weekly'] /$success['sales_monthly'] *100, 0, '.', '' );
+        $success['sales_percent']= (int)number_format( $success['sales_weekly'] /$success['sales_monthly'] *100, 0, '.', '' );
 
 
         $success['sales_avg']= (double)number_format( $success['sales_weekly'] /$success['sales_monthly'], 2, '.', '' );
