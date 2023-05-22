@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Image;
 use App\Models\Product;
+use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Imports\ProductsImport;
@@ -14,6 +15,7 @@ use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
+use Excel;
 
 class ProductController extends BaseController
 {
