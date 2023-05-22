@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Image;
 use App\Models\Product;
+use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use Illuminate\Validation\Rule;
@@ -12,6 +13,7 @@ use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
+use Excel;
 
 class ProductController extends BaseController
 {
@@ -353,4 +355,13 @@ class ProductController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
            }
+    
+    public function importProducts(Request $request)
+{
+        Excel::import(new ProductsImport, $request->file);
+
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة المنتجات بنجاح','products Added successfully');
+}
 }
