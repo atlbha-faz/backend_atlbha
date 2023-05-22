@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class UsersImport implements ToModel, WithHeadingRow
+class ProductsImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
