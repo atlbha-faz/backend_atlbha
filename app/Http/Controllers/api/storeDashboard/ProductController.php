@@ -355,7 +355,7 @@ class ProductController extends BaseController
                 return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
            }
     
-    public function uploadUsers(Request $request)
+    public function importProducts(Request $request)
 {
         Excel::import(new ProductsImport, $request->file);
 
