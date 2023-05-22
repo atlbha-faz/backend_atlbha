@@ -24,7 +24,7 @@ class ProductsImport implements ToModel, WithHeadingRow
             'selling_price' => $row['selling_price'],
             'stock' => $row['stock'],
             'cover' => $row['cover'],
-            'SEOdescription'=> 'dd',
+            'SEOdescription'=> $row['SEOdescription'],
            'discount_price'=>$row['discount_price'],
             'discount_percent'=>$row['discount_percent'],
             'subcategory_id' => $row['subcategory_id'],
