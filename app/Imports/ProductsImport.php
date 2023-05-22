@@ -27,7 +27,7 @@ class ProductsImport implements ToModel, WithHeadingRow
             'SEOdescription'=> 'dd',
            'discount_price'=>$row['discount_price'],
             'discount_percent'=>$row['discount_percent'],
-            'subcategory_id' => implode(',', $row['subcategory_id']),
+            'subcategory_id' => implode(',', $row['subcategory_id'][]),
             'category_id' => $row['category_id'],
             'store_id'=> auth()->user()->store_id,
           ]);
