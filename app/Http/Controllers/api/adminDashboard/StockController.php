@@ -175,7 +175,7 @@ class StockController extends BaseController
      */
     public function update(Request $request, $id)
         {
-          $product =Product::query()->where('for','etlobha')->find($id);
+          $product =Product::query()->where('for','stock')->find($id);
            if (is_null($product) || $product->is_deleted==1){
            return $this->sendError(" المنتج غير موجود","product is't exists");
             }
