@@ -23,19 +23,19 @@ class ProductsImport implements ToModel
         $sub_categories = explode(',',$row['7']);
         return new Product([
 
-           'name' => $row['name'],
+           'name' => $row['1'],
             'for' => 'store',
-            'description' => $row['description'],
-            'selling_price' => $row['selling_price'],
+            'description' => $row['2'],
+            'selling_price' => $row['3'],
 
              'category_id' =>Category::where('name',$row['4'])->pluck('id')->first(),
             // 'cover' => $row['4'],
-            'SEOdescription'=> $row['seodescription'],
-           'discount_price'=>$row['discount_price'],
+            'SEOdescription'=> $row['9'],
+           'discount_price'=>$row['5'],
            'subcategory_id' => implode(',',Category::whereIn('name',$sub_categories)->where('parent_id',$parent)->pluck('id')->toArray()),
-            'discount_percent'=>$row['discount_percent'],
+            'discount_percent'=>$row['6'],
 
-             'stock' => $row['stock'],
+             'stock' => $row['8'],
 
 
 
