@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -357,6 +358,10 @@ class ProductController extends BaseController
                 return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
            }
             public function import(Request $request){
+                
+           
+                    
+       
       Excel::import(new ProductsImport, $request->file);
 
         $success['status']= 200;
