@@ -159,8 +159,8 @@ else{
 
         }
         else{
-
-            $user = User::create([
+if($setting->registration_marketer==="active"){
+      $user = User::create([
                 'name'=> $request->user_name,
                 'user_name'=> $request->user_name,
                 'email' => $request->email,
@@ -172,6 +172,15 @@ else{
             $marketer = Marketer::create([
               'user_id'=> $user->id
             ]);
+            if($setting->status_marketer==="not_active"){
+                  $user->update(['status' => "not_active"]);
+            }
+}
+else{
+            $success['message'] = "لايمكن تسجيل مندوب";
+
+}
+
         }
 
 
@@ -221,7 +230,7 @@ else{
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
         $remember = request('remember');
-        if (auth()->guard()->attempt(request(['user_name', 'password']), 
+        if (auth()->guard()->attempt(request(['user_name', 'password']),
         $remember)) {
         $user = auth()->user();
         }
@@ -233,7 +242,7 @@ else{
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
-    
+
 }
 
  public function login(Request $request)
@@ -257,7 +266,7 @@ else{
 
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
-            
+
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
 
@@ -287,13 +296,13 @@ else{
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
         $remember = request('remember');
-        if (auth()->guard()->attempt(request(['user_name', 'password']), 
+        if (auth()->guard()->attempt(request(['user_name', 'password']),
         $remember)) {
         $user = auth()->user();
         }
-      
+
         $user->update(['device_token' => $request->device_token]);
-     
+
 
 
         $success['user'] = new UserResource($user);

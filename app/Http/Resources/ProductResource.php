@@ -59,7 +59,7 @@ class ProductResource extends JsonResource
          'images' => ImageResource::collection($this->image),
            'options'=>OptionResource::collection($this->option),
            
-             'is_import' =>0,
+             'is_import' =>false,
 
 
        ];
