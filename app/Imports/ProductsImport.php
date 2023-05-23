@@ -17,23 +17,25 @@ class ProductsImport implements ToModel
     {
         // dd($row['4']);
             //  dd(Category::where('name',)->pluck('id')->first());
-        $parent=Category::where('name',$row['4'])->pluck('id')->first();
+        $parent=Category::where('name',$row['category'])->pluck('id')->first();
         // dd(Category::where('name',$row['7'])->where('parent_id',$parent)->pluck('id')->toArray());
+        
+        $sub_categories = explode(',',$row['subcategories']);
         return new Product([
 
-           'name' => $row['1'],
+           'name' => $row['name'],
             'for' => 'store',
-            'description' => $row['2'],
-            'selling_price' => $row['3'],
+            'description' => $row['description'],
+            'selling_price' => $row['selling_price'],
 
-             'category_id' => Category::where('name',$row['4'])->pluck('id')->first(),
+             'category_id' => Category::where('name',$row['category'])->pluck('id')->first(),
             // 'cover' => $row['4'],
-            'SEOdescription'=> $row['5'],
-           'discount_price'=>$row['6'],
-           'subcategory_id' => implode(',',Category::where('name',$row['7'])->where('parent_id',$parent)->pluck('id')->toArray()),
-            'discount_percent'=>$row['8'],
+            'SEOdescription'=> $row['seodescription'],
+           'discount_price'=>$row['discount_price'],
+           'subcategory_id' => implode(',',Category::whereIn('name',$sub_categories)->where('parent_id',$parent)->pluck('id')->toArray()),
+            'discount_percent'=>$row['discount_percent'],
 
-             'stock' => $row['9'],
+             'stock' => $row['stock'],
 
 
 
