@@ -17,7 +17,7 @@ class ProductsImport implements ToModel
     {
         // dd($row['4']);
             //  dd(Category::where('name',)->pluck('id')->first());
-        $parent=Category::where('name',$row['category_name'])->pluck('id')->first();
+       // $parent=Category::where('name',$row['category_name'])->pluck('id')->first();
         // dd(Category::where('name',$row['7'])->where('parent_id',$parent)->pluck('id')->toArray());
         
         $sub_categories = explode(',',$row['subcategories']);
