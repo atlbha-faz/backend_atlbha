@@ -28,7 +28,7 @@ class ProductsImport implements ToModel
             'description' => $row['description'],
             'selling_price' => $row['selling_price'],
 
-             'category_id' => Category::where('name',$row['categoryname'])->pluck('id')->first(),
+             'category_id' =>$row['category_id'],
             // 'cover' => $row['4'],
             'SEOdescription'=> $row['seodescription'],
            'discount_price'=>$row['discount_price'],
