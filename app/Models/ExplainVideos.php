@@ -14,7 +14,7 @@ class ExplainVideos extends Model
         return $this->belongsTo(User::class);
     }
 
-     public function setVideoAttribute($video)
+     /*public function setVideoAttribute($video)
     {
         if (!is_null($video)) {
             if (gettype($video) != 'string') {
@@ -24,7 +24,7 @@ class ExplainVideos extends Model
                 $this->attributes['video'] = $video;
             }
         }
-    }
+    }*/
 
     public function getVideoAttribute($video)
     {
