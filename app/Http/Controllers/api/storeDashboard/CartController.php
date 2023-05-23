@@ -143,13 +143,16 @@ class CartController extends BaseController
         //
     }
 
-    public function sendOffer(Request $request)
+    public function sendOffer($id, Request $request)
     {
     
-       
+       $cart = Cart::where('id',$id)->whereDate('updated_at','<=',Carbon::now()->subHours(24)->format('Y-m-d'))->first();
+         if (is_null($cart)){
+         return $this->sendError("السلة غير موجودة","cart is't exists");
+         }
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'id'=>'required|exists:carts,id',
+            //'id'=>'required|exists:carts,id',
             'message'=>'required|string',
             //'discount_total' =>"required_if:discount_type,fixed,percent",
             'discount_value' =>"required_if:discount_type,fixed,percent",
@@ -183,8 +186,8 @@ class CartController extends BaseController
         ];
         
         $user = User::where('id',$cart->user_id)->first();
-           Notification::send($user , new emailNotification($data));
-         //Mail::to($user->email)->send(new SendOfferCart($data));
+         //  Notification::send($user , new emailNotification($data));
+         Mail::to($user->email)->send(new SendOfferCart($data));
            $success=New CartResource($cart);
            $success['status']= 200;
             return $this->sendResponse($success,'تم إرسال العرض بنجاح','Offer Cart Send successfully');

@@ -56,7 +56,7 @@ class RoleController extends BaseController
             }
       
       
-    $role = Role::create(['name'=>$request->role_name , 'type'=>'admin']);
+    $role = Role::create(['name'=>$request->role_name , 'type'=>'admin' ,'guard_name'=>'api']);
       
     $role->syncPermissions($request->permissions);
 
