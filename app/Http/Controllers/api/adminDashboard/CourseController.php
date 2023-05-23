@@ -325,7 +325,7 @@ class CourseController extends BaseController
         if ($isFileUploaded) {
             $video = new Video([
            'duration' => $playtime,
-            'video' => $filePath,
+            'video' => $fileName,
             'name'=> $fileName ,
             'unit_id' => $unit->id,
         ]);
