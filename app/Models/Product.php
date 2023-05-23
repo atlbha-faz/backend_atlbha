@@ -113,13 +113,13 @@ public function cart(){
         $orders=Order::whereHas('items', function($q) use ($product) {
             $q->where('product_id',$product->id);
         })->where('order_status','completed')->get();
-   
+
           $sum=0;
         foreach( $orders as $order){
         $orderItems=OrderItem::where('order_id', $order->id)->where('product_id',$product->id)->get();
-     
+
       foreach( $orderItems as $orderItem){
-        
+
         if($order->discount!=0){
         $sum= $sum+($order->discount * $orderItem->total_price/$order->total_price);
         }

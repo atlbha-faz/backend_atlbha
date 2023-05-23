@@ -4,16 +4,17 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Image;
 use App\Models\Product;
-use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
+use App\Imports\ProductsImport;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
-use Excel;
+
 
 class ProductController extends BaseController
 {
@@ -30,7 +31,7 @@ class ProductController extends BaseController
     {
 
        $products= ProductResource::collection(Product::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
-        
+
 
     $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)
                ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['products.*status','selling_price','purchasing_price','store_id']);
@@ -134,7 +135,7 @@ class ProductController extends BaseController
         if (is_null($product) || $product->is_deleted==1){
                return $this->sendError("المنتج غير موجود","product is't exists");
                }
-           
+
               $success['products']=New ProductResource($product);
               $success['status']= 200;
 
@@ -165,7 +166,7 @@ class ProductController extends BaseController
     $importproduct= Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)->whereIn('importproducts.product_id',$id)
     ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['selling_price','purchasing_price','store_id']);
           if(!is_null($importproduct))
-           {    
+           {
 
             $importproduct = Importproduct::where('product_id',$id)->first();
             $importproduct->update([
@@ -176,7 +177,7 @@ class ProductController extends BaseController
 
             return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
         }
-           
+
            else{
          $product =Product::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
          if (is_null($product) || $product->is_deleted==1 ){
@@ -277,25 +278,25 @@ class ProductController extends BaseController
 
       public function deleteall(Request $request)
     {
-   
-        
+
+
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)->whereIn('importproducts.product_id',$request->id)
                    ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['selling_price','purchasing_price','store_id']);
                if(!is_null($importproducts))
                {
             foreach($importproducts as $importproduct)
             {
-              
+
                     $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$importproduct->id)->first();
                     if (is_null($product)){
                         return $this->sendError("المنتج غير موجود","product is't exists");
                         }
                        $product->delete();
-                
-              
+
+
             }
            }
-           
+
          $products =Product::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
          foreach($products as $product)
            {
@@ -320,7 +321,7 @@ class ProductController extends BaseController
             {
          foreach($importproducts as $importproduct)
          {
-             
+
                  $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$importproduct->id)->first();
                  if (is_null($product)){
                      return $this->sendError("المنتج غير موجود","product is't exists");
@@ -331,8 +332,8 @@ class ProductController extends BaseController
                         else{
                         $product->update(['status' => 'active']);
                         }
-                
-           
+
+
              }
            }
 
@@ -355,13 +356,11 @@ class ProductController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
            }
-    
-    public function importProducts(Request $request)
-{
-        Excel::import(new ProductsImport, $request->file);
+            public function import(Request $request){
+      Excel::import(new ProductsImport, $request->file);
 
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم إضافة المنتجات بنجاح','products Added successfully');
-}
+    }
 }
