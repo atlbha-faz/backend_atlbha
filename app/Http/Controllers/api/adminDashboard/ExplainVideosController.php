@@ -63,33 +63,39 @@ class ExplainVideosController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        $fileName =  $request->video->getClientOriginalName();
+      /*  $fileName =  $request->video->getClientOriginalName();
         $filePath = 'videos/explainvideo/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
 
         // File URL to access the video in frontend
         $url = Storage::disk('public')->url($filePath);
-        $getID3 = new \getID3();
-        $pathVideo = 'storage/videos/explainvideo/'. $fileName;
-
-        $fileAnalyze = $getID3->analyze($pathVideo);
-        // dd($fileAnalyze);
-        $playtimes = $fileAnalyze['playtime_seconds'];
-        $playtime=gmdate("H:i:s", $playtimes);
+        */
 
         // dd($playtime);
-        if ($isFileUploaded) {
+       // if ($isFileUploaded) {
         $explainvideos = ExplainVideos::create([
             'title' => $request->title,
-            'duration' => $playtime,
+            'duration' => '00:00:00',
             'video' => $this->vedio,
             // 'name'=> $fileName ,
             'thumbnail' =>$request->thumbnail,
             //'link' =>$request->link,
             'user_id' => auth()->user()->id,
           ]);
-        }
+        
+        
+        $getID3 = new \getID3();
+        $pathVideo = 'storage/videos/explainvideo/'. $explainvideos->video;
+
+        $fileAnalyze = $getID3->analyze($pathVideo);
+        // dd($fileAnalyze);
+        $playtimes = $fileAnalyze['playtime_seconds'];
+        $playtime=gmdate("H:i:s", $playtimes);
+        
+        $explainvideos->update(['duration' => $playtime]);
+        
+       // }
 
          // return new CountryResource($country);
          $success['explainvideos']=New ExplainVideoResource($explainvideos);
