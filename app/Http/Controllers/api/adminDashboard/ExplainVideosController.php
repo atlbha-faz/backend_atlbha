@@ -83,7 +83,7 @@ class ExplainVideosController extends BaseController
         $explainvideos = ExplainVideos::create([
             'title' => $request->title,
             'duration' => $playtime,
-            'video' => $fileName,
+            'video' => $this->vedio,
             // 'name'=> $fileName ,
             'thumbnail' =>$request->thumbnail,
             //'link' =>$request->link,
