@@ -64,14 +64,14 @@ class ExplainVideosController extends BaseController
             return $this->sendError(null,$validator->errors());
         }
         $fileName =  $request->video->getClientOriginalName();
-        $filePath = 'videos/explainvideo' . $fileName;
+        $filePath = 'videos/explainvideo/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
 
         // File URL to access the video in frontend
         $url = Storage::disk('public')->url($filePath);
         $getID3 = new \getID3();
-        $pathVideo = 'storage/videos/explainvideo'. $fileName;
+        $pathVideo = 'storage/videos/explainvideo/'. $fileName;
 
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
@@ -161,14 +161,14 @@ class ExplainVideosController extends BaseController
           ]);
         if(!is_null($request->video)){
        $fileName =  $request->video->getClientOriginalName();
-        $filePath = 'videos/' . $fileName;
+        $filePath = 'videos/explainvideo/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
 
         // File URL to access the video in frontend
         $url = Storage::disk('public')->url($filePath);
         $getID3 = new \getID3();
-        $pathVideo = 'storage/videos/'. $fileName;
+        $pathVideo = 'storage/videos/explainvideo/'. $fileName;
 
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
