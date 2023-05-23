@@ -357,6 +357,15 @@ class ProductController extends BaseController
                 return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
            }
             public function importProducts(Request $request){
+             $input = $request->all();
+        $validator =  Validator::make($input ,[
+              'file'=>'required|mimes:csv,xlsx,xls',
+              ]);
+               if ($validator->fails())
+         {
+            # code...
+            return $this->sendError(null,$validator->errors());
+         }
       Excel::import(new ProductsImport, $request->file);
 
         $success['status']= 200;
