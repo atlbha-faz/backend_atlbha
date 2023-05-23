@@ -31,7 +31,7 @@ class ExplainVideos extends Model
         if (is_null($video)) {
             return   asset('assets/media/man.png');
         }
-        return asset('storage/videos/explainvideo') . '/' . $video;
+        return asset('storage/videos/explainvideo') . '/' . $this->name;
     }
      public function seTthumbnailAttribute($thumbnail)
     {
