@@ -184,7 +184,7 @@ class CartController extends BaseController
         
         $user = User::where('id',$cart->user_id)->first();
            Notification::send($user , new emailNotification($data));
-         //Mail::to($user->email)->send(new SendOfferCart($data));
+         Mail::to($user->email)->send(new SendOfferCart($data));
            $success=New CartResource($cart);
            $success['status']= 200;
             return $this->sendResponse($success,'تم إرسال العرض بنجاح','Offer Cart Send successfully');
