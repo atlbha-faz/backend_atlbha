@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Store;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Events\VerificationEvent;
 use App\Http\Resources\NoteResource;
@@ -39,8 +40,9 @@ class VerificationController extends BaseController
          if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
-
-        $store->update(['verification_status' => 'accept']);
+         $date = Carbon::now()->toDateTimeString();
+        $store->update(['verification_status' => 'accept',
+                  'verification_date'=>$date]);
         $users = User::where('store_id', $store->id)->get();
         $data = [
             'message' => ' تم قبول توثيق المتجر',
@@ -69,8 +71,9 @@ class VerificationController extends BaseController
          if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
-
-        $store->update(['verification_status' => 'reject']);
+         $date = Carbon::now()->toDateTimeString();
+        $store->update(['verification_status' => 'reject',
+        'verification_date'=>$date]);
         $users = User::where('store_id', $store->id)->get();
         $data = [
             'message' => ' تم رفض توثيق المتجر',
