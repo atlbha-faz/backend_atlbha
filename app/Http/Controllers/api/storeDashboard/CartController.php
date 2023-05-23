@@ -143,10 +143,13 @@ class CartController extends BaseController
         //
     }
 
-    public function sendOffer(Request $request)
+    public function sendOffer($id, Request $request)
     {
     
-       
+       $cart = Cart::where('id',$id)->whereDate('updated_at','<=',Carbon::now()->subHours(24)->format('Y-m-d'))->first();
+         if (is_null($cart)){
+         return $this->sendError("السلة غير موجودة","cart is't exists");
+         }
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'id'=>'required|exists:carts,id',
