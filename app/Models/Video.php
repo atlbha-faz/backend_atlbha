@@ -29,7 +29,7 @@ class Video extends Model
     //     }
     // }
 
-    public function getNameAttribute($video)
+    public function getVideoAttribute($video)
     {
         if (is_null($video)) {
             return   asset('assets/media/man.png');
