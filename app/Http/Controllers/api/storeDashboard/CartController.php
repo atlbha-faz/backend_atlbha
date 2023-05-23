@@ -152,7 +152,7 @@ class CartController extends BaseController
          }
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'id'=>'required|exists:carts,id',
+            //'id'=>'required|exists:carts,id',
             'message'=>'required|string',
             //'discount_total' =>"required_if:discount_type,fixed,percent",
             'discount_value' =>"required_if:discount_type,fixed,percent",
