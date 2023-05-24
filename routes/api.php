@@ -315,7 +315,7 @@ Auth::routes();
 Route::middleware([StoreUser::class])->group(function(){
 Route::prefix('/Store')->group(function () {
     // import file
-    Route::post('importFile', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'import']);
+    Route::post('importFile', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importProducts']);
 
 // country
 Route::resource('country',App\Http\Controllers\api\storeDashboard\CountryController::class);

@@ -357,11 +357,39 @@ class ProductController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
            }
-            public function importProducts(Request $request){
-      Excel::import(new ProductsImport, $request->file);
 
-        $success['status']= 200;
+        public function importProducts(Request $request){
+             $input = $request->all();
+             $validator =  Validator::make($input ,[
+             'file'=>'required|mimes:csv,xlsx,xls',
+              ]);
+               if ($validator->fails())
+                {
+                 # code...
+                return $this->sendError(null,$validator->errors());
+                }
+                // $file=$request->file('file');
 
-         return $this->sendResponse($success,'تم إضافة المنتجات بنجاح','products Added successfully');
-    }
+                    //   Excel::import(new ProductsImport, $request->file);
+                //     $import=new ProductsImport;
+                //     $import->import($file);
+                //    if($import->failures()->isNotEmpty()) {
+                //             return back()->withFailures($import->failures());
+                //         }
+                // dd($import->failures());
+                try {
+                        Excel::import(new ProductsImport, $request->file);
+                        $success['status']= 200;
+
+                        return $this->sendResponse($success,'تم إضافة المنتجات بنجاح','products Added successfully');
+                    } catch (ValidationException $e) {
+                        // Handle other import error
+                        // return "eroee";
+                        $failures = $e->failures();
+
+                        // Handle validation failures
+                        return $failures;
+                    }
+
+                    }
 }
