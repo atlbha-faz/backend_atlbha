@@ -34,7 +34,7 @@ class Video extends Model
         if (is_null($video)) {
             return   asset('assets/media/man.png');
         }
-        return asset('storage/videos/video') . '/' . $video;
+        return asset('storage/videos') . '/' . $video;
     }
 
   
