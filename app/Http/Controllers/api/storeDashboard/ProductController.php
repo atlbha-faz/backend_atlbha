@@ -361,7 +361,7 @@ class ProductController extends BaseController
         public function importProducts(Request $request){
              $input = $request->all();
              $validator =  Validator::make($input ,[
-             'file'=>'required|mimes:csv,xlsx,xls',
+             'file'=>'required|mimes:csv,txt,xlsx,xls',
               ]);
                if ($validator->fails())
                 {

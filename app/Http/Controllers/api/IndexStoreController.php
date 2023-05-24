@@ -27,7 +27,7 @@ class IndexStoreController extends BaseController
         //    $success['countVisit']= views($homepage)->count();
             //
          $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
-         $success['logo_footer']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
+        //  $success['logo_footer']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
          $success['slider1']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus1','active')->pluck('slider1')->first();
          $success['slider2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus2','active')->pluck('slider2')->first();
          $success['slider3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus3','active')->pluck('slider3')->first();
@@ -59,8 +59,9 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
 })->get();
 
   foreach($resent_arrivede_by_category as $category){
- $success['resent_arrivede_by_category'][]=collect($category)->merge(Product::where('is_deleted',0)
-     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get());
+//  $success['resent_arrivede_by_category'][]=$category;
+ $success['resent_arrivede_by_category'][][$category->name]=Product::where('is_deleted',0)
+ ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get();
   }
 
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->get());
