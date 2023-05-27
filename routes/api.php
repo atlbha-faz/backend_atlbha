@@ -37,7 +37,7 @@ Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 //  index Ettlobha page
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
-//  index store page
+//  index store page القالب
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
 Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 Route::group([

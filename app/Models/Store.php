@@ -58,7 +58,6 @@ class Store extends Model
         'activities_stores',
         'store_id',
         'activity_id'
-
         );
     }
      public function packages()

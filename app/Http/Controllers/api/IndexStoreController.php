@@ -27,7 +27,7 @@ class IndexStoreController extends BaseController
         //    $success['countVisit']= views($homepage)->count();
             //
          $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
-         $success['logo_footer']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
+        //  $success['logo_footer']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
          $success['slider1']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus1','active')->pluck('slider1')->first();
          $success['slider2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus2','active')->pluck('slider2')->first();
          $success['slider3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus3','active')->pluck('slider3')->first();
@@ -59,8 +59,9 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
 })->get();
 
   foreach($resent_arrivede_by_category as $category){
- $success['resent_arrivede_by_category'][]=collect($category)->merge(Product::where('is_deleted',0)
-     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get());
+//  $success['resent_arrivede_by_category'][]=$category;
+ $success['resent_arrivede_by_category'][][$category->name]=Product::where('is_deleted',0)
+ ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get();
   }
 
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->get());
@@ -92,13 +93,28 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
     } 
 
     public function productPage($id){
+      $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
+      $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->get());
+
         $product=Product::where('is_deleted',0)->where('id',$id)->first();
         $success['product']=NEW ProductResource(Product::where('is_deleted',0)->where('id',$id)->first());
         $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
                 ->where('store_id',$product->store_id)->where('category_id',$product->category_id)->whereNotIn('id', [$id])->get());
  
         $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id', $product->store_id)->where('product_id',$product->id)->get());
-        $success['status']= 200;
+        $success['store_name']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
+         $success['store_email ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+         $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
+         $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
+
+         $success['snapchat']=Store::where('is_deleted',0)->where('id',$id)->pluck('snapchat')->first();
+         $success['facebook']=Store::where('is_deleted',0)->where('id',$id)->pluck('facebook')->first();
+         $success['twiter']=Store::where('is_deleted',0)->where('id',$id)->pluck('twiter')->first();
+         $success['youtube']=Store::where('is_deleted',0)->where('id',$id)->pluck('youtube')->first();
+         $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
+         $store=Store::where('is_deleted',0)->where('id',$id)->first();
+         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['status']= 200;
 
         return $this->sendResponse($success,'تم ارجاع صفحة المنتج للمتجر بنجاح',' Product page return successfully');
   

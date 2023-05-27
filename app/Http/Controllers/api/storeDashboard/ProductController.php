@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -360,7 +361,7 @@ class ProductController extends BaseController
         public function importProducts(Request $request){
              $input = $request->all();
              $validator =  Validator::make($input ,[
-             'file'=>'required|mimes:csv,xlsx,xls',
+             'file'=>'required|mimes:csv,txt,xlsx,xls',
               ]);
                if ($validator->fails())
                 {
