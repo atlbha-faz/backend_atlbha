@@ -368,15 +368,7 @@ class ProductController extends BaseController
                  # code...
                 return $this->sendError(null,$validator->errors());
                 }
-                // $file=$request->file('file');
-
-                    //   Excel::import(new ProductsImport, $request->file);
-                //     $import=new ProductsImport;
-                //     $import->import($file);
-                //    if($import->failures()->isNotEmpty()) {
-                //             return back()->withFailures($import->failures());
-                //         }
-                // dd($import->failures());
+        
                 try {
                         Excel::import(new ProductsImport, $request->file);
                         $success['status']= 200;

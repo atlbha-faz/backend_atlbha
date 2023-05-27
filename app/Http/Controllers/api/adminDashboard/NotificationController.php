@@ -24,6 +24,7 @@ class NotificationController extends BaseController
     }
     public function index()
     {
+     
         $success['count_of_notifications']=auth()->user()->Notifications->count();
         $success['notifications']=NotificationResource::collection(auth()->user()->Notifications);
         $success['status']= 200;
@@ -31,10 +32,10 @@ class NotificationController extends BaseController
          return $this->sendResponse($success,'تم ارجاع جميع الاشعارات بنجاح','Notifications return successfully');
     }
     public function read($id){
-       
+
         $userUnreadNotification =  NotificationModel::query()->find($id);
         $userUnreadNotification->update(['read_at' =>Carbon::now()]);
-    
+
         $success['notifications']=$userUnreadNotification;
         $success['status']= 200;
 
@@ -42,7 +43,7 @@ class NotificationController extends BaseController
     }
     public function show($id){
         $userNotification =  NotificationModel::query()->find($id);
-       
+
         $success['notifications']=new NotificationResource($userNotification);
         $success['status']= 200;
 
@@ -69,7 +70,7 @@ class NotificationController extends BaseController
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف الاشعار بنجاح','notification deleted successfully');
     }
-    
+
     public function addEmail(Request $request)
     {
         $input = $request->all();
@@ -83,7 +84,7 @@ class NotificationController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        
+
         $data = [
             'subject' => $request->subject,
             'message' => $request->message,
@@ -115,21 +116,21 @@ class NotificationController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        
+
         $data = [
             'subject' => $request->subject,
             'message' => $request->message,
             'store_id' => $request->store_id,
-      
+
         ];
         if($request->type =="now"){
-        $alert= Alert::create( [ 
+        $alert= Alert::create( [
         'subject' => $request->subject,
         'message' => $request->message,
         'store_id' => $request->store_id]);
         }
         else{
-            $alert= Alert::create( [ 
+            $alert= Alert::create( [
             'subject' => $request->subject,
             'message' => $request->message,
             'store_id' => $request->store_id,
