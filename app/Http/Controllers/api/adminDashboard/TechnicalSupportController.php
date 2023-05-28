@@ -26,11 +26,11 @@ class TechnicalSupportController extends BaseController
      */
     public function index()
      {
-      $success[' Store_Technicalsupports']=count(DB::table('technical_supports')
+      $success['Store_Technicalsupports']=count(DB::table('technical_supports')
       ->select( DB::raw('count(*) as total'))
       ->groupBy(DB::raw("store_id"))
       ->get());
-      $success['percent_of_Store_Technicalsupports %']=(count(DB::table('technical_supports')
+      $success['percent_of_Store_Technicalsupports']=(count(DB::table('technical_supports')
       ->select( DB::raw('count(*) as total'))
       ->groupBy(DB::raw("store_id"))
       ->get())/(TechnicalSupport::where('is_deleted',0)->count())*100)."%";

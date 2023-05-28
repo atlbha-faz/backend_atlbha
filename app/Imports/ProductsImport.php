@@ -65,6 +65,13 @@ SkipsOnFailure
 
             'store_id'=> auth()->user()->store_id,
         ]);
+        
+
+   
+
+        return $product;
+    
+
     }
 
      public function rules(): array {
