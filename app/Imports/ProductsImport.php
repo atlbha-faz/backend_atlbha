@@ -5,14 +5,15 @@ namespace App\Imports;
 use Throwable;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 // use Maatwebsite\Excel\Concerns\SkipsFailures;
 // use Maatwebsite\Excel\Concerns\SkipsFailures;
 
@@ -35,8 +36,9 @@ SkipsOnFailure
 
     public function model(array $row)
     {
+// Log::info($row['cover']);
 
-
+// Log::alert($row['cover']);
         // dd($row['4']);
             //  dd(Category::where('name',)->pluck('id')->first());
         $parent=Category::where('name',$row['category_id'])->pluck('id')->first();

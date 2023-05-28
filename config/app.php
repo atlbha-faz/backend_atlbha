@@ -198,6 +198,8 @@ return [
         Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
        CyrildeWit\EloquentViewable\EloquentViewableServiceProvider::class,
   Maatwebsite\Excel\ExcelServiceProvider::class,
+    Spatie\Analytics\AnalyticsServiceProvider::class,
+
     ],
 
     /*
@@ -215,7 +217,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
   'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-
+'Analytics' => Spatie\Analytics\Facades\Analytics::class,
     ])->toArray(),
 
 ];
