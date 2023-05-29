@@ -15,6 +15,13 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {
+        
+                if($this->periodtype == null || $this->periodtype == '6months'){
+                  $periodtype = 'شهور'.' '.'6';
+        }else{
+            $periodtype = 'سنوي';
+        }
+          
         if($this->status ==null || $this->status == 'active'){
             $status = 'نشط';
         }else{
@@ -69,7 +76,7 @@ class StoreResource extends JsonResource
         'activity' =>ActivityResource::collection($this->activities),
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
-        'periodtype'=>$this->periodtype,
+        'periodtype'=>$periodtype,
         'left'=>$this->left($this->id),
         'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
         'verification_status'=>$verification_status,
