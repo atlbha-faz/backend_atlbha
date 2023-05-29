@@ -15,6 +15,12 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {
+                if($this->packages->last()->period == null $this->packages->last()->period == '6months'){
+                    $period = '6 شهور';
+        }else{
+            $period = 'سنوي';
+        }
+          
         if($this->status ==null || $this->status == 'active'){
             $status = 'نشط';
         }else{
@@ -78,6 +84,7 @@ class StoreResource extends JsonResource
         'status' => $status,
         'special' => $special,
              'package' =>$this->packagee($this->packages->last()->package_id),
+             'period' =>$period,
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
     ];
     }
