@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Imports\ProductsImport;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
@@ -368,17 +369,13 @@ class ProductController extends BaseController
                  # code...
                 return $this->sendError(null,$validator->errors());
                 }
-                // $file=$request->file('file');
 
-                    //   Excel::import(new ProductsImport, $request->file);
-                //     $import=new ProductsImport;
-                //     $import->import($file);
-                //    if($import->failures()->isNotEmpty()) {
-                //             return back()->withFailures($import->failures());
-                //         }
-                // dd($import->failures());
                 try {
+
                         Excel::import(new ProductsImport, $request->file);
+                                // Log::alert($row['cover']);
+                                // Log::info($row['cover']);
+
                         $success['status']= 200;
 
                         return $this->sendResponse($success,'تم إضافة المنتجات بنجاح','products Added successfully');
@@ -391,5 +388,5 @@ class ProductController extends BaseController
                         return $failures;
                     }
 
-                    }
+          }
 }

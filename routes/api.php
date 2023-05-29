@@ -45,7 +45,9 @@ Route::group([
 ], function () {
 Route::post('addComment/{id}',[App\Http\Controllers\api\IndexStoreController::class,'addComment']);
 });
-
+// visit count
+Route::get('visit',[App\Http\Controllers\api\VisitCountController::class,'visit']);
+//
 Route::get('posts',[App\Http\Controllers\api\PostController::class,'index']);
 Route::get('show/{id}',[App\Http\Controllers\api\PostController::class,'show']);
 Route::get('show_post/{id}',[App\Http\Controllers\api\PostController::class,'show_post']);
@@ -247,6 +249,9 @@ Route::post('rejectService/{id}',[App\Http\Controllers\api\adminDashboard\Websit
 
 
 Route::resource('stock',App\Http\Controllers\api\adminDashboard\StockController::class);
+// import product
+Route::post('importproducts',[App\Http\Controllers\api\adminDashboard\StockController::class,'importStockProducts']);
+
 Route::get('stockdeleteall',[App\Http\Controllers\api\adminDashboard\StockController::class,'deleteall']);
 Route::get('storechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreController::class,'changeSatusall']);
 Route::get('productchangeSatusall',[App\Http\Controllers\api\adminDashboard\ProductController::class,'changeSatusall']);

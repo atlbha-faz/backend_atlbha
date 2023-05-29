@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
             CouponSeeder::class,
             MaintenanceSeeder::class,
             MarketerSeeder::class,
-            
+
             PaymenttypeSeeder::class,
             OrderSeeder::class,
             // OrderItemSeeder::class,
@@ -64,13 +64,14 @@ class DatabaseSeeder extends Seeder
             HomepageSeeder::class,
             OfferSeeder::class,
             SectionSeeder::class,
-            PartnerSeeder::class, 
+            PartnerSeeder::class,
             CartSeeder::class,
-            CartDetailSeeder::class,  
+            CartDetailSeeder::class,
+            
             NotificationSeeder::class,
-            
-            
-            TechnicalSupportSeeder::class,
+
+
+           // TechnicalSupportSeeder::class,
             // PermissionTableSeeder::class,
 
         ]);

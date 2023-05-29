@@ -39,18 +39,18 @@ class NotificationSeeder extends Seeder
          $data2=[
             'message' => 'إستفسار حول دعم السرفر',
             'store_id' =>1,
-            'user_id'=>2,
+            'user_id'=>1,
             'type'=>"ask",
             'object_id'=>1
         ];
       $data3=[
         'message' => 'قبول متجر نون',
         'store_id' =>2,
-            'user_id'=>4,
+            'user_id'=>1,
             'type'=>"request",
             'object_id'=>1
         ];
-        $user = User::where('store_id',null)->where('user_type','admin')->first();
+        $user = User::where('store_id',null)->where('user_type','admin_employee')->first();
          Notification::send($user, new verificationNotification($data2));
          Notification::send($user, new verificationNotification($data3));
     }
