@@ -16,10 +16,10 @@ class StoreResource extends JsonResource
     public function toArray($request)
     {
         
-                if($this->packages->last()->periodtype == null || $this->packages->last()->periodtype == '6months'){
-                    $period = '6 شهور';
+                if($this->periodtype == null || $this->periodtype == '6months'){
+                    $periodtype = '6 شهور';
         }else{
-            $period = 'سنوي';
+            $periodtype = 'سنوي';
         }
           
         if($this->status ==null || $this->status == 'active'){
@@ -76,7 +76,7 @@ class StoreResource extends JsonResource
         'activity' =>ActivityResource::collection($this->activities),
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
-        'periodtype'=>$this->periodtype,
+        'periodtype'=>$periodtype,
         'left'=>$this->left($this->id),
         'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
         'verification_status'=>$verification_status,
@@ -85,7 +85,6 @@ class StoreResource extends JsonResource
         'status' => $status,
         'special' => $special,
              'package' =>$this->packagee($this->packages->last()->package_id),
-             'period' =>$period,
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
     ];
     }
