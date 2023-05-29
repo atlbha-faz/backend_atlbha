@@ -57,17 +57,21 @@ SkipsOnFailure
         //    ['image'=>$value,
         // 'product_id'=>$productid]);
         //  }
+         $arrayValues=array();
                $type = $row['optiontype'];
             $types = explode(',', $type);
              $title = $row['optiontitle'];
             $titles = explode(',', $title);
              $value = $row['optionvalue'];
             $values = explode(',', $value);
+              for ($x = 0; $x < count($types); $x++) {
+        $arrayValues[$x][]=$values[$x];}
       for ($x = 0; $x < count($types); $x++) {
            $option= Option::create([
                   'type' => $types[$x],
                   'title' => $titles[$x],
-                  'value' => explode(',',$values[$x]),
+                  'value' => implode(',', $arrayValues[$x]),
+
                   'product_id' =>  $productid
 
                 ]);
