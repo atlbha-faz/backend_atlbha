@@ -174,7 +174,7 @@ class ProductController extends BaseController
 
             }
                $success['status']= 200;
-                return $this->sendResponse($success,'تم تعطيل المنتجات بنجاح','products stop successfully');
+                 return $this->sendResponse($success,'تم تعديل حالة التصنيف بنجاح','category updated successfully');
     }
 
     /**
