@@ -67,8 +67,10 @@ class StockController extends BaseController
           'purchasing_price'=>['required','numeric','gt:0'],
           'selling_price'=>['required','numeric','gt:0'],
           'stock'=>['required','numeric','gt:0'],
-          'quantity'=>['required','numeric','gt:0'],
-          'less_qty'=>['required','numeric','gt:0'],
+          'mount'=>['required','numeric'],
+
+          'quantity'=>['required_if:mount,0','numeric','gt:0'],
+          'less_qty'=>['required_if:mount,0','numeric','gt:0'],
           'images'=>'required|array',
           'images.*'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
           'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
@@ -103,6 +105,7 @@ class StockController extends BaseController
           'selling_price' => $request->selling_price,
           'stock' => $request->stock,
           'cover' => $request->cover,
+          'mount' => $request->mount,
           'category_id' => $request->category_id,
           'subcategory_id' => implode(',', $request->subcategory_id),
           'store_id' => null,
@@ -185,8 +188,10 @@ class StockController extends BaseController
            $validator =  Validator::make($input ,[
                'name'=>'required|string|max:255',
               'description'=>'required|string',
-            'quantity'=>['required','numeric','gt:0'],
-            'less_qty'=>['required','numeric','gt:0'],
+              'mount'=>['required','numeric'],
+
+            'quantity'=>['required_if:mount,0','numeric','gt:0'],
+            'less_qty'=>['required_if:mount,0','numeric','gt:0'],
               'purchasing_price'=>['required','numeric','gt:0'],
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
@@ -221,6 +226,7 @@ class StockController extends BaseController
               'less_qty' =>$request->input('less_qty'),
               'stock' => $request->input('stock'),
               'cover' => $request->cover,
+              'mount' => $request->mount,
               'category_id' => $request->input('category_id'),
               'subcategory_id' =>  implode(',', $request->subcategory_id),
 

@@ -19,16 +19,16 @@ class ProductResource extends JsonResource
         }else{
             $status = 'غير نشط';
         }
-        
+
         if($this->special ==null || $this->special == 'special'){
             $special = 'مميز';
         }else{
             $special = 'غير مميز';
         }
-        
+
        return [
             'id' =>$this->id,
-           
+
             'name' => $this->name,
             //'sku' => $this->sku,
             'for' => $this->for,
@@ -48,17 +48,18 @@ class ProductResource extends JsonResource
             'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id',explode(',',$this->subcategory_id))->get()),
             'status' => $status,
             'special' => $special ,
+            'mount'=>$this->mount,
             'productRating'=>$this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
             'getOrderTotal'=>$this->getOrderTotal($this->id) !== null ? $this->getOrderTotal($this->id) : 0,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-           
+
             'category' => New CategoryResource($this->category),
             'store' => New StoreResource($this->store),
          'images' => ImageResource::collection($this->image),
            'options'=>OptionResource::collection($this->option),
-           
+
              'is_import' =>false,
 
 

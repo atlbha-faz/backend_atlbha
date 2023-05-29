@@ -16,8 +16,29 @@ $analyticsData = \Analytics::fetchVisitorsAndPageViews(Period::days(7));
 
 //retrieve visitors and page views since the 6 months ago
 $analyticsData1 = \Analytics::fetchVisitorsAndPageViews(Period::months(6));
+$analyticsData3 = \Analytics::performQuery(
+    Period::days(7),
+    'ga:sessions',
+    [
+        'metrics' => 'ga:sessions',
+        'dimensions' => 'ga:country,ga:city,ga:operatingSystem,ga:deviceCategory',
+        'sort' => '-ga:sessions'
+    ]
+);
+
+$rows = $analyticsData3->rows;
+
+foreach ($rows as $row) {
+    $country = $row[0];
+    $city = $row[1];
+    $platform = $row[2];
+    $deviceCategory = $row[3];
+
+    // Do something with the country, city, platform, and device type
+}
  $success['analyticsData']=$analyticsData;
  $success['analyticsData1']=$analyticsData1;
+ $success['analyticsData3']=$rows;
 
         $success['status']= 200;
 
