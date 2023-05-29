@@ -106,7 +106,7 @@ class PackagecouponController extends BaseController
           }
               $success['coupons']=New PackagecouponResource($coupon);
               $success['status']= 200;
-               return $this->sendResponse($success,'تم تعدبل حالة الكوبون بنجاح','coupon status updared successfully');
+         return $this->sendResponse($success,'تم تعديل حالة الكوبون بنجاح','coupon status updared successfully');
           }
 
     /**
