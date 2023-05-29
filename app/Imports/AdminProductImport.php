@@ -43,6 +43,7 @@ SkipsOnFailure
           'selling_price' => $row['selling_price'],
           'stock' => $row['stock'],
           'cover' => $row['cover'],
+          'SEOdescription'=> $row['seo'],
           'category_id' =>Category::where('name',$row['category_id'])->pluck('id')->first(),
            'subcategory_id' => implode(',',Category::whereIn('name',$sub_categories)->where('parent_id',$parent)->pluck('id')->toArray()),
           'store_id' => null,
@@ -85,16 +86,16 @@ SkipsOnFailure
             // 'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             '*.discount_price'=>['required','numeric'],
             '*.discount_percent'=>['required','numeric'],
-            // 'SEOdescription'=>'required',
+            '*.seo'=>'required',
             '*.category_id'=>'required|exists:categories,name',
             // '*.subcategory_id'=>['array'],
             '*.subcategory_id.*'=>['required','string'],
             // Rule::exists('categories', 'id')->where(function ($query) {
             // return $query->join('categories', 'id', 'parent_id');
         // }),
-        //  '*.type'=>'required|in:brand,color,wight,size',
-        //   '*.title'=>'required|string',
-        //   '*.value'=>'required|array',
+         '*.optiontype.*'=>'required|in:brand,color,wight,size',
+          '*.optiontitle.*'=>'required|string',
+          '*.optionvalue.*'=>'required|string',
 
 
     ];

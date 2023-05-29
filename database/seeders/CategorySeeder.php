@@ -49,7 +49,13 @@ class CategorySeeder extends Seeder
                     'for'=>'store',
                     'store_id'=>1
                     ]);
-
+  Category::create([
+                    'number' =>0004,
+                     'name' => '2جوالات',
+                     'parent_id'=>3,
+                    'for'=>'store',
+                    'store_id'=>1
+                    ]);
                   Category::create([
                         'number' =>0005,
                          'name' => 'هدايا والعاب',
