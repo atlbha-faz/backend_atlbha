@@ -17,7 +17,7 @@ class StoreResource extends JsonResource
     {
         
                 if($this->periodtype == null || $this->periodtype == '6months'){
-                    $periodtype = '6 شهور';
+                    $periodtype = 'شهور 6';
         }else{
             $periodtype = 'سنوي';
         }
