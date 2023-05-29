@@ -42,11 +42,14 @@ class EtlobhaController extends BaseController
             'purchasing_price'=>['required','numeric','gt:0'],
             'selling_price'=>['required','numeric','gt:0'],
             'stock'=>['required','numeric','gt:0'],
-            'quantity'=>['required','numeric','gt:0'],
-            'less_qty'=>['required','numeric','gt:0'],
+            'amount'=>['required','numeric'],
+
+            'quantity'=>['required_if:amount,0','numeric','gt:0'],
+            'less_qty'=>['required_if:amount,0','numeric','gt:0'],
             'images'=>'required|array',
             'images.*'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+
             'data'=>'nullable|array',
             'data.*.type'=>'required|in:brand,color,wight,size',
             'data.*.title'=>'required|string',
@@ -66,8 +69,8 @@ class EtlobhaController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        
-            
+
+
         $product = Product::create([
             'name' => $request->name,
             'for' => 'etlobha',
@@ -78,6 +81,7 @@ class EtlobhaController extends BaseController
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
             'cover' => $request->cover,
+            'amount' => $request->amount,
             'category_id' => $request->category_id,
             'subcategory_id' => implode(',', $request->subcategory_id),
             'store_id' => null,
@@ -135,11 +139,14 @@ class EtlobhaController extends BaseController
            $validator =  Validator::make($input ,[
                'name'=>'required|string|max:255',
               'description'=>'required|string',
-            'quantity'=>['required','numeric','gt:0'],
-            'less_qty'=>['required','numeric','gt:0'],
+              'amount'=>['required','numeric'],
+
+            'quantity'=>['required_if:amount,0','numeric','gt:0'],
+            'less_qty'=>['required_if:amount,0','numeric','gt:0'],
               'purchasing_price'=>['required','numeric','gt:0'],
               'selling_price'=>['required','numeric','gt:0'],
               'stock'=>['required','numeric','gt:0'],
+
             'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'images'=>'nullable|array',
             'images.*'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
@@ -171,6 +178,7 @@ class EtlobhaController extends BaseController
               'less_qty' =>$request->input('less_qty'),
               'stock' => $request->input('stock'),
               'cover' => $request->cover,
+                'amount' => $request->amount,
               'category_id' => $request->input('category_id'),
               'subcategory_id' =>  implode(',', $request->subcategory_id),
 
@@ -227,8 +235,8 @@ class EtlobhaController extends BaseController
 
               return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
 }
-    
-    
+
+
     public function show($product)
     {
          $product = Product::query()->where('for','etlobha')->find($product);
