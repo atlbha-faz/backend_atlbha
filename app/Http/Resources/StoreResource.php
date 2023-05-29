@@ -15,7 +15,7 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {
-                if($this->packages->last()->period == null $this->packages->last()->period == '6months'){
+                if($this->packages->last()->periodtype == null $this->packages->last()->periodtype == '6months'){
                     $period = '6 شهور';
         }else{
             $period = 'سنوي';
