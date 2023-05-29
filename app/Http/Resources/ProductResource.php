@@ -48,7 +48,7 @@ class ProductResource extends JsonResource
             'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id',explode(',',$this->subcategory_id))->get()),
             'status' => $status,
             'special' => $special ,
-            'mount'=>$this->mount,
+            'amount'=>$this->amount,
             'productRating'=>$this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
             'getOrderTotal'=>$this->getOrderTotal($this->id) !== null ? $this->getOrderTotal($this->id) : 0,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
