@@ -8,8 +8,10 @@ use App\Models\Option;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Imports\AdminProductImport;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class StockController extends BaseController
@@ -89,8 +91,8 @@ class StockController extends BaseController
       {
           return $this->sendError(null,$validator->errors());
       }
-      
-          
+
+
       $product = Product::create([
           'name' => $request->name,
           'for' => 'stock',
@@ -123,7 +125,7 @@ class StockController extends BaseController
           foreach($request->data as $data)
           {
               // dd($data['value']);
-      //$request->input('name', []);
+           //$request->input('name', []);
               $option= new Option([
                   'type' => $data['type'],
                   'title' => $data['title'],
@@ -142,7 +144,7 @@ class StockController extends BaseController
 
        return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
   }
-    
+
 
     /**
      * Display the specified resource.
@@ -321,5 +323,35 @@ class StockController extends BaseController
 
  }
 
+ public function importStockProducts(Request $request){
+             $input = $request->all();
+             $validator =  Validator::make($input ,[
+             'file'=>'required|mimes:csv,txt,xlsx,xls',
+              ]);
+               if ($validator->fails())
+                {
+                 # code...
+                return $this->sendError(null,$validator->errors());
+                }
+
+                try {
+
+                        Excel::import(new AdminProductImport, $request->file);
+                                // Log::alert($row['cover']);
+                                // Log::info($row['cover']);
+
+                        $success['status']= 200;
+
+                        return $this->sendResponse($success,'تم إضافة المنتجات بنجاح','products Added successfully');
+                    } catch (ValidationException $e) {
+                    //     // Handle other import error
+                    //     // return "eroee";
+                        $failures = $e->failures();
+
+                    //     // Handle validation failures
+                        return $failures;
+                    }
+
+          }
 
 }

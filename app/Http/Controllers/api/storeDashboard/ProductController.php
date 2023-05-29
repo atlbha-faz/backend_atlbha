@@ -388,5 +388,5 @@ class ProductController extends BaseController
                         return $failures;
                     }
 
-                    }
+          }
 }

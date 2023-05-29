@@ -249,6 +249,9 @@ Route::post('rejectService/{id}',[App\Http\Controllers\api\adminDashboard\Websit
 
 
 Route::resource('stock',App\Http\Controllers\api\adminDashboard\StockController::class);
+// import product
+Route::post('importproducts',[App\Http\Controllers\api\adminDashboard\StockController::class,'importStockProducts']);
+
 Route::get('stockdeleteall',[App\Http\Controllers\api\adminDashboard\StockController::class,'deleteall']);
 Route::get('storechangeSatusall',[App\Http\Controllers\api\adminDashboard\StoreController::class,'changeSatusall']);
 Route::get('productchangeSatusall',[App\Http\Controllers\api\adminDashboard\ProductController::class,'changeSatusall']);
