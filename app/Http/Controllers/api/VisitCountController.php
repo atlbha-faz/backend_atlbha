@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\api;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 // use Spatie\Analytics\Facades\Analytics;
+use Illuminate\Http\Request;
 use Spatie\Analytics\Period;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class VisitCountController extends BaseController
@@ -80,4 +82,79 @@ foreach ($rows as $row) {
          return $this->sendResponse($success,'تم العرض ','visit show successfully');
 
     }
+
+     public function storeClientVisit(Request $request){
+            $input = $request->all();
+
+            $validator =  Validator::make($input ,[
+            'startDate'=>'date',
+            'endDate'=>'date',
+
+               ]);
+            if ($validator->fails())
+            {
+             return $this->sendError(null,$validator->errors());
+           }
+          if(is_null($request->startDate) || is_null($request->endDate))
+          {
+            $startDate = Carbon::now()->subYear();
+            $endDate = Carbon::now();
+            $analyticsData3 = \Analytics::performQuery(
+            Period::create($startDate, $endDate),
+             'ga:sessions',
+             [
+              'metrics' => 'ga:sessions',
+              'dimensions' => 'ga:pagePath,ga:sourceMedium',
+             'sort' => '-ga:sessions'
+             ]
+         );
+
+          $rows1 = $analyticsData3->rows;
+
+          foreach ($rows1 as $row)
+     {
+
+        $pagePath = $row[0];
+        $sourceMedium = $row[1];
+
+       // Do something with the country, city, platform, and device type
+      }
+          }
+          else
+          {
+            // dd($request->startDate);
+        $startDate=date_create($request->startDate);
+        //  dd($startDate);
+        $endDate=date_create($request->endDate);
+        // dd($startDate);
+        $analyticsData3 = \Analytics::performQuery(
+       Period::create($startDate, $endDate),
+      'ga:sessions',
+    [
+        'metrics' => 'ga:sessions',
+        'dimensions' => 'ga:pagePath,ga:sourceMedium',
+        'sort' => '-ga:sessions'
+    ]
+);
+
+        $rows1 = $analyticsData3->rows;
+        if(!is_null($rows1)){
+        foreach ($rows1 as $row) {
+        $pagePath = $row[0];
+        $sourceMedium = $row[1];
+
+
+        // Do something with the country, city, platform, and device type
+      }
+    }
+          }
+        $success['analyticsData3']=$rows1;
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم العرض ','visit show successfully');
+
+
+        }
+
+
 }
