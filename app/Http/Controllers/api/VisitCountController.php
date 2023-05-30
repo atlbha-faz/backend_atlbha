@@ -17,18 +17,18 @@ $analyticsData = \Analytics::fetchVisitorsAndPageViews(Period::days(7));
 //retrieve visitors and page views since the 6 months ago
 $analyticsData1 = \Analytics::fetchVisitorsAndPageViews(Period::months(6));
 $analyticsData3 = \Analytics::performQuery(
-    Period::days(7),
+    Period::months(12),
     'ga:sessions',
     [
         'metrics' => 'ga:sessions',
-        'dimensions' => 'ga:country,ga:city,ga:operatingSystem,ga:deviceCategory',
+        'dimensions' => 'ga:pagePath,ga:sourceMedium,ga:country,ga:city,ga:operatingSystem,ga:deviceCategory',
         'sort' => '-ga:sessions'
     ]
 );
 
-$rows = $analyticsData3->rows;
+$rows1 = $analyticsData3->rows;
 
-foreach ($rows as $row) {
+foreach ($rows1 as $row) {
     $country = $row[0];
     $city = $row[1];
     $platform = $row[2];
@@ -36,9 +36,44 @@ foreach ($rows as $row) {
 
     // Do something with the country, city, platform, and device type
 }
+
+$data1 = \Analytics::performQuery(
+    Period::months(12),
+    'ga:users',
+    [
+        'dimensions' => 'ga:deviceCategory',
+        'sort' => '-ga:users',
+    ]
+);
+
+$rows = $data1->rows;
+
+$totalUsers = array_sum(array_column($rows, 1));
+
+$averages = [];
+
+foreach ($rows as $row) {
+    $deviceCategory = $row[0];
+    $users = $row[1];
+
+   if ($totalUsers !== 0) {
+    $averageUsers = round(($users / $totalUsers) * 100, 2);
+} else {
+    $averageUsers = 0;
+}
+
+    $averages[] = [
+        'deviceCategory' => $deviceCategory,
+        'averageUsers' => $averageUsers,
+    ];
+}
+
+
+
  $success['analyticsData']=$analyticsData;
  $success['analyticsData1']=$analyticsData1;
- $success['analyticsData3']=$rows;
+ $success['analyticsData3']=$rows1;
+ $success['averages']=$averages;
 
         $success['status']= 200;
 
