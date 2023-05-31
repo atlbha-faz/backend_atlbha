@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
 
             PaymenttypeSeeder::class,
             OrderSeeder::class,
-            // OrderItemSeeder::class,
+            OrderItemSeeder::class,
            PlatformSeeder::class,
             ReplaycontactSeeder::class,
             SeoSeeder::class,
@@ -71,8 +71,8 @@ class DatabaseSeeder extends Seeder
             NotificationSeeder::class,
 
 
-           // TechnicalSupportSeeder::class,
-            // PermissionTableSeeder::class,
+           TechnicalSupportSeeder::class,
+             PermissionTableSeeder::class,
 
         ]);
 
