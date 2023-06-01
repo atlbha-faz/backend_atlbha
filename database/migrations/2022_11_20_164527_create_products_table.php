@@ -17,7 +17,7 @@ return new class extends Migration
           $table->id();
             $table->string('name');
            // $table->string('sku')->unique();
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->enum('for',['store','etlobha','stock'])->default('etlobha');
            $table->enum('special',['special','not_special'])->default('not_special');
             $table->longText('description');

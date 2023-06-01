@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\api;
 
-use Illuminate\Http\Request;
+use App\Mail\SendOfferCart;
 
 // use Spatie\Analytics\Facades\Analytics;
+use Illuminate\Http\Request;
 use Spatie\Analytics\Period;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class VisitCountController extends BaseController
@@ -45,4 +47,6 @@ foreach ($rows as $row) {
          return $this->sendResponse($success,'تم العرض ','visit show successfully');
 
     }
+
+    
 }
