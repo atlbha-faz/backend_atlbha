@@ -48,8 +48,10 @@ Route::group([
 Route::post('addComment/{id}',[App\Http\Controllers\api\IndexStoreController::class,'addComment']);
 });
 // visit count
-Route::get('visit',[App\Http\Controllers\api\VisitCountController::class,'visit']);
+Route::post('storeClientVisit',[App\Http\Controllers\api\VisitCountController::class,'storeClientVisit']);
 //
+Route::get('visit',[App\Http\Controllers\api\VisitCountController::class,'visit']);
+
 Route::get('posts',[App\Http\Controllers\api\PostController::class,'index']);
 Route::get('show/{id}',[App\Http\Controllers\api\PostController::class,'show']);
 Route::get('show_post/{id}',[App\Http\Controllers\api\PostController::class,'show_post']);
