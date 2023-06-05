@@ -37,7 +37,7 @@ class IndexStoreController extends BaseController
          $success['banar3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus3','active')->pluck('banar3')->first();
 // special products
   $success['specialProducts']=ProductResource::collection(Product::where('is_deleted',0)
-     ->where('store_id',$id)->where('special','special')->orderBy('created_at', 'desc')->take(4)->get());
+     ->where('store_id',$id)->where('special','special')->orderBy('created_at', 'desc')->get());
 
 
 ///////////////////////////
@@ -52,14 +52,14 @@ $success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_
 $oneWeekAgo = Carbon::now()->subWeek();
 
 $success['resent_arrivede']=Product::where('is_deleted',0)
-     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->take(6)->get();
+     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->get();
 ////////////////////////////////////////
-$resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$id)->whereHas('products', function ($query) {
-  $query->whereDate('created_at', '>=', Carbon::now()->subWeek());
+$resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$id)->whereHas('products', function ($query) use($id)  {
+  $query->where('is_deleted',0)->where('store_id',$id)->whereDate('created_at', '>=', Carbon::now()->subWeek());
 })->get();
 
   foreach($resent_arrivede_by_category as $category){
-//  $success['resent_arrivede_by_category'][]=$category;
+
  $success['resent_arrivede_by_category'][][$category->name]=Product::where('is_deleted',0)
  ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get();
   }
@@ -89,8 +89,8 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الرئيسية للمتجر بنجاح','Store index return successfully');
-   
-    } 
+
+    }
 
     public function productPage($id){
       $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
@@ -100,7 +100,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
         $success['product']=NEW ProductResource(Product::where('is_deleted',0)->where('id',$id)->first());
         $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
                 ->where('store_id',$product->store_id)->where('category_id',$product->category_id)->whereNotIn('id', [$id])->get());
- 
+
         $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id', $product->store_id)->where('product_id',$product->id)->get());
         $success['store_name']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
          $success['store_email ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
@@ -117,11 +117,11 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['status']= 200;
 
         return $this->sendResponse($success,'تم ارجاع صفحة المنتج للمتجر بنجاح',' Product page return successfully');
-  
-    } 
+
+    }
     public function addComment(Request $request,$id)
     {
-    
+
         $product= Product::query()->find($id);
         $input = $request->all();
         $validator =  Validator::make($input ,[
@@ -149,8 +149,8 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
 
          return $this->sendResponse($success,'تم إضافة تعليق بنجاح','comment Added successfully');
 
-    }  
+    }
 
     }
- 
+
 
