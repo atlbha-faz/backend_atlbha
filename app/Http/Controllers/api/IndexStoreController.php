@@ -14,6 +14,7 @@ use App\Models\Category;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Http\Resources\PageResource;
+use DB;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -50,13 +51,17 @@ $success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_
     // more sale
 
   $arr=array();
-    $orders=Order::where('store_id',$id)->where('order_status','completed')->orderBy('created_at', 'desc')->get();
-    foreach($orders as  $order)
+    $orders=DB::table('order_items')->where('order_status','completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',$id)
+              ->select('products.id',DB::raw('sum(order_items.quantity) as count'))
+                 ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
+        
+      dd( $order->products->pluck('id'));
+  /*  foreach($orders as  $order)
     {
         if(count($order->products)>0)
 
      $arr[]=$order->products;
-}
+}*/
 $success['more_sales']= $arr;
 // resent arrivede
 
