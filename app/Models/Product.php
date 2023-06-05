@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory;
-  
+
 
 
     protected $fillable = ['name','slug','for','special','description','stock','cover','purchasing_price','amount','selling_price','quantity','less_qty','tags','discount_price','discount_percent','SEOdescription','category_id','subcategory_id','store_id','status','is_deleted'];
@@ -52,7 +52,7 @@ public function cart(){
     {
           return $this->belongsToMany(
           Order::class,
-          'orders_products',
+          'order_items',
           'product_id',
           'order_id'
 
@@ -98,7 +98,7 @@ public function cart(){
         $slug = Str::slug($value);
         $count = Product::whereRaw("slug REGEXP '^{$slug}(-[0-9]*)?$'")->count();
         $this->attributes['slug'] = ($count > 0) ? "{$slug}-{$count}" : $slug;
-   
+
     }
 
     public function offers()

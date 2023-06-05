@@ -48,7 +48,16 @@ $success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_
 })->get();
 //
     // more sale
-     $success['more_sales']=Order::where('store_id',$id)->where('order_status','completed')->orderBy('created_at', 'desc')->take(7)->get();
+
+  $arr=array();
+    $orders=Order::where('store_id',$id)->where('order_status','completed')->orderBy('created_at', 'desc')->get();
+    foreach($orders as  $order)
+    {
+        if(count($order->products)>0)
+
+     $arr[]=$order->products;
+}
+$success['more_sales']= $arr;
 // resent arrivede
 
 $oneWeekAgo = Carbon::now()->subWeek();
