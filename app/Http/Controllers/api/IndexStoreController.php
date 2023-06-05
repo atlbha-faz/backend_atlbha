@@ -107,8 +107,6 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
     public function productPage($id){
        $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());
-         $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
-
         $product=Product::where('is_deleted',0)->where('id',$id)->first();
         $success['product']=NEW ProductResource(Product::where('is_deleted',0)->where('id',$id)->first());
         $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
