@@ -36,8 +36,8 @@ class IndexStoreController extends BaseController
          $success['banar2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus2','active')->pluck('banar2')->first();
          $success['banar3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus3','active')->pluck('banar3')->first();
 // special products
-  $success['specialProducts']=ProductResource::collection(Product::where('is_deleted',0)
-     ->where('store_id',$id)->where('special','special')->orderBy('created_at', 'desc')->take(4)->get());
+
+  $success['specialProducts']=ProductResource::collection(Product::where('is_deleted',0)->where('store_id',$id)->where('special','special')->orderBy('created_at', 'desc')->get());
 
 
 ///////////////////////////
@@ -54,8 +54,8 @@ $oneWeekAgo = Carbon::now()->subWeek();
 $success['resent_arrivede']=Product::where('is_deleted',0)
      ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->take(6)->get();
 ////////////////////////////////////////
-$resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$id)->whereHas('products', function ($query) {
-  $query->whereDate('created_at', '>=', Carbon::now()->subWeek());
+$resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$id)->whereHas('products', function ($query) use($id) {
+  $query->where('store_id',$id)->whereDate('created_at', '>=', Carbon::now()->subWeek());
 })->get();
 
   foreach($resent_arrivede_by_category as $category){
@@ -68,8 +68,6 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['category']=Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
          $success['products_offers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
         $success['products_ratings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
-
-
         $productsCategories=Product::where('store_id',$id)->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total','DESC')->take(6)->get();
        foreach( $productsCategories as  $productsCategory){
         $success['Popular_categories'][]=Category::where('is_deleted',0)->where('store_id',$id)->where('id', $productsCategory->category_id)->first();
@@ -78,7 +76,6 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['store_email ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
-
          $success['snapchat']=Store::where('is_deleted',0)->where('id',$id)->pluck('snapchat')->first();
          $success['facebook']=Store::where('is_deleted',0)->where('id',$id)->pluck('facebook')->first();
          $success['twiter']=Store::where('is_deleted',0)->where('id',$id)->pluck('twiter')->first();
