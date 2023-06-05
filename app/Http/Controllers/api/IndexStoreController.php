@@ -43,9 +43,7 @@ class IndexStoreController extends BaseController
 
 
 ///////////////////////////
-$success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->whereHas('products', function ($query) {
-  $query->where('special', 'special');
-})->get();
+$success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_id',$id)->get();
 //
     // more sale
 
