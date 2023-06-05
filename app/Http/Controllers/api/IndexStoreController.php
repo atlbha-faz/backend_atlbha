@@ -14,6 +14,7 @@ use App\Models\Category;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Http\Resources\PageResource;
+use DB;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -48,13 +49,25 @@ $success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_
 })->get();
 //
     // more sale
-     $success['more_sales']=Order::where('store_id',$id)->where('order_status','completed')->orderBy('created_at', 'desc')->take(7)->get();
+
+  $arr=array();
+    $orders=DB::table('order_items')->where('order_status','completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',$id)
+              ->select('products.id',DB::raw('sum(order_items.quantity) as count'))
+                 ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
+        
+    
+    foreach($orders as  $order)
+    {
+     $arr[]=Product::find($order->id);
+        
+}
+$success['more_sales']= ProductResource::collection($arr);
 // resent arrivede
 
 $oneWeekAgo = Carbon::now()->subWeek();
 
-$success['resent_arrivede']=Product::where('is_deleted',0)
-     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->get();
+$success['resent_arrivede']=ProductResource::collection(Product::where('is_deleted',0)
+     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
 ////////////////////////////////////////
 $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$id)->whereHas('products', function ($query) use($id)  {
   $query->where('is_deleted',0)->where('store_id',$id)->whereDate('created_at', '>=', Carbon::now()->subWeek());
@@ -62,8 +75,8 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
 
   foreach($resent_arrivede_by_category as $category){
 
- $success['resent_arrivede_by_category'][][$category->name]=Product::where('is_deleted',0)
- ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get();
+ $success['resent_arrivede_by_category'][][$category->name]=ProductResource::collection(Product::where('is_deleted',0)
+ ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get());
   }
 
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());

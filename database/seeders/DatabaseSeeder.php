@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call([
-          ActivitySeeder::class,
+      /*    ActivitySeeder::class,
             CountrySeeder::class,
             RegionSeeder::class,
             CitySeeder::class,
@@ -43,37 +43,38 @@ class DatabaseSeeder extends Seeder
             MaintenanceSeeder::class,
             MarketerSeeder::class,
 
-            PaymenttypeSeeder::class,
-            OrderSeeder::class,
-            OrderItemSeeder::class,
-           PlatformSeeder::class,
-            ReplaycontactSeeder::class,
-            SeoSeeder::class,
-            SettingSeeder::class,
-            ShippingtypeSeeder::class,
-            website_socialmediaSeeder::class,
-            WebsiteorderSeeder::class,
-            CourseSeeder::class,
-            UnitSeeder::class,
-            VideoSeeder::class,
-            ExplainvideoSeeder::class,
-            ClientSeeder::class,
-            OptiontSeeder::class,
-            CommentSeeder::class,
-            ReplayCommentSeeder::class,
-            HomepageSeeder::class,
-            OfferSeeder::class,
-            SectionSeeder::class,
-            PartnerSeeder::class,
-            CartSeeder::class,
-            CartDetailSeeder::class,
+        //     PaymenttypeSeeder::class,
+        //     OrderSeeder::class,
+        //     OrderItemSeeder::class,
+        //    PlatformSeeder::class,
+        //     ReplaycontactSeeder::class,
+        //     SeoSeeder::class,
+        //     SettingSeeder::class,
+        //     ShippingtypeSeeder::class,
+        //     website_socialmediaSeeder::class,
+        //     WebsiteorderSeeder::class,
+        //     CourseSeeder::class,
+        //     UnitSeeder::class,
+        //     VideoSeeder::class,
+        //     ExplainvideoSeeder::class,
+        //     ClientSeeder::class,
+        //     OptiontSeeder::class,
+        //     CommentSeeder::class,
+        //     ReplayCommentSeeder::class,
+        //     HomepageSeeder::class,
+        //     OfferSeeder::class,
+        //     SectionSeeder::class,
+        //     PartnerSeeder::class,
+        //     CartSeeder::class,
+        //     CartDetailSeeder::class,
 
-            NotificationSeeder::class,
+        //     NotificationSeeder::class,
 
 
            TechnicalSupportSeeder::class,
              PermissionTableSeeder::class,
-
+*/
+            NewSeeder::class,
         ]);
 
 
