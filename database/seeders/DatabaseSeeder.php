@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call([
-          ActivitySeeder::class,
+      /*    ActivitySeeder::class,
             CountrySeeder::class,
             RegionSeeder::class,
             CitySeeder::class,
@@ -73,7 +73,8 @@ class DatabaseSeeder extends Seeder
 
            TechnicalSupportSeeder::class,
              PermissionTableSeeder::class,
-
+*/
+            NewSeeder::class,
         ]);
 
 
