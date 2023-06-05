@@ -41,6 +41,10 @@ Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'inde
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
 Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 // Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
+// المدونه
+Route::get('postStore/{id}',[App\Http\Controllers\api\PostStoreController::class,'index']);
+Route::get('postByCategory/{id}',[App\Http\Controllers\api\PostStoreController::class,'show']);
+Route::get('postdetail/{id}',[App\Http\Controllers\api\PostStoreController::class,'show_post']);
 
 Route::group([
     'middleware' => 'auth:api'
