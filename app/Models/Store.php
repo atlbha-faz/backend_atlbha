@@ -6,6 +6,7 @@ use DateTime;
 use Carbon\Carbon;
 use App\Models\Package;
 use App\Models\Product;
+use Illuminate\Support\Str;
 use App\Models\Package_store;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Store extends Model
 {
     use HasFactory;
-     protected $fillable = ['store_name','store_email','domain','icon','description','business_license','phonenumber','commercialregistertype','confirmation_status','confirmation_date','link','verification_status',
+     protected $fillable = ['store_name','store_email','domain','slug','icon','description','business_license','phonenumber','commercialregistertype','confirmation_status','confirmation_date','link','verification_status',
      'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period',
      'periodtype','special','file','tiktok','status','is_deleted'];
 
@@ -24,7 +25,11 @@ class Store extends Model
      protected $casts = [
         'activity_id' => 'array',
     ];
-
+    public function setDomainAttribute($value)
+    {
+        $this->attributes['domain'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
+    }
      public function products()
     {
         return $this->hasMany(Product::class);

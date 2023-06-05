@@ -4,15 +4,16 @@ namespace App\Models;
 use App\Models\Order;
 
 use App\Models\OrderItem;
+use Illuminate\Support\Str;
+// use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
-use Cviebrock\EloquentSluggable\Sluggable;
 use Gloudemans\Shoppingcart\Contracts\Buyable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
     use HasFactory;
-    use Sluggable;
+  
 
 
     protected $fillable = ['name','slug','for','special','description','stock','cover','purchasing_price','amount','selling_price','quantity','less_qty','tags','discount_price','discount_percent','SEOdescription','category_id','subcategory_id','store_id','status','is_deleted'];
@@ -83,13 +84,21 @@ public function cart(){
        return $this->hasMany(Option::class);
     }
 
-    public function sluggable(): array
+    // public function sluggable(): array
+    // {
+    //     return [
+    //         'slug' => [
+    //             'source' => 'name'
+    //         ]
+    //     ];
+    // }
+    public function setNameAttribute($value)
     {
-        return [
-            'slug' => [
-                'source' => 'sku'
-            ]
-        ];
+        $this->attributes['name'] = $value;
+        $slug = Str::slug($value);
+        $count = Product::whereRaw("slug REGEXP '^{$slug}(-[0-9]*)?$'")->count();
+        $this->attributes['slug'] = ($count > 0) ? "{$slug}-{$count}" : $slug;
+   
     }
 
     public function offers()

@@ -40,6 +40,8 @@ Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'inde
 //  index store page القالب
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
 Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
+// Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
+
 Route::group([
     'middleware' => 'auth:api'
 ], function () {
