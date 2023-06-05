@@ -74,7 +74,7 @@ class PostCategorySeeder extends Seeder
             'image'=>"post1.png",
             'postcategory_id'=>1
         ]);
-        
+
           Page::create([
             'title' => 'الخدمات المقدمة لنجاح مشروعك',
             'page_content' => '<p style="text-align:center"><img src="https://ckeditor.com/apps/ckfinder/userfiles/files/image-20230214115619-2.jpeg" style="height:398px; width:536px" /></p>
@@ -198,14 +198,14 @@ class PostCategorySeeder extends Seeder
             'seo_title' => 'الخدمات المقدمة لنجاح مشروعك',
             'seo_link'=>'http',
               'page_desc'=>'منصة اطلبها تضمن تقديم حلول ذكية وبسيطة وشاملة لإنشاء متجر الكتروني للعملاء بشكل سلس و بعيد عن التعقيد بحيث تكون الأمور مفهومة لكل الأشخاص من خلال توفير ادوات و وسائل عمل و لوحة تحكم احترافية و بسيطة في العمل لتمكّن التاجر من ادارة اعماله بشكل بسيط و احترافي',
-            
+
             'seo_desc'=>"this is description",
             'tags'=>'about us',
             'user_id'=>1,
             'image'=>"post2.png",
             'postcategory_id'=>1
         ]);
-        
+
         Page::create([
             'title' => 'التسويق الرقمي',
             'page_content' => '<h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); width: 935.987px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</p></h4><h4 style="text-align: right; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 453px; font-family: Tajawal, sans-serif !important; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><div class="box-1 box" style="align-items: center; display: flex; gap: 30px; justify-content: start; color: rgb(33, 37, 41); font-size: 16px; text-align: start; scroll-behavior: smooth !important;"><div class="info" style="align-items: flex-start; display: flex; flex: 1 1 0%; flex-direction: column; gap: 40px; justify-content: start; scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); font-weight: var(--font-weight-02); width: 453px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك</p></div><div class="box-img" style="text-align: right; flex: 1 1 0%; scroll-behavior: smooth !important;"><img src="http://home.atlbha.com/static/media/image%20blog2.1fe8e7452db60d6aa538.png" alt="" style="max-width: 100%; scroll-behavior: smooth !important;"></div></div></h4><h6 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-02); line-height: 1.2; margin: 0px; font-size: var(--font-size-20); letter-spacing: 0.2px; width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</h6><h4 style="text-align: right; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 453px; font-family: Tajawal, sans-serif !important; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><div class="box-2 box" style="align-items: center; display: flex; gap: 30px; justify-content: start; flex-direction: row-reverse; color: rgb(33, 37, 41); font-size: 16px; text-align: start; scroll-behavior: smooth !important;"><div class="info" style="align-items: flex-start; display: flex; flex: 1 1 0%; flex-direction: column; gap: 40px; justify-content: start; scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); font-weight: var(--font-weight-02); width: 453px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك</p></div><div class="box-img" style="text-align: right; flex: 1 1 0%; scroll-behavior: smooth !important;"><img src="http://home.atlbha.com/static/media/image%20blog13.66ac4eb621ada1d784d0.png" alt="" style="max-width: 100%; scroll-behavior: smooth !important;"></div></div></h4><h6 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-02); line-height: 1.2; margin: 0px; font-size: var(--font-size-20); letter-spacing: 0.2px; width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</h6>',
@@ -213,14 +213,14 @@ class PostCategorySeeder extends Seeder
             'seo_link'=>'http',
             'seo_desc'=>"this is description",
              'page_desc'=>'منصة اطلبها تضمن تقديم حلول ذكية وبسيطة وشاملة لإنشاء متجر الكتروني للعملاء بشكل سلس و بعيد عن التعقيد بحيث تكون الأمور مفهومة لكل الأشخاص من خلال توفير ادوات و وسائل عمل و لوحة تحكم احترافية و بسيطة في العمل لتمكّن التاجر من ادارة اعماله بشكل بسيط و احترافي',
-      
+
             'tags'=>'about us',
             'user_id'=>1,
             'image'=>"image.png",
             'postcategory_id'=>2
         ]);
-        
-       
+
+
         Page::create([
             'title' => 'من نحن',
             'page_content' => 'من نحن',
@@ -265,7 +265,7 @@ class PostCategorySeeder extends Seeder
 
         ]);
 
-        
+
           Page::create([
             'title' => 'التجارةالالكترونية',
             'page_content' => '<h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); width: 935.987px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</p></h4><h4 style="text-align: right; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 453px; font-family: Tajawal, sans-serif !important; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><div class="box-1 box" style="align-items: center; display: flex; gap: 30px; justify-content: start; color: rgb(33, 37, 41); font-size: 16px; text-align: start; scroll-behavior: smooth !important;"><div class="info" style="align-items: flex-start; display: flex; flex: 1 1 0%; flex-direction: column; gap: 40px; justify-content: start; scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); font-weight: var(--font-weight-02); width: 453px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك</p></div><div class="box-img" style="text-align: right; flex: 1 1 0%; scroll-behavior: smooth !important;"><img src="http://home.atlbha.com/static/media/image%20blog2.1fe8e7452db60d6aa538.png" alt="" style="max-width: 100%; scroll-behavior: smooth !important;"></div></div></h4><h6 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-02); line-height: 1.2; margin: 0px; font-size: var(--font-size-20); letter-spacing: 0.2px; width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</h6><h4 style="text-align: right; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 453px; font-family: Tajawal, sans-serif !important; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><div class="box-2 box" style="align-items: center; display: flex; gap: 30px; justify-content: start; flex-direction: row-reverse; color: rgb(33, 37, 41); font-size: 16px; text-align: start; scroll-behavior: smooth !important;"><div class="info" style="align-items: flex-start; display: flex; flex: 1 1 0%; flex-direction: column; gap: 40px; justify-content: start; scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); font-weight: var(--font-weight-02); width: 453px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك</p></div><div class="box-img" style="text-align: right; flex: 1 1 0%; scroll-behavior: smooth !important;"><img src="http://home.atlbha.com/static/media/image%20blog13.66ac4eb621ada1d784d0.png" alt="" style="max-width: 100%; scroll-behavior: smooth !important;"></div></div></h4><h6 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-02); line-height: 1.2; margin: 0px; font-size: var(--font-size-20); letter-spacing: 0.2px; width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</h6>',
@@ -314,7 +314,7 @@ class PostCategorySeeder extends Seeder
             'image'=>"image.png",
             'postcategory_id'=>3
         ]);
-        
+
           Page::create([
             'title' => 'التجارةالالكترونية',
             'page_content' => '<h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); width: 935.987px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</p></h4><h4 style="text-align: right; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 453px; font-family: Tajawal, sans-serif !important; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><div class="box-1 box" style="align-items: center; display: flex; gap: 30px; justify-content: start; color: rgb(33, 37, 41); font-size: 16px; text-align: start; scroll-behavior: smooth !important;"><div class="info" style="align-items: flex-start; display: flex; flex: 1 1 0%; flex-direction: column; gap: 40px; justify-content: start; scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); font-weight: var(--font-weight-02); width: 453px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك</p></div><div class="box-img" style="text-align: right; flex: 1 1 0%; scroll-behavior: smooth !important;"><img src="http://home.atlbha.com/static/media/image%20blog2.1fe8e7452db60d6aa538.png" alt="" style="max-width: 100%; scroll-behavior: smooth !important;"></div></div></h4><h6 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-02); line-height: 1.2; margin: 0px; font-size: var(--font-size-20); letter-spacing: 0.2px; width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</h6><h4 style="text-align: right; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 453px; font-family: Tajawal, sans-serif !important; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</h4><h4 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-05); line-height: 1.2; margin: 0px; font-size: var(--font-size-28); width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;"><div class="box-2 box" style="align-items: center; display: flex; gap: 30px; justify-content: start; flex-direction: row-reverse; color: rgb(33, 37, 41); font-size: 16px; text-align: start; scroll-behavior: smooth !important;"><div class="info" style="align-items: flex-start; display: flex; flex: 1 1 0%; flex-direction: column; gap: 40px; justify-content: start; scroll-behavior: smooth !important;"><p style="text-align: right; margin-bottom: 0px; font-size: var(--font-size-20); font-weight: var(--font-weight-02); width: 453px; color: var(--font-color-05); letter-spacing: 0.4px; scroll-behavior: smooth !important;">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك</p></div><div class="box-img" style="text-align: right; flex: 1 1 0%; scroll-behavior: smooth !important;"><img src="http://home.atlbha.com/static/media/image%20blog13.66ac4eb621ada1d784d0.png" alt="" style="max-width: 100%; scroll-behavior: smooth !important;"></div></div></h4><h6 style="text-align: right; font-family: Tajawal, sans-serif; font-weight: var(--font-weight-02); line-height: 1.2; margin: 0px; font-size: var(--font-size-20); letter-spacing: 0.2px; width: 935.987px; background-color: rgba(2, 70, 106, 0.04); scroll-behavior: smooth !important;">المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص</h6>',
@@ -1395,7 +1395,7 @@ class PostCategorySeeder extends Seeder
             'user_id'=>1,
             'image'=>"image.png",
             'postcategory_id'=>3,
-        
+
         ]);
           Page::create([
             'title' => 'التجارةالالكترونية',
@@ -1472,7 +1472,7 @@ class PostCategorySeeder extends Seeder
             'user_id'=>1,
             'image'=>"image.png",
             'postcategory_id'=>3,
-        
+
         ]);
           Page::create([
             'title' => 'التجارةالالكترونية',
@@ -1485,7 +1485,7 @@ class PostCategorySeeder extends Seeder
             'user_id'=>1,
             'image'=>"image.png",
             'postcategory_id'=>1,
-        
+
         ]);
         Page::create([
             'title' => 'التسويق الرقمي',
@@ -1498,7 +1498,7 @@ class PostCategorySeeder extends Seeder
             'user_id'=>1,
             'image'=>"image.png",
             'postcategory_id'=>2,
-           
+
         ]);
          Page::create([
             'title' => 'ادارة السوق',
@@ -1511,9 +1511,9 @@ class PostCategorySeeder extends Seeder
             'user_id'=>1,
             'image'=>"image.png",
             'postcategory_id'=>3,
-          
+
         ]);
-        
+
         Page_page_category::create([
             'page_id'=>1,
             'page_category_id'=>1,
@@ -1530,7 +1530,7 @@ class PostCategorySeeder extends Seeder
             'page_category_id'=>3,
 
            ]);
-         
+
             Page_page_category::create([
             'page_id'=>5,
             'page_category_id'=>3,
@@ -1556,27 +1556,27 @@ class PostCategorySeeder extends Seeder
             'page_category_id'=>1,
 
            ]);
-        
+
            Page_page_category::create([
             'page_id'=>7,
             'page_category_id'=>1,
 
            ]);
-        
-        
+
+
            Page_page_category::create([
             'page_id'=>8,
             'page_category_id'=>1,
 
            ]);
-        
-        
+
+
            Page_page_category::create([
             'page_id'=>9,
             'page_category_id'=>1,
 
            ]);
-        
+
         for($i =10 ; $i<101 ; $i++){
            Page_page_category::create([
             'page_id'=>$i,
@@ -1584,6 +1584,26 @@ class PostCategorySeeder extends Seeder
 
            ]);
         }
-        
+
+
+            Page::create([
+            'title' => 'من نحن',
+            'page_content' => 'من نحن',
+            'seo_title' => 'عنوان',
+            'seo_link'=>'http',
+            'page_desc'=>'مرحبا بك في من نحن الخاصة بمنصة 1',
+            'seo_desc'=>"this is description",
+           'tags'=>'about us',
+            'user_id'=>1,
+            'store_id'=>1
+
+        ]);
+         Page_page_category::create([
+            'page_id'=>111,
+            'page_category_id'=>4,
+
+           ]);
+
     }
+
 }

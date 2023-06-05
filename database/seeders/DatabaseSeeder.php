@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
             PartnerSeeder::class,
             CartSeeder::class,
             CartDetailSeeder::class,
-            
+
             NotificationSeeder::class,
 
 
