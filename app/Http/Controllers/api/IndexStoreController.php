@@ -35,6 +35,8 @@ class IndexStoreController extends BaseController
          $success['banar1']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus1','active')->pluck('banar1')->first();
          $success['banar2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus2','active')->pluck('banar2')->first();
          $success['banar3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus3','active')->pluck('banar3')->first();
+         $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
+
 // special products
   $success['specialProducts']=ProductResource::collection(Product::where('is_deleted',0)
      ->where('store_id',$id)->where('special','special')->orderBy('created_at', 'desc')->get());
@@ -64,7 +66,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
  ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get();
   }
 
-         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->get());
+         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());
          $success['category']=Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
          $success['products_offers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
         $success['products_ratings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
@@ -93,8 +95,9 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
     }
 
     public function productPage($id){
-      $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
-      $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->get());
+       $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
+         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());
+         $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
 
         $product=Product::where('is_deleted',0)->where('id',$id)->first();
         $success['product']=NEW ProductResource(Product::where('is_deleted',0)->where('id',$id)->first());
