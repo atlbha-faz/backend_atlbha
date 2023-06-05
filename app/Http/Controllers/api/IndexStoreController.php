@@ -56,19 +56,18 @@ $success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_
                  ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
         
     
- /*   foreach($orders as  $order)
+    foreach($orders as  $order)
     {
-        if(count($order->products)>0)
-
-     $arr[]=$order->products;
-}*/
-$success['more_sales']= $orders;
+     $arr[]=Product::find($order->id);
+        
+}
+$success['more_sales']= ProductResource::collection($arr);
 // resent arrivede
 
 $oneWeekAgo = Carbon::now()->subWeek();
 
-$success['resent_arrivede']=Product::where('is_deleted',0)
-     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->get();
+$success['resent_arrivede']=ProductResource::collection(Product::where('is_deleted',0)
+     ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
 ////////////////////////////////////////
 $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$id)->whereHas('products', function ($query) use($id)  {
   $query->where('is_deleted',0)->where('store_id',$id)->whereDate('created_at', '>=', Carbon::now()->subWeek());
@@ -76,8 +75,8 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
 
   foreach($resent_arrivede_by_category as $category){
 
- $success['resent_arrivede_by_category'][][$category->name]=Product::where('is_deleted',0)
- ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get();
+ $success['resent_arrivede_by_category'][][$category->name]=ProductResource::collection(Product::where('is_deleted',0)
+ ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get());
   }
 
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());
