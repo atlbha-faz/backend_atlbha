@@ -36,7 +36,7 @@ class IndexStoreController extends BaseController
          $success['banar1']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus1','active')->pluck('banar1')->first();
          $success['banar2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus2','active')->pluck('banar2')->first();
          $success['banar3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('banarstatus3','active')->pluck('banar3')->first();
-         $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
+        //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
 
 // special products
   $success['specialProducts']=ProductResource::collection(Product::where('is_deleted',0)
@@ -181,6 +181,8 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
       $success['status']= 200;
       return $this->sendResponse($success,'تم  الصفحة للمتجر بنجاح','Store page return successfully');
     }
+
+    // المدونه
 
     }
 

@@ -43,6 +43,10 @@ Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::cl
 Route::get('storPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'storPage']);
 
 // Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
+// المدونه
+Route::get('postStore/{id}',[App\Http\Controllers\api\PostStoreController::class,'index']);
+Route::get('postByCategory/{id}',[App\Http\Controllers\api\PostStoreController::class,'show']);
+Route::get('postdetail/{id}',[App\Http\Controllers\api\PostStoreController::class,'show_post']);
 
 Route::group([
     'middleware' => 'auth:api'
