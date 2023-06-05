@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
 use App\Models\Page;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Order;
+use App\Models\Category;
+use App\Models\OrderItem;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class NewSeeder extends Seeder
 {
@@ -66,5 +68,58 @@ class NewSeeder extends Seeder
                     'for'=>'store',
                        'store_id'=>1
                        ]);
+
+
+          Order::create([
+            'order_number' => '4455',
+            'user_id' => 2,
+            'quantity' => 5,
+            'total_price' => 1100,
+            'tax' => 2.3,
+            'shipping_price' => 10,
+            'discount' => 400,
+            'order_status' => 'completed',
+            'payment_status' => 'pending',
+            'store_id' => 1,
+
+        ]);
+          Order::create([
+            'order_number' => '5657',
+            'user_id' => 1,
+            'quantity' => 4,
+            'total_price' => 1000,
+            'tax' => 1.2,
+            'shipping_price' => 10,
+            'discount' => 0,
+            'order_status' => 'completed',
+            'payment_status' => "pending",
+            'store_id' => 1,
+
+        ]);
+
+          OrderItem::create([
+             'product_id'=>70,
+            'order_id'=>2,
+            'user_id' => 6,
+            'price' => 500,
+            'discount' => 400,
+            'quantity' => 3,
+            'total_price' => 600,
+            'order_status' => 'completed',
+            'payment_status' => 1,
+
+        ]);
+           OrderItem::create([
+             'product_id'=>102,
+            'order_id'=>1,
+            'user_id' => 6,
+            'price' => 500,
+            'discount' => 400,
+            'quantity' => 3,
+            'total_price' => 600,
+            'order_status' => 'completed',
+            'payment_status' => 1,
+
+        ]);
     }
 }
