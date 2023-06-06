@@ -90,7 +90,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
         
 $arr=array(); 
         $orders=DB::table('comments')->where('is_deleted',0)->where('store_id',$id)->join('products', 'comments.product_id', '=', 'products.id') 
-            ->select('products.id','comments.rateing')) ->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->get(); 
+            ->select('products.id','comments.rateing') ->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->get(); 
         foreach($orders as  $order) 
         { $arr[]=Product::find($order->id); } 
         $success['productsRatings']= ProductResource::collection($arr);
