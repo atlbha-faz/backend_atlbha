@@ -97,7 +97,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['youtube']=Store::where('is_deleted',0)->where('id',$id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$id)->first();
-         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['paymentMethod']=$store->paymenttypes->where('status','active');
          $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الرئيسية للمتجر بنجاح','Store index return successfully');
@@ -124,7 +124,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['youtube']=Store::where('is_deleted',0)->where('id',$id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$id)->first();
-         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['paymentMethod']=$store->paymenttypes->where('status','active');
          $success['status']= 200;
 
         return $this->sendResponse($success,'تم ارجاع صفحة المنتج للمتجر بنجاح',' Product page return successfully');
