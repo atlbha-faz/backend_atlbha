@@ -89,7 +89,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
         
 $arr=array(); 
-        $orders=DB::table('comments')->where('is_deleted',0)->where('store_id',$id)->join('products', 'comments.product_id', '=', 'products.id') 
+        $orders=DB::table('comments')->where('comments.is_deleted',0)->where('comments.store_id',$id)->join('products', 'comments.product_id', '=', 'products.id') 
             ->select('products.id','comments.rateing') ->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->get(); 
         foreach($orders as  $order) 
         { $arr[]=Product::find($order->id); } 
