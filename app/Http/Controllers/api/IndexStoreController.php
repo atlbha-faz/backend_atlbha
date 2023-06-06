@@ -93,7 +93,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
 })->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total','DESC')->take(6)->get();
   
         foreach( $productsCategories as  $productsCategory){
-        $success['PopularCategories'][]=new CategoryResource(Category::where('is_deleted',0)->whereIn('store_id',[null,$id])->where('id', $productsCategory->category_id)->first());
+        $success['PopularCategories'][]=Category::where('is_deleted',0)->whereIn('store_id',[null,$id])->where('id', $productsCategory->category_id)->first();
        }
          $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
          $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
