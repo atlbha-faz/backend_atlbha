@@ -50,6 +50,7 @@ class ProductResource extends JsonResource
             'special' => $special ,
             'amount'=>$this->amount,
             'productRating'=>$this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
+            'productRatingCount'=>$this->productratecount($this->id) !== null ? $this->productratecount($this->id) : 0,
             'getOrderTotal'=>$this->getOrderTotal($this->id) !== null ? $this->getOrderTotal($this->id) : 0,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
