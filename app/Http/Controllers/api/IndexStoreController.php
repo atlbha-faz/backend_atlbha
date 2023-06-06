@@ -30,6 +30,7 @@ class IndexStoreController extends BaseController
             //
          $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
         //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
+         $success['sliders']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus1','active')->get();
          $success['slider1']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus1','active')->pluck('slider1')->first();
          $success['slider2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus2','active')->pluck('slider2')->first();
          $success['slider3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus3','active')->pluck('slider3')->first();
