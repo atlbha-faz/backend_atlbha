@@ -86,11 +86,28 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());
         $success['lastPosts']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->orderBy('created_at', 'desc')->take(6)->get());
          $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get());
-         $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
+        
+        
+        
+  $arr=array();
+    $offers=DB::table('offers')->where('offers.is_deleted',0)->where('offers.store_id',$id)->join('products', 'offers.product_id', '=', 'products.id')->where('products.store_id',$id)
+              ->select('products.id')
+                 ->groupBy('offers.product_id')->get();
+        
+    
+    foreach($orders as  $order)
+    {
+     $arr[]=Product::find($order->id);
+        
+}
+$success['productsOffers']= ProductResource::collection($arr);
+        // $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
+        
+        
         
 $arr=array(); 
         $orders=DB::table('comments')->where('comments.is_deleted',0)->where('comments.store_id',$id)->join('products', 'comments.product_id', '=', 'products.id') 
-            ->select('products.id','comments.rateing') ->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->get(); 
+            ->select('products.id','comments.rateing') ->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->->take(3)->get(); 
         foreach($orders as  $order) 
         { $arr[]=Product::find($order->id); } 
         $success['productsRatings']= ProductResource::collection($arr);
