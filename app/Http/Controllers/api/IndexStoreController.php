@@ -29,7 +29,7 @@ class IndexStoreController extends BaseController
         //    $success['countVisit']= views($homepage)->count();
             //
          $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
-        //  $success['logo_footer']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
+        //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
          $success['slider1']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus1','active')->pluck('slider1')->first();
          $success['slider2']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus2','active')->pluck('slider2')->first();
          $success['slider3']=Homepage::where('is_deleted',0)->where('store_id',$id)->where('sliderstatus3','active')->pluck('slider3')->first();
@@ -61,12 +61,12 @@ $success['categoriesHaveSpecial']=Category::where('is_deleted',0)->where('store_
      $arr[]=Product::find($order->id);
         
 }
-$success['more_sales']= ProductResource::collection($arr);
+$success['moreSales']= ProductResource::collection($arr);
 // resent arrivede
 
 $oneWeekAgo = Carbon::now()->subWeek();
 
-$success['resent_arrivede']=ProductResource::collection(Product::where('is_deleted',0)
+$success['resentArrivede']=ProductResource::collection(Product::where('is_deleted',0)
      ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
 ////////////////////////////////////////
 $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$id)->whereHas('products', function ($query) use($id)  {
@@ -75,20 +75,20 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
 
   foreach($resent_arrivede_by_category as $category){
 
- $success['resent_arrivede_by_category'][][$category->name]=ProductResource::collection(Product::where('is_deleted',0)
+ $success['resentArrivedeByCategory'][][$category->name]=ProductResource::collection(Product::where('is_deleted',0)
  ->where('store_id',$id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id',$category->id)->get());
   }
 
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());
          $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get());
-         $success['products_offers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
-        $success['products_ratings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
+         $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
+        $success['productsRatings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
         $productsCategories=Product::where('store_id',$id)->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total','DESC')->take(6)->get();
        foreach( $productsCategories as  $productsCategory){
-        $success['Popular_categories'][]=Category::where('is_deleted',0)->where('store_id',$id)->where('id', $productsCategory->category_id)->first();
+        $success['PopularCategories'][]=Category::where('is_deleted',0)->where('store_id',$id)->where('id', $productsCategory->category_id)->first();
        }
-         $success['store_name']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
-         $success['store_email ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+         $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
+         $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
          $success['snapchat']=Store::where('is_deleted',0)->where('id',$id)->pluck('snapchat')->first();
@@ -112,9 +112,9 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
         $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
                 ->where('store_id',$product->store_id)->where('category_id',$product->category_id)->whereNotIn('id', [$id])->get());
 
-        $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id', $product->store_id)->where('product_id',$product->id)->get());
-        $success['store_name']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
-         $success['store_email ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+        $success['commentOfProducts']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id', $product->store_id)->where('product_id',$product->id)->get());
+        $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
+         $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
 
@@ -166,8 +166,8 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
       $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->id)->with('products')->has('products')->get());
       $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id',null)->get());
       $success['page']=PageResource::collection(Page::where('is_deleted',0)->where('id',$id)->where('store_id',$request->id)->where('postcategory_id',null)->get());
-      $success['store_name']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
-      $success['store_email ']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
+      $success['storeName']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
+      $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
       $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('phonenumber')->first();
       $success['description']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('description')->first();
 
