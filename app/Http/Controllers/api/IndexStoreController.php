@@ -90,8 +90,8 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
         
         
   $arr=array();
-    $offers=DB::table('offers')->where('offers.is_deleted',0)->where('offers.store_id',$id)->join('products', 'offers.id', '=', 'products.product_id')
-        ->join('products', 'products.product_id', '=', 'products.id')->where('products.store_id',$id)
+    $offers=DB::table('offers')->where('offers.is_deleted',0)->where('offers.store_id',$id)->join('offers_products', 'offers.id', '=', 'offers_products.offer_id')
+        ->join('products', 'products.id', '=', 'offers_products.product_id')->where('products.store_id',$id)
               ->select('products.id')
                  ->groupBy('offers.product_id')->get();
         
