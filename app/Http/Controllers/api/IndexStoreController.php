@@ -88,10 +88,12 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
          $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get());
          $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
         $success['productsRatings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
-        $productsCategories=Product::where('store_id',$id)->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total','DESC')->take(6)->get();
-       dd($productsCategories);
+        $productsCategories=Product::where('store_id',$id)->whereHas('category', function ($query) {
+  $query->where('is_deleted',0);
+})->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total','DESC')->take(6)->get();
+      
         foreach( $productsCategories as  $productsCategory){
-        $success['PopularCategories'][]=new CategoryResource(Category::where('store_id',$id)->where('id', $productsCategory->category_id)->first());
+        $success['PopularCategories'][]=new CategoryResource(Category::where('is_deleted',0)->where('store_id',$id)->where('id', $productsCategory->category_id)->first());
        }
          $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
          $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
