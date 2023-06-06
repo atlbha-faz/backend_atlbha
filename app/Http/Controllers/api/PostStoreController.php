@@ -22,13 +22,11 @@ class PostStoreController extends BaseController
 
         $success['posts']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->orderBy('created_at', 'desc')->get());
         $success['postCategory']=Postcategory::where('is_deleted',0)->get();
-        // $pages=Page_page_category::where('page_category_id',1)->pluck('page_id')->toArray();
-        // dd($pages);
-        // $success['last_posts']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->whereIn('id',$pages)->orderBy('created_at', 'desc')->get());
-        $success['last_posts']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->orderBy('created_at', 'desc')->take(3)->get());
+        $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
+        $success['lastPosts']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->whereIn('id',$pages)->orderBy('created_at', 'desc')->get());
         // footer
-         $success['store_name']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
-         $success['store_email ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+         $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
+         $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
 
@@ -38,7 +36,7 @@ class PostStoreController extends BaseController
          $success['youtube']=Store::where('is_deleted',0)->where('id',$id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$id)->first();
-         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['paymentMethod']=$store->paymenttypes->where('status','active');
         return $this->sendResponse($success,'تم ارجاع المدونة بنجاح','posts return successfully');
     }
     public function show($postCategory_id,Request $request){
@@ -48,9 +46,7 @@ class PostStoreController extends BaseController
         $success['posts']= PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id',$postCategory_id)->get());
         // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
         $success['postCategory']=Postcategory::where('is_deleted',0)->get();
-        // $success['last_posts']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
-        $success['last_posts']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id','!=',null)->orderBy('created_at', 'desc')->take(3)->get());
-
+        $success['lastPosts']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
         // footer
          $success['store_name']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
          $success['store_email ']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
@@ -63,7 +59,7 @@ class PostStoreController extends BaseController
          $success['youtube']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
-         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['paymentMethod']=$store->paymenttypes->where('status','active');
         return $this->sendResponse($success,'تم ارجاع الصفحة بنجاح',' post return successfully');
     }
     public function show_post($pageId,Request $request){
@@ -77,8 +73,8 @@ class PostStoreController extends BaseController
         $success['last_posts']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id','!=',null)->orderBy('created_at', 'desc')->take(3)->get());
         // $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
         // footer
-         $success['store_name']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
-         $success['store_email ']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
+         $success['storeName']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
+         $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('description')->first();
 
@@ -88,7 +84,7 @@ class PostStoreController extends BaseController
          $success['youtube']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
-         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['paymentMethod']=$store->paymenttypes->where('status','active');
         return $this->sendResponse($success,'تم ارجاع الصفحة بنجاح',' post return successfully');
     }
 }
