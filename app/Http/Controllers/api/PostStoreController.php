@@ -35,7 +35,7 @@ class PostStoreController extends BaseController
          $success['youtube']=Store::where('is_deleted',0)->where('id',$id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$id)->first();
-         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['paymentMethod']=$store->paymenttypes->where('status','active');
         return $this->sendResponse($success,'تم ارجاع المدونة بنجاح','posts return successfully');
     }
     public function show($postCategory_id,Request $request){
@@ -57,7 +57,7 @@ class PostStoreController extends BaseController
          $success['youtube']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
-         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['paymentMethod']=$store->paymenttypes->where('status','active');
         return $this->sendResponse($success,'تم ارجاع الصفحة بنجاح',' post return successfully');
     }
     public function show_post($pageId,Request $request){
@@ -80,7 +80,7 @@ class PostStoreController extends BaseController
          $success['youtube']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
-         $success['Paymentmethod']=$store->paymenttypes->where('status','active');
+         $success['paymentMethod']=$store->paymenttypes->where('status','active');
         return $this->sendResponse($success,'تم ارجاع الصفحة بنجاح',' post return successfully');
     }
 }
