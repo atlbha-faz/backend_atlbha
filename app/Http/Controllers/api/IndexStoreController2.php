@@ -22,9 +22,9 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController2 extends BaseController
 {
-    public function index(){
-      $store=app()->make('store');
-      
+    public function index(Request $reqest){
+  
+      $store=Store::where('domain',$reqest->domain)->firstOrFail();
       $id=  $store->id;
          $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
         //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
