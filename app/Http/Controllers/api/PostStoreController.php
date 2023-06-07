@@ -72,7 +72,7 @@ class PostStoreController extends BaseController
         // $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
         // footer
          $success['storeName']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
-         $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
+         $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('description')->first();
 
