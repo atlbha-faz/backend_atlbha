@@ -77,6 +77,8 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'StoreUser' => \App\Http\Middleware\StoreUser::class,
         'AdminUser' => \App\Http\Middleware\AdminUser::class,
+        'setActiveStore' => \App\Http\Middleware\SetActiveStore::class,
+
 
     ];
 }

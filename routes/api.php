@@ -41,7 +41,10 @@ Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'inde
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
 Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 Route::get('storPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'storPage']);
-
+//domain template
+Route::group(['middleware' => 'setActiveStore'], function () {
+Route::get('indexStore',[App\Http\Controllers\api\IndexStoreController2::class,'index']);
+});
 // Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 // المدونه
 Route::get('postStore/{id}',[App\Http\Controllers\api\PostStoreController::class,'index']);
