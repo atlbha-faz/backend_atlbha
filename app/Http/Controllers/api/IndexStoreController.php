@@ -98,7 +98,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
     
     foreach($offers as  $offer)
     {
-     $arr[]=Product::find($offer->id);
+     $arr[]=Product::find($offer->product_id);
         
 }
 $success['productsOffers']= ProductResource::collection($arr);
