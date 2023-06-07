@@ -64,7 +64,7 @@ class PostStoreController extends BaseController
 
             $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->id)->pluck('logo')->first();
         $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->id)->with('products')->has('products')->get());
-     $success['post']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id','!=',null)->where('id',$pageId)->get());
+     $success['post']=new PageResource(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id','!=',null)->where('id',$pageId)->first());
         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id',null)->get());
         // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
         $success['postCategory']=Postcategory::where('is_deleted',0)->get();
