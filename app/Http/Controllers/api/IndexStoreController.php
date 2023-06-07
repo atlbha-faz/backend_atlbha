@@ -121,7 +121,7 @@ $arr=array();
         $success['PopularCategories'][]=new CategoryResource(Category::where('is_deleted',0)->where('id', $productsCategory->category_id)->first());
        }
          $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
-         $success['storeEmail ']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+         $success['storeEmail']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
          $success['snapchat']=Store::where('is_deleted',0)->where('id',$id)->pluck('snapchat')->first();
