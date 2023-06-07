@@ -115,6 +115,10 @@ public function cart(){
 
         return Comment::where('product_id',$product_id)->where('comment_for','product')->avg('rateing');
      }
+    public function productratecount($product_id){
+
+        return Comment::where('product_id',$product_id)->where('comment_for','product')->count();
+     }
      //اجمالي المبيعات
      public function getOrderTotal($product_id){
 
