@@ -96,9 +96,9 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
                  ->groupBy('offers_products.product_id')->get();
         
     
-    foreach($orders as  $order)
+    foreach($offers as  $offer)
     {
-     $arr[]=Product::find($order->id);
+     $arr[]=Product::find($offer->id);
         
 }
 $success['productsOffers']= ProductResource::collection($arr);
