@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Models\Store;
 use Illuminate\Http\Request;
+use App\Models\Store;
 
 class SetActiveStore
 {
@@ -18,7 +18,7 @@ class SetActiveStore
     public function handle(Request $request, Closure $next)
     {
         $host = $request->getHost();
-        $store=Store::where('domain',$host)->firstOrFail();
+        $store=Store::where('domin',$host)->firstOrFail();
         if($store){
         app()->instance('store',$store);
         }

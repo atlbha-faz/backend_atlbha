@@ -139,26 +139,27 @@ $arr=array();
     }
 
     public function productPage($id){
-       $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
-         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());
+      $store_id=Product::where('is_deleted',0)->where('id',$id)->pluck('store_id')->first();
+       $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$store_id)->pluck('logo')->first();
+         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$store_id)->where('postcategory_id',null)->get());
         $product=Product::where('is_deleted',0)->where('id',$id)->first();
         $success['product']=NEW ProductResource(Product::where('is_deleted',0)->where('id',$id)->first());
         $success['relatedProduct']=ProductResource::collection(Product::where('is_deleted',0)
                 ->where('store_id',$product->store_id)->where('category_id',$product->category_id)->whereNotIn('id', [$id])->get());
 
         $success['commentOfProducts']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id', $product->store_id)->where('product_id',$product->id)->get());
-        $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
-         $success['storeEmail']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+        $success['storeName']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('store_name')->first();
+         $success['storeEmail']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('store_email')->first();
         $success['storeAddress']='السعودية - مدينة جدة';
-         $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
-         $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
+         $success['phonenumber']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('phonenumber')->first();
+         $success['description']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('description')->first();
 
-         $success['snapchat']=Store::where('is_deleted',0)->where('id',$id)->pluck('snapchat')->first();
-         $success['facebook']=Store::where('is_deleted',0)->where('id',$id)->pluck('facebook')->first();
-         $success['twiter']=Store::where('is_deleted',0)->where('id',$id)->pluck('twiter')->first();
-         $success['youtube']=Store::where('is_deleted',0)->where('id',$id)->pluck('youtube')->first();
-         $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
-         $store=Store::where('is_deleted',0)->where('id',$id)->first();
+         $success['snapchat']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('snapchat')->first();
+         $success['facebook']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('facebook')->first();
+         $success['twiter']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('twiter')->first();
+         $success['youtube']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('youtube')->first();
+         $success['instegram']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('instegram')->first();
+         $store=Store::where('is_deleted',0)->where('id',$store_id)->first();
          $success['paymentMethod']=$store->paymenttypes->where('status','active');
          $success['status']= 200;
 
