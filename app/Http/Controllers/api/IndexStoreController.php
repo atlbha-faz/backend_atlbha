@@ -199,7 +199,7 @@ $arr=array();
     }
     public function storPage(Request $request,$id){
       $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->id)->pluck('logo')->first();
-      $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->id)->with('products')->has('products')->get());
+      $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->id)->get());
       $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id',null)->get());
       $success['page']=new PageResource(Page::where('is_deleted',0)->where('id',$id)->where('store_id',$request->id)->where('postcategory_id',null)->first());
       $success['storeName']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
@@ -207,12 +207,31 @@ $arr=array();
         $success['storeAddress']='السعودية - مدينة جدة';
       $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('phonenumber')->first();
       $success['description']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('description')->first();
-
       $success['snapchat']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('snapchat')->first();
       $success['facebook']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('facebook')->first();
       $success['twiter']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('twiter')->first();
       $success['youtube']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('youtube')->first();
       $success['instegram']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('instegram')->first();
+      $success['status']= 200;
+      return $this->sendResponse($success,'تم  الصفحة للمتجر بنجاح','Store page return successfully');
+    }
+
+    public function storeProductCategory(Request $request,$id){
+      $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
+      $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
+      $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->store_id)->where('postcategory_id',null)->get());
+      $success['Products']=ProductResource::collection(Product::where('is_deleted',0)
+      ->where('store_id',$request->store_id)->where('category_id',$id)->get());
+      $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
+      $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
+        $success['storeAddress']='السعودية - مدينة جدة';
+      $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('phonenumber')->first();
+      $success['description']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('description')->first();
+      $success['snapchat']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('snapchat')->first();
+      $success['facebook']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('facebook')->first();
+      $success['twiter']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('twiter')->first();
+      $success['youtube']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('youtube')->first();
+      $success['instegram']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('instegram')->first();
       $success['status']= 200;
       return $this->sendResponse($success,'تم  الصفحة للمتجر بنجاح','Store page return successfully');
     }
