@@ -125,12 +125,12 @@ class CartController extends BaseController
         $cart =CartDetail::where('product_id',$id)->where('cart_id',$cart_id)->first();
        
           if (is_null($cart)){
-                return $this->sendError("السلة غير موجودة"," Cart is't exists");
+                return $this->sendError("المنتج غير موجودة"," product is't exists");
     }
            $cart->delete();
         
         $success['status']= 200;
-         return $this->sendResponse($success,'تم حذف السلة بنجاح','Cart deleted successfully');
+         return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
        }
 
     /**

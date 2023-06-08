@@ -343,7 +343,7 @@ Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::c
 Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'show']);
 Route::get('admin', [App\Http\Controllers\api\storeDashboard\CartController::class, 'admin']);
 Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
-Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class,'delete']);
+Route::get('deleteCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class,'delete']);
 Route::post('sendOfferCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class,'sendOffer']);
 
 // page
