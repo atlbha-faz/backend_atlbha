@@ -43,6 +43,25 @@ foreach($tags as $tag){
          $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$id)->first();
          $success['paymentMethod']=$store->paymenttypes->where('status','active');
+
+       $store=Store::where('is_deleted',0)->where('id',$id)->first();
+               $arr=array();
+                if($store->verification_status == 'accept'){
+                if($store->commercialregistertype == 'maeruf'){
+                    $arr['link']= $store->link;
+                    $arr['image']= 'https://backend.atlbha.com/api/public/images/maroof.png';
+                }
+                else{
+                    $arr['link']= null;
+                    $arr['image']= 'https://backend.atlbha.com/api/public/images/commerce.jpeg';
+                }
+                $verificayionMethod=$arr;
+                }
+                else{
+                $verificayionMethod =null ;
+                }
+           $success['verificayionMethod']=$verificayionMethod ;
+
         return $this->sendResponse($success,'تم ارجاع المدونة بنجاح','posts return successfully');
     }
      public function show($postCategory_id,Request $request){
@@ -75,6 +94,23 @@ foreach($tags as $tag){
          $success['instegram']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
          $success['paymentMethod']=$store->paymenttypes->where('status','active');
+         $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
+               $arr=array();
+                if($store->verification_status == 'accept'){
+                if($store->commercialregistertype == 'maeruf'){
+                    $arr['link']= $store->link;
+                    $arr['image']= 'https://backend.atlbha.com/api/public/images/maroof.png';
+                }
+                else{
+                    $arr['link']= null;
+                    $arr['image']= 'https://backend.atlbha.com/api/public/images/commerce.jpeg';
+                }
+                $verificayionMethod=$arr;
+                }
+                else{
+                $verificayionMethod =null ;
+                }
+           $success['verificayionMethod']=$verificayionMethod ;
         return $this->sendResponse($success,'تم ارجاع الصفحة بنجاح',' post return successfully');
     }
     public function show_post($pageId,Request $request){
@@ -109,6 +145,23 @@ foreach($tags as $tag){
          $success['instegram']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
          $success['paymentMethod']=$store->paymenttypes->where('status','active');
+         $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
+               $arr=array();
+                if($store->verification_status == 'accept'){
+                if($store->commercialregistertype == 'maeruf'){
+                    $arr['link']= $store->link;
+                    $arr['image']= 'https://backend.atlbha.com/api/public/images/maroof.png';
+                }
+                else{
+                    $arr['link']= null;
+                    $arr['image']= 'https://backend.atlbha.com/api/public/images/commerce.jpeg';
+                }
+                $verificayionMethod=$arr;
+                }
+                else{
+                $verificayionMethod =null ;
+                }
+           $success['verificayionMethod']=$verificayionMethod ;
         return $this->sendResponse($success,'تم ارجاع الصفحة بنجاح',' post return successfully');
     }
 }

@@ -285,6 +285,23 @@ $arr=array();
       $success['twiter']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('twiter')->first();
       $success['youtube']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('youtube')->first();
       $success['instegram']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('instegram')->first();
+      $store=Store::where('is_deleted',0)->where('id',$request->store_id)->first();
+               $arr=array();
+                if($store->verification_status == 'accept'){
+                if($store->commercialregistertype == 'maeruf'){
+                    $arr['link']= $store->link;
+                    $arr['image']= 'https://backend.atlbha.com/api/public/images/maroof.png';
+                }
+                else{
+                    $arr['link']= null;
+                    $arr['image']= 'https://backend.atlbha.com/api/public/images/commerce.jpeg';
+                }
+                $verificayionMethod=$arr;
+                }
+                else{
+                $verificayionMethod =null ;
+                }
+           $success['verificayionMethod']=$verificayionMethod ;
       $success['status']= 200;
       return $this->sendResponse($success,'تم  الصفحة للمتجر بنجاح','Store page return successfully');
     }
