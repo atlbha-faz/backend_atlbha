@@ -25,6 +25,7 @@ class PostStoreController extends BaseController
         // footer
          $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
          $success['storeEmail']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+       $success['storeAddress']='السعودية - مدينة جدة';
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
 
@@ -48,6 +49,7 @@ class PostStoreController extends BaseController
         // footer
          $success['storeName']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
          $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
+        $success['storeAddress']='السعودية - مدينة جدة';
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('description')->first();
 
@@ -74,6 +76,7 @@ class PostStoreController extends BaseController
         // footer
          $success['storeName']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
          $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
+        $success['storeAddress']='السعودية - مدينة جدة';
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('description')->first();
 
