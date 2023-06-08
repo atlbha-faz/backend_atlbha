@@ -49,7 +49,7 @@ class CartController extends BaseController
 
     public function show($id){
 
-        $cart = Cart::where('id',$id)->first();
+        $cart = Cart::where('user_id',auth()->user()->id)->where('store_id',$id)->first();
          if (is_null($cart)){
          return $this->sendError("السلة غير موجودة","cart is't exists");
          }
@@ -119,16 +119,16 @@ class CartController extends BaseController
           }
 
 
-    public function delete(Request $request)
+    public function delete($id)
     {
-        $carts =Cart::whereIn('id',$request->id)->get();
-        foreach($carts as $cart)
-        {
+        $cart_id=Cart::where('user_id',auth()->user()->id)->pluck('id')->first();
+        $cart =CartDetail::where('product_id',$id)->where('cart_id',$cart_id)->first();
+       
           if (is_null($cart)){
                 return $this->sendError("السلة غير موجودة"," Cart is't exists");
     }
            $cart->delete();
-        }
+        
         $success['status']= 200;
          return $this->sendResponse($success,'تم حذف السلة بنجاح','Cart deleted successfully');
        }
