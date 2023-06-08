@@ -122,6 +122,7 @@ $arr=array();
        }
          $success['storeName']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_name')->first();
          $success['storeEmail']=Store::where('is_deleted',0)->where('id',$id)->pluck('store_email')->first();
+         $success['storeAddress']='السعودية - مدينة جدة';
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$id)->pluck('description')->first();
          $success['snapchat']=Store::where('is_deleted',0)->where('id',$id)->pluck('snapchat')->first();
@@ -149,6 +150,7 @@ $arr=array();
         $success['commentOfProducts']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id', $product->store_id)->where('product_id',$product->id)->get());
         $success['storeName']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('store_name')->first();
          $success['storeEmail']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('store_email')->first();
+        $success['storeAddress']='السعودية - مدينة جدة';
          $success['phonenumber']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('phonenumber')->first();
          $success['description']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('description')->first();
 
@@ -199,9 +201,10 @@ $arr=array();
       $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->id)->pluck('logo')->first();
       $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->id)->with('products')->has('products')->get());
       $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id',null)->get());
-      $success['page']=PageResource::collection(Page::where('is_deleted',0)->where('id',$id)->where('store_id',$request->id)->where('postcategory_id',null)->get());
+      $success['page']=new PageResource(Page::where('is_deleted',0)->where('id',$id)->where('store_id',$request->id)->where('postcategory_id',null)->first());
       $success['storeName']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_name')->first();
       $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('store_email')->first();
+        $success['storeAddress']='السعودية - مدينة جدة';
       $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('phonenumber')->first();
       $success['description']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('description')->first();
 
