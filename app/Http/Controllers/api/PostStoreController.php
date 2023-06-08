@@ -17,6 +17,13 @@ class PostStoreController extends BaseController
 {
    public function index($id){
        $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
+       $tagarr=array();
+       $tags=Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->pluck('tags')->toArray();
+    //    dd($tags);
+foreach($tags as $tag){
+   $tagarr[]=$tag;
+}
+ $success['tags']=$tagarr;
       $success['category']=Category::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id',null)->get());
         $success['posts']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->orderBy('created_at', 'desc')->get());
@@ -38,8 +45,16 @@ class PostStoreController extends BaseController
          $success['paymentMethod']=$store->paymenttypes->where('status','active');
         return $this->sendResponse($success,'تم ارجاع المدونة بنجاح','posts return successfully');
     }
-    public function show($postCategory_id,Request $request){
-        $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->id)->pluck('logo')->first();
+     public function show($postCategory_id,Request $request){
+        $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->id)->pluck('logo')->toArray();
+$tagarr=array();
+       $tags=Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id','!=',null)->pluck('tags')->toArray();
+    //    dd($tags);
+foreach($tags as $tag){
+   $tagarr[]=$tag;
+}
+ $success['tags']=$tagarr;
+
         $success['category']=Category::where('is_deleted',0)->where('store_id',$request->id)->with('products')->has('products')->get();
        $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id',null)->get());
         $success['posts']= PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id',$postCategory_id)->get());
@@ -65,6 +80,13 @@ class PostStoreController extends BaseController
     public function show_post($pageId,Request $request){
 
             $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->id)->pluck('logo')->first();
+            $tagarr=array();
+       $tags=Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id','!=',null)->pluck('tags')->toArray();
+    //    dd($tags);
+foreach($tags as $tag){
+   $tagarr[]=$tag;
+}
+ $success['tags']=$tagarr;
         $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->id)->with('products')->has('products')->get());
      $success['post']=new PageResource(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id','!=',null)->where('id',$pageId)->first());
         $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->id)->where('postcategory_id',null)->get());
