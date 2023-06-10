@@ -355,7 +355,7 @@ $arr=array();
         if ( is_null($category) || $category->is_deleted==1){
                return $this->sendError("القسم غير موجودة","Category is't exists");
                }
-              $success['categories']=New CategoryResource($category);
+              $success['category']=New CategoryResource($category);
               $success['status']= 200;
 
                return $this->sendResponse($success,'تم عرض القسم بنجاح','Category showed successfully');
