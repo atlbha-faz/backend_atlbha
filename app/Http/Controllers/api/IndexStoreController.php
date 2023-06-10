@@ -279,12 +279,7 @@ $arr=array();
     }
 
     public function storeProductCategory(Request $request){
-        $request->limit
-            $request->page
-            $request->sort
-            $request->filter_category
-            $request->price
-            
+       
             $input = $request->all();
 
         $validator =  Validator::make($input ,[
