@@ -319,7 +319,7 @@ $arr=array();
                     $query->where('selling_price','>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price','<=', $price_to);
-                })orderBy($s , $sort)->paginate($limit));
+                })->orderBy($s , $sort)->paginate($limit));
       $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
       $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
         $success['storeAddress']='السعودية - مدينة جدة';
