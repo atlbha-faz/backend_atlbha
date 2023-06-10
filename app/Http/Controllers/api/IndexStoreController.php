@@ -140,11 +140,11 @@ $arr=array();
                 if($store->verification_status == 'accept'){
                 if($store->commercialregistertype == 'maeruf'){
                     $arr['link']= $store->link;
-                    $arr['image']= 'https://backend.atlbha.com/api/images/maroof.png';
+                    $arr['image']= 'https://backend.atlbha.com/api/assets/media/maroof.png';
                 }
                 else{
                     $arr['link']= null;
-                    $arr['image']= 'https://backend.atlbha.com/api/images/commerce.jpeg';
+                    $arr['image']= 'https://backend.atlbha.com/api/assets/media/commerce.jpeg';
                 }
                 $verificayionMethod=$arr;
                 }
@@ -193,11 +193,11 @@ $arr=array();
                 if($store->verification_status == 'accept'){
                 if($store->commercialregistertype == 'maeruf'){
                     $arr['link']= $store->link;
-                    $arr['image']= 'https://backend.atlbha.com/api/public/images/maroof.png';
+                    $arr['image']= 'https://backend.atlbha.com/api/assets/media/maroof.png';
                 }
                 else{
                     $arr['link']= null;
-                    $arr['image']= 'https://backend.atlbha.com/api/public/images/commerce.jpeg';
+                    $arr['image']= 'https://backend.atlbha.com/api/assets/media/commerce.jpeg';
                 }
                 $verificayionMethod=$arr;
                 }
@@ -262,11 +262,11 @@ $arr=array();
                 if($store->verification_status == 'accept'){
                 if($store->commercialregistertype == 'maeruf'){
                     $arr['link']= $store->link;
-                    $arr['image']= 'https://backend.atlbha.com/api/public/images/maroof.png';
+                    $arr['image']= 'https://backend.atlbha.com/api/assets/media/maroof.png';
                 }
                 else{
                     $arr['link']= null;
-                    $arr['image']= 'https://backend.atlbha.com/api/public/images/commerce.jpeg';
+                    $arr['image']= 'https://backend.atlbha.com/api/assets/media/commerce.jpeg';
                 }
                 $verificayionMethod=$arr;
                 }
@@ -299,11 +299,11 @@ $arr=array();
                 if($store->verification_status == 'accept'){
                 if($store->commercialregistertype == 'maeruf'){
                     $arr['link']= $store->link;
-                    $arr['image']= 'https://backend.atlbha.com/api/public/images/maroof.png';
+                    $arr['image']= 'https://backend.atlbha.com/api/assets/media/maroof.png';
                 }
                 else{
                     $arr['link']= null;
-                    $arr['image']= 'https://backend.atlbha.com/api/public/images/commerce.jpeg';
+                    $arr['image']= 'https://backend.atlbha.com/api/assets/media/commerce.jpeg';
                 }
                 $verificayionMethod=$arr;
                 }
