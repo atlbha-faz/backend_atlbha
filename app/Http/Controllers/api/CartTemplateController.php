@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\storeDashboard;
+namespace App\Http\Controllers\api;
 use Session;
 use Carbon\Carbon;
 use App\Models\Cart;
@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\AbandonedCartResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
-class CartController extends BaseController
+class CartTemplateController extends BaseController
 {
 
 
@@ -39,17 +39,12 @@ class CartController extends BaseController
 
     }
 
-    public function admin(){
-
-        $success['cart']=CartResource::collection(Cart::where('store_id',auth()->user()->store_id)->whereDate('updated_at','<=',Carbon::now()->subHours(24)->format('Y-m-d'))->get());
-          $success['status']= 200;
-           return $this->sendResponse($success,'تم عرض  السلة بنجاح','Cart Showed successfully');
-
-    }
+  
 
     public function show($id){
 
-        $cart = Cart::where('id',$id)->first();
+        $cart = Cart::where('user_id',auth()->user()->id)->where('store_id',$id)->first();
+    
          if (is_null($cart)){
          return $this->sendError("السلة غير موجودة","cart is't exists");
          }
@@ -119,17 +114,16 @@ class CartController extends BaseController
           }
 
 
-    public function delete(Request $request)
+    public function delete($id)
     {
-  
-        $carts =Cart::whereIn('id',$request->id)->get();
+        $cart_id=Cart::where('user_id',auth()->user()->id)->pluck('id')->first();
+        $cart =CartDetail::where('product_id',$id)->where('cart_id',$cart_id)->first();
        
-          
-    foreach(  $carts as   $cart)
-    {
- 
-           $cart->delete();
+          if (is_null($cart)){
+                return $this->sendError("المنتج غير موجودة"," product is't exists");
     }
+           $cart->delete();
+        
         $success['status']= 200;
          return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
        }
@@ -144,56 +138,7 @@ class CartController extends BaseController
         //
     }
 
-    public function sendOffer($id, Request $request)
-    {
-
-       $cart = Cart::where('id',$id)->whereDate('updated_at','<=',Carbon::now()->subHours(24)->format('Y-m-d'))->first();
-         if (is_null($cart)){
-         return $this->sendError("السلة غير موجودة","cart is't exists");
-         }
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            //'id'=>'required|exists:carts,id',
-            'message'=>'required|string',
-            //'discount_total' =>"required_if:discount_type,fixed,percent",
-            'discount_value' =>"required_if:discount_type,fixed,percent",
-            'discount_expire_date' =>"required_if:discount_type,fixed,percent",
-            'free_shipping'=>'in:0,1'
-
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $cart =Cart::where('id',$request->id)->first();
-        $discount_total = $cart->total - $request->discount_value;
-        if($request->discount_type =="percent"){
-            $discount_total = $cart->total - ($cart->total * ($request->discount_value/100));
-        }
-
-        $cart->update([
-            'message' => $request->message,
-            'free_shipping'=> $request->free_shipping,
-            'discount_type'=>$request->discount_type,
-            'discount_value'=>$request->discount_value,
-            'discount_total'=>$discount_total,
-            'discount_expire_date'=>$request->discount_expire_date
-        ]);
-
-        $data = [
-            'subject' =>"cart offer",
-            'message' => $request->message,
-            'store_id' => $cart->store_id,
-        ];
-
-        $user = User::where('id',$cart->user_id)->first();
-         //  Notification::send($user , new emailNotification($data));
-         Mail::to($user->email)->send(new SendOfferCart($data));
-           $success=New CartResource($cart);
-           $success['status']= 200;
-            return $this->sendResponse($success,'تم إرسال العرض بنجاح','Offer Cart Send successfully');
-
-    }
+    
 
 
     /**
