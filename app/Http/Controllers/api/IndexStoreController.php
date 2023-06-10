@@ -11,6 +11,7 @@ use App\Models\Store;
 use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\paymenttype_store;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Http\Resources\PageResource;
@@ -28,6 +29,8 @@ class IndexStoreController extends BaseController
         //   views($homepage)->record();
         //    $success['countVisit']= views($homepage)->count();
             //
+
+
          $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo')->first();
         //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
         $sliders = Array();
@@ -94,7 +97,7 @@ $resent_arrivede_by_category=Category::where('is_deleted',0)->where('store_id',$
         ->where('offers.store_id',$id)
               ->select('offers_products.product_id')
                  ->groupBy('offers_products.product_id')->get();
-   
+
 
     foreach($offers as  $offer)
     {
@@ -132,6 +135,23 @@ $arr=array();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$id)->first();
          $success['paymentMethod']=$store->paymenttypes->where('status','active');
+               $store=Store::where('is_deleted',0)->where('id',$id)->first();
+               $arr=array();
+                if($store->verification_status == 'accept'){
+                if($store->commercialregistertype == 'maeruf'){
+                    $arr['link']= $store->link;
+                    $arr['image']= 'https://backend.atlbha.com/assets/media/maroof.png';
+                }
+                else{
+                    $arr['link']= null;
+                    $arr['image']= 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                }
+                $verificayionMethod=$arr;
+                }
+                else{
+                $verificayionMethod =null ;
+                }
+           $success['verificayionMethod']=$verificayionMethod ;
          $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الرئيسية للمتجر بنجاح','Store index return successfully');
@@ -140,6 +160,8 @@ $arr=array();
 
     public function productPage($id){
       $store_id=Product::where('is_deleted',0)->where('id',$id)->pluck('store_id')->first();
+      if( $store_id != null)
+      {
        $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$store_id)->pluck('logo')->first();
          $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$store_id)->where('postcategory_id',null)->get());
         $product=Product::where('is_deleted',0)->where('id',$id)->first();
@@ -160,7 +182,30 @@ $arr=array();
          $success['youtube']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('youtube')->first();
          $success['instegram']=Store::where('is_deleted',0)->where('id',$store_id)->pluck('instegram')->first();
          $store=Store::where('is_deleted',0)->where('id',$store_id)->first();
+        //  if(($store->paymenttypes ==null)
+
          $success['paymentMethod']=$store->paymenttypes->where('status','active');
+
+
+           $store=Store::where('is_deleted',0)->where('id',$store_id)->first();
+           dd( $store);
+               $arr=array();
+                if($store->verification_status == 'accept'){
+                if($store->commercialregistertype == 'maeruf'){
+                    $arr['link']= $store->link;
+                    $arr['image']= 'https://backend.atlbha.com/assets/media/maroof.png';
+                }
+                else{
+                    $arr['link']= null;
+                    $arr['image']= 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                }
+                $verificayionMethod=$arr;
+                }
+                else{
+                $verificayionMethod =null ;
+                }
+           $success['verificayionMethod']=$verificayionMethod ;
+            }
          $success['status']= 200;
 
         return $this->sendResponse($success,'تم ارجاع صفحة المنتج للمتجر بنجاح',' Product page return successfully');
@@ -212,6 +257,23 @@ $arr=array();
       $success['twiter']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('twiter')->first();
       $success['youtube']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('youtube')->first();
       $success['instegram']=Store::where('is_deleted',0)->where('id',$request->id)->pluck('instegram')->first();
+       $store=Store::where('is_deleted',0)->where('id',$request->id)->first();
+               $arr=array();
+                if($store->verification_status == 'accept'){
+                if($store->commercialregistertype == 'maeruf'){
+                    $arr['link']= $store->link;
+                    $arr['image']= 'https://backend.atlbha.com/assets/media/maroof.png';
+                }
+                else{
+                    $arr['link']= null;
+                    $arr['image']= 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                }
+                $verificayionMethod=$arr;
+                }
+                else{
+                $verificayionMethod =null ;
+                }
+           $success['verificayionMethod']=$verificayionMethod ;
       $success['status']= 200;
       return $this->sendResponse($success,'تم  الصفحة للمتجر بنجاح','Store page return successfully');
     }
@@ -232,6 +294,23 @@ $arr=array();
       $success['twiter']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('twiter')->first();
       $success['youtube']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('youtube')->first();
       $success['instegram']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('instegram')->first();
+      $store=Store::where('is_deleted',0)->where('id',$request->store_id)->first();
+               $arr=array();
+                if($store->verification_status == 'accept'){
+                if($store->commercialregistertype == 'maeruf'){
+                    $arr['link']= $store->link;
+                    $arr['image']= 'https://backend.atlbha.com/assets/media/maroof.png';
+                }
+                else{
+                    $arr['link']= null;
+                    $arr['image']= 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                }
+                $verificayionMethod=$arr;
+                }
+                else{
+                $verificayionMethod =null ;
+                }
+           $success['verificayionMethod']=$verificayionMethod ;
       $success['status']= 200;
       return $this->sendResponse($success,'تم  الصفحة للمتجر بنجاح','Store page return successfully');
     }
