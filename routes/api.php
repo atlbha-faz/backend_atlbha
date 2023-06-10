@@ -43,7 +43,7 @@ Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'inde
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
 Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 Route::get('storPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'storPage']);
-Route::get('storeProductCategory/{id}',[App\Http\Controllers\api\IndexStoreController::class,'storeProductCategory']);
+Route::get('storeProductCategory',[App\Http\Controllers\api\IndexStoreController::class,'storeProductCategory']);
 
 
 Route::get('indexStore',[App\Http\Controllers\api\IndexStoreController2::class,'index']);
