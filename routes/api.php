@@ -33,9 +33,11 @@ Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mo
 
 Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi','App\Http\Controllers\api\AuthController@login_admin');
+Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
 Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 //  index Ettlobha page
+
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
 //  index store page القالب
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
@@ -342,8 +344,8 @@ Route::resource('city',App\Http\Controllers\api\storeDashboard\CityController::c
 //cart
 Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'show']);
 Route::get('admin', [App\Http\Controllers\api\storeDashboard\CartController::class, 'admin']);
-Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
-Route::get('deleteCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class,'delete']);
+// Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
+Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class,'delete']);
 Route::post('sendOfferCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class,'sendOffer']);
 
 // page
@@ -498,4 +500,9 @@ Route::resource('roles',App\Http\Controllers\api\storeDashboard\RoleController::
 Route::get('reports',[ReportController::class,'index']);
 
 });
+});
+Route::middleware([CustomerUser::class])->group(function(){
+Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
+Route::post('addCart', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
+Route::get('deleteCart/{id}', [App\Http\Controllers\api\CartTemplateController::class,'delete']);
 });

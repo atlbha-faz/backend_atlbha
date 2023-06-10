@@ -66,15 +66,29 @@ class StoreUserSeeder extends Seeder
         'country_id' => 1,
         'city_id'=> 3,
         'verified'=>1,
-        // 'store_id'=>1,
+         'store_id'=>1,
       ]);
     //         $userid2 =$user2->id;
     //   Store::where('id', 1)->update(['user_id'=> $userid2]);
+    $user2= User::create([
+      'user_id'=>6,
+      'name' => 'محمد',
+      'user_name' =>'mohammed',
+      'email' =>'mohammed@gmail.com',
+      'password' =>'12345678',
+      'gender' =>'male',
+      'phonenumber' => '0096650775433',
+      'image'=>'image.jpg',
+      'user_type'=>'customer',
+      'country_id' => 1,
+      'city_id'=> 3,
+      'verified'=>1,
+       'store_id'=>2,
+    ]);
         
-        
-        for($i=3 ; $i<45 ; $i++){
+        for($i=4 ; $i<45 ; $i++){
  $user1=User::create([
-        'user_id'=>$i+3,
+        'user_id'=>$i+4,
         'name' => 'روعه',
         'user_name' =>'rawaa',
         'email' =>'rawaa'.$i.'@gmail.com',
