@@ -278,12 +278,48 @@ $arr=array();
       return $this->sendResponse($success,'تم  الصفحة للمتجر بنجاح','Store page return successfully');
     }
 
-    public function storeProductCategory(Request $request,$id){
+    public function storeProductCategory(Request $request){
+        $request->limit
+            $request->page
+            $request->sort
+            $request->filter_category
+            $request->price
+            
+            $input = $request->all();
+
+        $validator =  Validator::make($input ,[
+            'limit'=>'numeric',
+            'page'=>'numeric',
+            'filter_category'=>'numeric',
+            'price_from'=>'numeric',
+            'price_to'=>'numeric',
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $limit = $request->input('limit');
+        if($limit == null){
+            $limit = 5;
+        }
+        $page = $request->input('page');
+        $sort = $request->input('sort');
+        $filter_category = $request->input('filter_category');
+        $price_from = $request->input('price_from');
+        $price_to = $request->input('price_to');
+            
+            
       $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
       $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
       $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->store_id)->where('postcategory_id',null)->get());
       $success['Products']=ProductResource::collection(Product::where('is_deleted',0)
-      ->where('store_id',$request->store_id)->where('category_id',$id)->get());
+      ->where('store_id',$request->store_id)->when($filter_category, function ($query, $filter_category) {
+                    $query->where('category_id', $filter_category);
+                })->when($price_from, function ($query, $price_from) {
+                    $query->where('selling_price','>=', $price_from);
+                })->when($price_to, function ($query, $price_to) {
+                    $query->where('selling_price','<=', $price_to);
+                })->paginate($limit));
       $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
       $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
         $success['storeAddress']='السعودية - مدينة جدة';
@@ -311,6 +347,9 @@ $arr=array();
                 $verificayionMethod =null ;
                 }
            $success['verificayionMethod']=$verificayionMethod ;
+        
+         $success['lastProducts']=ProductResource::collection(Product::where('is_deleted',0)
+      ->where('store_id',$request->store_id)->orderBy('created_at', 'desc')->take(5)->get());
       $success['status']= 200;
       return $this->sendResponse($success,'تم  الصفحة للمتجر بنجاح','Store page return successfully');
     }
