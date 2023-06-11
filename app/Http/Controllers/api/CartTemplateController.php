@@ -118,7 +118,7 @@ class CartTemplateController extends BaseController
     {
         $cart_id=Cart::where('user_id',auth()->user()->id)->pluck('id')->first();
         $cart =CartDetail::where('product_id',$id)->where('cart_id',$cart_id)->first();
-       
+        // $cart =CartDetail::where('id',$id)->first();
           if (is_null($cart)){
                 return $this->sendError("المنتج غير موجودة"," product is't exists");
     }
