@@ -124,6 +124,7 @@ class CartTemplateController extends BaseController
     }
            $cart->delete();
         
+        $success=New CartResource(Cart::where('user_id',auth()->user()->id)->first());
         $success['status']= 200;
          return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
        }

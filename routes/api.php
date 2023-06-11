@@ -43,10 +43,16 @@ Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'inde
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
 Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 Route::get('storPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'storPage']);
-Route::get('storeProductCategory/{id}',[App\Http\Controllers\api\IndexStoreController::class,'storeProductCategory']);
+Route::get('category/{id}',[App\Http\Controllers\api\IndexStoreController::class,'category']);
+Route::get('storeProductCategory',[App\Http\Controllers\api\IndexStoreController::class,'storeProductCategory']);
 
 
 Route::get('indexStore',[App\Http\Controllers\api\IndexStoreController2::class,'index']);
+
+Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
+Route::post('addCart', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
+Route::get('deleteCart/{id}', [App\Http\Controllers\api\CartTemplateController::class,'delete']);
+
 // Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 // المدونه
 Route::get('postStore/{id}',[App\Http\Controllers\api\PostStoreController::class,'index']);
@@ -500,9 +506,4 @@ Route::resource('roles',App\Http\Controllers\api\storeDashboard\RoleController::
 Route::get('reports',[ReportController::class,'index']);
 
 });
-});
-Route::middleware([CustomerUser::class])->group(function(){
-Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
-Route::post('addCart', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
-Route::get('deleteCart/{id}', [App\Http\Controllers\api\CartTemplateController::class,'delete']);
 });
