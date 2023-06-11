@@ -326,10 +326,10 @@ $arr=array();
         
         
         
-        $success['pages'] =($success['Products'])->lastPage();
-        $success['from'] =($success['Products'])->firstItem();
-        $success['to'] =($success['Products'])->lastItem();
-        $success['total'] =($success['Products'])->total();
+        $success['pages'] =$products->lastPage();
+        $success['from'] =$products->firstItem();
+        $success['to'] =$products->lastItem();
+        $success['total'] =$products->total();
         
         
     //  $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
