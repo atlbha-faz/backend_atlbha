@@ -324,7 +324,16 @@ $arr=array();
         $filters[0]["slug"] = "category";
         $filters[0]["type"] = "category";
         $filters[0]["value"] = null;
-            $success['filters'] = 
+        
+        $filters[1]["max"] =  Product::where('is_deleted',0)->where('store_id',$request->store_id)->orderBy('selling_price','desc')->pluck('selling_price')->first();
+        $filters[1]["min"] = Product::where('is_deleted',0)->where('store_id',$request->store_id)->orderBy('selling_price','asc')->pluck('selling_price')->first();
+        $filters[1]["name"] = "السعر";
+        $filters[1]["slug"] = "price";
+        $filters[1]["type"] = "range";
+        $filters[1]["value"] = [$filters[1]["min"],$filters[1]["max"]];
+        
+        
+            $success['filters'] = $filters;
             $success['filter_category']=$filter_category;
             $success['limit']=$limit;
             $success['page']=$page;
