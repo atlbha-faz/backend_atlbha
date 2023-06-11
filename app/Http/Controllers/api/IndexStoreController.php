@@ -295,9 +295,12 @@ $arr=array();
         }
         $limit = $request->input('limit');
         if($limit == null){
-            $limit = 5;
+            $limit = 12;
         }
         $page = $request->input('page');
+           if($page == null){
+            $page = 1;
+        }
         $sort = $request->input('sort');
         $s = 'name';
          if($sort == null){
@@ -307,12 +310,8 @@ $arr=array();
         $filter_category = $request->input('filter_category');
         $price_from = $request->input('price_from');
         $price_to = $request->input('price_to');
-            
-            
-      $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
-      $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
-      $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->store_id)->where('postcategory_id',null)->get());
-      $success['Products']=ProductResource::collection(Product::where('is_deleted',0)
+        
+        $products = ProductResource::collection(Product::where('is_deleted',0)
       ->where('store_id',$request->store_id)->when($filter_category, function ($query, $filter_category) {
                     $query->where('category_id', $filter_category);
                 })->when($price_from, function ($query, $price_from) {
@@ -320,7 +319,46 @@ $arr=array();
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price','<=', $price_to);
                 })->orderBy($s , $sort)->paginate($limit));
-      $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
+        
+        
+        $filters = Array();
+        $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted',0)->whereIn('store_id',[null,$request->store_id])->get());
+        $filters[0]["name"] = "التصنيفات";
+        $filters[0]["slug"] = "category";
+        $filters[0]["type"] = "category";
+        $filters[0]["value"] = null;
+        
+        $filters[1]["max"] =  Product::where('is_deleted',0)->where('store_id',$request->store_id)->orderBy('selling_price','desc')->pluck('selling_price')->first();
+        $filters[1]["min"] = Product::where('is_deleted',0)->where('store_id',$request->store_id)->orderBy('selling_price','asc')->pluck('selling_price')->first();
+        $filters[1]["name"] = "السعر";
+        $filters[1]["slug"] = "price";
+        $filters[1]["type"] = "range";
+        $filters[1]["value"] = [$filters[1]["min"],$filters[1]["max"]];
+        
+        
+            $success['filters'] = $filters;
+            $success['filter_category']=$filter_category;
+            $success['limit']=$limit;
+            $success['page']=$page;
+            $success['sort']=$sort;
+            $success['price_from']=$price_from;
+            $success['price_to']=$price_to;
+        
+        
+        
+        $success['pages'] =$products->lastPage();
+        $success['from'] =$products->firstItem();
+        $success['to'] =$products->lastItem();
+        $success['total'] =$products->total();
+        
+        
+    //  $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
+    //  $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
+    //  $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->store_id)->where('postcategory_id',null)->get());
+      $success['Products']=$products;
+        
+        
+   /*   $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
       $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
         $success['storeAddress']='السعودية - مدينة جدة';
       $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('phonenumber')->first();
@@ -348,6 +386,7 @@ $arr=array();
                 }
            $success['verificayionMethod']=$verificayionMethod ;
         
+        */
          $success['lastProducts']=ProductResource::collection(Product::where('is_deleted',0)
       ->where('store_id',$request->store_id)->orderBy('created_at', 'desc')->take(5)->get());
       $success['status']= 200;
