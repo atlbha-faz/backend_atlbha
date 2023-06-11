@@ -316,7 +316,15 @@ $arr=array();
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price','<=', $price_to);
                 })->orderBy($s , $sort)->paginate($limit));
-            
+        
+        
+        $filters = Array();
+        $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted',0)->whereIn('store_id',[null,$request->store_id])->get());
+        $filters[0]["name"] = "التصنيفات";
+        $filters[0]["slug"] = "category";
+        $filters[0]["type"] = "category";
+        $filters[0]["value"] = null;
+            $success['filters'] = 
             $success['filter_category']=$filter_category;
             $success['limit']=$limit;
             $success['page']=$page;
