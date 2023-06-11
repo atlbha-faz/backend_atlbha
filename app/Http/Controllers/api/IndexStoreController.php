@@ -325,6 +325,7 @@ $arr=array();
         $filters[0]["type"] = "category";
         $filters[0]["value"] = null;
         
+        dd(Product::where('is_deleted',0)->where('store_id',$request->store_id)->orderBy('selling_price','desc')->get());
         $filters[1]["max"] =  Product::where('is_deleted',0)->where('store_id',$request->store_id)->orderBy('selling_price','desc')->pluck('selling_price')->first();
         $filters[1]["min"] = Product::where('is_deleted',0)->where('store_id',$request->store_id)->orderBy('selling_price','asc')->pluck('selling_price')->first();
         $filters[1]["name"] = "السعر";
