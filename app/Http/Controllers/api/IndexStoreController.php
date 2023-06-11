@@ -295,7 +295,7 @@ $arr=array();
         }
         $limit = $request->input('limit');
         if($limit == null){
-            $limit = 5;
+            $limit = 12;
         }
         $page = $request->input('page');
         $sort = $request->input('sort');
