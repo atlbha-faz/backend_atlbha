@@ -308,7 +308,14 @@ $arr=array();
         $price_from = $request->input('price_from');
         $price_to = $request->input('price_to');
             
-            
+            $success['filter_category']=$filter_category;
+            $success['limit']=$limit;
+            $success['page']=$page;
+            $success['sort']=$sort;
+            $success['price_from']=$price_from;
+            $success['price_to']=$price_to;
+        
+        
     //  $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
     //  $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
     //  $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->store_id)->where('postcategory_id',null)->get());
@@ -320,6 +327,9 @@ $arr=array();
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price','<=', $price_to);
                 })->orderBy($s , $sort)->paginate($limit));
+        
+        $success['pages'] =($success['Products'])->lastPage();
+        
    /*   $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
       $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
         $success['storeAddress']='السعودية - مدينة جدة';
