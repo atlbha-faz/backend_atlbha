@@ -309,9 +309,9 @@ $arr=array();
         $price_to = $request->input('price_to');
             
             
-      $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
-      $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
-      $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->store_id)->where('postcategory_id',null)->get());
+    //  $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
+    //  $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
+    //  $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->store_id)->where('postcategory_id',null)->get());
       $success['Products']=ProductResource::collection(Product::where('is_deleted',0)
       ->where('store_id',$request->store_id)->when($filter_category, function ($query, $filter_category) {
                     $query->where('category_id', $filter_category);
@@ -320,7 +320,7 @@ $arr=array();
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price','<=', $price_to);
                 })->orderBy($s , $sort)->paginate($limit));
-      $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
+   /*   $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
       $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
         $success['storeAddress']='السعودية - مدينة جدة';
       $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('phonenumber')->first();
@@ -348,6 +348,7 @@ $arr=array();
                 }
            $success['verificayionMethod']=$verificayionMethod ;
         
+        */
          $success['lastProducts']=ProductResource::collection(Product::where('is_deleted',0)
       ->where('store_id',$request->store_id)->orderBy('created_at', 'desc')->take(5)->get());
       $success['status']= 200;
