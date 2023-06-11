@@ -298,6 +298,9 @@ $arr=array();
             $limit = 12;
         }
         $page = $request->input('page');
+           if($page == null){
+            $page = 1;
+        }
         $sort = $request->input('sort');
         $s = 'name';
          if($sort == null){
