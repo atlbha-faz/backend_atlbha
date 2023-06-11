@@ -307,6 +307,15 @@ $arr=array();
         $filter_category = $request->input('filter_category');
         $price_from = $request->input('price_from');
         $price_to = $request->input('price_to');
+        
+        $products = ProductResource::collection(Product::where('is_deleted',0)
+      ->where('store_id',$request->store_id)->when($filter_category, function ($query, $filter_category) {
+                    $query->where('category_id', $filter_category);
+                })->when($price_from, function ($query, $price_from) {
+                    $query->where('selling_price','>=', $price_from);
+                })->when($price_to, function ($query, $price_to) {
+                    $query->where('selling_price','<=', $price_to);
+                })->orderBy($s , $sort)->paginate($limit));
             
             $success['filter_category']=$filter_category;
             $success['limit']=$limit;
@@ -316,19 +325,18 @@ $arr=array();
             $success['price_to']=$price_to;
         
         
+        
+        $success['pages'] =($success['Products'])->lastPage();
+        $success['from'] =($success['Products'])->firstItem();
+        $success['to'] =($success['Products'])->lastItem();
+        $success['total'] =($success['Products'])->total();
+        
+        
     //  $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
     //  $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
     //  $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$request->store_id)->where('postcategory_id',null)->get());
-      $success['Products']=ProductResource::collection(Product::where('is_deleted',0)
-      ->where('store_id',$request->store_id)->when($filter_category, function ($query, $filter_category) {
-                    $query->where('category_id', $filter_category);
-                })->when($price_from, function ($query, $price_from) {
-                    $query->where('selling_price','>=', $price_from);
-                })->when($price_to, function ($query, $price_to) {
-                    $query->where('selling_price','<=', $price_to);
-                })->orderBy($s , $sort)->paginate($limit));
+      $success['Products']=$products;
         
-        $success['pages'] =($success['Products'])->lastPage();
         
    /*   $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
       $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
