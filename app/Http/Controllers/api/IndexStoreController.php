@@ -188,7 +188,7 @@ $arr=array();
 
 
            $store=Store::where('is_deleted',0)->where('id',$store_id)->first();
-           dd( $store);
+           //dd( $store);
                $arr=array();
                 if($store->verification_status == 'accept'){
                 if($store->commercialregistertype == 'maeruf'){
