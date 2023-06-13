@@ -101,7 +101,7 @@ class CommentController extends BaseController
    {
        $comment = Comment::where('id',$comment)->where('store_id',auth()->user()->store_id)->first();
         if (is_null($comment) ||$comment->is_deleted==1){
-        return $this->sendError("'طريقة الدفع غير موجودة","comment type is't exists");
+        return $this->sendError("التعليق غير موجود","comment type is't exists");
         }
 
 
