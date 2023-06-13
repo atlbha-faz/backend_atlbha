@@ -45,6 +45,7 @@ Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::cl
 Route::get('storPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'storPage']);
 Route::get('category/{id}',[App\Http\Controllers\api\IndexStoreController::class,'category']);
 Route::get('storeProductCategory',[App\Http\Controllers\api\IndexStoreController::class,'storeProductCategory']);
+Route::get('productSearch',[App\Http\Controllers\api\IndexStoreController::class,'productSearch']);
 
 
 Route::get('indexStore',[App\Http\Controllers\api\IndexStoreController2::class,'index']);

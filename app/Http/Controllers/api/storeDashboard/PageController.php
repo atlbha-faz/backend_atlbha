@@ -177,9 +177,12 @@ class PageController extends BaseController
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Page $page)
+    
+    public function update(Request $request, $page)
     {
-         if ($page->is_deleted==1 ||$page->store_id==null ||$page->store_id != auth()->user()->store_id ){
+        $page = Page::where('id', $page)->where('store_id', auth()->user()->store_id)->first();
+
+         if (is_null($page)||$page->is_deleted==1 ||$page->store_id==null ||$page->store_id != auth()->user()->store_id ){
             return $this->sendError("الصفحة غير موجودة","Page is't exists");
        }
 
