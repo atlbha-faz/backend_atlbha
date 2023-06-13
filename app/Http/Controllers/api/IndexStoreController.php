@@ -391,7 +391,7 @@ class IndexStoreController extends BaseController
         // }
 
         $validator = Validator::make($input, [
-            'query' => 'required|string',
+            'query' => 'string',
             'category' => 'numeric',
         ]);
         if ($validator->fails()) {
@@ -403,7 +403,10 @@ class IndexStoreController extends BaseController
 
         $products = ProductResource::collection(Product::where('is_deleted', 0)
                 ->where('store_id', $request->store_id)
-                ->where('name', 'like', '%' . $query . '%')
+               // ->where('name', 'like', '%' . $query . '%')
+                 ->when('$query, function ($query, $category) {
+                    ->where('name', 'like', '%' . $query . '%');
+                })
                 ->when($category, function ($query, $category) {
                     $query->where('category_id', $category);
                 })
