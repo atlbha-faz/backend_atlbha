@@ -404,7 +404,7 @@ class IndexStoreController extends BaseController
         $products = ProductResource::collection(Product::where('is_deleted', 0)
                 ->where('store_id', $request->store_id)
                // ->where('name', 'like', '%' . $query . '%')
-                 ->when('$query, function ($query, $category) {
+                 ->when($query, function ($query, $category) {
                     ->where('name', 'like', '%' . $query . '%');
                 })
                 ->when($category, function ($query, $category) {
