@@ -291,7 +291,7 @@ if($request->data){
             {
 
                     $categorys =Category::whereIn('id',$request->id)->where('for','store')->where('store_id', null)->where('is_deleted',0)->get();
-                    if( $categorys>0)
+                    if( count($categorys)>0)
                     {
                 foreach($categorys as $category)
                 {
