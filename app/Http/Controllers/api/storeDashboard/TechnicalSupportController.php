@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\TechnicalsupportResource;
 use App\Models\TechnicalSupport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\TechnicalsupportResource;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class TechnicalSupportController extends BaseController
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -21,11 +20,11 @@ class TechnicalSupportController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index()
-     {
-       $success['Technicalsupports']=TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
-        $success['status']= 200;
+    {
+        $success['Technicalsupports'] = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع الدعم الفني بنجاح','Technical Support return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'Technical Support return successfully');
     }
 
     /**
@@ -54,7 +53,6 @@ class TechnicalSupportController extends BaseController
     //         'type'=>'required|in:complaint,enquiry,suggestion',
     //         'supportstatus'=>'required|in:finished,not_finished,pending',
     //         'user_id' =>'required|exists:users,id'
-
 
     //     ]);
     //     if ($validator->fails())
@@ -86,17 +84,16 @@ class TechnicalSupportController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function show($technicalSupport)
- {
-           $technicalSupport = TechnicalSupport::where('id',$technicalSupport)->where('store_id',auth()->user()->store_id)->first();
-         if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1){
-         return $this->sendError("طلب الدعم الفني غير موجود","Technical Support is't exists");
-         }
+    {
+        $technicalSupport = TechnicalSupport::where('id', $technicalSupport)->where('store_id', auth()->user()->store_id)->first();
+        if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1) {
+            return $this->sendError("طلب الدعم الفني غير موجود", "Technical Support is't exists");
+        }
 
+        $success['technicalSupports'] = new TechnicalSupportResource($technicalSupport);
+        $success['status'] = 200;
 
-        $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم عرض بنجاح','Technical Support showed successfully');
+        return $this->sendResponse($success, 'تم عرض بنجاح', 'Technical Support showed successfully');
     }
 
     /**
@@ -177,37 +174,40 @@ class TechnicalSupportController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function destroy($technicalSupport)
-   {
-           $technicalSupport = TechnicalSupport::where('id',$technicalSupport)->where('store_id',auth()->user()->store_id)->first();
+    {
+        $technicalSupport = TechnicalSupport::where('id', $technicalSupport)->where('store_id', auth()->user()->store_id)->first();
 
-
-         if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
-         return $this->sendError("الصف غير موجودة","technicalSupport is't exists");
-         }
+        if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1) {
+            return $this->sendError("الصف غير موجودة", "technicalSupport is't exists");
+        }
         $technicalSupport->update(['is_deleted' => 1]);
 
-        $success['technicalSupport']=New TechnicalSupportResource($technicalSupport);
-        $success['status']= 200;
+        $success['technicalSupport'] = new TechnicalSupportResource($technicalSupport);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم حذف طلب الدعم بنجاح','technical Support deleted successfully');
+        return $this->sendResponse($success, 'تم حذف طلب الدعم بنجاح', 'technical Support deleted successfully');
     }
 
-       public function deleteall(Request $request)
+    public function deleteall(Request $request)
     {
 
-            $technicalSupports =technicalSupport::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
-           foreach($technicalSupports as $technicalSupport)
-           {
-             if (is_null($technicalSupport) || $technicalSupport->is_deleted==1 ){
-                    return $this->sendError("الصف غير موجودة","technicalSupport is't exists");
-             }
-             $technicalSupport->update(['is_deleted' => 1]);
-            $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
+        $technicalSupports = technicalSupport::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        // dd($technicalSupports);
+        if (count($technicalSupports) > 0) {
+            foreach ($technicalSupports as $technicalSupport) {
+
+                $technicalSupport->update(['is_deleted' => 1]);
+                $success['technicalSupports'] = new TechnicalSupportResource($technicalSupport);
 
             }
 
-           $success['status']= 200;
+            $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم حذف المنتج بنجاح','technicalSupport deleted successfully');
+            return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'technicalSupport deleted successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendError("الصف غير موجودة", "technicalSupport is't exists");
+        }
+
     }
 }
