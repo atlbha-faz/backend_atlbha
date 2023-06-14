@@ -4,10 +4,10 @@ namespace App\Models;
 
 use DateTime;
 use Carbon\Carbon;
+use App\Models\Comment;
 use App\Models\Package;
 use App\Models\Product;
 use Illuminate\Support\Str;
-use App\Models\Package_store;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -18,11 +18,12 @@ class Store extends Model
      'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period','verification_date',
      'periodtype','special','file','tiktok','status','is_deleted'];
 
-     public function rate($id){
-        $product_id=Product::select('id')->where('store_id',$id)->get();
-        return Comment::whereIn('product_id',$product_id)->where('comment_for','store')->avg('rateing');
-     }
-     protected $casts = [
+    public function rate($id)
+    {
+        $product_id = Product::select('id')->where('store_id', $id)->get();
+        return Comment::whereIn('product_id', $product_id)->where('comment_for', 'store')->avg('rateing');
+    }
+    protected $casts = [
         'activity_id' => 'array',
     ];
     public function setDomainAttribute($value)
@@ -30,100 +31,104 @@ class Store extends Model
         $this->attributes['domain'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
-     public function products()
+    public function products()
     {
         return $this->hasMany(Product::class);
     }
-    public function importproduct(){
-              return $this->hasMany(Importproduct::class);
-         }
+    public function importproduct()
+    {
+        return $this->hasMany(Importproduct::class);
+    }
 
-     public function city()
+    public function city()
     {
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
-          public function country()
+    public function country()
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
 
     }
-        public function usercity()
+    public function usercity()
     {
         return $this->belongsTo(City::class, 'user_city_id', 'id');
     }
-          public function usercountry()
+    public function usercountry()
     {
         return $this->belongsTo(Country::class, 'user_country_id', 'id');
 
     }
     public function activities()
-     {
-          return $this->belongsToMany(
-         Activity::class,
-        'activities_stores',
-        'store_id',
-        'activity_id'
+    {
+        return $this->belongsToMany(
+            Activity::class,
+            'activities_stores',
+            'store_id',
+            'activity_id'
         );
     }
-     public function packages()
+    public function packages()
     {
-          return $this->belongsToMany(
-          Store::class,
-          'packages_stores',
-          'store_id',
-          'package_id'
+        return $this->belongsToMany(
+            Store::class,
+            'packages_stores',
+            'store_id',
+            'package_id'
 
-     );
+        );
     }
-    public function left($id){
-       $day=Store::select('end_at')->where('id',$id)->first();
+    public function left($id)
+    {
+        $day = Store::select('end_at')->where('id', $id)->first();
         $date1 = new DateTime($day->end_at);
-        $now_date= Carbon::now();
+        $now_date = Carbon::now();
         $interval = $date1->diff($now_date);
         return $interval->days;
     }
-    public function period($id){
-        $period=Store::select('periodtype')->where('id',$id)->first();
-         return $period->period;
-     }
-     public function packagee($id){
-        if (is_null($id))
-        return "no_subscription";
-        $package=Package::select('name')->where('id',$id)->first();
-         return $package->name;
-     }
-     public function user()
+    public function period($id)
+    {
+        $period = Store::select('periodtype')->where('id', $id)->first();
+        return $period->period;
+    }
+    public function packagee($id)
+    {
+        if (is_null($id)) {
+            return "no_subscription";
+        }
+
+        $package = Package::select('name')->where('id', $id)->first();
+        return $package->name;
+    }
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
 
     public function page()
     {
         return $this->hasMany(Page::class);
     }
-      public function shippingtypes()
+    public function shippingtypes()
     {
-     return $this->belongsToMany(
-        Shippingtype::class,
-        'shippingtypes_stores',
-        'store_id',
-        'shippingtype_id'
-
+        return $this->belongsToMany(
+            Shippingtype::class,
+            'shippingtypes_stores',
+            'store_id',
+            'shippingtype_id'
 
         );
     }
     public function paymenttypes()
     {
-     return $this->belongsToMany(
-        Paymenttype::class,
-        'paymenttypes_stores',
-        'store_id',
-        'paymentype_id'
+        return $this->belongsToMany(
+            Paymenttype::class,
+            'paymenttypes_stores',
+            'store_id',
+            'paymentype_id'
         );
     }
 
-       public function setLogoAttribute($logo)
+    public function setLogoAttribute($logo)
     {
         if (!is_null($logo)) {
             if (gettype($logo) != 'string') {
@@ -138,13 +143,12 @@ class Store extends Model
     public function getLogoAttribute($logo)
     {
         if (is_null($logo)) {
-            return   asset('assets/media/man.png');
+            return asset('assets/media/man.png');
         }
         return asset('storage/images/storelogo') . '/' . $logo;
     }
 
-
-       public function setIconAttribute($icon)
+    public function setIconAttribute($icon)
     {
         if (!is_null($icon)) {
             if (gettype($icon) != 'string') {
@@ -159,13 +163,12 @@ class Store extends Model
     public function getIconAttribute($icon)
     {
         if (is_null($icon)) {
-            return   asset('assets/media/man.png');
+            return asset('assets/media/man.png');
         }
         return asset('storage/images/storeicon') . '/' . $icon;
     }
 
-
-       public function setFileAttribute($file)
+    public function setFileAttribute($file)
     {
         if (!is_null($file)) {
             if (gettype($file) != 'string') {
@@ -180,13 +183,12 @@ class Store extends Model
     public function getFileAttribute($file)
     {
         if (is_null($file)) {
-            return   asset('assets/media/man.png');
+            return asset('assets/media/man.png');
         }
         return asset('storage/files/store') . '/' . $file;
     }
 
-
-       public function setBusinesslicenseAttribute($business_license)
+    public function setBusinesslicenseAttribute($business_license)
     {
         if (!is_null($business_license)) {
             if (gettype($business_license) != 'string') {
@@ -201,14 +203,18 @@ class Store extends Model
     public function getBusinesslicenseAttribute($business_license)
     {
         if (is_null($business_license)) {
-            return   asset('assets/media/man.png');
+            return asset('assets/media/man.png');
         }
         return asset('storage/images/storebusiness_license') . '/' . $business_license;
     }
 
-      public function note()
+    public function note()
     {
         return $this->hasMany(Note::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
 }
