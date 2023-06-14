@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
 
-class UserController  extends BaseController
+class UserController extends BaseController
 {
-
 
     public function __construct()
     {
@@ -24,10 +23,10 @@ class UserController  extends BaseController
      */
     public function index()
     {
-        $success['users']=UserResource::collection(User::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
-        $success['status']= 200;
+        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع جميع االمستخدمين بنجاح','Users return successfully');
+        return $this->sendResponse($success, 'تم ارجاع جميع االمستخدمين بنجاح', 'Users return successfully');
     }
 
     /**
@@ -49,40 +48,38 @@ class UserController  extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'user_name'=>'required|string|max:255',
-            'email'=>'required|email|unique:users',
-            'status'=>'required|in:active,not_active',
-            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'status' => 'required|in:active,not_active',
+            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
         $user = User::create([
-            'name'=> $request->name,
-            'user_name'=> $request->user_name,
-            'user_type'=>'store_employee',
+            'name' => $request->name,
+            'user_name' => $request->user_name,
+            'user_type' => 'store_employee',
             'email' => $request->email,
             'password' => $request->password,
             'phonenumber' => $request->phonenumber,
-             'image' => $request->image,
-             'status' => $request->status,
-             'store_id' => auth()->user()->store_id
+            'image' => $request->image,
+            'status' => $request->status,
+            'store_id' => auth()->user()->store_id,
 
-          ]);
-        
-        
-    $user->assignRole($request->role);
+        ]);
 
-         $success['users']=New UserResource($user );
-        $success['status']= 200;
+        $user->assignRole($request->role);
 
-         return $this->sendResponse($success,'تم إضافة المستخدم بنجاح','User Added successfully');
+        $success['users'] = new UserResource($user);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم إضافة المستخدم بنجاح', 'User Added successfully');
     }
     /**
      * Display the specified resource.
@@ -92,15 +89,15 @@ class UserController  extends BaseController
      */
     public function show($id)
     {
-        $user = User::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
-        if (is_null($user) || $user->is_deleted==1){
-             return $this->sendError("المستخدم غير موجودة","user is't exists");
-             }
-            $success['users']=New UserResource($user);
-            $success['status']= 200;
+        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
+        if (is_null($user) || $user->is_deleted == 1) {
+            return $this->sendError("المستخدم غير موجود", "user is't exists");
+        }
+        $success['users'] = new UserResource($user);
+        $success['status'] = 200;
 
-             return $this->sendResponse($success,'تم  عرض بنجاح','user showed successfully');
-            }
+        return $this->sendResponse($success, 'تم  عرض بنجاح', 'user showed successfully');
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -122,48 +119,50 @@ class UserController  extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $user =User::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
+        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
+if (is_null($user) || $user->is_deleted == 1 ) {
+    return $this->sendError("المستخدم غير موجود", "user is't exists");
+}
 
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'user_name'=>'required|string|max:255',
-            'email'=>'required|email',
-            'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-             'password_confirm' => 'nullable|same:password',
-            'status'=>'required|in:active,not_active',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password_confirm' => 'nullable|same:password',
+            'status' => 'required|in:active,not_active',
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
 
         ]);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             # code...
-            return $this->sendError(null,$validator->errors());
+            return $this->sendError(null, $validator->errors());
         }
         $user->update([
-            'name'=> $request->input('name'),
-            'user_name'=> $request->input('user_name'),
+            'name' => $request->input('name'),
+            'user_name' => $request->input('user_name'),
             'email' => $request->input('email'),
             'status' => $request->input('status'),
             'phonenumber' => $request->input('phonenumber'),
-             'image' => $request->image,
-          'store_id' => auth()->user()->store_id
+            'image' => $request->image,
+            'store_id' => auth()->user()->store_id,
 
         ]);
-        
-        if(!is_null($request->password)){
-             $user->update([
-            'password' => $request->input('password'),
-                 ]);
+
+        if (!is_null($request->password)) {
+            $user->update([
+                'password' => $request->input('password'),
+            ]);
         }
 
-  $user->assignRole($request->role);
-        $success['users']=New UserResource($user);
-        $success['status']= 200;
+        $user->assignRole($request->role);
+        $success['users'] = new UserResource($user);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم التعديل بنجاح','modify  successfully');
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'modify  successfully');
 
     }
 
@@ -175,73 +174,72 @@ class UserController  extends BaseController
      */
     public function destroy($id)
     {
-           $user = User::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
+        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
 
-        if (is_null($user)||$user->is_deleted==1){
-            return $this->sendError("المستخدم غير موجودة","User is't exists");
-            }
-           $user->update(['is_deleted' => 1]);
-
-           $success['useres']=New UserResource($user);
-           $success['status']= 200;
-
-            return $this->sendResponse($success,'تم حذف المستخدم بنجاح','User deleted successfully');
+        if (is_null($user) || $user->is_deleted == 1) {
+            return $this->sendError("المستخدم غير موجودة", "User is't exists");
         }
+        $user->update(['is_deleted' => 1]);
+
+        $success['useres'] = new UserResource($user);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'User deleted successfully');
+    }
     public function deleteall(Request $request)
     {
 
-            $users =User::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
-           foreach($users as $user)
-           {
-             if (is_null($user) || $user->is_deleted==1 ){
-                    return $this->sendError("المستخدم غير موجودة","user is't exists");
-             }
-             $user->update(['is_deleted' => 1]);
-            $success['users']=New UserResource($user);
-
+        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        if (count($users) > 0) {
+            foreach ($users as $user) {
+                $user->update(['is_deleted' => 1]);
+                $success['users'] = new UserResource($user);
             }
 
-           $success['status']= 200;
+            $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم حذف المستخدم بنجاح','user deleted successfully');
+            return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'user deleted successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendError("المستخدم غير موجودة", "user is't exists");
+        }
     }
-       public function changeSatusall(Request $request)
-      {
-
-               $users =User::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
-                foreach($users as $user)
-                {
-                    if (is_null($user) || $user->is_deleted==1){
-                        return $this->sendError("  المستخدم غير موجودة","user is't exists");
-              }
-                    if($user->status === 'active'){
-                $user->update(['status' => 'not_active']);
-                }
-                else{
-                $user->update(['status' => 'active']);
-                }
-                $success['users']= New UserResource($user);
-
-                    }
-                    $success['status']= 200;
-
-                return $this->sendResponse($success,'تم تعديل حالة المستخدم بنجاح','user updated successfully');
-     }
-  public function changeStatus($id)
+    public function changeSatusall(Request $request)
     {
-        $user = User::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
-        if (is_null($user) || $user->is_deleted==1 ){
-         return $this->sendError("المستخدم غير موجودة","user is't exists");
-         }
-        if($user->status === 'active'){
-            $user->update(['status' => 'not_active']);
-     }
-    else{
-        $user->update(['status' => 'active']);
+
+        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        if (count($users) > 0) {
+            foreach ($users as $user) {
+                if ($user->status === 'active') {
+                    $user->update(['status' => 'not_active']);
+                } else {
+                    $user->update(['status' => 'active']);
+                }
+                $success['users'] = new UserResource($user);
+
+            }
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم تعديل حالة المستخدم بنجاح', 'user updated successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendError("المستخدم غير موجودة", "user is't exists");
+        }
     }
-        $success['users']=New UserResource($user);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة المستخدم بنجاح',' user status updared successfully');
+    public function changeStatus($id)
+    {
+        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
+        if (is_null($user) || $user->is_deleted == 1) {
+            return $this->sendError("المستخدم غير موجودة", "user is't exists");
+        }
+        if ($user->status === 'active') {
+            $user->update(['status' => 'not_active']);
+        } else {
+            $user->update(['status' => 'active']);
+        }
+        $success['users'] = new UserResource($user);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم تعدبل حالة المستخدم بنجاح', ' user status updared successfully');
 
     }
 
