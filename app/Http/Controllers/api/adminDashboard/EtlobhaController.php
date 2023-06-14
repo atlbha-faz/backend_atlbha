@@ -279,44 +279,50 @@ class EtlobhaController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $products =Product::whereIn('id',$request->id)->where('for','etlobha')->get();
+            $products =Product::whereIn('id',$request->id)->where('is_deleted',0)->where('for','etlobha')->get();
+            if(count($products)>0){
             foreach($products as $product){
-              if (is_null($product) || $product->is_deleted==1){
-         return $this->sendError("المنتج غير موجود","product is't exists");}
-              }
-           foreach($products as $product)
-           {
+           
+           
                $product->update(['is_deleted' => 1]);
             }
                $success['products']= ProductResource::collection($products);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
     }
+    else{
+      $success['status']= 200;
+  return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+  }
+  }
 
       public function changeStatusall(Request $request)
     {
-        $products =Product::whereIn('id',$request->id)->where('for','etlobha')->get();
+        $products =Product::whereIn('id',$request->id)->where('is_deleted',0)->where('for','etlobha')->get();
+        if(count($products)>0){
         foreach($products as $product){
-          if (is_null($product) || $product->is_deleted==1){
-         return $this->sendError("المنتج غير موجود","product is't exists");
-          }}
-        foreach($products as $product)
-        {
+        
         if($product->status === 'active'){
             $product->update(['status' => 'not_active']);
          }
          else{
         $product->update(['status' => 'active']);
-    }
+       }
         }
         $success['products']= ProductResource::collection($products);
         $success['status']= 200;
          return $this->sendResponse($success,'تم تعدبل حالة القسم بنجاح',' product status updared successfully');
-
+      }
+      else{
+          $success['status']= 200;
+      return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+      }
+      
     }
     public function statistics($product){
 
-      $product =Product::where('id',$product)->where('for','etlobha')->first();
+      $product =Product::where('id',$product)->where('is_deleted',0)->where('for','etlobha')->first();
+      if($product != null){
       $success['product']=New productResource($product);
       $success['import_count']=  $product->importproduct->count();
       $success['number_of_sold_product']=Order::whereHas('items', function($q) use ($product) {
@@ -325,6 +331,10 @@ class EtlobhaController extends BaseController
     $success['total']= $success['number_of_sold_product']*  $product->selling_price;
       $success['status']= 200;
        return $this->sendResponse($success,'تم العرض بنجاح',' product show successfully');
-
+  }
+   else{
+    $success['status']= 200;
+    return $this->sendResponse($success,'المدخلات غير موجودة','id does not exit');
+      }
   }
 }

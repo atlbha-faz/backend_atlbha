@@ -160,7 +160,7 @@ class StoreController extends BaseController
      */
     public function show($store)
     {
-        $store =Store::query()->find($store);
+        $store =Store::query()->where('confirmation_status','accept')->find($store);
         if (is_null($store) || $store->is_deleted==1){
         return $this->sendError("المتجر غير موجودة","store is't exists");
         }
@@ -192,15 +192,14 @@ class StoreController extends BaseController
      * @param  \App\Models\Store  $store
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Store $store)
+    public function update(Request $request,  $store)
     {
 
-                $user =$store->user;
-
-
-        if ($store->is_deleted==1){
+      $store = Store::query()->find($store);
+      if (is_null($store) || $store->is_deleted==1){
             return $this->sendError("المتجر غير موجود","store is't exists");
        }
+       $user =$store->user;
             $input = $request->all();
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
@@ -313,7 +312,7 @@ class StoreController extends BaseController
 
       public function specialStatus($id)
     {
-        $store = Store::query()->find($id);
+        $store = Store::query()->where('confirmation_status','accept')->find($id);
          if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
@@ -343,12 +342,11 @@ class StoreController extends BaseController
       public function changeSatusall(Request $request)
     {
 
-            $stores =Store::whereIn('id',$request->id)->get();
+            $stores =Store::whereIn('id',$request->id)->where('confirmation_status','accept')->where('is_deleted',0)->get();
+            if(count($stores)>0){
            foreach($stores as $store)
            {
-             if (is_null($store) || $store->is_deleted==1){
-                   return $this->sendError("المتجر غير موجودة"," store is't exists");
-       }
+          
               if($store->status === 'active'){
         $store->update(['status' => 'not_active']);
         }
@@ -361,7 +359,11 @@ class StoreController extends BaseController
                $success['status']= 200;
                 return $this->sendResponse($success,'تم تعطيل المتجر بنجاح','store stop successfully');
     }
-
+    else{
+      $success['status']= 200;
+        return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+         }
+      }
 
     public function destroy($store)
     {
@@ -458,17 +460,26 @@ class StoreController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $stores =Store::whereIn('id',$request->id)->where('for','store')->get();
+            $stores =Store::whereIn('id',$request->id)->where('confirmation_status','accept')->where('is_deleted',0)->get();
+            if(count($stores)>0){
            foreach($stores as $store)
            {
-            if (is_null($store) || $store->is_deleted==1){
-                   return $this->sendError("المتجر غير موجودة"," store is't exists");
-             }
+         
                $store->update(['is_deleted' => 1]);
             }
                $success['stores']= StoreResource::collection($stores);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المتجر بنجاح','store deleted successfully');
-    }
+          }
+                else{
+                  $success['status']= 200;
+              return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+              }
+    
+    
+              }
 
-}
+
+
+  }
+

@@ -114,8 +114,9 @@ class PlanController extends BaseController
      * @param  \App\Models\Plan  $plane
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Plan $plan)
+    public function update(Request $request,  $plan)
        {
+        $plan = Plan::query()->find($plan);
          if (is_null($plan) || $plan->is_deleted==1){
          return $this->sendError(" الخطة غير موجود","plan is't exists");
           }

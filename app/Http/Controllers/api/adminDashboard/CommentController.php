@@ -120,8 +120,9 @@ class CommentController extends BaseController
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, $comment)
       {
+        $comment =  Comment::where('id', $comment)->first();
          if (is_null($comment) ||$comment->is_deleted==1){
          return $this->sendError(" التعليق غير موجود","comment is't exists");
           }

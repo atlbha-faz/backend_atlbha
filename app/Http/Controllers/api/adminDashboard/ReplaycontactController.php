@@ -124,8 +124,9 @@ class ReplaycontactController extends BaseController
      * @param  \App\Models\Replaycontact  $replaycontact
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Replaycontact $replaycontact)
+    public function update(Request $request,  $replaycontact)
     {
+        $replaycontact =Replaycontact::query()->find($replaycontact);
         if ( is_null($replaycontact) || $replaycontact->is_deleted==1){
             return $this->sendError("الرد غير موجودة"," replaycontact is't exists");
        }

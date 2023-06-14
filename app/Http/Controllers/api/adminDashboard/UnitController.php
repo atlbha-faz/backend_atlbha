@@ -116,6 +116,7 @@ class UnitController extends BaseController
      */
     public function update(Request $request, Unit $unit)
        {
+        $unit =Unit::query()->find($unit);
          if (is_null($unit) || $unit->is_deleted==1){
          return $this->sendError("الوحدة غير موجودة","unit is't exists");
           }

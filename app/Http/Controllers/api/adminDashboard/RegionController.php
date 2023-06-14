@@ -93,8 +93,9 @@ class RegionController extends Controller
      * @param  \App\Models\c  $c
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Region $region)
+    public function update(Request $request,  $region)
    {
+         $region = Region::query()->find($region);
         if (is_null($region) || $region->is_deleted==1){
          return $this->sendError("المنطقه غير موجودة","region is't exists");
     }

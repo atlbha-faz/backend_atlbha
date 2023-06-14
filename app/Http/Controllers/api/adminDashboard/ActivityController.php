@@ -98,8 +98,10 @@ class ActivityController extends BaseController
      * @param  \App\Models\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Activity $activity)
+    public function update(Request $request, $activity)
     {
+        $activity = Activity::where('id', $activity)->first();
+
         if ( is_null($activity) || $activity->is_deleted==1){
             return $this->sendError("النشاط غير موجودة"," Activity is't exists");
        }
@@ -136,17 +138,23 @@ class ActivityController extends BaseController
     {
 
 
-            $activities =Activity::whereIn('id',$request->id)->get();
+            $activities =Activity::whereIn('id',$request->id)->where('is_deleted',0)->get();
+            if(count($activities)>0){
            foreach($activities as $activity)
            {
-             if (is_null($activity) || $activity->is_deleted==1){
-                   return $this->sendError("النشاط غير موجودة"," Activity is't exists");
-       }
+        
                $activity->update(['is_deleted' => 1]);
-        $success['activities']= New ActivityResource($activity);
+              $success['activities']= New ActivityResource($activity);
 
             }
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف الأنشطة بنجاح','Activity deleted successfully');
-    }
+           }
+
+      else{
+          $success['status']= 200;
+       return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
+        }
+
+     }
 }

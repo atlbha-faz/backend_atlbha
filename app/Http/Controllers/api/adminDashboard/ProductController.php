@@ -158,14 +158,12 @@ class ProductController extends BaseController
        public function changeSatusall(Request $request)
     {
 
-            $products =Product::whereIn('id',$request->id)->where('for','store')->get();
+            $products =Product::whereIn('id',$request->id)->where('is_deleted',0)->where('for','store')->get();
+            if(count($products)>0){
            foreach($products as $product)
            {
-             if (is_null($product) || $product->is_deleted==1){
-                   return $this->sendError("المنتجات غير موجودة"," product is't exists");
-       }
               if($product->status === 'active'){
-        $product->update(['status' => 'not_active']);
+            $product->update(['status' => 'not_active']);
         }
         else{
         $product->update(['status' => 'active']);
@@ -176,7 +174,11 @@ class ProductController extends BaseController
                $success['status']= 200;
                  return $this->sendResponse($success,'تم تعديل حالة التصنيف بنجاح','category updated successfully');
     }
-
+    else{
+        $success['status']= 200;
+    return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+    }
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -189,8 +191,10 @@ class ProductController extends BaseController
     }
     public function rateing($product)
     {
-        $product =Product::query()->find($product);
-
+        $product =Product::where('is_deleted',0)->where('id',$product)->first();
+        if (is_null($product) ){
+            return $this->sendError("المنتجات غير موجودة"," product is't exists");
+        }
         $rating =$product->comment->avg('rateing');
 
         $success['rateing']= $rating;
@@ -283,18 +287,22 @@ class ProductController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $products =Product::whereIn('id',$request->id)->where('for','store')->get();
+            $products =Product::whereIn('id',$request->id)->where('is_deleted',0)->where('for','store')->get();
+            if(count($products)>0){
            foreach($products as $product)
            {
-            if (is_null($product) || $product->is_deleted==1){
-                   return $this->sendError("المنتج غير موجودة"," product is't exists");
-             }
+            
                $product->update(['is_deleted' => 1]);
             }
                $success['products']= ProductResource::collection($products);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
-    }
+               } 
+               else{
+                $success['status']= 200;
+            return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+            }
+           }
 
      public function addNote(Request $request)
      {

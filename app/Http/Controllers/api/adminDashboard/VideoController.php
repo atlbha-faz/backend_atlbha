@@ -145,8 +145,9 @@ class VideoController extends BaseController
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Video $video)
+    public function update(Request $request,  $video)
      {
+        $video =Video::query()->find($video);
          if (is_null($video ) || $video->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","video is't exists");
           }

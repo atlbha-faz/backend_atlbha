@@ -127,8 +127,9 @@ class CityController extends BaseController
      * @param  \App\Models\City  $city
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, City $city)
+    public function update(Request $request, $city)
 {
+    $city =  City::where('id', $city)->first();
         if (is_null($city) || $city->is_deleted==1){
          return $this->sendError("المدينه غير موجودة","city is't exists");
     }
@@ -179,12 +180,10 @@ class CityController extends BaseController
       public function deleteall(Request $request)
     {
 
-            $citys =city::whereIn('id',$request->id)->get();
+            $citys =city::whereIn('id',$request->id)->where('is_deleted',0)->get();
+            if(count($citys)>0){
            foreach($citys as $city)
            {
-             if (is_null($city) || $city->is_deleted==1 ){
-                    return $this->sendError("المدينة غير موجودة","city is't exists");
-             }
              $city->update(['is_deleted' => 1]);
             $success['citys']=New cityResource($city);
 
@@ -193,5 +192,11 @@ class CityController extends BaseController
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف المدينة بنجاح','city deleted successfully');
+        }
+            else{
+                $success['status']= 200;
+             return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
+              }
     }
+
 }

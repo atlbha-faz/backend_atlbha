@@ -129,8 +129,9 @@ class SeoController extends BaseController
      * @param  \App\Models\Seo  $seo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Seo $seo)
+    public function update(Request $request,  $seo)
     {
+        $seo =Seo::query()->find($seo);
         if (is_null($seo) || $seo->is_deleted==1){
             return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
        }
