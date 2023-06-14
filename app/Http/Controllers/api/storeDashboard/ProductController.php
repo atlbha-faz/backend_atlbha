@@ -2,25 +2,20 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\Image;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Imports\ProductsImport;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use App\Imports\ProductsImport;
+use App\Models\Importproduct;
+use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\ImportproductResource;
-use App\Http\Controllers\api\BaseController as BaseController;
-
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends BaseController
 {
-     public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -32,17 +27,16 @@ class ProductController extends BaseController
     public function index()
     {
 
-       $products= ProductResource::collection(Product::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
+        $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
 
+        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+        $imports = importsResource::collection($import);
 
-    $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)
-               ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['products.*status','selling_price','purchasing_price','store_id']);
-               $imports=importsResource::collection($import);
+        $success['products'] = $products->merge($imports);
+        $success['status'] = 200;
 
-               $success['products']=$products->merge($imports);
-       $success['status']= 200;
-
-         return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','products return successfully');
+        return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
     }
 
@@ -65,30 +59,28 @@ class ProductController extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'description'=>'required|string',
-            'selling_price'=>['required','numeric','gt:0'],
-            'stock'=>['required','numeric','gt:0'],
-            'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'discount_price'=>['required','numeric'],
-            'discount_percent'=>['required','numeric'],
-            'SEOdescription'=>'required',
-            'category_id'=>'required|exists:categories,id',
-            'subcategory_id'=>['array'],
-            'subcategory_id.*'=>['required','numeric',
-            Rule::exists('categories', 'id')->where(function ($query) {
-            return $query->join('categories', 'id', 'parent_id');
-        }),
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'selling_price' => ['required', 'numeric', 'gt:0'],
+            'stock' => ['required', 'numeric', 'gt:0'],
+            'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'discount_price' => ['required', 'numeric'],
+            'discount_percent' => ['required', 'numeric'],
+            'SEOdescription' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => ['array'],
+            'subcategory_id.*' => ['required', 'numeric',
+                Rule::exists('categories', 'id')->where(function ($query) {
+                    return $query->join('categories', 'id', 'parent_id');
+                }),
 
-
-            ]
+            ],
 
             // 'store_id'=>'required|exists:stores,id',
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
         $product = Product::create([
             'name' => $request->name,
@@ -97,20 +89,18 @@ class ProductController extends BaseController
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
             'cover' => $request->cover,
-            'SEOdescription'=> $request->SEOdescription,
-           'discount_price'=>$request->discount_price,
-            'discount_percent'=>$request->discount_percent,
+            'SEOdescription' => $request->SEOdescription,
+            'discount_price' => $request->discount_price,
+            'discount_percent' => $request->discount_percent,
             'subcategory_id' => implode(',', $request->subcategory_id),
             'category_id' => $request->category_id,
-            'store_id'=> auth()->user()->store_id,
-          ]);
+            'store_id' => auth()->user()->store_id,
+        ]);
 
+        $success['products'] = new ProductResource($product);
+        $success['status'] = 200;
 
-
-         $success['products']=New ProductResource($product);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
+        return $this->sendResponse($success, 'تم إضافة منتج بنجاح', 'product Added successfully');
     }
 
     // public function deleteImport($product)
@@ -133,15 +123,15 @@ class ProductController extends BaseController
      */
     public function show($product)
     {
-        $product= Product::query()->find($product);
-        if (is_null($product) || $product->is_deleted==1){
-               return $this->sendError("المنتج غير موجود","product is't exists");
-               }
+        $product = Product::query()->find($product);
+        if (is_null($product) || $product->is_deleted == 1) {
+            return $this->sendError("المنتج غير موجود", "product is't exists");
+        }
 
-              $success['products']=New ProductResource($product);
-              $success['status']= 200;
+        $success['products'] = new ProductResource($product);
+        $success['status'] = 200;
 
-               return $this->sendResponse($success,'تم عرض المنتج بنجاح','product showed successfully');
+        return $this->sendResponse($success, 'تم عرض المنتج بنجاح', 'product showed successfully');
     }
 
     /**
@@ -163,97 +153,89 @@ class ProductController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-  {
-
-    $importproduct= Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)->whereIn('importproducts.product_id',$id)
-    ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['selling_price','purchasing_price','store_id']);
-          if(!is_null($importproduct))
-           {
-
-            $importproduct = Importproduct::where('product_id',$id)->first();
-            $importproduct->update([
-               'price' => $request->selling_price
-            ]);
-            $success['products']=New importsResource($importproduct);
-            $success['status']= 200;
-
-            return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
-        }
-
-           else{
-         $product =Product::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
-         if (is_null($product) || $product->is_deleted==1 ){
-         return $this->sendError(" المنتج غير موجود","product is't exists");
-          }
-
-         $input = $request->all();
-         $validator =  Validator::make($input ,[
-             'name'=>'required|string|max:255',
-
-            'description'=>'required|string',
-            'selling_price'=>['required','numeric','gt:0'],
-            'stock'=>['required','numeric','gt:0'],
-            'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'discount_price'=>['required','numeric'],
-            'discount_percent'=>['required','numeric'],
-            'SEOdescription'=>'required',
-            'category_id'=>'required|exists:categories,id',
-            'subcategory_id'=>['array'],
-            'subcategory_id.*'=>['required','numeric',
-            Rule::exists('categories', 'id')->where(function ($query) {
-            return $query->join('categories', 'id', 'parent_id');
-        }),
-
-
-            ]
-
-         ]);
-
-         if ($validator->fails())
-         {
-            # code...
-            return $this->sendError(null,$validator->errors());
-         }
-         $product->update([
-            'name' => $request->input('name'),
-            'for' => 'store',
-            'description' => $request->input('description'),
-            'selling_price' => $request->input('selling_price'),
-            'stock' => $request->input('stock'),
-            'cover' => $request->cover,
-            'SEOdescription' => $request->input('SEOdescription'),
-            'discount_price'=>$request->input('discount_price'),
-            'discount_percent'=>$request->input('discount_percent'),
-            'category_id' => $request->input('category_id'),
-             'subcategory_id' =>  implode(',', $request->subcategory_id),
-            // 'store_id' => $request->input('store_id'),
-
-
-         ]);
-
-
-            $success['products']=New ProductResource($product);
-            $success['status']= 200;
-
-            return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
-        }
-    }
-
-     public function changeStatus($id)
     {
-        $product = Product::where('id',$id)->where('store_id',auth()->user()->store_id)->first();
-        if (is_null($product) || $product->is_deleted==1 ){
-         return $this->sendError("القسم غير موجودة","product is't exists");
-         }
-        if($product->status === 'active'){
-            $product->update(['status' => 'not_active']);
-     }
-    else{
-        $product->update(['status' => 'active']);
+
+        $importproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $id)
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
+        if (!is_null($importproduct)) {
+
+            $importproduct = Importproduct::where('product_id', $id)->first();
+            $importproduct->update([
+                'price' => $request->selling_price,
+            ]);
+            $success['products'] = new importsResource($importproduct);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
+        } else {
+            $product = Product::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
+            if (is_null($product) || $product->is_deleted == 1) {
+                return $this->sendError(" المنتج غير موجود", "product is't exists");
+            }
+
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'name' => 'required|string|max:255',
+
+                'description' => 'required|string',
+                'selling_price' => ['required', 'numeric', 'gt:0'],
+                'stock' => ['required', 'numeric', 'gt:0'],
+                'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+                'discount_price' => ['required', 'numeric'],
+                'discount_percent' => ['required', 'numeric'],
+                'SEOdescription' => 'required',
+                'category_id' => 'required|exists:categories,id',
+                'subcategory_id' => ['array'],
+                'subcategory_id.*' => ['required', 'numeric',
+                    Rule::exists('categories', 'id')->where(function ($query) {
+                        return $query->join('categories', 'id', 'parent_id');
+                    }),
+
+                ],
+
+            ]);
+
+            if ($validator->fails()) {
+                # code...
+                return $this->sendError(null, $validator->errors());
+            }
+            $product->update([
+                'name' => $request->input('name'),
+                'for' => 'store',
+                'description' => $request->input('description'),
+                'selling_price' => $request->input('selling_price'),
+                'stock' => $request->input('stock'),
+                'cover' => $request->cover,
+                'SEOdescription' => $request->input('SEOdescription'),
+                'discount_price' => $request->input('discount_price'),
+                'discount_percent' => $request->input('discount_percent'),
+                'category_id' => $request->input('category_id'),
+                'subcategory_id' => implode(',', $request->subcategory_id),
+                // 'store_id' => $request->input('store_id'),
+
+            ]);
+
+            $success['products'] = new ProductResource($product);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
+        }
     }
-        $success['products']=New ProductResource($product);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة القسم بنجاح',' product status updared successfully');
+
+    public function changeStatus($id)
+    {
+        $product = Product::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
+        if (is_null($product) || $product->is_deleted == 1) {
+            return $this->sendError("القسم غير موجودة", "product is't exists");
+        }
+        if ($product->status === 'active') {
+            $product->update(['status' => 'not_active']);
+        } else {
+            $product->update(['status' => 'active']);
+        }
+        $success['products'] = new ProductResource($product);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم تعدبل حالة القسم بنجاح', ' product status updared successfully');
 
     }
 
@@ -265,128 +247,123 @@ class ProductController extends BaseController
      */
     public function destroy($product)
     {
-        $product =Product::where('id',$product)->where('store_id',auth()->user()->store_id)->first();
-        if (is_null($product) || $product->is_deleted==1){
-            return $this->sendError("المنتج غير موجود","product is't exists");
-            }
-           $product->update(['is_deleted' => 1]);
+        $product = Product::where('id', $product)->where('store_id', auth()->user()->store_id)->first();
+        if (is_null($product) || $product->is_deleted == 1) {
+            return $this->sendError("المنتج غير موجود", "product is't exists");
+        }
+        $product->update(['is_deleted' => 1]);
 
-           $success['products']=New ProductResource($product);
-           $success['status']= 200;
-            return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+        $success['products'] = new ProductResource($product);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
 
-
-
-      public function deleteall(Request $request)
+    public function deleteall(Request $request)
     {
 
+        $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
+        if (!is_null($importproducts)) {
+            foreach ($importproducts as $importproduct) {
 
-        $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)->whereIn('importproducts.product_id',$request->id)
-                   ->get(['products.*', 'importproducts.price','importproducts.status', ])->makeHidden(['selling_price','purchasing_price','store_id']);
-               if(!is_null($importproducts))
-               {
-            foreach($importproducts as $importproduct)
-            {
-
-                    $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$importproduct->id)->first();
-                    if (is_null($product)){
-                        return $this->sendError("المنتج غير موجود","product is't exists");
-                        }
-                       $product->delete();
-
+                $product = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
+                if (is_null($product)) {
+                    return $this->sendError("المنتج غير موجود", "product is't exists");
+                }
+                $product->delete();
 
             }
-           }
+        }
 
-         $products =Product::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
-         foreach($products as $product)
-           {
-             if (is_null($product) || $product->is_deleted==1 ){
-                    return $this->sendError("المنتج غير موجودة","product is't exists");
-             }
-             $product->update(['is_deleted' => 1]);
-            $success['products']=New ProductResource($product);
+        $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        if (count($products) > 0) {
+            foreach ($products as $product) {
+
+                $product->update(['is_deleted' => 1]);
+                $success['products'] = new ProductResource($product);
 
             }
 
-           $success['status']= 200;
+            $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
+            return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+        } else {
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, '  المنتج غير موجود', 'Product is not exist ');
+
+        }
     }
 
-       public function changeSatusall(Request $request)
-            {
-                $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted',0)->where('importproducts.store_id',auth()->user()->store_id)->whereIn('importproducts.product_id',$request->id)
-                ->get(['products.*', 'importproducts.price','importproducts.status'])->makeHidden(['selling_price','purchasing_price','store_id']);
-            if(!is_null($importproducts))
-            {
-         foreach($importproducts as $importproduct)
-         {
+    public function changeSatusall(Request $request)
+    {
+        $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
+        if (!is_null($importproducts)) {
+            foreach ($importproducts as $importproduct) {
 
-                 $product =Importproduct::where('store_id',auth()->user()->store_id)->where('product_id',$importproduct->id)->first();
-                 if (is_null($product)){
-                     return $this->sendError("المنتج غير موجود","product is't exists");
-                     }
-                     if($product->status === 'active'){
-                        $product->update(['status' => 'not_active']);
-                        }
-                        else{
-                        $product->update(['status' => 'active']);
-                        }
-
-
-             }
-           }
-
-                    $products =Product::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
-                foreach($products as $product)
-                {
-                    if (is_null($product) || $product->is_deleted==1){
-                        return $this->sendError("  المنتج غير موجودة","product is't exists");
-              }
-                    if($product->status === 'active'){
-                $product->update(['status' => 'not_active']);
+                $product = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
+                if (is_null($product)) {
+                    return $this->sendError("المنتج غير موجود", "product is't exists");
                 }
-                else{
-                $product->update(['status' => 'active']);
-                }
-                $success['products']= New ProductResource($product);
-
-                    }
-                    $success['status']= 200;
-
-                return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','product updated successfully');
-           }
-
-        public function importProducts(Request $request){
-             $input = $request->all();
-             $validator =  Validator::make($input ,[
-             'file'=>'required|mimes:csv,txt,xlsx,xls',
-              ]);
-               if ($validator->fails())
-                {
-                 # code...
-                return $this->sendError(null,$validator->errors());
+                if ($product->status === 'active') {
+                    $product->update(['status' => 'not_active']);
+                } else {
+                    $product->update(['status' => 'active']);
                 }
 
-                try {
+            }
+        }
 
-                        Excel::import(new ProductsImport, $request->file);
-                                // Log::alert($row['cover']);
-                                // Log::info($row['cover']);
+        $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        if (count($products) > 0) {
+            foreach ($products as $product) {
 
-                        $success['status']= 200;
+                if ($product->status === 'active') {
+                    $product->update(['status' => 'not_active']);
+                } else {
+                    $product->update(['status' => 'active']);
+                }
+                $success['products'] = new ProductResource($product);
 
-                        return $this->sendResponse($success,'تم إضافة المنتجات بنجاح','products Added successfully');
-                    } catch (ValidationException $e) {
-                        // Handle other import error
-                        // return "eroee";
-                        $failures = $e->failures();
+            }
+            $success['status'] = 200;
 
-                        // Handle validation failures
-                        return $failures;
-                    }
+            return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');
+        } else {
+            $success['status'] = 200;
 
-          }
+            return $this->sendResponse($success, '  المنتج غير موجود', 'Product is not exist ');
+        }
+    }
+    public function importProducts(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'file' => 'required|mimes:csv,txt,xlsx,xls',
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+
+        try {
+
+            Excel::import(new ProductsImport, $request->file);
+            // Log::alert($row['cover']);
+            // Log::info($row['cover']);
+
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم إضافة المنتجات بنجاح', 'products Added successfully');
+        } catch (ValidationException $e) {
+            // Handle other import error
+            // return "eroee";
+            $failures = $e->failures();
+
+            // Handle validation failures
+            return $failures;
+        }
+
+    }
 }

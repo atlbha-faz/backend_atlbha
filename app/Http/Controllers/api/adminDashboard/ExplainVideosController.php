@@ -83,8 +83,8 @@ class ExplainVideosController extends BaseController
     //         //'link' =>$request->link,
     //         'user_id' => auth()->user()->id,
     //       ]);
-        
-        
+
+
     //     $getID3 = new \getID3();
     //     $pathVideo = 'storage/videos/explainvideo/'. $explainvideos->video;
 
@@ -92,9 +92,9 @@ class ExplainVideosController extends BaseController
     //     // dd($fileAnalyze);
     //     $playtimes = $fileAnalyze['playtime_seconds'];
     //     $playtime=gmdate("H:i:s", $playtimes);
-        
+
     //     $explainvideos->update(['duration' => $playtime]);
-        
+
     //    // }
 
     //      // return new CountryResource($country);
@@ -208,7 +208,7 @@ class ExplainVideosController extends BaseController
             # code...
             return $this->sendError(null,$validator->errors());
         }
-        
+
         $explainvideos =$explainVideos->update([
             'title' => $request->input('title'),
              'thumbnail' => $request->thumbnail,

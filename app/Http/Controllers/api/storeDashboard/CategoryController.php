@@ -283,12 +283,10 @@ class CategoryController extends BaseController
     public function deleteall(Request $request)
     {
 
-        $categorys = Category::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
+        $categorys = Category::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
         if (count($categorys) > 0) {
             foreach ($categorys as $category) {
-                if (is_null($category) || $category->is_deleted == 1) {
-                    return $this->sendError("التصنيف غير موجودة", "category is't exists");
-                }
+
                 if ($category->parent_id == null) {
                     $categories = Category::where('parent_id', $category->id)->get();
 
@@ -312,12 +310,10 @@ class CategoryController extends BaseController
     public function changeSatusall(Request $request)
     {
 
-        $categorys = Category::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
+        $categorys = Category::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
         if (count($categorys) > 0) {
             foreach ($categorys as $category) {
-                if (is_null($category) || $category->is_deleted == 1) {
-                    return $this->sendError("  التصنيف غير موجودة", "category is't exists");
-                }
+
                 if ($category->status === 'active') {
                     $category->update(['status' => 'not_active']);
                 } else {
