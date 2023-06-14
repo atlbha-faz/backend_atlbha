@@ -213,12 +213,11 @@ class CouponController extends BaseController
     }
     public function deleteall(Request $request)
     {
-        $coupons = Coupon::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
+        $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+     
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
-                if (is_null($coupon) || $coupon->is_deleted == 1) {
-                    return $this->sendError("الكوبون غير موجودة", "coupon is't exists");
-                }
+
                 $coupon->update(['is_deleted' => 1]);
                 $success['coupons'] = new CouponResource($coupon);
             }
@@ -232,12 +231,10 @@ class CouponController extends BaseController
     public function changeSatusall(Request $request)
     {
 
-        $coupons = Coupon::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
+        $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
-                if (is_null($coupon) || $coupon->is_deleted == 1) {
-                    return $this->sendError("  الكوبون غير موجودة", "coupon is't exists");
-                }
+
                 if ($coupon->status === 'active') {
                     $coupon->update(['status' => 'not_active']);
                 } else {
