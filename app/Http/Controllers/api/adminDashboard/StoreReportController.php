@@ -32,8 +32,8 @@ class StoreReportController extends  BaseController
         ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->count())*100)."%";
          $success['active_of_stores']=Store::where('is_deleted',0)->where('status','active')->count();
          $success['not_active_of_stores']=Store::where('is_deleted',0)->where('status','not_active')->count();
-         $success['latest_stores']=Store::where('is_deleted',0)->where('status','active')->orderBy('id','DESC')->take(5)->get();
-         $success['last_24_hours_of_stores']=Store::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->count();
+         $success['latest_stores']=Store::where('is_deleted',0)->where('status','active')->orderBy('created_at','DESC')->take(5)->get();
+         $success['last_24_hours_of_stores']=Store::where('is_deleted',0)->where('status','active')->where('created_at', '>=', Carbon::now()->subDay())->count();
          $success['last_24_hours_of_pending_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','pending')->count();
          $success['last_24_hours_of_complete_orders']=Websiteorder::where('is_deleted',0)->where('created_at', '>=', Carbon::now()->subDay())->where('type','store')->where('status','accept')->count();
      $success['last_month_of_stores']=Store::where('is_deleted',0)->where('status','active')->where('created_at', '>=', Carbon::now()->month())->count();
@@ -69,11 +69,13 @@ class StoreReportController extends  BaseController
         $startDate2=$request->startDate2;
         $endDate2=$request->endDate2;
 
-        $success['count_of_stores']=Store::where('is_deleted',0)->count();
-        $success['average_of_stores']=((Store::where('is_deleted',0)->whereYear('created_at', Carbon::now()->year)
-        ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->count())*100)."%";
+        $success['count_of_stores']=Store::where('is_deleted',0)->where('status','active')->count();
+        $success['average_of_stores']=((Store::where('is_deleted',0)->where('status','active')->whereYear('created_at', Carbon::now()->year)
+        ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->where('status','active')->count())*100)."%";
 
-         $success['count_of_marketers']=Marketer::all()->count();
+         $success['count_of_marketers']=Marketer::whereHas('user', function($q){
+          $q->where('is_deleted', 0);
+                   })->count();
          $success['average_of_marketers']=((Marketer::whereHas('user', function($q){
             $q->where('is_deleted', 0);})->whereYear('created_at', Carbon::now()->year)
         ->whereMonth('created_at', Carbon::now()->month)->count())/(Marketer::whereHas('user', function($q){

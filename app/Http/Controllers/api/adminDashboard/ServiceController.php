@@ -185,22 +185,29 @@ class ServiceController extends BaseController
      public function deleteall(Request $request)
     {
 
-            $services =Service::whereIn('id',$request->id)->get();
+            $services =Service::whereIn('id',$request->id)->where('is_deleted',0)->get();
+            if(count($services)>0){
            foreach($services as $service)
            {
-             if (is_null($service) || $service->is_deleted==1 ){
-                   return $this->sendError("الخدمة غير موجودة"," service is't exists");
-             }
+          
              $service->update(['is_deleted' => 1]);
              $success['services']= New ServiceResource($service);
 
             }
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف الخدمة بنجاح','service deleted successfully');
-    }
+               }
+                else{
+            $success['status']= 200;
+        return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+        }
+}       
     public function showDetail($service)
     {
-        $service = Service::query()->find($service);
+        $service = Service::where('id',$service)->first();
+        if (is_null($service) || $service->is_deleted==1){
+            return $this->sendError("الخدمة غير موجودة","service is't exists");
+            }
         $orders=  $service->websiteorders;
         $store_id=[];
           if(!is_null($orders)){
@@ -209,12 +216,8 @@ class ServiceController extends BaseController
             $store_id[]=$order->store_id;
         }
         }
-        if (is_null($service) || $service->is_deleted==1){
-        return $this->sendError("الخدمة غير موجودة","service is't exists");
-        }
-
-        $stores =Store::whereIn('id',$store_id)->get();
-
+    
+        $stores =Store::whereIn('id',$store_id)->where('is_deleted',0)->get();
        $success['stores']=  StoreResource::collection($stores);
        $success['status']= 200;
 

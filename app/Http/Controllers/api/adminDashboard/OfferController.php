@@ -198,8 +198,12 @@ class OfferController extends BaseController
      * @param  \App\Models\Offer  $offer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Offer $offer)
+    public function update(Request $request,  $offer)
     {
+        $offer = Offer::query()->find($offer);
+        if (is_null($offer) || $offer->is_deleted==1){
+            return $this->sendError("العرض غير موجود","offer is't exists");
+            }
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'offer_type'=>'required|in:If_bought_gets,fixed_amount,percent',

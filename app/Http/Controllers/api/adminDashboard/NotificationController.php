@@ -91,7 +91,7 @@ class NotificationController extends BaseController
             'store_id' => $request->store_id,
         ];
         $contact = Contact::create($data);
-        $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
+        $users = User::where('store_id',$request->store_id)->where('is_deleted',0)->where('user_type','store')->get();
        foreach($users as  $user)
        {
           Notification::send($user , new emailNotification($data));
@@ -139,7 +139,7 @@ class NotificationController extends BaseController
         ]);
 
         }
-        $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
+        $users = User::where('store_id',$request->store_id)->where('is_deleted',0)->where('user_type','store')->get();
        foreach($users as  $user)
        {
           Notification::send($user , new emailNotification($data));

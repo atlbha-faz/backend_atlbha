@@ -94,7 +94,7 @@ class CouponController extends BaseController
      */
     public function show($coupon)
     {
-        $coupon = Coupon::query()->find($coupon);
+        $coupon = Coupon::where('store_id',null)->where('id',$coupon)->first();
         if (is_null($coupon ) || $coupon->is_deleted==1){
                return $this->sendError("الكوبون غير موجودة","Coupon is't exists");
                }
@@ -107,7 +107,7 @@ class CouponController extends BaseController
 
            public function changeStatus($id)
           {
-              $coupon = Coupon::query()->find($id);
+              $coupon = Coupon::where('store_id',null)->where('id',$id)->first();
               if (is_null($coupon ) || $coupon->is_deleted==1){
                return $this->sendError("الكوبون غير موجودة","coupon is't exists");
                }
@@ -141,9 +141,10 @@ class CouponController extends BaseController
      * @param  \App\Models\Coupon  $coupon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Coupon $coupon)
+    public function update(Request $request,  $coupon)
     {
-        if (is_null($coupon ) || $coupon->is_deleted==1){
+        $coupon =  Coupon::where('id', $coupon)->first();
+        if (is_null($coupon ) || $coupon->is_deleted==1 || $coupon->store_id != null){
             return $this->sendError("الكوبون غير موجودة"," coupon is't exists");
        }
             $input = $request->all();
@@ -183,7 +184,7 @@ class CouponController extends BaseController
      */
     public function destroy($coupon)
     {
-        $coupon =  Coupon::query()->find($coupon);
+        $coupon =  Coupon::where('store_id',null)->where('id',$coupon)->first();
         if (is_null($coupon ) || $coupon->is_deleted==1){
             return $this->sendError("الكوبون غير موجودة","coupon is't exists");
             }
@@ -197,12 +198,11 @@ class CouponController extends BaseController
       public function deleteall(Request $request)
     {
 
-            $coupons =Coupon::whereIn('id',$request->id)->get();
+            $coupons =Coupon::where('store_id',null)->whereIn('id',$request->id)->where('is_deleted',0)->get();
+            if(count($coupons)>0){
            foreach($coupons as $coupon)
            {
-             if (is_null($coupon) || $coupon->is_deleted==1 ){
-                    return $this->sendError("الكوبون غير موجودة","coupon is't exists");
-             }
+            
              $coupon->update(['is_deleted' => 1]);
             $success['coupons']=New CouponResource($coupon);
 
@@ -211,16 +211,23 @@ class CouponController extends BaseController
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف الكوبون بنجاح','coupon deleted successfully');
-    }
+            }
+            else{
+                $success['status']= 200;
+             return $this->sendResponse($success,'المدخلات غير موجودة','id is not exit');
+              }
+
+        
+        }
+
        public function changeSatusall(Request $request)
             {
 
-                    $coupons =Coupon::whereIn('id',$request->id)->get();
+                    $coupons =Coupon::where('store_id',null)->whereIn('id',$request->id)->where('is_deleted',0)->get();
+                    if(count($coupons)>0){
                 foreach($coupons as $coupon)
                 {
-                    if (is_null($coupon) || $coupon->is_deleted==1){
-                        return $this->sendError("  الكوبون غير موجودة","coupon is't exists");
-              }
+                    
                     if($coupon->status === 'active'){
                 $coupon->update(['status' => 'not_active']);
                 }
@@ -233,6 +240,12 @@ class CouponController extends BaseController
                     $success['status']= 200;
 
                 return $this->sendResponse($success,'تم تعديل حالة الكوبون بنجاح','coupon updated successfully');
-           }
+                }
+                else{
+                    $success['status']= 200;
+                return $this->sendResponse($success,'الكوبون غير صحيحة','coupon does not exit');
+                }
+    
+            }
 
 }

@@ -121,8 +121,10 @@ class PackageController extends BaseController
      * @param  \App\Models\Package  $package
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Package $package)
+    public function update(Request $request, $package)
     {
+        $package = Package::query()->find($package);
+
          if (is_null($package) || $package->is_deleted==1){
          return $this->sendError(" الياقة غير موجود","package is't exists");
           }
@@ -224,12 +226,10 @@ class PackageController extends BaseController
        public function changeSatusall(Request $request)
             {
 
-                    $packages =Package::whereIn('id',$request->id)->get();
+                    $packages =Package::whereIn('id',$request->id)->where('is_deleted',0)->get();
+                    if(count($packages)>0){
                 foreach($packages as $package)
                 {
-                    if (is_null($package) || $package->is_deleted==1){
-                        return $this->sendError("  الباقة غير موجودة","package is't exists");
-              }
                     if($package->status === 'active'){
                 $package->update(['status' => 'not_active']);
                 }
@@ -243,6 +243,11 @@ class PackageController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة الباقة بنجاح','package updated successfully');
            }
+           else{
+            $success['status']= 200;
+         return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
+          }
+        }
 
            public function planOfPackage($package_id){
             $arrayplan=array();

@@ -127,8 +127,9 @@ class PackagecouponController extends BaseController
      * @param  \App\Models\Packagecoupon  $packagecoupon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Packagecoupon $packagecoupon)
+    public function update(Request $request,  $packagecoupon)
     {
+        $packagecoupon = Packagecoupon::query()->find($packagecoupon);
         if (is_null($packagecoupon ) || $packagecoupon->is_deleted==1){
             return $this->sendError("الكوبون غير موجودة"," packagecoupon is't exists");
        }

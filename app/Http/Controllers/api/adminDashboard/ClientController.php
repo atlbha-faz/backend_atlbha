@@ -125,8 +125,9 @@ class ClientController extends BaseController
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(Request $request, $client)
      {
+        $client =  Client::where('id', $client)->first();
         if (is_null($client ) ||$client->is_deleted==1){
             return $this->sendError("المندوب غير موجودة","client is't exists");
             }

@@ -118,7 +118,8 @@ class MarketerController extends BaseController
     public function show(Marketer $marketer)
     {
        $marketer = Marketer::query()->find($marketer->id);
-    if (is_null($marketer)){
+       $user= User::query()->find($marketer->user_id);
+    if (is_null($marketer) || $user->is_deleted==1){
          return $this->sendError("المندوب غير موجودة","marketer is't exists");
          }
         $success['$marketers']=New MarketerResource($marketer);
@@ -146,9 +147,13 @@ class MarketerController extends BaseController
      * @param  \App\Models\Marketer  $marketer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Marketer $marketer)
+    public function update(Request $request,  $marketer)
     {
-
+      $marketer =  Marketer::where('id', $marketer)->first();
+      $user= User::query()->find($marketer->user_id);
+      if (is_null($user) || $user->is_deleted==1){
+        return $this->sendError(" المندوب غير موجود","marketer is't exists");
+         }
          $input = $request->all();
        $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
@@ -257,12 +262,11 @@ class MarketerController extends BaseController
     {
       $marketers =Marketer::whereIn('id',$request->id)->get();
       $marketers_id =Marketer::whereIn('id',$request->id)->pluck('user_id')->toArray();
-            $users =User::whereIn('id',$marketers_id)->get();
+            $users =User::whereIn('id',$marketers_id)->where('is_deleted',0)->get();
+            if(count($users)>0){
            foreach($users as $user)
            {
-             if (is_null($user) || $user->is_deleted==1 ){
-                    return $this->sendError("المندوب غير موجود","marketer is't exists");
-             }
+             
              $user->update(['is_deleted' => 1]);
           
 
@@ -272,4 +276,9 @@ class MarketerController extends BaseController
 
             return $this->sendResponse($success,'تم حذف المندوب بنجاح','marketer deleted successfully');
     }
-}
+    else{
+        $success['status']= 200;
+    return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+    }
+    }
+  }

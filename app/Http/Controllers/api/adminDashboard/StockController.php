@@ -295,24 +295,29 @@ class StockController extends BaseController
     {
 
 
-            $products =Product::whereIn('id',$request->id)->where('for','stock')->get();
+            $products =Product::whereIn('id',$request->id)->where('is_deleted',0)->where('for','stock')->get();
+            if(count($products)>0){
            foreach($products as $product)
            {
-             if (is_null($product) || $product->is_deleted==1 || $product->for=="store"){
-                   return $this->sendError("المنتج غير موجودة"," product is't exists");
-             }
+
              $product->update(['is_deleted' => 1]);
         $success['products']= New ProductResource($product);
 
             }
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
-    }
+           }
+          
+          else{
+            $success['status']= 200;
+        return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+        }
+          }
 
  public function addToStore($id)
  {
         $product = Product::query()->where('for','stock')->find($id);
-        // dd($product);
+       
          if (is_null($product ) || $product->is_deleted==1){
          return $this->sendError("المنتج غير موجودة","product is't exists");
          }

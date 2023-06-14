@@ -147,7 +147,7 @@ class CourseController extends BaseController
      */
     public function show($course)
     {
-          $course = Course::query()->find($course);
+          $course = Course::where('id',$course)->first();
          if (is_null($course ) || $course->is_deleted == 1){
          return $this->sendError("الكورس غير موجودة","course is't exists");
          }
@@ -177,9 +177,10 @@ class CourseController extends BaseController
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Course $course)
+    public function update(Request $request,  $course)
     {
-         $course_id=$course->id;
+      $course =  Course::where('id', $course)->first();
+       
         if (is_null($course ) || $course->is_deleted==1){
          return $this->sendError("الكورس غير موجودة","course is't exists");
         }
@@ -199,6 +200,7 @@ class CourseController extends BaseController
             # code...
             return $this->sendError(null,$validator->errors());
         }
+        $course_id=$course->id;
           $course->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
@@ -378,7 +380,7 @@ class CourseController extends BaseController
      */
     public function destroy($course)
      {
-       $course = Course::query()->find($course);
+       $course = Course::where('id',$course)->first();
          if (is_null($course ) || $course->is_deleted==1){
          return $this->sendError("الفيديو غير موجودة","course is't exists");
          }

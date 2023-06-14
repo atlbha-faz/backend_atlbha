@@ -179,9 +179,11 @@ class PageController extends BaseController
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Page $page)
+    public function update(Request $request,  $page)
     {
-        if ($page->is_deleted==1){
+        $page = Page::query()->find($page);
+        if (is_null($page) || $page->is_deleted==1){
+         
             return $this->sendError("الصفحة غير موجودة","Page is't exists");
        }
 
@@ -272,30 +274,32 @@ class PageController extends BaseController
   public function deleteall(Request $request)
     {
 
-            $pages =Page::whereIn('id',$request->id)->where('store_id',null)->get();
+            $pages =Page::whereIn('id',$request->id)->where('is_deleted',0)->where('store_id',null)->get();
+            if(count($pages)>0){
            foreach($pages as $page)
            {
-             if (is_null($page) || $page->is_deleted==1 ){
-                    return $this->sendError("الصفحة غير موجودة","page is't exists");
-             }
+             
              $page->update(['is_deleted' => 1]);
             $success['pages']=New PageResource($page);
 
             }
 
            $success['status']= 200;
-
             return $this->sendResponse($success,'تم حذف الصفحة بنجاح','page deleted successfully');
+        }
+        else{
+            $success['status']= 200;
+        return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+        }
     }
        public function changeSatusall(Request $request)
             {
 
-                    $pages =Page::whereIn('id',$request->id)->where('store_id',null)->get();
+                    $pages =Page::whereIn('id',$request->id)->where('is_deleted',0)->where('store_id',null)->get();
+                    if(count($pages)>0){
                 foreach($pages as $page)
                 {
-                    if (is_null($page) || $page->is_deleted==1){
-                        return $this->sendError("  الصفحة غير موجودة","page is't exists");
-              }
+                    
                     if($page->status === 'active'){
                 $page->update(['status' => 'not_active']);
                 }
@@ -309,5 +313,10 @@ class PageController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','page updated successfully');
            }
+           else{
+            $success['status']= 200;
+        return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+        }
+        }
     
 }

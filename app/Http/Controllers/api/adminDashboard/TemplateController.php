@@ -129,8 +129,9 @@ class TemplateController extends BaseController
      * @param  \App\Models\Template  $template
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Template $template)
+    public function update(Request $request,  $template)
      {
+        $template =Template::query()->find($template);
         if (is_null($template) || $template->is_deleted==1){
             return $this->sendError("التصنيف غير موجودة"," template is't exists");
        }

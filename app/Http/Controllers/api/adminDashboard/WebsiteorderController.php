@@ -89,9 +89,9 @@ class WebsiteorderController extends BaseController
      * @param  \App\Models\Websiteorder  $websiteorder
      * @return \Illuminate\Http\Response
      */
-    public function show(Websiteorder $websiteorder)
+    public function show($websiteorder)
     {
-
+        $websiteorder =Websiteorder::query()->find($websiteorder);
         if (is_null($websiteorder) || $websiteorder->is_deleted==1){
                return $this->sendError("  الطلب غير موجودة","websiteorder is't exists");
                }
@@ -119,8 +119,9 @@ class WebsiteorderController extends BaseController
      * @param  \App\Models\Websiteorder  $websiteorder
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Websiteorder $websiteorder)
+    public function update(Request $request,  $websiteorder)
     {
+        $websiteorder =Websiteorder::query()->find($websiteorder);
         if ( is_null($websiteorder) || $websiteorder->is_deleted==1){
             return $this->sendError(" الطلب غير موجودة"," websiteorder is't exists");
        }
@@ -172,12 +173,10 @@ class WebsiteorderController extends BaseController
 
     public function deleteall(Request $request)
     {
-            $websiteorders =Websiteorder::whereIn('id',$request->id)->get();
+            $websiteorders =Websiteorder::whereIn('id',$request->id)->where('is_deleted',0)->get();
+            if(count($websiteorders)>0){
            foreach($websiteorders as $websiteorder)
            {
-             if (is_null($websiteorder) || $websiteorder->is_deleted==1 ){
-                    return $this->sendError("الطلب غير موجودة","websiteorder is't exists");
-             }
              $websiteorder->update(['is_deleted' => 1]);
             $success['websiteorder']=New WebsiteorderResource($websiteorder);
 
@@ -186,7 +185,12 @@ class WebsiteorderController extends BaseController
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف الطلب بنجاح','websiteorder deleted successfully');
-    }
+             }
+             else{
+                $success['status']= 200;
+            return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+            }
+             }
 
 
            public function acceptStore($websiteorder)

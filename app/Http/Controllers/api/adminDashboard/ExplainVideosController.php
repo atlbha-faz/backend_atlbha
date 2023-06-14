@@ -47,6 +47,62 @@ class ExplainVideosController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function store(Request $request)
+    // {
+
+
+    //     $input = $request->all();
+    //     $validator =  Validator::make($input ,[
+    //         'title'=>'required|string|max:255',
+    //         'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+    //         'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //        // 'link'=>'required|url',
+
+    //     ]);
+    //     if ($validator->fails())
+    //     {
+    //         return $this->sendError(null,$validator->errors());
+    //     }
+    //   /*  $fileName =  $request->video->getClientOriginalName();
+    //     $filePath = 'videos/explainvideo/' . $fileName;
+
+    //     $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
+
+    //     // File URL to access the video in frontend
+    //     $url = Storage::disk('public')->url($filePath);
+    //     */
+
+    //     // dd($playtime);
+    //    // if ($isFileUploaded) {
+    //     $explainvideos = ExplainVideos::create([
+    //         'title' => $request->title,
+    //         'duration' => '00:00:00',
+    //         'video' => $request->video,
+    //         // 'name'=> $fileName ,
+    //         'thumbnail' =>$request->thumbnail,
+    //         //'link' =>$request->link,
+    //         'user_id' => auth()->user()->id,
+    //       ]);
+
+
+    //     $getID3 = new \getID3();
+    //     $pathVideo = 'storage/videos/explainvideo/'. $explainvideos->video;
+
+    //     $fileAnalyze = $getID3->analyze($pathVideo);
+    //     // dd($fileAnalyze);
+    //     $playtimes = $fileAnalyze['playtime_seconds'];
+    //     $playtime=gmdate("H:i:s", $playtimes);
+
+    //     $explainvideos->update(['duration' => $playtime]);
+
+    //    // }
+
+    //      // return new CountryResource($country);
+    //      $success['explainvideos']=New ExplainVideoResource($explainvideos);
+    //     $success['status']= 200;
+
+    //      return $this->sendResponse($success,'تم إضافة فيديو بنجاح','video Added successfully');
+    // }
     public function store(Request $request)
     {
 
@@ -63,39 +119,31 @@ class ExplainVideosController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-      /*  $fileName =  $request->video->getClientOriginalName();
-        $filePath = 'videos/explainvideo/' . $fileName;
+        $fileName =  $request->video->getClientOriginalName();
+        $filePath = 'videos/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
 
         // File URL to access the video in frontend
         $url = Storage::disk('public')->url($filePath);
-        */
-
-        // dd($playtime);
-       // if ($isFileUploaded) {
-        $explainvideos = ExplainVideos::create([
-            'title' => $request->title,
-            'duration' => '00:00:00',
-            'video' => $request->vedio,
-            // 'name'=> $fileName ,
-            'thumbnail' =>$request->thumbnail,
-            //'link' =>$request->link,
-            'user_id' => auth()->user()->id,
-          ]);
-
-
         $getID3 = new \getID3();
-        $pathVideo = 'storage/videos/explainvideo/'. $explainvideos->video;
+        $pathVideo = 'storage/videos/'. $fileName;
 
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
         $playtimes = $fileAnalyze['playtime_seconds'];
         $playtime=gmdate("H:i:s", $playtimes);
 
-        $explainvideos->update(['duration' => $playtime]);
-
-       // }
+        // dd($playtime);
+        if ($isFileUploaded) {
+        $explainvideos = ExplainVideos::create([
+            'title' => $request->title,
+            'duration' => $playtime,
+            'video' => $fileName,
+            'thumbnail' =>$request->thumbnail,
+            'user_id' => auth()->user()->id,
+          ]);
+        }
 
          // return new CountryResource($country);
          $success['explainvideos']=New ExplainVideoResource($explainvideos);
