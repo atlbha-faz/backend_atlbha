@@ -161,7 +161,7 @@ Route::get('changeReplaycontactStatus/{id}', [App\Http\Controllers\api\adminDash
 Route::get('changeContactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ContactController::class,'changeStatus']);
 Route::get('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class,'changeStatus']);
 Route::get('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class,'changeStatus']);
-Route::get('changeStoreStatus', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeStatus']);
+Route::get('changeStoreStatus', [App\Http\Controllers\api\adminDashboard\StoreController::class,'changeSatusall']);
 Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class,'changeStatus']);
 Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class,'changeStatus']);
 Route::get('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class,'changeStatus']);

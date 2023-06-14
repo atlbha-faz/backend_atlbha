@@ -129,8 +129,9 @@ class PlatformController extends BaseController
      * @param  \App\Models\GeneralShop  $generalShop
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Platform $platform)
+    public function update(Request $request,  $platform)
     {
+        $platform = Platform::query()->find($platform);
         if (is_null($platform ) || $platform->is_deleted==1){
             return $this->sendError("االسوق غير موجودة","platform is't exists");
                 }

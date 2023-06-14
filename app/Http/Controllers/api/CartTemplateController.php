@@ -61,15 +61,18 @@ class CartTemplateController extends BaseController
 
         $input = $request->all();
                 $validator =  Validator::make($input ,[
-
-                    'id' => [
+                    'data' => 'nullable|array',
+                    'data.*.id' => [
                         'required',
-                         Rule::exists('products')->where(function($query){
+                        //  Rule::exists('products')->where(function($query){
 
-                                    $query->where('store_id', auth()->user()->store_id)
-                                          ->where('id', request()->id);
-                         })
-                    ]
+                        //             $query->where('store_id', auth()->user()->store_id)
+                        //                   ->where('id', request()->id);
+                        //  })
+                        ],
+                      
+            'data.*.price' => 'required|numeric',
+            'data.*.qty' => 'required|numeric',
                 ]);
                 if ($validator->fails())
                 {
@@ -87,16 +90,18 @@ class CartTemplateController extends BaseController
                     'count' => 0
                 ]);
                 $cartid =$cart->id;
-
+                if (!is_null($request->data)) {
+                    foreach ($request->data as $data) {
          $cartDetail = CartDetail::updateOrCreate([
             'cart_id' => $cartid,
-            'product_id' => $request->id,
+            'product_id' => $data['id'],
           ], [
-            'qty' =>$request->qty,
-             'price'=>$request->price,
-             'option'=>$request->option
+            'qty' =>$data['qty'],
+             'price'=>$data['price'],
+            //  'option'=>$data['option'],
           ]);
-
+        }
+    }
           $cart->update([
             'total' => CartDetail::where('cart_id',$cartid)->get()->reduce(function ($total, $item) {
                     return $total + ($item->qty * $item->price);
@@ -117,13 +122,21 @@ class CartTemplateController extends BaseController
     public function delete($id)
     {
         $cart_id=Cart::where('user_id',auth()->user()->id)->pluck('id')->first();
+        
         $cart =CartDetail::where('product_id',$id)->where('cart_id',$cart_id)->first();
         // $cart =CartDetail::where('id',$id)->first();
           if (is_null($cart)){
                 return $this->sendError("المنتج غير موجودة"," product is't exists");
     }
            $cart->delete();
-        
+           $newCart=Cart::where('id',$cart_id)->first();
+           $newCart->update([
+            'total' => CartDetail::where('cart_id',$cart_id)->get()->reduce(function ($total, $item) {
+                    return $total + ($item->qty * $item->price);
+                              }),
+             'count'=> CartDetail::where('cart_id',$cart_id)->count()
+            ]);
+      
         $success=New CartResource(Cart::where('user_id',auth()->user()->id)->first());
         $success['status']= 200;
          return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');

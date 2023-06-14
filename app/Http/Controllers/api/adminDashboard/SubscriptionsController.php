@@ -39,13 +39,11 @@ class SubscriptionsController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $stores =Store::whereIn('id',$request->id)->get();
-        
+            $stores =Store::whereIn('id',$request->id)->where('is_deleted',0)->get();
+            if(count($stores)>0){
            foreach($stores as $store)
            {
-             if (is_null($store) || $store->is_deleted==1 ){
-                    return $this->sendError("الاشتراك غير موجودة","Subscriptions is't exists");
-             }
+            
              $store_package=Package_store::where('package_id',$store->package_id)->first();
              if (is_null($store_package) || $store_package->is_deleted==1){
             }
@@ -60,16 +58,20 @@ class SubscriptionsController extends BaseController
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف الاشتراك بنجاح','Subscriptions deleted successfully');
+        }
+        else{
+            $success['status']= 200;
+         return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
+          }
     }
        public function changeSatusall(Request $request)
             {
 
-                    $stores =Store::whereIn('id',$request->id)->get();
-                foreach($stores as $store)
+                    $stores =Store::whereIn('id',$request->id)->where('is_deleted',0)->get();
+                    if(count($stores)>0){
+                    foreach($stores as $store)
                 {
-                    if (is_null($store) || $store->is_deleted==1){
-                        return $this->sendError("  الاشتراك غير موجودة","Subscriptions is't exists");
-              }
+                 
               $store_package=Package_store::where('package_id',$store->package_id)->first();
               if( $store->package_id != null){
               $store->update(['package_id' => null]);
@@ -91,7 +93,11 @@ class SubscriptionsController extends BaseController
 
                 return $this->sendResponse($success,'تم تعديل حالة الاشتراك بنجاح','Subscriptions updated successfully');
            }
-
+           else{
+            $success['status']= 200;
+         return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
+          }
+        }
            public function addAlert(Request $request)
            {
                $input = $request->all();

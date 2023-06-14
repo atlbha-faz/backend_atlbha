@@ -115,8 +115,9 @@ class ReplaycommentController extends BaseController
      * @param  \App\Models\Replaycomment  $replaycomment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Replaycomment $replaycomment)
+    public function update(Request $request,  $replaycomment)
      {
+        $replaycomment = Replaycomment::query()->find($replaycomment);
          if (is_null($replaycomment ) || $replaycomment->is_deleted==1){
          return $this->sendError(" التعليق غير موجود","replay comment is't exists");
           }

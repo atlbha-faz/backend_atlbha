@@ -115,13 +115,11 @@ class CurrencyController extends BaseController
 
 public function changeSatusall(Request $request)
             {
-
-                    $currencys =Currency::whereIn('id',$request->id)->get();
+                    $currencys =Currency::whereIn('id',$request->id)->where('is_deleted',0)->get();
+                    if(count($currencys)>0){
                 foreach($currencys as $currency)
                 {
-                    if (is_null($currency) || $currency->is_deleted==1){
-                        return $this->sendError("  الصفحة غير موجودة","currency is't exists");
-              }
+                   
                     if($currency->status === 'active'){
                 $currency->update(['status' => 'not_active']);
                 }
@@ -135,6 +133,11 @@ public function changeSatusall(Request $request)
 
                 return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','currency updated successfully');
            }
+           else{
+            $success['status']= 200;
+         return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
+          }
+        }
 
     /**
      * Show the form for editing the specified resource.

@@ -29,7 +29,7 @@ class VerificationController extends BaseController
     public function index()
     {
 
-        $success['stores']=VerificationResource::collection(Store::where('is_deleted',0,)->where('verification_status','!=','pending')->get());
+        $success['stores']=VerificationResource::collection(Store::where('is_deleted',0)->where('verification_status','!=','pending')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
@@ -41,8 +41,9 @@ class VerificationController extends BaseController
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
          $date = Carbon::now()->toDateTimeString();
+        
         $store->update(['verification_status' => 'accept',
-                  'verification_date'=>$date]);
+                  'verification_date'=>  $date]);
         $users = User::where('store_id', $store->id)->get();
         $data = [
             'message' => ' تم قبول توثيق المتجر',
@@ -138,6 +139,9 @@ class VerificationController extends BaseController
     public function verification_update(Request $request)
     {
       $store = Store::query()->find($request->store_id);
+      if (is_null($store) || $store->is_deleted==1){
+        return $this->sendError("المتجر غير موجودة"," store is't exists");
+           }
         $input = $request->all();
         $validator =  Validator::make($input ,[
            'activity_id' =>'required|array',
@@ -189,7 +193,8 @@ class VerificationController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $stores =Store::whereIn('id',$request->id)->get();
+            $stores =Store::whereIn('id',$request->id)->where('is_deleted',0)->get();
+            if(count($stores)>0){
            foreach($stores as $store)
            {
             if (is_null($store) || $store->is_deleted==1){
@@ -198,11 +203,17 @@ class VerificationController extends BaseController
                $store->update([
             'link' =>  null,
             'file' =>  null,
-               'verification_status'=>'pending'
+               'verification_status'=>'pending',
+               'verification_date'=>null
                ]);
             }
                $success['stores']= VerificationResource::collection($stores);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المتجر بنجاح','store deleted successfully');
     }
+    else{
+        $success['status']= 200;
+    return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
+    }
+}
 }

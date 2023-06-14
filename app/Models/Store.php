@@ -15,7 +15,7 @@ class Store extends Model
 {
     use HasFactory;
      protected $fillable = ['store_name','store_email','domain','slug','icon','description','business_license','phonenumber','commercialregistertype','confirmation_status','confirmation_date','link','verification_status',
-     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period',
+     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period','verification_date',
      'periodtype','special','file','tiktok','status','is_deleted'];
 
      public function rate($id){

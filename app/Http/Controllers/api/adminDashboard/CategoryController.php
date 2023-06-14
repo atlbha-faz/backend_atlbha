@@ -184,12 +184,13 @@ if($request->data){
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request,  $category)
     {
-          $category_id=$category->id;
+        $category = Category::where('id', $category)->where('store_id', null)->first();
         if (is_null($category) ||  $category->is_deleted==1 || $category->for=='store'){
             return $this->sendError("التصنيف غير موجودة"," Category is't exists");
        }
+       $category_id=$category->id;
         // if($request->parent_id == null){
 
             $input = $request->all();
@@ -263,7 +264,7 @@ if($request->data){
      */
     public function destroy($category)
     {
-        $category =Category::query()->find($category);
+        $category =Category::query()->where('for','etlobha')->where('store_id', null)->find($category);
         if (is_null($category) || $category->is_deleted==1){
             return $this->sendError("القسم غير موجودة","category is't exists");
             }
@@ -285,12 +286,11 @@ if($request->data){
      public function deleteall(Request $request)
     {
 
-            $categorys =Category::whereIn('id',$request->id)->where('for','etlobha')->get();
+            $categorys =Category::whereIn('id',$request->id)->where('for','etlobha')->where('store_id', null)->where('is_deleted',0)->get();
+            if(count($categorys)>0){
            foreach($categorys as $category)
            {
-             if (is_null($category) || $category->is_deleted==1 ){
-                    return $this->sendError("التصنيف غير موجودة","category is't exists");
-             }
+          
 
              $category->update(['is_deleted' => 1]);
             $success['categorys']=New CategoryResource($category);
@@ -300,16 +300,20 @@ if($request->data){
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف التصنيف بنجاح','category deleted successfully');
-    }
+             }
+             else{
+                $success['status']= 200;
+            return $this->sendResponse($success,'المدخلات غير موجودة','id does not exit');
+            }
+             }
        public function changeSatusall(Request $request)
             {
 
-                    $categorys =Category::whereIn('id',$request->id)->where('for','etlobha')->get();
+                    $categorys =Category::whereIn('id',$request->id)->where('for','etlobha')->where('is_deleted',0)->get();
+                    if(count($categorys)>0){
                 foreach($categorys as $category)
                 {
-                    if (is_null($category) || $category->is_deleted==1){
-                        return $this->sendError("  التصنيف غير موجودة","category is't exists");
-              }
+                 
                     if($category->status === 'active'){
                 $category->update(['status' => 'not_active']);
                 }
@@ -323,4 +327,9 @@ if($request->data){
 
                 return $this->sendResponse($success,'تم تعديل حالة التصنيف بنجاح','category updated successfully');
            }
+           else{
+            $success['status']= 200;
+        return $this->sendResponse($success,'المدخلات غير موجودة','id does not exit');
+        }
+        }
 }

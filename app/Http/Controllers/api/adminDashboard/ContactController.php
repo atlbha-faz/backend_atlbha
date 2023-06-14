@@ -122,8 +122,9 @@ class ContactController extends BaseController
      * @param  \App\Models\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Contact $contact)
+    public function update(Request $request,$contact)
     {
+        $contact =  Contact::where('id', $contact)->first();
         if (is_null($contact) ||$contact->is_deleted==1){
             return $this->sendError("بيانات التواصل غير موجودة"," contact is't exists");
        }
@@ -176,12 +177,11 @@ class ContactController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $contacts =Contact::whereIn('id',$request->id)->get();
+            $contacts =Contact::whereIn('id',$request->id)->where('is_deleted',0)->get();
+            if(count($contacts)>0){
            foreach($contacts as $contact)
            {
-             if (is_null($contact) || $contact->is_deleted==1 ){
-                    return $this->sendError("الصفحة غير موجودة","contact is't exists");
-             }
+             
              $contact->update(['is_deleted' => 1]);
             $success['contacts']=New ContactResource($contact);
 
@@ -190,5 +190,10 @@ class ContactController extends BaseController
            $success['status']= 200;
 
             return $this->sendResponse($success,'تم حذف البريد بنجاح','contact deleted successfully');
-    }
+            }
+            else{
+                $success['status']= 200;
+             return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
+              }
+           }
 }
