@@ -126,6 +126,9 @@ class UserController  extends BaseController
     public function update(Request $request, $id)
     {
         $user =User::query()->find($id);
+        if (is_null($user) || $user->is_deleted==1){
+            return $this->sendError("المستخدم غير موجودة","user is't exists");
+            }
 
         $input = $request->all();
         $validator =  Validator::make($input ,[

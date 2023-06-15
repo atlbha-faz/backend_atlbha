@@ -44,7 +44,7 @@ else{
             'email'=>'required|email|unique:users',
             'store_email'=>'required_if:user_type,store|email|unique:stores',
             'password'=>'required',
-            'domain'=>'required_if:user_type,store|url',
+            'domain'=>'required_if:user_type,store|url|unique:stores',
             'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users,phonenumber'],
             'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'activity_id' =>'required_if:user_type,store|array|exists:activities,id',

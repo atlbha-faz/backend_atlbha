@@ -160,7 +160,6 @@ class EtlobhaController extends BaseController
             'description' => $request->input('description'),
             'purchasing_price' => $request->input('purchasing_price'),
             'selling_price' => $request->input('selling_price'),
-            'slug' => $request->input('slug'),
             'quantity' => $request->input('quantity'),
             'less_qty' => $request->input('less_qty'),
             'stock' => $request->input('stock'),
@@ -260,8 +259,6 @@ class EtlobhaController extends BaseController
             $products =Product::whereIn('id',$request->id)->where('is_deleted',0)->where('for','etlobha')->get();
             if(count($products)>0){
             foreach($products as $product){
-
-
                $product->update(['is_deleted' => 1]);
             }
                $success['products']= ProductResource::collection($products);

@@ -43,7 +43,9 @@ class NotificationController extends BaseController
     }
     public function show($id){
         $userNotification =  NotificationModel::query()->find($id);
-
+        if (is_null($userNotification) ){
+            return $this->sendError("الاشعار غير موجود"," Notification is't exists");
+       }
         $success['notifications']=new NotificationResource($userNotification);
         $success['status']= 200;
 
@@ -64,12 +66,20 @@ class NotificationController extends BaseController
     public function deleteNotificationAll(Request $request)
     {
         $notifications = NotificationModel::whereIn('id',$request->id)->get();
+        if(count($notifications)>0)
+        {
      foreach($notifications  as $notification ){
            $notification->delete();
      }
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف الاشعار بنجاح','notification deleted successfully');
     }
+    else{
+        $success['status']= 200;
+        return $this->sendResponse($success,'الاشعار غير موجود','id does not exit');
+        
+    }
+}
 
     public function addEmail(Request $request)
     {
