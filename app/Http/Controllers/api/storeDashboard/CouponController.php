@@ -155,7 +155,7 @@ class CouponController extends BaseController
         }
         $input = $request->all();
         $validator = Validator::make($input, [
-            'code' => 'required|string|unique:coupons,code,' . $coupon->id,
+            'code' => ['required','regex:/^[a-zA-Z0-9]+$/','unique:coupons,code,'.$coupon->id],
             'discount_type' => 'required|in:fixed,percent',
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
@@ -214,7 +214,7 @@ class CouponController extends BaseController
     public function deleteall(Request $request)
     {
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
-     
+
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
 
