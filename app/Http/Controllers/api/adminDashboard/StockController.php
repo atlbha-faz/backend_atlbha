@@ -68,7 +68,6 @@ class StockController extends BaseController
           'selling_price'=>['required','numeric','gt:0'],
           'stock'=>['required','numeric','gt:0'],
           'amount'=>['required','numeric'],
-
           'quantity'=>['required_if:amount,0','numeric','gt:0'],
           'less_qty'=>['required_if:amount,0','numeric','gt:0'],
           'images'=>'required|array',
@@ -221,7 +220,6 @@ class StockController extends BaseController
               'description' => $request->input('description'),
               'purchasing_price' => $request->input('purchasing_price'),
               'selling_price' => $request->input('selling_price'),
-              'slug' =>$request->input('slug'),
               'quantity' =>$request->input('quantity'),
               'less_qty' =>$request->input('less_qty'),
               'stock' => $request->input('stock'),
