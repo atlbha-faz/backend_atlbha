@@ -157,15 +157,15 @@ class ProductController extends BaseController
 
         $importproductt = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $id)
             ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
-          
+
         if (!is_null($importproductt)) {
 
             $importproduct = Importproduct::where('product_id', $id)->first();
-          
+
             $importproduct->update([
                 'price' => $request->selling_price,
             ]);
-            
+
             $success['products'] = new importsResource($importproductt);
             $success['status'] = 200;
 
@@ -266,7 +266,7 @@ class ProductController extends BaseController
 
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
             ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
-        if (count($importproducts)>0) {
+        if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
                 $product = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
@@ -287,19 +287,18 @@ class ProductController extends BaseController
 
             }
 
-            
-        } 
+        }
         $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');    
-        
+        return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+
     }
 
     public function changeSatusall(Request $request)
     {
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
             ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
-        if (count($importproducts)>0) {
+        if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
                 $product = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
@@ -334,7 +333,7 @@ class ProductController extends BaseController
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');
-        } 
+        }
     }
     public function importProducts(Request $request)
     {

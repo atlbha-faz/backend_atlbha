@@ -19,40 +19,40 @@ class importsResource extends JsonResource
         }else{
             $status = 'غير نشط';
         }
-        
-        if($this->special ==null || $this->special == 'special'){
+
+        if ($this->special == null || $this->special == 'special') {
             $special = 'مميز';
-        }else{
+        } else {
             $special = 'غير مميز';
         }
-        
-       return [
-           "type" =>"importProduct",
-            'id' =>$this->id,
+
+        return [
+            "type" => "importProduct",
+            'id' => $this->id,
             'name' => $this->name,
             //'sku' => $this->sku,
             'for' => $this->for,
-             'slug' => $this->slug,
+            'slug' => $this->slug,
             'description' => $this->description,
             'selling_price' => $this->price,
             'quantity' => $this->quantity,
             'less_qty' => $this->less_qty,
             'stock' => $this->stock,
             'tags' => $this->tags,
-            'cover' =>$this->cover,
-            'discount_price'=>$this->discount_price,
-            'discount_percent'=>$this->discount_percent,
-            'SEOdescription'=>$this->SEOdescription,
-            'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id',explode(',',$this->subcategory_id))->get()),
+            'cover' => $this->cover,
+            'discount_price' => $this->discount_price,
+            'discount_percent' => $this->discount_percent,
+            'SEOdescription' => $this->SEOdescription,
+            'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id', explode(',', $this->subcategory_id))->get()),
             'status' => $status,
-            'special' => $special ,
+            'special' => $special,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'category' => New CategoryResource($this->category),
+            'category' => new CategoryResource($this->category),
             //  'images' => ImageResource::collection($this->image),
-             'is_import' =>true,
-          
-       ];
+            'is_import' => true,
+
+        ];
     }
 }
