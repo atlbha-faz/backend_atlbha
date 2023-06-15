@@ -90,7 +90,7 @@ class ContactController extends BaseController
     public function changeStatus($id)
     {
         $contact = Contact::query()->find($id);
-        if ($contact->is_deleted==1){
+        if (is_null($contact) || $contact->is_deleted==1){
          return $this->sendError("بيانات التواصل غير موجودة","contact is't exists");
          }
         if($contact->status === 'active'){
