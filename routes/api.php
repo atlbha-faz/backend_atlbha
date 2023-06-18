@@ -48,9 +48,11 @@ Route::get('category/{id}',[App\Http\Controllers\api\IndexStoreController::class
 Route::get('storeProductCategory',[App\Http\Controllers\api\IndexStoreController::class,'storeProductCategory']);
 Route::get('productSearch',[App\Http\Controllers\api\IndexStoreController::class,'productSearch']);
 
+
 Route::middleware([SetActiveStore::class])->group(function(){
-Route::get('indexStoree',[App\Http\Controllers\api\IndexStoreController2::class,'index']);
+Route::get('indexStore',[App\Http\Controllers\api\IndexStoreController2::class,'index']);
 });
+
 Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
 Route::post('addCart', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
 Route::get('deleteCart/{id}', [App\Http\Controllers\api\CartTemplateController::class,'delete']);
