@@ -52,7 +52,7 @@ class ServiceController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'name'=>'required',
+            'name'=>'required|string|max:255',
             'description'=>'required|string',
             'file'=>'required',
             'price'=>['required','numeric','gt:0'],
