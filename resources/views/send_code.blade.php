@@ -1,1 +1,1 @@
-code:	{{$data['name']
+code:	{{$data['name']}}
