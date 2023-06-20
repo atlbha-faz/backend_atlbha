@@ -39,6 +39,9 @@ return new class extends Migration
             $table->timestamp('verify_code_expires_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->unique(['email', 'user_type']);
+            $table->unique(['phonenumber', 'user_type']);
+
         });
     }
 
