@@ -108,11 +108,11 @@ class PasswordResetController extends BaseController
                 'code'   =>   $user->code,
             );
 
-           try{
+           //try{
                  Mail::to($user->email)->send(new SendCode($data));
-            }catch(\Exception $e){
+            /*}catch(\Exception $e){
             return $this->sendError('صيغة البريد الالكتروني غير صحيحة','The email format is incorrect.');
-            }
+            }*/
 
 
 
