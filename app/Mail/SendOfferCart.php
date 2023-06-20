@@ -29,7 +29,7 @@ class SendOfferCart extends Mailable
      */
     public function build()
     {
-        return $this->from('rawaa.faz.it@gmail.com')->subject('E-mail from atlbha.net Contact Form')->view('send_offer_template')->with('data',$this->data);
+        return $this->from('support@atlbha.com')->subject('E-mail from atlbha.net Contact Form')->view('send_offer_template')->with('data',$this->data);
     
     }
 }
