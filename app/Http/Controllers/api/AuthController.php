@@ -73,7 +73,7 @@ else{
                 'user_name' => $request->user_name,
                 'user_type' => "store",
                 'password'=>$request->password,
-                'phonenumber' => $request->userphonenumber,
+                'phonenumber' => $request->phonenumber,
                 
             ]);
         if($request->user_type=="store"){
