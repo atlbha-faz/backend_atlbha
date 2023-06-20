@@ -39,7 +39,7 @@ else{
         $validator =  Validator::make($input ,[
             'checkbox_field' => 'required|in:1',
             'user_type'=>'required|in:store,marketer',
-            'name'=>'required|string|max:255',
+           // 'name'=>'required|string|max:255',
             'user_name'=>'required|string|max:255|unique:users',
             //'store_name'=>'required_if:user_type,store|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
