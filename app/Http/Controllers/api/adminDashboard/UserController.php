@@ -78,8 +78,8 @@ class UserController  extends BaseController
              'image' => $request->image,
 
           ]);
-        
-        
+
+
     $user->assignRole($request->role);
 
          $success['activities']=New UserResource($user );
@@ -152,7 +152,7 @@ class UserController  extends BaseController
             'user_name' => $request->input('user_name'),
             'phonenumber' => $request->input('phonenumber'),
              'image' => $request->image,
-             
+
         ]);
           if(!is_null($request->password)){
             $user->update([
@@ -160,8 +160,8 @@ class UserController  extends BaseController
       ]);
         }
 
-        
-        
+
+
   $user->assignRole($request->role);
 
         $success['users']=New UserResource($user);
@@ -198,7 +198,7 @@ class UserController  extends BaseController
             if(count($users)>0){
            foreach($users as $user)
            {
-            
+
              $user->update(['is_deleted' => 1]);
             $success['users']=New UserResource($user);
 
