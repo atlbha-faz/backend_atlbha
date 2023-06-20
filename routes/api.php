@@ -33,9 +33,14 @@ Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mo
 
 Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi','App\Http\Controllers\api\AuthController@login_admin');
-Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
+// Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
 Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
+// login template
+Route::post('/logincustomerphoneapi', 'App\Http\Controllers\api\AuthController@login_customer');
+Route::post('/logincustomeremailapi', 'App\Http\Controllers\api\AuthController@login_customer_email');
+Route::post('/registerUser', 'App\Http\Controllers\api\AuthController@registerUser');
+
 //  index Ettlobha page
 
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
