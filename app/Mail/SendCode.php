@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendOfferCart extends Mailable
+class SendCode extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,7 +29,7 @@ class SendOfferCart extends Mailable
      */
     public function build()
     {
-        return $this->from('support@atlbha.com')->subject('E-mail from atlbha.net Contact Form')->view('send_offer_template')->with('data',$this->data);
+        return $this->from('support@atlbha.com')->subject('E-mail from atlbha.net Contact Form')->view('send_code_template')->with('data',$this->data);
     
     }
 }

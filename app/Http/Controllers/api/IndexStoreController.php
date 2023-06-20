@@ -22,6 +22,11 @@ class IndexStoreController extends BaseController
 {
     public function index($id)
     {
+        $store = Store::where('domain',$id)->first();
+        if (is_null($store) || $store->is_deleted == 1) {
+            return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+        $id = $store->id;
         // visit count
         // $homepage=Homepage::where('is_deleted',0)->where('store_id',null)->first();
         //   views($homepage)->record();

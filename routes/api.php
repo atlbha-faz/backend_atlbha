@@ -93,9 +93,10 @@ Route::group([
     'prefix' => 'password'
 ], function () {
     Route::post('create', 'App\Http\Controllers\api\PasswordResetController@create');
+    Route::post('create-by-email', 'App\Http\Controllers\api\PasswordResetController@create_by_email');
     Route::get('find/{token}', 'App\Http\Controllers\api\PasswordResetController@find');
     Route::post('verify', 'App\Http\Controllers\api\PasswordResetController@verifyContact');
-    Route::post('reset', 'App\Http\Controllers\api\PasswordResetController@reset');
+    Route::post('reset2', 'App\Http\Controllers\api\PasswordResetController@reset');
 });
 
 
