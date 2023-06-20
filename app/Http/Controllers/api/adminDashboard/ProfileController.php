@@ -34,14 +34,14 @@ class ProfileController extends BaseController
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->where('user_type', 'admin_employee')->orWhere('user_type', 'admin')
+                return $query->whereIn('user_type', ['admin_employee','admin'])
                     ->where('id', '!=', $user->id);
             }),
             ],
             'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'confirm_password' => 'required_if:password,required|same:password',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->where('user_type', 'admin_employee')->orWhere('user_type', 'admin')
+                return $query->whereIn('user_type', ['admin_employee','admin'])
                     ->where('id', '!=', $user->id);
             }),
             ],

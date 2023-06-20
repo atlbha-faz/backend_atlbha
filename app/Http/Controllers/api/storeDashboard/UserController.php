@@ -135,7 +135,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->where('user_type', 'store_employee')
+                return $query->whereIn('user_type', ['store_employee','store'])
                     ->where('id', '!=', $user->id);
             }),
             ],
@@ -143,7 +143,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
             'password_confirm' => 'nullable|same:password',
             'status' => 'required|in:active,not_active',
              'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->where('user_type', 'store_employee')
+                return $query->whereIn('user_type', ['store_employee','store'])
                     ->where('id', '!=', $user->id);
             }),
             ],
