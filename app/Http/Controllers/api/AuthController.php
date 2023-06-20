@@ -58,7 +58,7 @@ else{
             //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
             'package_id' =>'required_if:user_type,store|exists:packages,id',
             //'country_id'=>'required_if:user_type,store|exists:countries,id',
-            //'city_id'=>'required|exists:cities,id',
+            'city_id'=>'required_if:user_type,customer|exists:cities,id',
             'periodtype'=>'required_if:user_type,store|in:6months,year',
 
         ]);
