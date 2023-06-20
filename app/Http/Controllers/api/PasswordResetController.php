@@ -72,6 +72,59 @@ class PasswordResetController extends BaseController
         $success['user']= new UserResource($user);
         return $this->sendResponse($success,'تم ارسال الرسالة بنجاح','massege send successfully');
     }
+
+       public function create_by_email(Request $request)
+    {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'username' => 'required|string',
+        ]);
+
+        if ($validator->fails())
+        {
+            # code...
+            return $this->sendError($validator->errors());
+        }
+
+        $user = User::where('username', $request->username)->orWhere('email', $request->username)->first();
+        if (!$user){
+            return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
+        }
+
+        $passwordReset = PasswordReset::updateOrCreate(
+            ['email' => $user->email],
+            [
+                'email' => $user->email,
+                'token' => Str::random(60)
+             ]
+        );
+
+        if ($user && $passwordReset){
+                $user->generateCode();
+                 $data = array(
+                'code'   =>   $user->code,
+            );
+
+           try{
+                 Mail::to($user->email)->send(new SendCode($data));
+            }catch(\Exception $e){
+            return $this->sendError('صيغة البريد الالكتروني غير صحيحة','The email format is incorrect.');
+            }
+
+
+
+         /* $request->code = $user->code;
+            $request->phonenumber =$user->phonenumber;
+
+        $this->sendSms($request); // send and return its response
+*/
+
+        }
+
+        $success['status']= 200;
+        $success['user']= new UserResource($user);
+        return $this->sendResponse($success,'تم ارسال الرسالة بنجاح','massege send successfully');
+    }
     /**
      * Find token password reset
      *
