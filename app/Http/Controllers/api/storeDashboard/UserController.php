@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class UserController extends BaseController
 {
@@ -51,10 +52,15 @@ class UserController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
+           'email' => ['required','email', Rule::unique('users')->where(function ($query) {
+                    return $query->where('user_type', 'store_employee');
+                }),
+                ],
             'status' => 'required|in:active,not_active',
             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                return $query->where('user_type', 'store_employee');
+            })],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
@@ -128,11 +134,19 @@ if (is_null($user) || $user->is_deleted == 1 ) {
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
-            'email' => 'required|email',
+            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store_employee','store'])
+                    ->where('id', '!=', $user->id);
+            }),
+            ],
             'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'password_confirm' => 'nullable|same:password',
             'status' => 'required|in:active,not_active',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store_employee','store'])
+                    ->where('id', '!=', $user->id);
+            }),
+            ],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
 
