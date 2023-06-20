@@ -49,7 +49,7 @@ else{
                 ],
             //'store_email'=>'required_if:user_type,store|email|unique:stores',
             'password'=>'required',
-            'domain'=>'required_if:user_type,store|url|unique:stores',
+            //'domain'=>'required_if:user_type,store|unique:stores',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',Rule::unique('users')->where(function ($query) {
                     return $query->where('user_type', 'store');
                 }),
@@ -68,7 +68,7 @@ else{
         }
         
         $user = User::create([
-                'name' => $request->name,
+                //'name' => $request->name,
                 'email'=>$request->email,
                 'user_name' => $request->user_name,
                 'user_type' => "store",
@@ -91,15 +91,15 @@ else{
 
 
             $store = Store::create([
-                'store_name' => $request->store_name,
-                'store_email'=>$request->store_email,
-                'domain' =>$request->domain,
-                'phonenumber' => $request->phonenumber,
+               // 'store_name' => $request->store_name,
+               // 'store_email'=>$request->store_email,
+               // 'domain' =>$request->domain,
+               // 'phonenumber' => $request->phonenumber,
                 'package_id' => $request->package_id,
                 'user_id' => $userid,
                 'periodtype'=>$request->periodtype,
                 //'country_id' => $request->country_id,
-                'city_id' => $request->city_id,
+              //  'city_id' => $request->city_id,
 
             ]);
 
@@ -121,7 +121,7 @@ else{
                     'end_at'=>  $end_at ]);
 
                 }
-            $store->activities()->attach($request->activity_id);
+           // $store->activities()->attach($request->activity_id);
             $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
 
             if($setting->registration_status=="registration_with_admin"){
