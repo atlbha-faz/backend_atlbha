@@ -33,22 +33,25 @@ class AuthController extends BaseController
             $validator = Validator::make($input, [
                 'checkbox_field' => 'required|in:1',
                 'user_type' => 'required|in:store,marketer',
-                'name' => 'required|string|max:255',
+                // 'name'=>'required|string|max:255',
                 'user_name' => 'required|string|max:255|unique:users',
-                'store_name' => 'required_if:user_type,store|string|max:255',
+                //'store_name'=>'required_if:user_type,store|string|max:255',
                 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                     return $query->where('user_type', 'store');
                 }),
                 ],
-                'store_email' => 'required_if:user_type,store|email|unique:stores',
+                //'store_email'=>'required_if:user_type,store|email|unique:stores',
                 'password' => 'required',
-                'domain' => 'required_if:user_type,store|url|unique:stores',
-                'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber'],
-                'phonenumber' => ['required_if:user_type,store', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-                'activity_id' => 'required_if:user_type,store|array|exists:activities,id',
+                //'domain'=>'required_if:user_type,store|unique:stores',
+                'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                    return $query->where('user_type', 'store');
+                }),
+                ],
+                //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+                //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
                 'package_id' => 'required_if:user_type,store|exists:packages,id',
                 //'country_id'=>'required_if:user_type,store|exists:countries,id',
-                'city_id' => 'required|exists:cities,id',
+                'city_id' => 'required_if:user_type,customer|exists:cities,id',
                 'periodtype' => 'required_if:user_type,store|in:6months,year',
 
             ]);
@@ -56,29 +59,39 @@ class AuthController extends BaseController
             if ($validator->fails()) {
                 return $this->sendError('Validation Error.', $validator->errors());
             }
+
+            $user = User::create([
+                //'name' => $request->name,
+                'email' => $request->email,
+                'user_name' => $request->user_name,
+                'user_type' => "store",
+                'password' => $request->password,
+                'phonenumber' => $request->phonenumber,
+
+            ]);
             if ($request->user_type == "store") {
 
-                $user = User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'user_name' => $request->user_name,
-                    'user_type' => "store",
-                    'password' => $request->password,
-                    'phonenumber' => $request->userphonenumber,
+                /* $user = User::create([
+                'name' => $request->name,
+                'email'=>$request->email,
+                'user_name' => $request->user_name,
+                'user_type' => "store",
+                'password'=>$request->password,
+                'phonenumber' => $request->userphonenumber,
                 ]);
-
+                 */
                 $userid = $user->id;
 
                 $store = Store::create([
-                    'store_name' => $request->store_name,
-                    'store_email' => $request->store_email,
-                    'domain' => $request->domain,
-                    'phonenumber' => $request->phonenumber,
+                    // 'store_name' => $request->store_name,
+                    // 'store_email'=>$request->store_email,
+                    // 'domain' =>$request->domain,
+                    // 'phonenumber' => $request->phonenumber,
                     'package_id' => $request->package_id,
                     'user_id' => $userid,
                     'periodtype' => $request->periodtype,
                     //'country_id' => $request->country_id,
-                    'city_id' => $request->city_id,
+                    //  'city_id' => $request->city_id,
 
                 ]);
 
@@ -97,7 +110,7 @@ class AuthController extends BaseController
                         'end_at' => $end_at]);
 
                 }
-                $store->activities()->attach($request->activity_id);
+                // $store->activities()->attach($request->activity_id);
                 $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
 
                 if ($setting->registration_status == "registration_with_admin") {
@@ -151,43 +164,9 @@ class AuthController extends BaseController
 
             } else {
                 if ($setting->registration_marketer === "active") {
-                    $input = $request->all();
-                    $validator = Validator::make($input, [
-                        'checkbox_field' => 'required|in:1',
-                        'user_type' => 'required|in:store,marketer',
-                        'name' => 'required|string|max:255',
-                        'user_name' => 'required|string|max:255|unique:users',
-                        'store_name' => 'required_if:user_type,store|string|max:255',
-                        'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                            return $query->where('user_type', 'marketer');
-                        }),
-                        ],
-
-                        'password' => 'required',
-                        'domain' => 'required_if:user_type,store|url|unique:stores',
-                        'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                            return $query->where('user_type', 'marketer');
-                        }),
-                        ],
-
-                        //'country_id'=>'required_if:user_type,store|exists:countries,id',
-                        'city_id' => 'required|exists:cities,id',
-                        'periodtype' => 'required_if:user_type,store|in:6months,year',
-
-                    ]);
-
-                    if ($validator->fails()) {
-                        return $this->sendError('Validation Error.', $validator->errors());
-                    }
-
-                    $user = User::create([
-                        'name' => $request->user_name,
-                        'user_name' => $request->user_name,
-                        'email' => $request->email,
-                        'password' => $request->password,
-                        'phonenumber' => $request->phonenumber,
-                        'city_id' => $request->city_id,
+                    $user->update([
                         'user_type' => "marketer",
+                        'city_id' => $request->city_id,
                     ]);
                     $marketer = Marketer::create([
                         'user_id' => $user->id,
@@ -327,12 +306,58 @@ class AuthController extends BaseController
         // }
     }
 //login store template
-//login store with phoneNumber template
+    // public function login_customer(Request $request)
+    // {
 
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+    //         'user_name' => 'string|required',
+    //         'password' => 'string|required',
+    //     ]);
 
-    //login store with email template
+    //     if ($validator->fails()) {
+    //         return $this->sendError(null, $validator->errors());
+    //     }
 
+    //     $store = Store::where('domain', $request->domain)->first();
+    //     $id = $store->id;
 
+    //     if (
+    //         !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer', 'store_id' => $id])
+    //         && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer', 'store_id' => $id])
+
+    //     ) {
+    //         return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
+    //     } elseif (
+    //         !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'verified' => 1, 'store_id' => $id])
+    //         && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'verified' => 1, 'store_id' => $id])
+    //     ) {
+    //         $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->where('store_id', $id)->first();
+
+    //         if ($user) {
+
+    //             $user->generateVerifyCode();
+    //             $request->code = $user->verify_code;
+    //             $request->phonenumber = $user->phonenumber;
+    //             $this->sendSms($request); // send and return its response
+    //         }
+
+    //         return $this->sendError('الحساب غير محقق', 'User not verified');
+    //     }
+    //     $remember = request('remember');
+    //     if (auth()->guard()->attempt(request(['user_name', 'password']),
+    //         $remember)) {
+    //         $user = auth()->user();
+    //     }
+
+    //     $user->update(['device_token' => $request->device_token]);
+
+    //     $success['user'] = new UserResource($user);
+    //     $success['token'] = $user->createToken('authToken')->accessToken;
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
+    // }
     public function logout()
     {
         $user = auth("api")->user()->token();
@@ -342,42 +367,43 @@ class AuthController extends BaseController
         return $this->sendResponse($success, 'تم تسجيل الخروج بنجاح', 'User logout Successfully');
     }
 
-    // public function store_verify_message(Request $request)
-    // {
-    //     $input = $request->all();
-    //     $validator =  Validator::make($input, [
-    //         'email' => 'required|string',
-    //     ]);
+    public function store_verify_message(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'user_name' => 'required|string',
+        ]);
 
-    //     if ($validator->fails()) {
-    //         # code...
-    //         return $this->sendError($validator->errors());
-    //     }
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError($validator->errors());
+        }
 
-    //     $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
-    //     if (!$user) {
-    //         return $this->sendError('المستخدم غير موجود', 'We cant find a user with that user_name.');
-    //     }
+        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
+        if (!$user) {
+            return $this->sendError('المستخدم غير موجود', 'We cant find a user with that user_name.');
+        }
 
-    //     if ($user) {
-    //         $user->generateVerifyCode();
-    //         $request->code = $user->verify_code;
-    //         $request->phonenumber = $user->phonenumber;
-    //         $this->sendSms($request); // send and return its response
+        if ($user) {
+            $user->generateVerifyCode();
 
-    //     }
+            $request->code = $user->verify_code;
+            $request->phonenumber = $user->phonenumber;
+            $this->sendSms($request); // send and return its response
 
-    //     $success['status'] = 200;
-    //     $success['user'] = new UserResource($user);
-    //     return $this->sendResponse($success, 'تم ارسال الرسالة بنجاح', 'Email send successfully');
-    // }
+        }
+
+        $success['status'] = 200;
+        $success['user'] = new UserResource($user);
+        return $this->sendResponse($success, 'تم ارسال الرسالة بنجاح', 'Email send successfully');
+    }
 
     public function verifyUser(Request $request)
     {
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'phonenumber' => 'required|string',
+            'user_name' => 'required|string',
             'code' => 'required|numeric',
         ]);
 
@@ -386,7 +412,7 @@ class AuthController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        $user = User::where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->latest()->first();
+        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->latest()->first();
 
         if ($request->code == $user->verify_code) {
             $user->resetVerifyCode();
@@ -401,39 +427,6 @@ class AuthController extends BaseController
             return $this->sendResponse($success, 'لم يتم التحقق', 'not verified');
         }
     }
-
- 
-
-    // public function store_verify_message(Request $request)
-    // {
-    //     $input = $request->all();
-    //     $validator = Validator::make($input, [
-    //         'user_name' => 'required|string',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         # code...
-    //         return $this->sendError($validator->errors());
-    //     }
-
-    //     $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
-    //     if (!$user) {
-    //         return $this->sendError('المستخدم غير موجود', 'We cant find a user with that user_name.');
-    //     }
-
-    //     if ($user) {
-    //         $user->generateVerifyCode();
-
-    //         $request->code = $user->verify_code;
-    //         $request->phonenumber = $user->phonenumber;
-    //         $this->sendSms($request); // send and return its response
-
-    //     }
-
-    //     $success['status'] = 200;
-    //     $success['user'] = new UserResource($user);
-    //     return $this->sendResponse($success, 'تم ارسال الرسالة بنجاح', 'Email send successfully');
-    // }
 
     /////////////////////////////////////////////////// SMS
 

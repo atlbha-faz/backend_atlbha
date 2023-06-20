@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
-            $table->string('store_name');
-            $table->string('slug')->unique();
-            $table->string('store_email')->unique();
-            $table->string('domain')->unique();
+            $table->string('store_name')->nullable();
+            $table->string('slug')->unique()->nullable();
+            $table->string('store_email')->unique()->nullable();
+            $table->string('domain')->unique()->nullable();
             $table->string('icon')->nullable();
-            $table->string('phonenumber');
+            $table->string('phonenumber')->nullable();
             $table->string('description')->nullable();
             $table->string('file')->nullable();
             $table->string('snapchat')->nullable();
