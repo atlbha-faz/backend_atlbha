@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use App\Mail\SendCode;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\UserResource;
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class PasswordResetController extends BaseController
 {
