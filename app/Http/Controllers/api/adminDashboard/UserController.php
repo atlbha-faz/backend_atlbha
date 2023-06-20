@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
-class UserController  extends BaseController
+class UserController extends BaseController
 {
-
 
     public function __construct()
     {
@@ -24,10 +24,10 @@ class UserController  extends BaseController
      */
     public function index()
     {
-        $success['users']=UserResource::collection(User::where('is_deleted',0)->get());
-        $success['status']= 200;
+        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع جميع االمستخدمين بنجاح','Users return successfully');
+        return $this->sendResponse($success, 'تم ارجاع جميع االمستخدمين بنجاح', 'Users return successfully');
     }
 
     /**
@@ -49,43 +49,46 @@ class UserController  extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
             //'user_id'=>'required|max:255|unique:users',
-            'user_name'=>'required|string|max:255|unique:users',
+            'user_name' => 'required|string|max:255|unique:users',
             //'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-             'password_confirm' => 'required|same:password',
+            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                return $query->where('user_type', 'admin_employee');
+            }),
+            ],
+            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password_confirm' => 'required|same:password',
             //'gender'=>'required|in:male,female',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users'],
-            'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                return $query->where('user_type', 'admin_employee');
+            })],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             //'country_id'=>'required|exists:countries,id',
             //'city_id'=>'required|exists:cities,id',
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
         $user = User::create([
-            'name'=> $request->name,
-            'user_name'=> $request->user_name,
-            'user_type'=>'admin_employee',
+            'name' => $request->name,
+            'user_name' => $request->user_name,
+            'user_type' => 'admin_employee',
             'email' => $request->email,
             'password' => $request->password,
             'phonenumber' => $request->phonenumber,
-             'image' => $request->image,
+            'image' => $request->image,
 
-          ]);
+        ]);
 
+        $user->assignRole($request->role);
 
-    $user->assignRole($request->role);
+        $success['activities'] = new UserResource($user);
+        $success['status'] = 200;
 
-         $success['activities']=New UserResource($user );
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة المستخدم بنجاح','User Added successfully');
+        return $this->sendResponse($success, 'تم إضافة المستخدم بنجاح', 'User Added successfully');
     }
     /**
      * Display the specified resource.
@@ -96,14 +99,14 @@ class UserController  extends BaseController
     public function show($id)
     {
         $user = User::query()->find($id);
-        if (is_null($user) || $user->is_deleted==1){
-             return $this->sendError("المستخدم غير موجودة","user is't exists");
-             }
-            $success['users']=New UserResource($user);
-            $success['status']= 200;
+        if (is_null($user) || $user->is_deleted == 1) {
+            return $this->sendError("المستخدم غير موجودة", "user is't exists");
+        }
+        $success['users'] = new UserResource($user);
+        $success['status'] = 200;
 
-             return $this->sendResponse($success,'تم  عرض بنجاح','user showed successfully');
-            }
+        return $this->sendResponse($success, 'تم  عرض بنجاح', 'user showed successfully');
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -125,49 +128,55 @@ class UserController  extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $user =User::query()->find($id);
-        if (is_null($user) || $user->is_deleted==1){
-            return $this->sendError("المستخدم غير موجودة","user is't exists");
-            }
+        $user = User::query()->find($id);
+        if (is_null($user) || $user->is_deleted == 1) {
+            return $this->sendError("المستخدم غير موجودة", "user is't exists");
+        }
 
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'user_name'=>'required|string|max:255|unique:users,user_name,'.$user->id,
-            'email'=>'required|email|unique:users,email,'.$user->id,
-            'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-             'password_confirm' => 'nullable|same:password',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:users,phonenumber,'.$user->id],
-            'image'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255|unique:users,user_name,' . $user->id,
+            // 'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->where('user_type', 'admin_employee')
+                    ->where('id', '!=', $user->id);
+            }),
+            ],
+            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password_confirm' => 'nullable|same:password',
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->where('user_type', 'admin_employee')
+                    ->where('id', '!=', $user->id);
+            }),
+            ],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             # code...
-            return $this->sendError(null,$validator->errors());
+            return $this->sendError(null, $validator->errors());
         }
         $user->update([
-            'name'=> $request->input('name'),
+            'name' => $request->input('name'),
             'email' => $request->input('email'),
             'user_name' => $request->input('user_name'),
             'phonenumber' => $request->input('phonenumber'),
-             'image' => $request->image,
+            'image' => $request->image,
 
         ]);
-          if(!is_null($request->password)){
+        if (!is_null($request->password)) {
             $user->update([
-          'password'=> $request->password,
-      ]);
+                'password' => $request->password,
+            ]);
         }
 
+        $user->assignRole($request->role);
 
+        $success['users'] = new UserResource($user);
+        $success['status'] = 200;
 
-  $user->assignRole($request->role);
-
-        $success['users']=New UserResource($user);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم التعديل بنجاح','modify  successfully');
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'modify  successfully');
 
     }
 
@@ -180,64 +189,58 @@ class UserController  extends BaseController
     public function destroy($id)
     {
 
-        $user =User::query()->find($id);
-        if (is_null($user)||$user->is_deleted==1){
-            return $this->sendError("المستخدم غير موجودة","User is't exists");
-            }
-           $user->update(['is_deleted' => 1]);
-
-           $success['useres']=New UserResource($user);
-           $success['status']= 200;
-
-            return $this->sendResponse($success,'تم حذف المستخدم بنجاح','User deleted successfully');
+        $user = User::query()->find($id);
+        if (is_null($user) || $user->is_deleted == 1) {
+            return $this->sendError("المستخدم غير موجودة", "User is't exists");
         }
-          public function deleteall(Request $request)
+        $user->update(['is_deleted' => 1]);
+
+        $success['useres'] = new UserResource($user);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'User deleted successfully');
+    }
+    public function deleteall(Request $request)
     {
 
-            $users =User::whereIn('id',$request->id)->where('is_deleted',0)->get();
-            if(count($users)>0){
-           foreach($users as $user)
-           {
+        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->get();
+        if (count($users) > 0) {
+            foreach ($users as $user) {
 
-             $user->update(['is_deleted' => 1]);
-            $success['users']=New UserResource($user);
+                $user->update(['is_deleted' => 1]);
+                $success['users'] = new UserResource($user);
 
             }
 
-           $success['status']= 200;
+            $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم حذف المستخدم بنجاح','user deleted successfully');
-           }
-           else{
-            $success['status']= 200;
-         return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
-          }
-       }
-       public function changeSatusall(Request $request)
-            {
-
-                    $users =User::whereIn('id',$request->id)->where('is_deleted',0)->get();
-                    if(count($users)>0){
-                foreach($users as $user)
-                {
-                    if($user->status === 'active'){
-                $user->update(['status' => 'not_active']);
-                }
-                else{
-                $user->update(['status' => 'active']);
-                }
-                $success['users']= New UserResource($user);
-
-                    }
-                    $success['status']= 200;
-
-                return $this->sendResponse($success,'تم تعديل حالة المستخدم بنجاح','user updated successfully');
-           }
-           else{
-            $success['status']= 200;
-         return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
-          }
+            return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'user deleted successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غيرموجودة', 'id is not exit');
         }
+    }
+    public function changeSatusall(Request $request)
+    {
 
+        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->get();
+        if (count($users) > 0) {
+            foreach ($users as $user) {
+                if ($user->status === 'active') {
+                    $user->update(['status' => 'not_active']);
+                } else {
+                    $user->update(['status' => 'active']);
+                }
+                $success['users'] = new UserResource($user);
 
-  }
+            }
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم تعديل حالة المستخدم بنجاح', 'user updated successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غيرموجودة', 'id is not exit');
+        }
+    }
+
+}

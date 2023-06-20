@@ -43,7 +43,7 @@ class StoreUserSeeder extends Seeder
         'email' =>'rawaa@gmail.com',
         'password' =>'12345678',
         'gender' =>'female',
-        'phonenumber' => '0096650775433',
+        'phonenumber' => '0096650785433',
         'image'=>'image.jpg',
         'user_type'=>'store',
         'country_id' => 1,
@@ -77,7 +77,7 @@ class StoreUserSeeder extends Seeder
       'email' =>'mohammed@gmail.com',
       'password' =>'12345678',
       'gender' =>'male',
-      'phonenumber' => '0096650775433',
+      'phonenumber' => '0096650975433',
       'image'=>'image.jpg',
       'user_type'=>'customer',
       'country_id' => 1,
@@ -85,7 +85,7 @@ class StoreUserSeeder extends Seeder
       'verified'=>1,
        'store_id'=>2,
     ]);
-        
+
         for($i=4 ; $i<45 ; $i++){
  $user1=User::create([
         'user_id'=>$i+4,
@@ -94,7 +94,7 @@ class StoreUserSeeder extends Seeder
         'email' =>'rawaa'.$i.'@gmail.com',
         'password' =>'12345678',
         'gender' =>'female',
-        'phonenumber' => '0096650775433',
+        'phonenumber' => '009665037543'.$i.'',
         'image'=>'image.jpg',
         'user_type'=>'store',
         'country_id' => 1,
@@ -104,7 +104,7 @@ class StoreUserSeeder extends Seeder
       ]);
          $userid1 =$user1->id;
       Store::where('id', $i)->update(['user_id'=> $userid1]);
-            
+
         }
 
 }
