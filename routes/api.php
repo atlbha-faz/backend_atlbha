@@ -39,7 +39,8 @@ Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
 // login template
 Route::post('/logincustomerphoneapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer');
 Route::post('/logincustomeremailapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer_email');
-Route::post('/registerUser', 'App\Http\Controllers\api\AuthCustomerController@registerUser');
+Route::post('/registerUser/{id}', 'App\Http\Controllers\api\AuthCustomerController@registerUser');
+Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@verifyUser');
 
 //  index Ettlobha page
 
