@@ -1,15 +1,15 @@
 <?php
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\UserResource;
-use App\Models\Store;
 use App\Models\User;
+use App\Mail\SendCode;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class AuthCustomerController extends BaseController
 {
@@ -48,6 +48,12 @@ class AuthCustomerController extends BaseController
             $this->sendSms($request); // send and return its response
 
         }
+        $success['user'] = new UserResource($user);
+        $success['token'] = $user->createToken('authToken')->accessToken;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
+
     }
 
     //login store with email template
@@ -63,10 +69,8 @@ class AuthCustomerController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-        $store = Store::where('domain', $request->domain)->first();
-        $id = $store->id;
 
-        if (!auth()->guard()->attempt(['email' => $request->email, 'user_type' => 'customer', 'store_id' => $id])) {
+        if (!auth()->guard()->attempt(['email' => $request->email, 'user_type' => 'customer'])) {
             $user = User::create([
                 'email' => $request->email,
                 'user_type' => "customer",
@@ -74,17 +78,31 @@ class AuthCustomerController extends BaseController
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->email = $user->email;
-            Mail::to($request->email)->send(new \App\Mail\VerifyEmail ($request->code));
+            $data = array(
+                'code' =>  $request->code ,
+            );
+
+            Mail::to($user->email)->send(new SendCode($data));
 
         } else {
-            $user = User::where('email', $request->email)->where('store_id', $id)->first();
+            $user = User::where('email', $request->email)->first();
 
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
+            $data = array(
+                'code' =>  $request->code ,
+            );
+
             //  $request->phonenumber = $user->phonenumber;
-            Mail::to($request->email)->send(new \App\Mail\VerifyEmail ($request->code));
+            Mail::to($user->email)->send(new SendCode($data));
 
         }
+        $success['user'] = new UserResource($user);
+        $success['token'] = $user->createToken('authToken')->accessToken;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
+
     }
 
     public function logout()
@@ -176,5 +194,31 @@ class AuthCustomerController extends BaseController
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
         return $this->sendResponse($success, 'تم التسجيل', 'regsiter');
+    }
+    public function sendSms($request)
+    {
+
+        try {
+            $ch = curl_init('https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=hDRvlqGVdSQwsCLPk0bDRJIqs9Vvdi&SenderID=MASHAHER&Body=' . $request->code . '&Recipient=' . $request->phonenumber);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt(
+                $ch,
+                CURLOPT_HTTPHEADER,
+                array(
+                    'Accept: application/json',
+                    'Content-Type: application/x-www-form-urlencoded',
+                )
+            );
+            $result = curl_exec($ch);
+            $decoded = json_decode($result);
+            if ($decoded->success == "true") {
+                return true;
+            }
+
+            return $this->sendError("فشل ارسال الرسالة", "Failed Send Message");
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
     }
 }
