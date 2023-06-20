@@ -33,7 +33,7 @@ class PasswordResetController extends BaseController
         if ($validator->fails())
         {
             # code...
-            return $this->sendError($validator->errors());
+            return $this->sendError('Validation Error.', $validator->errors());
         }
 
         $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
@@ -86,7 +86,7 @@ class PasswordResetController extends BaseController
         if ($validator->fails())
         {
             # code...
-            return $this->sendError($validator->errors());
+            return $this->sendError('Validation Error.', $validator->errors());
         }
 
         $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
@@ -174,7 +174,7 @@ class PasswordResetController extends BaseController
         if ($validator->fails())
         {
             # code...
-            return $this->sendError($validator->errors());
+           return $this->sendError('Validation Error.', $validator->errors());
         }
 
 
@@ -218,7 +218,7 @@ class PasswordResetController extends BaseController
         if ($validator->fails())
         {
             # code...
-            return $this->sendError($validator->errors());
+           return $this->sendError('Validation Error.', $validator->errors());
         }
 
 
