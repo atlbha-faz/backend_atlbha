@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SetActiveStore;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\api\storeDashboard\ReportController;
 
@@ -46,13 +47,14 @@ Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@veri
 
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
 //  index store page القالب
+Route::middleware([SetActiveStore::class])->group(function(){
 Route::get('indexStore/{id}',[App\Http\Controllers\api\IndexStoreController::class,'index']);
 Route::get('productPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 Route::get('storPage/{id}',[App\Http\Controllers\api\IndexStoreController::class,'storPage']);
 Route::get('category/{id}',[App\Http\Controllers\api\IndexStoreController::class,'category']);
 Route::get('storeProductCategory',[App\Http\Controllers\api\IndexStoreController::class,'storeProductCategory']);
 Route::get('productSearch',[App\Http\Controllers\api\IndexStoreController::class,'productSearch']);
-
+});
 
 Route::middleware([SetActiveStore::class])->group(function(){
 Route::get('indexStore',[App\Http\Controllers\api\IndexStoreController2::class,'index']);

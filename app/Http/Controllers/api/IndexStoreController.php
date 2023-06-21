@@ -242,25 +242,31 @@ class IndexStoreController extends BaseController
         return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
 
     }
-    public function storPage(Request $request, $id)
+    public function storPage(Request $request,$id)
     {
-        $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $request->id)->first();
+        $store = Store::where('domain',$request->domain)->first();
+        if (is_null($store) || $store->is_deleted == 1) {
+            return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+     
+        $store_id = $store->id;
+        $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->first();
         if ($store_id != null) {
-            $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $request->id)->pluck('logo')->first();
-            $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $request->id)->get());
-            $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $request->id)->where('postcategory_id', null)->get());
-            $success['page'] = new PageResource(Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $request->id)->where('postcategory_id', null)->first());
-            $success['storeName'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('store_name')->first();
-            $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('store_email')->first();
+            $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+            $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->get());
+            $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
+            $success['page'] = new PageResource(Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->where('postcategory_id', null)->first());
+            $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
+            $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
             $success['storeAddress'] = 'السعودية - مدينة جدة';
-            $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('phonenumber')->first();
-            $success['description'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('description')->first();
-            $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('snapchat')->first();
-            $success['facebook'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('facebook')->first();
-            $success['twiter'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('twiter')->first();
-            $success['youtube'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('youtube')->first();
-            $success['instegram'] = Store::where('is_deleted', 0)->where('id', $request->id)->pluck('instegram')->first();
-            $store = Store::where('is_deleted', 0)->where('id', $request->id)->first();
+            $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
+            $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
+            $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
+            $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
+            $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
+            $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
+            $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+            $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $arr = array();
             if ($store->verification_status == 'accept') {
                 if ($store->commercialregistertype == 'maeruf') {
@@ -285,6 +291,12 @@ class IndexStoreController extends BaseController
     }
     public function storeProductCategory(Request $request)
     {
+        $store = Store::where('domain',$request->domain)->first();
+        if (is_null($store) || $store->is_deleted == 1) {
+            return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+     
+        $store_id = $store->id;
 
         $input = $request->all();
 
@@ -317,7 +329,7 @@ class IndexStoreController extends BaseController
         $price_to = $request->input('price_to');
 
         $products = ProductResource::collection(Product::where('is_deleted', 0)
-                ->where('store_id', $request->store_id)->when($filter_category, function ($query, $filter_category) {
+                ->where('store_id', $store_id )->when($filter_category, function ($query, $filter_category) {
                 $query->where('category_id', $filter_category);
             })->when($price_from, function ($query, $price_from) {
                 $query->where('selling_price', '>=', $price_from);
@@ -326,14 +338,14 @@ class IndexStoreController extends BaseController
             })->orderBy($s, $sort)->paginate($limit));
 
         $filters = array();
-        $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $request->store_id])->get());
+        $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id ])->get());
         $filters[0]["name"] = "التصنيفات";
         $filters[0]["slug"] = "category";
         $filters[0]["type"] = "category";
         $filters[0]["value"] = null;
 
-        $filters[1]["max"] = Product::where('is_deleted', 0)->where('store_id', $request->store_id)->orderBy('selling_price', 'desc')->pluck('selling_price')->first();
-        $filters[1]["min"] = Product::where('is_deleted', 0)->where('store_id', $request->store_id)->orderBy('selling_price', 'asc')->pluck('selling_price')->first();
+        $filters[1]["max"] = Product::where('is_deleted', 0)->where('store_id', $store_id )->orderBy('selling_price', 'desc')->pluck('selling_price')->first();
+        $filters[1]["min"] = Product::where('is_deleted', 0)->where('store_id', $store_id )->orderBy('selling_price', 'asc')->pluck('selling_price')->first();
         $filters[1]["name"] = "السعر";
         $filters[1]["slug"] = "price";
         $filters[1]["type"] = "range";
@@ -387,7 +399,7 @@ class IndexStoreController extends BaseController
 
          */
         $success['lastProducts'] = ProductResource::collection(Product::where('is_deleted', 0)
-                ->where('store_id', $request->store_id)->orderBy('created_at', 'desc')->take(5)->get());
+                ->where('store_id', $store_id )->orderBy('created_at', 'desc')->take(5)->get());
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم  الصفحة للمتجر بنجاح', 'Store page return successfully');
     }
@@ -405,6 +417,13 @@ class IndexStoreController extends BaseController
     }
     public function productSearch(Request $request)
     {
+
+        $store = Store::where('domain',$request->domain)->first();
+        if (is_null($store) || $store->is_deleted == 1) {
+            return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+     
+        $store_id = $store->id;
         $input = $request->all();
 
         // $validator = Validator::make($input, [
@@ -428,7 +447,7 @@ class IndexStoreController extends BaseController
         $query = $request->input('query');
 
         $products = ProductResource::collection(Product::where('is_deleted', 0)
-                ->where('store_id', $request->store_id)
+                ->where('store_id',  $store_id )
                 ->where('name', 'like', '%' . $query . '%')
                 ->when($category, function ($query, $category) {
                     $query->where('category_id', $category);

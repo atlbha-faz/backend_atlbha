@@ -17,8 +17,8 @@ class SetActiveStore
      */
     public function handle(Request $request, Closure $next)
     {
-        $host = $request->getHost();
-        $store=Store::where('domin',$host)->firstOrFail();
+        $host =$request->route('domain');
+        $store=Store::where('domain',$host)->first();
         if($store){
         app()->instance('store',$store);
         }
