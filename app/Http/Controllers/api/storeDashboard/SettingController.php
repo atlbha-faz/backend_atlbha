@@ -38,6 +38,7 @@ class SettingController extends BaseController
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
                 'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
                 'description'=>'required|string',
+                'domain'=>'required|string|unique:stores,domain,' . auth()->user()->store_id,
                  'country_id'=>'required|exists:countries,id',
                  'city_id'=>'required|exists:cities,id',
         ]);
@@ -51,6 +52,7 @@ class SettingController extends BaseController
             'icon' =>  $request->icon,
             'logo' =>  $request->logo,
             'description' =>  $request->input('description'),
+            'domain' =>  $request->input('domain'),
             'country_id' =>  $request->input('country_id'),
             'city_id' =>  $request->input('city_id'),
         ]);
