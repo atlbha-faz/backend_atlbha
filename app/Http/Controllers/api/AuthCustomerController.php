@@ -195,6 +195,7 @@ class AuthCustomerController extends BaseController
         $success['token'] = $user->createToken('authToken')->accessToken;
         return $this->sendResponse($success, 'تم التسجيل', 'regsiter');
     }
+    
     public function sendSms($request)
     {
 
