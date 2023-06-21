@@ -143,7 +143,7 @@ class AuthCustomerController extends BaseController
             return $this->sendResponse($success, 'لم يتم التحقق', 'not verified');
         }
     }
-
+    
     public function registerUser(Request $request, $id)
     {
         $user = User::where('id', $id)->where('is_deleted', 0)->first();
