@@ -31,6 +31,12 @@ class CartTemplateController extends BaseController
 
     public function show($id)
     {
+        $store = Store::where('domain',$id)->first();
+        if (is_null($store) || $store->is_deleted == 1) {
+            return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+        $id = $store->id;
+
 
         $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $id)->first();
 
