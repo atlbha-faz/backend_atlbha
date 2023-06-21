@@ -19,7 +19,6 @@ class SetActiveStore
     {
         $host =$request->route('domain');
         $store=Store::where('domain',$host)->first();
-      
         if($store){
         app()->instance('store',$store);
         }
