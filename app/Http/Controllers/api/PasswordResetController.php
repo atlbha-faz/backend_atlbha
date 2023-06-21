@@ -7,8 +7,11 @@ use App\Models\PasswordReset;
 use App\Models\User;
 use Validator;
 use Illuminate\Support\Str;
+
+use App\Mail\SendCode;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\UserResource;
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class PasswordResetController extends BaseController
 {
@@ -24,16 +27,16 @@ class PasswordResetController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'username' => 'required|string',
+            'user_name' => 'required|string',
         ]);
 
         if ($validator->fails())
         {
             # code...
-            return $this->sendError($validator->errors());
+            return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $user = User::where('username', $request->username)->orWhere('email', $request->username)->first();
+        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
         if (!$user){
             return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
         }
@@ -65,6 +68,59 @@ class PasswordResetController extends BaseController
 
         $this->sendSms($request); // send and return its response
 
+
+        }
+
+        $success['status']= 200;
+        $success['user']= new UserResource($user);
+        return $this->sendResponse($success,'تم ارسال الرسالة بنجاح','massege send successfully');
+    }
+
+       public function create_by_email(Request $request)
+    {
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'user_name' => 'required|string',
+        ]);
+
+        if ($validator->fails())
+        {
+            # code...
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
+        if (!$user){
+            return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
+        }
+
+        $passwordReset = PasswordReset::updateOrCreate(
+            ['email' => $user->email],
+            [
+                'email' => $user->email,
+                'token' => Str::random(60)
+             ]
+        );
+
+        if ($user && $passwordReset){
+                $user->generateCode();
+                 $data = array(
+                'code'   =>   $user->code,
+            );
+
+           try{
+                 Mail::to($user->email)->send(new SendCode($data));
+            }catch(\Exception $e){
+            return $this->sendError('صيغة البريد الالكتروني غير صحيحة','The email format is incorrect.');
+            }
+
+
+
+         /* $request->code = $user->code;
+            $request->phonenumber =$user->phonenumber;
+
+        $this->sendSms($request); // send and return its response
+*/
 
         }
 
@@ -110,7 +166,7 @@ class PasswordResetController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             //'email' => 'required|string|email',
-            'username' => 'required|string',
+            'user_name' => 'required|string',
             'password' => ['required','confirmed','string','min:6', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/'],
             'token' => 'required|string',
         ]);
@@ -118,11 +174,11 @@ class PasswordResetController extends BaseController
         if ($validator->fails())
         {
             # code...
-            return $this->sendError($validator->errors());
+           return $this->sendError('Validation Error.', $validator->errors());
         }
 
 
-        $user = User::where('username', $request->username)->orWhere('email', $request->username)->first();
+        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
         if (!$user){
             return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
         }
@@ -155,18 +211,18 @@ class PasswordResetController extends BaseController
 
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'username' => 'required|string',
+            'user_name' => 'required|string',
             'code' => 'required|numeric',
         ]);
 
         if ($validator->fails())
         {
             # code...
-            return $this->sendError($validator->errors());
+           return $this->sendError('Validation Error.', $validator->errors());
         }
 
 
-        $user = User::where('username', $request->username)->orWhere('email', $request->username)->latest()->first();
+        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->latest()->first();
 
         if($request->code == $user->code)
         {

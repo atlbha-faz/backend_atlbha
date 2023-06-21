@@ -34,9 +34,15 @@ Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mo
 
 Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi','App\Http\Controllers\api\AuthController@login_admin');
-Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
+// Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
 Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
 Route::get('/logout','App\Http\Controllers\api\AuthController@logout');
+// login template
+Route::post('/logincustomerphoneapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer');
+Route::post('/logincustomeremailapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer_email');
+Route::post('/registerUser/{id}', 'App\Http\Controllers\api\AuthCustomerController@registerUser');
+Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@verifyUser');
+
 //  index Ettlobha page
 
 Route::get('index',[App\Http\Controllers\api\IndexEtlobhaController::class,'index']);
@@ -95,9 +101,10 @@ Route::group([
     'prefix' => 'password'
 ], function () {
     Route::post('create', 'App\Http\Controllers\api\PasswordResetController@create');
+    Route::post('create-by-email', 'App\Http\Controllers\api\PasswordResetController@create_by_email');
     Route::get('find/{token}', 'App\Http\Controllers\api\PasswordResetController@find');
     Route::post('verify', 'App\Http\Controllers\api\PasswordResetController@verifyContact');
-    Route::post('reset', 'App\Http\Controllers\api\PasswordResetController@reset');
+    Route::post('reset-password', 'App\Http\Controllers\api\PasswordResetController@reset');
 });
 
 
