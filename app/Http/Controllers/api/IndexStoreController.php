@@ -248,10 +248,9 @@ class IndexStoreController extends BaseController
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
-     
         $store_id = $store->id;
         $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->first();
-        if ($store_id != null) {
+        if ($page  != null) {
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
             $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->get());
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
