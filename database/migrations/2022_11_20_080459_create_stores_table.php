@@ -35,7 +35,7 @@ return new class extends Migration
             $table->timestamp('end_at')->nullable();
             $table->enum('verification_status',['pending','admin_waiting','accept','reject'])->default('pending');
             $table->timestamp('verification_date')->nullable();
-            $table->enum('periodtype',['6months','year'])->default('year');
+            $table->enum('periodtype',['6months','year'])->default('year')->nullable();
             $table->enum('status',['active','not_active'])->default('active');
             $table->enum('commercialregistertype',['commercialregister','maeruf'])->default('commercialregister');
             $table->timestamp('confirmation_date')->nullable();
