@@ -52,13 +52,29 @@ class AuthController extends BaseController
                 'package_id' => 'required_if:user_type,store|exists:packages,id',
                 //'country_id'=>'required_if:user_type,store|exists:countries,id',
                 'city_id' => 'required_if:user_type,marketer|exists:cities,id',
-                'periodtype' => 'required_if:user_type,store|in:6months,year',
+                //'periodtype' => 'required_if:user_type,store|in:6months,year',
 
             ]);
+            
 
             if ($validator->fails()) {
                 return $this->sendError('Validation Error.', $validator->errors());
             }
+
+            if($request->user_type == 'store'){
+                 $validator = Validator::make($input, ['periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
+
+            ]);
+            }else{
+
+                   $validator = Validator::make($input, ['periodtype' => 'nullable',
+
+            ]);
+            }
+               if ($validator->fails()) {
+                return $this->sendError('Validation Error.', $validator->errors());
+            }
+
 
             $user = User::create([
                 //'name' => $request->name,
@@ -103,12 +119,17 @@ class AuthController extends BaseController
                     $store->update([
                         'start_at' => $store->created_at,
                         'end_at' => $end_at]);
-                } else {
+                } elseif($request->periodtype == "year") {
                     $end_at = date('Y-m-d', strtotime("+ 1 years", strtotime($store->created_at)));
                     $store->update([
                         'start_at' => $store->created_at,
                         'end_at' => $end_at]);
 
+                }else{
+                    $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
+                    $store->update([
+                        'start_at' => $store->created_at,
+                        'end_at' => $end_at]);
                 }
                 // $store->activities()->attach($request->activity_id);
                 $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
