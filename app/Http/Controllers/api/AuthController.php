@@ -36,17 +36,11 @@ class AuthController extends BaseController
                 // 'name'=>'required|string|max:255',
                 'user_name' => 'required|string|max:255|unique:users',
                 //'store_name'=>'required_if:user_type,store|string|max:255',
-                'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                    return $query->whereIn('user_type', ['store','store_employee']);
-                }),
-                ],
+                
                 //'store_email'=>'required_if:user_type,store|email|unique:stores',
                 'password' => 'required',
                 //'domain'=>'required_if:user_type,store|unique:stores',
-                'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                    return $query->whereIn('user_type', ['store','store_employee']);
-                }),
-                ],
+                
                 //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
                 //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
                 'package_id' => 'required_if:user_type,store|exists:packages,id',
@@ -63,11 +57,27 @@ class AuthController extends BaseController
 
             if($request->user_type == 'store'){
                  $validator = Validator::make($input, ['periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
+                'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                    return $query->whereIn('user_type', ['store','store_employee']);
+                }),                           
+                ],
+                 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                    return $query->whereIn('user_type', ['store','store_employee']);
+                }),
+                ],
 
             ]);
             }else{
 
                    $validator = Validator::make($input, ['periodtype' => 'nullable',
+                                                 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                    return $query->whereIn('user_type', ['marketer']);
+                }),                           
+                ],
+                 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                    return $query->whereIn('user_type', ['marketer']);
+                }),
+                ],
 
             ]);
             }
