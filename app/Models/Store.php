@@ -143,7 +143,7 @@ class Store extends Model
     public function getLogoAttribute($logo)
     {
         if (is_null($logo)) {
-            return asset('assets/media/man.png');
+            return asset('assets/media/logo.svg');
         }
         return asset('storage/images/storelogo') . '/' . $logo;
     }
