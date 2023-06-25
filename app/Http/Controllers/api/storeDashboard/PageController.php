@@ -50,9 +50,9 @@ class PageController extends BaseController
             'title' => 'required|string|max:255',
             'page_desc' => 'required',
             'page_content' => 'required|string',
-            'seo_title' => 'required|string',
-            'seo_link' => 'required|url',
-            'seo_desc' => 'required|string',
+            'seo_title' => 'nullable|string',
+            'seo_link' => 'nullable|url',
+            'seo_desc' => 'nullable|string',
             'tags' => 'required',
             //'name'=>'required|exists:page_categories,id'
 
@@ -96,9 +96,9 @@ class PageController extends BaseController
             'title' => 'required|string|max:255',
             'page_content' => 'required|string',
             'page_desc' => 'required',
-            'seo_title' => 'required|string',
-            'seo_link' => 'required|url',
-            'seo_desc' => 'required|string',
+            'seo_title' => 'nullable|string',
+            'seo_link' => 'nullable|url',
+            'seo_desc' => 'nullable|string',
             'tags' => 'required',
             // 'name'=>'required|exists:page_categories,id'
 
@@ -183,9 +183,9 @@ class PageController extends BaseController
             'title' => 'required|string|max:255',
             'page_content' => 'required|string',
             'page_desc' => 'required',
-            'seo_title' => 'required|string',
-            'seo_link' => 'required|url',
-            'seo_desc' => 'required|string',
+            'seo_title' => 'nullable|string',
+            'seo_link' => 'nullable|url',
+            'seo_desc' => 'nullable|string',
             'tags' => 'required',
             // 'name'=>'required|exists:page_categories,id'
             // 'store_id'=>'required|exists:stores,id',

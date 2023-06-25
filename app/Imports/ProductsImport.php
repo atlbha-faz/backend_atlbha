@@ -36,7 +36,7 @@ SkipsOnFailure
 
     public function model(array $row)
     {
-
+//dd($row['9']);
 
 // Log::alert($row['cover']);
         // dd($row['4']);

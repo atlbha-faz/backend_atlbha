@@ -38,6 +38,7 @@ class CartTemplateController extends BaseController
         }
         $id = $store->id;
 
+        $success['domain'] = Store::where('is_deleted', 0)->where('id',$id)->pluck('domain')->first();
 
         $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $id)->first();
 

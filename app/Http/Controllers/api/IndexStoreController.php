@@ -35,6 +35,8 @@ class IndexStoreController extends BaseController
         $store = Store::where('is_deleted', 0)->where('id', $id)->first();
         if ($store != null) {
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $id)->pluck('logo')->first();
+            $success['domain'] = Store::where('is_deleted', 0)->where('id',$id)->pluck('domain')->first();
+
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
             $sliders = array();
             $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', $id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
@@ -159,6 +161,7 @@ class IndexStoreController extends BaseController
     {
         $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
         if ($store_id != null) {
+            $success['domain'] = Store::where('is_deleted', 0)->where('id',$store_id)->pluck('domain')->first();
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
             $product = Product::where('is_deleted', 0)->where('id', $id)->first();
@@ -251,6 +254,7 @@ class IndexStoreController extends BaseController
         $store_id = $store->id;
         $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->first();
         if ($page  != null) {
+            $success['domain'] = Store::where('is_deleted', 0)->where('id',$store_id)->pluck('domain')->first();
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
             $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->get());
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
@@ -397,6 +401,7 @@ class IndexStoreController extends BaseController
         $success['verificayionMethod']=$verificayionMethod ;
 
          */
+        $success['domain'] = Store::where('is_deleted', 0)->where('id',$store_id)->pluck('domain')->first();
         $success['lastProducts'] = ProductResource::collection(Product::where('is_deleted', 0)
                 ->where('store_id', $store_id )->orderBy('created_at', 'desc')->take(5)->get());
         $success['status'] = 200;
@@ -452,6 +457,7 @@ class IndexStoreController extends BaseController
                     $query->where('category_id', $category);
                 })
                 ->get());
+        $success['domain'] = Store::where('is_deleted', 0)->where('id',$store_id)->pluck('domain')->first();
         $success['searchProducts'] = $products;
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض المنتجات بنجاح', 'Category products successfully');

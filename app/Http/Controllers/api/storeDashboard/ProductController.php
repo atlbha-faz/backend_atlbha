@@ -156,10 +156,10 @@ class ProductController extends BaseController
     {
 
         $importproductt = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $id)
-            ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
+            ->first(['products.*', 'importproducts.price', 'importproducts.status']);
 
         if (!is_null($importproductt)) {
-
+$importproductt = $importproductt->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
             $importproduct = Importproduct::where('product_id', $id)->first();
 
             $importproduct->update([
