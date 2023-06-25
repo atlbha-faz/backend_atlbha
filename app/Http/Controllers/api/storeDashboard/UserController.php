@@ -173,6 +173,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
         }
 
         $user->assignRole($request->role);
+        $user->save();
         $success['users'] = new UserResource($user);
         $success['status'] = 200;
 
