@@ -207,6 +207,7 @@ class StoreReportController extends  BaseController
             $array_city_store[$city->name]=0;
           }
 
+         
 
           $packageCount=Package::where('is_deleted',0)->count();
           for($i = 1; $i <= $packageCount; $i++){
@@ -214,12 +215,14 @@ class StoreReportController extends  BaseController
          $stores=$package->stores;
          foreach($stores as $store){
           foreach($cities as $city){
+            if($store->city != null){
             if($store->city->id == $city->id ){
            if($store->periodtype=="year")
            $array_city_store[$store->city->name]= $array_city_store[$store->city->name]+ $package->yearly_price;
            else
            $array_city_store[$store->city->name]= $array_city_store[$store->city->name]+ $package->monthly_price;
          }
+        }
         }
         }
         }
