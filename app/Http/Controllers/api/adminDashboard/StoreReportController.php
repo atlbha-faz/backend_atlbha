@@ -28,8 +28,13 @@ class StoreReportController extends  BaseController
     public function index(Request $request)
     {
         $success['count_of_stores']=Store::where('is_deleted',0)->count();
+        if($success['count_of_stores']>0){
         $success['average_of_stores']=((Store::where('is_deleted',0)->whereYear('created_at', Carbon::now()->year)
         ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->count())*100)."%";
+        }
+        else{
+          $success['average_of_stores']=0;
+        }
          $success['active_of_stores']=Store::where('is_deleted',0)->where('status','active')->count();
          $success['not_active_of_stores']=Store::where('is_deleted',0)->where('status','not_active')->count();
          $success['latest_stores']=Store::where('is_deleted',0)->where('status','active')->orderBy('created_at','DESC')->take(5)->get();
@@ -70,20 +75,34 @@ class StoreReportController extends  BaseController
         $endDate2=$request->endDate2;
 
         $success['count_of_stores']=Store::where('is_deleted',0)->where('status','active')->count();
+        if(   $success['count_of_stores']>0){
         $success['average_of_stores']=((Store::where('is_deleted',0)->where('status','active')->whereYear('created_at', Carbon::now()->year)
         ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->where('status','active')->count())*100)."%";
-
+        }
+        else{
+          $success['average_of_stores']=0;
+        }
          $success['count_of_marketers']=Marketer::whereHas('user', function($q){
           $q->where('is_deleted', 0);
                    })->count();
+                   if( $success['count_of_marketers']>0){
          $success['average_of_marketers']=((Marketer::whereHas('user', function($q){
             $q->where('is_deleted', 0);})->whereYear('created_at', Carbon::now()->year)
         ->whereMonth('created_at', Carbon::now()->month)->count())/(Marketer::whereHas('user', function($q){
             $q->where('is_deleted', 0);
         })->count())*100)."%";
+      }
+      else{
+        $success['average_of_marketers']=0;
+      }
          $success['count_of_services']=Service::where('is_deleted',0)->count();
+         if( $success['count_of_services']>0){
             $success['average_of_services']=((Service::where('is_deleted',0)->whereYear('created_at', Carbon::now()->year)
            ->whereMonth('created_at', Carbon::now()->month)->count())/(Service::where('is_deleted',0)->count())*100)."%";
+         }
+         else{
+          $success['average_of_services']=0;
+         }
 // احمالي المتاجر خلال 6 شهور
           if(is_null($request->startDate1) || is_null($request->endDate1))
           {
