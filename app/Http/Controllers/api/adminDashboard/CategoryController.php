@@ -81,7 +81,7 @@ class CategoryController extends BaseController
               ]);
 
            
-if($request->data){
+  if($request->data){
     foreach($request->data as $data)
     {
 
