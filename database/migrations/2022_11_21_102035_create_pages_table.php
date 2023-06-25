@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('page_content');
-            $table->string('seo_title');
-            $table->string('seo_link');
-            $table->longText('seo_desc');
+            $table->string('seo_title')->nullable();
+            $table->string('seo_link')->nullable();
+            $table->longText('seo_desc')->nullable();
             $table->longText('page_desc')->nullable();
             $table->text('tags');
             $table->string('image')->nullable();

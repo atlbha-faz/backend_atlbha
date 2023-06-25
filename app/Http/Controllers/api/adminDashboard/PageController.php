@@ -55,9 +55,9 @@ class PageController extends BaseController
             'title'=>'required|string|max:255',
             'page_desc'=>'required',
             'page_content'=>'required',
-            'seo_title'=>'required',
-            'seo_link'=>'required',
-            'seo_desc'=>'required',
+            'seo_title'=>'nullable',
+            'seo_link'=>'nullable',
+            'seo_desc'=>'nullable',
             'tags'=>'required',
             //'name'=>'required|exists:page_categories,id'
             // 'user_id'=>'exists:users,id',
@@ -103,9 +103,9 @@ class PageController extends BaseController
             'title'=>'required|string|max:255',
             'page_content'=>'required',
             'page_desc'=>'required',
-            'seo_title'=>'required',
-            'seo_link'=>'required',
-            'seo_desc'=>'required',
+            'seo_title'=>'nullable',
+            'seo_link'=>'nullable',
+            'seo_desc'=>'nullable',
             'tags'=>'required',
             // 'user_id'=>'exists:users,id',
 
@@ -192,9 +192,9 @@ class PageController extends BaseController
             'title'=>'required|string|max:255',
             'page_desc'=>'required',
             'page_content'=>'required',
-            'seo_title'=>'required',
-            'seo_link'=>'required',
-            'seo_desc'=>'required',
+            'seo_title'=>'nullable',
+            'seo_link'=>'nullable',
+            'seo_desc'=>'nullable',
             'tags'=>'required',
 
            ]);

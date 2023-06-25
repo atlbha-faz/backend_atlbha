@@ -78,7 +78,7 @@ class AuthController extends BaseController
                     return $query->whereIn('user_type', ['marketer']);
                 }),
                 ],
-
+'name'=>'required|string|max:255',
             ]);
             }
                if ($validator->fails()) {
@@ -197,6 +197,7 @@ class AuthController extends BaseController
                 if ($setting->registration_marketer === "active") {
                     $user->update([
                         'user_type' => "marketer",
+                        'name' => $request->name,
                         'city_id' => $request->city_id,
                     ]);
                     $marketer = Marketer::create([

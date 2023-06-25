@@ -119,6 +119,22 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم عرض الاقسام الفرعية بنجاح', 'sub_Category showed successfully');
     }
 
+     public function mainCategories_etlobha()
+    {
+        $success['categories'] = CategoryResource::collection(Category::
+                where('is_deleted', 0)
+                ->where('parent_id', null)
+                ->where('for', 'etlobha')
+                ->where(function ($query) {
+                    $query->where('store_id', auth()->user()->store_id)
+                        ->OrWhere('store_id', null);
+                })->where('status', 'active')->get());
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+
+    }
+   
+
     public function etlobahCategory()
     {
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'etlobha')->where('parent_id', null)->where('store_id', null)->get());
