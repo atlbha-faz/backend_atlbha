@@ -442,7 +442,7 @@ Route::post('updateLink',[App\Http\Controllers\api\storeDashboard\SeoController:
 Route::post('updateRobots',[App\Http\Controllers\api\storeDashboard\SeoController::class,'updateRobots']);
 
 //  clients
-Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
+// Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
 Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class,'changeStatus']);
 Route::get('clientdeleteall',[App\Http\Controllers\api\storeDashboard\ClientController::class,'deleteall']);
 //
