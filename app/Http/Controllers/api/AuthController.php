@@ -450,7 +450,7 @@ if($request->user_type == "store"){
         }
 
         $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->latest()->first();
-dd($user);
+
         if ($request->code == $user->verify_code) {
             $user->resetVerifyCode();
             $user->verified = 1;
