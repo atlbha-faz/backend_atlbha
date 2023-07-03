@@ -32,7 +32,7 @@ class CartTemplateController extends BaseController
 
     public function show($id)
     {
-        $store = Store::where('domain',$id)->where('verification_status','accept')->whereDate('end_at', '<', Carbon::now())->first();
+        $store = Store::where('domain',$id)->where('verification_status','accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }

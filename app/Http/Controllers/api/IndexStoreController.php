@@ -22,7 +22,7 @@ class IndexStoreController extends BaseController
 {
     public function index($id)
     {
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '<', Carbon::now())->first();
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
@@ -161,7 +161,7 @@ class IndexStoreController extends BaseController
     {
         $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
 
-        $store = Store::where('id', $store_id)->where('verification_status', 'accept')->whereDate('end_at', '<', Carbon::now())->first();
+        $store = Store::where('id', $store_id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
@@ -254,7 +254,7 @@ class IndexStoreController extends BaseController
     }
     public function storPage(Request $request, $id)
     {
-        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '<', Carbon::now())->first();
+        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
@@ -301,7 +301,7 @@ class IndexStoreController extends BaseController
     }
     public function storeProductCategory(Request $request)
     {
-        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '<', Carbon::now())->first();
+        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
@@ -429,7 +429,7 @@ class IndexStoreController extends BaseController
     public function productSearch(Request $request)
     {
 
-        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '<', Carbon::now())->first();
+        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
