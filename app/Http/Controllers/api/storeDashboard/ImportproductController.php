@@ -83,7 +83,7 @@ class ImportproductController extends BaseController
                 'price' => $request->price,
             ]);
             $success['importproducts'] = new ImportproductResource($importproduct);
-            $success['status'] = 200;
+            $success['status'] =200;
 
             return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
         } else {
