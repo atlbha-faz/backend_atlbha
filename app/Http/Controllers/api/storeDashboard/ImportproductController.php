@@ -31,7 +31,7 @@ class ImportproductController extends BaseController
     }
     public function store(Request $request)
     {
-        $importedproduct = Importproduct::where('product_id', $request->product_id)->first();
+        $importedproduct = Importproduct::where('product_id', $request->product_id)->where('store_id', auth()->user()->store_id)->first();
         if ($importedproduct) {
             return $this->sendError(" تم استيراده مسبقا ", "imported");
         }
@@ -68,7 +68,7 @@ class ImportproductController extends BaseController
 
     public function updateimportproduct(Request $request, $id)
     {
-        $importproduct = Importproduct::where('product_id', $id)->first();
+        $importproduct = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
         if ($importproduct != null) {
             $input = $request->all();
             $validator = Validator::make($input, [
