@@ -159,7 +159,7 @@ class ProductController extends BaseController
             ->first(['products.*', 'importproducts.price', 'importproducts.status']);
 
         if (!is_null($importproductt)) {
-$importproductt = $importproductt->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
+            $importproductt = $importproductt->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
             $importproduct = Importproduct::where('product_id', $id)->first();
 
             $importproduct->update([
@@ -288,9 +288,6 @@ $importproductt = $importproductt->makeHidden(['selling_price', 'purchasing_pric
             }
 
         }
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
 
     }
 
@@ -313,9 +310,7 @@ $importproductt = $importproductt->makeHidden(['selling_price', 'purchasing_pric
                 $success['products'] = new importsResource($importproduct);
 
             }
-            $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');
         }
 
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
