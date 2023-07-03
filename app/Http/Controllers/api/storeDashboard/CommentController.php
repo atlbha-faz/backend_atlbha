@@ -205,25 +205,30 @@ class CommentController extends BaseController
     public function changeSatusall(Request $request)
     {
 
-            $comments =Comment::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->get();
+            $comments =Comment::whereIn('id',$request->id)->where('store_id',auth()->user()->store_id)->where('is_deleted',0)->get();
+            if(count($comments)>0){
         foreach($comments as $comment)
         {
-            if (is_null($comment) || $comment->is_deleted==1 ){
-                return $this->sendError("  التعليق غير موجودة","comment is't exists");
-      }
+     
             if($comment->status === 'active'){
         $comment->update(['status' => 'not_active']);
         }
         else{
         $comment->update(['status' => 'active']);
         }
+    
         $success['comments']= New CommentResource($comment);
 
             }
             $success['status']= 200;
 
         return $this->sendResponse($success,'تم تعديل حالة التعليق بنجاح','comment updated successfully');
-   }
+        }
+   else{
+    $success['status']= 200;
+ return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
+  }
+}
     public function replayComment(Request $request)
     {
     $input = $request->all();
