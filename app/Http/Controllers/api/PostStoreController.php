@@ -16,12 +16,12 @@ class PostStoreController extends BaseController
 {
     public function index($id)
     {
-        
-        $store = Store::where('domain',$id)->first();
+
+        $store = Store::where('domain',$id)->where('verification_status','accept')->whereDate('end_at', '<', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
-     
+
         $id = $store->id;
         if ($store != null) {
             $success['domain'] = Store::where('is_deleted', 0)->where('id',$id)->pluck('domain')->first();
@@ -80,11 +80,11 @@ class PostStoreController extends BaseController
     }
     public function show($postCategory_id, Request $request)
     {
-        $store = Store::where('domain',$request->domain)->first();
+        $store = Store::where('domain',$request->domain)->where('verification_status','accept')->whereDate('end_at', '<', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
-     
+
         $store_id = $store->id;
         $postcategory = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', $postCategory_id)->first();
         if ($postcategory != null) {
@@ -145,11 +145,11 @@ class PostStoreController extends BaseController
     }
     public function show_post($pageId, Request $request)
     {
-        $store = Store::where('domain',$request->domain)->first();
+        $store = Store::where('domain',$request->domain)->where('verification_status','accept')->whereDate('end_at', '<', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
-     
+
         $store_id = $store->id;
         $post = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', '!=', null)->where('id', $pageId)->first();
         if ($post != null) {
