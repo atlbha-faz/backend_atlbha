@@ -212,7 +212,12 @@ class AuthController extends BaseController
                 }
 
             }
-
+if($request->user_type == "store"){
+            $user->generateVerifyCode();
+            $request->code = $user->verify_code;
+            $request->phonenumber = $user->phonenumber;
+            $this->sendSms($request);
+}
             $success['user'] = new UserResource($user);
             $success['token'] = $user->createToken('authToken')->accessToken;
             $success['status'] = 200;
@@ -465,28 +470,31 @@ class AuthController extends BaseController
     public function sendSms($request)
     {
 
-        try {
-            $ch = curl_init('https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=hDRvlqGVdSQwsCLPk0bDRJIqs9Vvdi&SenderID=MASHAHER&Body=' . $request->code . '&Recipient=' . $request->phonenumber);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt(
-                $ch,
-                CURLOPT_HTTPHEADER,
-                array(
-                    'Accept: application/json',
-                    'Content-Type: application/x-www-form-urlencoded',
-                )
-            );
-            $result = curl_exec($ch);
-            $decoded = json_decode($result);
-            if ($decoded->success == "true") {
-                return true;
-            }
+          try
+        {
+$ch = curl_init('https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=hDRvlqGVdSQwsCLPk0bDRJIqs9Vvdi&SenderID=MASHAHER&Body='.$request->code.'&Recipient='.$request->phonenumber);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+ 'Accept: application/json',
+ 'Content-Type: application/x-www-form-urlencoded')
+);
+$result = curl_exec($ch);
+$decoded = json_decode($result);
+if ($decoded->success =="true" ) {
+    return true;
+}
 
-            return $this->sendError("فشل ارسال الرسالة", "Failed Send Message");
-        } catch (Exception $e) {
+            return $this->sendError("فشل ارسال الرسالة","Failed Send Message");
+
+
+
+        }
+        catch (Exception $e)
+        {
             return $this->sendError($e->getMessage());
         }
+
     }
 // test
     public function sendMessagePost()
