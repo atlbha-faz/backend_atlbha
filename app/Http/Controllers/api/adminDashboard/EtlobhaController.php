@@ -286,7 +286,7 @@ class EtlobhaController extends BaseController
         }
         $success['products']= ProductResource::collection($products);
         $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة القسم بنجاح',' product status updared successfully');
+         return $this->sendResponse($success,'تم تعدبل حالة المنتج بنجاح',' product status updared successfully');
       }
       else{
           $success['status']= 200;

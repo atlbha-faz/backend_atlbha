@@ -164,7 +164,7 @@ class CommentController extends BaseController
 
     public function changeStatus($comment)
     {
-       $comment = Comment::where('id',$comment)->where('store_id',auth()->user()->store_id)->first();
+       $comment = Comment::where('id',$comment)->first();
          if (is_null($comment) ||$comment->is_deleted==1){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
