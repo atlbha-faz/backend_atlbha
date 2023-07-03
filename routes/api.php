@@ -33,9 +33,6 @@ Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mo
 
 
 Route::post('/loginapi','App\Http\Controllers\api\AuthController@login');
-
-Route::post('/home/sendMessage', 'App\Http\Controllers\api\AuthController@sendMessage');
-Route::post('/home/verifyUser', 'App\Http\Controllers\api\AuthController@verifyUser');
 Route::post('/loginadminapi','App\Http\Controllers\api\AuthController@login_admin');
 // Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
 Route::post('/registerapi','App\Http\Controllers\api\AuthController@register');
