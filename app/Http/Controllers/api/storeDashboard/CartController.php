@@ -162,14 +162,14 @@ class CartController extends BaseController
             $discount_total = $cart->total - ($cart->total * ($request->discount_value / 100));
         }
 
-        $cart->update([
-            'message' => $request->message,
-            'free_shipping' => $request->free_shipping,
-            'discount_type' => $request->discount_type,
-            'discount_value' => $request->discount_value,
-            'discount_total' => $discount_total,
-            'discount_expire_date' => $request->discount_expire_date,
-        ]);
+        $cart->message = $request->message;
+        $cart->free_shipping = $request->free_shipping;
+        $cart->discount_type = $request->discount_type;
+        $cart->discount_value = $request->discount_value;
+        $cart->discount_total = $request->discount_total;
+        $cart->discount_expire_date = $request->discount_expire_date;
+         $cart->timestamps = false;
+        $cart->save();
 
         $data = [
             'subject' => "cart offer",
