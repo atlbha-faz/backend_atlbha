@@ -65,7 +65,7 @@ class StockController extends BaseController
           'name'=>'required|string|max:255',
           'description'=>'required|string',
           'purchasing_price'=>['required','numeric','gt:0'],
-          'selling_price'=>['required','numeric','gt:0'],
+          'selling_price'=>['required','numeric','gte:purchasing_price'],
           'stock'=>['required','numeric','gt:0'],
           'amount'=>['required','numeric'],
           'quantity'=>['required_if:amount,0','numeric','gt:0'],
@@ -192,7 +192,7 @@ class StockController extends BaseController
             'quantity'=>['required_if:amount,0','numeric','gt:0'],
             'less_qty'=>['required_if:amount,0','numeric','gt:0'],
               'purchasing_price'=>['required','numeric','gt:0'],
-              'selling_price'=>['required','numeric','gt:0'],
+              'selling_price'=>['required','numeric','gte:purchasing_price'],
               'stock'=>['required','numeric','gt:0'],
             'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'images'=>'nullable|array',
@@ -305,7 +305,7 @@ class StockController extends BaseController
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
            }
-          
+
           else{
             $success['status']= 200;
         return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
@@ -315,7 +315,7 @@ class StockController extends BaseController
  public function addToStore($id)
  {
         $product = Product::query()->where('for','stock')->find($id);
-       
+
          if (is_null($product ) || $product->is_deleted==1){
          return $this->sendError("المنتج غير موجودة","product is't exists");
          }
