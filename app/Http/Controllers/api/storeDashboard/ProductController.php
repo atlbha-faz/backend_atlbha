@@ -288,7 +288,7 @@ class ProductController extends BaseController
             }
 
         }
-
+return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
 
     public function changeSatusall(Request $request)
