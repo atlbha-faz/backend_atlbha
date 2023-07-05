@@ -29,7 +29,6 @@ class AuthController extends BaseController
 
         } else {
 
-
             if($request->user_type == 'store'){
                 $input = $request->all();
                 $validator = Validator::make($input, [
