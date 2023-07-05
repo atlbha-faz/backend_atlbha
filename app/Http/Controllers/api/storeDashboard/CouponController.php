@@ -58,7 +58,7 @@ class CouponController extends BaseController
             'user_redemptions' => ['required', 'numeric'],
             'free_shipping' => ['required', 'in:0,1'],
             'exception_discount_product' => ['required', 'in:0,1'],
-            'status' => 'required|in:active,not_active',
+            'status' => 'nullable|in:active,not_active',
 
         ]);
         if ($validator->fails()) {
