@@ -118,7 +118,7 @@ return [
     'prohibited_unless' => 'الحقل :attribute محظور في حال ما لم يكون :other يساوي :value.',
     'prohibits' => 'الحقل :attribute يحظر :other من اي يكون موجود',
     'regex' => 'صيغة الحقل :attribute .غير صحيحة',
-    'required' => 'الحقل :attribute مطلوب.',
+    'required' => 'حقل :attribute مطلوب.',
     'required_array_keys' => 'الحقل :attribute يجب ان يحتوي علي مدخلات للقيم التالية :values.',
     'required_if' => 'الحقل :attribute مطلوب في حال ما إذا كان :other يساوي :value.',
     'required_if_accepted' => 'The :attribute field is required when :other is accepted.',
@@ -206,7 +206,15 @@ return [
         'q'                     => 'البحث',
         'link'                  => 'الرابط ',
         'slug'                  => ' ',
-        'icon'                  =>'الايقونة'
+        'icon'                  =>'صورة الايقونة',
+        'package_id'            =>'اسم الباقة',
+        'checkbox_field'         => 'الشروط والاحكام',
+        'periodtype'             =>'مدة الاشتراك',
+        'city_id'                =>'الدولة',
+        'code'                   =>"الكود",
+        'data.*.id'           =>"العنصر",
+        'data.*.price'           =>"السعر",
+        'data.*.qty'             =>"الكمية",
     ],
 
 ];

@@ -288,9 +288,11 @@ class ProductController extends BaseController
             }
 
         }
-        $success['products'] = ProductResource:collection($products);
+        $success['status'] = 200;
 
-return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+        return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+
+
     }
 
     public function changeSatusall(Request $request)
@@ -327,10 +329,11 @@ return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'pro
                 $success['products'] = new ProductResource($product);
 
             }
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');
+         
         }
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');
     }
     public function importProducts(Request $request)
     {
