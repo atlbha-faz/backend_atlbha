@@ -53,7 +53,7 @@ class CouponController extends BaseController
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
             //'start_at' =>['required','date'],
-            'expire_date' => ['required', 'date'],
+            'expire_date' => ['nullable', 'date'],
             'total_redemptions' => ['required', 'numeric'],
             'user_redemptions' => ['required', 'numeric'],
             'free_shipping' => ['required', 'in:0,1'],

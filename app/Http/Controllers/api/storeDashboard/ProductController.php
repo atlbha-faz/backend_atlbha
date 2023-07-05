@@ -70,7 +70,7 @@ class ProductController extends BaseController
             'SEOdescription' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['array'],
-            'subcategory_id.*' => ['required', 'numeric',
+            'subcategory_id.*' => ['nullable', 'numeric',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     return $query->join('categories', 'id', 'parent_id');
                 }),
@@ -189,7 +189,7 @@ class ProductController extends BaseController
                 'SEOdescription' => 'nullable',
                 'category_id' => 'required|exists:categories,id',
                 'subcategory_id' => ['array'],
-                'subcategory_id.*' => ['required', 'numeric',
+                'subcategory_id.*' => ['nullable', 'numeric',
                     Rule::exists('categories', 'id')->where(function ($query) {
                         return $query->join('categories', 'id', 'parent_id');
                     }),
