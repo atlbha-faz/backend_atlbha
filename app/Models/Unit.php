@@ -38,7 +38,7 @@ class Unit extends Model
         if (is_null($file)) {
             return   asset('assets/media/man.png');
         }
-        return asset('storage/files/unitfile') . '/' . $file;
+        return asset('storage/files/unitfile') . '/' .str_replace( array( '\'', '"', "" , ' ' ), '', $file);
     }
 
       public function countVideo($unitid)
