@@ -22,7 +22,7 @@ class IndexStoreController extends BaseController
 {
     public function index($id)
     {
-        $store = Store::where('domain',$id)->first();
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
@@ -35,7 +35,7 @@ class IndexStoreController extends BaseController
         $store = Store::where('is_deleted', 0)->where('id', $id)->first();
         if ($store != null) {
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $id)->pluck('logo')->first();
-            $success['domain'] = Store::where('is_deleted', 0)->where('id',$id)->pluck('domain')->first();
+            $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
 
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
             $sliders = array();
@@ -54,7 +54,7 @@ class IndexStoreController extends BaseController
             $success['specialProducts'] = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $id)->where('special', 'special')->orderBy('created_at', 'desc')->get());
 
-///////////////////////////
+            ///////////////////////////
             $success['categoriesHaveSpecial'] = Category::where('is_deleted', 0)->where('store_id', $id)->with('products')->has('products')->whereHas('products', function ($query) {
                 $query->where('is_deleted', 0)->where('special', 'special');
             })->get();
@@ -77,7 +77,7 @@ class IndexStoreController extends BaseController
 
             $success['resentArrivede'] = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
-////////////////////////////////////////
+            ////////////////////////////////////////
             $resent_arrivede_by_category = Category::where('is_deleted', 0)->where('store_id', $id)->whereHas('products', function ($query) use ($id) {
                 $query->where('is_deleted', 0)->where('store_id', $id)->whereDate('created_at', '>=', Carbon::now()->subWeek());
             })->get();
@@ -160,8 +160,15 @@ class IndexStoreController extends BaseController
     public function productPage($id)
     {
         $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
+
+        $store = Store::where('id', $store_id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
+        if (is_null($store) || $store->is_deleted == 1) {
+            return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+
+
         if ($store_id != null) {
-            $success['domain'] = Store::where('is_deleted', 0)->where('id',$store_id)->pluck('domain')->first();
+            $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
             $product = Product::where('is_deleted', 0)->where('id', $id)->first();
@@ -245,16 +252,16 @@ class IndexStoreController extends BaseController
         return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
 
     }
-    public function storPage(Request $request,$id)
+    public function storPage(Request $request, $id)
     {
-        $store = Store::where('domain',$request->domain)->first();
+        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
         $store_id = $store->id;
         $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->first();
-        if ($page  != null) {
-            $success['domain'] = Store::where('is_deleted', 0)->where('id',$store_id)->pluck('domain')->first();
+        if ($page != null) {
+            $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
             $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->get());
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
@@ -294,11 +301,11 @@ class IndexStoreController extends BaseController
     }
     public function storeProductCategory(Request $request)
     {
-        $store = Store::where('domain',$request->domain)->first();
+        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
-     
+
         $store_id = $store->id;
 
         $input = $request->all();
@@ -332,7 +339,7 @@ class IndexStoreController extends BaseController
         $price_to = $request->input('price_to');
 
         $products = ProductResource::collection(Product::where('is_deleted', 0)
-                ->where('store_id', $store_id )->when($filter_category, function ($query, $filter_category) {
+                ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
                 $query->where('category_id', $filter_category);
             })->when($price_from, function ($query, $price_from) {
                 $query->where('selling_price', '>=', $price_from);
@@ -341,14 +348,14 @@ class IndexStoreController extends BaseController
             })->orderBy($s, $sort)->paginate($limit));
 
         $filters = array();
-        $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id ])->get());
+        $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id])->get());
         $filters[0]["name"] = "التصنيفات";
         $filters[0]["slug"] = "category";
         $filters[0]["type"] = "category";
         $filters[0]["value"] = null;
 
-        $filters[1]["max"] = Product::where('is_deleted', 0)->where('store_id', $store_id )->orderBy('selling_price', 'desc')->pluck('selling_price')->first();
-        $filters[1]["min"] = Product::where('is_deleted', 0)->where('store_id', $store_id )->orderBy('selling_price', 'asc')->pluck('selling_price')->first();
+        $filters[1]["max"] = Product::where('is_deleted', 0)->where('store_id', $store_id)->orderBy('selling_price', 'desc')->pluck('selling_price')->first();
+        $filters[1]["min"] = Product::where('is_deleted', 0)->where('store_id', $store_id)->orderBy('selling_price', 'asc')->pluck('selling_price')->first();
         $filters[1]["name"] = "السعر";
         $filters[1]["slug"] = "price";
         $filters[1]["type"] = "range";
@@ -401,9 +408,9 @@ class IndexStoreController extends BaseController
         $success['verificayionMethod']=$verificayionMethod ;
 
          */
-        $success['domain'] = Store::where('is_deleted', 0)->where('id',$store_id)->pluck('domain')->first();
+        $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
         $success['lastProducts'] = ProductResource::collection(Product::where('is_deleted', 0)
-                ->where('store_id', $store_id )->orderBy('created_at', 'desc')->take(5)->get());
+                ->where('store_id', $store_id)->orderBy('created_at', 'desc')->take(5)->get());
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم  الصفحة للمتجر بنجاح', 'Store page return successfully');
     }
@@ -422,11 +429,11 @@ class IndexStoreController extends BaseController
     public function productSearch(Request $request)
     {
 
-        $store = Store::where('domain',$request->domain)->first();
+        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
-     
+
         $store_id = $store->id;
         $input = $request->all();
 
@@ -451,13 +458,13 @@ class IndexStoreController extends BaseController
         $query = $request->input('query');
 
         $products = ProductResource::collection(Product::where('is_deleted', 0)
-                ->where('store_id',  $store_id )
+                ->where('store_id', $store_id)
                 ->where('name', 'like', '%' . $query . '%')
                 ->when($category, function ($query, $category) {
                     $query->where('category_id', $category);
                 })
                 ->get());
-        $success['domain'] = Store::where('is_deleted', 0)->where('id',$store_id)->pluck('domain')->first();
+        $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
         $success['searchProducts'] = $products;
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض المنتجات بنجاح', 'Category products successfully');
