@@ -288,6 +288,8 @@ class ProductController extends BaseController
             }
 
         }
+        $success['products'] = ProductResource:collection($products);
+
 return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
 
