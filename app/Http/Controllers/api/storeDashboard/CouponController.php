@@ -53,12 +53,12 @@ class CouponController extends BaseController
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
             //'start_at' =>['required','date'],
-            'expire_date' => ['required', 'date'],
-            'total_redemptions' => ['required', 'numeric'],
-            'user_redemptions' => ['required', 'numeric'],
+            'expire_date' => ['nullable', 'date'],
+            'total_redemptions' => ['required', 'numeric','gt:0'],
+            'user_redemptions' => ['required', 'numeric','gt:0'],
             'free_shipping' => ['required', 'in:0,1'],
             'exception_discount_product' => ['required', 'in:0,1'],
-            'status' => 'required|in:active,not_active',
+            'status' => 'nullable|in:active,not_active',
 
         ]);
         if ($validator->fails()) {
@@ -162,9 +162,9 @@ class CouponController extends BaseController
             'expire_date' => ['required', 'date'],
             'free_shipping' => ['required', 'in:0,1'],
             'exception_discount_product' => ['required', 'in:0,1'],
-            'status' => 'required|in:active,not_active',
-            'total_redemptions' => ['required', 'numeric'],
-            'user_redemptions' => ['required', 'numeric'],
+            'status' => 'nullable|in:active,not_active',
+            'total_redemptions' => ['required', 'numeric','gt:0'],
+            'user_redemptions' => ['required', 'numeric','gt:0'],
         ]);
         if ($validator->fails()) {
             # code...
