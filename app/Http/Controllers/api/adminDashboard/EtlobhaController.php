@@ -64,6 +64,11 @@ class EtlobhaController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
+        if ($request->subcategory_id != null) {
+            $subcategory = implode(',', $request->subcategory_id);
+        } else {
+            $subcategory = null;
+        }
 
         $product = Product::create([
             'name' => $request->name,
@@ -77,7 +82,7 @@ class EtlobhaController extends BaseController
             'cover' => $request->cover,
             'amount' => $request->amount,
             'category_id' => $request->category_id,
-            'subcategory_id' => implode(',', $request->subcategory_id),
+            'subcategory_id' => $subcategory,
             'store_id' => null,
 
         ]);
@@ -143,7 +148,7 @@ class EtlobhaController extends BaseController
             'data.*.title' => 'required|string',
             'data.*.value' => 'required|array',
             'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => ['nullable','array'],
+            'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     return $query->join('categories', 'id', 'parent_id');
@@ -155,6 +160,12 @@ class EtlobhaController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
+        if ($request->subcategory_id != null) {
+            $subcategory = implode(',', $request->subcategory_id);
+        } else {
+            $subcategory = null;
+        }
+
         $product->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
@@ -166,7 +177,7 @@ class EtlobhaController extends BaseController
             'cover' => $request->cover,
             'amount' => $request->amount,
             'category_id' => $request->input('category_id'),
-            'subcategory_id' => implode(',', $request->subcategory_id),
+            'subcategory_id' => $subcategory,
 
         ]);
         if ($request->hasFile("images")) {
@@ -256,61 +267,57 @@ class EtlobhaController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $products =Product::whereIn('id',$request->id)->where('is_deleted',0)->where('for','etlobha')->get();
-            if(count($products)>0){
-            foreach($products as $product){
-               $product->update(['is_deleted' => 1]);
+        $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'etlobha')->get();
+        if (count($products) > 0) {
+            foreach ($products as $product) {
+                $product->update(['is_deleted' => 1]);
             }
-               $success['products']= ProductResource::collection($products);
-               $success['status']= 200;
-                return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
-    }
-    else{
-      $success['status']= 200;
-  return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
-  }
-  }
-
-      public function changeStatusall(Request $request)
-    {
-        $products =Product::whereIn('id',$request->id)->where('is_deleted',0)->where('for','etlobha')->get();
-        if(count($products)>0){
-        foreach($products as $product){
-
-        if($product->status === 'active'){
-            $product->update(['status' => 'not_active']);
-         }
-         else{
-        $product->update(['status' => 'active']);
-       }
+            $success['products'] = ProductResource::collection($products);
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
-        $success['products']= ProductResource::collection($products);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة المنتج بنجاح',' product status updared successfully');
-      }
-      else{
-          $success['status']= 200;
-      return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
-      }
+    }
+
+    public function changeStatusall(Request $request)
+    {
+        $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'etlobha')->get();
+        if (count($products) > 0) {
+            foreach ($products as $product) {
+
+                if ($product->status === 'active') {
+                    $product->update(['status' => 'not_active']);
+                } else {
+                    $product->update(['status' => 'active']);
+                }
+            }
+            $success['products'] = ProductResource::collection($products);
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم تعدبل حالة المنتج بنجاح', ' product status updared successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
+        }
 
     }
     public function statistics($product)
     {
 
-      $product =Product::where('id',$product)->where('is_deleted',0)->where('for','etlobha')->first();
-      if($product != null){
-      $success['product']=New productResource($product);
-      $success['import_count']=  $product->importproduct->count();
-      $success['number_of_sold_product']=Order::whereHas('items', function($q) use ($product) {
-        $q->where('product_id',$product->id)->where('order_status','completed');
-    })->count();
-    $success['total']= $success['number_of_sold_product']*  $product->selling_price;
-      $success['status']= 200;
-       return $this->sendResponse($success,'تم العرض بنجاح',' product show successfully');
-  }
-   else{
-    $success['status']= 200;
-    return $this->sendResponse($success,'المدخلات غير موجودة','id does not exit');
-      }
-  }
+        $product = Product::where('id', $product)->where('is_deleted', 0)->where('for', 'etlobha')->first();
+        if ($product != null) {
+            $success['product'] = new productResource($product);
+            $success['import_count'] = $product->importproduct->count();
+            $success['number_of_sold_product'] = Order::whereHas('items', function ($q) use ($product) {
+                $q->where('product_id', $product->id)->where('order_status', 'completed');
+            })->count();
+            $success['total'] = $success['number_of_sold_product'] * $product->selling_price;
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم العرض بنجاح', ' product show successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
+        }
+    }
 }
