@@ -73,10 +73,13 @@ class ImportproductController extends BaseController
     public function updateimportproduct(Request $request, $id)
     {
         $importproduct = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
+        $purchasing_price = Product::where('id', $id)->value('purchasing_price');
+
         if ($importproduct != null) {
             $input = $request->all();
             $validator = Validator::make($input, [
-                'price' => ['required', 'numeric', 'gt:0'],
+                'price' => ['required', 'numeric',
+                    'gte:' . $purchasing_price],
 
             ]);
             if ($validator->fails()) {
