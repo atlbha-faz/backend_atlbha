@@ -85,6 +85,12 @@ class CourseController extends BaseController
         foreach($data['file'] as $filedata)
     {
         $file[]=$filedata->getClientOriginalName();
+        $fileName=$filedata->getClientOriginalName();
+        $filePath = 'files/unitfile/' . str_replace( array( '\'', '"', "" , ' ' ), '', $fileName);
+
+        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
+
+ 
     }
 
         $unit= new Unit([
@@ -294,7 +300,11 @@ class CourseController extends BaseController
         $file=array();
         foreach($data['file'] as $filedata)
     {
-        $file[]=$filedata->getClientOriginalName();
+      $file[]=$filedata->getClientOriginalName();
+      $fileName=$filedata->getClientOriginalName();
+      $filePath = 'files/unitfile/' . str_replace( array( '\'', '"', "" , ' ' ), '', $fileName);
+
+      $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
     }
 
         $unit= new Unit([
