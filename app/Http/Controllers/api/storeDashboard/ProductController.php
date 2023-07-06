@@ -65,11 +65,11 @@ class ProductController extends BaseController
             'selling_price' => ['required', 'numeric', 'gt:0'],
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'discount_price' => [ 'nullable','numeric'],
-            'discount_percent' => [ 'nullable','numeric'],
+            'discount_price' => ['nullable', 'numeric'],
+            'discount_percent' => ['nullable', 'numeric'],
             'SEOdescription' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => ['nullable','array'],
+            'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     return $query->join('categories', 'id', 'parent_id');
@@ -82,6 +82,11 @@ class ProductController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
+        if ($request->subcategory_id != null) {
+            $subcategory = implode(',', $request->subcategory_id);
+        } else {
+            $subcategory = null;
+        }
         $product = Product::create([
             'name' => $request->name,
             'for' => 'store',
@@ -92,7 +97,7 @@ class ProductController extends BaseController
             'SEOdescription' => $request->SEOdescription,
             'discount_price' => $request->discount_price,
             'discount_percent' => $request->discount_percent,
-            'subcategory_id' => implode(',', $request->subcategory_id),
+            'subcategory_id' => $subcategory,
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
         ]);
@@ -188,7 +193,7 @@ class ProductController extends BaseController
                 'discount_percent' => ['required', 'numeric'],
                 'SEOdescription' => 'nullable',
                 'category_id' => 'required|exists:categories,id',
-                'subcategory_id' => ['nullable','array'],
+                'subcategory_id' => ['nullable', 'array'],
                 'subcategory_id.*' => ['nullable', 'numeric',
                     Rule::exists('categories', 'id')->where(function ($query) {
                         return $query->join('categories', 'id', 'parent_id');
@@ -202,6 +207,12 @@ class ProductController extends BaseController
                 # code...
                 return $this->sendError(null, $validator->errors());
             }
+            if ($request->subcategory_id != null) {
+                $subcategory = implode(',', $request->subcategory_id);
+            } else {
+                $subcategory = null;
+            }
+
             $product->update([
                 'name' => $request->input('name'),
                 'for' => 'store',
@@ -213,7 +224,7 @@ class ProductController extends BaseController
                 'discount_price' => $request->input('discount_price'),
                 'discount_percent' => $request->input('discount_percent'),
                 'category_id' => $request->input('category_id'),
-                'subcategory_id' => implode(',', $request->subcategory_id),
+                'subcategory_id' => $subcategory,
                 // 'store_id' => $request->input('store_id'),
 
             ]);
@@ -292,7 +303,6 @@ class ProductController extends BaseController
 
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
 
-
     }
 
     public function changeSatusall(Request $request)
@@ -329,7 +339,7 @@ class ProductController extends BaseController
                 $success['products'] = new ProductResource($product);
 
             }
-         
+
         }
         $success['status'] = 200;
 
