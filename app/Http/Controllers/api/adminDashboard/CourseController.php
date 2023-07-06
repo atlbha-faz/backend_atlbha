@@ -82,6 +82,7 @@ class CourseController extends BaseController
   foreach($request->data as $data)
     {
         $file=array();
+        if (isset($data['file'])) {
         foreach($data['file'] as $filedata)
     {
         $file[]=$filedata->getClientOriginalName();
@@ -92,7 +93,7 @@ class CourseController extends BaseController
 
  
     }
-
+  }
         $unit= new Unit([
             'title' => $data['title'],
             'file' =>implode(',',$file),
@@ -100,7 +101,7 @@ class CourseController extends BaseController
               ]);
 
       $unit->save();
-
+      if (isset($data['video'])) {
     foreach($data['video'] as $videodata)
     {
 
@@ -133,7 +134,7 @@ class CourseController extends BaseController
         }
 
     }
-
+  }
         }
 
 
@@ -298,6 +299,7 @@ class CourseController extends BaseController
          foreach($request->data as $data)
     {
         $file=array();
+        if (isset($data['file'])) {
         foreach($data['file'] as $filedata)
     {
       $file[]=$filedata->getClientOriginalName();
@@ -306,6 +308,7 @@ class CourseController extends BaseController
 
       $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
     }
+  }
 
         $unit= new Unit([
             'title' => $data['title'],
@@ -314,7 +317,7 @@ class CourseController extends BaseController
               ]);
 
       $unit->save();
-
+      if (isset($data['video'])) {
     foreach($data['video'] as $videodata)
     {
 
@@ -348,7 +351,7 @@ class CourseController extends BaseController
         }
 
     }
-
+   }
         }
 
 
