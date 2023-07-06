@@ -315,7 +315,7 @@ return [
         'purchasing_price' => 'سعر الشراء',
         'selling_price' => 'سعر البيع',
         'stock' => 'المخزون',
-        'amount' => '',
+        'amount' => 'كمية غير محدودة',
         'quantity' => 'الكمية',
         'less_qty' => ' اقل كمية للتنبيه',
         'images.*' => 'الصور المتعددة',
@@ -393,6 +393,12 @@ return [
         'video' => 'الفيديو',
         'unit_id' => 'الوحدة',
         'sevices' => 'الخدمة',
+        'commercialregistertype'=>'السجل التجاري/ معروف',
+        'fixed'=>"قيمة ثابتة",
+        'fixed_amount'=>"قيمة ثابتة",
+        'percent'=>"نسبة",
+        "user_type"=>"نوع المستخدم",
+        "If_bought_gets"=>"العرض الاول"   
     ],
 
 ];
