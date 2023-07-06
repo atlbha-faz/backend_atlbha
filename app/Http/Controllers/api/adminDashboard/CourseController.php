@@ -68,8 +68,8 @@ class CourseController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        
-        
+
+
         $course = Course::create([
             'name' => $request->name,
             'description'=>$request->description,
@@ -112,7 +112,7 @@ class CourseController extends BaseController
         // dd($fileAnalyze);
         $playtimes = $fileAnalyze['playtime_seconds'];
         $playtime=gmdate("H:i:s", $playtimes);
-      
+
         if ($isFileUploaded) {
             $video = new Video([
            'duration' => $playtime,
@@ -180,7 +180,7 @@ class CourseController extends BaseController
     public function update(Request $request,  $course)
     {
       $course =  Course::where('id', $course)->first();
-       
+
         if (is_null($course ) || $course->is_deleted==1){
          return $this->sendError("الكورس غير موجودة","course is't exists");
         }

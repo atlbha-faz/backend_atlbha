@@ -54,7 +54,7 @@ class StoreCategoryController extends BaseController
                 'name'=>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
                // 'store_id' =>'required|exists:stores,id',
-                'data.*.name'=>'required|string|max:255',
+                'data.*.name'=>'nullable|string|max:255',
                 'data.*.id' => 'nullable|numeric',
 
             ]);
@@ -177,7 +177,7 @@ if($request->data){
     {
 
         $category=Category::where('store_id',null)->where('id',$id)->first();
-       
+
         // dd($request->data);
       if (is_null($category) ||  $category->is_deleted==1 || $category->for=='etlobha'){
           return $this->sendError("التصنيف غير موجودة"," Category is't exists");
@@ -188,7 +188,7 @@ if($request->data){
           $input = $request->all();
          $validator =  Validator::make($input ,[
           'name'=>'required|string|max:255',
-          'data.*.name'=>'required|string|max:255',
+          'data.*.name'=>'nullable|string|max:255',
           'data.*.id' => 'nullable|numeric',
           // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
          ]);
@@ -272,7 +272,7 @@ if($request->data){
              if(count($categorys)>0){
            foreach($categorys as $category)
            {
-        
+
              $category->update(['is_deleted' => 1]);
             $success['categorys']=New CategoryResource($category);
 
@@ -295,7 +295,7 @@ if($request->data){
                     {
                 foreach($categorys as $category)
                 {
-               
+
                     if($category->status === 'active'){
                 $category->update(['status' => 'not_active']);
                 }

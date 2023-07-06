@@ -69,7 +69,7 @@ class ProductController extends BaseController
             'discount_percent' => [ 'nullable','numeric'],
             'SEOdescription' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => ['array'],
+            'subcategory_id' => ['nullable','array'],
             'subcategory_id.*' => ['nullable', 'numeric',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     return $query->join('categories', 'id', 'parent_id');
@@ -188,7 +188,7 @@ class ProductController extends BaseController
                 'discount_percent' => ['required', 'numeric'],
                 'SEOdescription' => 'nullable',
                 'category_id' => 'required|exists:categories,id',
-                'subcategory_id' => ['array'],
+                'subcategory_id' => ['nullable','array'],
                 'subcategory_id.*' => ['nullable', 'numeric',
                     Rule::exists('categories', 'id')->where(function ($query) {
                         return $query->join('categories', 'id', 'parent_id');
