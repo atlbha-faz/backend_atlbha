@@ -53,7 +53,7 @@ class CategoryController extends BaseController
             $validator =  Validator::make($input ,[
                 'name'=>'required|string|max:255',
                 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-                'data.*.name'=>'required|string|max:255',
+                'data.*.name'=>'nullable|string|max:255',
                 'data.*.id' => 'nullable|numeric',
             ]);
             if ($validator->fails())
@@ -75,12 +75,12 @@ class CategoryController extends BaseController
                 'name' => $request->name,
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
                 'icon' => $request->icon,
-                'parent_id'=>null, 
+                'parent_id'=>null,
                 'for'=>'etlobha',
                 'store_id'=> null,
               ]);
 
-           
+
   if($request->data){
     foreach($request->data as $data)
     {
@@ -88,7 +88,7 @@ class CategoryController extends BaseController
             $cat=Category::orderBy('id', 'desc')->first();
           $number=$cat->number;
           $number= ((int) $number) +1;
-        
+
         $subcategory= new Category([
                 'number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
             'name' => $data['name'],
@@ -197,7 +197,7 @@ class CategoryController extends BaseController
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
              'icon'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-            'data.*.name'=>'required|string|max:255',
+            'data.*.name'=>'nullable|string|max:255',
             'data.*.id' => 'nullable|numeric',
            ]);
            if ($validator->fails())
@@ -205,10 +205,10 @@ class CategoryController extends BaseController
                # code...
                return $this->sendError(null,$validator->errors());
            }
-        
-        
-           
-        
+
+
+
+
            $category->update([
                'name' => $request->input('name'),
                 'icon' =>$request->icon,
@@ -228,7 +228,7 @@ class CategoryController extends BaseController
 
      foreach ($request->data as $data) {
          $sub_cat = Category::find($data['id']);
-         
+
            if(!is_null($sub_cat)){
              $number = $sub_cat->number;
          }else{
@@ -237,8 +237,8 @@ class CategoryController extends BaseController
           $number= ((int) $number) +1;
              $number = str_pad($number, 4, '0', STR_PAD_LEFT);
          }
-              
-       
+
+
       $subcategories[] = Category::updateOrCreate([
          'id'=>$data['id'],
       ], [
@@ -270,9 +270,9 @@ class CategoryController extends BaseController
             }
             if($category->parent_id == null){
             $categories = Category::where('parent_id', $category->id)->get();
-   
+
            foreach ($categories as $subcategory) {
-   
+
             $subcategory->update(['is_deleted' => 1]);
                  }
                 }
@@ -290,7 +290,7 @@ class CategoryController extends BaseController
             if(count($categorys)>0){
            foreach($categorys as $category)
            {
-          
+
 
              $category->update(['is_deleted' => 1]);
             $success['categorys']=New CategoryResource($category);
@@ -313,7 +313,7 @@ class CategoryController extends BaseController
                     if(count($categorys)>0){
                 foreach($categorys as $category)
                 {
-                 
+
                     if($category->status === 'active'){
                 $category->update(['status' => 'not_active']);
                 }
