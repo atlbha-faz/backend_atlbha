@@ -22,22 +22,26 @@ class ImportproductController extends BaseController
     {
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'store')->where('parent_id', null)->where('store_id', null)->get());
-        $imports=Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
-        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->whereNotIn('id',$imports)->get());
+        $imports = Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
+        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->whereNotIn('id', $imports)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
     }
+
     public function store(Request $request)
     {
         $importedproduct = Importproduct::where('product_id', $request->product_id)->where('store_id', auth()->user()->store_id)->first();
         if ($importedproduct) {
             return $this->sendError(" تم استيراده مسبقا ", "imported");
         }
+        $purchasing_price = Product::where('id', $request->product_id)->value('purchasing_price');
+
         $input = $request->all();
         $validator = Validator::make($input, [
-            'price' => ['required', 'numeric', 'gt:0'],
+            'price' => ['required', 'numeric',
+                'gte:' . $purchasing_price],
             'product_id' => 'required',
         ]);
         if ($validator->fails()) {
@@ -83,7 +87,7 @@ class ImportproductController extends BaseController
                 'price' => $request->price,
             ]);
             $success['importproducts'] = new ImportproductResource($importproduct);
-            $success['status'] =200;
+            $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
         } else {
