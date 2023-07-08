@@ -22,5 +22,12 @@ class CreateUserSeeder extends Seeder
          $permissions = Permission::all();
 
          $role->syncPermissions($permissions);
+
+         $role = Role::create(['name' => 'المالك',
+         'type'=>'store']);
+ 
+          $permissions = Permission::all();
+ 
+          $role->syncPermissions($permissions);
     }
 }

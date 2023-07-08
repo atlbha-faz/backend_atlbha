@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\StoreResource;
-use App\Models\Store;
-use App\Models\User;
-use App\Notifications\verificationNotification;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Notification;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Store;
+use Illuminate\Http\Request;
+use App\Events\VerificationEvent;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class VerificationController extends BaseController
 {
@@ -77,14 +78,15 @@ class VerificationController extends BaseController
             Notification::send($user, new verificationNotification($data));
         }
         event(new VerificationEvent($data));
+        $date = Carbon::now()->toDateTimeString();
         $store->update([
             'commercialregistertype' => $request->input('commercialregistertype'),
-
             'city_id' => $request->input('city_id'),
             'link' => $request->input('link'),
             'file' => $request->file,
             'phonenumber' => $request->input('phonenumber'),
             'verification_status' => "admin_waiting",
+            'verification_date'=>  $date 
 
         ]);
         if ($store->commercialregistertype == "commercialregister") {
