@@ -35,7 +35,7 @@ class EtlobhaserviceController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
 
-            'service_id'=>'array|exists:services,id'
+            'service_id'=>'required|array|exists:services,id'
         ]);
         if ($validator->fails())
         {
