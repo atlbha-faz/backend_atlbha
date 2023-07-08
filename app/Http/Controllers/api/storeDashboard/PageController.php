@@ -172,9 +172,10 @@ class PageController extends BaseController
 
     public function update(Request $request, $page)
     {
+    
         $page = Page::where('id', $page)->where('store_id', auth()->user()->store_id)->first();
 
-        if (is_null($page) || $page->is_deleted == 1 || $page->store_id == null || $page->store_id != auth()->user()->store_id) {
+        if (is_null($page) || $page->is_deleted == 1) {
             return $this->sendError("الصفحة غير موجودة", "Page is't exists");
         }
 
