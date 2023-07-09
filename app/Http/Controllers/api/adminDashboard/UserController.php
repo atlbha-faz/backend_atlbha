@@ -24,7 +24,8 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->get());
+        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $userAdmain->id)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع االمستخدمين بنجاح', 'Users return successfully');
@@ -98,8 +99,9 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-        $user = User::query()->find($id);
-        if (is_null($user) || $user->is_deleted == 1) {
+        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $user = User::query()->whereNot('id',  $userAdmain->id)->find($id);
+        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id ) {
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
         $success['users'] = new UserResource($user);
@@ -128,8 +130,9 @@ class UserController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $user = User::query()->find($id);
-        if (is_null($user) || $user->is_deleted == 1) {
+        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $user = User::query()->whereNot('id',$userAdmain->id)->find($id);
+        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id) {
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
 
@@ -188,9 +191,9 @@ class UserController extends BaseController
      */
     public function destroy($id)
     {
-
-        $user = User::query()->find($id);
-        if (is_null($user) || $user->is_deleted == 1) {
+        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $user = User::query()->whereNot('id',  $userAdmain->id)->find($id);
+        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id) {
             return $this->sendError("المستخدم غير موجودة", "User is't exists");
         }
         $user->update(['is_deleted' => 1]);
@@ -202,8 +205,8 @@ class UserController extends BaseController
     }
     public function deleteall(Request $request)
     {
-
-        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->get();
+        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->get();
         if (count($users) > 0) {
             foreach ($users as $user) {
 
@@ -222,8 +225,8 @@ class UserController extends BaseController
     }
     public function changeSatusall(Request $request)
     {
-
-        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->get();
+        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->get();
         if (count($users) > 0) {
             foreach ($users as $user) {
                 if ($user->status === 'active') {
