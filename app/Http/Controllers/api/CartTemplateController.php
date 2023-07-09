@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Product;
-use App\Models\CartDetail;
-use Illuminate\Http\Request;
-use App\Http\Resources\CartResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CartResource;
+use App\Models\Cart;
+use App\Models\CartDetail;
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CartTemplateController extends BaseController
 {
@@ -32,13 +32,25 @@ class CartTemplateController extends BaseController
 
     public function show($id)
     {
-        $store = Store::where('domain',$id)->where('verification_status','accept')->whereDate('end_at', '>', Carbon::now())->first();
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
+        if ($store->maintenance != null) {
+            if ($store->maintenance->status == 'active') {
+                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+            }
+
+        }
+
         $id = $store->id;
 
-        $success['domain'] = Store::where('is_deleted', 0)->where('id',$id)->pluck('domain')->first();
+        $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
 
         $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $id)->first();
 

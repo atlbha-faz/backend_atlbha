@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\MaintenanceResource;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
@@ -26,7 +27,20 @@ class IndexStoreController extends BaseController
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
+        if ($store->maintenance != null) {
+            if ($store->maintenance->status == 'active') {
+                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+            }
+
+        }
+
         $id = $store->id;
+
         // visit count
         // $homepage=Homepage::where('is_deleted',0)->where('store_id',null)->first();
         //   views($homepage)->record();
@@ -165,7 +179,17 @@ class IndexStoreController extends BaseController
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
+        if ($store->maintenance != null) {
+            if ($store->maintenance->status == 'active') {
+                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
 
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+            }
+
+        }
 
         if ($store_id != null) {
             $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
@@ -258,6 +282,18 @@ class IndexStoreController extends BaseController
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
+        if ($store->maintenance != null) {
+            if ($store->maintenance->status == 'active') {
+                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+            }
+
+        }
+
         $store_id = $store->id;
         $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->first();
         if ($page != null) {
@@ -304,6 +340,17 @@ class IndexStoreController extends BaseController
         $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+        if ($store->maintenance != null) {
+            if ($store->maintenance->status == 'active') {
+                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+            }
+
         }
 
         $store_id = $store->id;
@@ -432,6 +479,17 @@ class IndexStoreController extends BaseController
         $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
         if (is_null($store) || $store->is_deleted == 1) {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+        if ($store->maintenance != null) {
+            if ($store->maintenance->status == 'active') {
+                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+            }
+
         }
 
         $store_id = $store->id;
