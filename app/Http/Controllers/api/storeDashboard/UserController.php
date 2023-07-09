@@ -24,7 +24,14 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        if($storeAdmain!=null){
+        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get());
+        }
+        else{
+            $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get());
+  
+        }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع االمستخدمين بنجاح', 'Users return successfully');
@@ -95,7 +102,14 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        if($storeAdmain!=null){
+        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->first();
+        }
+        else{
+        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->first();
+  
+        }
         if (is_null($user) || $user->is_deleted == 1) {
             return $this->sendError("المستخدم غير موجود", "user is't exists");
         }
@@ -125,7 +139,13 @@ class UserController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        if($storeAdmain!=null){
+        $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
+        } else{
+            $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->first();
+  
+        }
 if (is_null($user) || $user->is_deleted == 1 ) {
     return $this->sendError("المستخدم غير موجود", "user is't exists");
 }
@@ -189,8 +209,14 @@ if (is_null($user) || $user->is_deleted == 1 ) {
      */
     public function destroy($id)
     {
-        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
-
+        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        if($storeAdmain!=null){
+        $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
+        }
+        else{
+            $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->first();
+ 
+        }
         if (is_null($user) || $user->is_deleted == 1) {
             return $this->sendError("المستخدم غير موجودة", "User is't exists");
         }
@@ -203,8 +229,14 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function deleteall(Request $request)
     {
-
-        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        if($storeAdmain!=null){
+        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
+        }
+        else
+        {
+     $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get();
+        }
         if (count($users) > 0) {
             foreach ($users as $user) {
                 $user->update(['is_deleted' => 1]);
@@ -221,8 +253,14 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function changeSatusall(Request $request)
     {
-
-        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        if($storeAdmain!=null){
+        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
+        }
+        else
+        {
+            $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get();
+        }
         if (count($users) > 0) {
             foreach ($users as $user) {
                 if ($user->status === 'active') {
@@ -243,7 +281,15 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function changeStatus($id)
     {
-        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        if($storeAdmain!=null){
+        $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
+        }
+        else
+        {
+            $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->first();
+  
+        }
         if (is_null($user) || $user->is_deleted == 1) {
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }

@@ -144,7 +144,7 @@ class SelectorController extends BaseController
     }
     public function roles()
     {
-        $success['roles'] = DB::table('roles')->get();
+        $success['roles'] = DB::table('roles')->whereNot('name', 'المالك')->get();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الأدوار بنجاح', 'roles return successfully');

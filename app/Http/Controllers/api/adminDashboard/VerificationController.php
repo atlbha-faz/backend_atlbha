@@ -204,7 +204,6 @@ class VerificationController extends BaseController
             'link' =>  null,
             'file' =>  null,
                'verification_status'=>'pending',
-               'verification_date'=>null
                ]);
             }
                $success['stores']= VerificationResource::collection($stores);

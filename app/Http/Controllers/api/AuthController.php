@@ -70,7 +70,6 @@ class AuthController extends BaseController
                     //'store_email'=>'required_if:user_type,store|email|unique:stores',
                     'password' => 'required',
                     //'domain'=>'required_if:user_type,store|unique:stores',
-
                     //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
                     //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
                     'package_id' => 'required_if:user_type,store|exists:packages,id',
@@ -126,9 +125,10 @@ class AuthController extends BaseController
                     //  'city_id' => $request->city_id,
 
                 ]);
-
+             
                 $user->update([
                     'store_id' => $store->id]);
+                    $user->assignRole("المالك");
 
                 if ($request->periodtype == "6months") {
                     $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
