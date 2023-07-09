@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ProductResource;
-use App\Models\Image;
-use App\Models\Option;
-use App\Models\Order;
-use App\Models\Product;
 use Carbon\Carbon;
+use App\Models\Image;
+use App\Models\Order;
+use App\Models\Option;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ProductResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class EtlobhaController extends BaseController
 {
@@ -22,6 +23,10 @@ class EtlobhaController extends BaseController
     public function index()
     {
         $success['newProducts'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('created_at', '>=', Carbon::now()->subDay())->count();
+        $more_sales= $products=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',null)->where('products.for','etlobha')->where('products.is_deleted', 0)
+        ->select('products.id',DB::raw('sum(order_items.total_price) as sales'),DB::raw('sum(order_items.quantity) as count'))
+           ->groupBy('order_items.product_id')->orderBy('count', 'desc')->first();
+           $success['more_sales'] =Product::where('id',$more_sales->id)->value('name');
         $success['not_active_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('status', 'not_active')->count();
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
         $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->get());
