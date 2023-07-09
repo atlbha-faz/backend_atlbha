@@ -14,25 +14,25 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-            if($this->status ==null || $this->status == 'active'){
+        if ($this->status == null || $this->status == 'active') {
             $status = 'نشط';
-        }else{
+        } else {
             $status = 'غير نشط';
         }
 
-        if($this->special ==null || $this->special == 'special'){
+        if ($this->special == null || $this->special == 'special') {
             $special = 'مميز';
-        }else{
+        } else {
             $special = 'غير مميز';
         }
 
-       return [
-            'id' =>$this->id,
+        return [
+            'id' => $this->id,
 
             'name' => $this->name,
             //'sku' => $this->sku,
             'for' => $this->for,
-             'slug' => $this->slug,
+            'slug' => $this->slug,
             'description' => $this->description,
             'purchasing_price' => $this->purchasing_price,
             'selling_price' => $this->selling_price,
@@ -40,30 +40,29 @@ class ProductResource extends JsonResource
             'less_qty' => $this->less_qty,
             'stock' => $this->stock,
             'tags' => $this->tags,
-            'cover' =>$this->cover,
-            'discount_price'=>$this->discount_price,
-            'discount_percent'=>$this->discount_percent,
-            'SEOdescription'=>$this->SEOdescription,
-            'importproduct'=>$this->importproduct->count(),
-            'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id',explode(',',$this->subcategory_id))->get()),
+            'cover' => $this->cover,
+            'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
+            'discount_percent' => $this->discount_percent !== null ? $this->discount_percent : 0,
+            'SEOdescription' => $this->SEOdescription,
+            'importproduct' => $this->importproduct->count(),
+            'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id', explode(',', $this->subcategory_id))->get()),
             'status' => $status,
-            'special' => $special ,
-            'amount'=>$this->amount,
-            'productRating'=>$this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
-            'productRatingCount'=>$this->productratecount($this->id) !== null ? $this->productratecount($this->id) : 0,
-            'getOrderTotal'=>$this->getOrderTotal($this->id) !== null ? $this->getOrderTotal($this->id) : 0,
+            'special' => $special,
+            'amount' => $this->amount,
+            'productRating' => $this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
+            'productRatingCount' => $this->productratecount($this->id) !== null ? $this->productratecount($this->id) : 0,
+            'getOrderTotal' => $this->getOrderTotal($this->id) !== null ? $this->getOrderTotal($this->id) : 0,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
 
-            'category' => New CategoryResource($this->category),
-            'store' => New StoreResource($this->store),
-         'images' => ImageResource::collection($this->image),
-           'options'=>OptionResource::collection($this->option),
+            'category' => new CategoryResource($this->category),
+            'store' => new StoreResource($this->store),
+            'images' => ImageResource::collection($this->image),
+            'options' => OptionResource::collection($this->option),
 
-             'is_import' =>false,
+            'is_import' => false,
 
-
-       ];
-        }
+        ];
+    }
 }
