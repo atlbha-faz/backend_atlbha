@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ProductResource;
-use App\Imports\AdminProductImport;
+use Carbon\Carbon;
 use App\Models\Image;
 use App\Models\Option;
 use App\Models\Product;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Imports\AdminProductImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Resources\ProductResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class StockController extends BaseController
 {
@@ -34,7 +35,11 @@ class StockController extends BaseController
         $success['finished_soon'] = Product::where('is_deleted', 0)->where('for', 'stock')->where('stock', '<', '20')->count();
         $date = Carbon::now()->subDays(7);
         $success['last_week_product_added'] = Product::where('is_deleted', 0)->where('for', 'stock')->where('created_at', '>=', $date)->count();
-        $success['most_order'] = 0;
+        $most_order = DB::table('importproducts')
+            ->select('product_id', DB::raw('COUNT(*) as count'))
+            ->groupBy('product_id')
+            ->orderByDesc('count')->first();
+        $success['most_order'] = Product::where('id',$most_order->product_id)->value('name');
         $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->get());
         $success['status'] = 200;
 
