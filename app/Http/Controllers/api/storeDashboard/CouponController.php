@@ -203,13 +203,13 @@ class CouponController extends BaseController
         ]);
         switch ($request->coupon_apply) {
             case ('selected_product'):
-                $coupon->products()->attach($request->select_product_id);
+                $coupon->products()->sync($request->select_product_id);
                 break;
             case ('selected_category'):
-                $coupon->categories()->attach($request->select_category_id);
+                $coupon->categories()->sync($request->select_category_id);
                 break;
             case ('selected_payment'):
-                $coupon->paymenttypes()->attach($request->select_payment_id);
+                $coupon->paymenttypes()->sync($request->select_payment_id);
                 break;
 
         }
