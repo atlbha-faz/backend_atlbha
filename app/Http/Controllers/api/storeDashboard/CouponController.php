@@ -59,7 +59,7 @@ class CouponController extends BaseController
             'free_shipping' => ['required', 'in:0,1'],
             'exception_discount_product' => ['required', 'in:0,1'],
             'coupon_apply' => 'in:all,selected_product,selected_category,selected_payment',
-            'offer_apply' => $request->offer_apply,
+
             'status' => 'nullable|in:active,not_active',
 
         ]);
@@ -83,13 +83,13 @@ class CouponController extends BaseController
         ]);
         switch ($request->coupon_apply) {
             case ('selected_product'):
-                $offer->products()->attach($request->select_product_id, ["type" => "select"]);
+                $coupon->products()->attach($request->select_product_id);
                 break;
             case ('selected_category'):
-                $offer->categories()->attach($request->select_category_id, ["type" => "select"]);
+                $coupon->categories()->attach($request->select_category_id);
                 break;
             case ('selected_payment'):
-                $offer->paymenttypes()->attach($request->select_payment_id, ["type" => "select"]);
+                $coupon->paymenttypes()->attach($request->select_payment_id);
                 break;
 
         }
