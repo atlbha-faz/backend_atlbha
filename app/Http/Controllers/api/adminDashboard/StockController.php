@@ -276,6 +276,9 @@ class StockController extends BaseController
             }
 
             foreach ($request->data as $data) {
+                if (!isset($data['id'])) {
+                    $data['id']=null;
+                }
                 $options[] = Option::updateOrCreate([
                     'id' => $data['id'],
                     'product_id' => $id,
