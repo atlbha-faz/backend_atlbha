@@ -90,7 +90,7 @@ class CurrencyController extends BaseController
             $success['currencies']=New CurrencyResource($currency);
             $success['status']= 200;
 
-             return $this->sendResponse($success,'تم  عرض بنجاح',' Currency showed successfully');
+             return $this->sendResponse($success,'تم  عرض  العملة بنجاح',' Currency showed successfully');
 
         }
         // public function changeStatus($id)
@@ -113,7 +113,7 @@ class CurrencyController extends BaseController
 
         // }
 
-public function changeSatusall(Request $request)
+          public function changeSatusall(Request $request)
             {
                     $currencys =Currency::whereIn('id',$request->id)->where('is_deleted',0)->get();
                     if(count($currencys)>0){
@@ -131,7 +131,7 @@ public function changeSatusall(Request $request)
                     }
                     $success['status']= 200;
 
-                return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','currency updated successfully');
+                return $this->sendResponse($success,'تم تعديل حالة العملة بنجاح','currency updated successfully');
            }
            else{
             $success['status']= 200;
