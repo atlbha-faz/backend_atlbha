@@ -26,7 +26,12 @@ class EtlobhaController extends BaseController
         $more_sales= $products=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',null)->where('products.for','etlobha')->where('products.is_deleted', 0)
         ->select('products.id',DB::raw('sum(order_items.total_price) as sales'),DB::raw('sum(order_items.quantity) as count'))
            ->groupBy('order_items.product_id')->orderBy('count', 'desc')->first();
+           if(  $more_sales!= null){
            $success['more_sales'] =Product::where('id',$more_sales->id)->value('name');
+           }
+           else{
+            $success['more_sales']=0;
+           }
         $success['not_active_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('status', 'not_active')->count();
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
         $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->get());
