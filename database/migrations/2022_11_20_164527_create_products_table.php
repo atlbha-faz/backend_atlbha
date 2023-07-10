@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('cover');
             $table->text("tags")->nullable();
             $table->double('discount_price')->nullable();
-            $table->integer('discount_percent')->nullable();
+
             $table->string('SEOdescription')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');

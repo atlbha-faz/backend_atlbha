@@ -66,7 +66,7 @@ class ProductController extends BaseController
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'discount_price' => ['nullable', 'numeric'],
-            'discount_percent' => ['nullable', 'numeric'],
+            
             'SEOdescription' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
@@ -96,7 +96,7 @@ class ProductController extends BaseController
             'cover' => $request->cover,
             'SEOdescription' => $request->SEOdescription,
             'discount_price' => $request->discount_price,
-            'discount_percent' => $request->discount_percent,
+
             'subcategory_id' => $subcategory,
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
@@ -190,7 +190,7 @@ class ProductController extends BaseController
                 'stock' => ['required', 'numeric', 'gt:0'],
                 'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
                 'discount_price' => ['required', 'numeric'],
-                'discount_percent' => ['required', 'numeric'],
+
                 'SEOdescription' => 'nullable',
                 'category_id' => 'required|exists:categories,id',
                 'subcategory_id' => ['nullable', 'array'],
@@ -222,7 +222,7 @@ class ProductController extends BaseController
                 'cover' => $request->cover,
                 'SEOdescription' => $request->input('SEOdescription'),
                 'discount_price' => $request->input('discount_price'),
-                'discount_percent' => $request->input('discount_percent'),
+
                 'category_id' => $request->input('category_id'),
                 'subcategory_id' => $subcategory,
                 // 'store_id' => $request->input('store_id'),

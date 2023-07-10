@@ -54,10 +54,12 @@ class CouponController extends BaseController
             'discount' => ['required', 'numeric', 'gt:0'],
             //'start_at' =>['required','date'],
             'expire_date' => ['nullable', 'date'],
-            'total_redemptions' => ['required', 'numeric','gt:0'],
-            'user_redemptions' => ['required', 'numeric','gt:0'],
+            'total_redemptions' => ['required', 'numeric', 'gt:0'],
+            'user_redemptions' => ['required', 'numeric', 'gt:0'],
             'free_shipping' => ['required', 'in:0,1'],
             'exception_discount_product' => ['required', 'in:0,1'],
+            'coupon_apply' => 'in:all,selected_product,selected_category,selected_payment',
+            'offer_apply' => $request->offer_apply,
             'status' => 'nullable|in:active,not_active',
 
         ]);
@@ -75,9 +77,22 @@ class CouponController extends BaseController
             'user_redemptions' => $request->user_redemptions,
             'free_shipping' => $request->free_shipping,
             'exception_discount_product' => $request->exception_discount_product,
+            'coupon_apply' => $request->coupon_apply,
             'store_id' => auth()->user()->store_id,
             'status' => $request->status,
         ]);
+        switch ($request->coupon_apply) {
+            case ('selected_product'):
+                $offer->products()->attach($request->select_product_id, ["type" => "select"]);
+                break;
+            case ('selected_category'):
+                $offer->categories()->attach($request->select_category_id, ["type" => "select"]);
+                break;
+            case ('selected_payment'):
+                $offer->paymenttypes()->attach($request->select_payment_id, ["type" => "select"]);
+                break;
+
+        }
 
         $success['coupons'] = new CouponResource($coupon);
         $success['status'] = 200;
@@ -155,7 +170,7 @@ class CouponController extends BaseController
         }
         $input = $request->all();
         $validator = Validator::make($input, [
-            'code' => ['required','regex:/^[a-zA-Z0-9]+$/','unique:coupons,code,'.$coupon->id],
+            'code' => ['required', 'regex:/^[a-zA-Z0-9]+$/', 'unique:coupons,code,' . $coupon->id],
             'discount_type' => 'required|in:fixed,percent',
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
@@ -163,8 +178,9 @@ class CouponController extends BaseController
             'free_shipping' => ['required', 'in:0,1'],
             'exception_discount_product' => ['required', 'in:0,1'],
             'status' => 'nullable|in:active,not_active',
-            'total_redemptions' => ['required', 'numeric','gt:0'],
-            'user_redemptions' => ['required', 'numeric','gt:0'],
+            'total_redemptions' => ['required', 'numeric', 'gt:0'],
+            'user_redemptions' => ['required', 'numeric', 'gt:0'],
+
         ]);
         if ($validator->fails()) {
             # code...
