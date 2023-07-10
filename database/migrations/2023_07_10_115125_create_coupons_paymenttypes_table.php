@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('couponss_paymenttypes', function (Blueprint $table) {
+        Schema::create('coupons_paymenttypes', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('coupon_id')->unsigned();
             $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('couponss_paymenttypes');
+        Schema::dropIfExists('coupons_paymenttypes');
     }
 };
