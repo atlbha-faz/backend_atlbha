@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use PhpOffice\PhpSpreadsheet\Calculation\Financial\Coupons;
 
 class Paymenttype extends Model
 {
@@ -47,6 +48,15 @@ class Paymenttype extends Model
         'offers_paymenttypes',
         'paymenttype_id',
         'offer_id'
+        );
+  }
+  public function coupons()
+  {
+     return $this->belongsToMany(
+        Coupons::class,
+        'coupons_paymenttypes',
+        'paymenttype_id',
+        'coupon_id'
         );
   }
 }

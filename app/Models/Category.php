@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Coupon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -57,6 +58,15 @@ class Category extends Model
         'category_id',
         'offer_id'
         )->withPivot("type");
+  }
+       public function coupons()
+  {
+     return $this->belongsToMany(
+        Coupon::class,
+        'categories_coupons',
+        'category_id',
+        'coupon_id'
+        );
   }
 
 }
