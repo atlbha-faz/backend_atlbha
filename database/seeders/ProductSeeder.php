@@ -28,13 +28,13 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+          
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
 
             ]);
-        
+
             Product::create([
                 'name' =>'ساعة يد ماركة سكيمي ضد الماء',
                  'for'=>'etlobha',
@@ -46,11 +46,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -63,11 +63,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -80,11 +80,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -97,11 +97,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -115,7 +115,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -132,7 +132,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -149,13 +149,13 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
                 'special'=>'special',
                 ]);
-        
+
          Product::create([
             'name' =>'سماعة هيدفدون أصلية',
              'for'=>'etlobha',
@@ -167,7 +167,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -184,11 +184,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -201,11 +201,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -218,11 +218,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -235,11 +235,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -253,7 +253,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -270,7 +270,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -287,13 +287,13 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
                 'special'=>'special',
                 ]);
-        
+
          Product::create([
             'name' =>'سماعة هيدفدون أصلية',
              'for'=>'etlobha',
@@ -305,7 +305,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -322,11 +322,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -339,11 +339,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -356,11 +356,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -373,11 +373,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -390,11 +390,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
                             Product::create([
                                 'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -407,11 +407,11 @@ class ProductSeeder extends Seeder
                                 'stock'=>20,
                                 'cover'=>'product.png',
                                 'discount_price'=>0,
-                                'discount_percent'=>0,
+
                                 'category_id' =>1,
                                 'subcategory_id'=>2,
                                 'special'=>'special'
-                    
+
                                 ]);
 
             Product::create([
@@ -425,7 +425,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -442,7 +442,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -459,13 +459,13 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
                 'special'=>'special',
                 ]);
-        
+
          Product::create([
             'name' =>'سماعة هيدفدون أصلية',
              'for'=>'etlobha',
@@ -477,7 +477,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -494,11 +494,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -511,11 +511,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -528,11 +528,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -545,11 +545,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -563,7 +563,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -580,7 +580,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -597,7 +597,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -614,7 +614,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -631,11 +631,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -648,11 +648,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -665,11 +665,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -682,11 +682,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -700,7 +700,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -717,7 +717,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -734,7 +734,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -751,7 +751,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -768,11 +768,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -785,11 +785,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -802,11 +802,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -819,11 +819,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -837,7 +837,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -854,7 +854,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -871,7 +871,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -888,7 +888,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -905,11 +905,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -922,11 +922,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -939,11 +939,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -956,11 +956,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -974,7 +974,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -991,7 +991,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1008,7 +1008,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -1025,7 +1025,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -1042,11 +1042,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -1059,11 +1059,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -1076,11 +1076,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -1093,11 +1093,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -1111,7 +1111,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1128,7 +1128,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1145,7 +1145,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -1162,7 +1162,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -1179,11 +1179,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -1196,11 +1196,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -1213,11 +1213,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -1230,11 +1230,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -1248,7 +1248,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1265,7 +1265,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1282,7 +1282,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -1299,7 +1299,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -1316,11 +1316,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -1333,11 +1333,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -1350,11 +1350,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -1367,11 +1367,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -1385,7 +1385,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1402,7 +1402,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1419,7 +1419,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -1436,7 +1436,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -1453,11 +1453,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -1470,11 +1470,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -1487,11 +1487,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -1504,11 +1504,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -1522,7 +1522,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1539,7 +1539,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1556,7 +1556,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -1573,7 +1573,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -1590,11 +1590,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -1607,11 +1607,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -1624,11 +1624,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -1641,11 +1641,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -1659,7 +1659,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1676,7 +1676,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1693,7 +1693,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>2,
@@ -1710,7 +1710,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -1727,11 +1727,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -1744,11 +1744,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -1761,11 +1761,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -1778,11 +1778,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -1796,7 +1796,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1813,7 +1813,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>1,
@@ -1830,7 +1830,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>4,
@@ -1847,7 +1847,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -1864,11 +1864,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -1881,11 +1881,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -1898,11 +1898,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -1915,11 +1915,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -1933,7 +1933,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>5,
@@ -1950,7 +1950,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>6,
@@ -1967,7 +1967,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>7,
@@ -1984,7 +1984,7 @@ class ProductSeeder extends Seeder
             'stock'=>20,
             'cover'=>'product.png',
             'discount_price'=>0,
-            'discount_percent'=>0,
+
             'category_id' =>1,
             'subcategory_id'=>2,
             'special'=>'special'
@@ -2001,11 +2001,11 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'product.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>1,
                 'subcategory_id'=>2,
                 'special'=>'special'
-    
+
                 ]);
                 Product::create([
                     'name' =>'ايفون 13 برو ازرق',
@@ -2018,11 +2018,11 @@ class ProductSeeder extends Seeder
                     'stock'=>20,
                     'cover'=>'product.png',
                     'discount_price'=>0,
-                    'discount_percent'=>0,
+
                     'category_id' =>1,
                     'subcategory_id'=>2,
                     'special'=>'special'
-        
+
                     ]);
                     Product::create([
                         'name' =>'حقيبة هاند باج ماركة اصلية',
@@ -2035,11 +2035,11 @@ class ProductSeeder extends Seeder
                         'stock'=>20,
                         'cover'=>'product.png',
                         'discount_price'=>0,
-                        'discount_percent'=>0,
+
                         'category_id' =>1,
                         'subcategory_id'=>2,
                         'special'=>'special'
-            
+
                         ]);
                         Product::create([
                             'name' =>'ساعة يد ماركة سكيمي ضد الماء',
@@ -2052,11 +2052,11 @@ class ProductSeeder extends Seeder
                             'stock'=>20,
                             'cover'=>'product.png',
                             'discount_price'=>0,
-                            'discount_percent'=>0,
+
                             'category_id' =>1,
                             'subcategory_id'=>2,
                             'special'=>'special'
-                
+
                             ]);
 
             Product::create([
@@ -2070,7 +2070,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'headphone.png',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>8,
@@ -2087,7 +2087,7 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'phone.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>3,
                 'subcategory_id'=>4,
                 'store_id'=>9,
@@ -2104,20 +2104,20 @@ class ProductSeeder extends Seeder
                 'stock'=>20,
                 'cover'=>'game.jpg',
                 'discount_price'=>0,
-                'discount_percent'=>0,
+
                 'category_id' =>5,
                 'subcategory_id'=>6,
                 'store_id'=>10,
                 'special'=>'special',
                 ]);
-        
+
         for($i=1 ; $i<121 ; $i++){
                Image::create([
                 'image'=>'game.jpg',
                 'product_id'=>$i,
                 ]);
         }
-        
+
         Importproduct::create([
             'product_id'=>1,
             'store_id'=>1,

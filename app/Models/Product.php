@@ -3,9 +3,10 @@
 namespace App\Models;
 use App\Models\Order;
 
+use App\Models\Coupon;
 use App\Models\OrderItem;
-use Illuminate\Support\Str;
 // use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Gloudemans\Shoppingcart\Contracts\Buyable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,7 @@ class Product extends Model
 
 
 
-    protected $fillable = ['name','slug','for','special','description','stock','cover','purchasing_price','amount','selling_price','quantity','less_qty','tags','discount_price','discount_percent','SEOdescription','category_id','subcategory_id','store_id','status','is_deleted'];
+    protected $fillable = ['name','slug','for','special','description','stock','cover','purchasing_price','amount','selling_price','quantity','less_qty','tags','discount_price','SEOdescription','category_id','subcategory_id','store_id','status','is_deleted'];
 //     protected $casts = [
 //     'subcategory_id' => 'array',
 // ];
@@ -110,6 +111,16 @@ public function cart(){
         'offer_id'
         )->withPivot("type");
   }
+   public function coupons()
+  {
+     return $this->belongsToMany(
+        Coupon::class,
+        'coupons_products',
+        'product_id',
+        'coupon_id'
+        );
+  }
+
 
  public function productrate($product_id){
 

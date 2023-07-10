@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Coupon extends Model
 {
     use HasFactory;
-        protected $fillable = ['code','discount_type','total_price','discount','expire_date','total_redemptions','user_redemptions','start_at','free_shipping','exception_discount_product','store_id','status','is_deleted'];
+        protected $fillable = ['code','discount_type','total_price','discount','expire_date','total_redemptions','user_redemptions','start_at','free_shipping','exception_discount_product','coupon_apply','store_id','status','is_deleted'];
 
 
          public function store()
@@ -31,7 +31,7 @@ class Coupon extends Model
  {
     $expire = Coupon::query()->find($id);
     // $expire=Coupon::select('expire_date')->where('id',$coupon);
-   
+
     $my_time=Carbon::now();
 $status = "غير نشط";
     if($expire->status=='active'){
@@ -48,11 +48,42 @@ if($expire->status=='expired'){
 $status = "نشط";
 $expire->update(['status' => 'active']);}
     }
-     
-     
+
+
 return $status;
 
 
  }
+
+  public function categories()
+  {
+     return $this->belongsToMany(
+        Category::class,
+        'categories_coupons',
+        'coupon_id',
+        'category_id'
+        );
+  }
+
+
+public function products()
+  {
+     return $this->belongsToMany(
+        Product::class,
+        'coupons_products',
+        'coupon_id',
+        'product_id'
+        );
+  }
+
+public function paymenttypes()
+  {
+     return $this->belongsToMany(
+        Paymenttype::class,
+        'coupons_paymenttypes',
+        'coupon_id',
+        'paymenttype_id'
+        );
+  }
 
 }

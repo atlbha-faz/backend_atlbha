@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\HomepageResource;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
-use App\Http\Resources\HomepageResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class HomepageController extends BaseController
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -21,10 +21,10 @@ class HomepageController extends BaseController
      */
     public function index()
     {
-        $success['Homepages']=HomepageResource::collection(Homepage::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
-        $success['status']= 200;
+        $success['Homepages'] = HomepageResource::collection(Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع الصفحة الرئبسبة  بنجاح','Homepages return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الصفحة الرئبسبة  بنجاح', 'Homepages return successfully');
     }
 
     /**
@@ -90,7 +90,6 @@ class HomepageController extends BaseController
     //         //    'store_id' => $request->input('store_id'),
     //        ]);
 
-
     //      $success['Homepages']=New HomepageResource($Homepage );
     //     $success['status']= 200;
 
@@ -151,7 +150,6 @@ class HomepageController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-
     /**
      * Remove the specified resource from storage.
      *
@@ -176,61 +174,92 @@ class HomepageController extends BaseController
     public function logoUpdate(Request $request)
     {
 
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
-            'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-              ]);
-           if ($validator->fails())
-           {
-               return $this->sendError(null,$validator->errors());
-           }
-         $logohomepage =Homepage::updateOrCreate([
-            'store_id'   => auth()->user()->store_id,
-               ],[
-               'logo' => $request->logo,
-                  ]);
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'logo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+        $logohomepage = Homepage::updateOrCreate([
+            'store_id' => auth()->user()->store_id,
+        ], [
+            'logo' => $request->logo,
+        ]);
 
-           $success['homepages']=New HomepageResource($logohomepage);
-           $success['status']= 200;
+        $success['homepages'] = new HomepageResource($logohomepage);
+        $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
-}
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    }
 
-public function banarUpdate(Request $request)
-{
+    public function banarUpdate(Request $request)
+    {
 
         $input = $request->all();
-       $validator =  Validator::make($input ,[
-        'banar1'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'banarstatus1'=>'required|in:active,not_active',
-        'banar2'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'banarstatus2'=>'required|in:active,not_active',
-        'banar3'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-        'banarstatus3'=>'required|in:active,not_active',
-          ]);
-       if ($validator->fails())
-       {
-           # code...
-           return $this->sendError(null,$validator->errors());
-       }
+        $validator = Validator::make($input, [
+            'banar1' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'banarstatus1' => 'required|in:active,not_active',
+            'banar2' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'banarstatus2' => 'required|in:active,not_active',
+            'banar3' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'banarstatus3' => 'required|in:active,not_active',
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
 
+        $banarhomepage = Homepage::updateOrCreate([
+            'store_id' => auth()->user()->store_id,
+        ], [
+            'banar1' => $request->banar1,
+            'banarstatus1' => $request->banarstatus1,
+            'banar2' => $request->banar2,
+            'banarstatus2' => $request->banarstatus2,
+            'banar3' => $request->banar3,
+            'banarstatus3' => $request->banarstatus3,
+        ]);
 
-     $banarhomepage =Homepage::updateOrCreate([
-        'store_id'   => auth()->user()->store_id,
-    ],[
-                'banar1' => $request->banar1,
-                'banarstatus1' => $request->banarstatus1,
-                'banar2' => $request->banar2,
-                'banarstatus2' => $request->banarstatus2,
-                'banar3' => $request->banar3,
-                'banarstatus3' => $request->banarstatus3,
-              ]);
+        $success['homepages'] = new HomepageResource($banarhomepage);
+        $success['status'] = 200;
 
-       $success['homepages']=New HomepageResource($banarhomepage);
-       $success['status']= 200;
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    }
 
-        return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
-}
+    public function sliderUpdate(Request $request)
+    {
+
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'slider1' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'sliderstatus1' => 'required|in:active,not_active',
+            'slider2' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'sliderstatus2' => 'required|in:active,not_active',
+            'slider3' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'sliderstatus3' => 'required|in:active,not_active',
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+
+        $banarhomepage = Homepage::updateOrCreate([
+            'store_id' => auth()->user()->store_id,
+        ], [
+            'slider1' => $request->slider1,
+            'sliderstatus1' => $request->sliderstatus1,
+            'slider2' => $request->slider2,
+            'sliderstatus2' => $request->sliderstatus2,
+            'slider3' => $request->slider3,
+            'sliderstatus3' => $request->sliderstatus3,
+        ]);
+
+        $success['homepages'] = new HomepageResource($banarhomepage);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    }
 
 // public function sliderUpdate(Request $request)
 // {
@@ -253,7 +282,6 @@ public function banarUpdate(Request $request)
 //            return $this->sendError(null,$validator->errors());
 //        }
 
-
 //      $logohomepage->updateOrCreate([
 //             'store_id'   => auth()->user()->store_id,
 //             ],[
@@ -270,28 +298,27 @@ public function banarUpdate(Request $request)
 
 //         return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
 // }
-public function commentUpdate(Request $request)
-{
+    public function commentUpdate(Request $request)
+    {
 
         $input = $request->all();
-       $validator =  Validator::make($input ,[
-        'commentstatus'=>'required|in:active,not_active',
-        'clientstatus'=>'required|in:active,not_active'
-          ]);
-       if ($validator->fails())
-       {
-           return $this->sendError(null,$validator->errors());
-       }
-     $commenthomepage =Homepage::updateOrCreate([
-        'store_id'   => auth()->user()->store_id,
-           ],[
-           'commentstatus' => $request->commentstatus,
-           'clientstatus' => $request->clientstatus
-              ]);
+        $validator = Validator::make($input, [
+            'commentstatus' => 'required|in:active,not_active',
+            'clientstatus' => 'required|in:active,not_active',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+        $commenthomepage = Homepage::updateOrCreate([
+            'store_id' => auth()->user()->store_id,
+        ], [
+            'commentstatus' => $request->commentstatus,
+            'clientstatus' => $request->clientstatus,
+        ]);
 
-       $success['homepages']=New HomepageResource($commenthomepage);
-       $success['status']= 200;
+        $success['homepages'] = new HomepageResource($commenthomepage);
+        $success['status'] = 200;
 
-        return $this->sendResponse($success,'تم التعديل بنجاح','homepage updated successfully');
-}
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    }
 }
