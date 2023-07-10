@@ -42,7 +42,6 @@ class ProductResource extends JsonResource
             'tags' => $this->tags,
             'cover' => $this->cover,
             'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
-            'discount_percent' => $this->discount_percent !== null ? $this->discount_percent : 0,
             'SEOdescription' => $this->SEOdescription,
             'importproduct' => $this->importproduct->count(),
             'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id', explode(',', $this->subcategory_id))->get()),

@@ -180,6 +180,7 @@ class CouponController extends BaseController
             'status' => 'nullable|in:active,not_active',
             'total_redemptions' => ['required', 'numeric', 'gt:0'],
             'user_redemptions' => ['required', 'numeric', 'gt:0'],
+            'coupon_apply' => 'in:all,selected_product,selected_category,selected_payment',
 
         ]);
         if ($validator->fails()) {
@@ -196,9 +197,22 @@ class CouponController extends BaseController
             'user_redemptions' => $request->input('user_redemptions'),
             'free_shipping' => $request->input('free_shipping'),
             'exception_discount_product' => $request->input('exception_discount_product'),
+            'coupon_apply' => $request->coupon_apply,
             'status' => $request->input('status'),
             //    'store_id' => $request->input('store_id'),
         ]);
+        switch ($request->coupon_apply) {
+            case ('selected_product'):
+                $coupon->products()->attach($request->select_product_id);
+                break;
+            case ('selected_category'):
+                $coupon->categories()->attach($request->select_category_id);
+                break;
+            case ('selected_payment'):
+                $coupon->paymenttypes()->attach($request->select_payment_id);
+                break;
+
+        }
 
         $success['coupons'] = new CouponResource($coupon);
         $success['status'] = 200;
