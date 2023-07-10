@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-          $table->id();
+            $table->id();
             $table->string('name');
-           // $table->string('sku')->unique();
+            // $table->string('sku')->unique();
             $table->string('slug')->unique();
-            $table->enum('for',['store','etlobha','stock'])->default('etlobha');
-           $table->enum('special',['special','not_special'])->default('not_special');
+            $table->enum('for', ['store', 'etlobha', 'stock'])->default('etlobha');
+            $table->enum('special', ['special', 'not_special'])->default('not_special');
             $table->longText('description');
             $table->boolean('amount')->default(0);
             $table->double('purchasing_price')->nullable();
@@ -29,16 +29,16 @@ return new class extends Migration
             $table->integer('stock')->nullable();
             $table->string('cover');
             $table->text("tags")->nullable();
-            $table->double('discount_price')->default(0);
-            $table->integer('discount_percent')->default(0);
+            $table->double('discount_price')->nullable();
+            $table->integer('discount_percent')->nullable();
             $table->string('SEOdescription')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->string('subcategory_id')->nullable();
-           // $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('cascade');
+            // $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('cascade');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->enum('status',['active','not_active'])->default('active');
+            $table->enum('status', ['active', 'not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
