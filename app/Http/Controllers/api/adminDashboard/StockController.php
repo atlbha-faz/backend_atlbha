@@ -39,7 +39,12 @@ class StockController extends BaseController
             ->select('product_id', DB::raw('COUNT(*) as count'))
             ->groupBy('product_id')
             ->orderByDesc('count')->first();
+            if($most_order != null){
         $success['most_order'] = Product::where('id',$most_order->product_id)->value('name');
+            }
+            else{
+                $success['most_order'] =0; 
+            }
         $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->get());
         $success['status'] = 200;
 
