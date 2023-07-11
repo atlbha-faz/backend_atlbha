@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ProductResource;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -79,7 +80,10 @@ class EtlobhaController extends BaseController
         } else {
             $subcategory = null;
         }
-
+        if (!($request->hasFile("cover"))) {
+            $newImagePath =  basename($request->cover);
+            //  Storage::copy($existingImagePath, $newImagePath);
+        }
         $product = Product::create([
             'name' => $request->name,
             'for' => 'etlobha',
