@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Carbon\Carbon;
-use App\Models\Image;
-use App\Models\Order;
-use App\Models\Option;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\ProductResource;
+use App\Models\Image;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\Product;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class EtlobhaController extends BaseController
 {
@@ -24,15 +24,14 @@ class EtlobhaController extends BaseController
     public function index()
     {
         $success['newProducts'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('created_at', '>=', Carbon::now()->subDay())->count();
-        $more_sales= $products=DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id',null)->where('products.for','etlobha')->where('products.is_deleted', 0)
-        ->select('products.id',DB::raw('sum(order_items.total_price) as sales'),DB::raw('sum(order_items.quantity) as count'))
-           ->groupBy('order_items.product_id')->orderBy('count', 'desc')->first();
-           if(  $more_sales!= null){
-           $success['more_sales'] =Product::where('id',$more_sales->id)->value('name');
-           }
-           else{
-            $success['more_sales']=0;
-           }
+        $more_sales = $products = DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id', null)->where('products.for', 'etlobha')->where('products.is_deleted', 0)
+            ->select('products.id', DB::raw('sum(order_items.total_price) as sales'), DB::raw('sum(order_items.quantity) as count'))
+            ->groupBy('order_items.product_id')->orderBy('count', 'desc')->first();
+        if ($more_sales != null) {
+            $success['more_sales'] = Product::where('id', $more_sales->id)->value('name');
+        } else {
+            $success['more_sales'] = 0;
+        }
         $success['not_active_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('status', 'not_active')->count();
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
         $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->get());
@@ -44,6 +43,7 @@ class EtlobhaController extends BaseController
 
     public function store(Request $request)
     {
+
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
@@ -52,12 +52,9 @@ class EtlobhaController extends BaseController
             'selling_price' => ['required', 'numeric', 'gte:purchasing_price'],
             'stock' => ['required', 'numeric', 'gt:0'],
             'amount' => ['required', 'numeric'],
-
             'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'images' => 'required|array',
-            'images.*' => ['required','url', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'cover' => ['required', 'url','image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
 
             'data' => 'nullable|array',
             'data.*.type' => 'required|in:brand,color,wight,size',
@@ -72,6 +69,25 @@ class EtlobhaController extends BaseController
             ],
         ]);
 
+        if (($request->hasFile("cover"))) {
+            $validator = Validator::make($input, [
+                'cover' => 'required |image| mimes:jpeg,png,jpg,gif,svg| max:2048',
+                // 'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+
+            ]);
+            $cover = $request->cover;
+
+        } else {
+            $validator = Validator::make($input, [
+                'cover' => 'required |string| max:2048',
+                // 'images.*' => ['required', 'string'],
+            ]);
+
+            $existingImagePath = $request->cover;
+            $newImagePath = basename($request->cover);
+            Storage::copy($existingImagePath, $newImagePath);
+            $cover = $newImagePath;
+        }
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
@@ -79,10 +95,6 @@ class EtlobhaController extends BaseController
             $subcategory = implode(',', $request->subcategory_id);
         } else {
             $subcategory = null;
-        }
-        if (!($request->hasFile("cover"))) {
-            $newImagePath =  basename($request->cover);
-            //  Storage::copy($existingImagePath, $newImagePath);
         }
         $product = Product::create([
             'name' => $request->name,
@@ -93,7 +105,7 @@ class EtlobhaController extends BaseController
             'purchasing_price' => $request->purchasing_price,
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
-            'cover' => $request->cover,
+            'cover' => $cover,
             'amount' => $request->amount,
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
@@ -101,18 +113,44 @@ class EtlobhaController extends BaseController
 
         ]);
         $productid = $product->id;
+
         if ($request->hasFile("images")) {
-            $files = $request->file("images");
+            $files = $request->images;
+
             foreach ($files as $file) {
-                $imageName = time() . '_' . $file->getClientOriginalName();
+                if (is_uploaded_file($file)) {
+                    $imageName = time() . '_' . $file->getClientOriginalName();
+                    $request['product_id'] = $productid;
+                    $request['image'] = $imageName;
+                    $filePath = 'images/product/' . $imageName;
+                    $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+                    Image::create($request->all());
+                } else {
+
+                    $request['product_id'] = $productid;
+                    $existingImagePath = $file;
+                    $newImagePath = basename($file);
+                    $request['image'] = $newImagePath;
+                    Storage::copy($existingImagePath, $newImagePath);
+
+                    Image::create($request->all());
+                }
+            }
+        } else {
+
+            $files = $request->images;
+            foreach ($files as $file) {
+                $imageName = time() . '_' . $file;
                 $request['product_id'] = $productid;
-                $request['image'] = $imageName;
-                // $file->move(\public_path("/images"),$imageName);
-                $file->store('images/product', 'public');
+                $existingImagePath = $file;
+                $newImagePath = basename($file);
+                $request['image'] = $newImagePath;
+                Storage::copy($existingImagePath, $newImagePath);
                 Image::create($request->all());
 
             }
         }
+
         if (!is_null($request->data)) {
             foreach ($request->data as $data) {
                 // dd($data['value']);
@@ -134,6 +172,7 @@ class EtlobhaController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم إضافة منتج بنجاح', 'product Added successfully');
+
     }
 
     public function update(Request $request, $id)
@@ -227,7 +266,7 @@ class EtlobhaController extends BaseController
 
             foreach ($request->data as $data) {
                 if (!isset($data['id'])) {
-                    $data['id']=null;
+                    $data['id'] = null;
                 }
 
                 $options[] = Option::updateOrCreate([
