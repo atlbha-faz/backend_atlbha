@@ -56,9 +56,7 @@ Route::get('storeProductCategory',[App\Http\Controllers\api\IndexStoreController
 Route::get('productSearch',[App\Http\Controllers\api\IndexStoreController::class,'productSearch']);
 });
 
-Route::middleware([SetActiveStore::class])->group(function(){
-Route::get('indexStore',[App\Http\Controllers\api\IndexStoreController2::class,'index']);
-});
+
 
 Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
 Route::post('addCart', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
