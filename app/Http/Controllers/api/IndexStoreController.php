@@ -8,6 +8,7 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\MaintenanceResource;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\ProductResource;
+use App\Models\Package_store;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Homepage;
@@ -23,8 +24,11 @@ class IndexStoreController extends BaseController
 {
     public function index($id)
     {
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
-        if (is_null($store) || $store->is_deleted == 1) {
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id',null)->whereDate('end_at', '>', Carbon::now())->first();
+        if(!is_null($store)){ 
+        $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
+        }
+        if (is_null($store) || $store->is_deleted == 1  || is_null($store_package)|| $store_package->status =="not_active") {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
         if ($store->maintenance != null) {
@@ -173,10 +177,13 @@ class IndexStoreController extends BaseController
     }
     public function productPage($id)
     {
-        $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
+        $store_id = Product::where('is_deleted', 0)->where('id', $id)->whereNot('package_id',null)->pluck('store_id')->first();
 
         $store = Store::where('id', $store_id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
-        if (is_null($store) || $store->is_deleted == 1) {
+        if(!is_null($store)){ 
+            $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
+            }
+        if (is_null($store) || $store->is_deleted == 1 || is_null($store_package)|| $store_package->status =="not_active") {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
         if ($store->maintenance != null) {
@@ -278,8 +285,11 @@ class IndexStoreController extends BaseController
     }
     public function storPage(Request $request, $id)
     {
-        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
-        if (is_null($store) || $store->is_deleted == 1) {
+        $store = Store::where('domain', $request->domain)->whereNot('package_id',null)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
+        if(!is_null($store)){ 
+            $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
+            }
+        if (is_null($store) || $store->is_deleted == 1 ||  is_null($store_package)|| $store_package->status =="not_active") {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
         if ($store->maintenance != null) {
@@ -337,8 +347,11 @@ class IndexStoreController extends BaseController
     }
     public function storeProductCategory(Request $request)
     {
-        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
-        if (is_null($store) || $store->is_deleted == 1) {
+        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereNot('package_id',null)->whereDate('end_at', '>', Carbon::now())->first();
+        if(!is_null($store)){ 
+            $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
+            }
+        if (is_null($store) || $store->is_deleted == 1 ||  is_null($store_package)|| $store_package->status =="not_active") {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
         if ($store->maintenance != null) {
@@ -476,8 +489,11 @@ class IndexStoreController extends BaseController
     public function productSearch(Request $request)
     {
 
-        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
-        if (is_null($store) || $store->is_deleted == 1) {
+        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id',null)->first();
+        if(!is_null($store)){ 
+            $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
+            }
+        if (is_null($store) || $store->is_deleted == 1 || is_null($store_package)|| $store_package->status =="not_active") {
             return $this->sendError("المتجر غير موجودة", "Store is't exists");
         }
         if ($store->maintenance != null) {
