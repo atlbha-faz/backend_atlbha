@@ -55,8 +55,8 @@ class EtlobhaController extends BaseController
             'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'images' => 'required|array',
-            'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'images.*' => ['required','url', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'cover' => ['required', 'url','image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
 
             'data' => 'nullable|array',
             'data.*.type' => 'required|in:brand,color,wight,size',
@@ -225,7 +225,7 @@ class EtlobhaController extends BaseController
                 if (!isset($data['id'])) {
                     $data['id']=null;
                 }
-                
+
                 $options[] = Option::updateOrCreate([
                     'id' => $data['id'],
                     'product_id' => $id,

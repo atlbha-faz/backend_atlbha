@@ -48,7 +48,7 @@ class CouponController extends BaseController
         // dd($request->free_shipping);
         $input = $request->all();
         $validator = Validator::make($input, [
-            'code' => 'required|regex:/^[a-zA-Z0-9]+$/|max:255|unique:coupons',
+            'code' => 'required|regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/|max:255|unique:coupons',
             'discount_type' => 'required|in:fixed,percent',
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],

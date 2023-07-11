@@ -9,6 +9,7 @@ use App\Imports\ProductsImport;
 use App\Models\Importproduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -66,7 +67,7 @@ class ProductController extends BaseController
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'discount_price' => ['nullable', 'numeric'],
-            
+
             'SEOdescription' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
@@ -375,4 +376,54 @@ class ProductController extends BaseController
         }
 
     }
+
+    // public function duplicateProduct($productId)
+    // {
+    //     // Find the existing product by ID
+    //     $existingProduct = Product::where('store_id', auth()->user()->store_id)->find($productId);
+
+    //     if (!$existingProduct || $existingProduct->is_deleted == 1) {
+    //         // Handle case where the product does not exist
+    //         // or display an error message to the user
+    //         return $this->sendError("المنتج غير موجود", "product is't exists");
+
+    //     }
+
+    //     // Create a new instance of the Product model
+    //     $newProduct = new Product();
+
+    //     // Assign the attributes of the existing product to the new product
+    //     $newProduct->name = $existingProduct->name;
+    //     $newProduct->selling_price = $existingProduct->selling_price;
+    //     $newProduct->discount_price = $existingProduct->discount_price;
+    //     $newProduct->category_id = $existingProduct->category_id;
+    //     $newProduct->subcategory_id = $existingProduct->subcategory_id;
+    //     $newProduct->SEOdescription = $existingProduct->SEOdescription;
+    //     $newProduct->for = $existingProduct->for;
+    //     $newProduct->store_id = $existingProduct->store_id;
+
+    //     $newProduct->stock = $existingProduct->stock;
+    //     // Assign other attributes as needed
+
+    //     // Save the new product to the database
+    //     $newProduct->save();
+
+    //     // Duplicate the image file
+    //     $existingImagePath = $existingProduct->cover;
+
+    //     if ($existingImagePath) {
+    //         $newImagePath =  basename($existingImagePath);
+    //         Storage::copy($existingImagePath, $newImagePath);
+
+    //         // Associate the new image path with the new product
+    //         $newProduct->cover = $newImagePath;
+    //         $newProduct->save();
+    //     }
+    //     $success['products'] = new ProductResource($newProduct);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم  تكرار المنتج بنجاح', 'product updated successfully');
+
+    //     // Redirect or return a response as desired
+    // }
 }
