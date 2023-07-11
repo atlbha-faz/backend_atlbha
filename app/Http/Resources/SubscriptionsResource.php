@@ -14,7 +14,7 @@ class SubscriptionsResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
+        if( $this->packagestatus($this->id) ==null || $this->packagestatus($this->id)  == 'active'){
             $status = 'نشط';
         }else{
             $status = 'غير نشط';
@@ -26,7 +26,11 @@ class SubscriptionsResource extends JsonResource
             $special = 'غير مميز';
         }
         
-       if($this->periodtype ==null || $this->periodtype == 'year'){
+       if($this->periodtype ==null)
+       {
+        $periodtype="null";
+       }
+        elseif($this->periodtype == 'year'){
             $periodtype = 'سنوي';
         }else{
             $periodtype = '6 شهور';

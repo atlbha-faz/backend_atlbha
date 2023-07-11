@@ -79,12 +79,17 @@ class Store extends Model
         );
     }
     public function left($id)
-    {
+    {  $store= Store::where('id', $id)->first();
+        if($store->package_id == null){
+            return 0;  
+        }
+        else{
         $day = Store::select('end_at')->where('id', $id)->first();
         $date1 = new DateTime($day->end_at);
         $now_date = Carbon::now();
         $interval = $date1->diff($now_date);
         return $interval->days;
+        }
     }
     public function period($id)
     {
@@ -99,6 +104,17 @@ class Store extends Model
 
         $package = Package::select('name')->where('id', $id)->first();
         return $package->name;
+    }
+    public function packagestatus($id)
+    {
+        $store= Store::where('id', $id)->first();
+        $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
+        if($store_package !=null){
+        return    $store_package->status;
+        }
+        else{
+            return null; 
+        }
     }
     public function user()
     {

@@ -44,13 +44,18 @@ class SubscriptionsController extends BaseController
            foreach($stores as $store)
            {
             
-             $store_package=Package_store::where('package_id',$store->package_id)->first();
+              $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
+             
              if (is_null($store_package) || $store_package->is_deleted==1){
             }
             else{
              $store_package->update(['is_deleted' => 1]);
             }
-             $store->update(['package_id' => null]);
+            if( $store->package_id != null){
+                $store->update(['package_id' => null]);
+                $store->update(['periodtype' => null]);
+                $store->update(['left' =>0]);
+                }
             $success['Subscriptions']=New SubscriptionsResource($store);
 
             }
@@ -71,11 +76,11 @@ class SubscriptionsController extends BaseController
                     if(count($stores)>0){
                     foreach($stores as $store)
                 {
-                 
-              $store_package=Package_store::where('package_id',$store->package_id)->first();
-              if( $store->package_id != null){
-              $store->update(['package_id' => null]);
-              }
+               
+              $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
+            //   if( $store->package_id != null){
+            //   $store->update(['package_id' => null]);
+            //   }
               if (is_null($store_package) || $store_package->is_deleted==1){
               }
               else{
