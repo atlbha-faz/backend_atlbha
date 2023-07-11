@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\User;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Resources\UserResource;
@@ -20,6 +21,7 @@ class ProfileController extends BaseController
     public function index()
     {
         $success['users'] = new UserResource(auth()->user());
+        $success['verification_count']=  Store::where('is_deleted',0)->where('verification_status','=','admin_waiting')->count();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'user showed successfully');

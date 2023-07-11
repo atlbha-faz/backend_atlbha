@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CouponResource;
+use Carbon\Carbon;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use App\Http\Resources\CouponResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CouponController extends BaseController
 {
@@ -58,20 +59,23 @@ class CouponController extends BaseController
             'user_redemptions' => ['required', 'numeric', 'gt:0'],
             'free_shipping' => ['required', 'in:0,1'],
             'exception_discount_product' => ['required', 'in:0,1'],
-            'coupon_apply' => 'in:all,selected_product,selected_category,selected_payment',
-
+            'coupon_apply' => [ 'required','in:all,selected_product,selected_category,selected_payment'],
+            'select_product_id'=>'required_if:coupon_apply,selected_product',
+            'select_category_id'=>'required_if:coupon_apply,selected_category',
+            'select_payment_id'=>'required_if:coupon_apply,selected_payment',
             'status' => 'nullable|in:active,not_active',
 
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
+        $date = Carbon::now()->toDateTimeString();
         $coupon = Coupon::create([
             'code' => $request->code,
             'discount_type' => $request->discount_type,
             'total_price' => $request->total_price,
             'discount' => $request->discount,
-            //'start_at' => $request->start_at,
+            'start_at' => $date,
             'expire_date' => $request->expire_date,
             'total_redemptions' => $request->total_redemptions,
             'user_redemptions' => $request->user_redemptions,
@@ -170,7 +174,7 @@ class CouponController extends BaseController
         }
         $input = $request->all();
         $validator = Validator::make($input, [
-            'code' => ['required', 'regex:/^[a-zA-Z0-9]+$/', 'unique:coupons,code,' . $coupon->id],
+            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/', 'unique:coupons,code,' . $coupon->id],
             'discount_type' => 'required|in:fixed,percent',
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
@@ -180,18 +184,22 @@ class CouponController extends BaseController
             'status' => 'nullable|in:active,not_active',
             'total_redemptions' => ['required', 'numeric', 'gt:0'],
             'user_redemptions' => ['required', 'numeric', 'gt:0'],
-            'coupon_apply' => 'in:all,selected_product,selected_category,selected_payment',
-
+            'coupon_apply' => ['required ', 'in:all,selected_product,selected_category,selected_payment'],
+            'select_product_id'=>'required_if:coupon_apply,selected_product',
+            'select_category_id'=>'required_if:coupon_apply,selected_category',
+            'select_payment_id'=>'required_if:coupon_apply,selected_payment',
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
+        $date = Carbon::now()->toDateTimeString();
         $coupon->update([
             'code' => $request->input('code'),
             'discount_type' => $request->input('discount_type'),
             'total_price' => $request->input('total_price'),
             'discount' => $request->input('discount'),
+            'start_at' => $date,
             'expire_date' => $request->input('expire_date'),
             'total_redemptions' => $request->input('total_redemptions'),
             'user_redemptions' => $request->input('user_redemptions'),
@@ -201,16 +209,18 @@ class CouponController extends BaseController
             'status' => $request->input('status'),
             //    'store_id' => $request->input('store_id'),
         ]);
+       
         switch ($request->coupon_apply) {
             case ('selected_product'):
-                $coupon->products()->attach($request->select_product_id);
+                $coupon->products()->sync($request->select_product_id);
                 break;
             case ('selected_category'):
-                $coupon->categories()->attach($request->select_category_id);
+                $coupon->categories()->sync($request->select_category_id);
                 break;
             case ('selected_payment'):
-                $coupon->paymenttypes()->attach($request->select_payment_id);
+                $coupon->paymenttypes()->sync($request->select_payment_id);
                 break;
+              
 
         }
 
