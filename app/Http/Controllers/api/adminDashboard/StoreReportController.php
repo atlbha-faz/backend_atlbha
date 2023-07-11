@@ -53,7 +53,7 @@ class StoreReportController extends  BaseController
         }
         $success['array_store']= $array_store;
 
-       $success['verification_count']=  Store::where('is_deleted',0)->where('verification_status','!=','admin_waiting')->count();
+       $success['verification_count']=  Store::where('is_deleted',0)->where('verification_status','=','admin_waiting')->count();
 
         $success['status']= 200;
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
