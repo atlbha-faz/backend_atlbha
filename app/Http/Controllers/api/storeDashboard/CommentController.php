@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Models\Store;
 use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Homepage;
@@ -9,7 +10,9 @@ use Illuminate\Http\Request;
 use App\Models\Replaycomment;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\HomepageResource;
+use App\Notifications\emailNotification;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\ReplaycommentResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -231,11 +234,11 @@ class CommentController extends BaseController
 }
     public function replayComment(Request $request)
     {
-    $input = $request->all();
+       $input = $request->all();
         $validator =  Validator::make($input ,[
             // 'subject'=>'required|string|max:255',
             'comment_text'=>'required|string|max:255',
-            'comment_id'=>'exists:comments,id',
+            'comment_id'=>'required|exists:comments,id',
 
         ]);
         if ($validator->fails())
@@ -247,10 +250,19 @@ class CommentController extends BaseController
         $replay = Replaycomment::create([
             'comment_text' => $request->comment_text,
             'comment_id' => $request->comment_id,
-
             'user_id' => auth()->user()->id,
         ]);
-
+        $store=Store::where('id', auth()->user()->store_id)->value('store_name');
+        $data= [
+            'subject' =>"رد على التعليق",
+            'message' => $request->comment_text,
+            'store_id' =>    $store,
+        ];
+        $replaycomment =Comment::where('id',$request->comment_id)->where('is_deleted',0)->first();
+          if($replaycomment->user != null)
+          {
+            Notification::send($replaycomment->user , new emailNotification($data));
+          }
          $success['replays']=New ReplaycommentResource($replay);
         $success['status']= 200;
 
