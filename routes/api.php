@@ -395,6 +395,7 @@ Route::get('productchangeSatusall',[App\Http\Controllers\api\storeDashboard\Prod
 Route::get('productdeleteall',[App\Http\Controllers\api\storeDashboard\ProductController::class,'deleteall']);
 Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class,'changeStatus']);
 Route::get('deleteImport/{product}',[App\Http\Controllers\api\storeDashboard\ProductController::class,'deleteImport']);
+Route::post('duplicateProduct/{product}',[App\Http\Controllers\api\storeDashboard\ProductController::class,'duplicateProduct']);
 
 // importProduct
 Route::get('etlobhaShow',[App\Http\Controllers\api\storeDashboard\ImportproductController::class,'etlobhaShow']);

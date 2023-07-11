@@ -29,7 +29,7 @@ class AuthController extends BaseController
 
         } else {
 
-            if($request->user_type == 'store'){
+            if ($request->user_type == 'store') {
                 $input = $request->all();
                 $validator = Validator::make($input, [
                     'checkbox_field' => 'required|in:1',
@@ -49,16 +49,16 @@ class AuthController extends BaseController
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
                     'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
-                'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                    return $query->whereIn('user_type', ['store','store_employee']);
-                })],
-                'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                    return $query->whereIn('user_type', ['store','store_employee']);
-                })],
+                    'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                        return $query->whereIn('user_type', ['store', 'store_employee']);
+                    })],
+                    'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                        return $query->whereIn('user_type', ['store', 'store_employee']);
+                    })],
 
+                ]);
 
-                 ]);
-            }else{
+            } else {
                 $input = $request->all();
                 $validator = Validator::make($input, [
                     'checkbox_field' => 'required|in:1',
@@ -76,20 +76,23 @@ class AuthController extends BaseController
                     //'country_id'=>'required_if:user_type,store|exists:countries,id',
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
-                    'periodtype' => 'nullable',  'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                    return $query->whereIn('user_type', ['marketer']);
-                }),
-                ],
-                'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                    return $query->whereIn('user_type', ['marketer']);
-                }),
-                ],
-                'name'=>'required|string|max:255',
+                    'periodtype' => 'nullable', 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                        return $query->whereIn('user_type', ['marketer']);
+                    }),
+                    ],
+                    'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                        return $query->whereIn('user_type', ['marketer']);
+                    }),
+                    ],
+                    'name' => 'required|string|max:255',
                 ]);
+
+
             }
             if ($validator->fails()) {
                 return $this->sendError('Validation Error.', $validator->errors());
-                }
+            }
+
 
             $user = User::create([
                 //'name' => $request->name,
@@ -100,6 +103,8 @@ class AuthController extends BaseController
                 'phonenumber' => $request->phonenumber,
 
             ]);
+
+
             if ($request->user_type == "store") {
 
                 /* $user = User::create([
@@ -125,10 +130,10 @@ class AuthController extends BaseController
                     //  'city_id' => $request->city_id,
 
                 ]);
-             
+
                 $user->update([
                     'store_id' => $store->id]);
-                    $user->assignRole("المالك");
+                $user->assignRole("المالك");
 
                 if ($request->periodtype == "6months") {
                     $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
@@ -149,6 +154,7 @@ class AuthController extends BaseController
                 }
                 // $store->activities()->attach($request->activity_id);
                 $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
+
 
                 if ($setting->registration_status == "registration_with_admin") {
                     $store->update([
@@ -183,7 +189,7 @@ class AuthController extends BaseController
                         'store_id' => $store->id,
                     ]);
 
-                    $users = User::where('store_id', null)->get();
+                    $storeusers = User::where('store_id', null)->get();
 
                     $data = [
                         'message' => 'طلب متجر',
@@ -192,14 +198,17 @@ class AuthController extends BaseController
                         'type' => "store_request",
                         'object_id' => $store->id,
                     ];
-                    foreach ($users as $user) {
+                    foreach ($storeusers as $storeuser) {
                         Notification::send($user, new verificationNotification($data));
                     }
                     event(new VerificationEvent($data));
 
                 }
 
+
+
             } else {
+
                 if ($setting->registration_marketer === "active") {
                     $user->update([
                         'user_type' => "marketer",
@@ -218,12 +227,16 @@ class AuthController extends BaseController
                 }
 
             }
+
+
+
             if ($request->user_type == "store") {
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
                 $this->sendSms($request);
             }
+
             $success['user'] = new UserResource($user);
             $success['token'] = $user->createToken('authToken')->accessToken;
             $success['status'] = 200;
