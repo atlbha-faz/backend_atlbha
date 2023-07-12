@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use Carbon\Carbon;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
 use App\Http\Resources\CouponResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -86,8 +87,18 @@ class CouponController extends BaseController
             'status' => $request->status,
         ]);
         switch ($request->coupon_apply) {
-            case ('selected_product'):
-                $coupon->products()->attach($request->select_product_id);
+            case ('selected_product'):{
+                // $coupon->products()->attach($request->select_product_id);
+                foreach($request->select_product_id as $product){
+                   $import= Importproduct::where('product_id',$product)->where('store_id',auth()->user()->store_id)->first();
+                   if( $import != null){
+                    $coupon->products()->attach( $product,["import" => 1]);
+                   }else{
+                    $coupon->products()->attach( $product,["import" => 0]);
+
+                   }
+                }
+            }
                 break;
             case ('selected_category'):
                 $coupon->categories()->attach($request->select_category_id);
@@ -211,8 +222,17 @@ class CouponController extends BaseController
         ]);
        
         switch ($request->coupon_apply) {
-            case ('selected_product'):
-                $coupon->products()->sync($request->select_product_id);
+            case ('selected_product'):{
+                foreach($request->select_product_id as $product){
+                   $import= Importproduct::where('product_id',$product)->where('store_id',auth()->user()->store_id)->first();
+                   if( $import != null){
+                    $coupon->products()->sync( $product,["import" => 1]);
+                   }else{
+                    $coupon->products()->sync( $product,["import" => 0]);
+
+                   }
+                }
+            }
                 break;
             case ('selected_category'):
                 $coupon->categories()->sync($request->select_category_id);

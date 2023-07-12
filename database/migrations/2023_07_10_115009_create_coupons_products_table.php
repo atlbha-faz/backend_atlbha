@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade');
             $table->bigInteger('product_id')->unsigned();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-
+            $table->boolean('import')->default(0);
             $table->timestamps();
         });
     }
