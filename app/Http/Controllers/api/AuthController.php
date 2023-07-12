@@ -314,6 +314,9 @@ class AuthController extends BaseController
         //dd(Hash::make($request->password));
 //$user = null;
         if (
+            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password])
+            
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
 
