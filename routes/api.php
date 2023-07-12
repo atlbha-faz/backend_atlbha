@@ -212,9 +212,22 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class);
 
-        Route::resource('shippingtype', App\Http\Controllers\api\adminDashboard\ShippingtypeController::class);
-        Route::resource('paymenttype', App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);
-        Route::resource('comment', App\Http\Controllers\api\adminDashboard\CommentController::class);
+
+
+Route::resource('category',App\Http\Controllers\api\adminDashboard\CategoryController::class);
+Route::resource('storecategory',App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
+Route::post('addvideo',[App\Http\Controllers\api\adminDashboard\CourseController::class,'addvideo']);
+Route::get('deletevideo/{id}',[App\Http\Controllers\api\adminDashboard\CourseController::class,'deletevideo']);
+
+
+Route::resource('course',App\Http\Controllers\api\adminDashboard\CourseController::class);
+
+Route::resource('shippingtype',App\Http\Controllers\api\adminDashboard\ShippingtypeController::class);
+Route::resource('paymenttype',App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);
+Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
+Route::get('commentchangeSatusall',[App\Http\Controllers\api\adminDashboard\CommentController::class,'changeSatusall']);
+Route::get('commentdeleteall',[App\Http\Controllers\api\adminDashboard\CommentController::class,'deleteall']);
+
         Route::resource('page', App\Http\Controllers\api\adminDashboard\PageController::class);
 //Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\PageController::class,"relatedPage"]);
         Route::post('page-publish', [App\Http\Controllers\api\adminDashboard\PageController::class, 'publish']);
