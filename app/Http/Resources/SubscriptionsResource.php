@@ -28,7 +28,7 @@ class SubscriptionsResource extends JsonResource
         
        if($this->periodtype ==null)
        {
-        $periodtype="null";
+        $periodtype='6 شهور';
        }
         elseif($this->periodtype == 'year'){
             $periodtype = 'سنوي';
