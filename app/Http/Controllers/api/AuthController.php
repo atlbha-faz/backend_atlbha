@@ -347,19 +347,18 @@ class AuthController extends BaseController
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
         $remember = request('remember');
-        if (auth()->guard()->attempt(request(['user_name', 'password']),
-            $remember)) {
+        if (auth()->guard()->attempt(request(['user_name', 'password']))) {
             $user = auth()->user();
             
+        }
+
+        //$user->update(['device_token' => $request->device_token]);
+
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
-        }
-
-        //$user->update(['device_token' => $request->device_token]);
-
         // }
     }
 //login store template
