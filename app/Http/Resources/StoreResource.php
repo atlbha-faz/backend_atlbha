@@ -85,7 +85,8 @@ class StoreResource extends JsonResource
         'verification_date'=>$this->verification_date,
         'status' => $status,
         'special' => $special,
-             'package' =>$this->packagee($this->packages->last()->package_id),
+        // 'package' =>$this->packagee($this->packages->last()->package_id),
+             'package' =>$this->packagee($this->package_id),
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
     ];
     }
