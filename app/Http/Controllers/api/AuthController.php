@@ -288,7 +288,7 @@ class AuthController extends BaseController
             $user = auth()->user();
         }
 
-        $user->update(['device_token' => $request->device_token]);
+       // $user->update(['device_token' => $request->device_token]);
 
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
@@ -352,7 +352,7 @@ class AuthController extends BaseController
             $user = auth()->user();
         }
 
-        $user->update(['device_token' => $request->device_token]);
+        //$user->update(['device_token' => $request->device_token]);
 
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
