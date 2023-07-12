@@ -88,13 +88,13 @@ class PasswordResetController extends BaseController
             # code...
             return $this->sendError('Validation Error.', $validator->errors());
         }
-
+$user_name = $request->user_name;
         $user = User::where(
            function($query) {
              return $query->where('type', 'store')->orWhere('email', 'store_employee');
             })->where(
-           function($query) {
-             return $query->where('user_name', $request->user_name)->orWhere('email', $request->user_name);
+           function($query )use ($user_name) {
+             return $query->where('user_name', $user_name)->orWhere('email', $user_name);
             })
             ->first();
         if (!$user){
