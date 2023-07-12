@@ -66,7 +66,7 @@ class CommentController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'comment_text'=>'required|string|max:255',
-            'rateing'=>'required|numeric|lt:5',
+            'rateing'=>'required|numeric|lte:5',
             'comment_for'=>'required|in:product,store',
             'store_id'=>'required_if:comment_for,store',
             'product_id'=>'required_if:comment_for,product',
@@ -212,14 +212,14 @@ class CommentController extends BaseController
             if(count($comments)>0){
         foreach($comments as $comment)
         {
-     
+
             if($comment->status === 'active'){
         $comment->update(['status' => 'not_active']);
         }
         else{
         $comment->update(['status' => 'active']);
         }
-    
+
         $success['comments']= New CommentResource($comment);
 
             }
