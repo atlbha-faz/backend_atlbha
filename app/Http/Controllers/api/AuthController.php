@@ -312,7 +312,7 @@ class AuthController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         //dd(Hash::make($request->password));
-
+$user;
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
