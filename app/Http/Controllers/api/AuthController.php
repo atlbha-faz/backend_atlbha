@@ -349,7 +349,8 @@ class AuthController extends BaseController
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
-        $remember = request('remember');
+       // $remember = request('remember');
+        dd(auth()->guard()->attempt(request(['user_name', 'password'])));
         if (auth()->guard()->attempt(request(['user_name', 'password']))) {
             $user = auth()->user();
             
