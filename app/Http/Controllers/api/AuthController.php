@@ -316,7 +316,10 @@ class AuthController extends BaseController
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password])
-            
+            ) {
+            return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
+        }
+          elseif (  
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
 
