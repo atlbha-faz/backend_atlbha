@@ -36,7 +36,15 @@ class PasswordResetController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
+        $user_name = $request->user_name;
+        $user = User::where(
+           function($query) {
+             return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
+            })->where(
+           function($query )use ($user_name) {
+             return $query->where('user_name', $user_name)->orWhere('email', $user_name);
+            })
+            ->first();
         if (!$user){
             return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
         }
