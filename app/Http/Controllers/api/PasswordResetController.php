@@ -91,12 +91,10 @@ class PasswordResetController extends BaseController
 
         $user = User::where(
            function($query) {
-             return $query
-                    where('type', 'store')->orWhere('email', 'store_employee');
+             return $query->where('type', 'store')->orWhere('email', 'store_employee');
             })->where(
            function($query) {
-             return $query
-                    where('user_name', $request->user_name)->orWhere('email', $request->user_name);
+             return $query->where('user_name', $request->user_name)->orWhere('email', $request->user_name);
             })
             ->first();
         if (!$user){
