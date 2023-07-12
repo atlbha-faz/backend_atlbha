@@ -288,7 +288,7 @@ class AuthController extends BaseController
             $user = auth()->user();
         }
 
-        $user->update(['device_token' => $request->device_token]);
+       // $user->update(['device_token' => $request->device_token]);
 
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
@@ -312,22 +312,21 @@ class AuthController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         //dd(Hash::make($request->password));
-
+//$user = null;
         if (
+            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password])
+            ) {
+            return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
+        }
+          elseif (  
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
 
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
 
-            && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
 
-            && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer'])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'customer'])
-
-            && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'marketer'])
         ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
         } elseif (
@@ -346,13 +345,14 @@ class AuthController extends BaseController
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
-        $remember = request('remember');
-        if (auth()->guard()->attempt(request(['user_name', 'password']),
-            $remember)) {
+       // $remember = request('remember');
+       
+        if (auth()->guard()->attempt(request(['user_name', 'password']))) {
             $user = auth()->user();
+            
         }
 
-        $user->update(['device_token' => $request->device_token]);
+        //$user->update(['device_token' => $request->device_token]);
 
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
