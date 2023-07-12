@@ -312,7 +312,7 @@ class AuthController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         //dd(Hash::make($request->password));
-$user = null;
+//$user = null;
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
@@ -350,15 +350,16 @@ $user = null;
         if (auth()->guard()->attempt(request(['user_name', 'password']),
             $remember)) {
             $user = auth()->user();
-        }
-
-        //$user->update(['device_token' => $request->device_token]);
-
+            
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
+        }
+
+        //$user->update(['device_token' => $request->device_token]);
+
         // }
     }
 //login store template
