@@ -479,6 +479,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('selector/packages', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'packages']);
         Route::get('selector/products', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'products']);
         Route::get('selector/payment_types', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'payment_types']);
+        Route::get('selector/productImportproduct', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'storeImportproduct']);
 
         Route::get('selector/auth_user', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'auth_user']);
         Route::get('selector/cities', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'cities']);

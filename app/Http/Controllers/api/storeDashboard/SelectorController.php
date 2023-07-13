@@ -2,34 +2,35 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ActivityResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\CityResource;
-use App\Http\Resources\CountryResource;
-use App\Http\Resources\PackageResource;
-use App\Http\Resources\Page_categoryResource;
-use App\Http\Resources\PaymenttypeResource;
-use App\Http\Resources\PlanResource;
-use App\Http\Resources\PostCategoryResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\ServiceResource;
-use App\Http\Resources\StoreResource;
-use App\Http\Resources\TemplateResource;
-use App\Models\Activity;
-use App\Models\Category;
 use App\Models\City;
+use App\Models\Plan;
+use App\Models\Store;
 use App\Models\Country;
 use App\Models\Package;
-use App\Models\Page_category;
-use App\Models\Paymenttype;
-use App\Models\Plan;
-use App\Models\Postcategory;
 use App\Models\Product;
 use App\Models\Service;
-use App\Models\Store;
+use App\Models\Activity;
+use App\Models\Category;
 use App\Models\Template;
+use App\Models\Paymenttype;
+use App\Models\Postcategory;
+use App\Models\Page_category;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\CityResource;
+use App\Http\Resources\PlanResource;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\CountryResource;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\PackageResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\ServiceResource;
+use App\Http\Resources\ActivityResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\TemplateResource;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\PostCategoryResource;
+use App\Http\Resources\Page_categoryResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SelectorController extends BaseController
 {
@@ -196,6 +197,22 @@ class SelectorController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع تصنيفات المقالات بنجاح', 'Post Categories return successfully');
+    }
+    
+    public function storeImportproduct()
+    {
+
+        $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+
+        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+        $imports = importsResource::collection($import);
+
+        $success['products'] = $products->merge($imports);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
+
     }
 
 }
