@@ -94,8 +94,8 @@ class CartTemplateController extends BaseController
     }
     public function addToCart(Request $request)
     {
-        if ($domain == 'atlbha') {
-            $store = Store::where('domain', $id)->where('is_deleted', 0)->first();
+        if ( is_null(auth()->user()->store_id)) {
+        
             $input = $request->all();
             $validator = Validator::make($input, [
                 'data' => 'nullable|array',
@@ -154,7 +154,7 @@ class CartTemplateController extends BaseController
             }
 
         } else {
-            $store = Store::where('domain', $id)->where('is_deleted', 0)->first();
+           
 
             $input = $request->all();
             $validator = Validator::make($input, [
@@ -179,7 +179,7 @@ class CartTemplateController extends BaseController
             if ($product_quantity >= $request->qty) {
                 $cart = Cart::updateOrCreate([
                     'user_id' => auth()->user()->id,
-                    'store_id' => $store->id,
+                    'store_id' => auth()->user()->store_id,
                 ], [
                     'total' => 0,
                     'count' => 0,

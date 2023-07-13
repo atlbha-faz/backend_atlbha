@@ -26,7 +26,6 @@ class IndexStoreController extends BaseController
     public function index($id)
     {
         if ($id == 'atlbha') {
-
             $store = Store::where('domain', $id)->first();
             if (is_null($store) || $store->is_deleted == 1) {
                 return $this->sendError("المتجر غير موجود", "Store is't exists");
@@ -293,15 +292,14 @@ class IndexStoreController extends BaseController
         }
 
     }
-    public function productPage($domain, $id)
+    public function productPage( $id)
     {
 
-        if ($domain == 'atlbha') {
-
             $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
-
-            if ($store_id == null) {
-                $success['domain'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('domain')->first();
+      
+            if (is_null($store_id)) {
+            
+                $success['domain'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
                 $product = Product::where('is_deleted', 0)->where('id', $id)->first();
@@ -310,47 +308,27 @@ class IndexStoreController extends BaseController
                         ->where('store_id', null)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
 
                 $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', null)->where('product_id', $product->id)->get());
-                $success['storeName'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('store_name')->first();
-                $success['storeEmail'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('store_email')->first();
+                $success['storeName'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('store_name')->first();
+                $success['storeEmail'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('store_email')->first();
                 $success['storeAddress'] = 'السعودية - مدينة جدة';
-                $success['phonenumber'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('phonenumber')->first();
-                $success['description'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('description')->first();
+                $success['phonenumber'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('phonenumber')->first();
+                $success['description'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('description')->first();
 
-                $success['snapchat'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('snapchat')->first();
-                $success['facebook'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('facebook')->first();
-                $success['twiter'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('twiter')->first();
-                $success['youtube'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('youtube')->first();
-                $success['instegram'] = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('instegram')->first();
-                $store = Store::where('is_deleted', 0)->where('domain', $domain)->first();
+                $success['snapchat'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('snapchat')->first();
+                $success['facebook'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('facebook')->first();
+                $success['twiter'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('twiter')->first();
+                $success['youtube'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('youtube')->first();
+                $success['instegram'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('instegram')->first();
+                $store = Store::where('is_deleted', 0)->where('domain', 'atlbha')->first();
                 //  if(($store->paymenttypes ==null)
 
                 $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
-                $store = Store::where('is_deleted', 0)->where('domain', $domain)->first();
-                //dd( $store);
-                $arr = array();
-                // if ($store->verification_status == 'accept') {
-                //     if ($store->commercialregistertype == 'maeruf') {
-                //         $arr['link'] = $store->link;
-                //         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
-                //     } else {
-                //         $arr['link'] = null;
-                //         $arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
-                //     }
-                //     $verificayionMethod = $arr;
-                // } else {
-                //     $verificayionMethod = null;
-                // }
-                // $success['verificayionMethod'] = $verificayionMethod;
-                // $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع صفحة المنتج للمتجر بنجاح', ' Product page return successfully');
-
-            } else {
+                $store = Store::where('is_deleted', 0)->where('domain', 'atlbha')->first();
+               
                 $success['status'] = 200;
 
-                return $this->sendResponse($success, 'صفحة المنتج غير موجود ', ' Product page is not exists');
-            }
+                return $this->sendResponse($success, 'تم ارجاع صفحة المنتج للمتجر بنجاح', ' Product page return successfully');
 
         } else {
             $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
@@ -377,8 +355,15 @@ class IndexStoreController extends BaseController
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
+                
                 $product = Product::where('is_deleted', 0)->where('id', $id)->first();
+                $import= Importproduct::where('product_id',$product->id)->where('store_id',$store_id)->first();
+                if($import != null){
                 $success['product'] = new ProductResource(Product::where('is_deleted', 0)->where('id', $id)->first());
+                }
+                else{
+                    $success['product'] = new importsResource(Product::where('is_deleted', 0)->where('id', $id)->first());
+                }
                 $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)
                         ->where('store_id', $product->store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
 
@@ -425,8 +410,8 @@ class IndexStoreController extends BaseController
                 return $this->sendResponse($success, 'صفحة المنتج غير موجود ', ' Product page is not exists');
             }
 
+        
         }
-
     }
     public function addComment(Request $request, $id)
     {
