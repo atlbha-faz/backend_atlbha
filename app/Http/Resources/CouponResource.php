@@ -24,6 +24,9 @@ class CouponResource extends JsonResource
             $discount_type = 'نسبة مئوية';
         }
 
+
+        $products =ProductResource::collection($this->products());
+        $imports = importsResource::collection($this->imports());
         return [
             'id' => $this->id,
             'code' => $this->code,
@@ -37,7 +40,7 @@ class CouponResource extends JsonResource
             'free_shipping' => $this->free_shipping !== null ? $this->free_shipping : 0,
             'exception_discount_product' => $this->exception_discount_product !== null ? $this->exception_discount_product : 0,
             'coupon_apply' => $this->coupon_apply,
-            'selected_product' => $this->coupon_apply == "selected_product" ? array_merge((ProductResource::collection($this->products()))->toArray(),(importsResource::collection($this->imports()))->toArray()): null,
+            'selected_product' => $this->coupon_apply == "selected_product" ? array_merge($imports->toArray(),$products->toArray()): null,
             'selected_category' => $this->coupon_apply == "selected_category" ? CategoryResource::collection($this->categories) : null,
             'selected_payment' => $this->coupon_apply == "selected_payment" ? PaymenttypeResource::collection($this->paymenttypes) : null,
             'status' => $this->expireCoupon($this->id),
