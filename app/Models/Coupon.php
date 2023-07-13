@@ -73,7 +73,7 @@ public function products()
         'coupons_products',
         'coupon_id',
         'product_id'
-        )->where('import',0)->get();
+        )->where('import',0)->get()->toArray();
   }
 public function imports()
   {
