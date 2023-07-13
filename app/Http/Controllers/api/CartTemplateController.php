@@ -32,101 +32,186 @@ class CartTemplateController extends BaseController
 
     public function show($id)
     {
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id',null)->first();
-        if(!is_null($store)){ 
-            
-            $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
-            }
-        if (is_null($store) || $store->is_deleted == 1 || is_null($store_package)|| $store_package->status =="not_active") {
-            return $this->sendError("المتجر غير موجودة", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+        if ($id == 'atlbha') {
+            $store = Store::where('domain', $id)->where('is_deleted', 0)->first();
 
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-
+            if (is_null($store) || $store->is_deleted == 1) {
+                return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
 
+            $id = $store->id;
+
+            $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
+
+            $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', null)->first();
+
+            if (is_null($cart)) {
+                return $this->sendError("السلة غير موجودة", "cart is't exists");
+            }
+
+            $success['cart'] = new CartResource($cart);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
+
+        } else {
+            $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
+            if (!is_null($store)) {
+
+                $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+            }
+            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+                return $this->sendError("المتجر غير موجودة", "Store is't exists");
+            }
+            if ($store->maintenance != null) {
+                if ($store->maintenance->status == 'active') {
+                    $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                    $success['status'] = 200;
+
+                    return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+                }
+
+            }
+
+            $id = $store->id;
+
+            $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
+
+            $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $id)->first();
+
+            if (is_null($cart)) {
+                return $this->sendError("السلة غير موجودة", "cart is't exists");
+            }
+
+            $success['cart'] = new CartResource($cart);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
+
         }
-
-        $id = $store->id;
-
-        $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
-
-        $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $id)->first();
-
-        if (is_null($cart)) {
-            return $this->sendError("السلة غير موجودة", "cart is't exists");
-        }
-
-        $success['cart'] = new CartResource($cart);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
-
     }
-
     public function addToCart(Request $request)
     {
+        if ($domain == 'atlbha') {
+            $store = Store::where('domain', $id)->where('is_deleted', 0)->first();
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'data' => 'nullable|array',
+                'data.*.id' => [
+                    'required',
+                    //  Rule::exists('products')->where(function($query){
 
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'data' => 'nullable|array',
-            'data.*.id' => [
-                'required',
-                //  Rule::exists('products')->where(function($query){
+                    //             $query->where('store_id', auth()->user()->store_id)
+                    //                   ->where('id', request()->id);
+                    //  })
+                ],
 
-                //             $query->where('store_id', auth()->user()->store_id)
-                //                   ->where('id', request()->id);
-                //  })
-            ],
-
-            'data.*.price' => 'required|numeric',
-            'data.*.qty' => 'required|numeric',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-        $product_quantity = Product::where('id', $request->id)->pluck('quantity')->first();
-
-        if ($product_quantity >= $request->qty) {
-            $cart = Cart::updateOrCreate([
-                'user_id' => auth()->user()->id,
-                'store_id' => auth()->user()->store_id,
-            ], [
-                'total' => 0,
-                'count' => 0,
+                'data.*.price' => 'required|numeric',
+                'data.*.qty' => 'required|numeric',
             ]);
-            $cartid = $cart->id;
-            if (!is_null($request->data)) {
-                foreach ($request->data as $data) {
-                    $cartDetail = CartDetail::updateOrCreate([
-                        'cart_id' => $cartid,
-                        'product_id' => $data['id'],
-                    ], [
-                        'qty' => $data['qty'],
-                        'price' => $data['price'],
-                        //  'option'=>$data['option'],
-                    ]);
-                }
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
             }
-            $cart->update([
-                'total' => CartDetail::where('cart_id', $cartid)->get()->reduce(function ($total, $item) {
-                    return $total + ($item->qty * $item->price);
-                }),
-                'count' => CartDetail::where('cart_id', $cartid)->count(),
-            ]);
+            $product_quantity = Product::where('id', $request->id)->pluck('quantity')->first();
 
-            $success = new CartResource($cart);
-            $success['status'] = 200;
-            return $this->sendResponse($success, 'تم إضافة  السلة بنجاح', 'Cart Added successfully');
+            if ($product_quantity >= $request->qty) {
+                $cart = Cart::updateOrCreate([
+                    'user_id' => auth()->user()->id,
+                    'store_id' => null,
+                ], [
+                    'total' => 0,
+                    'count' => 0,
+                ]);
+                $cartid = $cart->id;
+                if (!is_null($request->data)) {
+                    foreach ($request->data as $data) {
+                        $cartDetail = CartDetail::updateOrCreate([
+                            'cart_id' => $cartid,
+                            'product_id' => $data['id'],
+                        ], [
+                            'qty' => $data['qty'],
+                            'price' => $data['price'],
+                            //  'option'=>$data['option'],
+                        ]);
+                    }
+                }
+                $cart->update([
+                    'total' => CartDetail::where('cart_id', $cartid)->get()->reduce(function ($total, $item) {
+                        return $total + ($item->qty * $item->price);
+                    }),
+                    'count' => CartDetail::where('cart_id', $cartid)->count(),
+                ]);
+
+                $success = new CartResource($cart);
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'تم إضافة  السلة بنجاح', 'Cart Added successfully');
+            } else {
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, ' الطلب اكبر من الكمية المتوفرة ', 'quanity more than avaliable');
+            }
+
         } else {
-            $success['status'] = 200;
+            $store = Store::where('domain', $id)->where('is_deleted', 0)->first();
 
-            return $this->sendResponse($success, ' الطلب اكبر من الكمية المتوفرة ', 'quanity more than avaliable');
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'data' => 'nullable|array',
+                'data.*.id' => [
+                    'required',
+                    //  Rule::exists('products')->where(function($query){
+
+                    //             $query->where('store_id', auth()->user()->store_id)
+                    //                   ->where('id', request()->id);
+                    //  })
+                ],
+
+                'data.*.price' => 'required|numeric',
+                'data.*.qty' => 'required|numeric',
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
+            }
+            $product_quantity = Product::where('id', $request->id)->pluck('quantity')->first();
+
+            if ($product_quantity >= $request->qty) {
+                $cart = Cart::updateOrCreate([
+                    'user_id' => auth()->user()->id,
+                    'store_id' => $store->id,
+                ], [
+                    'total' => 0,
+                    'count' => 0,
+                ]);
+                $cartid = $cart->id;
+                if (!is_null($request->data)) {
+                    foreach ($request->data as $data) {
+                        $cartDetail = CartDetail::updateOrCreate([
+                            'cart_id' => $cartid,
+                            'product_id' => $data['id'],
+                        ], [
+                            'qty' => $data['qty'],
+                            'price' => $data['price'],
+                            //  'option'=>$data['option'],
+                        ]);
+                    }
+                }
+                $cart->update([
+                    'total' => CartDetail::where('cart_id', $cartid)->get()->reduce(function ($total, $item) {
+                        return $total + ($item->qty * $item->price);
+                    }),
+                    'count' => CartDetail::where('cart_id', $cartid)->count(),
+                ]);
+
+                $success = new CartResource($cart);
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'تم إضافة  السلة بنجاح', 'Cart Added successfully');
+            } else {
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, ' الطلب اكبر من الكمية المتوفرة ', 'quanity more than avaliable');
+            }
         }
     }
     public function delete($id)
