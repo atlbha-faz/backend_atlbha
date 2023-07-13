@@ -25,7 +25,7 @@ class CommentController extends BaseController
     public function index()
     {
 
-        $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->get());
+        $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('store_id',null)->where('product_id',null)->where('comment_for','store')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع التعليقات بنجاح','comments return successfully');
@@ -89,10 +89,10 @@ class CommentController extends BaseController
      */
     public function show($comment)
    {
-        $comment = Comment::query()->find($comment);
+        $comment = Comment::query()->where('store_id',null)->where('product_id',null)->where('comment_for','store')->find($comment);
 
         if (is_null($comment) ||$comment->is_deleted==1){
-        return $this->sendError("'طريقة الدفع غير موجودة","comment type is't exists");
+        return $this->sendError("'التعليق غير موجودة","comment type is't exists");
         }
 
 
@@ -153,12 +153,13 @@ class CommentController extends BaseController
             return $this->sendResponse($success,'تم التعديل بنجاح','comment updated successfully');
     }
 
-    public function changeStatus($id)
+    public function changeSatusall(Request $request)
     {
-        $comment = Comment::query()->find($id);
-         if (is_null($comment) ||$comment->is_deleted==1){
-         return $this->sendError("التعليق غير موجود","comment is't exists");
-         }
+        $comments =Comment::whereIn('id',$request->id)->where('store_id',null)->where('product_id',null)->where('comment_for','store')->where('is_deleted',0)->get();
+
+        if(count($comments)>0){
+            foreach($comments as $comment)
+            {
 
         if($comment->status === 'active'){
         $comment->update(['status' => 'not_active']);
@@ -166,7 +167,9 @@ class CommentController extends BaseController
         else{
         $comment->update(['status' => 'active']);
         }
-        $success['comments']=New CommentResource($comment);
+         }
+         }  
+        $success['comments']=CommentResource::collection($comments);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة التعليق بنجاح','comment updated successfully');
@@ -179,17 +182,35 @@ class CommentController extends BaseController
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy($comment)
-      {
-       $comment = Comment::query()->find($comment);
-         if (is_null($comment) ||$comment->is_deleted==1){
-         return $this->sendError("التعليق غير موجود","comment is't exists");
-         }
-        $comment->update(['is_deleted' => 1]);
+    // public function destroy($comment)
+    //   {
+    //    $comment = Comment::query()->find($comment);
+    //      if (is_null($comment) ||$comment->is_deleted==1){
+    //      return $this->sendError("التعليق غير موجود","comment is't exists");
+    //      }
+    //     $comment->update(['is_deleted' => 1]);
 
-        $success['comments']=New CommentResource($comment);
+    //     $success['comments']=New CommentResource($comment);
+    //     $success['status']= 200;
+
+    //      return $this->sendResponse($success,'تم حذف التعليق بنجاح',' comment deleted successfully');
+    // }
+
+    public function deleteall(Request $request)
+    {
+        $comments =Comment::whereIn('id',$request->id)->where('store_id',null)->where('product_id',null)->where('comment_for','store')->where('is_deleted',0)->get();
+
+        if(count($comments)>0){
+            foreach($comments as $comment)
+            {
+
+                $comment->update(['is_deleted' => 1]);
+         }
+         }  
+        $success['comments']=CommentResource::collection($comments);
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم حذف التعليق بنجاح',' comment deleted successfully');
+         return $this->sendResponse($success,'تم حذف التعليق بنجاح','comment deleted successfully');
+
     }
 }

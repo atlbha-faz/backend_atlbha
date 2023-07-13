@@ -73,7 +73,16 @@ public function products()
         'coupons_products',
         'coupon_id',
         'product_id'
-        );
+        )->where('import',0)->get();
+  }
+public function imports()
+  {
+     return $this->belongsToMany(
+        Product::class,
+        'coupons_products',
+        'coupon_id',
+        'product_id'
+        )->where('import',1)->get();
   }
 
 public function paymenttypes()
