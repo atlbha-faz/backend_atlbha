@@ -75,7 +75,7 @@ public function products()
         'product_id'
         )->where('import',1)->get();
   }
-public function products()
+public function imports()
   {
      return $this->belongsToMany(
         Product::class,
