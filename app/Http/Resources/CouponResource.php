@@ -26,7 +26,7 @@ class CouponResource extends JsonResource
 
 
         $products =ProductResource::collection($this->products());
-        $imports = importsResource::collection($this->imports());
+        $imports = (importsResource::collection($this->imports()))->toArray();
         return [
             'id' => $this->id,
             'code' => $this->code,
