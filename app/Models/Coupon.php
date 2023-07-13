@@ -82,7 +82,7 @@ public function imports()
         'coupons_products',
         'coupon_id',
         'product_id'
-        )->where('import',1)->get()->toArray();
+        )->where('import',1)->get();
   }
 
 public function paymenttypes()
