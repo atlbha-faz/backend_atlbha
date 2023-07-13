@@ -73,6 +73,15 @@ public function products()
         'coupons_products',
         'coupon_id',
         'product_id'
+        )->where('import',1)->get();
+  }
+public function products()
+  {
+     return $this->belongsToMany(
+        Product::class,
+        'coupons_products',
+        'coupon_id',
+        'product_id'
         )->where('import',0)->get();
   }
 
