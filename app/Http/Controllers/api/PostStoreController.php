@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\api;
 
-use Carbon\Carbon;
-use App\Models\Page;
-use App\Models\Store;
-use App\Models\Package;
-use App\Models\Package_store;
-use App\Models\Category;
-use App\Models\Homepage;
-use App\Models\Paymenttype;
-use App\Models\Postcategory;
-use Illuminate\Http\Request;
-use App\Http\Resources\PageResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\MaintenanceResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\PageResource;
+use App\Models\Category;
+use App\Models\Homepage;
+use App\Models\Package_store;
+use App\Models\Page;
+use App\Models\Paymenttype;
+use App\Models\Postcategory;
+use App\Models\Setting;
+use App\Models\Store;
+use App\Models\website_socialmedia;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class PostStoreController extends BaseController
 {
@@ -23,53 +24,35 @@ class PostStoreController extends BaseController
     {
         if ($id == 'atlbha') {
 
-            $store = Store::where('domain', $id)->first();
-
-            if (is_null($store) || $store->is_deleted == 1) {
-                return $this->sendError("المتجر غير موجودة", "Store is't exists");
+            $success['domain'] = $id;
+            $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+            $tagarr = array();
+            $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
+            //    dd($tags);
+            foreach ($tags as $tag) {
+                $tagarr[] = $tag;
             }
+            $success['tags'] = $tagarr;
+            $success['category'] = Category::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->with('products')->has('products')->get();
+            $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
+            $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
+            $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
+            $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
+            // footer
+            $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
+            $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
+            $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
+            $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
+            $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
+            $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+            $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
+            $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
+            // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+            $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
 
-            $id = $store->id;
-            if ($store != null) {
-                $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
-                $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
-                $tagarr = array();
-                $tags = Page::where('is_deleted', 0)->where('store_id', $id)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
-                //    dd($tags);
-                foreach ($tags as $tag) {
-                    $tagarr[] = $tag;
-                }
-                $success['tags'] = $tagarr;
-                $success['category'] = Category::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->with('products')->has('products')->get();
-                $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
-                $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
-                $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
-                $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
-                // footer
-                $success['storeName'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('store_name')->first();
-                $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('store_email')->first();
-                $success['storeAddress'] = 'السعودية - مدينة جدة';
-                $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('phonenumber')->first();
-                $success['description'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('description')->first();
+            $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
-                $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('snapchat')->first();
-                $success['facebook'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('facebook')->first();
-                $success['twiter'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('twiter')->first();
-                $success['youtube'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('youtube')->first();
-                $success['instegram'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('instegram')->first();
-
-                $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
-
-                $store = Store::where('is_deleted', 0)->where('id', $id)->first();
-
-                return $this->sendResponse($success, 'تم ارجاع المدونة بنجاح', 'posts return successfully');
-            } else {
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, ' المتجر غير موجود', 'Store is not exists');
-
-            }
+            return $this->sendResponse($success, 'تم ارجاع المدونة بنجاح', 'posts return successfully');
 
         } else {
             $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
@@ -151,18 +134,11 @@ class PostStoreController extends BaseController
     }
     public function show($postCategory_id, Request $request)
     {
-        if ($request->domain== 'atlbha') {
+        if ($request->domain == 'atlbha') {
 
-            $store = Store::where('domain', $request->domain)->first();
-
-            if (is_null($store) || $store->is_deleted == 1) {
-                return $this->sendError("المتجر غير موجودة", "Store is't exists");
-            }
-
-            $store_id = $store->id;
             $postcategory = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', $postCategory_id)->first();
             if ($postcategory != null) {
-                $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
+                $success['domain'] = $request->domain;
 
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->toArray();
                 $tagarr = array();
@@ -180,18 +156,17 @@ class PostStoreController extends BaseController
                 $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
                 $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
                 // footer
-                $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
-                $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
-                $success['storeAddress'] = 'السعودية - مدينة جدة';
-                $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
-                $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
+                $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
+                $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
+                $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
+                $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
+                $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
+                $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+                $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
+                $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
+                // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+                $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
 
-                $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
-                $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
-                $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
-                $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
-                $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
-                $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes->where('status', 'active');
 
                 return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
@@ -286,16 +261,10 @@ class PostStoreController extends BaseController
     public function show_post($pageId, Request $request)
     {
         if ($request->domain == 'atlbha') {
-            $store = Store::where('domain', $request->domain)->first();
 
-            if (is_null($store) || $store->is_deleted == 1) {
-                return $this->sendError("المتجر غير موجودة", "Store is't exists");
-            }
-
-            $store_id = $store->id;
             $post = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $pageId)->first();
             if ($post != null) {
-                $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
+                $success['domain'] = $request->domain;
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
                 $tagarr = array();
                 $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
@@ -313,18 +282,17 @@ class PostStoreController extends BaseController
                 $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->where('postcategory_id', '==', Page::find($pageId)->postcategory_id)->orderBy('created_at', 'desc')->take(2)->get());
                 // $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
                 // footer
-                $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
-                $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
-                $success['storeAddress'] = 'السعودية - مدينة جدة';
-                $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
-                $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
+                $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
+                $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
+                $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
+                $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
+                $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
+                $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+                $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
+                $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
+                // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+                $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
 
-                $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
-                $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
-                $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
-                $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
-                $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
-                $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
                 return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
