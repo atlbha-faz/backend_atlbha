@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\MaintenanceResource;
-use App\Http\Resources\PageResource;
+use Carbon\Carbon;
+use App\Models\Page;
+use App\Models\Store;
+use App\Models\Package;
+use App\Models\Package_store;
 use App\Models\Category;
 use App\Models\Homepage;
-use App\Models\Page;
 use App\Models\Paymenttype;
 use App\Models\Postcategory;
-use App\Models\Store;
 use Illuminate\Http\Request;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\MaintenanceResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class PostStoreController extends BaseController
 {
@@ -148,7 +151,7 @@ class PostStoreController extends BaseController
     }
     public function show($postCategory_id, Request $request)
     {
-        if ($id == 'atlbha') {
+        if ($request->domain== 'atlbha') {
 
             $store = Store::where('domain', $request->domain)->first();
 
