@@ -86,6 +86,7 @@ class CouponController extends BaseController
             'store_id' => auth()->user()->store_id,
             'status' => $request->status,
         ]);
+        
         switch ($request->coupon_apply) {
             case ('selected_product'):{
                 // $coupon->products()->attach($request->select_product_id);

@@ -186,7 +186,7 @@ class CategoryController extends BaseController
     {
         $category = Category::where('id', $category)->where('store_id', auth()->user()->store_id)->first();
 
-        if (is_null($category) || $category->is_deleted == 1 || $category->store_id != auth()->user()->store_id) {
+        if (is_null($category) || $category->is_deleted == 1) {
             return $this->sendError("التصنيف غير موجودة", " Category is't exists");
         }
         // if($request->parent_id == null){
@@ -215,12 +215,14 @@ class CategoryController extends BaseController
         // dd($request->$data['id']);
         $subcategories_id = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         foreach ($subcategories_id as $oid) {
+            if($request->data != null){
             if (!(in_array($oid, array_column($request->data, 'id')))) {
                 $subcategory = Category::query()->find($oid);
                 $subcategory->update(['is_deleted' => 1]);
             }
         }
-if($request->data){
+    }
+          if($request->data){
         foreach ($request->data as $data) {
             $sub_cat = Category::find($data['id']);
 
@@ -246,6 +248,11 @@ if($request->data){
 
             ]);
         }
+    }
+    else{
+        $subcategory = Category::where('parent_id', $category_id)->get();
+        foreach($subcategory as $sub)
+       { $sub->delete();}
     }
 
         $success['categories'] = new CategoryResource($category);
