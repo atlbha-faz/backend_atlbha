@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\api;
 
-use DB;
-use Carbon\Carbon;
-use App\Models\Page;
-use App\Models\Store;
-use App\Models\Comment;
-use App\Models\Product;
-use App\Models\Category;
-use App\Models\Homepage;
-use App\Models\Paymenttype;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Models\Package_store;
-use App\Http\Resources\PageResource;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\importsResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\CategoryResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\MaintenanceResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\ProductResource;
+use App\Models\Category;
+use App\Models\Comment;
+use App\Models\Homepage;
+use App\Models\Importproduct;
+use App\Models\Package_store;
+use App\Models\Page;
+use App\Models\Paymenttype;
+use App\Models\Product;
+use App\Models\Store;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class IndexStoreController extends BaseController
 {
@@ -190,7 +190,7 @@ class IndexStoreController extends BaseController
                 $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $id)->where('products.special', 'special')->orderBy('products.created_at', 'desc')
                     ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
                 $imports = importsResource::collection($import);
-    
+
                 $success['specialProducts'] = $products->merge($imports);
 
                 ///////////////////////////
@@ -206,29 +206,27 @@ class IndexStoreController extends BaseController
                     ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
 
                 foreach ($orders as $order) {
-                    $import= Importproduct::where('product_id',$order->id)->where('store_id',$id)->first();
-                    if(is_null($import))
-                     {
+                    $import = Importproduct::where('product_id', $order->id)->where('store_id', $id)->first();
+                    if (is_null($import)) {
                         $arr1[] = Product::find($order->id);
-                        $products=ProductResource::collection($arr1);
-                     }
-                     else{
+                        $products = ProductResource::collection($arr1);
+                    } else {
                         $arr2[] = Product::find($order->id);
-                        $imports=importsResource::collection($arr2);
+                        $imports = importsResource::collection($arr2);
 
-                     }
-            
+                    }
+
                 }
                 $success['moreSales'] = $products->merge($imports);
                 // resent arrivede
 
                 $oneWeekAgo = Carbon::now()->subWeek();
-              
+
                 $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
-                ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
-               $resentimports = importsResource::collection($resentimport);
-               $resentproduct=ProductResource::collection(Product::where('is_deleted', 0)
-               ->where('store_id', $id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
+                    ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+                $resentimports = importsResource::collection($resentimport);
+                $resentproduct = ProductResource::collection(Product::where('is_deleted', 0)
+                        ->where('store_id', $id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
                 $success['resentArrivede'] = $resentproduct->merge($resentimport);
                 ////////////////////////////////////////
                 $resent_arrivede_by_category = Category::where('is_deleted', 0)->where('store_id', $id)->whereHas('products', function ($query) use ($id) {
@@ -313,13 +311,14 @@ class IndexStoreController extends BaseController
         }
 
     }
-    public function productPage( $id)
+    public function productPage($domain, $id)
     {
+        if ($domain == 'atlbha') {
 
             $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
-      
+
             if (is_null($store_id)) {
-            
+
                 $success['domain'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
@@ -346,13 +345,19 @@ class IndexStoreController extends BaseController
                 $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
                 $store = Store::where('is_deleted', 0)->where('domain', 'atlbha')->first();
-               
+
                 $success['status'] = 200;
 
                 return $this->sendResponse($success, 'تم ارجاع صفحة المنتج للمتجر بنجاح', ' Product page return successfully');
 
+            } else {
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, '  صفحة المنتج غير موجودة', ' Product page is not exist');
+
+            }
         } else {
-            $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
+            $store_id = Store::where('domain', $domain)->pluck('id')->first();
 
             $store = Store::where('id', $store_id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
             if (!is_null($store)) {
@@ -376,17 +381,24 @@ class IndexStoreController extends BaseController
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
-                
+
                 $product = Product::where('is_deleted', 0)->where('id', $id)->first();
-                $import= Importproduct::where('product_id',$product->id)->where('store_id',$store_id)->first();
-                if($import != null){
-                $success['product'] = new ProductResource(Product::where('is_deleted', 0)->where('id', $id)->first());
-                }
-                else{
+                $import = Importproduct::where('product_id', $id)->where('store_id', $store_id)->first();
+                if ($import != null) {
                     $success['product'] = new importsResource(Product::where('is_deleted', 0)->where('id', $id)->first());
+
+                } else {
+                    $exit_product = Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first();
+                    if ($exit_product != null) {
+                        $success['product'] = new ProductResource(Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first());
+                    } else {
+                        return $this->sendError("المنتج غير موجود", "product is't exists");
+
+                    }
                 }
+
                 $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)
-                        ->where('store_id', $product->store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
+                        ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
 
                 $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $product->store_id)->where('product_id', $product->id)->get());
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
@@ -431,41 +443,70 @@ class IndexStoreController extends BaseController
                 return $this->sendResponse($success, 'صفحة المنتج غير موجود ', ' Product page is not exists');
             }
 
-        
         }
     }
     public function addComment(Request $request, $id)
     {
+        if ($domain == 'atlbha') {
+            $product = Product::query()->find($id);
+            if (is_null($product) || $product->is_deleted == 1) {
+                return $this->sendError("المنتج غير موجود", "product is't exists");
+            }
 
-        $product = Product::query()->find($id);
-        if (is_null($product) || $product->is_deleted == 1) {
-            return $this->sendError("المنتج غير موجود", "product is't exists");
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'comment_text' => 'required|string|max:255',
+                'rateing' => 'required|numeric|lte:5',
+
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
+            }
+            $comment = Comment::create([
+                'comment_text' => $request->comment_text,
+                'rateing' => $request->rateing,
+                'comment_for' => 'product',
+                'product_id' => $id,
+                'store_id' => null,
+                'user_id' => auth()->user()->id,
+
+            ]);
+
+            $success['comments'] = new CommentResource($comment);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
+        } else {
+            $product = Product::query()->find($id);
+            if (is_null($product) || $product->is_deleted == 1) {
+                return $this->sendError("المنتج غير موجود", "product is't exists");
+            }
+
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'comment_text' => 'required|string|max:255',
+                'rateing' => 'required|numeric|lte:5',
+
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
+            }
+            $store_id = Store::where('domain', $request->domain)->pluck('id')->first();
+            $comment = Comment::create([
+                'comment_text' => $request->comment_text,
+                'rateing' => $request->rateing,
+                'comment_for' => 'product',
+                'product_id' => $id,
+                'store_id' => $store_id,
+                'user_id' => auth()->user()->id,
+
+            ]);
+
+            $success['comments'] = new CommentResource($comment);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
         }
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment_text' => 'required|string|max:255',
-            'rateing' => 'required|numeric|lte:5',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-        $comment = Comment::create([
-            'comment_text' => $request->comment_text,
-            'rateing' => $request->rateing,
-            'comment_for' => 'product',
-            'product_id' => $id,
-            'store_id' => $product->store_id,
-            'user_id' => auth()->user()->id,
-
-        ]);
-
-        $success['comments'] = new CommentResource($comment);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
-
     }
     public function storPage(Request $request, $id)
     {
@@ -701,17 +742,17 @@ class IndexStoreController extends BaseController
             $filter_category = $request->input('filter_category');
             $price_from = $request->input('price_from');
             $price_to = $request->input('price_to');
-            $imports_id= Importproduct::where('store_id',$store_id)->pluck('product_id')->toArray();
+            $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
             $importsproducts = importsResource::collection(Product::where('is_deleted', 0)
-            ->where('store_id', $store_id)
-            ->whereIn('id',  $imports_id)
-            ->when($filter_category, function ($query, $filter_category) {
-            $query->where('category_id', $filter_category);
-            })->when($price_from, function ($query, $price_from) {
-            $query->where('selling_price', '>=', $price_from);
-            })->when($price_to, function ($query, $price_to) {
-            $query->where('selling_price', '<=', $price_to);
-             })->orderBy($s, $sort)->paginate($limit));
+                    ->where('store_id', $store_id)
+                    ->whereIn('id', $imports_id)
+                    ->when($filter_category, function ($query, $filter_category) {
+                        $query->where('category_id', $filter_category);
+                    })->when($price_from, function ($query, $price_from) {
+                    $query->where('selling_price', '>=', $price_from);
+                })->when($price_to, function ($query, $price_to) {
+                    $query->where('selling_price', '<=', $price_to);
+                })->orderBy($s, $sort)->paginate($limit));
 
             $storeproducts = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
@@ -721,7 +762,7 @@ class IndexStoreController extends BaseController
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price', '<=', $price_to);
                 })->orderBy($s, $sort)->paginate($limit));
-                $products=$storeproducts->merge($importsproducts);
+            $products = $storeproducts->merge($importsproducts);
             $filters = array();
             $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id])->get());
             $filters[0]["name"] = "التصنيفات";
@@ -876,15 +917,15 @@ class IndexStoreController extends BaseController
 
             $category = $request->input('category');
             $query = $request->input('query');
-            $imports_id= Importproduct::where('store_id',$store_id)->pluck('product_id')->toArray();
+            $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
             $imports_products = importsResource::collection(Product::where('is_deleted', 0)
-            ->where('store_id', $store_id)
-            ->whereIn('id',  $imports_id)
-            ->where('name', 'like', '%' . $query . '%')
-            ->when($category, function ($query, $category) {
-                $query->where('category_id', $category);
-            })
-            ->get());
+                    ->where('store_id', $store_id)
+                    ->whereIn('id', $imports_id)
+                    ->where('name', 'like', '%' . $query . '%')
+                    ->when($category, function ($query, $category) {
+                        $query->where('category_id', $category);
+                    })
+                    ->get());
             $products = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)
                     ->where('name', 'like', '%' . $query . '%')
