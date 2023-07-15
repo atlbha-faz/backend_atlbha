@@ -221,8 +221,7 @@ class CategoryController extends BaseController
                 $subcategory->update(['is_deleted' => 1]);
             }
         }
-        }
-
+          if($request->data){
         foreach ($request->data as $data) {
             $sub_cat = Category::find($data['id']);
 
@@ -248,6 +247,7 @@ class CategoryController extends BaseController
 
             ]);
         }
+    }
 
         $success['categories'] = new CategoryResource($category);
         $success['status'] = 200;
