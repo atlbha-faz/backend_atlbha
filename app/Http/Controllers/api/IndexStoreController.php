@@ -5,12 +5,14 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\importsResource;
 use App\Http\Resources\MaintenanceResource;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Homepage;
+use App\Models\Importproduct;
 use App\Models\Package_store;
 use App\Models\Page;
 use App\Models\Paymenttype;
@@ -292,13 +294,14 @@ class IndexStoreController extends BaseController
         }
 
     }
-    public function productPage( $id)
+    public function productPage($domain, $id)
     {
+        if ($domain == 'atlbha') {
 
             $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
-      
+
             if (is_null($store_id)) {
-            
+
                 $success['domain'] = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
@@ -325,13 +328,19 @@ class IndexStoreController extends BaseController
                 $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
                 $store = Store::where('is_deleted', 0)->where('domain', 'atlbha')->first();
-               
+
                 $success['status'] = 200;
 
                 return $this->sendResponse($success, 'تم ارجاع صفحة المنتج للمتجر بنجاح', ' Product page return successfully');
 
+            } else {
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, '  صفحة المنتج غير موجودة', ' Product page is not exist');
+
+            }
         } else {
-            $store_id = Product::where('is_deleted', 0)->where('id', $id)->pluck('store_id')->first();
+            $store_id = Store::where('domain', $domain)->pluck('id')->first();
 
             $store = Store::where('id', $store_id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
             if (!is_null($store)) {
@@ -355,17 +364,24 @@ class IndexStoreController extends BaseController
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
-                
+
                 $product = Product::where('is_deleted', 0)->where('id', $id)->first();
-                $import= Importproduct::where('product_id',$product->id)->where('store_id',$store_id)->first();
-                if($import != null){
-                $success['product'] = new ProductResource(Product::where('is_deleted', 0)->where('id', $id)->first());
-                }
-                else{
+                $import = Importproduct::where('product_id', $id)->where('store_id', $store_id)->first();
+                if ($import != null) {
                     $success['product'] = new importsResource(Product::where('is_deleted', 0)->where('id', $id)->first());
+
+                } else {
+                    $exit_product = Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first();
+                    if ($exit_product != null) {
+                        $success['product'] = new ProductResource(Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first());
+                    } else {
+                        return $this->sendError("المنتج غير موجود", "product is't exists");
+
+                    }
                 }
+
                 $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)
-                        ->where('store_id', $product->store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
+                        ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
 
                 $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $product->store_id)->where('product_id', $product->id)->get());
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
@@ -410,41 +426,70 @@ class IndexStoreController extends BaseController
                 return $this->sendResponse($success, 'صفحة المنتج غير موجود ', ' Product page is not exists');
             }
 
-        
         }
     }
     public function addComment(Request $request, $id)
     {
+        if ($domain == 'atlbha') {
+            $product = Product::query()->find($id);
+            if (is_null($product) || $product->is_deleted == 1) {
+                return $this->sendError("المنتج غير موجود", "product is't exists");
+            }
 
-        $product = Product::query()->find($id);
-        if (is_null($product) || $product->is_deleted == 1) {
-            return $this->sendError("المنتج غير موجود", "product is't exists");
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'comment_text' => 'required|string|max:255',
+                'rateing' => 'required|numeric|lte:5',
+
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
+            }
+            $comment = Comment::create([
+                'comment_text' => $request->comment_text,
+                'rateing' => $request->rateing,
+                'comment_for' => 'product',
+                'product_id' => $id,
+                'store_id' => null,
+                'user_id' => auth()->user()->id,
+
+            ]);
+
+            $success['comments'] = new CommentResource($comment);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
+        } else {
+            $product = Product::query()->find($id);
+            if (is_null($product) || $product->is_deleted == 1) {
+                return $this->sendError("المنتج غير موجود", "product is't exists");
+            }
+
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'comment_text' => 'required|string|max:255',
+                'rateing' => 'required|numeric|lte:5',
+
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
+            }
+            $store_id = Store::where('domain', $request->domain)->pluck('id')->first();
+            $comment = Comment::create([
+                'comment_text' => $request->comment_text,
+                'rateing' => $request->rateing,
+                'comment_for' => 'product',
+                'product_id' => $id,
+                'store_id' => $store_id,
+                'user_id' => auth()->user()->id,
+
+            ]);
+
+            $success['comments'] = new CommentResource($comment);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
         }
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment_text' => 'required|string|max:255',
-            'rateing' => 'required|numeric|lte:5',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-        $comment = Comment::create([
-            'comment_text' => $request->comment_text,
-            'rateing' => $request->rateing,
-            'comment_for' => 'product',
-            'product_id' => $id,
-            'store_id' => $product->store_id,
-            'user_id' => auth()->user()->id,
-
-        ]);
-
-        $success['comments'] = new CommentResource($comment);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
-
     }
     public function storPage(Request $request, $id)
     {
