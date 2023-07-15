@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CartResource;
+use Carbon\Carbon;
 use App\Models\Cart;
-use App\Models\CartDetail;
-use App\Models\Product;
-use App\Models\Store;
 use App\Models\User;
+use App\Models\Store;
+use App\Models\Product;
+use App\Models\CartDetail;
+use App\Models\Package_store;
 use Illuminate\Http\Request;
+use App\Http\Resources\CartResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CartTemplateController extends BaseController
 {
@@ -55,7 +57,9 @@ class CartTemplateController extends BaseController
             return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
 
         } else {
+         
             $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
+          
             if (!is_null($store)) {
 
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();

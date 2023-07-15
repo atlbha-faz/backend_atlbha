@@ -215,10 +215,12 @@ class CategoryController extends BaseController
         // dd($request->$data['id']);
         $subcategories_id = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         foreach ($subcategories_id as $oid) {
+            if($request->data != null){
             if (!(in_array($oid, array_column($request->data, 'id')))) {
                 $subcategory = Category::query()->find($oid);
                 $subcategory->update(['is_deleted' => 1]);
             }
+        }
         }
 
         foreach ($request->data as $data) {
