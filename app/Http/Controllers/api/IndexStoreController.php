@@ -429,7 +429,8 @@ class IndexStoreController extends BaseController
     }
     public function addComment(Request $request, $id)
     {
-        if ($domain == 'atlbha') {
+        // add comment
+        if ($request->domain == 'atlbha') {
             $product = Product::query()->find($id);
             if (is_null($product) || $product->is_deleted == 1) {
                 return $this->sendError("المنتج غير موجود", "product is't exists");
@@ -883,7 +884,7 @@ class IndexStoreController extends BaseController
                         $query->where('products.category_id', $category);
                     },)
                     ->get(['products.*', 'importproducts.price']));
-                 
+
             $products = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)
                     ->where('name', 'like', '%' . $query . '%')
@@ -891,7 +892,7 @@ class IndexStoreController extends BaseController
                         $query->where('category_id', $category);
                     })
                     ->get());
-                  
+
             $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
             $success['searchProducts'] = $products->merge($imports_products);
             $success['status'] = 200;

@@ -167,7 +167,7 @@ class PostStoreController extends BaseController
                 // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
                 $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
 
-                $success['paymentMethod'] = $store->paymenttypes->where('status', 'active');
+                $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
                 return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
             } else {
