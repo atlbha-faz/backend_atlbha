@@ -511,7 +511,7 @@ class AuthController extends BaseController
         "api_password":"'.env("GETWAY_PASSWORD", null).'", 
         "sms_type": "T", 
         "encoding":"T", 
-        "sender_id": "MASHAHER", 
+        "sender_id": "ATLBHA", 
         "phonenumber": "'.$request->phonenumber.'", 
         "textmessage":"'.$request->code.'", 
 
