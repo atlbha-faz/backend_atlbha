@@ -34,7 +34,6 @@ Route::post('/loginadminapi', 'App\Http\Controllers\api\AuthController@login_adm
 // Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
 Route::post('/registerapi', 'App\Http\Controllers\api\AuthController@register');
 Route::get('/logout', 'App\Http\Controllers\api\AuthController@logout');
-Route::post('/verifyٍStore', 'App\Http\Controllers\api\AuthController@verifyUser');
 // login template
 Route::post('/logincustomerphoneapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer');
 Route::post('/logincustomeremailapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer_email');
