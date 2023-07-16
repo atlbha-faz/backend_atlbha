@@ -31,7 +31,7 @@ class ProductController extends BaseController
         $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
 
         $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
-            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price',  'store_id']);
         $imports = importsResource::collection($import);
 
         $success['products'] = $products->merge($imports);
@@ -129,12 +129,25 @@ class ProductController extends BaseController
      */
     public function show($product)
     {
+      
         $product = Product::query()->find($product);
+       
         if (is_null($product) || $product->is_deleted == 1) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
         }
 
-        $success['products'] = new ProductResource($product);
+        $newproduct = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $product->id)->first();
+         if($newproduct){
+            $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $product->id)
+            ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price',  'store_id']);
+            $success['product'] = new importsResource($newimportproduct);
+
+              }
+              else{
+                $success['product'] = new ProductResource($product);
+
+              }
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض المنتج بنجاح', 'product showed successfully');
@@ -165,14 +178,14 @@ class ProductController extends BaseController
             ->first(['products.*', 'importproducts.price', 'importproducts.status']);
 
         if (!is_null($importproductt)) {
-            $importproductt = $importproductt->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
+            $importproductt = $importproductt->makeHidden(['selling_price', 'store_id']);
             $importproduct = Importproduct::where('product_id', $id)->first();
 
             $importproduct->update([
                 'price' => $request->selling_price,
             ]);
             $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $id)
-            ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+            ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price',  'store_id']);
 
             $success['products'] = new importsResource($newimportproduct);
             $success['status'] = 200;
@@ -279,7 +292,7 @@ class ProductController extends BaseController
     {
 
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
-            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price',  'store_id']);
         if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
@@ -311,7 +324,7 @@ class ProductController extends BaseController
     public function changeSatusall(Request $request)
     {
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
-            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'purchasing_price', 'store_id']);
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
         if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
