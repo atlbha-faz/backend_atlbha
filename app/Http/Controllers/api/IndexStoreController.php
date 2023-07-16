@@ -150,30 +150,30 @@ class IndexStoreController extends BaseController
 
             }
 
-            $id = $store->id;
+            $store_id = $store->id;
 
-            $store = Store::where('is_deleted', 0)->where('id', $id)->first();
+            // $store = Store::where('is_deleted', 0)->where('id', $id)->first();
             if ($store != null) {
-                $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $id)->pluck('logo')->first();
-                $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
+                $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+                $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
 
                 //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
                 $sliders = array();
-                $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', $id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
-                $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', $id)->where('sliderstatus2', 'active')->pluck('slider2')->first();
-                $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', $id)->where('sliderstatus3', 'active')->pluck('slider3')->first();
+                $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
+                $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus2', 'active')->pluck('slider2')->first();
+                $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus3', 'active')->pluck('slider3')->first();
                 $success['sliders'] = $sliders;
                 $banars = array();
-                $banars[] = Homepage::where('is_deleted', 0)->where('store_id', $id)->where('banarstatus1', 'active')->pluck('banar1')->first();
-                $banars[] = Homepage::where('is_deleted', 0)->where('store_id', $id)->where('banarstatus2', 'active')->pluck('banar2')->first();
-                $banars[] = Homepage::where('is_deleted', 0)->where('store_id', $id)->where('banarstatus3', 'active')->pluck('banar3')->first();
+                $banars[] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus1', 'active')->pluck('banar1')->first();
+                $banars[] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus2', 'active')->pluck('banar2')->first();
+                $banars[] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus3', 'active')->pluck('banar3')->first();
                 $success['banars'] = $banars;
                 //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
 
                 // special products
-                $products = ProductResource::collection(Product::where('is_deleted', 0)->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $id)->get());
+                $products = ProductResource::collection(Product::where('is_deleted', 0)->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id',$store_id)->get());
 
-                $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $id)->where('products.special', 'special')->orderBy('products.created_at', 'desc')
+                $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('products.special', 'special')->orderBy('products.created_at', 'desc')
                     ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
                 $imports = importsResource::collection($import);
 
@@ -184,15 +184,16 @@ class IndexStoreController extends BaseController
                     $query->where('is_deleted', 0)->where('special', 'special');
                 })->get();
                 //
+
                 // more sale
                 $arr1 = array();
                 $arr2 = array();
-                $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('order_items.store_id', $id)
+                $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('order_items.store_id', $store_id)
                     ->select('products.id', DB::raw('sum(order_items.quantity) as count'))
                     ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
 
                 foreach ($orders as $order) {
-                    $import = Importproduct::where('product_id', $order->id)->where('store_id', $id)->first();
+                    $import = Importproduct::where('product_id', $order->id)->where('store_id', $store_id)->first();
                     if (is_null($import)) {
                         $arr1[] = Product::find($order->id);
                         $products = ProductResource::collection($arr1);
@@ -208,26 +209,26 @@ class IndexStoreController extends BaseController
 
                 $oneWeekAgo = Carbon::now()->subWeek();
 
-                $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
+                $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
                     ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
                 $resentimports = importsResource::collection($resentimport);
                 $resentproduct = ProductResource::collection(Product::where('is_deleted', 0)
-                        ->where('store_id', $id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
+                        ->where('store_id', $store_id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
                 $success['resentArrivede'] = $resentproduct->merge($resentimports);
                 ////////////////////////////////////////
-                $resent_arrivede_by_category = Category::where('is_deleted', 0)->where('store_id', $id)->whereHas('products', function ($query) use ($id) {
-                    $query->where('is_deleted', 0)->where('store_id', $id)->whereDate('created_at', '>=', Carbon::now()->subWeek());
+                $resent_arrivede_by_category = Category::where('is_deleted', 0)->where('store_id', $store_id)->whereHas('products', function ($query) use ($store_id) {
+                    $query->where('is_deleted', 0)->where('store_id', $store_id)->whereDate('created_at', '>=', Carbon::now()->subWeek());
                 })->get();
 
                 foreach ($resent_arrivede_by_category as $category) {
 
                     $success['resentArrivedeByCategory'][][$category->name] = ProductResource::collection(Product::where('is_deleted', 0)
-                            ->where('store_id', $id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id', $category->id)->get());
+                            ->where('store_id', $store_id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id', $category->id)->get());
                 }
 
-                $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $id)->where('postcategory_id', null)->get());
-                $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(6)->get());
-                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $id)->with('products')->has('products')->get());
+                $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
+                $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(6)->get());
+                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id',$store_id)->with('products')->has('products')->get());
 
                 // $arr = array();
                 // $offers = DB::table('offers')->where('offers.is_deleted', 0)->where('offers.store_id', $id)->join('offers_products', 'offers.id', '=', 'offers_products.offer_id')
@@ -243,31 +244,31 @@ class IndexStoreController extends BaseController
                 // $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
 
                 $arr = array();
-                $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', $id)->join('products', 'comments.product_id', '=', 'products.id')
+                $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', $store_id)->join('products', 'comments.product_id', '=', 'products.id')
                     ->select('products.id', 'comments.rateing')->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->take(3)->get();
                 foreach ($orders as $order) {$arr[] = Product::find($order->id);}
                 $success['productsRatings'] = ProductResource::collection($arr);
                 //   $success['productsRatings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
-                $productsCategories = Product::where('store_id', $id)->whereHas('category', function ($query) {
+                $productsCategories = Product::where('store_id', $store_id)->whereHas('category', function ($query) {
                     $query->where('is_deleted', 0);
                 })->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total', 'DESC')->take(6)->get();
 
                 foreach ($productsCategories as $productsCategory) {
                     $success['PopularCategories'][] = new CategoryResource(Category::where('is_deleted', 0)->where('id', $productsCategory->category_id)->first());
                 }
-                $success['storeName'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('store_name')->first();
-                $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('store_email')->first();
+                $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
+                $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
                 $success['storeAddress'] = 'السعودية - مدينة جدة';
-                $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('phonenumber')->first();
-                $success['description'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('description')->first();
-                $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('snapchat')->first();
-                $success['facebook'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('facebook')->first();
-                $success['twiter'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('twiter')->first();
-                $success['youtube'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('youtube')->first();
-                $success['instegram'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('instegram')->first();
-                $store = Store::where('is_deleted', 0)->where('id', $id)->first();
+                $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
+                $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
+                $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
+                $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
+                $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
+                $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
+                $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+                $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes->where('status', 'active');
-                $store = Store::where('is_deleted', 0)->where('id', $id)->first();
+                $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $arr = array();
                 if ($store->verification_status == 'accept') {
                     if ($store->commercialregistertype == 'maeruf') {
