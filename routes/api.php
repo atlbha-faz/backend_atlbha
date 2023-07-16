@@ -82,7 +82,7 @@ Route::get('posts', [App\Http\Controllers\api\PostController::class, 'index']);
 Route::get('show/{id}', [App\Http\Controllers\api\PostController::class, 'show']);
 Route::get('show_post/{id}', [App\Http\Controllers\api\PostController::class, 'show_post']);
 
-Route::post('send-verify-message', 'App\Http\Controllers\api\AuthController@store_verify_message');
+Route::post('send-verifymessage', 'App\Http\Controllers\api\AuthController@store_verify_message');
 Route::post('verify-user', 'App\Http\Controllers\api\AuthController@verifyUser');
 
 Route::get('page/{id}', [App\Http\Controllers\api\SubpageController::class, "show"]);
