@@ -174,7 +174,7 @@ class IndexStoreController extends BaseController
                 $products = ProductResource::collection(Product::where('is_deleted', 0)->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $id)->get());
 
                 $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $id)->where('products.special', 'special')->orderBy('products.created_at', 'desc')
-                    ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+                    ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
                 $imports = importsResource::collection($import);
 
                 $success['specialProducts'] = $products->merge($imports);
@@ -209,7 +209,7 @@ class IndexStoreController extends BaseController
                 $oneWeekAgo = Carbon::now()->subWeek();
 
                 $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
-                    ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+                    ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
                 $resentimports = importsResource::collection($resentimport);
                 $resentproduct = ProductResource::collection(Product::where('is_deleted', 0)
                         ->where('store_id', $id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
@@ -589,6 +589,7 @@ class IndexStoreController extends BaseController
     }
     public function storeProductCategory(Request $request)
     {
+        
         if ($request->domain == 'atlbha') {
 
             $input = $request->all();
@@ -714,7 +715,7 @@ class IndexStoreController extends BaseController
             $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
             $importsproducts = importsResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)
-                    ->whereIn('id', $imports_id)
+                    ->whereIn('id', $imports_id)->join('importproducts', 'products.id', '=', 'importproducts.product_id')
                     ->when($filter_category, function ($query, $filter_category) {
                         $query->where('category_id', $filter_category);
                     })->when($price_from, function ($query, $price_from) {
@@ -869,7 +870,7 @@ class IndexStoreController extends BaseController
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
-
+            $store_id = $store->id;
             $category = $request->input('category');
             $query = $request->input('query');
             $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
@@ -879,8 +880,8 @@ class IndexStoreController extends BaseController
                     ->where('name', 'like', '%' . $query . '%')
                     ->when($category, function ($query, $category) {
                         $query->where('category_id', $category);
-                    })
-                    ->get());
+                    },)->join('importproducts', 'products.id', '=', 'importproducts.product_id')
+                    ->get(['products.*', 'importproducts.price']));
             $products = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)
                     ->where('name', 'like', '%' . $query . '%')

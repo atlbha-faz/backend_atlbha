@@ -34,6 +34,7 @@ class importsResource extends JsonResource
             'for' => $this->for,
             'slug' => $this->slug,
             'description' => $this->description,
+            'purchasing_price' => $this->purchasing_price,
             'selling_price' => $this->price,
             'quantity' => $this->quantity,
             'less_qty' => $this->less_qty,
