@@ -199,26 +199,87 @@ class AuthCustomerController extends BaseController
     public function sendSms($request)
     {
 
-        try {
-            $ch = curl_init('https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=hDRvlqGVdSQwsCLPk0bDRJIqs9Vvdi&SenderID=MASHAHER&Body=' . $request->code . '&Recipient=' . $request->phonenumber);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt(
-                $ch,
-                CURLOPT_HTTPHEADER,
-                array(
-                    'Accept: application/json',
-                    'Content-Type: application/x-www-form-urlencoded',
-                )
-            );
-            $result = curl_exec($ch);
-            $decoded = json_decode($result);
-            if ($decoded->success == "true") {
-                return true;
-            }
+        try
+        {
+            $data_string = json_encode($request); 
+            
+            
+            $curl = curl_init();
 
-            return $this->sendError("فشل ارسال الرسالة", "Failed Send Message");
-        } catch (Exception $e) {
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://rest.gateway.sa/api/SendSMS',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>'{ 
+        "api_id":"'.env("GETWAY_API", null).'", 
+        "api_password":"'.env("GETWAY_PASSWORD", null).'", 
+        "sms_type": "T", 
+        "encoding":"T", 
+        "sender_id": "ATLBHA", 
+        "phonenumber": "'.$request->phonenumber.'", 
+        "textmessage":"'.$request->code.'", 
+
+  	"templateid": null, 
+  	"V1": null, 
+  	"V2": null, 
+  	"V3": null, 
+  	"V4": null, 
+  	"V5": null,
+"ValidityPeriodInSeconds": 60,
+"uid":"xyz",
+"callback_url":"https://xyz.com/",
+"pe_id":"xyz",
+"template_id":"xyz"
+
+        
+        } 
+        ',
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        
+        
+        /*  curl_close($curl);
+      echo $response;
+
+
+
+            
+            $ch = curl_init('http://REST.GATEWAY.SA/api/SendSMS?api_id=API71257826714&api_password=FAZ@102030@123&sms_type=P&encoding=T&sender_id=MASHAHER&phonenumber='.$request->phonenumber.'&textmessage='.$request->code.'&uid=xyz&callback_url=null'); 
+
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");             
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+    
+curl_setopt($ch, CURLOPT_HTTPHEADER, array( 
+ 'Accept: application/json', 
+ 'Content-Type: application/x-www-form-urlencoded',                                                                              
+        'Content-Length: ' . strlen($data_string)) 
+); 
+$result = curl_exec($ch);*/
+$decoded = json_decode($response);
+
+//dd($decoded);
+if ($decoded->status =="S" ) {
+    return true;
+}
+    
+            return $this->sendError("فشل ارسال الرسالة","Failed Send Message");
+
+
+            
+        }
+        catch (Exception $e)
+        {
             return $this->sendError($e->getMessage());
         }
     }
