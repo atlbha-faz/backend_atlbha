@@ -224,12 +224,12 @@ class IndexStoreController extends BaseController
 
                 $oneWeekAgo = Carbon::now()->subWeek();
               
-                $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
+                $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $id)
                 ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
                $resentimports = importsResource::collection($resentimport);
                $resentproduct=ProductResource::collection(Product::where('is_deleted', 0)
                ->where('store_id', $id)->whereDate('created_at', '>=', $oneWeekAgo)->get());
-                $success['resentArrivede'] = $resentproduct->merge($resentimport);
+                $success['resentArrivede'] = $resentproduct->merge($resentimports);
                 ////////////////////////////////////////
                 $resent_arrivede_by_category = Category::where('is_deleted', 0)->where('store_id', $id)->whereHas('products', function ($query) use ($id) {
                     $query->where('is_deleted', 0)->where('store_id', $id)->whereDate('created_at', '>=', Carbon::now()->subWeek());

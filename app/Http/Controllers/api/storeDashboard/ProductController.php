@@ -171,8 +171,10 @@ class ProductController extends BaseController
             $importproduct->update([
                 'price' => $request->selling_price,
             ]);
+            $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $id)
+            ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
 
-            $success['products'] = new importsResource($importproductt);
+            $success['products'] = new importsResource($newimportproduct);
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
