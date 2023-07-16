@@ -590,6 +590,7 @@ class IndexStoreController extends BaseController
     }
     public function storeProductCategory(Request $request)
     {
+
         if ($request->domain == 'atlbha') {
 
             $input = $request->all();
@@ -715,7 +716,7 @@ class IndexStoreController extends BaseController
             $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
             $importsproducts = importsResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)
-                    ->whereIn('id', $imports_id)
+                    ->whereIn('id', $imports_id)->join('importproducts', 'products.id', '=', 'importproducts.product_id')
                     ->when($filter_category, function ($query, $filter_category) {
                         $query->where('category_id', $filter_category);
                     })->when($price_from, function ($query, $price_from) {
@@ -870,7 +871,7 @@ class IndexStoreController extends BaseController
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
-
+            $store_id = $store->id;
             $category = $request->input('category');
             $query = $request->input('query');
             $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
@@ -880,8 +881,8 @@ class IndexStoreController extends BaseController
                     ->where('name', 'like', '%' . $query . '%')
                     ->when($category, function ($query, $category) {
                         $query->where('category_id', $category);
-                    })
-                    ->get());
+                    },)->join('importproducts', 'products.id', '=', 'importproducts.product_id')
+                    ->get(['products.*', 'importproducts.price']));
             $products = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)
                     ->where('name', 'like', '%' . $query . '%')
