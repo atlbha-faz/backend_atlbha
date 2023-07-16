@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
-Route::get('sendMessage', 'App\Http\Controllers\api\AuthController@sendMessage');
-Route::post('sendMessagePost', 'App\Http\Controllers\api\AuthController@sendMessagePost');
+Route::get('sendMessage', 'App\Http\Controllers\api\AuthController@store_verify_message');
+//Route::post('sendMessagePost', 'App\Http\Controllers\api\AuthController@sendMessagePost');
 
 Route::get('selector/cities', [App\Http\Controllers\api\SelectorController::class, 'cities']);
 Route::get('selector/countries', [App\Http\Controllers\api\SelectorController::class, 'countries']);
