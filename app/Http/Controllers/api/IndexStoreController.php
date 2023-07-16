@@ -429,7 +429,7 @@ class IndexStoreController extends BaseController
     }
     public function addComment(Request $request, $id)
     {
-        if ($domain == 'atlbha') {
+        if ($request->domain == 'atlbha') {
             $product = Product::query()->find($id);
             if (is_null($product) || $product->is_deleted == 1) {
                 return $this->sendError("المنتج غير موجود", "product is't exists");
