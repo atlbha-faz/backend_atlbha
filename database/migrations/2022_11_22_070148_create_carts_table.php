@@ -29,7 +29,7 @@ return new class extends Migration
             $table->boolean('is_deleted')->default(0);
             $table->string('message')->nullable();
             $table->timestamps();
-            $table->unique('user_id','store_id');
+            // $table->unique('user_id','store_id');
         });
     }
 
