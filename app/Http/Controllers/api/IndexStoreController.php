@@ -714,15 +714,15 @@ class IndexStoreController extends BaseController
             $price_from = $request->input('price_from');
             $price_to = $request->input('price_to');
             $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
-            $importsproducts = importsResource::collection(Product::where('is_deleted', 0)
-                    ->where('store_id', $store_id)
-                    ->whereIn('id', $imports_id)->join('importproducts', 'products.id', '=', 'importproducts.product_id')
+            $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
+                    ->where('importproducts.store_id', $store_id)
+                    ->whereIn('products.id', $imports_id)
                     ->when($filter_category, function ($query, $filter_category) {
-                        $query->where('category_id', $filter_category);
+                        $query->where('products.category_id', $filter_category);
                     })->when($price_from, function ($query, $price_from) {
-                    $query->where('selling_price', '>=', $price_from);
+                    $query->where('products.selling_price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
-                    $query->where('selling_price', '<=', $price_to);
+                    $query->where('products.selling_price', '<=', $price_to);
                 })->orderBy($s, $sort)->paginate($limit));
 
             $storeproducts = ProductResource::collection(Product::where('is_deleted', 0)
@@ -875,14 +875,15 @@ class IndexStoreController extends BaseController
             $category = $request->input('category');
             $query = $request->input('query');
             $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
-            $imports_products = importsResource::collection(Product::where('is_deleted', 0)
-                    ->where('store_id', $store_id)
-                    ->whereIn('id', $imports_id)
-                    ->where('name', 'like', '%' . $query . '%')
+            $imports_products = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
+                    ->where('importproducts.store_id', $store->id)
+                    ->whereIn('products.id', $imports_id)
+                    ->where('products.name', 'like', '%' . $query . '%')
                     ->when($category, function ($query, $category) {
-                        $query->where('category_id', $category);
-                    },)->join('importproducts', 'products.id', '=', 'importproducts.product_id')
+                        $query->where('products.category_id', $category);
+                    },)
                     ->get(['products.*', 'importproducts.price']));
+                 
             $products = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)
                     ->where('name', 'like', '%' . $query . '%')
@@ -890,6 +891,7 @@ class IndexStoreController extends BaseController
                         $query->where('category_id', $category);
                     })
                     ->get());
+                  
             $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
             $success['searchProducts'] = $products->merge($imports_products);
             $success['status'] = 200;
