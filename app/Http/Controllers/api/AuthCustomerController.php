@@ -48,6 +48,10 @@ class AuthCustomerController extends BaseController
             $this->sendSms($request); // send and return its response
 
         }
+
+        $user = auth("api")->user()->token();
+        $user->revoke();
+        
         $success['user'] = new UserResource($user);
       //  $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
@@ -97,8 +101,12 @@ class AuthCustomerController extends BaseController
             Mail::to($user->email)->send(new SendCode($data));
 
         }
+
+        $user = auth("api")->user()->token();
+        $user->revoke();
+        
         $success['user'] = new UserResource($user);
-        $success['token'] = $user->createToken('authToken')->accessToken;
+      //  $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
