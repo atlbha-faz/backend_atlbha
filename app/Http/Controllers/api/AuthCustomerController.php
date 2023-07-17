@@ -49,7 +49,7 @@ class AuthCustomerController extends BaseController
 
         }
         $success['user'] = new UserResource($user);
-        $success['token'] = $user->createToken('authToken')->accessToken;
+      //  $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
