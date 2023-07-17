@@ -155,7 +155,11 @@ class AuthCustomerController extends BaseController
             $user->save();
             $success['status'] = 200;
             $success['user'] = new UserResource($user);
-            $success['token'] = $user->createToken('authToken')->accessToken;
+            if(is_null($user->phonenumber) || is_null($user->email) || is_null($user->user_name) ){
+            $success['token'] = null;
+            }else{
+                $success['token'] = $user->createToken('authToken')->accessToken;
+            }
             return $this->sendResponse($success, 'تم التحقق', 'verified');
         } else {
             $success['status'] = 200;
