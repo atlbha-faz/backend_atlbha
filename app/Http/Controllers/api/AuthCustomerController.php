@@ -19,6 +19,17 @@ class AuthCustomerController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'
+            ],
+
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+
+        if (!auth()->guard()->attempt(['phonenumber' => $request->phonenumber, 'user_type' => 'customer'])) {
+
+               $validator = Validator::make($input, [
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
                 return $query->where('user_type', 'customer');
             }),
@@ -28,8 +39,7 @@ class AuthCustomerController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-
-        if (!auth()->guard()->attempt(['phonenumber' => $request->phonenumber, 'user_type' => 'customer'])) {
+            
             $user = User::create([
                 'phonenumber' => $request->phonenumber,
                 'user_type' => "customer",
@@ -65,6 +75,15 @@ class AuthCustomerController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
+            'email' => ['required', 'email'
+            ],
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+
+        if (!auth()->guard()->attempt(['email' => $request->email, 'user_type' => 'customer'])) {
+            $validator = Validator::make($input, [
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                 return $query->where('user_type', 'customer');
             }),
@@ -73,8 +92,7 @@ class AuthCustomerController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-
-        if (!auth()->guard()->attempt(['email' => $request->email, 'user_type' => 'customer'])) {
+            
             $user = User::create([
                 'email' => $request->email,
                 'user_type' => "customer",
