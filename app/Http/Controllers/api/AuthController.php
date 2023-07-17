@@ -189,7 +189,7 @@ class AuthController extends BaseController
                         'store_id' => $store->id,
                     ]);
 
-                    $storeusers = User::where('store_id', null)->get();
+                    $storeusers = User::where('store_id', null)->whereIn('user_type', ['admin','admin_employee'])->get();
 
                     $data = [
                         'message' => 'طلب متجر',
