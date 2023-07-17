@@ -27,7 +27,7 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        if (!auth()->guard()->attempt(['phonenumber' => $request->phonenumber, 'user_type' => 'customer'])) {
+        if (is_null(User::where('phonenumber', $request->phonenumber)->where('user_type' , 'customer')->first())) {
 
                $validator = Validator::make($input, [
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
@@ -51,7 +51,7 @@ class AuthCustomerController extends BaseController
             $this->sendSms($request);
 
         } else {
-            $user = User::where('phonenumber', $request->phonenumber)->where('is_deleted', 0)->first();
+            $user = User::where('phonenumber', $request->phonenumber)->where('user_type' , 'customer')->where('is_deleted', 0)->first();
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
@@ -82,7 +82,7 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        if (!auth()->guard()->attempt(['email' => $request->email, 'user_type' => 'customer'])) {
+        if (is_null(User::where('email', $request->email)->where('user_type' , 'customer')->first())) {
             $validator = Validator::make($input, [
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                 return $query->where('user_type', 'customer');
