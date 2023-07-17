@@ -148,7 +148,10 @@ class AuthCustomerController extends BaseController
         }
 
         $user = User::where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->latest()->first();
-
+if(is_null($user)){
+    
+            return $this->sendError('الحساب غير موجود', 'User not found');
+}
         if ($request->code == $user->verify_code) {
             $user->resetVerifyCode();
             $user->verified = 1;
