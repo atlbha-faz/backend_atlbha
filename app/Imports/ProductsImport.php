@@ -57,7 +57,7 @@ SkipsOnFailure
             'SEOdescription'=> $row['seo'],
            'discount_price'=>$row['discount_price'],
            'subcategory_id' => implode(',',Category::whereIn('name',$sub_categories)->where('parent_id',$parent)->where('store_id',auth()->user()->store_id)->pluck('id')->toArray()),
-            'discount_percent'=>$row['discount_percent'],
+            //'discount_percent'=>$row['discount_percent'],
 
              'stock' => $row['stock'],
 
@@ -82,7 +82,7 @@ SkipsOnFailure
             '*.stock'=>['required','numeric','gt:0'],
             // 'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             '*.discount_price'=>['required','numeric'],
-            '*.discount_percent'=>['required','numeric'],
+           // '*.discount_percent'=>['required','numeric'],
              '*.seo'=>'required',
             '*.category_id'=>'required|exists:categories,name',
             // '*.subcategory_id'=>['array'],
