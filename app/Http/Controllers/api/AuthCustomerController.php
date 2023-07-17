@@ -59,11 +59,8 @@ class AuthCustomerController extends BaseController
 
         }
 
-        $user = auth("api")->user()->token();
-        $user->revoke();
         
         $success['user'] = new UserResource($user);
-      //  $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
@@ -120,11 +117,7 @@ class AuthCustomerController extends BaseController
 
         }
 
-        $user = auth("api")->user()->token();
-        $user->revoke();
-        
         $success['user'] = new UserResource($user);
-      //  $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
