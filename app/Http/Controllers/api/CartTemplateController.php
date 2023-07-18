@@ -218,7 +218,7 @@ class CartTemplateController extends BaseController
 
     public function delete($domain,$id)
     {
-        $store = Store::where('domain', $domain)->pluck('id')->first();
+        $store = Store::where('domain', $domain)->first();
         $cart_id = Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->pluck('id')->first();
         $cart = CartDetail::where('id', $id)->first();
 
