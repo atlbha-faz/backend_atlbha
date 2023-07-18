@@ -60,7 +60,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
 
 Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
 Route::post('addCart/{domain}', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
-Route::get('deleteCart/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'delete']);
+Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'delete']);
 
 // Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 // المدونه

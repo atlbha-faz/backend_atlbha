@@ -398,7 +398,11 @@ return [
         'fixed_amount'=>"قيمة ثابتة",
         'percent'=>"نسبة",
         "user_type"=>"نوع المستخدم",
-        "If_bought_gets"=>"العرض الاول"
+        "If_bought_gets"=>"العرض الاول",
+        "filter_category"=>"التصنيف",
+        "limit"=>"الحد الاقصى",
+        "price_from"=>"السعر من",
+        "price_to"=>"السعر الى",
     ],
 
 ];
