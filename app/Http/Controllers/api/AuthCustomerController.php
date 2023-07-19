@@ -140,6 +140,8 @@ class AuthCustomerController extends BaseController
         $validator = Validator::make($input, [
             'phonenumber' => 'required|string',
             'code' => 'required|numeric',
+        ], [
+            'phonenumber.required' => 'المدخل مطلوب',
         ]);
 
         if ($validator->fails()) {

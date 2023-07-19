@@ -515,9 +515,9 @@ class AuthController extends BaseController
         "phonenumber": "'.$request->phonenumber.'", 
         "textmessage":"'.$request->code.'", 
 
-  	"templateid": null, 
+  	"templateid": "1866", 
   	"V1": null, 
-  	"V2": null, 
+  	"V2": "83747", 
   	"V3": null, 
   	"V4": null, 
   	"V5": null,
@@ -525,7 +525,7 @@ class AuthController extends BaseController
 "uid":"xyz",
 "callback_url":"https://xyz.com/",
 "pe_id":"xyz",
-"template_id":"xyz"
+"template_id":"1866"
 
         
         } 

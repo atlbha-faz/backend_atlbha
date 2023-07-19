@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Carbon\Carbon;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ProductResource;
+use App\Imports\AdminProductImport;
 use App\Models\Image;
 use App\Models\Option;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
-use App\Imports\AdminProductImport;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Resources\ProductResource;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StockController extends BaseController
 {
@@ -39,12 +41,11 @@ class StockController extends BaseController
             ->select('product_id', DB::raw('COUNT(*) as count'))
             ->groupBy('product_id')
             ->orderByDesc('count')->first();
-            if($most_order != null){
-        $success['most_order'] = Product::where('id',$most_order->product_id)->value('name');
-            }
-            else{
-                $success['most_order'] =0; 
-            }
+        if ($most_order != null) {
+            $success['most_order'] = Product::where('id', $most_order->product_id)->value('name');
+        } else {
+            $success['most_order'] = 0;
+        }
         $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->get());
         $success['status'] = 200;
 
@@ -81,12 +82,12 @@ class StockController extends BaseController
             'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'images' => 'required|array',
-            'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'images.*' => ['required', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'data' => 'nullable|array',
-            'data.*.type' => 'required|in:brand,color,wight,size',
-            'data.*.title' => 'required|string',
-            'data.*.value' => 'required|array',
+            // 'data' => 'nullable|array',
+            // 'data.*.type' => 'required|in:brand,color,wight,size',
+            // 'data.*.title' => 'required|string',
+            // 'data.*.value' => 'required|array',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -126,31 +127,31 @@ class StockController extends BaseController
         if ($request->hasFile("images")) {
             $files = $request->file("images");
             foreach ($files as $file) {
-                $imageName = time() . '_' . $file->getClientOriginalName();
+                $imageName = Str::random(10) . time() . '_' . $file->getClientOriginalExtension();
                 $request['product_id'] = $productid;
                 $request['image'] = $imageName;
-                // $file->move(\public_path("/images"),$imageName);
-                $file->store('images/product', 'public');
+                $filePath = 'images/product/' . $imageName;
+                $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
                 Image::create($request->all());
 
             }
         }
-        if (!is_null($request->data)) {
-            foreach ($request->data as $data) {
-                // dd($data['value']);
-                //$request->input('name', []);
-                $option = new Option([
-                    'type' => $data['type'],
-                    'title' => $data['title'],
-                    'value' => implode(',', $data['value']),
-                    'product_id' => $productid,
+        // if (!is_null($request->data)) {
+        //     foreach ($request->data as $data) {
+        //         // dd($data['value']);
+        //         //$request->input('name', []);
+        //         $option = new Option([
+        //             'type' => $data['type'],
+        //             'title' => $data['title'],
+        //             'value' => implode(',', $data['value']),
+        //             'product_id' => $productid,
 
-                ]);
+        //         ]);
 
-                $option->save();
-                $options[] = $option;
-            }
-        }
+        //         $option->save();
+        //         $options[] = $option;
+        //     }
+        // }
 
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
@@ -206,11 +207,11 @@ class StockController extends BaseController
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'images' => 'nullable|array',
-            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'data' => 'nullable|array',
-            'data.*.type' => 'required|in:brand,color,wight,size',
-            'data.*.title' => 'required|string',
-            'data.*.value' => 'required|array',
+            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
+            // 'data' => 'nullable|array',
+            // 'data.*.type' => 'required|in:brand,color,wight,size',
+            // 'data.*.title' => 'required|string',
+            // 'data.*.value' => 'required|array',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -255,42 +256,43 @@ class StockController extends BaseController
             }
 
             foreach ($files as $file) {
-                $imageName = time() . '_' . $file->getClientOriginalName();
-                $request["product_id"] = $id;
-                $request["image"] = $imageName;
-                $file->store('images/product', 'public');
+                $imageName = Str::random(10) . time() . '_' . $file->getClientOriginalExtension();
+                $request['product_id'] = $productid;
+                $request['image'] = $imageName;
+                $filePath = 'images/product/' . $imageName;
+                $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
                 Image::create($request->all());
 
             }
         }
 
-        $option = Option::where('product_id', $id);
+        // $option = Option::where('product_id', $id);
 
-        if (!is_null($request->data)) {
-            $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
-            foreach ($options_id as $oid) {
-                if (!(in_array($oid, array_column($request->data, 'id')))) {
-                    $option = Option::query()->find($oid);
-                    $option->update(['is_deleted' => 1]);
-                }
-            }
+        // if (!is_null($request->data)) {
+        //     $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
+        //     foreach ($options_id as $oid) {
+        //         if (!(in_array($oid, array_column($request->data, 'id')))) {
+        //             $option = Option::query()->find($oid);
+        //             $option->update(['is_deleted' => 1]);
+        //         }
+        //     }
 
-            foreach ($request->data as $data) {
-                if (!isset($data['id'])) {
-                    $data['id']=null;
-                }
-                $options[] = Option::updateOrCreate([
-                    'id' => $data['id'],
-                    'product_id' => $id,
-                    'is_deleted' => 0,
-                ], [
-                    'type' => $data['type'],
-                    'title' => $data['title'],
-                    'value' => $data['value'],
-                    'product_id' => $id,
-                ]);
-            }
-        }
+        //     foreach ($request->data as $data) {
+        //         if (!isset($data['id'])) {
+        //             $data['id'] = null;
+        //         }
+        //         $options[] = Option::updateOrCreate([
+        //             'id' => $data['id'],
+        //             'product_id' => $id,
+        //             'is_deleted' => 0,
+        //         ], [
+        //             'type' => $data['type'],
+        //             'title' => $data['title'],
+        //             'value' => $data['value'],
+        //             'product_id' => $id,
+        //         ]);
+        //     }
+        // }
 
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;

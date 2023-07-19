@@ -89,7 +89,7 @@ SkipsOnFailure
             '*.stock'=>['required','numeric','gt:0'],
             // 'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             '*.discount_price'=>['required','numeric'],
-            '*.discount_percent'=>['required','numeric'],
+          //  '*.discount_percent'=>['required','numeric'],
             '*.seo'=>'required',
             '*.category_id'=>'required|exists:categories,name',
             // '*.subcategory_id'=>['array'],
