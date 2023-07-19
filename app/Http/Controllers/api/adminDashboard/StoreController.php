@@ -372,6 +372,10 @@ class StoreController extends BaseController
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
         $store->update(['is_deleted' => 1]);
+         $users = User::where('store_id',$store->id)->get();
+               foreach($users as $user){
+                   $user->update(['is_deleted' => 1]);
+               }
 
         $success['store']=New StoreResource($store);
         $success['status']= 200;
@@ -466,6 +470,10 @@ class StoreController extends BaseController
            {
          
                $store->update(['is_deleted' => 1]);
+               $users = User::where('store_id',$store->id)->get();
+               foreach($users as $user){
+                   $user->update(['is_deleted' => 1]);
+               }
             }
                $success['stores']= StoreResource::collection($stores);
                $success['status']= 200;

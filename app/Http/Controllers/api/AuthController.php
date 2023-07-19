@@ -189,7 +189,7 @@ class AuthController extends BaseController
                         'store_id' => $store->id,
                     ]);
 
-                    $storeusers = User::where('store_id', null)->get();
+                    $storeusers = User::where('store_id', null)->whereIn('user_type', ['admin','admin_employee'])->get();
 
                     $data = [
                         'message' => 'طلب متجر',
@@ -314,8 +314,8 @@ class AuthController extends BaseController
         //dd(Hash::make($request->password));
 //$user = null;
         if (
-            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password])
+            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0])
             ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
         }
@@ -515,9 +515,9 @@ class AuthController extends BaseController
         "phonenumber": "'.$request->phonenumber.'", 
         "textmessage":"'.$request->code.'", 
 
-  	"templateid": null, 
+  	"templateid": "1866", 
   	"V1": null, 
-  	"V2": null, 
+  	"V2": "83747", 
   	"V3": null, 
   	"V4": null, 
   	"V5": null,
@@ -525,7 +525,7 @@ class AuthController extends BaseController
 "uid":"xyz",
 "callback_url":"https://xyz.com/",
 "pe_id":"xyz",
-"template_id":"xyz"
+"template_id":"1866"
 
         
         } 

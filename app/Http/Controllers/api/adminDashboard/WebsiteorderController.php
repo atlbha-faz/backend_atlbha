@@ -59,7 +59,7 @@ class WebsiteorderController extends BaseController
 
 
 
-        $success['Websiteorder']=WebsiteorderResource::collection(Websiteorder::where('is_deleted',0)->get());
+        $success['Websiteorder']=WebsiteorderResource::collection(Websiteorder::where('is_deleted',0)->orderBy('id', 'DESC')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع الطلبات بنجاح','Websiteorder return successfully');

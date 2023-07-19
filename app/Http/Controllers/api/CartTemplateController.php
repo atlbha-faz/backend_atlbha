@@ -216,10 +216,11 @@ class CartTemplateController extends BaseController
         }
     }
 
-    public function delete($id)
+    public function delete($domain,$id)
     {
-        $cart_id = Cart::where('user_id', auth()->user()->id)->pluck('id')->first();
-        $cart = CartDetail::where('product_id', $id)->where('cart_id', $cart_id)->first();
+        $store = Store::where('domain', $domain)->first();
+        $cart_id = Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->pluck('id')->first();
+        $cart = CartDetail::where('id', $id)->first();
 
         if (is_null($cart)) {
             return $this->sendError("المنتج غير موجودة", " product is't exists");
@@ -233,7 +234,7 @@ class CartTemplateController extends BaseController
             'count' => CartDetail::where('cart_id', $cart_id)->count(),
         ]);
 
-        $success = new CartResource(Cart::where('user_id', auth()->user()->id)->first());
+        $success = new CartResource(Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->first());
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }

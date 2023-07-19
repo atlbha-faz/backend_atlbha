@@ -210,7 +210,7 @@ return [
         'package_id'            =>'اسم الباقة',
         'checkbox_field'         => 'الموافقة على الشروط والاحكام',
         'periodtype'             =>'مدة الاشتراك',
-        'city_id'                =>'الدولة',
+        'city_id'                =>'المدينة',
         'code'                   =>"الكود",
         'data.*.id'           =>"العنصر",
         'data.*.price'           =>"السعر",
@@ -343,7 +343,7 @@ return [
         'package_id' => 'اسم الباقة',
         'checkbox_field' => 'الشروط والاحكام',
         'periodtype' => 'مدة الاشتراك',
-        'city_id' => 'الدولة',
+        'city_id' =>'المدينة',
         'code' => "الكود",
         'data.*.id' => "العنصر",
         'data.*.price' => "السعر",
@@ -398,7 +398,11 @@ return [
         'fixed_amount'=>"قيمة ثابتة",
         'percent'=>"نسبة",
         "user_type"=>"نوع المستخدم",
-        "If_bought_gets"=>"العرض الاول"
+        "If_bought_gets"=>"العرض الاول",
+        "filter_category"=>"التصنيف",
+        "limit"=>"الحد الاقصى",
+        "price_from"=>"السعر من",
+        "price_to"=>"السعر الى",
     ],
 
 ];
