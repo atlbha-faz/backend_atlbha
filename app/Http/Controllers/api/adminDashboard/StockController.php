@@ -117,7 +117,7 @@ class StockController extends BaseController
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
             'cover' => $request->cover,
-            'amount' => $request->amount,
+             'amount' => 1,
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
@@ -127,7 +127,7 @@ class StockController extends BaseController
         if ($request->hasFile("images")) {
             $files = $request->file("images");
             foreach ($files as $file) {
-                $imageName = Str::random(10) . time() . '_' . $file->getClientOriginalExtension();
+                $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
                 $request['product_id'] = $productid;
                 $request['image'] = $imageName;
                 $filePath = 'images/product/' . $imageName;
@@ -240,11 +240,13 @@ class StockController extends BaseController
             'less_qty' => $request->input('less_qty'),
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
-            'amount' => $request->amount,
+             'amount' => 1,
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
 
         ]);
+        $productid = $product->id;
+
         if ($request->hasFile("images")) {
             $files = $request->file("images");
 
@@ -256,7 +258,7 @@ class StockController extends BaseController
             }
 
             foreach ($files as $file) {
-                $imageName = Str::random(10) . time() . '_' . $file->getClientOriginalExtension();
+                $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
                 $request['product_id'] = $productid;
                 $request['image'] = $imageName;
                 $filePath = 'images/product/' . $imageName;
