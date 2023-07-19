@@ -189,7 +189,7 @@ class AuthController extends BaseController
                         'store_id' => $store->id,
                     ]);
 
-                    $storeusers = User::where('store_id', null)->whereIn('user_type', ['admin','admin_employee'])->get();
+                    $storadamins= User::where('store_id', null)->whereIn('user_type', ['admin','admin_employee'])->get();
 
                     $data = [
                         'message' => 'طلب متجر',
@@ -198,8 +198,8 @@ class AuthController extends BaseController
                         'type' => "store_request",
                         'object_id' => $store->id,
                     ];
-                    foreach ($storeusers as $storeuser) {
-                        Notification::send($user, new verificationNotification($data));
+                    foreach ($storadamins as $storadamin) {
+                        Notification::send($storadamin, new verificationNotification($data));
                     }
                     event(new VerificationEvent($data));
 

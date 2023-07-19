@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Unit;
 use App\Models\Video;
 use App\Models\Course;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\VideoResource;
 use App\Http\Resources\CourseResource;
@@ -105,7 +106,7 @@ class CourseController extends BaseController
     foreach($data['video'] as $videodata)
     {
 
-       $fileName =  $videodata->getClientOriginalName();
+       $fileName =  Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
         $filePath = 'videos/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
@@ -321,7 +322,7 @@ class CourseController extends BaseController
     foreach($data['video'] as $videodata)
     {
 
-       $fileName =  $videodata->getClientOriginalName();
+       $fileName = Str::random(10) .time() . '.' . $videodata->getClientOriginalExtension();
         $filePath = 'videos/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
