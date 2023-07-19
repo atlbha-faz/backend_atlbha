@@ -78,7 +78,7 @@ class StockController extends BaseController
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:purchasing_price'],
             'stock' => ['required', 'numeric', 'gt:0'],
-            'amount' => ['required', 'numeric'],
+            // 'amount' => ['required', 'numeric'],
             'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'images' => 'required|array',
@@ -198,7 +198,7 @@ class StockController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'amount' => ['required', 'numeric'],
+            // 'amount' => ['required', 'numeric'],
 
             'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
