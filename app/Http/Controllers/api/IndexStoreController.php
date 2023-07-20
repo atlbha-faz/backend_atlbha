@@ -734,7 +734,7 @@ class IndexStoreController extends BaseController
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price', '<=', $price_to);
                 })->orderBy($s, $sort)->paginate($limit));
-            $products = $storeproducts->concat($importsproducts);
+            $products = $storeproducts->merge($importsproducts);
             $filters = array();
             $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id])->get());
             $filters[0]["name"] = "التصنيفات";

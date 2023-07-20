@@ -83,8 +83,9 @@ SkipsOnFailure
     return [
             '*.name' => 'required|string',
             '*.description'=>'required|string',
-            '*.selling_price'=>['required','numeric','gt:0'],
+        
             '*.purchasing_price'=>['required','numeric','gt:0'],
+            '*.selling_price'=>['required','numeric','gte:'.(int)$request->purchasing_price],
             // '*.quantity'=>['required','numeric','gt:0'],
             // '*.less_qty'=>['required','numeric','gt:0'],
             '*.stock'=>['required','numeric','gt:0'],
