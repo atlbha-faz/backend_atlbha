@@ -757,10 +757,10 @@ class IndexStoreController extends BaseController
             $success['price_from'] = $price_from;
             $success['price_to'] = $price_to;
 
-            $success['pages'] = $products->lastPage();
-            $success['from'] = $products->firstItem();
-            $success['to'] = $products->lastItem();
-            $success['total'] = $products->total();
+            $success['pages'] = $storeproducts->lastPage();
+            $success['from'] = $storeproducts->firstItem();
+            $success['to'] = $storeproducts->lastItem();
+            $success['total'] = $storeproducts->total();
 
             //  $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
             //  $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
