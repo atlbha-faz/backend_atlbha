@@ -253,7 +253,7 @@ if(is_null($user)){
         "textmessage":"'.$request->code.'", 
 
   	"templateid": "1868", 
-  	"V1": "83747", 
+  	"V1": "'.$request->code.'", 
   	"V2": null, 
   	"V3": null, 
   	"V4": null, 
