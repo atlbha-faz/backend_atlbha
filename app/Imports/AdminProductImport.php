@@ -36,8 +36,8 @@ SkipsOnFailure
             $product = Product::create([
           'name' => $row['name'],
           'for' => 'stock',
-          'quantity' => $row['quantity'],
-          'less_qty' =>$row['less_qty'],
+        //   'quantity' => $row['quantity'],
+        //   'less_qty' =>$row['less_qty'],
           'description' => $row['description'],
           'purchasing_price' =>$row['purchasing_price'],
           'selling_price' => $row['selling_price'],
@@ -47,6 +47,7 @@ SkipsOnFailure
           'category_id' =>Category::where('name',$row['category_id'])->pluck('id')->first(),
            'subcategory_id' => implode(',',Category::whereIn('name',$sub_categories)->where('parent_id',$parent)->pluck('id')->toArray()),
           'store_id' => null,
+          'amount' => 1,
 
         ]);
          $productid =$product->id;
@@ -57,25 +58,25 @@ SkipsOnFailure
         //    ['image'=>$value,
         // 'product_id'=>$productid]);
         //  }
-         $arrayValues=array();
-               $type = $row['optiontype'];
-            $types = explode(',', $type);
-             $title = $row['optiontitle'];
-            $titles = explode(',', $title);
-             $value = $row['optionvalue'];
-            $values = explode(',', $value);
-              for ($x = 0; $x < count($types); $x++) {
-        $arrayValues[$x][]=$values[$x];}
-      for ($x = 0; $x < count($types); $x++) {
-           $option= Option::create([
-                  'type' => $types[$x],
-                  'title' => $titles[$x],
-                  'value' => implode(',', $arrayValues[$x]),
+    //      $arrayValues=array();
+    //            $type = $row['optiontype'];
+    //         $types = explode(',', $type);
+    //          $title = $row['optiontitle'];
+    //         $titles = explode(',', $title);
+    //          $value = $row['optionvalue'];
+    //         $values = explode(',', $value);
+    //           for ($x = 0; $x < count($types); $x++) {
+    //     $arrayValues[$x][]=$values[$x];}
+    //   for ($x = 0; $x < count($types); $x++) {
+    //        $option= Option::create([
+    //               'type' => $types[$x],
+    //               'title' => $titles[$x],
+    //               'value' => implode(',', $arrayValues[$x]),
 
-                  'product_id' =>  $productid
+    //               'product_id' =>  $productid
 
-                ]);
-            }
+    //             ]);
+    //         }
         }
     }
        public function rules(): array {
@@ -84,8 +85,8 @@ SkipsOnFailure
             '*.description'=>'required|string',
             '*.selling_price'=>['required','numeric','gt:0'],
             '*.purchasing_price'=>['required','numeric','gt:0'],
-            '*.quantity'=>['required','numeric','gt:0'],
-            '*.less_qty'=>['required','numeric','gt:0'],
+            // '*.quantity'=>['required','numeric','gt:0'],
+            // '*.less_qty'=>['required','numeric','gt:0'],
             '*.stock'=>['required','numeric','gt:0'],
             // 'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             '*.discount_price'=>['required','numeric'],
@@ -97,9 +98,9 @@ SkipsOnFailure
             // Rule::exists('categories', 'id')->where(function ($query) {
             // return $query->join('categories', 'id', 'parent_id');
         // }),
-         '*.optiontype.*'=>'required|in:brand,color,wight,size',
-          '*.optiontitle.*'=>'required|string',
-          '*.optionvalue.*'=>'required|string',
+        //  '*.optiontype.*'=>'required|in:brand,color,wight,size',
+        //   '*.optiontitle.*'=>'required|string',
+        //   '*.optionvalue.*'=>'required|string',
 
 
     ];
