@@ -74,7 +74,7 @@ class StoreController extends BaseController
             'city_id'=>'required|exists:cities,id',
             'user_country_id'=>'required|exists:countries,id',
             'user_city_id'=>'required|exists:cities,id',
-            'periodtype'=>'required|in:6months,year',
+            'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
             'status'=>'required|in:active,inactive',
             'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
@@ -134,14 +134,28 @@ class StoreController extends BaseController
          $store->update([
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);
-        }
-         else{
+        
+      } elseif ($request->periodtype == "year") {
                $end_at = date('Y-m-d',strtotime("+ 1 years", strtotime($store->created_at)));
         $store->update([
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);
 
             }
+            else{
+              $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
+              $store->update([
+                  'start_at' => $store->created_at,
+                  'end_at' => $end_at]);
+
+            }
+            if($request->package_id ==1){
+              $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
+              $store->update([
+                  'start_at' => $store->created_at,
+                  'end_at' => $end_at]);
+
+             }
           $store->activities()->attach($request->activity_id);
           $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
 
