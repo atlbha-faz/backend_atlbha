@@ -252,8 +252,8 @@ if(is_null($user)){
         "phonenumber": "'.$request->phonenumber.'", 
         "textmessage":"'.$request->code.'", 
 
-  	"templateid": null, 
-  	"V1": null, 
+  	"templateid": "1867", 
+  	"V1": "83747", 
   	"V2": null, 
   	"V3": null, 
   	"V4": null, 
@@ -262,7 +262,7 @@ if(is_null($user)){
 "uid":"xyz",
 "callback_url":"https://xyz.com/",
 "pe_id":"xyz",
-"template_id":"xyz"
+"template_id":"1867"
 
         
         } 
