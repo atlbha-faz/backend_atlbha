@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->double('monthly_price');
             $table->double('yearly_price');
-            $table->double('discount');
+            $table->double('discount')->nullable()->default(0);
             $table->enum('status',['active','not_active'])->default('active');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();

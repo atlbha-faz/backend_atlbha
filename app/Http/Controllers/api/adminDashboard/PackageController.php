@@ -54,7 +54,7 @@ class PackageController extends BaseController
             'name'=>'required|string|max:255',
             'monthly_price'=>'required|numeric|gt:0',
             'yearly_price'=>'required|numeric|gt:0',
-            'discount'=>'required|numeric|gt:0',
+            'discount'=>'nullable|numeric|gt:0',
             'plan'=>'required|array',
             'template'=>'required|array',
 
@@ -133,7 +133,7 @@ class PackageController extends BaseController
            'name'=>'required|string|max:255',
             'monthly_price'=>'required|numeric|gt:0',
             'yearly_price'=>'required|numeric|gt:0',
-            'discount'=>'required|numeric|gt:0',
+            'discount'=>'nullable|numeric|gt:0',
             'plan'=>'required|array',
             'template'=>'required|array',
 
