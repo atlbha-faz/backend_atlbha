@@ -709,7 +709,7 @@ class IndexStoreController extends BaseController
             $s = 'name';
             if ($sort == null) {
                 $sort = 'desc';
-                $s = 'id';
+                $s = 'products.id';
             }
             $filter_category = $request->input('filter_category');
             $price_from = $request->input('price_from');
@@ -734,7 +734,7 @@ class IndexStoreController extends BaseController
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price', '<=', $price_to);
                 })->orderBy($s, $sort)->paginate($limit));
-            $products = $storeproducts->merge($importsproducts);
+            $products = $storeproducts->concat($importsproducts);
             $filters = array();
             $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id])->get());
             $filters[0]["name"] = "التصنيفات";

@@ -49,7 +49,7 @@ class EtlobhaController extends BaseController
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:purchasing_price'],
+            'selling_price' => ['required','numeric','gte:'.(int)$request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
             // 'amount' => ['required', 'numeric'],
             'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
@@ -67,7 +67,11 @@ class EtlobhaController extends BaseController
                 }),
             ],
         ]);
-
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+       
         if (($request->hasFile("cover"))) {
             $validator = Validator::make($input, [
                 'cover' => 'required |image| mimes:jpeg,png,jpg,gif,svg| max:2048',
@@ -95,6 +99,7 @@ class EtlobhaController extends BaseController
         } else {
             $subcategory = null;
         }
+      
         $product = Product::create([
             'name' => $request->name,
             'for' => 'etlobha',
@@ -133,7 +138,6 @@ class EtlobhaController extends BaseController
                     $newImagePath = basename($file);
                     $request['image'] = $newImagePath;
                     Storage::copy($existingImagePath, $newImagePath);
-
                     Image::create($request->all());
                 }
             }
@@ -191,7 +195,7 @@ class EtlobhaController extends BaseController
             'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:purchasing_price'],
+            'selling_price' => ['required', 'numeric', 'gte:'.(int)$request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
 
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
