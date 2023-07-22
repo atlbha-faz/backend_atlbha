@@ -34,8 +34,12 @@ SkipsOnFailure
 
             $parent = Category::where('name', $row['category_id'])->pluck('id')->first();
             // dd(Category::where('name',$row['6'])->where('parent_id',$parent)->pluck('id')->toArray());
-
+         if($row['subcategory_id'] != null){
             $sub_categories = explode(',', $row['subcategory_id']);
+         }
+         else{
+            $sub_categories=null;
+         }
             $product = Product::create([
                 'name' => $row['name'],
                 'for' => 'stock',
@@ -48,7 +52,7 @@ SkipsOnFailure
                 'cover' => $row['cover'],
                 'SEOdescription' => $row['seo'],
                 'category_id' => Category::where('name', $row['category_id'])->pluck('id')->first(),
-                'subcategory_id' => implode(',', Category::whereIn('name', $sub_categories)->where('parent_id', $parent)->pluck('id')->toArray()),
+                'subcategory_id' => $sub_categories ==null ?null :implode(',', Category::whereIn('name', $sub_categories)->where('parent_id', $parent)->pluck('id')->toArray()),
                 'store_id' => null,
                 'amount' => 1,
 
