@@ -44,7 +44,12 @@ SkipsOnFailure
         $parent=Category::where('name',$row['category_id'])->where('store_id',auth()->user()->store_id)->pluck('id')->first();
         // dd(Category::where('name',$row['6'])->where('parent_id',$parent)->pluck('id')->toArray());
 
-        $sub_categories = explode(',',$row['subcategory_id']);
+        if($row['subcategory_id'] != null){
+            $sub_categories = explode(',', $row['subcategory_id']);
+         }
+         else{
+            $sub_categories=null;
+         }
         return new Product([
 
            'name' => $row['name'],
@@ -56,7 +61,7 @@ SkipsOnFailure
             // 'cover' => $row['4'],
             'SEOdescription'=> $row['seo'],
            'discount_price'=>$row['discount_price'],
-           'subcategory_id' => implode(',',Category::whereIn('name',$sub_categories)->where('parent_id',$parent)->where('store_id',auth()->user()->store_id)->pluck('id')->toArray()),
+           'subcategory_id' =>$sub_categories ==null ?null :implode(',', Category::whereIn('name', $sub_categories)->where('parent_id', $parent)->pluck('id')->toArray()),
             //'discount_percent'=>$row['discount_percent'],
 
              'stock' => $row['stock'],
@@ -86,7 +91,7 @@ SkipsOnFailure
              '*.seo'=>'nullable',
             '*.category_id'=>'required|exists:categories,name',
             // '*.subcategory_id'=>['array'],
-            '*.subcategory_id.*'=>['required','string']
+            '*.subcategory_id.*'=>['nullable','string']
             // Rule::exists('categories', 'id')->where(function ($query) {
             // return $query->join('categories', 'id', 'parent_id');
         // }),
