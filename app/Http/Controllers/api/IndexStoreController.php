@@ -174,7 +174,7 @@ class IndexStoreController extends BaseController
                 $products = ProductResource::collection(Product::where('is_deleted', 0)->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id',$store_id)->get());
 
                 $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('products.special', 'special')->orderBy('products.created_at', 'desc')
-                    ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+                    ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
                 $imports = importsResource::collection($import);
 
                 $success['specialProducts'] = $products->merge($imports);
@@ -730,8 +730,7 @@ class IndexStoreController extends BaseController
                     $query->where('products.selling_price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('products.selling_price', '<=', $price_to);
-                })->orderBy($s, $sort)->paginate($limit));
-
+                }) ->select('products.*','importproducts.price')->orderBy($s, $sort)->paginate($limit));
             $storeproducts = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
                     $query->where('category_id', $filter_category);
