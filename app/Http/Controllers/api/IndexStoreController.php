@@ -188,7 +188,7 @@ class IndexStoreController extends BaseController
                 // more sale
                 $arr1 = array();
                 $arr2 = array();
-                $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('order_items.store_id', $store_id)
+                $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('order_items.store_id', $store_id)->where('products.is_deleted', 0)
                     ->select('products.id', DB::raw('sum(order_items.quantity) as count'))
                     ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
 
@@ -244,7 +244,7 @@ class IndexStoreController extends BaseController
                 // $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
 
                 $arr = array();
-                $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', $store_id)->join('products', 'comments.product_id', '=', 'products.id')
+                $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', $store_id)->join('products', 'comments.product_id', '=', 'products.id')->where('products.is_deleted', 0)
                     ->select('products.id', 'comments.rateing')->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->take(3)->get();
                 foreach ($orders as $order) {$arr[] = Product::find($order->id);}
                 $success['productsRatings'] = ProductResource::collection($arr);
@@ -367,7 +367,7 @@ class IndexStoreController extends BaseController
                 $product = Product::where('is_deleted', 0)->where('id', $id)->first();
                 $import = Importproduct::where('product_id', $id)->where('store_id', $store_id)->first();
                 if ($import != null) {
-                    $success['product'] = new importsResource(Product::where('is_deleted', 0)->where('id', $id)->first());
+                    $success['product'] = new importsResource(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.id', $id)->first(['products.*', 'importproducts.price']));
 
                 } else {
                     $exit_product = Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first();
@@ -382,7 +382,7 @@ class IndexStoreController extends BaseController
                 $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)
                         ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
 
-                $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $product->store_id)->where('product_id', $product->id)->get());
+                $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $product->id)->get());
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
                 $success['storeAddress'] = 'السعودية - مدينة جدة';
