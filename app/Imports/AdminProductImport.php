@@ -87,7 +87,6 @@ SkipsOnFailure
         return [
             '*.name' => 'required|string',
             '*.description' => 'required|string',
-
             '*.purchasing_price' => ['required', 'numeric', 'gt:0'],
             '*.selling_price' => ['required', 'numeric'],
             // '*.quantity'=>['required','numeric','gt:0'],
@@ -99,7 +98,7 @@ SkipsOnFailure
             '*.seo' => 'nullable',
             '*.category_id' => 'required|exists:categories,name',
             // '*.subcategory_id'=>['array'],
-            '*.subcategory_id.*' => ['required', 'string'],
+            '*.subcategory_id.*' => ['nullable', 'string'],
             // Rule::exists('categories', 'id')->where(function ($query) {
             // return $query->join('categories', 'id', 'parent_id');
             // }),
