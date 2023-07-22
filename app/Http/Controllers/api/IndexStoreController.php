@@ -251,7 +251,7 @@ class IndexStoreController extends BaseController
                 //   $success['productsRatings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
                 $productsCategories = Product::where('store_id', $store_id)->whereHas('category', function ($query) {
                     $query->where('is_deleted', 0);
-                })->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total', 'DESC')->take(6)->get();
+                })->where('is_deleted', 0)->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total', 'DESC')->take(6)->get();
 
                 foreach ($productsCategories as $productsCategory) {
                     $success['PopularCategories'][] = new CategoryResource(Category::where('is_deleted', 0)->where('id', $productsCategory->category_id)->first());
