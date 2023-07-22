@@ -34,7 +34,7 @@ SkipsOnFailure
 
             $parent = Category::where('name', $row['category_id'])->pluck('id')->first();
             // dd(Category::where('name',$row['6'])->where('parent_id',$parent)->pluck('id')->toArray());
-         if($row['subcategory_id'] != null){
+         if(isset($row['subcategory_id']) && $row['subcategory_id'] != null){
             $sub_categories = explode(',', $row['subcategory_id']);
          }
          else{
