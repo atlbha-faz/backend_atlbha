@@ -228,8 +228,14 @@ class IndexStoreController extends BaseController
 
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
                 $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(6)->get());
-                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id',$store_id)->with('products')->has('products')->get());
-
+                $product_ids=Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
+                $prodtcts=Product::whereIn('id',$product_ids)->where('is_deleted', 0)->get();
+                $category=array();
+                foreach($prodtcts as $prodtct){
+                    $category[]=$prodtct->category;
+                }
+                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id',$store_id)->with('products')->has('products')->get()->merge($category));
+                
                 // $arr = array();
                 // $offers = DB::table('offers')->where('offers.is_deleted', 0)->where('offers.store_id', $id)->join('offers_products', 'offers.id', '=', 'offers_products.offer_id')
                 //     ->where('offers.store_id', $id)
