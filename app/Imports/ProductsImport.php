@@ -50,6 +50,14 @@ SkipsOnFailure
          else{
             $sub_categories=null;
          }
+         if(isset($row['discount_price']) &&  $row['discount_price']!=null ) 
+         {$discount_price=$row['discount_price'];} else{
+            $discount_price=null;
+         }
+         if(isset($row['seo']) &&  $row['seo']!=null ) 
+         {$seo=$row['seo'];} else{
+            $seo=null;
+         }
         return new Product([
 
            'name' => $row['name'],
@@ -59,8 +67,8 @@ SkipsOnFailure
 
              'category_id' =>Category::where('name',$row['category_id'])->where('store_id',auth()->user()->store_id)->pluck('id')->first(),
             // 'cover' => $row['4'],
-            'SEOdescription'=> $row['seo'],
-           'discount_price'=>$row['discount_price'],
+            'SEOdescription'=> $seo,
+           'discount_price'=>$discount_price,
            'subcategory_id' =>$sub_categories ==null ?null :implode(',', Category::whereIn('name', $sub_categories)->where('parent_id', $parent)->pluck('id')->toArray()),
             //'discount_percent'=>$row['discount_percent'],
 

@@ -40,6 +40,11 @@ SkipsOnFailure
          else{
             $sub_categories=null;
          }
+         if(isset($row['seo']) &&  $row['seo']!=null ) 
+         {$seo=$row['seo'];} else{
+            $seo=null;
+         }
+    
             $product = Product::create([
                 'name' => $row['name'],
                 'for' => 'stock',
@@ -50,7 +55,7 @@ SkipsOnFailure
                 'selling_price' => $row['selling_price'],
                 'stock' => $row['stock'],
                 'cover' => $row['cover'],
-                'SEOdescription' => $row['seo'],
+                'SEOdescription' =>$seo,
                 'category_id' => Category::where('name', $row['category_id'])->pluck('id')->first(),
                 'subcategory_id' => $sub_categories ==null ?null :implode(',', Category::whereIn('name', $sub_categories)->where('parent_id', $parent)->pluck('id')->toArray()),
                 'store_id' => null,
