@@ -104,7 +104,7 @@ class PostStoreController extends BaseController
                 $success['youtube'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('youtube')->first();
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('instegram')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $id)->first();
-                $success['paymentMethod'] = $store->paymenttypes->where('status', 'active');
+                $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
 
                 $store = Store::where('is_deleted', 0)->where('id', $id)->first();
                 $arr = array();
@@ -232,7 +232,7 @@ class PostStoreController extends BaseController
                 $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
-                $success['paymentMethod'] = $store->paymenttypes->where('status', 'active');
+                $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $arr = array();
                 if ($store->verification_status == 'accept') {
@@ -358,7 +358,7 @@ class PostStoreController extends BaseController
                 $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
-                $success['paymentMethod'] = $store->paymenttypes->where('status', 'active');
+                $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $arr = array();
                 if ($store->verification_status == 'accept') {
