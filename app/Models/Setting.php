@@ -43,7 +43,7 @@ public function store()
     public function getLogoAttribute($logo)
     {
         if (is_null($logo)) {
-            return   asset('assets/media/man.png');
+            return   asset('assets/media/logo.svg');
         }
         return asset('storage/images/logo') . '/' . $logo;
     }
@@ -62,7 +62,7 @@ public function store()
     public function getIconAttribute($icon)
     {
         if (is_null($icon)) {
-            return   asset('assets/media/man.png');
+            return   asset('assets/media/logo.svg');
         }
         return asset('storage/images/icon') . '/' . $icon;
     }

@@ -157,16 +157,21 @@ class CartController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $cart = Cart::where('id', $request->id)->first();
-        $discount_total = $cart->total - $request->discount_value;
+        $discount_total = $request->discount_value;
         if ($request->discount_type == "percent") {
-            $discount_total = $cart->total - ($cart->total * ($request->discount_value / 100));
+            $discount_total = $cart->total * ($request->discount_value / 100);
         }
-
+        if($cart->discount_total==null){
+            $cart->discount_total=0;
+        }
+        $discount_total1=$cart->discount_total+$discount_total;
+        $total=$cart->total- $discount_total;
         $cart->message = $request->message;
         $cart->free_shipping = $request->free_shipping;
         $cart->discount_type = $request->discount_type;
         $cart->discount_value = $request->discount_value;
-        $cart->discount_total = $request->discount_total;
+        $cart->discount_total = $discount_total1;
+        $cart->total =  $total;
         $cart->discount_expire_date = $request->discount_expire_date;
          $cart->timestamps = false;
         $cart->save();

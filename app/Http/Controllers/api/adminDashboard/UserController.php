@@ -24,8 +24,8 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $userAdmain=User::whereNot('name', 'Admin')->first();
-        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $userAdmain->id)->get());
+        $userAdmain=User::where('user_type', 'admin')->first();
+        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->where('user_type', 'admin_employee')->whereNot('id', auth()->user()->id)->whereNot('id',  $userAdmain->id)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع االمستخدمين بنجاح', 'Users return successfully');
@@ -99,9 +99,9 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $userAdmain=User::where('user_type', 'admin')->first();
         $user = User::query()->whereNot('id',  $userAdmain->id)->find($id);
-        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id ) {
+        if (is_null($user) || $user->is_deleted == 1|| $user->user_type != 'admin_employee' || $user->id ==auth()->user()->id ) {
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
         $success['users'] = new UserResource($user);
@@ -130,9 +130,9 @@ class UserController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $userAdmain=User::where('user_type', 'admin')->first();
         $user = User::query()->whereNot('id',$userAdmain->id)->find($id);
-        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id) {
+        if (is_null($user) || $user->is_deleted == 1 || $user->user_type != 'admin_employee' || $user->id ==auth()->user()->id) {
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
 
@@ -191,9 +191,9 @@ class UserController extends BaseController
      */
     public function destroy($id)
     {
-        $userAdmain=User::whereNot('name', 'Admin')->first();
+        $userAdmain=User::where('user_type', 'admin')->first();
         $user = User::query()->whereNot('id',  $userAdmain->id)->find($id);
-        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id) {
+        if (is_null($user) || $user->is_deleted == 1 || $user->user_type != 'admin_employee' || $user->id ==auth()->user()->id) {
             return $this->sendError("المستخدم غير موجودة", "User is't exists");
         }
         $user->update(['is_deleted' => 1]);
@@ -205,8 +205,8 @@ class UserController extends BaseController
     }
     public function deleteall(Request $request)
     {
-        $userAdmain=User::whereNot('name', 'Admin')->first();
-        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->get();
+        $userAdmain=User::where('user_type', 'admin')->first();
+        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->where('user_type', 'admin_employee')->get();
         if (count($users) > 0) {
             foreach ($users as $user) {
 
@@ -225,8 +225,8 @@ class UserController extends BaseController
     }
     public function changeSatusall(Request $request)
     {
-        $userAdmain=User::whereNot('name', 'Admin')->first();
-        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->get();
+        $userAdmain=User::where('user_type', 'admin')->first();
+        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->where('user_type', 'admin_employee')->get();
         if (count($users) > 0) {
             foreach ($users as $user) {
                 if ($user->status === 'active') {

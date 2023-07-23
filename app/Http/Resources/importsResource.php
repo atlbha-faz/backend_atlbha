@@ -52,6 +52,9 @@ class importsResource extends JsonResource
             'updated_at' => (string) $this->updated_at,
             'category' => new CategoryResource($this->category),
               'images' => ImageResource::collection($this->image),
+              'productRating' => $this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
+              'productRatingCount' => $this->productratecount($this->id) !== null ? $this->productratecount($this->id) : 0,
+
             'is_import' => true,
 
         ];

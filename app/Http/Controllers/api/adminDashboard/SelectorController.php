@@ -122,7 +122,7 @@ class SelectorController extends BaseController
     }
  public function roles()
     {
-        $success['roles']=RoleResource::collection(Role::where('type','admin')->get());
+        $success['roles']=RoleResource::collection(Role::where('type','admin')->whereNot('id', 1)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الأدوار بنجاح','Roles return successfully');
