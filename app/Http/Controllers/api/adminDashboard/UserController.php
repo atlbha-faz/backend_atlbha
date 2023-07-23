@@ -101,7 +101,7 @@ class UserController extends BaseController
     {
         $userAdmain=User::where('user_type', 'admin')->first();
         $user = User::query()->whereNot('id',  $userAdmain->id)->find($id);
-        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id ) {
+        if (is_null($user) || $user->is_deleted == 1|| $user->user_type != 'admin_employee' || $user->id ==auth()->user()->id ) {
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
         $success['users'] = new UserResource($user);
@@ -132,7 +132,7 @@ class UserController extends BaseController
     {
         $userAdmain=User::where('user_type', 'admin')->first();
         $user = User::query()->whereNot('id',$userAdmain->id)->find($id);
-        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id) {
+        if (is_null($user) || $user->is_deleted == 1 || $user->user_type != 'admin_employee' || $user->id ==auth()->user()->id) {
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
 
@@ -193,7 +193,7 @@ class UserController extends BaseController
     {
         $userAdmain=User::where('user_type', 'admin')->first();
         $user = User::query()->whereNot('id',  $userAdmain->id)->find($id);
-        if (is_null($user) || $user->is_deleted == 1 || $user->id ==auth()->user()->id) {
+        if (is_null($user) || $user->is_deleted == 1 || $user->user_type != 'admin_employee' || $user->id ==auth()->user()->id) {
             return $this->sendError("المستخدم غير موجودة", "User is't exists");
         }
         $user->update(['is_deleted' => 1]);
@@ -206,7 +206,7 @@ class UserController extends BaseController
     public function deleteall(Request $request)
     {
         $userAdmain=User::where('user_type', 'admin')->first();
-        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->get();
+        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->where('user_type', 'admin_employee')->get();
         if (count($users) > 0) {
             foreach ($users as $user) {
 
@@ -226,7 +226,7 @@ class UserController extends BaseController
     public function changeSatusall(Request $request)
     {
         $userAdmain=User::where('user_type', 'admin')->first();
-        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->get();
+        $users = User::whereIn('id', $request->id)->whereNot('id',  $userAdmain->id)->whereNot('id', auth()->user()->id)->where('is_deleted', 0)->where('user_type', 'admin_employee')->get();
         if (count($users) > 0) {
             foreach ($users as $user) {
                 if ($user->status === 'active') {
