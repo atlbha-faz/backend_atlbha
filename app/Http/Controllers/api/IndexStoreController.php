@@ -61,7 +61,7 @@ class IndexStoreController extends BaseController
             // more sale
 
             $arr = array();
-            $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id', null)
+            $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id', null)->where('products.is_deleted', 0)
                 ->select('products.id', DB::raw('sum(order_items.quantity) as count'))
                 ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
 
@@ -104,7 +104,7 @@ class IndexStoreController extends BaseController
             // $success['productsOffers'] = ProductResource::collection($arr);
 
             $arr = array();
-            $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', null)->join('products', 'comments.product_id', '=', 'products.id')
+            $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', null)->join('products', 'comments.product_id', '=', 'products.id')->where('products.is_deleted', 0)
                 ->select('products.id', 'comments.rateing')->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->take(3)->get();
             foreach ($orders as $order) {$arr[] = Product::find($order->id);}
             $success['productsRatings'] = ProductResource::collection($arr);
@@ -121,11 +121,11 @@ class IndexStoreController extends BaseController
             $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
             $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
             $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
-            $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-            $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
-            $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
+            $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->where('status','active')->pluck('link')->first();
+            $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->where('status','active')->pluck('link')->first();
+            $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->where('status','active')->pluck('link')->first();
             // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-            $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
+            $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->where('status','active')->pluck('link')->first();
             $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
@@ -740,8 +740,14 @@ class IndexStoreController extends BaseController
                     $query->where('selling_price', '<=', $price_to);
                 })->orderBy($s, $sort)->paginate($limit));
             $products = $storeproducts->merge($importsproducts);
+            $product_ids=Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
+            $prodtcts=Product::whereIn('id',$product_ids)->where('is_deleted', 0)->get();
+            $category=array();
+            foreach($prodtcts as $prodtct){
+                $category[]=$prodtct->category;
+            }
             $filters = array();
-            $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id])->get());
+            $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id])->get()->merge($category));
             $filters[0]["name"] = "التصنيفات";
             $filters[0]["slug"] = "category";
             $filters[0]["type"] = "category";
