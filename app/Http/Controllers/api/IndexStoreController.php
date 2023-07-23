@@ -61,7 +61,7 @@ class IndexStoreController extends BaseController
             // more sale
 
             $arr = array();
-            $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id', null)
+            $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id', null)->where('products.is_deleted', 0)
                 ->select('products.id', DB::raw('sum(order_items.quantity) as count'))
                 ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
 
@@ -104,7 +104,7 @@ class IndexStoreController extends BaseController
             // $success['productsOffers'] = ProductResource::collection($arr);
 
             $arr = array();
-            $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', null)->join('products', 'comments.product_id', '=', 'products.id')
+            $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', null)->join('products', 'comments.product_id', '=', 'products.id')->where('products.is_deleted', 0)
                 ->select('products.id', 'comments.rateing')->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->take(3)->get();
             foreach ($orders as $order) {$arr[] = Product::find($order->id);}
             $success['productsRatings'] = ProductResource::collection($arr);
@@ -740,8 +740,14 @@ class IndexStoreController extends BaseController
                     $query->where('selling_price', '<=', $price_to);
                 })->orderBy($s, $sort)->paginate($limit));
             $products = $storeproducts->merge($importsproducts);
+            $product_ids=Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
+            $prodtcts=Product::whereIn('id',$product_ids)->where('is_deleted', 0)->get();
+            $category=array();
+            foreach($prodtcts as $prodtct){
+                $category[]=$prodtct->category;
+            }
             $filters = array();
-            $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id])->get());
+            $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->whereIn('store_id', [null, $store_id])->get()->merge($category));
             $filters[0]["name"] = "التصنيفات";
             $filters[0]["slug"] = "category";
             $filters[0]["type"] = "category";
