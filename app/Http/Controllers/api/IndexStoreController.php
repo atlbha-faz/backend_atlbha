@@ -121,11 +121,11 @@ class IndexStoreController extends BaseController
             $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
             $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
             $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
-            $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-            $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
-            $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
+            $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->where('status','active')->pluck('link')->first();
+            $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->where('status','active')->pluck('link')->first();
+            $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->where('status','active')->pluck('link')->first();
             // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-            $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
+            $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->where('status','active')->pluck('link')->first();
             $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
