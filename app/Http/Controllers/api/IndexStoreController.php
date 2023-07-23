@@ -727,9 +727,9 @@ class IndexStoreController extends BaseController
                     ->when($filter_category, function ($query, $filter_category) {
                         $query->where('products.category_id', $filter_category);
                     })->when($price_from, function ($query, $price_from) {
-                    $query->where('products.selling_price', '>=', $price_from);
+                    $query->where('importproducts.price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
-                    $query->where('products.selling_price', '<=', $price_to);
+                    $query->where('importproducts.price', '<=', $price_to);
                 }) ->select('products.*','importproducts.price')->orderBy($s, $sort)->paginate($limit));
             $storeproducts = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
@@ -767,12 +767,11 @@ class IndexStoreController extends BaseController
             $success['sort'] = $sort;
             $success['price_from'] = $price_from;
             $success['price_to'] = $price_to;
-
-            $success['pages'] = $storeproducts->lastPage()+ $importsproducts->lastPage();
+            $success['pages'] = ($storeproducts->lastPage()< $importsproducts->lastPage()? $importsproducts->lastPage():$storeproducts->lastPage()) ;
          
-            $success['from'] = $storeproducts->firstItem();
-            $success['to'] = $storeproducts->lastItem()+ $importsproducts->lastItem();
-            $success['total'] = $storeproducts->total()+$importsproducts->total();
+            $success['from'] = ( $storeproducts->firstItem() == null?$importsproducts->firstItem(): $storeproducts->firstItem());
+            $success['to'] = ($storeproducts->lastItem() == null?0:$storeproducts->lastItem())+ ($importsproducts->lastItem()== null?0:$importsproducts->lastItem());
+            $success['total'] = ($storeproducts->total() == null?0:$storeproducts->total())+ ($importsproducts->total() == null?0:$importsproducts->total());
 
             //  $success['logo']=Homepage::where('is_deleted',0)->where('store_id',$request->store_id)->pluck('logo')->first();
             //  $success['category']=CategoryResource::collection(Category::where('is_deleted',0)->where('store_id',$request->store_id)->get());
