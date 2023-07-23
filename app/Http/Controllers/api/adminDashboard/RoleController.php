@@ -18,7 +18,7 @@ class RoleController extends BaseController
      public function index()
     {
 
-                $success['roles']=RoleResource::collection(Role::where('type','admin')->get());
+                $success['roles']=RoleResource::collection(Role::where('type','admin')->whereNot('id', 1)->get());
 
         $success['status']= 200;
 
@@ -28,7 +28,7 @@ class RoleController extends BaseController
     public function show($role)
     {
         $role= Role::query()->find($role);
-        if ( is_null($role) || $role->type!='admin'){
+        if ( is_null($role) || $role->type!='admin' || $role->id ==1){
                return $this->sendError("الدور غير موجود","Role is't exists");
                }
               $success['role']=New RoleResource($role);
@@ -69,7 +69,7 @@ class RoleController extends BaseController
     
      public function update(Request $request, Role $role)
     {
-        if (is_null($role) ||  $role->type!= 'admin'){
+        if (is_null($role) ||  $role->type!= 'admin'  || $role->id ==1){
             return $this->sendError("الدور غير موجود"," Role is't exists");
        }
             $input = $request->all();
@@ -100,7 +100,7 @@ class RoleController extends BaseController
     
        public function destroy( Role $role)
     {
-        if (is_null($role) ||  $role->type!= 'admin'){
+        if (is_null($role) ||  $role->type!= 'admin'  || $role->id ==1){
             return $this->sendError("الدور غير موجود"," Role is't exists");
        }
            
