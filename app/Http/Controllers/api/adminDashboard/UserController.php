@@ -25,7 +25,7 @@ class UserController extends BaseController
     public function index()
     {
         $userAdmain=User::where('user_type', 'admin')->first();
-        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $userAdmain->id)->get());
+        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->where('user_type', 'admin_employee')->whereNot('id', auth()->user()->id)->whereNot('id',  $userAdmain->id)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع االمستخدمين بنجاح', 'Users return successfully');
