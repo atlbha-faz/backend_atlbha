@@ -24,7 +24,7 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::('type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
         $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get());
         }
@@ -102,7 +102,7 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
         $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->first();
         }
@@ -139,7 +139,7 @@ class UserController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
         $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
         } else{
@@ -209,7 +209,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
      */
     public function destroy($id)
     {
-        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
         $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
         }
@@ -229,7 +229,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function deleteall(Request $request)
     {
-        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
         $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
         }
@@ -253,7 +253,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function changeSatusall(Request $request)
     {
-        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
         $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
         }
@@ -281,7 +281,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function changeStatus($id)
     {
-        $storeAdmain=User::where('name', 'المالك')->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
         $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
         }
