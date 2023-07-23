@@ -180,7 +180,7 @@ class Store extends Model
     public function getIconAttribute($icon)
     {
         if (is_null($icon)) {
-            return asset('assets/media/man.png');
+            return asset('assets/media/logo.svg');
         }
         return asset('storage/images/storeicon') . '/' . $icon;
     }
