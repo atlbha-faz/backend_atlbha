@@ -336,11 +336,14 @@ class EtlobhaController extends BaseController
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'etlobha')->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
+                
                 $imports = Importproduct::where('product_id', $product->id)->get();
+                 if (count($imports) > 0) {
                 foreach($imports as $import){
                     
                 $import->delete();
                 }
+            }
                 
                 $product->update(['is_deleted' => 1]);
             }
