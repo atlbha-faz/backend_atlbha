@@ -370,7 +370,7 @@ class IndexStoreController extends BaseController
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
 
-                $product = Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first();
+                $product = Product::where('is_deleted', 0)->where('id', $id)->first();
                 $import = Importproduct::where('product_id', $id)->where('store_id', $store_id)->first();
                 if ($import != null) {
                     $success['product'] = new importsResource(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.id', $id)->first(['products.*', 'importproducts.price']));
@@ -384,10 +384,10 @@ class IndexStoreController extends BaseController
 
                     }
                 }
-               
+               if($product != null){
                 $success['relatedProduct'] =ProductResource::collection(Product::where('is_deleted', 0)
                         ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
-
+               }
                 $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $product->id)->get());
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
