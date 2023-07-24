@@ -24,7 +24,7 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $storeAdmain=User::('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
         $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get());
         }
