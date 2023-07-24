@@ -114,6 +114,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
         Route::get('list', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'list'])->name('list');
 
+        Route::get('selector/etlobahCategory', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'etlobahCategory']);
         Route::get('selector/years', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'years']);
         Route::get('selector/cities', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'cities']);
         Route::get('selector/countries', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'countries']);
