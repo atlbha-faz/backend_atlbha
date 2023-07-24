@@ -54,12 +54,12 @@ class IndexEtlobhaController extends BaseController
         $success['cities']=CityResource::collection(City::where('is_deleted',0)->where('status','active')->get());
 
 
-     if(Section::where('id',1)->where('is_deleted',0)->where('status','active')){
+     if(!is_null(Section::where('id',1)->where('is_deleted',0)->where('status','active')->first())){
      $success['section1']=Section::where('id',1)->pluck('name')->first();
      $success['products']=ProductResource::collection(Product::where('is_deleted',0)
      ->where('store_id',null)->where('special','special')->get());
     }
-    if(Section::where('id',2)->where('is_deleted',0)->where('status','active')){
+    if(!is_null(Section::where('id',2)->where('is_deleted',0)->where('status','active')->first())){
      $success['section2']=Section::where('id',2)->pluck('name')->first();
      $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->where('special','special')->get());}
 
