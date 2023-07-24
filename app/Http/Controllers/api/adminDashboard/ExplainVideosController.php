@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ExplainVideos;
 use Illuminate\Support\Facades\Storage;
@@ -119,7 +120,7 @@ class ExplainVideosController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        $fileName =  $request->video->getClientOriginalName();
+        $fileName =  Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
         $filePath = 'videos/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
@@ -214,7 +215,7 @@ class ExplainVideosController extends BaseController
              'thumbnail' => $request->thumbnail,
           ]);
         if(!is_null($request->video)){
-       $fileName =  $request->video->getClientOriginalName();
+       $fileName =   Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
         $filePath = 'videos/explainvideo/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
