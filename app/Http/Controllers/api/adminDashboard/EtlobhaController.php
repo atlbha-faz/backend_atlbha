@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\ProductResource;
 use App\Models\Image;
-use App\Models\ImportProduct;
+use App\Models\Importproduct;
 use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
