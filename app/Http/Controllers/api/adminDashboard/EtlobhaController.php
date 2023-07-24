@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\ProductResource;
 use App\Models\Image;
-use App\Models\ImportProduct;
+use App\Models\Importproduct;
 use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -336,11 +336,14 @@ class EtlobhaController extends BaseController
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'etlobha')->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
+                
                 $imports = Importproduct::where('product_id', $product->id)->get();
+                 if (count($imports) > 0) {
                 foreach($imports as $import){
                     
                 $import->delete();
                 }
+            }
                 
                 $product->update(['is_deleted' => 1]);
             }

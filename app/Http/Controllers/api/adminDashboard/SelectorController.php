@@ -7,6 +7,7 @@ use App\Models\Plan;
 use App\Models\Unit;
 use App\Models\Video;
 use App\Models\Country;
+use App\Models\Category;
 use App\Models\Package;
 use App\Models\Activity;
 use App\Models\Template;
@@ -25,6 +26,7 @@ use App\Http\Resources\TemplateResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PostCategoryResource;
 use App\Http\Resources\Page_categoryResource;
+use App\Http\Resources\CategoryResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class SelectorController extends BaseController
@@ -34,6 +36,15 @@ class SelectorController extends BaseController
     public function __construct()
     {
         $this->middleware('auth:api');
+    }
+
+    
+    public function etlobahCategory()
+    {
+        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'etlobha')->where('parent_id', null)->where('store_id', null)->get());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
     }
 
      public function years()
