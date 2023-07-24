@@ -14,17 +14,17 @@ class ExplainVideos extends Model
         return $this->belongsTo(User::class);
     }
 
-     public function setVideoAttribute($video)
-    {
-        if (!is_null($video)) {
-            if (gettype($video) != 'string') {
-                $i = $video->store('videos/explainvideo', 'public');
-                $this->attributes['video'] = $video->hashName();
-            } else {
-                $this->attributes['video'] = $video;
-            }
-        }
-    }
+    //  public function setVideoAttribute($video)
+    // {
+    //     if (!is_null($video)) {
+    //         if (gettype($video) != 'string') {
+    //             $i = $video->store('videos/explainvideo', 'public');
+    //             $this->attributes['video'] = $video->hashName();
+    //         } else {
+    //             $this->attributes['video'] = $video;
+    //         }
+    //     }
+    // }
 
     public function getVideoAttribute($video)
     {
