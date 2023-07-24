@@ -232,7 +232,7 @@ class ExplainVideosController extends BaseController
         if ($isFileUploaded) {
         $explainvideos = $explainVideos->update([
             'duration' => $playtime,
-             'video' => $filePath,
+             'video' => $fileName,
           ]);
         }
         }
