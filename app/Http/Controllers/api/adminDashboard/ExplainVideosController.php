@@ -215,7 +215,7 @@ class ExplainVideosController extends BaseController
              'thumbnail' => $request->thumbnail,
           ]);
         if(!is_null($request->video)){
-       $fileName =   Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
+       $fileName =  Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
         $filePath = 'videos/explainvideo/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
@@ -223,8 +223,7 @@ class ExplainVideosController extends BaseController
         // File URL to access the video in frontend
         $url = Storage::disk('public')->url($filePath);
         $getID3 = new \getID3();
-        $pathVideo = 'storage/videos/explainvideo/'. $fileName;
-
+        $pathVideo = 'storage/videos/'. $fileName;
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
         $playtimes = $fileAnalyze['playtime_seconds'];
