@@ -132,10 +132,12 @@ class IndexStoreController extends BaseController
 
         } else {
             $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+            dd($store);
+            
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
-            if (is_null($store) || $store->is_deleted == 1 ) {
+            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active" ) {
                 return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
             if ($store->maintenance != null) {
