@@ -217,6 +217,7 @@ $user_name = $request->user_name;
 
         $success['status']= 200;
         $success['user']= new UserResource($user);
+           $success['token'] = $user->createToken('authToken')->accessToken;
         return $this->sendResponse($success,'تم استعادة كلمة المرور بنجاح','The password reset success.');
     }
 
