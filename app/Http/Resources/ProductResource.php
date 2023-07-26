@@ -41,7 +41,7 @@ class ProductResource extends JsonResource
             'stock' => $this->stock,
             'tags' => $this->tags,
             'cover' => $this->cover,
-            'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
+            'discount_price' => $this->discount_price !== null ? $this->discount_price : $this->selling_price,
             'SEOdescription' => $this->SEOdescription,
             'importproduct' => $this->importproduct->count(),
             'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id', explode(',', $this->subcategory_id))->get()),
@@ -57,7 +57,7 @@ class ProductResource extends JsonResource
 
             'category' => new CategoryResource($this->category),
             'store' => new StoreResource($this->store),
-            'images' => ImageResource::collection($this->image->where('is_deleted',0)),
+            'images' => ImageResource::collection($this->image->where('is_deleted', 0)),
             'options' => OptionResource::collection($this->option),
 
             'is_import' => false,

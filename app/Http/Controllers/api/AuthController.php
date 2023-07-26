@@ -39,7 +39,7 @@ class AuthController extends BaseController
                     //'store_name'=>'required_if:user_type,store|string|max:255',
 
                     //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                    'password' => 'required',
+                    'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
                     //'domain'=>'required_if:user_type,store|unique:stores',
 
                     //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -68,7 +68,7 @@ class AuthController extends BaseController
                     //'store_name'=>'required_if:user_type,store|string|max:255',
 
                     //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                    'password' => 'required',
+                    'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
                     //'domain'=>'required_if:user_type,store|unique:stores',
                     //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
                     //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
@@ -76,7 +76,7 @@ class AuthController extends BaseController
                     //'country_id'=>'required_if:user_type,store|exists:countries,id',
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
-                    'periodtype' => 'nullable', 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                    'email' => 'nullable', 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                         return $query->whereIn('user_type', ['marketer']);
                     }),
                     ],
@@ -87,35 +87,23 @@ class AuthController extends BaseController
                     'name' => 'required|string|max:255',
                 ]);
 
-
             }
             if ($validator->fails()) {
                 return $this->sendError('Validation Error.', $validator->errors());
             }
 
-
-            $user = User::create([
-                //'name' => $request->name,
-                'email' => $request->email,
-                'user_name' => $request->user_name,
-                'user_type' => "store",
-                'password' => $request->password,
-                'phonenumber' => $request->phonenumber,
-
-            ]);
-
-
             if ($request->user_type == "store") {
 
-                /* $user = User::create([
-                'name' => $request->name,
-                'email'=>$request->email,
-                'user_name' => $request->user_name,
-                'user_type' => "store",
-                'password'=>$request->password,
-                'phonenumber' => $request->userphonenumber,
+                $user = User::create([
+                    //'name' => $request->name,
+                    'email' => $request->email,
+                    'user_name' => $request->user_name,
+                    'user_type' => "store",
+                    'password' => $request->password,
+                    'phonenumber' => $request->phonenumber,
+
                 ]);
-                 */
+
                 $userid = $user->id;
 
                 $store = Store::create([
@@ -155,7 +143,6 @@ class AuthController extends BaseController
                 // $store->activities()->attach($request->activity_id);
                 $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
 
-
                 if ($setting->registration_status == "registration_with_admin") {
                     $store->update([
                         'confirmation_status' => 'accept']);
@@ -189,7 +176,7 @@ class AuthController extends BaseController
                         'store_id' => $store->id,
                     ]);
 
-                    $storadamins= User::where('store_id', null)->whereIn('user_type', ['admin','admin_employee'])->get();
+                    $storadamins = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->get();
 
                     $data = [
                         'message' => 'طلب متجر',
@@ -205,11 +192,21 @@ class AuthController extends BaseController
 
                 }
 
-
-
             } else {
 
                 if ($setting->registration_marketer === "active") {
+                    $user = User::create([
+
+                        'email' => $request->email,
+                        'user_name' => $request->user_name,
+                        'password' => $request->password,
+                        'phonenumber' => $request->phonenumber,
+                        'user_type' => "marketer",
+                        'name' => $request->name,
+                        'city_id' => $request->city_id,
+
+                    ]);
+
                     $user->update([
                         'user_type' => "marketer",
                         'name' => $request->name,
@@ -227,8 +224,6 @@ class AuthController extends BaseController
                 }
 
             }
-
-
 
             if ($request->user_type == "store") {
                 $user->generateVerifyCode();
@@ -288,7 +283,7 @@ class AuthController extends BaseController
             $user = auth()->user();
         }
 
-       // $user->update(['device_token' => $request->device_token]);
+        // $user->update(['device_token' => $request->device_token]);
 
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
@@ -316,16 +311,14 @@ class AuthController extends BaseController
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0])
-            ) {
+        ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
-        }
-          elseif (  
+        } elseif (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store'])
 
             && !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'user_type' => 'store_employee'])
-
 
         ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
@@ -345,11 +338,11 @@ class AuthController extends BaseController
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
-       // $remember = request('remember');
-       
+        // $remember = request('remember');
+
         if (auth()->guard()->attempt(request(['user_name', 'password']))) {
             $user = auth()->user();
-            
+
         }
 
         //$user->update(['device_token' => $request->device_token]);
@@ -486,40 +479,38 @@ class AuthController extends BaseController
 
     /////////////////////////////////////////////////// SMS
 
-    
     public function sendSms($request)
     {
-        
+
         try
         {
-            $data_string = json_encode($request); 
-            
-            
+            $data_string = json_encode($request);
+
             $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://rest.gateway.sa/api/SendSMS',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>'{ 
-        "api_id":"'.env("GETWAY_API", null).'", 
-        "api_password":"'.env("GETWAY_PASSWORD", null).'", 
-        "sms_type": "T", 
-        "encoding":"T", 
-        "sender_id": "ATLBHA", 
-        "phonenumber": "'.$request->phonenumber.'", 
-        "textmessage":"'.$request->code.'", 
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://rest.gateway.sa/api/SendSMS',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
+        "api_id":"' . env("GETWAY_API", null) . '",
+        "api_password":"' . env("GETWAY_PASSWORD", null) . '",
+        "sms_type": "T",
+        "encoding":"T",
+        "sender_id": "ATLBHA",
+        "phonenumber": "' . $request->phonenumber . '",
+        "textmessage":"' . $request->code . '",
 
-  	"templateid": "1868", 
-  	"V1": "'.$request->code.'", 
-  	"V2": null, 
-  	"V3": null, 
-  	"V4": null, 
+  	"templateid": "1868",
+  	"V1": "' . $request->code . '",
+  	"V2": null,
+  	"V3": null,
+  	"V4": null,
   	"V5": null,
 "ValidityPeriodInSeconds": 60,
 "uid":"xyz",
@@ -527,55 +518,46 @@ class AuthController extends BaseController
 "pe_id":"xyz",
 "template_id":"1868"
 
-        
-        } 
+
+        }
         ',
-          CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json'
-          ),
-        ));
-        
-        $response = curl_exec($curl);
-        
-        
-        
-        /*  curl_close($curl);
-      echo $response;
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                ),
+            ));
 
+            $response = curl_exec($curl);
 
+            /*  curl_close($curl);
+            echo $response;
 
-            
-            $ch = curl_init('http://REST.GATEWAY.SA/api/SendSMS?api_id=API71257826714&api_password=FAZ@102030@123&sms_type=P&encoding=T&sender_id=MASHAHER&phonenumber='.$request->phonenumber.'&textmessage='.$request->code.'&uid=xyz&callback_url=null'); 
+            $ch = curl_init('http://REST.GATEWAY.SA/api/SendSMS?api_id=API71257826714&api_password=FAZ@102030@123&sms_type=P&encoding=T&sender_id=MASHAHER&phonenumber='.$request->phonenumber.'&textmessage='.$request->code.'&uid=xyz&callback_url=null');
 
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");             
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-    
-curl_setopt($ch, CURLOPT_HTTPHEADER, array( 
- 'Accept: application/json', 
- 'Content-Type: application/x-www-form-urlencoded',                                                                              
-        'Content-Length: ' . strlen($data_string)) 
-); 
-$result = curl_exec($ch);*/
-$decoded = json_decode($response);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Accept: application/json',
+            'Content-Type: application/x-www-form-urlencoded',
+            'Content-Length: ' . strlen($data_string))
+            );
+            $result = curl_exec($ch);*/
+            $decoded = json_decode($response);
 
 //dd($decoded);
-if ($decoded->status =="S" ) {
-    return true;
-}
-    
-            return $this->sendError("فشل ارسال الرسالة","Failed Send Message");
+            if ($decoded->status == "S") {
+                return true;
+            }
 
+            return $this->sendError("فشل ارسال الرسالة", "Failed Send Message");
 
-            
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return $this->sendError($e->getMessage());
         }
-        
+
     }
-    
+
 // test
     public function sendMessagePost()
     {
