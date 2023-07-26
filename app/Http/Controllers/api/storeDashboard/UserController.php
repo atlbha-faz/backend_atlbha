@@ -30,7 +30,7 @@ class UserController extends BaseController
         }
         else{
             $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get());
-  
+
         }
         $success['status'] = 200;
 
@@ -64,7 +64,7 @@ class UserController extends BaseController
                 }),
                 ],
             'status' => 'required|in:active,not_active',
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
                 return $query->where('user_type', 'store_employee');
             })],
@@ -108,7 +108,7 @@ class UserController extends BaseController
         }
         else{
         $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->first();
-  
+
         }
         if (is_null($user) || $user->is_deleted == 1) {
             return $this->sendError("المستخدم غير موجود", "user is't exists");
@@ -144,7 +144,7 @@ class UserController extends BaseController
         $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
         } else{
             $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->first();
-  
+
         }
 if (is_null($user) || $user->is_deleted == 1 ) {
     return $this->sendError("المستخدم غير موجود", "user is't exists");
@@ -159,7 +159,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
                     ->where('id', '!=', $user->id);
             }),
             ],
-            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
             'password_confirm' => 'nullable|same:password',
             'status' => 'required|in:active,not_active',
              'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
@@ -215,7 +215,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
         }
         else{
             $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->first();
- 
+
         }
         if (is_null($user) || $user->is_deleted == 1) {
             return $this->sendError("المستخدم غير موجودة", "User is't exists");
@@ -288,7 +288,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
         else
         {
             $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->first();
-  
+
         }
         if (is_null($user) || $user->is_deleted == 1) {
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
