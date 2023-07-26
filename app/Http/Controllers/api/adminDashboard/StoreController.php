@@ -37,7 +37,7 @@ class StoreController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
     }
-  
+
 
     /**
      * Show the form for creating a new resource.
@@ -64,7 +64,7 @@ class StoreController extends BaseController
             'store_name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
             'store_email'=>'required|email|unique:stores',
-            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
             'domain'=>'required|string|unique:stores',
             'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -134,7 +134,7 @@ class StoreController extends BaseController
          $store->update([
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);
-        
+
       } elseif ($request->periodtype == "year") {
                $end_at = date('Y-m-d',strtotime("+ 1 years", strtotime($store->created_at)));
         $store->update([
@@ -221,7 +221,7 @@ class StoreController extends BaseController
             'store_name'=>'required|string|max:255',
             'email'=>'required|email',
             'store_email'=>'required|email',
-             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
             'domain'=>'required|string|unique:stores,domain,' . $store->id,
             'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -297,14 +297,14 @@ class StoreController extends BaseController
 
      public function changeStatus(Request $request)
     {
-         
+
           $stores =Store::whereIn('id',$request->id)->get();
            foreach($stores as $store)
            {
              if (is_null($store) || $store->is_deleted==1){
                    return $this->sendError("المتجر غير موجود"," Store is't exists");
        }
-               
+
         if($store->status === 'active'){
         $store->update(['status' => 'not_active']);
         }
@@ -313,8 +313,8 @@ class StoreController extends BaseController
         }
 
             }
-         
-       
+
+
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة المتجر بنجاح','store updated successfully');
@@ -322,7 +322,7 @@ class StoreController extends BaseController
     }
 
 
-     
+
 
       public function specialStatus($id)
     {
@@ -360,7 +360,7 @@ class StoreController extends BaseController
             if(count($stores)>0){
            foreach($stores as $store)
            {
-          
+
               if($store->status === 'active'){
         $store->update(['status' => 'not_active']);
         }
@@ -442,7 +442,7 @@ class StoreController extends BaseController
         }
 
             $users = User::where('store_id', $request->store_id)->where('user_type','store')->get();
-  
+
             $data = [
                 'message' => 'تعديل توثيق',
                 'store_id' =>  $request->store_id,
@@ -468,7 +468,7 @@ class StoreController extends BaseController
        $user->update([
          'name' =>  $request->input('name'),
          ]);
-         
+
 
         $success['store']=Store::where('is_deleted',0)->where('id',$request->store_id)->first();
         $success['status']= 200;
@@ -482,7 +482,7 @@ class StoreController extends BaseController
             if(count($stores)>0){
            foreach($stores as $store)
            {
-         
+
                $store->update(['is_deleted' => 1]);
                $users = User::where('store_id',$store->id)->get();
                foreach($users as $user){
@@ -497,8 +497,8 @@ class StoreController extends BaseController
                   $success['status']= 200;
               return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
               }
-    
-    
+
+
               }
 
 
