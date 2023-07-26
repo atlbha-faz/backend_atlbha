@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ExplainVideos;
 use Illuminate\Support\Facades\Storage;
@@ -119,15 +120,15 @@ class ExplainVideosController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        $fileName =  $request->video->getClientOriginalName();
-        $filePath = 'videos/' . $fileName;
+        $fileName =  Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
+        $filePath = 'videos/explainvideo/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
 
         // File URL to access the video in frontend
         $url = Storage::disk('public')->url($filePath);
         $getID3 = new \getID3();
-        $pathVideo = 'storage/videos/'. $fileName;
+        $pathVideo = 'storage/videos/explainvideo/'. $fileName;
 
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
@@ -214,7 +215,7 @@ class ExplainVideosController extends BaseController
              'thumbnail' => $request->thumbnail,
           ]);
         if(!is_null($request->video)){
-       $fileName =  $request->video->getClientOriginalName();
+       $fileName =  Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
         $filePath = 'videos/explainvideo/' . $fileName;
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
@@ -223,7 +224,6 @@ class ExplainVideosController extends BaseController
         $url = Storage::disk('public')->url($filePath);
         $getID3 = new \getID3();
         $pathVideo = 'storage/videos/explainvideo/'. $fileName;
-
         $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
         $playtimes = $fileAnalyze['playtime_seconds'];
@@ -232,7 +232,7 @@ class ExplainVideosController extends BaseController
         if ($isFileUploaded) {
         $explainvideos = $explainVideos->update([
             'duration' => $playtime,
-             'video' => $filePath,
+             'video' => $fileName,
           ]);
         }
         }

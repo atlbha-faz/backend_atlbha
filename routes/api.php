@@ -52,7 +52,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('storeProductCategory', [App\Http\Controllers\api\IndexStoreController::class, 'storeProductCategory']);
     Route::get('productSearch', [App\Http\Controllers\api\IndexStoreController::class, 'productSearch']);
     Route::get('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'index']);
-Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
+    Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
 });
 
 
@@ -114,6 +114,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
         Route::get('list', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'list'])->name('list');
 
+        Route::get('selector/etlobahCategory', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'etlobahCategory']);
         Route::get('selector/years', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'years']);
         Route::get('selector/cities', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'cities']);
         Route::get('selector/countries', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'countries']);

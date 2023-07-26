@@ -199,7 +199,7 @@ if($request->data){
          }
          $category->update([
              'name' => $request->input('name'),
-              'icon' =>$request->input('icon'),
+           'icon' =>$request->icon,
               'for' =>'store',
               'store_id' =>null
          ]);

@@ -132,10 +132,12 @@ class IndexStoreController extends BaseController
 
         } else {
             $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+            
+            
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
-            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active" ) {
                 return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
             if ($store->maintenance != null) {
@@ -376,18 +378,18 @@ class IndexStoreController extends BaseController
                     $success['product'] = new importsResource(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.id', $id)->first(['products.*', 'importproducts.price']));
 
                 } else {
-                    $exit_product = Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first();
-                    if ($exit_product != null) {
+                    $product = Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first();
+                    if ($product != null) {
                         $success['product'] = new ProductResource(Product::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $id)->first());
                     } else {
                         return $this->sendError("المنتج غير موجود", "product is't exists");
 
                     }
                 }
-
-                $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)
+               if($product != null){
+                $success['relatedProduct'] =ProductResource::collection(Product::where('is_deleted', 0)
                         ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
-
+               }
                 $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $product->id)->get());
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
