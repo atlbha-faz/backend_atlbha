@@ -848,7 +848,7 @@ class IndexStoreController extends BaseController
                     ->where('for', 'etlobha')
                     ->where('name', 'like', '%' . $query . '%')
                     ->when($category, function ($query, $category) {
-                        $query->where('category_id', $category);
+                        $query->where('category_id', $category)->orWhere('subcategory_id',$category);
                     })
                     ->get());
             $success['domain'] = $request->domain;
@@ -894,7 +894,7 @@ class IndexStoreController extends BaseController
                     ->whereIn('products.id', $imports_id)
                     ->where('products.name', 'like', '%' . $query . '%')
                     ->when($category, function ($query, $category) {
-                        $query->where('products.category_id', $category);
+                        $query->where('products.category_id', $category)->orWhere('products.subcategory_id',$category);
                     },)
                     ->get(['products.*', 'importproducts.price']));
 
@@ -902,7 +902,7 @@ class IndexStoreController extends BaseController
                     ->where('store_id', $store_id)
                     ->where('name', 'like', '%' . $query . '%')
                     ->when($category, function ($query, $category) {
-                        $query->where('category_id', $category);
+                        $query->where('category_id', $category)->orWhere('subcategory_id',$category);
                     })
                     ->get());
 
