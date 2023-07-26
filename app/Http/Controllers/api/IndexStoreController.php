@@ -634,7 +634,7 @@ class IndexStoreController extends BaseController
 
             $products = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', null)->when($filter_category, function ($query, $filter_category) {
-                    $query->where('category_id', $filter_category);
+                        $query->where('category_id', $filter_category)->orWhere('subcategory_id',$filter_category);
                 })->when($price_from, function ($query, $price_from) {
                     $query->where('selling_price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
@@ -735,12 +735,13 @@ class IndexStoreController extends BaseController
                 }) ->select('products.*','importproducts.price')->orderBy($s, $sort)->paginate($limit));
             $storeproducts = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
-                    $query->where('category_id', $filter_category);
+                    $query->where('category_id', $filter_category)->orWhere('subcategory_id',$filter_category);
                 })->when($price_from, function ($query, $price_from) {
                     $query->where('selling_price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price', '<=', $price_to);
                 })->orderBy($s, $sort)->paginate($limit));
+        
             $products = $storeproducts->merge($importsproducts);
             $product_ids=Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
             $prodtcts=Product::whereIn('id',$product_ids)->where('is_deleted', 0)->get();
