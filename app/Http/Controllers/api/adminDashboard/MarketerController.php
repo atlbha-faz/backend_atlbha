@@ -56,7 +56,7 @@ class MarketerController extends BaseController
           'checkbox_field' => 'required|in:1',
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users',
-            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
              'password_confirm' => 'required|same:password',
             'user_name'=>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -158,7 +158,7 @@ class MarketerController extends BaseController
        $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users,email,'.$marketer->user->id,
-            'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password'=>'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
              'password_confirm' => 'nullable|same:password',
             'user_name'=>'required|string|max:255',
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -202,7 +202,7 @@ class MarketerController extends BaseController
             'instegram' => $request->input('instegram'),
             // 'socialmediatext' =>$request->input('socialmediatext')
         ]);
-        
+
         if(!is_null($request->password)){
             $user->update([
           'password'=> $request->password,
@@ -266,9 +266,9 @@ class MarketerController extends BaseController
             if(count($users)>0){
            foreach($users as $user)
            {
-             
+
              $user->update(['is_deleted' => 1]);
-          
+
 
             }
             $success['marketers']=MarketerResource::collection($marketers);
