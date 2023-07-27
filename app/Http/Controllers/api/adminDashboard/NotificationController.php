@@ -6,14 +6,16 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Alert;
 use App\Models\Store;
+use App\Mail\SendMail;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Models\NotificationModel;
-use App\Http\Resources\NotificationResource;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\AlertResource;
 use App\Http\Resources\ContactResource;
 use App\Notifications\emailNotification;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\NotificationResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class NotificationController extends BaseController
@@ -24,7 +26,7 @@ class NotificationController extends BaseController
     }
     public function index()
     {
-     
+
         $success['count_of_notifications']=auth()->user()->Notifications->count();
         $success['notifications']=NotificationResource::collection(auth()->user()->Notifications);
         $success['status']= 200;
@@ -77,7 +79,7 @@ class NotificationController extends BaseController
     else{
         $success['status']= 200;
         return $this->sendResponse($success,'الاشعار غير موجود','id does not exit');
-        
+
     }
 }
 
@@ -104,7 +106,13 @@ class NotificationController extends BaseController
         $users = User::where('store_id',$request->store_id)->where('is_deleted',0)->where('user_type','store')->get();
        foreach($users as  $user)
        {
-          Notification::send($user , new emailNotification($data));
+        //   Notification::send($user , new emailNotification($data));
+        try {
+    Mail::to($user->email)->send(new SendMail($data));
+} catch (\Exception $e) {
+    return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+}
+
        }
          $success['contacts']=New ContactResource($contact);
         $success['status']= 200;
