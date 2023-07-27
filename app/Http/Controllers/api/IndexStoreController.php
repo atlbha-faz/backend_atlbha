@@ -739,7 +739,7 @@ class IndexStoreController extends BaseController
                     $query->where('selling_price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('selling_price', '<=', $price_to);
-                })->orderBy($s, $sort)->paginate($limit));
+                })->where('store_id', $store_id)->orderBy($s, $sort)->paginate($limit));
 
             $products = $storeproducts->merge($importsproducts);
             $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
@@ -748,12 +748,11 @@ class IndexStoreController extends BaseController
             foreach ($prodtcts as $prodtct) {
                 $category[] = $prodtct->category;
             }
+            $adminCategory = Category::where('is_deleted', 0)->where('status', 'active')->where('for', 'store')
+                ->Where('store_id', null)->with('products')->has('products')->get();
             $filters = array();
-            $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status', 'active')->where('for', 'store')
-                    ->where(function ($query) use ($store_id) {
-                        $query->whereNull('store_id')
-                            ->OrWhere('store_id', $store_id);
-                    })->with('products')->has('products')->get())->merge($category);
+            $filters[0]["items"] = CategoryResource::collection($adminCategory->merge(Category::where('is_deleted', 0)->where('status', 'active')->where('for', 'store')
+                    ->Where('store_id', $store_id)->get())->merge($category));
             $filters[0]["name"] = "التصنيفات";
             $filters[0]["slug"] = "category";
             $filters[0]["type"] = "category";
