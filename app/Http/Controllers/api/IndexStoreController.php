@@ -749,10 +749,10 @@ class IndexStoreController extends BaseController
                 $category[] = $prodtct->category;
             }
             $filters = array();
-            $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'store')
-                    ->where(function ($query) use($store_id) {
-                        $query->where('store_id', $store_id)
-                            ->OrWhere('store_id', null);
+            $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status', 'active')->where('for', 'store')
+                    ->where(function ($query) use ($store_id) {
+                        $query->whereNull('store_id')
+                            ->OrWhere('store_id', $store_id);
                     })->with('products')->has('products')->get())->merge($category);
             $filters[0]["name"] = "التصنيفات";
             $filters[0]["slug"] = "category";
