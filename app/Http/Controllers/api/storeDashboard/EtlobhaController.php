@@ -20,7 +20,7 @@ class EtlobhaController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'comment_text' => 'required|string|max:255',
-            'rateing' => 'required|numeric|lte:5',
+            'rateing' => 'nullable',
             'store_id' => 'required_if:comment_for,store',
             'product_id' => 'required_if:comment_for,product',
 
