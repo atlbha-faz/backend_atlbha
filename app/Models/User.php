@@ -6,13 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasPermissions;
-use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable , HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     protected $guard_name = 'api';
     /**
@@ -38,8 +37,8 @@ class User extends Authenticatable
         'verify_code',
         'verify_code_expires_at',
         'store_id',
-         'status',
-       'is_deleted'
+        'status',
+        'is_deleted',
     ];
 
     /**
@@ -62,41 +61,45 @@ class User extends Authenticatable
     ];
 
     public function coupons()
-{
-    return $this->belongsToMany(
-        Coupon::class,
-        'coupons_users',
-        'user_id',
-       'coupon_id',
+    {
+        return $this->belongsToMany(
+            Coupon::class,
+            'coupons_users',
+            'user_id',
+            'coupon_id'
         );
     }
-       public function services()
-{
-    return $this->belongsToMany(
-        Service::class,
-        'services_users',
-        'user_id',
-        'service_id'
+    public function services()
+    {
+        return $this->belongsToMany(
+            Service::class,
+            'services_users',
+            'user_id',
+            'service_id'
         );
     }
     public function city()
     {
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
-          public function country()
+    public function country()
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id', 'id');
     }
     public function marketer()
     {
         return $this->hasMany(Marketer::class);
     }
-     public function order()
+    public function order()
     {
         return $this->hasMany(Order::class);
     }
 
-       public function setImageAttribute($image)
+    public function setImageAttribute($image)
     {
         if (!is_null($image)) {
             if (gettype($image) != 'string') {
@@ -111,11 +114,10 @@ class User extends Authenticatable
     public function getImageAttribute($image)
     {
         if (is_null($image)) {
-            return   asset('assets/media/man.png');
+            return asset('assets/media/man.png');
         }
         return asset('storage/images/users') . '/' . $image;
     }
-
 
     public function generateCode()
     {
@@ -133,7 +135,7 @@ class User extends Authenticatable
         $this->save();
     }
 
-      public function generateVerifyCode()
+    public function generateVerifyCode()
     {
         $this->timestamps = false;
         $this->verify_code = rand(100000, 999999);
@@ -149,13 +151,9 @@ class User extends Authenticatable
         $this->save();
     }
 
-
     public function setPasswordAttribute($password)
     {
-            $this->attributes['password'] = bcrypt($password);
+        $this->attributes['password'] = bcrypt($password);
     }
-
-
-
 
 }
