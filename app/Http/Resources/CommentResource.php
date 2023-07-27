@@ -14,23 +14,23 @@ class CommentResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
+        if ($this->status == null || $this->status == 'active') {
             $status = 'نشط';
-        }else{
+        } else {
             $status = 'غير نشط';
         }
-        
+
         return [
-            'id' =>$this->id,
+            'id' => $this->id,
             'comment_text' => $this->comment_text,
             'rateing' => $this->rateing,
             'status' => $status,
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at->diffForHumans(),
             'updated_at' => (string) $this->updated_at,
-            'user' => New UserResource($this->user),
-            'product' => New ProductResource($this->product),
-            'store' => New StoreResource($this->store)
+            'user' => new UserResource($this->user),
+            'product' => new ProductResource($this->product),
+            'store' => $this->store !== null ? new StoreResource($this->store) : new StoreResource($this->user->store),
         ];
     }
 }
