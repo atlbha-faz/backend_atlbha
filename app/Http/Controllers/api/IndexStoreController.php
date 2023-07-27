@@ -750,7 +750,7 @@ class IndexStoreController extends BaseController
             }
             $filters = array();
             $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'store')
-                    ->where(function ($query) {
+                    ->where(function ($query) use($store_id) {
                         $query->where('store_id', $store_id)
                             ->OrWhere('store_id', null);
                     })->get())->merge($category);
