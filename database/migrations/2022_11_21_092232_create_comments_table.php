@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->text('comment_text');
-            $table->integer('rateing')->default(0);
+            $table->integer('rateing')->nullable();
             $table->enum('comment_for', ['product', 'store'])->default('product');
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
