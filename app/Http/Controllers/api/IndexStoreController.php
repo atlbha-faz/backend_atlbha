@@ -753,7 +753,7 @@ class IndexStoreController extends BaseController
                     ->where(function ($query) use($store_id) {
                         $query->where('store_id', $store_id)
                             ->OrWhere('store_id', null);
-                    })->get())->merge($category);
+                    })->with('products')->has('products')->get())->merge($category);
             $filters[0]["name"] = "التصنيفات";
             $filters[0]["slug"] = "category";
             $filters[0]["type"] = "category";
