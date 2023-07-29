@@ -26,6 +26,8 @@ class PostStoreController extends BaseController
 
             $success['domain'] = $id;
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+            $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
+
             $tagarr = array();
             $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
             //    dd($tags);
@@ -79,6 +81,8 @@ class PostStoreController extends BaseController
             if ($store != null) {
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $id)->pluck('logo')->first();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('icon')->first();
+
                 $tagarr = array();
                 $tags = Page::where('is_deleted', 0)->where('store_id', $id)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
                 //    dd($tags);
@@ -141,6 +145,8 @@ class PostStoreController extends BaseController
                 $success['domain'] = $request->domain;
 
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->toArray();
+                $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
+
                 $tagarr = array();
                 $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
                 //    dd($tags);
@@ -207,6 +213,7 @@ class PostStoreController extends BaseController
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->toArray();
                 $tagarr = array();
                 $tags = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 //    dd($tags);
                 foreach ($tags as $tag) {
                     $tagarr[] = $tag;
@@ -266,6 +273,7 @@ class PostStoreController extends BaseController
             if ($post != null) {
                 $success['domain'] = $request->domain;
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+                $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
                 $tagarr = array();
                 $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
                 //    dd($tags);
@@ -330,6 +338,8 @@ class PostStoreController extends BaseController
             if ($post != null) {
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
+
                 $tagarr = array();
                 $tags = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
                 //    dd($tags);
