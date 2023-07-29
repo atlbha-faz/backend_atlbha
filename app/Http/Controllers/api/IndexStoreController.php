@@ -34,6 +34,8 @@ class IndexStoreController extends BaseController
             // $store = Store::where('is_deleted', 0)->where('id', $id)->first();
 
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+            $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
+
             $success['domain'] = $id;
 
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
@@ -156,6 +158,7 @@ class IndexStoreController extends BaseController
             // $store = Store::where('is_deleted', 0)->where('id', $id)->first();
             if ($store != null) {
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
 
                 //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
@@ -316,6 +319,7 @@ class IndexStoreController extends BaseController
             $product = Product::where('is_deleted', 0)->where('id', $id)->where('store_id', null)->first();
             if ($product != null) {
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+                $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
                 $success['domain'] = $domain;
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
                 $product = Product::where('is_deleted', 0)->where('id', $id)->where('store_id', null)->first();
@@ -374,6 +378,7 @@ class IndexStoreController extends BaseController
             if ($store_id != null) {
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
 
                 $product = Product::where('is_deleted', 0)->where('id', $id)->first();
@@ -510,6 +515,7 @@ class IndexStoreController extends BaseController
             $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', null)->first();
             if ($page != null) {
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+                $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
                 $success['domain'] = $request->domain;
                 $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->get());
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
@@ -562,6 +568,7 @@ class IndexStoreController extends BaseController
             if ($page != null) {
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->get());
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
                 $success['page'] = new PageResource(Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->where('postcategory_id', null)->first());
