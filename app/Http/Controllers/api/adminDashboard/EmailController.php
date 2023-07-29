@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\api\adminDashboard;
+use Exception;
 use Notification;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Store;
+use App\Mail\SendMail;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Models\Replaycontact;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\ContactResource;
 use App\Notifications\emailNotification;
 use Illuminate\Support\Facades\Validator;
@@ -61,6 +64,7 @@ class EmailController extends BaseController
     
     public function addEmail(Request $request)
     {
+ 
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'subject'=>'required|string|max:255',
@@ -72,7 +76,7 @@ class EmailController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        
+     
         $data = [
             'subject' => $request->subject,
             'message' => $request->message,
@@ -85,9 +89,18 @@ class EmailController extends BaseController
         ];
         $contact = Replaycontact::create($data);
         $users = User::where('store_id',$request->store_id)->where('user_type','store')->get();
-       foreach($users as  $user)
+   
+      
+        foreach($users as  $user)
        {
-        Notification::send($user , new emailNotification($data1));
+      
+        // Notification::send($user , new emailNotification($data1));
+      
+        try {
+            Mail::to($user->email)->send(new SendMail($data1));
+        } catch (Exception $e) {
+            return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+        }
        }
          $success['contacts']=New ContactResource($contact);
         $success['status']= 200;
