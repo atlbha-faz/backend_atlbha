@@ -727,16 +727,27 @@ class IndexStoreController extends BaseController
             $price_from = $request->input('price_from');
             $price_to = $request->input('price_to');
             $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
+            if(is_null($filter_category)){
+                $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
+                    ->where('importproducts.store_id', $store_id)
+                    ->whereIn('products.id', $imports_id)
+                    ->when($price_from, function ($query, $price_from) {
+                    $query->where('importproducts.price', '>=', $price_from);
+                })->when($price_to, function ($query, $price_to) {
+                    $query->where('importproducts.price', '<=', $price_to);
+                })->select('products.*', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
+            }else{
             $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
                     ->where('importproducts.store_id', $store_id)
                     ->whereIn('products.id', $imports_id)
-                    ->when($filter_category, function ($query, $filter_category) {
+                    ->where(function ($query)use($filter_category){
                         $query->where('products.category_id', $filter_category)->orWhere('products.subcategory_id', $filter_category);
                     })->when($price_from, function ($query, $price_from) {
                     $query->where('importproducts.price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('importproducts.price', '<=', $price_to);
                 })->select('products.*', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
+            }
             $storeproducts = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
                     $query->where('category_id', $filter_category)->orWhere('subcategory_id', $filter_category);
