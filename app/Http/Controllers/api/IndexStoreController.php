@@ -34,6 +34,8 @@ class IndexStoreController extends BaseController
             // $store = Store::where('is_deleted', 0)->where('id', $id)->first();
 
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+            $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
+
             $success['domain'] = $id;
 
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
@@ -156,6 +158,7 @@ class IndexStoreController extends BaseController
             // $store = Store::where('is_deleted', 0)->where('id', $id)->first();
             if ($store != null) {
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
 
                 //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
@@ -278,6 +281,7 @@ class IndexStoreController extends BaseController
                 }
                 $popularCategories=array_merge($popularCategories,$category);
                 $success['PopularCategories']= CategoryResource::collection($popularCategories);
+
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
                 $success['storeAddress'] = 'السعودية - مدينة جدة';
@@ -326,6 +330,7 @@ class IndexStoreController extends BaseController
             $product = Product::where('is_deleted', 0)->where('id', $id)->where('store_id', null)->first();
             if ($product != null) {
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+                $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
                 $success['domain'] = $domain;
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
                 $product = Product::where('is_deleted', 0)->where('id', $id)->where('store_id', null)->first();
@@ -384,6 +389,7 @@ class IndexStoreController extends BaseController
             if ($store_id != null) {
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
 
                 $product = Product::where('is_deleted', 0)->where('id', $id)->first();
@@ -520,6 +526,7 @@ class IndexStoreController extends BaseController
             $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', null)->first();
             if ($page != null) {
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+                $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
                 $success['domain'] = $request->domain;
                 $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->get());
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', null)->get());
@@ -572,6 +579,7 @@ class IndexStoreController extends BaseController
             if ($page != null) {
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+                $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->get());
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', null)->get());
                 $success['page'] = new PageResource(Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->where('postcategory_id', null)->first());
@@ -737,26 +745,26 @@ class IndexStoreController extends BaseController
             $price_from = $request->input('price_from');
             $price_to = $request->input('price_to');
             $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
-            if(is_null($filter_category)){
+            if (is_null($filter_category)) {
                 $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
-                    ->where('importproducts.store_id', $store_id)
-                    ->whereIn('products.id', $imports_id)
-                    ->when($price_from, function ($query, $price_from) {
-                    $query->where('importproducts.price', '>=', $price_from);
-                })->when($price_to, function ($query, $price_to) {
-                    $query->where('importproducts.price', '<=', $price_to);
-                })->select('products.*', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
-            }else{
-            $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
-                    ->where('importproducts.store_id', $store_id)
-                    ->whereIn('products.id', $imports_id)
-                    ->where(function ($query)use($filter_category){
-                        $query->where('products.category_id', $filter_category)->orWhere('products.subcategory_id', $filter_category);
-                    })->when($price_from, function ($query, $price_from) {
-                    $query->where('importproducts.price', '>=', $price_from);
-                })->when($price_to, function ($query, $price_to) {
-                    $query->where('importproducts.price', '<=', $price_to);
-                })->select('products.*', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
+                        ->where('importproducts.store_id', $store_id)
+                        ->whereIn('products.id', $imports_id)
+                        ->when($price_from, function ($query, $price_from) {
+                            $query->where('importproducts.price', '>=', $price_from);
+                        })->when($price_to, function ($query, $price_to) {
+                        $query->where('importproducts.price', '<=', $price_to);
+                    })->select('products.*', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
+            } else {
+                $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
+                        ->where('importproducts.store_id', $store_id)
+                        ->whereIn('products.id', $imports_id)
+                        ->where(function ($query) use ($filter_category) {
+                            $query->where('products.category_id', $filter_category)->orWhere('products.subcategory_id', $filter_category);
+                        })->when($price_from, function ($query, $price_from) {
+                        $query->where('importproducts.price', '>=', $price_from);
+                    })->when($price_to, function ($query, $price_to) {
+                        $query->where('importproducts.price', '<=', $price_to);
+                    })->select('products.*', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
             }
             $storeproducts = ProductResource::collection(Product::where('is_deleted', 0)
                     ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
