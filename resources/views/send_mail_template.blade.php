@@ -1,0 +1,1 @@
+<h2>message:	{{$data['message']}}</h2>
