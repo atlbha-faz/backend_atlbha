@@ -269,8 +269,9 @@ class IndexStoreController extends BaseController
                 })->where('is_deleted', 0)->groupBy('category_id')->selectRaw('count(*) as total, category_id')->orderBy('total', 'DESC')->take(6)->get();
 
                 foreach ($productsCategories as $productsCategory) {
-                    $success['PopularCategories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('id', $productsCategory->category_id)->get()->merge($category));
+                    $success['PopularCategories'][] = new CategoryResource(Category::where('is_deleted', 0)->where('id', $productsCategory->category_id)->first());
                 }
+                 $success['PopularCategories']= $success['PopularCategories']->merge($category);
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
                 $success['storeAddress'] = 'السعودية - مدينة جدة';
