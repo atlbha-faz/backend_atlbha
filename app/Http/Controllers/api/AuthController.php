@@ -225,12 +225,12 @@ class AuthController extends BaseController
 
             }
 
-            if ($request->user_type == "store") {
+          
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
                 $this->sendSms($request);
-            }
+            
 
             $success['user'] = new UserResource($user);
             $success['token'] = $user->createToken('authToken')->accessToken;
