@@ -235,7 +235,12 @@ class IndexStoreController extends BaseController
                 foreach ($prodtcts as $prodtct) {
                     $category[] = $prodtct->category;
                 }
-                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->with('products')->has('products')->get()->merge($category));
+                // $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->with('products')->has('products')->get()->merge($category));
+                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where(function ($query) use ($store_id) {
+                    $query->where('store_id', $store_id)->orWhere('store_id', null);
+                })->where('for', 'store')->with('products')->whereHas('products', function ($query) use ($store_id) {
+                    $query->where('is_deleted', 0)->where('store_id', $store_id);
+                })->get()->merge($category));
 
                 // $arr = array();
                 // $offers = DB::table('offers')->where('offers.is_deleted', 0)->where('offers.store_id', $id)->join('offers_products', 'offers.id', '=', 'offers_products.offer_id')
@@ -751,8 +756,12 @@ class IndexStoreController extends BaseController
             $adminCategory = Category::where('is_deleted', 0)->where('status', 'active')->where('for', 'store')
                 ->Where('store_id', null)->with('products')->has('products')->get();
             $filters = array();
-            $filters[0]["items"] = CategoryResource::collection($adminCategory->merge(Category::where('is_deleted', 0)->where('status', 'active')->where('for', 'store')
-                    ->Where('store_id', $store_id)->get())->merge($category));
+            $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->where(function ($query) use ($store_id) {
+                $query->where('store_id', $store_id)->orWhere('store_id', null);
+            })->where('for', 'store')->with('products')->whereHas('products', function ($query) use ($store_id) {
+                $query->where('is_deleted', 0)->where('store_id', $store_id);
+            })->get()->merge($category));
+
             $filters[0]["name"] = "التصنيفات";
             $filters[0]["slug"] = "category";
             $filters[0]["type"] = "category";
