@@ -128,7 +128,6 @@ class NotificationController extends BaseController
             'subject'=>'required|string|max:255',
             'message'=>'required|string',
             'store_id'=>'exists:stores,id',
-
         ]);
         if ($validator->fails())
         {
