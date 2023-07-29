@@ -400,7 +400,15 @@ class IndexStoreController extends BaseController
                     $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)
                             ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
                 }
-                $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $product->id)->get());
+
+                $commentStatus = Homepage::where('is_deleted', 0)->where('id', $store_id)->pluck('commentstatus')->first();
+
+                if ($commentStatus == 'active') {
+                    $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $product->id)->get());
+                } else {
+                    $success['commentOfProducts'] = array();
+                }
+
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
                 $success['storeAddress'] = 'السعودية - مدينة جدة';
@@ -470,7 +478,7 @@ class IndexStoreController extends BaseController
                 'product_id' => $id,
                 'store_id' => null,
                 'user_id' => auth()->user()->id,
-
+                'status' => 'not_active',
             ]);
 
             $success['comments'] = new CommentResource($comment);
@@ -500,7 +508,7 @@ class IndexStoreController extends BaseController
                 'product_id' => $id,
                 'store_id' => $store_id,
                 'user_id' => auth()->user()->id,
-
+                'status' => 'not_active',
             ]);
 
             $success['comments'] = new CommentResource($comment);

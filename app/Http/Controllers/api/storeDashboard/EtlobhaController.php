@@ -21,8 +21,8 @@ class EtlobhaController extends BaseController
         $validator = Validator::make($input, [
             'comment_text' => 'required|string|max:255',
             'rateing' => 'nullable',
-            'store_id' => 'required_if:comment_for,store',
-            'product_id' => 'required_if:comment_for,product',
+            // 'store_id' => 'required_if:comment_for,store',
+            // 'product_id' => 'required_if:comment_for,product',
 
         ]);
         if ($validator->fails()) {
@@ -35,7 +35,7 @@ class EtlobhaController extends BaseController
             'product_id' => null,
             'store_id' => null,
             'user_id' => auth()->user()->id,
-
+            'status' => 'not_active',
         ]);
 
         $success['comments'] = new CommentResource($comment);
