@@ -412,7 +412,7 @@ class IndexStoreController extends BaseController
 
                 $commentStatus = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('commentstatus', 'active')->first();
 
-                if ($commentStatus != null) { 
+                if ($commentStatus != null) {
 
                     $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $product->id)->where('status', 'active')->get());
                 } else {
@@ -876,7 +876,7 @@ class IndexStoreController extends BaseController
     public function category($id)
     {
         $category = Category::query()->find($id);
-        if (is_null($category) || $category->is_deleted == 1 || $category->status != 'active') {
+        if (is_null($category) || $category->is_deleted == 1 || $category->status == 'not_active') {
             return $this->sendError("القسم غير موجودة", "Category is't exists");
         }
         $success['category'] = new CategoryResource($category);
