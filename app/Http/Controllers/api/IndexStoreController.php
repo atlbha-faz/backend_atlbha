@@ -877,7 +877,7 @@ class IndexStoreController extends BaseController
             $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
             $product_ids = Importproduct::where('store_id', $store_id)->orderBy('created_at', 'desc')->pluck('product_id')->toArray();
             $importprodtcts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->whereIn('products.id', $product_ids)->select('products.*', 'importproducts.price')->orderBy('importproducts.created_at', 'desc')->take(5)->get();
-            $products = Product::where('is_deleted', 1)->where('store_id', $store_id)->orderBy('created_at', 'desc')->take(5)->get();
+            $products = Product::where('is_deleted', 0)->where('store_id', $store_id)->orderBy('created_at', 'desc')->take(5)->get();
             if ($products != null) {
                 $success['lastProducts'] = ProductResource::collection($products);} else {
                 $success['lastProducts'] = importsResource::collection($importprodtcts);
