@@ -283,7 +283,10 @@ class IndexStoreController extends BaseController
                 }
                 $popularCategories = array();
                 foreach ($productsCategories as $productsCategory) {
-                    $popularCategories[] = Category::where('is_deleted', 0)->where('status', 'active')->where('id', $productsCategory->category_id)->first();
+                     $c =Category::where('is_deleted', 0)->where('status', 'active')->where('id', $productsCategory->category_id)->first();
+                    if($c != null){
+                         $popularCategories[] = $c;
+                    }
                 }
                 $popularCategories = array_merge($popularCategories, $category);
                 if($popularCategories != null){
