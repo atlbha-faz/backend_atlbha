@@ -277,14 +277,20 @@ class CategoryController extends BaseController
     public function deleteall(Request $request)
     {
 
-        $categorys = Category::whereIn('id', $request->id)->where('for', 'etlobha')->where('store_id', null)->where('is_deleted', 0)->get();
-        if (count($categorys) > 0) {
-            foreach ($categorys as $category) {
-
-                $category->update(['is_deleted' => 1]);
-                $success['categorys'] = new CategoryResource($category);
-
+            $categorys =Category::whereIn('id',$request->id)->where('for','etlobha')->where('store_id', null)->where('is_deleted',0)->get();
+            if(count($categorys)>0){
+           foreach($categorys as $category)
+           {
+             $category->update(['is_deleted' => 1]);
+            $success['categorys']=New CategoryResource($category);
+            if ($category->parent_id == null) {
+            $subs=Category::where('parent_id',$category->id)->where('for','etlobha')->where('is_deleted',0)->get();
+            foreach($subs as $sub)
+            {
+                $sub->update(['is_deleted' => 1]);
             }
+            }
+            } 
 
             $success['status'] = 200;
 
