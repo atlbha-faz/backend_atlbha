@@ -283,7 +283,15 @@ if($request->data){
 
              $category->update(['is_deleted' => 1]);
             $success['categorys']=New CategoryResource($category);
+            if ($category->parent_id == null) {
+            $subs=Category::where('parent_id',$category->id)->where('for','store')->where('is_deleted',0)->get();
+            foreach($subs as $sub)
+            {
 
+                $sub->update(['is_deleted' => 1]);
+
+            }
+              }
             }
 
            $success['status']= 200;

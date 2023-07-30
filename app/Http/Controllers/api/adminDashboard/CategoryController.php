@@ -296,12 +296,16 @@ class CategoryController extends BaseController
             if(count($categorys)>0){
            foreach($categorys as $category)
            {
-
-
              $category->update(['is_deleted' => 1]);
             $success['categorys']=New CategoryResource($category);
-
+            if ($category->parent_id == null) {
+            $subs=Category::where('parent_id',$category->id)->where('for','etlobha')->where('is_deleted',0)->get();
+            foreach($subs as $sub)
+            {
+                $sub->update(['is_deleted' => 1]);
             }
+            }
+            } 
 
            $success['status']= 200;
 
@@ -326,6 +330,7 @@ class CategoryController extends BaseController
                 else{
                 $category->update(['status' => 'active']);
                 }
+               
                 $success['categorys']= New CategoryResource($category);
 
                     }
