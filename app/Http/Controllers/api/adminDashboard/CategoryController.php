@@ -312,17 +312,9 @@ class CategoryController extends BaseController
                 } else {
                     $category->update(['status' => 'active']);
                 }
-<<<<<<< HEAD
-                else{
-                $category->update(['status' => 'active']);
-                }
-               
-                $success['categorys']= New CategoryResource($category);
-=======
                 if ($category->parent_id == null) {
                     $subs = Category::where('parent_id', $category->id)->where('for', 'etlobha')->where('is_deleted', 0)->get();
                     foreach ($subs as $sub) {
->>>>>>> 236e42ad0fe2a28b20be7f1b4a9ac24bb37d7a41
 
                         if ($sub->status === 'active') {
                             $sub->update(['status' => 'not_active']);
