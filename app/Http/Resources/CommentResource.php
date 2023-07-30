@@ -15,6 +15,10 @@ class CommentResource extends JsonResource
     public function toArray($request)
     {
         if ($this->status == null || $this->status == 'active') {
+            if($this->store_id == null && $this->comment_for == 'store'){
+                  $status = 'تم النشر';
+            }else{
+            }
             $status = 'نشط';
         } else {
             $status = 'غير نشط';
