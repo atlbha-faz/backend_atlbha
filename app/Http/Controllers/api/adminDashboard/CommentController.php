@@ -161,18 +161,20 @@ class CommentController extends BaseController
             foreach($comments as $comment)
             {
 
-        if($comment->status === 'active'){
+     /*   if($comment->status === 'active'){
         $comment->update(['status' => 'not_active']);
         }
         else{
+        */
         $comment->update(['status' => 'active']);
-        }
+      
+            //}
          }
          }  
         $success['comments']=CommentResource::collection($comments);
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم تعديل حالة التعليق بنجاح','comment updated successfully');
+         return $this->sendResponse($success,'تم نشر التقييم بنجاح','comment has been published successfully');
 
     }
 

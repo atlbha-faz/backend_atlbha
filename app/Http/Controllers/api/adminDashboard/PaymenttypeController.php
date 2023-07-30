@@ -84,6 +84,7 @@ class PaymenttypeController extends BaseController
 
         if($paymenttype->status === 'active'){
         $paymenttype->update(['status' => 'not_active']);
+          $paymenttype->stores()->detach();
         }
         else{
         $paymenttype->update(['status' => 'active']);
