@@ -183,6 +183,7 @@ class PaymenttypeController extends BaseController
 
     //     $success['paymenttypes']=New PaymenttypeResource($paymenttype);
     //     $success['status']= 200;
+    // 
 
     //      return $this->sendResponse($success,'تم حذف طريقةالدفع بنجاح','payment type deleted successfully');
     // }
