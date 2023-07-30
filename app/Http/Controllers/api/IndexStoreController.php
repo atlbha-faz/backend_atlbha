@@ -411,9 +411,10 @@ class IndexStoreController extends BaseController
                             ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
                 }
 
-                $commentStatus = Homepage::where('is_deleted', 0)->where('id', $store_id)->pluck('commentstatus')->first();
+                $commentStatus = Homepage::where('is_deleted', 0)->where('id', $store_id)->where('commentstatus', 'active')->first();
 
-                if ($commentStatus == 'active') {
+                if ($commentStatus != null) { 
+
                     $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $product->id)->get());
                 } else {
                     $success['commentOfProducts'] = array();
