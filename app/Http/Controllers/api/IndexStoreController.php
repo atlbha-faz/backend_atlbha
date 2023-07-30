@@ -239,11 +239,18 @@ class IndexStoreController extends BaseController
                     $category[] = $prodtct->category;
                 }
                 // $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->with('products')->has('products')->get()->merge($category));
-                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status', 'active')->where(function ($query) use ($store_id) {
+
+               $categories= Category::where('is_deleted', 0)->where('status', 'active')->where(function ($query) use ($store_id) {
                     $query->where('store_id', $store_id)->orWhere('store_id', null);
                 })->where('for', 'store')->with('products')->whereHas('products', function ($query) use ($store_id) {
                     $query->where('is_deleted', 0)->where('store_id', $store_id);
-                })->get()->merge($category));
+                })->get()->merge($category);
+                if($categories != null){
+                $success['category'] = CategoryResource::collection($categories);
+            }
+            else{
+                $success['category'] =array();
+            }
 
                 // $arr = array();
                 // $offers = DB::table('offers')->where('offers.is_deleted', 0)->where('offers.store_id', $id)->join('offers_products', 'offers.id', '=', 'offers_products.offer_id')
