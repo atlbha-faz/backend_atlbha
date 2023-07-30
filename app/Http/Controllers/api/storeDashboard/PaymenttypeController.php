@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Paymenttype;
+use App\Models\paymenttype_store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
@@ -23,7 +24,7 @@ class PaymenttypeController extends BaseController
     public function index()
      {
 
-        $success['paymenttypes']=PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->get());
+        $success['paymenttypes']=PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->where('status', 'active')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع طرق الدفع بنجاح','payment types return successfully');
@@ -81,10 +82,9 @@ class PaymenttypeController extends BaseController
      public function show($paymenttype)
      {
         $paymenttype = Paymenttype::query()->find($paymenttype);
-        if (is_null($paymenttype) || $paymenttype->is_deleted==1){
+        if (is_null($paymenttype) || $paymenttype->is_deleted==1 || $paymenttype->status=="not_active"){
         return $this->sendError("'طريقة الدفع غير موجودة","payment type is't exists");
         }
-
 
        $success['paymenttypes']=New PaymenttypeResource($paymenttype);
        $success['status']= 200;
@@ -143,17 +143,24 @@ class PaymenttypeController extends BaseController
      public function changeStatus($id)
     {
         $paymenttype = Paymenttype::query()->find($id);
-         if (is_null($paymenttype) || $paymenttype->is_deleted==1){
-         return $this->sendError("شركة الشحن غير موجودة","paymenttype is't exists");
+         if (is_null($paymenttype) || $paymenttype->is_deleted==1 || $paymenttype->status=="not_active" ){
+         return $this->sendError("شركة الدفع غير موجودة","paymenttype is't exists");
          }
+         $paymenttype=paymenttype_store::where('paymentype_id',$id)->where('store_id',auth()->user()->store_id)->first();
 
-        if($paymenttype->status === 'active'){
-        $paymenttype->update(['status' => 'not_active']);
+        if( $paymenttype != null){
+           $paymenttype->delete();
         }
         else{
-        $paymenttype->update(['status' => 'active']);
+            $paymenttype = paymenttype_store::create([
+                'paymentype_id'=>$id ,
+                'store_id'=>auth()->user()->store_id
+            ]);
+
+            $success['paymenttypes']=$paymenttype;
+
         }
-        $success['paymenttypes']=New paymenttypeResource($paymenttype);
+       
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة طريقة الدفع بنجاح','payment type updated successfully');
