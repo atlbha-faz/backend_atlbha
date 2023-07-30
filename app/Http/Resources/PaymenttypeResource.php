@@ -14,11 +14,20 @@ class PaymenttypeResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
+        if(auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee'){
+              if($this->stores()->where('store_id',auth()->user()->store_id )->first() != null){
             $status = 'نشط';
         }else{
             $status = 'غير نشط';
         }
+        }else{
+              if($this->status ==null || $this->status == 'active'){
+            $status = 'نشط';
+        }else{
+            $status = 'غير نشط';
+        }
+        }
+        
         return [
         'id' =>$this->id,
         'name'=>$this->name,
