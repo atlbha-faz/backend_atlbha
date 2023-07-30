@@ -286,7 +286,13 @@ class IndexStoreController extends BaseController
                     $popularCategories[] = Category::where('is_deleted', 0)->where('status', 'active')->where('id', $productsCategory->category_id)->first();
                 }
                 $popularCategories = array_merge($popularCategories, $category);
-                $success['PopularCategories'] = CategoryResource::collection($popularCategories);
+                if($popularCategories != null){
+                    $success['PopularCategories'] = CategoryResource::collection($popularCategories);
+
+                }
+                else{
+                    $success['PopularCategories']=array();
+                }
 
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
