@@ -85,6 +85,7 @@ class ShippingtypeController extends BaseController
 
         if($shippingtype->status === 'active'){
         $shippingtype->update(['status' => 'not_active']);
+        $shippingtype->stores()->detach();
         }
         else{
         $shippingtype->update(['status' => 'active']);

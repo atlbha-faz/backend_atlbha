@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Shippingtype;
+use App\Models\shippingtype_store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ShippingtypeResource;
@@ -138,21 +139,26 @@ class ShippingtypeController extends BaseController
      public function changeStatus($id)
     {
         $shippingtype = Shippingtype::query()->find($id);
-         if (is_null($shippingtype) || $shippingtype->is_deleted==1){
-         return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
-         }
-
-        if($shippingtype->status === 'active'){
-        $shippingtype->update(['status' => 'not_active']);
+        if (is_null($shippingtype) || $shippingtype->is_deleted==1 || $shippingtype->status=="not_active" ){
+        return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
         }
-        else{
-        $shippingtype->update(['status' => 'active']);
-        }
-        $success['shippingtypes']=New ShippingtypeResource($shippingtype);
-        $success['status']= 200;
+        $shippingtype=shippingtype_store::where('shippingtype_id',$id)->where('store_id',auth()->user()->store_id)->first();
 
-         return $this->sendResponse($success,'تم تعديل حالة شركة الشحن بنجاح','shipping type updated successfully');
+       if( $shippingtype != null){
+          $shippingtype->delete();
+       }
+       else{
+           $shippingtype = shippingtype_store::create([
+               'shippingtype_id'=>$id ,
+               'store_id'=>auth()->user()->store_id
+           ]);
 
+           $success['shippingtypes']=$shippingtype;
+
+       }
+      
+       $success['status']= 200;
+        return $this->sendResponse($success,'تم تعديل حالة طريقة  الشحن بنجاح','shipping type updated successfully');
     }
 
     /**
