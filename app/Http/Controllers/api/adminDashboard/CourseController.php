@@ -86,18 +86,20 @@ class CourseController extends BaseController
         if (isset($data['file'])) {
         foreach($data['file'] as $filedata)
     {
+    if($filedata->getClientOriginalName() != null)
+    {
         $file[]=$filedata->getClientOriginalName();
         $fileName=$filedata->getClientOriginalName();
         $filePath = 'files/unitfile/' . str_replace( array( '\'', '"', "" , ' ' ), '', $fileName);
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
-
+    }
  
     }
   }
         $unit= new Unit([
             'title' => $data['title'],
-            'file' =>implode(',',$file),
+            'file' =>count($file)>0? implode(',',$file):null,
             'course_id' => $course->id,
               ]);
 
@@ -303,6 +305,8 @@ class CourseController extends BaseController
         if (isset($data['file'])) {
         foreach($data['file'] as $filedata)
     {
+      if($filedata->getClientOriginalName() != null)
+      {
       $file[]=$filedata->getClientOriginalName();
       $fileName=$filedata->getClientOriginalName();
       $filePath = 'files/unitfile/' . str_replace( array( '\'', '"', "" , ' ' ), '', $fileName);
@@ -310,10 +314,11 @@ class CourseController extends BaseController
       $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
     }
   }
+  }
 
         $unit= new Unit([
             'title' => $data['title'],
-            'file' =>implode(',',$file),
+            'file' =>count($file)>0? implode(',',$file):null,
             'course_id' => $course->id,
               ]);
 
