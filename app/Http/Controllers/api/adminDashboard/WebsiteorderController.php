@@ -31,20 +31,7 @@ class WebsiteorderController extends BaseController
      */
     public function index()
     {
-        $success['count_of_store_order']=Websiteorder::where('is_deleted',0)->where('type','store')->count();
-
-         $array_store = array();
-        $i = date("Y-m");
-        $x = 1;
-        while($x <= 6){
-            $array_store[$i]["store"]= Websiteorder::where('is_deleted',0)->where('type','store')->whereYear('created_at', date('Y', strtotime($i)))->whereMonth('created_at', date('m', strtotime($i)))->count();
-           $i = date("Y-m", strtotime("-1 month", strtotime($i)));
-            $x++;
-        }
-        $success['array_store']= $array_store;
-
-
-
+      
 
         $success['count_of_serivces_order']=Websiteorder::where('is_deleted',0)->where('type','service')->count();
         $success['count_of_Design']=Websiteorder::where('is_deleted',0)->where('type','service')->whereHas('services', function($q){
@@ -193,69 +180,9 @@ class WebsiteorderController extends BaseController
              }
 
 
-           public function acceptStore($websiteorder)
-           {
-            $websiteorder =Websiteorder::query()->where('type','store')->find($websiteorder);
-            if (is_null($websiteorder) || $websiteorder->is_deleted==1){
-                return $this->sendError("الطلب غير موجود","Order is't exists");
-                }
-               $store = Store::query()->find($websiteorder->store_id);
+  
 
-               $websiteorder->update(['status' => 'accept']);
-               $store->update(['confirmation_status' => 'accept']);
-               $users = User::where('store_id', $store->id)->get();
-               $data = [
-                   'message' => ' تم قبول الطلب',
-                   'store_id' => $websiteorder->store_id,
-                   'user_id'=>auth()->user()->id,
-                   'type'=>"accept",
-                   'object_id'=>$websiteorder->store_id
-               ];
-
-               foreach($users as $user)
-               {
-               Notification::send($user, new verificationNotification($data));
-               }
-
-               event(new VerificationEvent($data));
-               $success['store']=New StoreResource($store);
-               $success['status']= 200;
-
-                return $this->sendResponse($success,'تم قبول الطلب بنجاح',' accept successfully');
-
-           }
-
-           public function rejectStore($websiteorder)
-           {
-            $websiteorder =Websiteorder::query()->where('type','store')->find($websiteorder);
-            if (is_null($websiteorder) || $websiteorder->is_deleted==1){
-                return $this->sendError("الطلب غير موجود","Order is't exists");
-                }
-               $store = Store::query()->find($websiteorder->store_id);
-
-               $websiteorder->update(['status' => 'reject']);
-               $store->update(['confirmation_status' => 'reject']);
-               $users = User::where('store_id', $store->id)->get();
-               $data = [
-                   'message' => ' تم رفض الطلب',
-                   'store_id' => $websiteorder->store_id,
-                   'user_id'=>auth()->user()->id,
-                   'type'=>"reject",
-                   'object_id'=>$websiteorder->store_id
-               ];
-
-               foreach($users as $user)
-               {
-               Notification::send($user, new verificationNotification($data));
-               }
-
-               event(new VerificationEvent($data));
-               $success['store']=New StoreResource($store);
-               $success['status']= 200;
-
-                return $this->sendResponse($success,'تم رفض الطلب بنجاح','reject successfully');
-
-           }
+      
 
            public function acceptService($websiteorder)
            {

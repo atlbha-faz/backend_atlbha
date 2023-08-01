@@ -32,7 +32,7 @@ class StoreController extends BaseController
     public function index()
     {
 
-        $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->where('confirmation_status','accept')->get());
+        $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');
@@ -123,7 +123,7 @@ class StoreController extends BaseController
             'periodtype'=>$request->periodtype,
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
-            'confirmation_status' => 'accept',
+           
           ]);
 
           $user->update([
@@ -174,7 +174,7 @@ class StoreController extends BaseController
      */
     public function show($store)
     {
-        $store =Store::query()->where('confirmation_status','accept')->find($store);
+        $store =Store::query()->find($store);
         if (is_null($store) || $store->is_deleted==1){
         return $this->sendError("المتجر غير موجودة","store is't exists");
         }
@@ -326,7 +326,7 @@ class StoreController extends BaseController
 
       public function specialStatus($id)
     {
-        $store = Store::query()->where('confirmation_status','accept')->find($id);
+        $store = Store::query()->find($id);
          if (is_null($store) || $store->is_deleted==1){
          return $this->sendError("المتجر غير موجود","store is't exists");
          }
@@ -356,7 +356,7 @@ class StoreController extends BaseController
       public function changeSatusall(Request $request)
     {
 
-            $stores =Store::whereIn('id',$request->id)->where('confirmation_status','accept')->where('is_deleted',0)->get();
+            $stores =Store::whereIn('id',$request->id)->where('is_deleted',0)->get();
             if(count($stores)>0){
            foreach($stores as $store)
            {
@@ -459,7 +459,7 @@ class StoreController extends BaseController
             'store_name' =>  $request->input('store_name'),
             'link' =>  $request->input('link'),
             'file' =>  $request->input('file'),
-            'confirmation_status'=>"accept"
+           
 
         ]);
 
@@ -478,7 +478,7 @@ class StoreController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $stores =Store::whereIn('id',$request->id)->where('confirmation_status','accept')->where('is_deleted',0)->get();
+            $stores =Store::whereIn('id',$request->id)->where('is_deleted',0)->get();
             if(count($stores)>0){
            foreach($stores as $store)
            {

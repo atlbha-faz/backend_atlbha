@@ -36,16 +36,7 @@ class SubscriptionsResource extends JsonResource
             $periodtype = '6 شهور';
         }
         
-     
-          if($this->confirmation_status ==null || $this->confirmation_status == 'request'){
-            $confirmation_status = 'قيد المعالجة';
-        }elseif($this->confirmation_status == 'pending'){
-            $confirmation_status = 'قيد المعالجة';
-        }elseif($this->confirmation_status == 'accept'){
-            $confirmation_status = 'منتهي';
-        }elseif($this->confirmation_status == 'reject'){
-            $confirmation_status = 'مرفوض';
-        }
+    
         
         
          if($this->verification_status ==null || $this->verification_status == 'pending'){
@@ -71,7 +62,6 @@ class SubscriptionsResource extends JsonResource
        'package_name' => $this->packagee($this->package_id),
        'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
        'verification_status'=>$verification_status,
-       'confirmation_status'=>$confirmation_status,
        'status' => $status,
        'special' => $special ,
        'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
