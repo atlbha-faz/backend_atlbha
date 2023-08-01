@@ -62,7 +62,7 @@ class CourseController extends BaseController
             'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
             'data.*.title'=>'required|string|max:255',
-           'data.*.file.*'=>'mimes:pdf,doc,excel',
+           'data.*.file.*'=>'nullable|mimes:pdf,doc,excel',
             // 'user_id'=>'required|exists:users,id'
         ]);
         if ($validator->fails())
@@ -202,7 +202,7 @@ class CourseController extends BaseController
            'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
           'data.*.video.*'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
           'data.*.title'=>'required|string|max:255',
-         'data.*.file.*'=>'mimes:pdf,doc,excel',
+         'data.*.file.*'=>'nullable|mimes:pdf,doc,excel',
         ]);
 
         if ($validator->fails())
