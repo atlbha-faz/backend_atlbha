@@ -143,54 +143,6 @@ class AuthController extends BaseController
                 // $store->activities()->attach($request->activity_id);
                 $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
 
-                if ($setting->registration_status == "registration_with_admin") {
-                    $store->update([
-                        'confirmation_status' => 'accept']);
-                    $order_number = Websiteorder::orderBy('id', 'desc')->first();
-                    if (is_null($order_number)) {
-                        $number = 0001;
-                    } else {
-
-                        $number = $order_number->order_number;
-                        $number = ((int) $number) + 1;
-                    }
-                    $websiteorder = Websiteorder::create([
-                        'type' => 'store',
-                        'order_number' => str_pad($number, 4, '0', STR_PAD_LEFT),
-                        'store_id' => $store->id,
-                        'status' => 'accept',
-                    ]);
-                } else {
-
-                    $order_number = Websiteorder::orderBy('id', 'desc')->first();
-                    if (is_null($order_number)) {
-                        $number = 0001;
-                    } else {
-
-                        $number = $order_number->order_number;
-                        $number = ((int) $number) + 1;
-                    }
-                    $websiteorder = Websiteorder::create([
-                        'type' => 'store',
-                        'order_number' => str_pad($number, 4, '0', STR_PAD_LEFT),
-                        'store_id' => $store->id,
-                    ]);
-
-                    $storadamins = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->get();
-
-                    $data = [
-                        'message' => 'طلب متجر',
-                        'store_id' => $store->id,
-                        'user_id' => $store->user_id,
-                        'type' => "store_request",
-                        'object_id' => $store->id,
-                    ];
-                    foreach ($storadamins as $storadamin) {
-                        Notification::send($storadamin, new verificationNotification($data));
-                    }
-                    event(new VerificationEvent($data));
-
-                }
 
             } else {
 

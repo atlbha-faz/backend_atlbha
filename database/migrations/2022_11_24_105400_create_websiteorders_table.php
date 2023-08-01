@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('websiteorders', function (Blueprint $table) {
             $table->id();
             $table->string('order_number')->unique();
-            $table->enum('type', ['store', 'service'])->default('store');
+            $table->enum('type', ['store', 'service'])->default('service');
             $table->enum('status',['accept','pending','reject'])->default('pending');
             $table->boolean('is_deleted')->default(0);
               $table->unsignedBigInteger('store_id')->nullable();

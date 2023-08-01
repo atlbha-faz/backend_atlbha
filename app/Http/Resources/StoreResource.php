@@ -34,15 +34,8 @@ class StoreResource extends JsonResource
             $special = 'غير مميز';
         }
         
-          if($this->confirmation_status ==null || $this->confirmation_status == 'request'){
-            $confirmation_status = 'قيد المعالجة';
-        }elseif($this->confirmation_status == 'pending'){
-            $confirmation_status = 'قيد المعالجة';
-        }elseif($this->confirmation_status == 'accept'){
-            $confirmation_status = 'منتهي';
-        }elseif($this->confirmation_status == 'reject'){
-            $confirmation_status = 'مرفوض';
-        }
+   
+        
         
         
          if($this->verification_status ==null || $this->verification_status == 'pending'){
@@ -81,7 +74,6 @@ class StoreResource extends JsonResource
         'left'=>$this->left($this->id),
         'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
         'verification_status'=>$verification_status,
-        'confirmation_status'=>$confirmation_status,
         'verification_date'=>$this->verification_date,
         'status' => $status,
         'special' => $special,

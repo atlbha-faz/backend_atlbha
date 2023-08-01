@@ -38,11 +38,9 @@ return new class extends Migration
             $table->enum('periodtype',['6months','year'])->default('year')->nullable();
             $table->enum('status',['active','not_active'])->default('active');
             $table->enum('commercialregistertype',['commercialregister','maeruf'])->default('commercialregister');
-            $table->timestamp('confirmation_date')->nullable();
             $table->string('link')->nullable();
             $table->boolean('is_deleted')->default(0);
             $table->enum('special',['special','not_special'])->default('not_special');
-            $table->enum('confirmation_status',['request','accept','reject','pending'])->default('request');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('package_id')->nullable();
