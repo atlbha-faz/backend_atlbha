@@ -31,8 +31,8 @@ class Homepage extends Model implements Viewable
 
     public function getLogoAttribute($logo)
     {
-        if (is_null($logo)) {
-            return   asset('assets/media/man.png');
+        if (is_null($logo) || $logo == '') {
+            return   asset('assets/media/logo.svg');
         }
         return asset('storage/images/homepage') . '/' . $logo;
     }
@@ -52,8 +52,8 @@ class Homepage extends Model implements Viewable
 
     public function getLogoFooterAttribute($logo_footer)
     {
-        if (is_null($logo_footer)) {
-            return   asset('assets/media/man.png');
+        if (is_null($logo_footer) || $logo_footer=='') {
+            return   asset('assets/media/logo.svg');
         }
         return asset('storage/images/homepage') . '/' . $logo_footer;
     }
