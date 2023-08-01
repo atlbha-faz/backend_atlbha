@@ -36,7 +36,7 @@ class Unit extends Model
     public function getFileAttribute($file)
     {
         if (is_null($file)) {
-            return   null;
+            return   array();
         }
         $files=explode(',',$file);
         $url=array();
