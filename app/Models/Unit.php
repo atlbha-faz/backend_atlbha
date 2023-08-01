@@ -21,24 +21,30 @@ class Unit extends Model
         return $this->hasMany(Video::class);
     }
 
-       public function setFileAttribute($file)
-    {
-        if (!is_null($file)) {
-            if (gettype($file) != 'string') {
-                $i = $file->store('files/unitfile', 'public');
-                $this->attributes['file'] = $file->hashName();
-            } else {
-                $this->attributes['file'] = $file;
-            }
-        }
-    }
+    //    public function setFileAttribute($file)
+    // {
+    //     if (!is_null($file)) {
+    //         if (gettype($file) != 'string') {
+    //             $i = $file->store('files/unitfile', 'public');
+    //             $this->attributes['file'] = $file->hashName();
+    //         } else {
+    //             $this->attributes['file'] = $file;
+    //         }
+    //     }
+    // }
 
     public function getFileAttribute($file)
     {
         if (is_null($file)) {
-            return   asset('assets/media/man.png');
+            return   null;
         }
-        return asset('storage/files/unitfile') . '/' .str_replace( array( '\'', '"', "" , ' ' ), '', $file);
+        $files=explode(',',$file);
+        $url=array();
+    foreach($files as $file){
+        $url []=  asset('storage/files/unitfile') . '/' .str_replace( array( '\'', '"', "" , ' ' ), '', $file);
+    }
+return  $url;
+       
     }
 
       public function countVideo($unitid)
