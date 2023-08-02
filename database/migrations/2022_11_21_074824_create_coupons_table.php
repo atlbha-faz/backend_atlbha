@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
+            $table->string('code');
             $table->enum('discount_type', ['fixed', 'percent'])->default('percent');
             $table->double('total_price');
             $table->double('discount');
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->timestamps();
+            $table->unique(['code', 'store_id']);
         });
     }
 
