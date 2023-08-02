@@ -49,7 +49,9 @@ class CouponController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'code'=>'required|regex:/^[a-zA-Z0-9]+$/|max:255|unique:coupons',
+            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/','max:255', Rule::unique('coupons')->where(function ($query) {
+                    return $query->where('store_id', null);
+                    })],
             'discount_type'=>'required|in:fixed,percent',
             'discount'=>['required','numeric','gt:0'],
             'start_at' =>['required','date'],
@@ -149,6 +151,7 @@ class CouponController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
+                                         
             'discount_type'=>'required|in:fixed,percent',
             'discount'=>['required','numeric','gt:0'],
             'expire_date' =>['required','date'],
