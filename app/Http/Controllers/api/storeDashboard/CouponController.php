@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Http\Resources\CouponResource;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -50,7 +51,9 @@ class CouponController extends BaseController
         // dd($request->free_shipping);
         $input = $request->all();
         $validator = Validator::make($input, [
-            'code' => 'required|regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/|max:255|unique:coupons',
+            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/','max:255', Rule::unique('coupons')->where(function ($query) {
+                        return $query->where('store_id', auth()->user()->store_id);
+                    })],
             'discount_type' => 'required|in:fixed,percent',
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
@@ -186,7 +189,10 @@ class CouponController extends BaseController
         }
         $input = $request->all();
         $validator = Validator::make($input, [
-            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/', 'unique:coupons,code,' . $coupon->id],
+
+            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/','max:255', Rule::unique('coupons')->where(function ($query) use ($coupon) {
+                        return $query->where('store_id', auth()->user()->store_id)->where('id', '!=', $coupon->id);
+                    })],
             'discount_type' => 'required|in:fixed,percent',
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
