@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use Exception;
 use App\Models\Store;
+use App\Mail\SendMail;
 use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Models\Replaycomment;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\HomepageResource;
 use App\Notifications\emailNotification;
@@ -261,7 +264,12 @@ class CommentController extends BaseController
         $replaycomment =Comment::where('id',$request->comment_id)->where('is_deleted',0)->first();
           if($replaycomment->user != null)
           {
-            Notification::send($replaycomment->user , new emailNotification($data));
+            // Notification::send($replaycomment->user , new emailNotification($data));
+            try {
+                Mail::to($replaycomment->user->email)->send(new SendMail($data));
+            } catch (Exception $e) {
+                return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+            }
           }
          $success['replays']=New ReplaycommentResource($replay);
         $success['status']= 200;
