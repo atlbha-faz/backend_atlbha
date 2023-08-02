@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Http\Resources\CouponResource;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
