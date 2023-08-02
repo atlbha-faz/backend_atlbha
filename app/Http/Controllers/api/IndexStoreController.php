@@ -40,10 +40,19 @@ class IndexStoreController extends BaseController
 
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
             $sliders = array();
-            $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus1', 'active')->pluck('slider1')->first();
-            $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus2', 'active')->pluck('slider2')->first();
-            $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus3', 'active')->pluck('slider3')->first();
-            $success['sliders'] = $sliders;
+            $s1 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus1', 'active')->pluck('slider1')->first();
+             if(!is_null($s1){
+               $sliders[] = $s1;
+               }
+            $s2 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus2', 'active')->pluck('slider2')->first();
+             if(!is_null($s2){
+               $sliders[] = $s2;
+               }
+        $s3 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus3', 'active')->pluck('slider3')->first();
+             if(!is_null($s3){
+               $sliders[] = $s3;
+               }
+        $success['sliders'] = $sliders;
             $banars = array();
             $b1 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus1', 'active')->pluck('banar1')->first();
             if(!is_null($b1){
