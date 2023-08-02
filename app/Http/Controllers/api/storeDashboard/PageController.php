@@ -207,7 +207,7 @@ class PageController extends BaseController
         ]);
         //$request->input('name', []);
         if ($request->pageCategory) {
-            $page->page_categories()->attach($request->pageCategory);
+            $page->page_categories()->sync($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
                 $page->update([
                     'image' => $request->image,
