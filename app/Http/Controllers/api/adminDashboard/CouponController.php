@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use Illuminate\Http\Request;
 use App\Http\Resources\CouponResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class CouponController extends BaseController
