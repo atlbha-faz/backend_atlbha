@@ -45,9 +45,18 @@ class IndexStoreController extends BaseController
             $sliders[] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus3', 'active')->pluck('slider3')->first();
             $success['sliders'] = $sliders;
             $banars = array();
-            $banars[] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus1', 'active')->pluck('banar1')->first();
-            $banars[] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus2', 'active')->pluck('banar2')->first();
-            $banars[] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus3', 'active')->pluck('banar3')->first();
+            $b1 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus1', 'active')->pluck('banar1')->first();
+            if(!is_null($b1){
+               $banars[] = $b1;
+               }
+            $b2 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus2', 'active')->pluck('banar2')->first();
+         if(!is_null($b2){
+               $banars[] = $b2;
+               }
+            $b3 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus3', 'active')->pluck('banar3')->first();
+         if(!is_null($b3){
+               $banars[] = $b3;
+               }
             $success['banars'] = $banars;
             //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
 
