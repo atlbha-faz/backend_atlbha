@@ -175,13 +175,13 @@ class IndexStoreController extends BaseController
                 //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
 
                 // special products
-                $products = ProductResource::collection(Product::where('is_deleted', 0)->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store_id)->get());
+                $specialproducts = ProductResource::collection(Product::where('is_deleted', 0)->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store_id)->get());
 
                 $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('products.special', 'special')->orderBy('products.created_at', 'desc')
                     ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
                 $imports = importsResource::collection($import);
 
-                $success['specialProducts'] = $products->merge($imports);
+                $success['specialProducts'] = $specialproducts->merge($imports);
 
                 ///////////////////////////
                 $success['categoriesHaveSpecial'] = Category::where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->with('products')->has('products')->whereHas('products', function ($query) {
@@ -195,20 +195,18 @@ class IndexStoreController extends BaseController
                 $orders = DB::table('order_items')->where('order_status', 'completed')->join('products', 'order_items.product_id', '=', 'products.id')->where('order_items.store_id', $store_id)->where('products.is_deleted', 0)
                     ->select('products.id', DB::raw('sum(order_items.quantity) as count'))
                     ->groupBy('order_items.product_id')->orderBy('count', 'desc')->get();
-
+                    $moreSalesImports=array();
                 foreach ($orders as $order) {
                     $import = Importproduct::where('product_id', $order->id)->where('store_id', $store_id)->first();
-                    if (is_null($import)) {
                         $arr1[] = Product::find($order->id);
-                        $products = ProductResource::collection($arr1);
-                    } else {
-                        $arr2[] = Product::find($order->id);
-                        $imports = importsResource::collection($arr2);
-
+                        if (!is_null($import)) {
+                        $arr2[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $order->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
+                        ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);;
+                        $moreSalesImports = importsResource::collection($arr2);
                     }
-
                 }
-                $success['moreSales'] = $products->merge($imports);
+                $products = ProductResource::collection($arr1);
+                $success['moreSales'] = $products->merge($moreSalesImports);
                 // resent arrivede
 
                 $oneWeekAgo = Carbon::now()->subWeek();
@@ -266,9 +264,10 @@ class IndexStoreController extends BaseController
                 // $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
 
                 $arr = array();
-                $orders = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', $store_id)->join('products', 'comments.product_id', '=', 'products.id')->where('products.is_deleted', 0)
+                $ratings = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', $store_id)->join('products', 'comments.product_id', '=', 'products.id')->where('products.is_deleted', 0)
                     ->select('products.id', 'comments.rateing')->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->take(3)->get();
-                foreach ($orders as $order) {$arr[] = Product::find($order->id);}
+                    
+                foreach ($ratings as $rating) {$arr[] = Product::find($rating->id);}
                 $success['productsRatings'] = ProductResource::collection($arr);
                 //   $success['productsRatings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
                 $productsCategories = Product::where('store_id', $store_id)->whereHas('category', function ($query) {
@@ -310,16 +309,16 @@ class IndexStoreController extends BaseController
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
-                $arr = array();
+                $verificayion_arr = array();
                 if ($store->verification_status == 'accept') {
                     if ($store->commercialregistertype == 'maeruf') {
-                        $arr['link'] = $store->link;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
+                        $verificayion_arr['link'] = $store->link;
+                        $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
-                        $arr['link'] = null;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                        $verificayion_arr['link'] = null;
+                        $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
                     }
-                    $verificayionMethod = $arr;
+                    $verificayionMethod = $verificayion_arr;
                 } else {
                     $verificayionMethod = null;
                 }
