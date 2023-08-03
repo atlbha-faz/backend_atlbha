@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CouponResource;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
-use App\Http\Resources\CouponResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class CouponController extends BaseController
 {
@@ -24,10 +24,10 @@ class CouponController extends BaseController
      */
     public function index()
     {
-        $success['coupons']=CouponResource::collection(Coupon::where('is_deleted',0)->where('store_id',null)->get());
-        $success['status']= 200;
+        $success['coupons'] = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', null)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع جميع الكوبونات بنجاح','coupons return successfully');
+        return $this->sendResponse($success, 'تم ارجاع جميع الكوبونات بنجاح', 'coupons return successfully');
     }
 
     /**
@@ -49,20 +49,20 @@ class CouponController extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/','max:255', Rule::unique('coupons')->where(function ($query) {
+        $validator = Validator::make($input, [
+            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/', 'max:255',
+                Rule::unique('coupons')->where(function ($query) {
                     return $query->where('store_id', null);
-                    })],
-            'discount_type'=>'required|in:fixed,percent',
-            'discount'=>['required','numeric','gt:0'],
-            'start_at' =>['required','date'],
-            'expire_date' =>['required','date'],
-            'total_redemptions'=>['required','numeric'],
+                })->where('is_deleted', 0)],
+            'discount_type' => 'required|in:fixed,percent',
+            'discount' => ['required', 'numeric', 'gt:0'],
+            'start_at' => ['required', 'date'],
+            'expire_date' => ['required', 'date'],
+            'total_redemptions' => ['required', 'numeric'],
 
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
         $coupon = Coupon::create([
             'code' => $request->code,
@@ -72,14 +72,13 @@ class CouponController extends BaseController
             'expire_date' => $request->expire_date,
             'total_redemptions' => $request->total_redemptions,
             'store_id' => null,
-          ]);
+        ]);
 
-         $success['coupons']=New CouponResource($coupon);
-        $success['status']= 200;
+        $success['coupons'] = new CouponResource($coupon);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم إضافة الكوبون بنجاح','Coupon Added successfully');
+        return $this->sendResponse($success, 'تم إضافة الكوبون بنجاح', 'Coupon Added successfully');
     }
-
 
     /**
      * Display the specified resource.
@@ -87,7 +86,6 @@ class CouponController extends BaseController
      * @param  \App\Models\Coupon  $country
      * @return \Illuminate\Http\Response
      */
-
 
     /**
      * Display the specified resource.
@@ -97,34 +95,32 @@ class CouponController extends BaseController
      */
     public function show($coupon)
     {
-        $coupon = Coupon::where('store_id',null)->where('id',$coupon)->first();
-        if (is_null($coupon ) || $coupon->is_deleted==1){
-               return $this->sendError("الكوبون غير موجودة","Coupon is't exists");
-               }
-              $success['Coupons']=New CouponResource($coupon);
-              $success['status']= 200;
+        $coupon = Coupon::where('store_id', null)->where('id', $coupon)->first();
+        if (is_null($coupon) || $coupon->is_deleted == 1) {
+            return $this->sendError("الكوبون غير موجودة", "Coupon is't exists");
+        }
+        $success['Coupons'] = new CouponResource($coupon);
+        $success['status'] = 200;
 
-               return $this->sendResponse($success,'تم  عرض بنجاح','coupon showed successfully');
+        return $this->sendResponse($success, 'تم  عرض بنجاح', 'coupon showed successfully');
 
-          }
+    }
 
-           public function changeStatus($id)
-          {
-              $coupon = Coupon::where('store_id',null)->where('id',$id)->first();
-              if (is_null($coupon ) || $coupon->is_deleted==1){
-               return $this->sendError("الكوبون غير موجودة","coupon is't exists");
-               }
-              if($coupon->status === 'active'){
-           $coupon->update(['status' => 'not_active']);
-           }
-          else{
-              $coupon->update(['status' => 'active']);
-          }
-              $success['coupons']=New CouponResource($coupon);
-              $success['status']= 200;
-               return $this->sendResponse($success,'تم تعدبل حالة الكوبون بنجاح','coupon status updared successfully');
-          }
-
+    public function changeStatus($id)
+    {
+        $coupon = Coupon::where('store_id', null)->where('id', $id)->first();
+        if (is_null($coupon) || $coupon->is_deleted == 1) {
+            return $this->sendError("الكوبون غير موجودة", "coupon is't exists");
+        }
+        if ($coupon->status === 'active') {
+            $coupon->update(['status' => 'not_active']);
+        } else {
+            $coupon->update(['status' => 'active']);
+        }
+        $success['coupons'] = new CouponResource($coupon);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم تعدبل حالة الكوبون بنجاح', 'coupon status updared successfully');
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -144,40 +140,39 @@ class CouponController extends BaseController
      * @param  \App\Models\Coupon  $coupon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,  $coupon)
+    public function update(Request $request, $coupon)
     {
-        $coupon =  Coupon::where('id', $coupon)->first();
-        if (is_null($coupon ) || $coupon->is_deleted==1 || $coupon->store_id != null){
-            return $this->sendError("الكوبون غير موجودة"," coupon is't exists");
-       }
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
-                                         
-            'discount_type'=>'required|in:fixed,percent',
-            'discount'=>['required','numeric','gt:0'],
-            'expire_date' =>['required','date'],
-            'start_at' =>['required','date'],
-            'total_redemptions'=>['required','numeric'],
+        $coupon = Coupon::where('id', $coupon)->first();
+        if (is_null($coupon) || $coupon->is_deleted == 1 || $coupon->store_id != null) {
+            return $this->sendError("الكوبون غير موجودة", " coupon is't exists");
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
 
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $coupon->update([
-               'discount_type' => $request->input('discount_type'),
-               'discount' => $request->input('discount'),
-               'start_at' => $request->input('start_at'),
-               'expire_date' => $request->input('expire_date'),
-               'total_redemptions' => $request->input('total_redemptions'),
-               'store_id' => null,
-           ]);
+            'discount_type' => 'required|in:fixed,percent',
+            'discount' => ['required', 'numeric', 'gt:0'],
+            'expire_date' => ['required', 'date'],
+            'start_at' => ['required', 'date'],
+            'total_redemptions' => ['required', 'numeric'],
 
-           $success['coupons']=New CouponResource($coupon);
-           $success['status']= 200;
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+        $coupon->update([
+            'discount_type' => $request->input('discount_type'),
+            'discount' => $request->input('discount'),
+            'start_at' => $request->input('start_at'),
+            'expire_date' => $request->input('expire_date'),
+            'total_redemptions' => $request->input('total_redemptions'),
+            'store_id' => null,
+        ]);
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','coupon updated successfully');
+        $success['coupons'] = new CouponResource($coupon);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'coupon updated successfully');
     }
 
     /**
@@ -188,68 +183,62 @@ class CouponController extends BaseController
      */
     public function destroy($coupon)
     {
-        $coupon =  Coupon::where('store_id',null)->where('id',$coupon)->first();
-        if (is_null($coupon ) || $coupon->is_deleted==1){
-            return $this->sendError("الكوبون غير موجودة","coupon is't exists");
-            }
-           $coupon->update(['is_deleted' => 1]);
+        $coupon = Coupon::where('store_id', null)->where('id', $coupon)->first();
+        if (is_null($coupon) || $coupon->is_deleted == 1) {
+            return $this->sendError("الكوبون غير موجودة", "coupon is't exists");
+        }
+        $coupon->update(['is_deleted' => 1]);
 
-           $success['coupons']=New couponResource($coupon);
-           $success['status']= 200;
+        $success['coupons'] = new couponResource($coupon);
+        $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم حذف الكوبون بنجاح','coupon deleted successfully');
+        return $this->sendResponse($success, 'تم حذف الكوبون بنجاح', 'coupon deleted successfully');
     }
-      public function deleteall(Request $request)
+    public function deleteall(Request $request)
     {
 
-            $coupons =Coupon::where('store_id',null)->whereIn('id',$request->id)->where('is_deleted',0)->get();
-            if(count($coupons)>0){
-           foreach($coupons as $coupon)
-           {
-            
-             $coupon->update(['is_deleted' => 1]);
-            $success['coupons']=New CouponResource($coupon);
+        $coupons = Coupon::where('store_id', null)->whereIn('id', $request->id)->where('is_deleted', 0)->get();
+        if (count($coupons) > 0) {
+            foreach ($coupons as $coupon) {
+
+                $coupon->update(['is_deleted' => 1]);
+                $success['coupons'] = new CouponResource($coupon);
 
             }
 
-           $success['status']= 200;
+            $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم حذف الكوبون بنجاح','coupon deleted successfully');
-            }
-            else{
-                $success['status']= 200;
-             return $this->sendResponse($success,'المدخلات غير موجودة','id is not exit');
-              }
-
-        
+            return $this->sendResponse($success, 'تم حذف الكوبون بنجاح', 'coupon deleted successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غير موجودة', 'id is not exit');
         }
 
-       public function changeSatusall(Request $request)
-            {
+    }
 
-                    $coupons =Coupon::where('store_id',null)->whereIn('id',$request->id)->where('is_deleted',0)->get();
-                    if(count($coupons)>0){
-                foreach($coupons as $coupon)
-                {
-                    
-                    if($coupon->status === 'active'){
-                $coupon->update(['status' => 'not_active']);
-                }
-                else{
-                $coupon->update(['status' => 'active']);
-                }
-                $success['coupons']= New CouponResource($coupon);
+    public function changeSatusall(Request $request)
+    {
 
-                    }
-                    $success['status']= 200;
+        $coupons = Coupon::where('store_id', null)->whereIn('id', $request->id)->where('is_deleted', 0)->get();
+        if (count($coupons) > 0) {
+            foreach ($coupons as $coupon) {
 
-                return $this->sendResponse($success,'تم تعديل حالة الكوبون بنجاح','coupon updated successfully');
+                if ($coupon->status === 'active') {
+                    $coupon->update(['status' => 'not_active']);
+                } else {
+                    $coupon->update(['status' => 'active']);
                 }
-                else{
-                    $success['status']= 200;
-                return $this->sendResponse($success,'الكوبون غير صحيحة','coupon does not exit');
-                }
-    
+                $success['coupons'] = new CouponResource($coupon);
+
             }
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم تعديل حالة الكوبون بنجاح', 'coupon updated successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'الكوبون غير صحيحة', 'coupon does not exit');
+        }
+
+    }
 
 }
