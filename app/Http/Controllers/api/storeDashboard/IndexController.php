@@ -28,8 +28,9 @@ class IndexController extends BaseController
     public function index()
       {
         $success['visits']=10;
-        $success['customers']=User::where('user_type', 'customer')->where('store_id', auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->where('verified',1)->count();
-
+        $success['orders_count']=Order::whereHas('items', function($q){
+          $q->where('store_id',auth()->user()->store_id);
+      })->count();
         $success['sales']=DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->sum('total_price');
           $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count();
 
