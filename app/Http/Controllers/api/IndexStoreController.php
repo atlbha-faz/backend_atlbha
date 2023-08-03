@@ -234,11 +234,13 @@ class IndexStoreController extends BaseController
                     $moreSalesImports=array();
                 foreach ($orders as $order) {
                     $import = Importproduct::where('product_id', $order->id)->where('store_id', $store_id)->first();
-                        $arr1[] = Product::find($order->id);
                         if (!is_null($import)) {
                         $arr2[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $order->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
-                        ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);;
+                        ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);;
                         $moreSalesImports = importsResource::collection($arr2);
+                    }
+                    else{
+                        $arr1[] = Product::find($order->id);
                     }
                 }
                 $products = ProductResource::collection($arr1);
@@ -299,11 +301,25 @@ class IndexStoreController extends BaseController
                 // $success['productsOffers']=Offer::where('is_deleted',0)->where('store_id',$id)->with('products')->has('products')->get();
 
                 $arr = array();
+                $ratingsimport=array();
+                $ratingsImports=array();
                 $ratings = DB::table('comments')->where('comments.is_deleted', 0)->where('comments.store_id', $store_id)->join('products', 'comments.product_id', '=', 'products.id')->where('products.is_deleted', 0)
                     ->select('products.id', 'comments.rateing')->groupBy('comments.product_id')->orderBy('comments.rateing', 'desc')->take(3)->get();
 
-                foreach ($ratings as $rating) {$arr[] = Product::find($rating->id);}
-                $success['productsRatings'] = ProductResource::collection($arr);
+                foreach ($ratings as $rating) {
+            $importing = Importproduct::where('product_id', $rating->id)->where('store_id', $store_id)->first();
+                    if (!is_null($importing)) {
+                        $ratingsimport[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $rating->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
+                        ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden([ 'selling_price', 'store_id']); 
+                         $ratingsImports= importsResource::collection($ratingsimport);
+                    }
+                    else{
+                        $arr[] = Product::find($rating->id);
+                    }
+                    
+                }
+           
+                $success['productsRatings'] = ProductResource::collection($arr)->merge($ratingsImports);
                 //   $success['productsRatings']=Comment::where('is_deleted',0)->where('store_id',$id)->orderBy('rateing', 'DESC')->with('product')->has('product')->take(3)->get();
                 $productsCategories = Product::where('store_id', $store_id)->whereHas('category', function ($query) {
                     $query->where('is_deleted', 0);
