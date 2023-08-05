@@ -176,6 +176,6 @@ class WebsiteSocialmediaController extends BaseController
            $success['website_socialmedia']=New website_socialmediaResource($website_socialmedia);
            $success['status']= 200;
 
-            return $this->sendResponse($success,'تم حذف وسائل بنجاح','website_socialmedia deleted successfully');
+            return $this->sendResponse($success,'تم حذف وسائل التواصل بنجاح','website_socialmedia deleted successfully');
     }
 }

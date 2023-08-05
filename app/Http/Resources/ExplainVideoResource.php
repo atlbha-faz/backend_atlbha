@@ -27,7 +27,7 @@ class ExplainVideoResource extends JsonResource
             'thumbnail' => $this->thumbnail,
             'duration' => $this->duration,
             'status' => $status,
-            'url'=> "https://store.atlbha.com/Academy",
+            'url'=> "https://store.atlbha.com/Academy/ExplainDetails/".$this->id,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

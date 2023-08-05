@@ -39,7 +39,7 @@ class CommentController extends BaseController
         foreach($products as $product ){
             $product_id[]= $product->id;
         }
-        $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->whereIn('product_id',$product_id)->get());
+        $success['comment_of_products']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','product')->where('store_id',auth()->user()->store_id)->get());
         $success['commentActivation']=Homepage::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->pluck('commentstatus')->first();
 
         $success['status']= 200;
