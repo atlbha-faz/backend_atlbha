@@ -49,7 +49,7 @@ class VerificationController extends BaseController
         $validator = Validator::make($input, [
             'activity_id' => 'required|array',
             'commercialregistertype' => 'required|in:commercialregister,maeruf',
-            'store_name' => 'required_if:commercialregistertype,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
+            'store_name' => 'required|unique:stores,store_name,' . auth()->user()->store_id,
             'city_id' => 'required',
             'link' => 'required_if:commercialregistertype,maeruf',
             'file' => 'required|mimes:pdf',
@@ -86,12 +86,11 @@ class VerificationController extends BaseController
             'file' => $request->file,
             'phonenumber' => $request->input('phonenumber'),
             'verification_status' => "admin_waiting",
-            'verification_date'=>  $date 
+            'verification_date'=>  $date ,
+            'store_name' => $request->input('store_name')
 
         ]);
-        if ($store->commercialregistertype == "commercialregister") {
-            $store->update(['store_name' => $request->input('store_name')]);
-        }
+      
 
         $store->activities()->sync($request->activity_id);
 
