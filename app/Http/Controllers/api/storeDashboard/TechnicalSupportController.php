@@ -147,25 +147,24 @@ class TechnicalSupportController extends BaseController
     //         return $this->sendResponse($success,'تم التعديل بنجاح','technical Support updated successfully');
     //     }
 
-    //      public function changeStatus($id)
-    // {
-    //     $technicalSupport = TechnicalSupport::query()->find($id);
-    //      if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
-    //      return $this->sendError("طلب الدعم غير موجود","technical Support is't exists");
-    //      }
+    public function changeStatus($id)
+    {
+        $technicalSupport = TechnicalSupport::query()->find($id);
+        if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1) {
+            return $this->sendError("طلب الدعم غير موجود", "technical Support is't exists");
+        }
 
-    //     if($technicalSupport->status === 'active'){
-    //     $technicalSupport->update(['status' => 'not_active']);
-    //     }
-    //     else{
-    //     $technicalSupport->update(['status' => 'active']);
-    //     }
-    //     $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
-    //     $success['status']= 200;
+        if ($technicalSupport->supportstatus === 'not_finished') {
+            $technicalSupport->update(['supportstatus' => 'finished']);
+        } else {
+            $technicalSupport->update(['supportstatus' => 'not_finished']);
+        }
+        $success['technicalSupports'] = new TechnicalSupportResource($technicalSupport);
+        $success['status'] = 200;
 
-    //      return $this->sendResponse($success,'تم تعديل حالة طلب الدعم بنجاح','technical Support updated successfully');
+        return $this->sendResponse($success, 'تم تعديل حالة طلب الدعم بنجاح', 'technical Support updated successfully');
 
-    // }
+    }
 
     /**
      * Remove the specified resource from storage.
