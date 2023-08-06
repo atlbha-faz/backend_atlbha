@@ -27,12 +27,11 @@ class VerificationController extends BaseController
 
         // $success['activity']=Store::where('store_id',auth()->user()->store_id)->activities->first();
         $type = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('commercialregistertype')->first();
-        if ($type == 'maeruf') {
+    
             $success['name'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('store_name')->first();
             $success['city'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('city_id')->first();
 
-        } elseif ($type == 'commercialregister') {
-            $success['city'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('city_id')->first();
+     if ($type == 'maeruf') {
             $success['link'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('link')->first();
         }
         $success['file'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('file')->first();
