@@ -55,7 +55,6 @@ Route::middleware([SetActiveStore::class])->group(function () {
     Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
 });
 
-
 Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('indexStore', [App\Http\Controllers\api\IndexStoreController2::class, 'index']);
 });
@@ -74,6 +73,7 @@ Route::group([
     'middleware' => 'auth:api',
 ], function () {
     Route::post('addComment/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'addComment']);
+    Route::post('addContact', [App\Http\Controllers\api\IndexStoreController::class, 'addContact']);
 });
 // visit count
 Route::post('storeClientVisit', [App\Http\Controllers\api\VisitCountController::class, 'storeClientVisit']);
@@ -200,7 +200,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotification']);
         Route::get('NotificationDeleteAll', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotificationAll']);
         Route::get('NotificationShow/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'show']);
-         Route::post('addEmail', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'addEmail']);
+        Route::post('addEmail', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'addEmail']);
         Route::post('addAlert', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'addAlert']);
 
         Route::get('EmailIndex', [App\Http\Controllers\api\adminDashboard\EmailController::class, 'index']);
@@ -216,21 +216,18 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class);
 
+        Route::resource('category', App\Http\Controllers\api\adminDashboard\CategoryController::class);
+        Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
+        Route::post('addvideo', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'addvideo']);
+        Route::get('deletevideo/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deletevideo']);
 
+        Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class);
 
-Route::resource('category',App\Http\Controllers\api\adminDashboard\CategoryController::class);
-Route::resource('storecategory',App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
-Route::post('addvideo',[App\Http\Controllers\api\adminDashboard\CourseController::class,'addvideo']);
-Route::get('deletevideo/{id}',[App\Http\Controllers\api\adminDashboard\CourseController::class,'deletevideo']);
-
-
-Route::resource('course',App\Http\Controllers\api\adminDashboard\CourseController::class);
-
-Route::resource('shippingtype',App\Http\Controllers\api\adminDashboard\ShippingtypeController::class);
-Route::resource('paymenttype',App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);
-Route::resource('comment',App\Http\Controllers\api\adminDashboard\CommentController::class);
-Route::get('commentchangeSatusall',[App\Http\Controllers\api\adminDashboard\CommentController::class,'changeSatusall']);
-Route::get('commentdeleteall',[App\Http\Controllers\api\adminDashboard\CommentController::class,'deleteall']);
+        Route::resource('shippingtype', App\Http\Controllers\api\adminDashboard\ShippingtypeController::class);
+        Route::resource('paymenttype', App\Http\Controllers\api\adminDashboard\PaymenttypeController::class);
+        Route::resource('comment', App\Http\Controllers\api\adminDashboard\CommentController::class);
+        Route::get('commentchangeSatusall', [App\Http\Controllers\api\adminDashboard\CommentController::class, 'changeSatusall']);
+        Route::get('commentdeleteall', [App\Http\Controllers\api\adminDashboard\CommentController::class, 'deleteall']);
 
         Route::resource('page', App\Http\Controllers\api\adminDashboard\PageController::class);
 //Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\PageController::class,"relatedPage"]);
@@ -421,6 +418,7 @@ Route::middleware([StoreUser::class])->group(function () {
 // Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
         Route::resource('technicalSupport', App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class);
         Route::get('technicalSupportStoredeleteall', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'deleteall']);
+        Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'changeStatus']);
 // Shipping company
         Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'changeStatus']);
         Route::resource('shippingtype', App\Http\Controllers\api\storeDashboard\ShippingtypeController::class);
