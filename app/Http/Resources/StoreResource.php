@@ -56,6 +56,7 @@ class StoreResource extends JsonResource
         'store_email'=>$this->store_email,
         'icon' =>$this->icon,
         'description'=>$this->description,
+        'store_address'=>$this->store_address,
         'business_license'=>$this->business_license,
         'ID_file' =>$this->ID_file,
         'link' =>$this->link,

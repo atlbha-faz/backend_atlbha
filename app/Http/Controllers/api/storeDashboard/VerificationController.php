@@ -49,7 +49,7 @@ class VerificationController extends BaseController
         $validator = Validator::make($input, [
             'activity_id' => 'required|array',
             'commercialregistertype' => 'required|in:commercialregister,maeruf',
-            'store_name' => 'required_if:commercialregistertype,commercialregister',
+            'store_name' => 'required_if:commercialregistertype,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
             'city_id' => 'required',
             'link' => 'required_if:commercialregistertype,maeruf',
             'file' => 'required|mimes:pdf',
