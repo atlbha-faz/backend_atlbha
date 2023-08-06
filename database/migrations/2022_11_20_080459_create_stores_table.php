@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('store_email')->unique()->nullable();
             $table->string('domain')->unique()->nullable();
             $table->string('icon')->nullable();
+            $table->string('store_address')->nullable();
             $table->string('phonenumber')->nullable();
             $table->string('description')->nullable();
             $table->string('file')->nullable();

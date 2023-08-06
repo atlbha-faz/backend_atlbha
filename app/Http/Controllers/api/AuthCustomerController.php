@@ -103,7 +103,7 @@ class AuthCustomerController extends BaseController
             Mail::to($user->email)->send(new SendCode($data));
 
         } else {
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->where('user_type', 'customer')->where('is_deleted', 0)->first();
 
             $user->generateVerifyCode();
             $request->code = $user->verify_code;

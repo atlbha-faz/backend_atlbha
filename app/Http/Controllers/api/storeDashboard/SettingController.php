@@ -31,6 +31,7 @@ class SettingController extends BaseController
             'icon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'description' => 'required|string',
+            'store_address' => 'nullable|string',
             'domain' => 'required|string|unique:stores,domain,' . auth()->user()->store_id,
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
@@ -50,6 +51,7 @@ class SettingController extends BaseController
             'country_id' => $request->input('country_id'),
             'city_id' => $request->input('city_id'),
             'store_email' => $request->input('store_email'),
+            'store_address' => $request->input('store_address'),
             'phonenumber' => $request->input('phonenumber'),
         ]);
         $success['storeSetting'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
