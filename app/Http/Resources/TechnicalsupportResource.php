@@ -14,44 +14,42 @@ class TechnicalsupportResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
+        if ($this->status == null || $this->status == 'active') {
             $status = 'نشط';
-        }else{
+        } else {
             $status = 'غير نشط';
         }
-        
-      
-          if($this->supportstatus ==null || $this->supportstatus == 'pending'){
+
+        if ($this->supportstatus == null || $this->supportstatus == 'pending') {
             $supportstatus = 'قيد المعالجة';
-        }elseif($this->supportstatus == 'finished'){
+        } elseif ($this->supportstatus == 'finished') {
             $supportstatus = 'منتهية';
-        }elseif($this->supportstatus == 'not_finished'){
+        } elseif ($this->supportstatus == 'not_finished') {
             $supportstatus = 'غير منتهية';
         }
-        
-        
-        
-          if($this->type ==null || $this->type == 'enquiry'){
+
+        if ($this->type == null || $this->type == 'enquiry') {
             $type = 'استفسار';
-        }elseif($this->type == 'complaint'){
+        } elseif ($this->type == 'complaint') {
             $type = 'شكوى';
-        }elseif($this->type == 'suggestion'){
+        } elseif ($this->type == 'suggestion') {
             $type = 'اقتراح';
         }
-        
-        
-         return [
-            'id' =>$this->id,
-            'title'=>$this->title,
-            'phonenumber' =>$this->phonenumber,
-            'content' =>$this->content,
-            'type'=>$type,
-            'supportstatus'=>$supportstatus,
+
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'phonenumber' => $this->user->phonenumber,
+            'name' => $this->user->name,
+            'content' => $this->content,
+            'type' => $type,
+            'supportstatus' => $supportstatus,
             'status' => $status,
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
-           'updated_at' => (string) $this->updated_at,
-            'store' => New StoreResource($this->store)
+            'updated_at' => (string) $this->updated_at,
+            'store' => new StoreResource($this->store),
+            'user' => new UserResource($this->user),
 
         ];
     }

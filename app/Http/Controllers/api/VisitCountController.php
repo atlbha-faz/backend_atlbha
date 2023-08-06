@@ -30,15 +30,16 @@ class VisitCountController extends BaseController
         );
 
         $rows1 = $analyticsData3->rows;
+if( $rows1 != null){foreach ($rows1 as $row) {
+    $country = $row[0];
+    $city = $row[1];
+    $platform = $row[2];
+    $deviceCategory = $row[3];
 
-        foreach ($rows1 as $row) {
-            $country = $row[0];
-            $city = $row[1];
-            $platform = $row[2];
-            $deviceCategory = $row[3];
+    // Do something with the country, city, platform, and device type
+}
+}
 
-            // Do something with the country, city, platform, and device type
-        }
 
         $data1 = \Analytics::performQuery(
             Period::months(12),
@@ -50,7 +51,7 @@ class VisitCountController extends BaseController
         );
 
         $rows = $data1->rows;
-
+if($rows != null){
         $totalUsers = array_sum(array_column($rows, 1));
 
         $averages = [];
@@ -70,11 +71,11 @@ class VisitCountController extends BaseController
                 'averageUsers' => $averageUsers,
             ];
         }
-
+    }
         $success['analyticsData'] = $analyticsData;
         $success['analyticsData1'] = $analyticsData1;
         $success['analyticsData3'] = $rows1;
-        $success['averages'] = $averages;
+        // $success['averages'] = $averages;
 
         $success['status'] = 200;
 
