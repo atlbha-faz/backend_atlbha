@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Seeders\DaySeeder;
 use Illuminate\Database\Seeder;
 use Database\Seeders\NotificationSeeder;
 
@@ -75,6 +76,7 @@ class DatabaseSeeder extends Seeder
             //  PermissionTableSeeder::class,
 
             NewSeeder::class,
+            DaySeeder::class,
         ]);
 
 

@@ -17,7 +17,7 @@ class Store extends Model
     use HasFactory;
      protected $fillable = ['store_name','store_email','domain','slug','icon','description','business_license','phonenumber','commercialregistertype','link','verification_status','store_address',
      'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period','verification_date',
-     'periodtype','special','file','tiktok','status','is_deleted'];
+     'periodtype','special','file','tiktok','working_status','status','is_deleted'];
 
     public function rate($id)
     {
@@ -71,13 +71,31 @@ class Store extends Model
     public function packages()
     {
         return $this->belongsToMany(
-            Store::class,
+            Package::class,
             'packages_stores',
             'store_id',
             'package_id'
 
         );
     }
+    public function days()
+    {
+        return $this->belongsToMany(
+            Day::class,
+            'days_stores',
+            'store_id',
+            'day_id'
+
+        );
+    }
+    public function daystore()
+    {
+        return $this->hasMany(
+            Day_Store::class
+
+        );
+    }
+
     public function left($id)
     {  $store= Store::where('id', $id)->first();
         if($store->package_id == null){
