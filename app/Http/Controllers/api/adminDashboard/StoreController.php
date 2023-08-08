@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Events\VerificationEvent;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\NoteResource;
@@ -57,17 +58,23 @@ class StoreController extends BaseController
      */
     public function store(Request $request)
       {
+
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'user_name'=>'required|string|max:255',
             'store_name'=>'required|string|max:255',
-            'email'=>'required|email|unique:users',
-            'store_email'=>'required|email|unique:stores',
+            'email'=>['required','email',Rule::unique('users')->where(function ($query) {
+              return $query->whereIn('user_type', ['store', 'store_employee']);
+          })],
+            'store_email'=>'required|email|unique:stores,store_email',
             'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
-            'domain'=>'required|string|unique:stores',
-            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'domain'=>'required|string|unique:stores,domain',
+            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',Rule::unique('users','phonenumber')->where(function ($query) {
+              return $query->whereIn('user_type', ['store', 'store_employee']);
+          })],
+
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:stores,phonenumber'],
             'activity_id' =>'required|array',
             'package_id' =>'required',
             'country_id'=>'required|exists:countries,id',
@@ -219,12 +226,18 @@ class StoreController extends BaseController
             'name'=>'required|string|max:255',
             'user_name'=>'required|string|max:255',
             'store_name'=>'required|string|max:255',
-            'email'=>'required|email',
-            'store_email'=>'required|email',
+            'email'=>['required','email',Rule::unique('users')->where(function ($query) use ($user) {
+              return $query->whereIn('user_type', ['store', 'store_employee'])
+                  ->where('id', '!=', $store->user->id);
+          }),],
+            'store_email'=>'required|email|unique:stores,store_email,' . $store->id,
              'password'=>'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
             'domain'=>'required|string|unique:stores,domain,' . $store->id,
-            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'userphonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',Rule::unique('users','phonenumber')->where(function ($query) use ($user) {
+              return $query->whereIn('user_type', ['store', 'store_employee'])
+                  ->where('id', '!=', $store->user->id);
+          }),],
+            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:stores,phonenumber,' . $store->id],
             'package_id' =>'required',
              'activity_id' =>'required|array',
             'country_id'=>'required|exists:countries,id',
