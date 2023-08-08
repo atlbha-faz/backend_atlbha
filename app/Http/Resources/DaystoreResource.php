@@ -15,7 +15,7 @@ class DaystoreResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' =>$this->id,
+            //'id' =>$this->id,
             'day' => new DayResource($this->day),
             'from' => $this->from,
             'to' => $this->to,
