@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Models\Product;
+
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StoreResource extends JsonResource
@@ -32,6 +34,35 @@ class StoreResource extends JsonResource
             $special = 'مميز';
         }else{
             $special = 'غير مميز';
+        }
+        
+        if($this->working_status == 'not_active'){
+            foreach(\App\Models\Day::get() as $day){
+                   if($day->name =="Friday"){
+                   $daystore[] = (object) [
+            'day' => new DayResource($day),
+            'from' => null,
+            'to' => null,
+            'status' => 'not_active'
+            ];
+
+                }else{
+                    
+                      $daystore[] = (object) [
+            'day' => new DayResource($day),
+            'from' => '8:00:00',
+            'to' => '22:00:00',
+            'status' => 'active'
+            ];
+            
+            }
+            
+               
+            }
+            
+
+        }else{
+            $daystore = $this->daystore;
         }
         
    
@@ -83,7 +114,7 @@ class StoreResource extends JsonResource
              'package' =>$this->packagee($this->package_id),
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'working_status'=>$this->working_status,
-        'workDays'=>DaystoreResource::collection($this->daystore)
+        'workDays'=>DaystoreResource::collection($daystore)
     ];
     }
 }
