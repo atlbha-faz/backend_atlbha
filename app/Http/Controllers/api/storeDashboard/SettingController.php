@@ -40,7 +40,7 @@ class SettingController extends BaseController
             'city_id' => 'required|exists:cities,id',
             'store_email' => 'required|email|unique:stores,store_email,' . auth()->user()->store_id,
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:stores,store_email,' . auth()->user()->store_id],
-            'workstatus'=>'in:active,not_active',
+            'working_status'=>'required|in:active,not_active',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
             'data.*.id' => 'required',
@@ -62,9 +62,11 @@ class SettingController extends BaseController
             'store_email' => $request->input('store_email'),
             'store_address' => $request->input('store_address'),
             'phonenumber' => $request->input('phonenumber'),
+            'working_status' => $request->input('working_status'),
         ]);
-        if($request->input('workstatus') == 'not_active'){
-            $days=Day::all();
+        
+        if($request->input('working_status') == 'active'){
+          /*  $days=Day::all();
             foreach($days as $day){
                 if($day->name =="Friday"){
                     $workdays= Day_Store::updateOrCreate([
@@ -88,7 +90,7 @@ class SettingController extends BaseController
             }
         }
         }
-        else{
+        else{*/
         if (!is_null($request->data)) {
           foreach ($request->data as $data) {
             if( $data['status']=="not_active"){
