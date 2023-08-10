@@ -22,6 +22,8 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\DaystoreResource;
+use App\Http\Resources\DayResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\MaintenanceResource;
 use App\Http\Resources\TechnicalsupportResource;
@@ -149,6 +151,39 @@ class IndexStoreController extends BaseController
             // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
             $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->where('status', 'active')->pluck('link')->first();
             $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
+            
+            
+             
+                
+            foreach(\App\Models\Day::get() as $day){
+                   if($day->name =="Friday"){
+                   $daystore[] = (object) [
+            'day' => new DayResource($day),
+            'from' => null,
+            'to' => null,
+            'status' => 'not_active'
+            ];
+
+                }else{
+                    
+                      $daystore[] = (object) [
+            'day' => new DayResource($day),
+            'from' => '08:00:00',
+            'to' => '22:00:00',
+            'status' => 'active'
+            ];
+            
+            }
+            
+               
+            }
+            
+
+        
+        
+                
+                $success['workDays'] = DaystoreResource::collection($daystore);
+                
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
 
@@ -373,6 +408,38 @@ class IndexStoreController extends BaseController
                     $verificayionMethod = null;
                 }
                 $success['verificayionMethod'] = $verificayionMethod;
+                
+                 if($store->working_status == 'not_active'){
+            foreach(\App\Models\Day::get() as $day){
+                   if($day->name =="Friday"){
+                   $daystore[] = (object) [
+            'day' => new DayResource($day),
+            'from' => null,
+            'to' => null,
+            'status' => 'not_active'
+            ];
+
+                }else{
+                    
+                      $daystore[] = (object) [
+            'day' => new DayResource($day),
+            'from' => '08:00:00',
+            'to' => '22:00:00',
+            'status' => 'active'
+            ];
+            
+            }
+            
+               
+            }
+            
+
+        }else{
+            $daystore = $store->daystore;
+        }
+        
+                
+                $success['workDays'] = DaystoreResource::collection($daystore);
                 $success['status'] = 200;
 
                 return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
