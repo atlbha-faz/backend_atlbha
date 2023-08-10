@@ -173,7 +173,7 @@ class CartTemplateController extends BaseController
                 if ($validator->fails()) {
                     return $this->sendError(null, $validator->errors());
                 }
-                $product_quantity = Product::where('id', $request->id)->pluck('quantity')->first();
+                $product_quantity = Product::where('id', $request->id)->pluck('stock')->first();
                 $store = Store::where('domain', $domain)->first();
                 $store_id = $store->id;
 

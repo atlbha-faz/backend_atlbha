@@ -74,7 +74,7 @@ class CartController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-        $product_quantity = Product::where('id', $request->id)->pluck('quantity')->first();
+        $product_quantity = Product::where('id', $request->id)->pluck('stock')->first();
 
         if ($product_quantity >= $request->qty) {
             $cart = Cart::updateOrCreate([
