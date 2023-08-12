@@ -52,7 +52,7 @@ class SubscriptionsResource extends JsonResource
         return [
        'id' =>$this->id,
        'store_name'=>$this->store_name,
-       
+       'logo'=>$this->logo,
        'user' =>New UserResource($this->user),
        'activity' =>ActivityResource::collection($this->activities),
        'country' => New CountryResource($this->country),
