@@ -88,9 +88,9 @@ class CourseController extends BaseController
     {
     if($filedata->getClientOriginalName() != null)
     {
-        $file[]=$filedata->getClientOriginalName();
-        $fileName=$filedata->getClientOriginalName();
-        $filePath = 'files/unitfile/' . str_replace( array( '\'', '"', "" , ' ' ), '', $fileName);
+        $fileName=Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
+        $file[]=$fileName;
+        $filePath = 'files/unitfile/' .str_replace( array( '\'', '"', "" , ' ' ), '',$fileName);
 
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
     }
@@ -307,9 +307,11 @@ class CourseController extends BaseController
     {
       if($filedata->getClientOriginalName() != null)
       {
-      $file[]=$filedata->getClientOriginalName();
-      $fileName=$filedata->getClientOriginalName();
-      $filePath = 'files/unitfile/' . str_replace( array( '\'', '"', "" , ' ' ), '', $fileName);
+        $fileName=Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
+
+      $file[]= $fileName;
+  
+      $filePath = 'files/unitfile/' .str_replace( array( '\'', '"', "" , ' ' ), '',$fileName);
 
       $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
     }
