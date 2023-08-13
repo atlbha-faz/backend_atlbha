@@ -134,11 +134,11 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
     }
-   
+
 
     public function etlobahCategory()
     {
-        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'etlobha')->where('parent_id', null)->where('store_id', null)->get());
+        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status','active')->where('for', 'etlobha')->where('parent_id', null)->where('store_id', null)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
@@ -198,7 +198,7 @@ class SelectorController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع تصنيفات المقالات بنجاح', 'Post Categories return successfully');
     }
-    
+
     public function storeImportproduct()
     {
 
