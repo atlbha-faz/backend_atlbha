@@ -105,7 +105,7 @@ class RoleController extends BaseController
        }
            
        $item = Role::withCount(['users' => function ($query) {
-        $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
+        $query->where('is_deleted', 0);
     }])->findOrFail($role->id);
     if ($item->users_count) {
       return $this->sendError('Permission granted to the employee', 'الصلاحية ممنوحة للموظف');
