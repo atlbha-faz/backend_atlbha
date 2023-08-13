@@ -86,8 +86,6 @@ class RoleController extends BaseController
            }
         
          
-         
-      
     $role->update(['name'=>$request->role_name ]);
       
     $role->syncPermissions($request->permissions);
