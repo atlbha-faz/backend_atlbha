@@ -104,7 +104,9 @@ class RoleController extends BaseController
             return $this->sendError("الدور غير موجود"," Role is't exists");
        }
            
-    $item = Role::withCount('users')->findOrFail($role->id);
+    $item = Role::withCount(['users' => function ($query) {
+        $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
+    }])->findOrFail($role->id);
     if ($item->users_count) {
       return $this->sendError('Permission granted to the employee', 'الصلاحية ممنوحة للموظف');
     }

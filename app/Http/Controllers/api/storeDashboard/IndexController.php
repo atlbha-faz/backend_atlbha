@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Contracts\Validation\Rule;
@@ -32,7 +33,9 @@ class IndexController extends BaseController
           $q->where('store_id',auth()->user()->store_id);
       })->count();
         $success['sales']=DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->sum('total_price');
-          $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count();
+        $imports_id = Importproduct::where('store_id', auth()->user()->store_id)->pluck('product_id')->toArray();
+
+          $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('status','active')->where('is_deleted',0)->count()+count($imports_id);
 
         $success['orders']=OrderResource::collection(Order::where('store_id',auth()->user()->store_id)->orderBy('created_at', 'DESC')->take(5)->get());
 
