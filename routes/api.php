@@ -43,6 +43,8 @@ Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@veri
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\IndexEtlobhaController::class, 'index']);
+Route::resource('atlobhaContact',App\Http\Controllers\api\AtlobhaContactController::class);
+Route::get('atlobhaContactdeleteall', [App\Http\Controllers\api\AtlobhaContactController::class, 'deleteall']);
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('indexStore/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'index']);
