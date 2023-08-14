@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Models\Package_store;
 use App\Models\TechnicalSupport;
+use App\Models\SubscriptionEmail;
+use App\Http\Resources\DayResource;
 use App\Models\website_socialmedia;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\CommentResource;
@@ -23,10 +25,10 @@ use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\DaystoreResource;
-use App\Http\Resources\DayResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\MaintenanceResource;
 use App\Http\Resources\TechnicalsupportResource;
+use App\Http\Resources\SubscriptionEmailResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController extends BaseController
@@ -151,39 +153,31 @@ class IndexStoreController extends BaseController
             // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
             $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->where('status', 'active')->pluck('link')->first();
             $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
-            
-            
-             
-                
-            foreach(\App\Models\Day::get() as $day){
-                   if($day->name =="Friday"){
-                   $daystore[] = (object) [
-            'day' => new DayResource($day),
-            'from' => null,
-            'to' => null,
-            'status' => 'not_active'
-            ];
 
-                }else{
-                    
-                      $daystore[] = (object) [
-            'day' => new DayResource($day),
-            'from' => '08:00:00',
-            'to' => '22:00:00',
-            'status' => 'active'
-            ];
-            
-            }
-            
-               
-            }
-            
+            foreach (\App\Models\Day::get() as $day) {
+                if ($day->name == "Friday") {
+                    $daystore[] = (object) [
+                        'day' => new DayResource($day),
+                        'from' => null,
+                        'to' => null,
+                        'status' => 'not_active',
+                    ];
 
-        
-        
-                
-                $success['workDays'] = DaystoreResource::collection($daystore);
-                
+                } else {
+
+                    $daystore[] = (object) [
+                        'day' => new DayResource($day),
+                        'from' => '08:00:00',
+                        'to' => '22:00:00',
+                        'status' => 'active',
+                    ];
+
+                }
+
+            }
+
+            $success['workDays'] = DaystoreResource::collection($daystore);
+
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
 
@@ -408,37 +402,34 @@ class IndexStoreController extends BaseController
                     $verificayionMethod = null;
                 }
                 $success['verificayionMethod'] = $verificayionMethod;
-                
-                 if($store->working_status == 'not_active'){
-            foreach(\App\Models\Day::get() as $day){
-                   if($day->name =="Friday"){
-                   $daystore[] = (object) [
-            'day' => new DayResource($day),
-            'from' => null,
-            'to' => null,
-            'status' => 'not_active'
-            ];
 
-                }else{
-                    
-                      $daystore[] = (object) [
-            'day' => new DayResource($day),
-            'from' => '08:00:00',
-            'to' => '22:00:00',
-            'status' => 'active'
-            ];
-            
-            }
-            
-               
-            }
-            
+                if ($store->working_status == 'not_active') {
+                    foreach (\App\Models\Day::get() as $day) {
+                        if ($day->name == "Friday") {
+                            $daystore[] = (object) [
+                                'day' => new DayResource($day),
+                                'from' => null,
+                                'to' => null,
+                                'status' => 'not_active',
+                            ];
 
-        }else{
-            $daystore = $store->daystore;
-        }
-        
-                
+                        } else {
+
+                            $daystore[] = (object) [
+                                'day' => new DayResource($day),
+                                'from' => '08:00:00',
+                                'to' => '22:00:00',
+                                'status' => 'active',
+                            ];
+
+                        }
+
+                    }
+
+                } else {
+                    $daystore = $store->daystore;
+                }
+
                 $success['workDays'] = DaystoreResource::collection($daystore);
                 $success['status'] = 200;
 
@@ -1127,5 +1118,28 @@ class IndexStoreController extends BaseController
 
     }
     // المدونه
+    public function addSubsicription(Request $request, $domain)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'email' => 'required|email',
+
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+        $store_id = Store::where('domain', $domain)->pluck('id')->first();
+        $subsicription = SubscriptionEmail::create([
+            'email' => $request->email,
+            'store_id' => $store_id,
+
+        ]);
+
+        $success['subsicriptions'] = new SubscriptionEmailResource($subsicription);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم الاشتراك', 'subscription successfully');
+
+    }
 
 }
