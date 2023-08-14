@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\SetActiveStore;
 use App\Http\Controllers\api\storeDashboard\ReportController;
 use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
+use App\Http\Middleware\SetActiveStore;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -349,7 +349,7 @@ Route::middleware([StoreUser::class])->group(function () {
         // import file
         Route::post('importFile', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importProducts']);
 
-            // country
+        // country
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
 
@@ -396,7 +396,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('etlobhaProductShow/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'show']);
 
         Route::post('importproduct', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'store']);
-                Route::post('updateimportproduct/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'updateimportproduct']);
+        Route::post('updateimportproduct/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'updateimportproduct']);
         // category
         Route::resource('category', App\Http\Controllers\api\storeDashboard\CategoryController::class);
         Route::get('categoryStorechangeSatusall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeSatusall']);
@@ -417,18 +417,18 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::resource('video', App\Http\Controllers\api\storeDashboard\VideoController::class);
         Route::get('changeUnitStatus/{id}', [App\Http\Controllers\api\storeDashboard\UnitController::class, 'changeStatus']);
         Route::resource('unit', App\Http\Controllers\api\storeDashboard\UnitController::class);
-            // technical Support
-            // Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
+        // technical Support
+        // Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
         Route::resource('technicalSupport', App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class);
         Route::get('technicalSupportStoredeleteall', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'deleteall']);
         Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'changeStatus']);
-            // Shipping company
+        // Shipping company
         Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'changeStatus']);
         Route::resource('shippingtype', App\Http\Controllers\api\storeDashboard\ShippingtypeController::class);
-            // payment type
+        // payment type
         Route::get('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class, 'changeStatus']);
         Route::resource('paymenttype', App\Http\Controllers\api\storeDashboard\PaymenttypeController::class);
-            //offer
+        //offer
         Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\OfferController::class, 'changeStatus']);
         Route::resource('offer', App\Http\Controllers\api\storeDashboard\OfferController::class);
         // SEO keywords
@@ -441,7 +441,7 @@ Route::middleware([StoreUser::class])->group(function () {
         // Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
         Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class, 'changeStatus']);
         Route::get('clientdeleteall', [App\Http\Controllers\api\storeDashboard\ClientController::class, 'deleteall']);
-            //
+        //
         Route::resource('homepage', App\Http\Controllers\api\storeDashboard\HomepageController::class);
         // comments
         Route::resource('comment', App\Http\Controllers\api\storeDashboard\CommentController::class);
@@ -455,15 +455,15 @@ Route::middleware([StoreUser::class])->group(function () {
         // etlobha comment
         Route::post('etlobhaComment', [App\Http\Controllers\api\storeDashboard\EtlobhaController::class, 'etlobhaComment']);
 
-         // users
+        // users
         Route::resource('user', App\Http\Controllers\api\storeDashboard\UserController::class);
         Route::get('changeuserStatus/{id}', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeStatus']);
         Route::get('userchangeSatusall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeSatusall']);
         Route::get('userdeleteall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'deleteall']);
-          //
+        //
         Route::get('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class, 'changeStatus']);
 
-          //  setting
+        //  setting
         Route::get('setting_store_show', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_show']);
         Route::post('setting_store_update', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_update']);
         //profile
@@ -499,7 +499,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('selector/page-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'pagesCategory']);
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);
 
-          //  payment
+        //  payment
         Route::post('payment', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'payment']);
         Route::get('callback', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'callback'])->name('callback');
         Route::post('updateCharge/{id}', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'updateCharge']);
@@ -510,11 +510,12 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('ordersdeleteall', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'deleteall']);
         Route::get('permissions', [App\Http\Controllers\api\storeDashboard\PermissionController::class, 'index'])->name('permissions');
         Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class);
-      // reports
+        // reports
         Route::get('reports', [ReportController::class, 'index']);
         // subsicription
 
         Route::get('subsicriptions', [SubscriptionEmailController::class, 'index']);
+        Route::get('subsicriptionsdeleteall', [SubscriptionEmailController::class, 'deleteall']);
 
     });
 });
