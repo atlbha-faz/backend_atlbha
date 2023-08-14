@@ -29,7 +29,7 @@ class SubscriptionEmailController extends BaseController
             foreach ($subsicriptions as $subsicription) {
 
                 $subsicription->delete();
-                $success['subsicriptions'] = new SubscriptionEmailResource($subsicription);
+                // $success['subsicriptions'] = new SubscriptionEmailResource($subsicription);
 
             }
             $success['status'] = 200;
