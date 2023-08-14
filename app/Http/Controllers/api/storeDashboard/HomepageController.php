@@ -304,7 +304,7 @@ class HomepageController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'commentstatus' => 'required|in:active,not_active',
-            'clientstatus' => 'required|in:active,not_active',
+            // 'clientstatus' => 'required|in:active,not_active',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -313,7 +313,7 @@ class HomepageController extends BaseController
             'store_id' => auth()->user()->store_id,
         ], [
             'commentstatus' => $request->commentstatus,
-            'clientstatus' => $request->clientstatus,
+            // 'clientstatus' => $request->clientstatus,
         ]);
 
         $success['homepages'] = new HomepageResource($commenthomepage);
