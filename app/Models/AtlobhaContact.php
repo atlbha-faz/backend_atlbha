@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AtlobhaContact extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','email','title','content','is_deleted'];
+    protected $fillable = ['name','email','title','content','status','is_deleted'];
 
 }

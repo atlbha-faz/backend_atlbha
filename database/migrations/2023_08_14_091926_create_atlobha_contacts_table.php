@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('title');
             $table->longText('content');
+            $table->enum('status', ['finished', 'not_finished', 'pending'])->default('not_finished');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });

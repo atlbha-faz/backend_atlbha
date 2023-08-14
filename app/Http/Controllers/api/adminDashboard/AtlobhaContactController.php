@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\adminDashboard;
 
 use Illuminate\Http\Request;
 use App\Models\AtlobhaContact;
@@ -10,6 +10,10 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class AtlobhaContactController extends BaseController
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     public function index()
     {
         $success['atlobhaContact']=atlobhaContactResource::collection(AtlobhaContact::where('is_deleted',0)->get());
@@ -17,30 +21,23 @@ class AtlobhaContactController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الرسائل  بنجاح','atlobhaContact return successfully');
     }
-    public function store(Request $request)
+    public function changeStatus($id)
     {
-
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'email'=>'required|email',
-            'title'=>'required|string',
-            'content' =>'required|string',
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        $atlobhaContact = AtlobhaContact::query()->find($id);
+        if (is_null($atlobhaContact) || $atlobhaContact->is_deleted == 1) {
+            return $this->sendError("طلب الدعم غير موجود", "atlobhaContact is't exists");
         }
-        $atlobhaContact = AtlobhaContact::create([
-            'name' => $request->name,
-            'email'=>$request->email,
-            'title' =>$request->title,
-            'content' =>$request->content,
-        ]);
-        $success['atlobhaContact']= New atlobhaContactResource($atlobhaContact);
-        $success['status']= 200;
 
-         return $this->sendResponse($success,'تم إضافة الرسالة  بنجاح','message Added successfully');
+        if ($atlobhaContact->status === 'not_finished') {
+            $atlobhaContact->update(['status' => 'finished']);
+        } else {
+            $atlobhaContact->update(['status' => 'not_finished']);
+        }
+        $success['atlobhaContacts'] = new atlobhaContactResource($atlobhaContact);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تعديل حالة الطلب بنجاح', 'atlobhaContact updated successfully');
+
     }
     public function deleteall(Request $request)
     {
