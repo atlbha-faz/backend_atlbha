@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers\api;
 
-use DB;
-use Carbon\Carbon;
-use App\Models\Page;
-use App\Models\Store;
-use App\Models\Comment;
-use App\Models\Product;
-use App\Models\Setting;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\DayResource;
+use App\Http\Resources\DaystoreResource;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\MaintenanceResource;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\SubscriptionEmailResource;
+use App\Http\Resources\TechnicalsupportResource;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Homepage;
-use App\Models\Paymenttype;
-use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Models\Package_store;
-use App\Models\TechnicalSupport;
+use App\Models\Page;
+use App\Models\Paymenttype;
+use App\Models\Product;
+use App\Models\Setting;
+use App\Models\Store;
 use App\Models\SubscriptionEmail;
-use App\Http\Resources\DayResource;
+use App\Models\TechnicalSupport;
 use App\Models\website_socialmedia;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\importsResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\DaystoreResource;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\MaintenanceResource;
-use App\Http\Resources\TechnicalsupportResource;
-use App\Http\Resources\SubscriptionEmailResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController extends BaseController
 {
@@ -1120,6 +1120,15 @@ class IndexStoreController extends BaseController
     // المدونه
     public function addSubsicription(Request $request, $domain)
     {
+        $store = Store::where('domain', $domain)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+
+        if (!is_null($store)) {
+            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+        }
+        if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+            return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+
         $input = $request->all();
         $validator = Validator::make($input, [
             'email' => 'required|email',
