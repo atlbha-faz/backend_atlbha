@@ -108,7 +108,7 @@ class RoleController extends BaseController
         $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
     }])->findOrFail($role->id);
     if ($item->users_count) {
-      return $this->sendError('Permission granted to the employee', 'الصلاحية ممنوحة للموظف');
+      return $this->sendError('الصلاحية ممنوحة للموظف','Permission granted to the employee');
     }
       
     $role->revokePermissionTo($role->permissions);
