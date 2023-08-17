@@ -295,8 +295,8 @@ class IndexStoreController extends BaseController
                     $success['resentArrivedeByCategory'][][$category->name] = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')
                             ->where('store_id', $store_id)->whereDate('created_at', '>=', $oneWeekAgo)->where('category_id', $category->id)->get());
                 }
-
-                $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
+                $pages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
+                $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id', $pages)->get());
                 $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(6)->get());
                 $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
                 $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();

@@ -34,6 +34,8 @@ class IndexController extends BaseController
       })->count();
         $success['sales']=DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->sum('total_price');
         $imports_id = Importproduct::where('store_id', auth()->user()->store_id)->count();
+        $success['imports_id']=Importproduct::where('store_id', auth()->user()->store_id)->count();
+        $success['products_c']=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->count();
 
           $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->count()+$imports_id;
 
