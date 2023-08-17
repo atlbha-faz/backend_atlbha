@@ -34,10 +34,15 @@ class IndexController extends BaseController
       })->count();
         $success['sales']=DB::table('orders')->where('order_status','completed')->where('store_id',auth()->user()->store_id)->sum('total_price');
         $imports_id = Importproduct::where('store_id', auth()->user()->store_id)->count();
-        $success['imports_id']=Importproduct::where('store_id', auth()->user()->store_id)->count();
-        $success['products_c']=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->count();
+        $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
 
-          $success['products_count']=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->count()+$imports_id;
+        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price',  'store_id']);
+        $imports = importsResource::collection($import);
+
+        $all = $products->merge($imports);
+
+          $success['products_count']= $all->count();
 
         $success['orders']=OrderResource::collection(Order::where('store_id',auth()->user()->store_id)->orderBy('created_at', 'DESC')->take(5)->get());
 
