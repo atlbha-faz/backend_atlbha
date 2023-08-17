@@ -10,6 +10,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
