@@ -15,6 +15,7 @@ use App\Http\Resources\SubscriptionEmailResource;
 use App\Http\Resources\TechnicalsupportResource;
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Page_page_category;
 use App\Models\Homepage;
 use App\Models\Importproduct;
 use App\Models\Package_store;
