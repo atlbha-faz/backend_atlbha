@@ -38,7 +38,7 @@ class ProfileCustomerController extends BaseController
                     ->where('id', '!=', $user->id);
             }),
             ],
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query)  use ($user) {
                 return $query->whereIn('user_type', ['customer'])->where('id', '!=', $user->id);
             }),
             ],
