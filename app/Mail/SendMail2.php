@@ -30,7 +30,7 @@ class SendMail2 extends Mailable
      */
     public function build()
     {       
-        return $this->from($this->data['store_email'])->subject('E-mail from atlbha.net Contact Form')->view('send_mail_template')->with('data',$this->data);
+        return $this->from('noreply@atlbha.com')->subject('E-mail from atlbha.net Contact Form')->view('send_mail_template')->with('data',$this->data);
 
     }
 }
