@@ -44,8 +44,7 @@ Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@veri
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\IndexEtlobhaController::class, 'index']);
-Route::resource('atlobhaContact',App\Http\Controllers\api\AtlobhaContactController::class);
-Route::get('atlobhaContactdeleteall', [App\Http\Controllers\api\AtlobhaContactController::class, 'deleteall']);
+Route::post('atlobhaContactAdd',[App\Http\Controllers\api\IndexEtlobhaController::class,'store']);
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('indexStore/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'index']);
@@ -340,6 +339,9 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('subscriptionschangeSatusall', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'changeSatusall']);
 
         Route::get('permissions', [App\Http\Controllers\api\adminDashboard\PermissionController::class, 'index'])->name('permissions');
+        Route::get('atlobhaContact', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'index']);
+        Route::get('atlobhaContactdeleteall', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'deleteall']);
+        Route::get('atlobhaContactChangeStatus/{id}', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'changeStatus']);
 
     });
 });

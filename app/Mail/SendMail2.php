@@ -3,11 +3,13 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
-class SendOfferCart extends Mailable
+class SendMail2 extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -16,7 +18,6 @@ class SendOfferCart extends Mailable
      *
      * @return void
      */
-    
     public function __construct($data)
     {
         $this->data = $data;
@@ -28,8 +29,8 @@ class SendOfferCart extends Mailable
      * @return $this
      */
     public function build()
-    {
-        return $this->from($this->data['store_email'])->subject('E-mail from atlbha.net Contact Form')->view('send_offer_template')->with('data',$this->data);
-    
+    {       
+        return $this->from($this->data['store_email'])->subject('E-mail from atlbha.net Contact Form')->view('send_mail_template')->with('data',$this->data);
+
     }
 }

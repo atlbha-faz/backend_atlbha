@@ -2,28 +2,32 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ActivityResource;
-use App\Http\Resources\CityResource;
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\PackageResource;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\PartnerResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\StoreResource;
-use App\Http\Resources\website_socialmediaResource;
-use App\Models\Activity;
 use App\Models\City;
-use App\Models\Comment;
-use App\Models\Homepage;
-use App\Models\Package;
 use App\Models\Page;
-use App\Models\Page_page_category;
+use App\Models\Store;
+use App\Models\Comment;
+use App\Models\Package;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
-use App\Models\Store;
+use App\Models\Activity;
+use App\Models\Homepage;
+use Illuminate\Http\Request;
+use App\Models\AtlobhaContact;
+use App\Models\Page_page_category;
 use App\Models\website_socialmedia;
+use App\Http\Resources\CityResource;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\PackageResource;
+use App\Http\Resources\PartnerResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\ActivityResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\atlobhaContactResource;
+use App\Http\Resources\website_socialmediaResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexEtlobhaController extends BaseController
 {
@@ -67,11 +71,36 @@ class IndexEtlobhaController extends BaseController
         $success['partners'] = PartnerResource::collection(Partner::where('is_deleted', 0)->get());
 
         $pages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
-        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $pages)->get());
+        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id',null)->where('status', 'active')->whereIn('id', $pages)->get());
         $success['website_socialmedia'] = website_socialmediaResource::collection(website_socialmedia::where('is_deleted', 0)->where('status', 'active')->get());
 
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الرئيسية بنجاح', 'etlobha index return successfully');
+    }
+    public function store(Request $request)
+    {
+
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'name'=>'required|string|max:255',
+            'email'=>'required|email',
+            'title'=>'required|string',
+            'content' =>'required|string',
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $atlobhaContact = AtlobhaContact::create([
+            'name' => $request->name,
+            'email'=>$request->email,
+            'title' =>$request->title,
+            'content' =>$request->content,
+        ]);
+        $success['atlobhaContact']= New atlobhaContactResource($atlobhaContact);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم إضافة الرسالة  بنجاح','message Added successfully');
     }
 }

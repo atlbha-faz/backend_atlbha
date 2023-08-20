@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use Exception;
 use App\Models\Store;
-use App\Mail\SendMail;
+use App\Mail\SendMail2;
 use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Homepage;
@@ -260,13 +260,14 @@ class CommentController extends BaseController
             'subject' =>"رد على التعليق",
             'message' => $request->comment_text,
             'store_id' =>    $store,
+            'store_email' =>    Store::where('id', auth()->user()->store_id)->store_email,
         ];
         $replaycomment =Comment::where('id',$request->comment_id)->where('is_deleted',0)->first();
           if($replaycomment->user != null)
           {
             // Notification::send($replaycomment->user , new emailNotification($data));
             try {
-                Mail::to($replaycomment->user->email)->send(new SendMail($data));
+                Mail::to($replaycomment->user->email)->send(new SendMail2($data));
             } catch (Exception $e) {
                 return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
             }
