@@ -39,7 +39,7 @@ class ProfileCustomerController extends BaseController
             }),
             ],
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['customer']);
+                return $query->whereIn('user_type', ['customer'])->where('id', '!=', $user->id);
             }),
             ],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
@@ -62,6 +62,6 @@ class ProfileCustomerController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'modify  successfully');
 
     }
-    // 
+    //
 
 }
