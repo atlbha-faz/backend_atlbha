@@ -179,6 +179,7 @@ class CartController extends BaseController
             'subject' => "cart offer",
             'message' => $request->message,
             'store_id' => $cart->store_id,
+            'store_email' => $cart->store->store_email,
         ];
 
         $user = User::where('id', $cart->user_id)->first();
