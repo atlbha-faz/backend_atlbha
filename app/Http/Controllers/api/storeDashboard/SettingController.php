@@ -60,7 +60,7 @@ class SettingController extends BaseController
             'country_id' => $request->input('country_id'),
             'city_id' => $request->input('city_id'),
             'store_email' => $request->input('store_email'),
-            'store_address' => $request->input('country_id').'-'.$request->input('city_id'),
+            'store_address' => \App\Models\Country::find($request->input('country_id'))->name.'-'.\App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
             'working_status' => $request->input('working_status'),
         ]);
