@@ -78,7 +78,7 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        if (is_null(User::where('email', $request->email)->where('user_type', 'customer')->first())) {
+        if (is_null(User::where('email', $request->email)->where('user_type', 'customer')->where('is_deleted', 0)->first())) {
             $validator = Validator::make($input, [
                 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                     return $query->where('user_type', 'customer');
