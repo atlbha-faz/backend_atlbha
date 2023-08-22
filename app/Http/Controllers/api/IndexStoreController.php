@@ -955,7 +955,7 @@ class IndexStoreController extends BaseController
 
             /*   $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
             $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
-            $success['storeAddress']=Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
+            $success['storeAddress']=Store::where('is_deleted', 0)->where('id', $request->store_id)->pluck('store_address')->first();
             $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('phonenumber')->first();
             $success['description']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('description')->first();
             $success['snapchat']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('snapchat')->first();
