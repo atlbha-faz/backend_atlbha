@@ -378,7 +378,7 @@ class IndexStoreController extends BaseController
 
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
-                $success['storeAddress'] = 'السعودية - مدينة جدة';
+                $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
                 $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
                 $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
                 $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
@@ -545,7 +545,7 @@ class IndexStoreController extends BaseController
 
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
-                $success['storeAddress'] = 'السعودية - مدينة جدة';
+                $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
                 $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
                 $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
 
@@ -717,7 +717,7 @@ class IndexStoreController extends BaseController
                 $success['page'] = new PageResource(Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->where('postcategory_id', null)->first());
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
-                $success['storeAddress'] = 'السعودية - مدينة جدة';
+                $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
                 $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
                 $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
                 $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
@@ -955,7 +955,7 @@ class IndexStoreController extends BaseController
 
             /*   $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
             $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
-            $success['storeAddress']='السعودية - مدينة جدة';
+            $success['storeAddress']=Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
             $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('phonenumber')->first();
             $success['description']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('description')->first();
             $success['snapchat']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('snapchat')->first();
