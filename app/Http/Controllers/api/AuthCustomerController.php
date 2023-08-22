@@ -27,7 +27,7 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        if (is_null(User::where('phonenumber', $request->phonenumber)->where('user_type', 'customer')->first())) {
+        if (is_null(User::where('phonenumber', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->first())) {
 
             $validator = Validator::make($input, [
                 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
@@ -148,7 +148,7 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        $user = User::where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->latest()->first();
+        $user = User::where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->where('is_deleted', 0)->latest()->first();
         if (is_null($user)) {
 
             return $this->sendError('الحساب غير موجود', 'User not found');
