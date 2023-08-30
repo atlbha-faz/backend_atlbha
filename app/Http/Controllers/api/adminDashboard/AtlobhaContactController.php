@@ -26,8 +26,8 @@ class AtlobhaContactController extends BaseController
     
     public function show($contact)
     {
-        $contact= AtlobhaContact::query()->find($contact);
-        if (is_null($contact) ||$contact->is_deleted==1){
+        $atlobhaContact= AtlobhaContact::query()->find($contact);
+        if (is_null($atlobhaContact) ||$atlobhaContact->is_deleted==1){
             return $this->sendError("طلب الدعم غير موجود", "atlobhaContact is't exists");
                }
              $success['atlobhaContacts'] = new atlobhaContactResource($atlobhaContact);
