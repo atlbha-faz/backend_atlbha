@@ -76,12 +76,13 @@ class StoreController extends BaseController
 
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:stores,phonenumber'],
             'activity_id' =>'required|array',
-            'package_id' =>'required',
+            //'package_id' =>'required',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
             'user_country_id'=>'required|exists:countries,id',
             'user_city_id'=>'required|exists:cities,id',
-            'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
+            //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
+            'periodtype' => 'required|in:6months,year',
             'status'=>'required|in:active,inactive',
             'image'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
@@ -107,7 +108,7 @@ class StoreController extends BaseController
 
           $userid =$user->id;
 
-
+ $request->package_id =1;
         $store = Store::create([
             'store_name' => $request->store_name,
             'store_email'=>$request->store_email,
@@ -238,7 +239,7 @@ class StoreController extends BaseController
                   ->where('id', '!=', $store->user->id);
           }),],
             'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/','unique:stores,phonenumber,' . $store->id],
-            'package_id' =>'required',
+           // 'package_id' =>'required',
              'activity_id' =>'required|array',
             'country_id'=>'required|exists:countries,id',
             'city_id'=>'required|exists:cities,id',
@@ -251,7 +252,7 @@ class StoreController extends BaseController
                # code...
                return $this->sendError(null,$validator->errors());
            }
-
+ $request->package_id =1;
             $user->update([
                'name' => $request->input('name'),
                'email' => $request->input('email'),
