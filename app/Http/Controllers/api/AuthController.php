@@ -48,7 +48,8 @@ class AuthController extends BaseController
                     //'country_id'=>'required_if:user_type,store|exists:countries,id',
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
-                    'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
+                    //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
+                   'periodtype' => 'required|in:6months,year',
                     'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                         return $query->whereIn('user_type', ['store', 'store_employee']);
                     })],
