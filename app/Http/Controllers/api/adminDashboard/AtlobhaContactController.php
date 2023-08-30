@@ -21,6 +21,22 @@ class AtlobhaContactController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الرسائل  بنجاح','atlobhaContact return successfully');
     }
+
+
+    
+    public function show($contact)
+    {
+        $contact= AtlobhaContact::query()->find($contact);
+        if (is_null($contact) ||$contact->is_deleted==1){
+            return $this->sendError("طلب الدعم غير موجود", "atlobhaContact is't exists");
+               }
+             $success['atlobhaContacts'] = new atlobhaContactResource($atlobhaContact);
+              $success['status']= 200;
+
+               
+        return $this->sendResponse($success, 'تم عرض الطلب بنجاح', 'atlobhaContact showed successfully');
+    }
+    
     public function changeStatus($id)
     {
         $atlobhaContact = AtlobhaContact::query()->find($id);
