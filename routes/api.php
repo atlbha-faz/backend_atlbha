@@ -340,6 +340,7 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::get('permissions', [App\Http\Controllers\api\adminDashboard\PermissionController::class, 'index'])->name('permissions');
         Route::get('atlobhaContact', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'index']);
+        Route::get('atlobhaContact/{id}', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'show']);
         Route::get('atlobhaContactdeleteall', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'deleteall']);
         Route::get('atlobhaContactChangeStatus/{id}', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'changeStatus']);
 
