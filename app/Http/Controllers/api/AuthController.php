@@ -28,7 +28,7 @@ class AuthController extends BaseController
             return $this->sendError('stop_registration', 'تم ايقاف التسجيل');
 
         } else {
-
+            $request->package_id =1;
             if ($request->user_type == 'store') {
                 $input = $request->all();
                 $validator = Validator::make($input, [
@@ -44,7 +44,7 @@ class AuthController extends BaseController
 
                     //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
                     //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
-                    'package_id' => 'required_if:user_type,store|exists:packages,id',
+                    //'package_id' => 'required_if:user_type,store|exists:packages,id',
                     //'country_id'=>'required_if:user_type,store|exists:countries,id',
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
@@ -72,7 +72,7 @@ class AuthController extends BaseController
                     //'domain'=>'required_if:user_type,store|unique:stores',
                     //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
                     //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
-                    'package_id' => 'required_if:user_type,store|exists:packages,id',
+                    //'package_id' => 'required_if:user_type,store|exists:packages,id',
                     //'country_id'=>'required_if:user_type,store|exists:countries,id',
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
