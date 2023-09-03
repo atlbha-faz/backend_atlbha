@@ -6,6 +6,8 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\TechnicalsupportResource;
 use App\Models\TechnicalSupport;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Store;
+use App\Mail\SendMail2;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
