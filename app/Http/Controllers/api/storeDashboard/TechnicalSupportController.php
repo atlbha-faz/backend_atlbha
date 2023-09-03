@@ -209,4 +209,46 @@ class TechnicalSupportController extends BaseController
         }
 
     }
+public function replay(Request $request)
+    {
+       $input = $request->all();
+        $validator =  Validator::make($input ,[
+            // 'subject'=>'required|string|max:255',
+            'replay_text'=>'required|string|max:255',
+            'technical_support_id'=>'required|exists:technical_supports,id',
+
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+
+
+       /* $replay = Replaycomment::create([
+            'comment_text' => $request->comment_text,
+            'comment_id' => $request->comment_id,
+            'user_id' => auth()->user()->id,
+        ]);*/
+        $store=Store::where('id', auth()->user()->store_id)->value('store_name');
+        $data= [
+            'subject' =>"رد على رسالة تواصل معنا",
+            'message' => $request->replay_text,
+            'store_id' =>    $store,
+            'store_email' =>    Store::where('id', auth()->user()->store_id)->store_email,
+        ];
+        $replaytechnicalsupport =technicalSupport::where('id',$request->technical_support_id)->where('is_deleted',0)->first();
+          if($replaytechnicalsupport->user != null)
+          {
+            // Notification::send($replaycomment->user , new emailNotification($data));
+            try {
+                Mail::to($replaytechnicalsupport->user->email)->send(new SendMail2($data));
+            } catch (Exception $e) {
+                return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+            }
+          }
+        // $success['replays']=New ReplaycommentResource($replay);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم اضافة رد بنجاح',' Added successfully');
+    }
 }
