@@ -428,7 +428,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('technicalSupportStoredeleteall', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'deleteall']);
         Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'changeStatus']);
         
-        Route::post('replayTechnicalSupport', App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'replay');
+        Route::post('replayTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'replay']);
         // Shipping company
         Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'changeStatus']);
         Route::resource('shippingtype', App\Http\Controllers\api\storeDashboard\ShippingtypeController::class);
