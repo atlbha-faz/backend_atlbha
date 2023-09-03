@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\TechnicalsupportResource;
 use App\Models\TechnicalSupport;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
