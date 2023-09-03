@@ -234,12 +234,12 @@ public function replay(Request $request)
             'user_id' => auth()->user()->id,
         ]);*/
         $store=Store::where('id', auth()->user()->store_id)->value('store_name');
-        dd(Store::where('id', auth()->user()->store_id)->get());
+        //dd(Store::where('id', auth()->user()->store_id)->get());
         $data= [
             'subject' =>"رد على رسالة تواصل معنا",
             'message' => $request->replay_text,
             'store_id' =>    $store,
-            'store_email' =>    Store::where('id', auth()->user()->store_id)->store_email,
+            'store_email' =>    Store::where('id', auth()->user()->store_id)->first()->store_email,
         ];
         $replaytechnicalsupport =technicalSupport::where('id',$request->technical_support_id)->where('is_deleted',0)->first();
           if($replaytechnicalsupport->user != null)
