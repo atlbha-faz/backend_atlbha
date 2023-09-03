@@ -260,7 +260,7 @@ class CommentController extends BaseController
             'subject' =>"رد على التعليق",
             'message' => $request->comment_text,
             'store_id' =>    $store,
-            'store_email' =>    Store::where('id', auth()->user()->store_id)->store_email,
+            'store_email' =>    Store::where('id', auth()->user()->store_id)->first()->store_email,
         ];
         $replaycomment =Comment::where('id',$request->comment_id)->where('is_deleted',0)->first();
           if($replaycomment->user != null)
