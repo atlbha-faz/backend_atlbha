@@ -396,7 +396,7 @@ class IndexStoreController extends BaseController
                         $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
                         $verificayion_arr['link'] = null;
-                        $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                        $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
                     }
                     $verificayionMethod = $verificayion_arr;
                 } else {
@@ -568,7 +568,7 @@ class IndexStoreController extends BaseController
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                        $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
                     }
                     $verificayionMethod = $arr;
                 } else {
@@ -733,7 +733,7 @@ class IndexStoreController extends BaseController
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                        $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
                     }
                     $verificayionMethod = $arr;
                 } else {
@@ -972,7 +972,7 @@ class IndexStoreController extends BaseController
             }
             else{
             $arr['link']= null;
-            $arr['image']= 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+            $arr['image']= 'https://backend.atlbha.com/assets/media/new_commerce.png';
             }
             $verificayionMethod=$arr;
             }
