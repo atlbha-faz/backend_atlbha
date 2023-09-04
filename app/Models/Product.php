@@ -124,11 +124,11 @@ public function cart(){
 
  public function productrate($product_id){
 
-        return Comment::where('product_id',$product_id)->where('comment_for','product')->avg('rateing');
+        return Comment::where('product_id',$product_id)->where('is_deleted', 0)->where('comment_for','product')->avg('rateing');
      }
     public function productratecount($product_id){
 
-        return Comment::where('product_id',$product_id)->where('comment_for','product')->count();
+        return Comment::where('product_id',$product_id)->where('is_deleted', 0)->where('comment_for','product')->count();
      }
      //اجمالي المبيعات
      public function getOrderTotal($product_id){
