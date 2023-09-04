@@ -118,7 +118,7 @@ class PostStoreController extends BaseController
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                        $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
                     }
                     $verificayionMethod = $arr;
                 } else {
@@ -248,7 +248,7 @@ class PostStoreController extends BaseController
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                        $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
                     }
                     $verificayionMethod = $arr;
                 } else {
@@ -377,7 +377,7 @@ class PostStoreController extends BaseController
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/commerce.jpeg';
+                        $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
                     }
                     $verificayionMethod = $arr;
                 } else {
