@@ -103,7 +103,7 @@ return [
     'min_digits' => 'الحقل :attribute يجب أن يحتوي :min أرقام على الأقل.',
     'multiple_of' => 'الحقل :attribute يجب أن يكون من مضاعفات :value.',
     'not_in' => 'الحقل :attribute لاغٍ',
-    'not_regex' => 'الحقل :attribute نوعه لاغٍ',
+    'not_regex' => 'حقل :attribute نوعه غير صحيح',
     'numeric' => 'يجب على الحقل :attribute أن يكون رقمًا',
     'password' => [
         'letters' => 'يجب ان يشمل حقل :attribute على حرف واحد على الاقل.',
