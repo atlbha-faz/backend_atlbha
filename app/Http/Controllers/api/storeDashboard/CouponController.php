@@ -89,7 +89,7 @@ class CouponController extends BaseController
             'store_id' => auth()->user()->store_id,
             'status' => $request->status,
         ]);
-        
+
         switch ($request->coupon_apply) {
             case ('selected_product'):{
                 // $coupon->products()->attach($request->select_product_id);
@@ -227,7 +227,7 @@ class CouponController extends BaseController
             'status' => $request->input('status'),
             //    'store_id' => $request->input('store_id'),
         ]);
-       
+
         switch ($request->coupon_apply) {
             case ('selected_product'):{
                 foreach($request->select_product_id as $product){
@@ -247,7 +247,7 @@ class CouponController extends BaseController
             case ('selected_payment'):
                 $coupon->paymenttypes()->sync($request->select_payment_id);
                 break;
-              
+
 
         }
 
