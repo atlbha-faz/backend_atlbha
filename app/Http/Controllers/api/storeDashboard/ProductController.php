@@ -300,8 +300,14 @@ class ProductController extends BaseController
                 if (is_null($product)) {
                     return $this->sendError("المنتج غير موجود", "product is't exists");
                 }
-                $product->delete();
-
+                $mainProduct=Product::where('id', $importproduct->id)->where('is_deleted', 0)->first();
+                $comments = $mainProduct->comment->where('store_id', auth()->user()->store_id);
+                if( $comments != null){
+                foreach($comments as $comment){
+                    $comment->update(['is_deleted' => 1]);
+                }
+            }
+            $product->delete();
             }
         }
 
@@ -310,6 +316,12 @@ class ProductController extends BaseController
             foreach ($products as $product) {
 
                 $product->update(['is_deleted' => 1]);
+                $comments =$product->comment;
+                if( $comments != null){
+                foreach($comments as $comment){
+                    $comment->update(['is_deleted' => 1]);
+                }
+            }
                 $success['products'] = new ProductResource($product);
 
             }
