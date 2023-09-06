@@ -148,7 +148,6 @@ class StoreController extends BaseController
         $store->update([
                'start_at'=> $store->created_at,
                 'end_at'=>  $end_at ]);
-
             }
             else{
               $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
