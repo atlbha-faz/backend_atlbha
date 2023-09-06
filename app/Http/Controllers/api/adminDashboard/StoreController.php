@@ -108,7 +108,7 @@ class StoreController extends BaseController
 
           $userid =$user->id;
 
- $request->package_id =1;
+        $request->package_id =1;
         $store = Store::create([
             'store_name' => $request->store_name,
             'store_email'=>$request->store_email,
@@ -156,13 +156,13 @@ class StoreController extends BaseController
                   'end_at' => $end_at]);
 
             }
-            if($request->package_id ==1){
-              $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
-              $store->update([
-                  'start_at' => $store->created_at,
-                  'end_at' => $end_at]);
+            // if($request->package_id ==1){
+            //   $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
+            //   $store->update([
+            //       'start_at' => $store->created_at,
+            //       'end_at' => $end_at]);
 
-             }
+            //  }
           $store->activities()->attach($request->activity_id);
           $store->packages()->attach( $request->package_id,['start_at'=> $store->created_at,'end_at'=>$end_at,'periodtype'=>$request->periodtype,'packagecoupon_id'=>$request->packagecoupon]);
 
