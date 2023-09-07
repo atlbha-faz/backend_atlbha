@@ -207,7 +207,7 @@ class SettingController extends BaseController
         $success['status_marketer']=Setting::where('is_deleted',0)->pluck('status_marketer')->first();
         $success['status']= 200;
 
-         return $this->sendResponse($success,'تم تعدبل الحالة  بنجاح','status updated successfully');
+         return $this->sendResponse($success,'تم تعديل الحالة  بنجاح','status updated successfully');
 
     }
 
