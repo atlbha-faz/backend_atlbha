@@ -461,6 +461,7 @@ Route::middleware([StoreUser::class])->group(function () {
         // Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
         // etlobha comment
         Route::post('etlobhaComment', [App\Http\Controllers\api\storeDashboard\EtlobhaController::class, 'etlobhaComment']);
+        Route::get('existComment', [App\Http\Controllers\api\storeDashboard\EtlobhaController::class, 'existComment']);
 
         // users
         Route::resource('user', App\Http\Controllers\api\storeDashboard\UserController::class);
