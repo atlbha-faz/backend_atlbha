@@ -30,6 +30,7 @@ class AuthController extends BaseController
         } else {
             $request->package_id =1;
             if ($request->user_type == 'store') {
+             
                 $input = $request->all();
                 $validator = Validator::make($input, [
                     'checkbox_field' => 'required|in:1',
@@ -58,8 +59,17 @@ class AuthController extends BaseController
                     })],
 
                 ]);
-
+                if ($validator->fails()) {
+                    return $this->sendError('Validation Error.', $validator->errors());
+                }
             } else {
+                if ($setting->registration_marketer =="not_active") {
+
+         
+                    return $this->sendError('stop_registration_markter', 'لايمكن تسجيل مندوب');
+             
+            }else {
+            
                 $input = $request->all();
                 $validator = Validator::make($input, [
                     'checkbox_field' => 'required|in:1',
@@ -92,7 +102,7 @@ class AuthController extends BaseController
             if ($validator->fails()) {
                 return $this->sendError('Validation Error.', $validator->errors());
             }
-
+        }
             if ($request->user_type == "store") {
 
                 $user = User::create([
@@ -143,7 +153,15 @@ class AuthController extends BaseController
                 }
                 // $store->activities()->attach($request->activity_id);
                 $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
+                $user->generateVerifyCode();
+                $request->code = $user->verify_code;
+                $request->phonenumber = $user->phonenumber;
+                $this->sendSms($request);
+            
 
+            $success['user'] = new UserResource($user);
+            $success['token'] = $user->createToken('authToken')->accessToken;
+            $success['status'] = 200;
 
             } else {
 
@@ -171,24 +189,19 @@ class AuthController extends BaseController
                     if ($setting->status_marketer === "not_active") {
                         $user->update(['status' => "not_active"]);
                     }
-                } else {
-                    $success['message'] = "لايمكن تسجيل مندوب";
-
-                }
+                    $user->generateVerifyCode();
+                    $request->code = $user->verify_code;
+                    $request->phonenumber = $user->phonenumber;
+                    $this->sendSms($request);
+                
+    
+                $success['user'] = new UserResource($user);
+                $success['status'] = 200;
+                } 
 
             }
 
           
-                $user->generateVerifyCode();
-                $request->code = $user->verify_code;
-                $request->phonenumber = $user->phonenumber;
-                $this->sendSms($request);
-            
-
-            $success['user'] = new UserResource($user);
-            $success['token'] = $user->createToken('authToken')->accessToken;
-            $success['status'] = 200;
-
             return $this->sendResponse($success, 'تم التسجيل بنجاح', 'Register Successfully');
         }
     }
