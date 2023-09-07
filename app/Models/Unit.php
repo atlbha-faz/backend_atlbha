@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Unit extends Model
 {
     use HasFactory;
-    protected $fillable = ['title','file','course_id','status','is_deleted'];
-       protected $casts = [
-    'file' => 'array',
-];
+    protected $fillable = ['title', 'file', 'course_id', 'status', 'is_deleted'];
+    protected $casts = [
+        'file' => 'array',
+    ];
     public function course()
     {
         return $this->belongsTo(Course::class);
@@ -36,41 +36,41 @@ class Unit extends Model
     public function getFileAttribute($file)
     {
         if (is_null($file)) {
-            return   array();
+            return array();
         }
-        $files=explode(',',$file);
-        $url=array();
-    foreach($files as $file){
-        $url []=  asset('storage/files/unitfile') . '/' .str_replace( array( '\'', '"', "" , ' ' ), '', $file);
-    }
-return  $url;
-       
+        $files = explode(',', $file);
+        $url = array();
+        foreach ($files as $file) {
+            $url[] = asset('storage/files/unitfile') . '/' . str_replace(array('\'', '"', "", ' '), '', $file);
+        }
+        return $url;
+
     }
 
-      public function countVideo($unitid)
+    public function countVideo($unitid)
     {
-        $unitid=Video::select('id')->where('unit_id',$unitid)->where('is_deleted',0)->get();
+        $unitid = Video::select('id')->where('unit_id', $unitid)->where('is_deleted', 0)->get();
 
-        $videoes=$unitid->count();
-        return  $videoes;
+        $videoes = $unitid->count();
+        return $videoes;
     }
-        public function durationUnit($unit_id)
-   {
+    public function durationUnit($unit_id)
+    {
         $sum = strtotime('00:00:00');
 
         $totaltime = 0;
-        $videoid=Video::select('id')->where('unit_id',$unit_id)->get();
+        $videoid = Video::select('id')->where('unit_id', $unit_id)->where('is_deleted', 0)->get();
 
-       //    $unitid=count($unitid);
-       //$video=Unit::select('id')->where('id',$course_id)->get()
-       $videoes = Video::whereIn('id',$videoid)->get();
-       foreach($videoes as $video){
-           // Converting the time into seconds
-        $timeinsec = strtotime($video->duration) - $sum;
+        //    $unitid=count($unitid);
+        //$video=Unit::select('id')->where('id',$course_id)->get()
+        $videoes = Video::whereIn('id', $videoid)->get();
+        foreach ($videoes as $video) {
+            // Converting the time into seconds
+            $timeinsec = strtotime($video->duration) - $sum;
 
-       // Sum the time with previous value
-       $totaltime = $totaltime + $timeinsec;
-          }
+            // Sum the time with previous value
+            $totaltime = $totaltime + $timeinsec;
+        }
 
         // Totaltime is the summation of all
         // time in seconds
@@ -91,8 +91,5 @@ return  $url;
         // Printing the result
         return ("$h:$m:$s");
 
-
-
-        
-  }
+    }
 }
