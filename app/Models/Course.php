@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','description','duration','tags','image','link','user_id','status',
-    'is_deleted'];
+    protected $fillable = ['name', 'description', 'duration', 'tags', 'image', 'link', 'user_id', 'status',
+        'is_deleted'];
 
     public function user()
     {
@@ -19,33 +19,33 @@ class Course extends Model
     {
         return $this->hasMany(Unit::class);
     }
-      public function countVideo($course_id)
+    public function countVideo($course_id)
     {
-       $unitid=Unit::select('id')->where('course_id',$course_id)->where('is_deleted',0)->get();
+        $unitid = Unit::select('id')->where('course_id', $course_id)->where('is_deleted', 0)->get();
 
-    //    $unitid=count($unitid);
-       //$video=Unit::select('id')->where('id',$course_id)->get()
-    $videoes = Video::whereIn('unit_id',$unitid)->where('is_deleted',0)->get();
-    $videoes = count($videoes);
-    return  $videoes;
-  }
-       public function durationCourse($course_id)
-   {
+        //    $unitid=count($unitid);
+        //$video=Unit::select('id')->where('id',$course_id)->get()
+        $videoes = Video::whereIn('unit_id', $unitid)->where('is_deleted', 0)->get();
+        $videoes = count($videoes);
+        return $videoes;
+    }
+    public function durationCourse($course_id)
+    {
         $sum = strtotime('00:00:00');
 
         $totaltime = 0;
-        $unitid=Unit::select('id')->where('course_id',$course_id)->get();
+        $unitid = Unit::select('id')->where('course_id', $course_id)->where('is_deleted', 0)->get();
 
-       //    $unitid=count($unitid);
-       //$video=Unit::select('id')->where('id',$course_id)->get()
-       $videoes = Video::whereIn('unit_id',$unitid)->get();
-       foreach($videoes as $video){
-           // Converting the time into seconds
-        $timeinsec = strtotime($video->duration) - $sum;
+        //    $unitid=count($unitid);
+        //$video=Unit::select('id')->where('id',$course_id)->get()
+        $videoes = Video::whereIn('unit_id', $unitid)->get();
+        foreach ($videoes as $video) {
+            // Converting the time into seconds
+            $timeinsec = strtotime($video->duration) - $sum;
 
-       // Sum the time with previous value
-       $totaltime = $totaltime + $timeinsec;
-          }
+            // Sum the time with previous value
+            $totaltime = $totaltime + $timeinsec;
+        }
 
         // Totaltime is the summation of all
         // time in seconds
@@ -64,13 +64,11 @@ class Course extends Model
         $s = $totaltime - ($m * 60);
 
         // Printing the result
-         return ("$h:$m:$s");
-    
+        return ("$h:$m:$s");
 
+    }
 
-  }
-
-public function setImageAttribute($image)
+    public function setImageAttribute($image)
     {
         if (!is_null($image)) {
             if (gettype($image) != 'string') {
@@ -85,11 +83,9 @@ public function setImageAttribute($image)
     public function getImageAttribute($image)
     {
         if (is_null($image)) {
-            return   asset('assets/media/man.png');
+            return asset('assets/media/man.png');
         }
         return asset('storage/images/courses') . '/' . $image;
     }
-
-
 
 }

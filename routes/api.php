@@ -44,7 +44,7 @@ Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@veri
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\IndexEtlobhaController::class, 'index']);
-Route::post('atlobhaContactAdd',[App\Http\Controllers\api\IndexEtlobhaController::class,'store']);
+Route::post('atlobhaContactAdd', [App\Http\Controllers\api\IndexEtlobhaController::class, 'store']);
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('indexStore/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'index']);
@@ -217,6 +217,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
         Route::post('addvideo', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'addvideo']);
         Route::get('deletevideo/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deletevideo']);
+        Route::get('deleteunit/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deleteunit']);
 
         Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class);
 
@@ -427,8 +428,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::resource('technicalSupport', App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class);
         Route::get('technicalSupportStoredeleteall', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'deleteall']);
         Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'changeStatus']);
-        
-        Route::post('replayTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'replay']);
+
+        Route::post('replayTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'replay']);
         // Shipping company
         Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'changeStatus']);
         Route::resource('shippingtype', App\Http\Controllers\api\storeDashboard\ShippingtypeController::class);
