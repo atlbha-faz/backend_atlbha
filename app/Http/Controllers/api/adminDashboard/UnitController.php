@@ -9,7 +9,7 @@ use App\Http\Resources\UnitResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 class UnitController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
