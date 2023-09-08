@@ -60,13 +60,13 @@ class UserController extends BaseController
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
            'email' => ['required','email', Rule::unique('users')->where(function ($query) {
-                    return $query->where('user_type', 'store_employee');
+                    return $query->whereIn('user_type', ['store_employee','store']);
                 }),
                 ],
             'status' => 'required|in:active,not_active',
             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                return $query->where('user_type', 'store_employee');
+                return $query->whereIn('user_type', ['store_employee','store']);
             })],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
