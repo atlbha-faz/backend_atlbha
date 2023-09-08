@@ -114,7 +114,7 @@ class StoreResource extends JsonResource
              'package' =>$this->packagee($this->package_id),
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'working_status'=>$this->working_status,
-        'workDays'=>DaystoreResource::collection($daystore)
+        //  'workDays'=>DaystoreResource::collection($daystore)
     ];
     }
 }
