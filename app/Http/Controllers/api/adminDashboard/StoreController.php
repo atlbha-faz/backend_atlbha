@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -402,6 +403,10 @@ class StoreController extends BaseController
          $users = User::where('store_id',$store->id)->get();
                foreach($users as $user){
                    $user->update(['is_deleted' => 1]);
+                   $comment=Comment::where('comment_for','store')->where('user_id',$user->id)->where('is_deleted',0)->first();
+                  if( $comment != null){
+                    $comment->update(['is_deleted' => 1]);
+                  }
                }
 
         $success['store']=New StoreResource($store);

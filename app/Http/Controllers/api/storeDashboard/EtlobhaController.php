@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CommentResource;
+use App\Models\User;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class EtlobhaController extends BaseController
 {
@@ -28,6 +29,11 @@ class EtlobhaController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
+       $users= User::whereIn('user_type', ['store','store_employee'])->where('store_id', auth()->user()->store_id)->where('is_deleted',0)->pluck('id')->toArray();
+        $exitComment=Comment::where('comment_for','store')->whereIn('user_id',$users)->where('is_deleted',0)->first();
+       if($exitComment != null){
+        return $this->sendError('تم التعليق مسبقا', 'comment exists');
+           }
         $comment = Comment::create([
             'comment_text' => $request->comment_text,
             'rateing' => $request->rateing,
@@ -44,4 +50,20 @@ class EtlobhaController extends BaseController
         return $this->sendResponse($success, 'تم إضافة تعليقك لمنصة اطلبها بنجاح', 'your  Atlobha comment Added successfully');
 
     }
+    public function existComment()
+    {
+        $users= User::whereIn('user_type', ['store','store_employee'])->where('store_id', auth()->user()->store_id)->where('is_deleted',0)->pluck('id')->toArray();
+        $exitComment=Comment::where('comment_for','store')->whereIn('user_id',$users)->where('is_deleted',0)->first();
+       if($exitComment != null){
+        $success['existComment'] = true;
+           }
+           else{
+           $success['existComment'] = false;
+           }
+           $success['status'] = 200;
+
+           return $this->sendResponse($success, 'تم إرجاع حالة التعليق بنجاح', 'your comment return successfully');
+   
+    }
+
 }
