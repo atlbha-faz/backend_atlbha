@@ -209,11 +209,19 @@ class PageController extends BaseController
         if ($request->pageCategory) {
             $page->page_categories()->sync($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
+            
                 $page->update([
                     'image' => $request->image,
                     'postcategory_id' => $request->postCategory_id,
                 ]);
+            }else{
+           
+                $page->update([
+                    'image' =>null,
+                    'postcategory_id' => null,
+                ]);
             }
+            
         }
         $success['pages'] = new PageResource($page);
         $success['status'] = 200;
