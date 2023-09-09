@@ -38,7 +38,7 @@ class Course extends Model
 
         //    $unitid=count($unitid);
         //$video=Unit::select('id')->where('id',$course_id)->get()
-        $videoes = Video::whereIn('unit_id', $unitid)->get();
+        $videoes = Video::whereIn('unit_id', $unitid)->where('is_deleted', 0)->get();
         foreach ($videoes as $video) {
             // Converting the time into seconds
             $timeinsec = strtotime($video->duration) - $sum;
