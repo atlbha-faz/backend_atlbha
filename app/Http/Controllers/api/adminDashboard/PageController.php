@@ -223,6 +223,13 @@ class PageController extends BaseController
                    'postcategory_id'=>$request->postCategory_id,
               ]);
             }
+            else{
+           
+                $page->update([
+                    'image' =>null,
+                    'postcategory_id' => null,
+                ]);
+            }
              }
            $success['pages']=New PageResource($page);
            $success['status']= 200;
