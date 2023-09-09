@@ -81,6 +81,7 @@ class UserController extends BaseController
             'password' => $request->password,
             'phonenumber' => $request->phonenumber,
             'image' => $request->image,
+            'verified'=>1,                 
 
         ]);
 
