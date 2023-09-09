@@ -206,7 +206,7 @@ class TechnicalSupportController extends BaseController
 
             $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'technicalSupport deleted successfully');
+            return $this->sendResponse($success, 'تم حذف الدعم الفني بنجاح', 'technicalSupport deleted successfully');
         } else {
             $success['status'] = 200;
             return $this->sendError("الصف غير موجودة", "technicalSupport is't exists");
