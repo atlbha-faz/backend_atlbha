@@ -229,7 +229,7 @@ class AuthController extends BaseController
   }])
         )  {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
-        } elseif (
+        } /* elseif (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
        $query->whereIn('user_type',  ['admin','admin_employee']);
   }, 'verified' => 1])
@@ -253,12 +253,13 @@ class AuthController extends BaseController
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
+        */
         $remember = request('remember');
         if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
        $query->whereIn('user_type',  ['admin','admin_employee']);
-  }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
+  }, /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
        $query->whereIn('user_type',  ['admin','admin_employee']);
-  }, 'verified' => 1])) {
+  }, /*'verified' => 1 */])) {
             $user = auth()->user();
         }
 
