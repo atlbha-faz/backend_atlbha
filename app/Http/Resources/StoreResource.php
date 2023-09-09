@@ -17,25 +17,25 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {
-        
+
                 if($this->periodtype == null || $this->periodtype == '6months'){
                   $periodtype = 'شهور'.' '.'6';
         }else{
             $periodtype = 'سنوي';
         }
-          
+
         if($this->status ==null || $this->status == 'active'){
             $status = 'نشط';
         }else{
             $status = 'غير نشط';
         }
-        
+
         if($this->special ==null || $this->special == 'special'){
             $special = 'مميز';
         }else{
             $special = 'غير مميز';
         }
-        
+
         if($this->working_status == 'not_active'){
             foreach(\App\Models\Day::get() as $day){
                    if($day->name =="Friday"){
@@ -47,28 +47,28 @@ class StoreResource extends JsonResource
             ];
 
                 }else{
-                    
+
                       $daystore[] = (object) [
             'day' => new DayResource($day),
             'from' => '08:00:00',
             'to' => '22:00:00',
             'status' => 'active'
             ];
-            
+
             }
-            
-               
+
+
             }
-            
+
 
         }else{
             $daystore = $this->daystore;
         }
-        
-   
-        
-        
-        
+
+
+
+
+
          if($this->verification_status ==null || $this->verification_status == 'pending'){
             $verification_status = 'لم يتم الطلب';
         }elseif($this->verification_status == 'admin_waiting'){
@@ -114,7 +114,7 @@ class StoreResource extends JsonResource
              'package' =>$this->packagee($this->package_id),
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'working_status'=>$this->working_status,
-        //  'workDays'=>DaystoreResource::collection($daystore)
+         'workDays'=>DaystoreResource::collection($daystore)
     ];
     }
 }
