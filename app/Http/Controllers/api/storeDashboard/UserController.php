@@ -188,7 +188,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
 
         if (!is_null($request->password)) {
             $user->update([
-                'password' => $request->input('password'),
+                'password' => $request->password,
             ]);
         }
 
