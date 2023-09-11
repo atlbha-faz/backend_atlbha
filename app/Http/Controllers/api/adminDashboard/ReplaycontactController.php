@@ -24,7 +24,7 @@ class ReplaycontactController extends BaseController
      */
     public function index()
     {
-        $success['Replaycontacts']=ReplaycontactResource::collection(Replaycontact::where('is_deleted',0)->get());
+        $success['Replaycontacts']=ReplaycontactResource::collection(Replaycontact::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع ردود التواصل بنجاح','Replaycontacts return successfully');

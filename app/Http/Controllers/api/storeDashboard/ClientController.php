@@ -21,7 +21,7 @@ class ClientController extends BaseController
      */
     public function index()
     {
-        $success['clients'] = ClientResource::collection(Client::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $success['clients'] = ClientResource::collection(Client::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع العملاء بنجاح', 'clients return successfully');

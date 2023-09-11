@@ -25,7 +25,7 @@ class ActivityController extends BaseController
      */
     public function index()
     {
-        $success['activities']=ActivityResource::collection(Activity::where('is_deleted',0)->get());
+        $success['activities']=ActivityResource::collection(Activity::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع الانشطة بنجاح','Activities return successfully');

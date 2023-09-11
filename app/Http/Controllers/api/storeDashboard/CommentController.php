@@ -33,7 +33,7 @@ class CommentController extends BaseController
     public function index()
     {
 
-        $success['comment_of_store']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',auth()->user()->store_id)->get());
+        $success['comment_of_store']=CommentResource::collection(Comment::where('is_deleted',0)->where('comment_for','store')->where('store_id',auth()->user()->store_id)->orderByDesc('created_at')->get());
         $product_id=array();
         $products=Product::where('store_id',auth()->user()->store_id)->where('is_deleted',0)->get();
         foreach($products as $product ){

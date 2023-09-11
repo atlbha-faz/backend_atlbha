@@ -23,7 +23,7 @@ class SubscriptionsController extends BaseController
     public function index()
     {
 
-        $success['stores'] = SubscriptionsResource::collection(Store::where('is_deleted', 0, )->where('package_id', '!=', null)->get());
+        $success['stores'] = SubscriptionsResource::collection(Store::where('is_deleted', 0, )->where('package_id', '!=', null)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Subscriptions return successfully');

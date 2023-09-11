@@ -34,7 +34,7 @@ class StoreController extends BaseController
     public function index()
     {
 
-        $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->get());
+        $success['stores']=StoreResource::collection(Store::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المتاجر بنجاح','Stores return successfully');

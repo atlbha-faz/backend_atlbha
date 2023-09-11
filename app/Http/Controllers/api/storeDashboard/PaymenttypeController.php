@@ -24,7 +24,7 @@ class PaymenttypeController extends BaseController
     public function index()
      {
 
-        $success['paymenttypes']=PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->where('status', 'active')->get());
+        $success['paymenttypes']=PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع طرق الدفع بنجاح','payment types return successfully');
