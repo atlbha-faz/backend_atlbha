@@ -35,7 +35,7 @@ class CartController extends BaseController
 
     public function admin()
     {
-        $success['cart'] = CartResource::collection(Cart::where('store_id', auth()->user()->store_id)->whereNot('count',0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->get());
+        $success['cart'] = CartResource::collection(Cart::where('store_id', auth()->user()->store_id)->whereNot('count',0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->get());
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
 

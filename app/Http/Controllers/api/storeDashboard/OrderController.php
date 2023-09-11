@@ -44,7 +44,7 @@ class OrderController extends BaseController
         
         $success['orders']=OrderResource::collection(Order::whereHas('items', function($q){
     $q->where('store_id',auth()->user()->store_id);
-})->get());
+})->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الطلبات بنجاح','Orders return successfully');

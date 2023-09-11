@@ -46,7 +46,7 @@ class StockController extends BaseController
         } else {
             $success['most_order'] = 0;
         }
-        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->get());
+        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');

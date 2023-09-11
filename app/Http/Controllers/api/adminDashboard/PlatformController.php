@@ -24,7 +24,7 @@ class PlatformController extends BaseController
      */
     public function index()
     {
-        $success['platforms']=PlatformResource::collection(Platform::where('is_deleted',0)->get());
+        $success['platforms']=PlatformResource::collection(Platform::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع السوق  بنجاح','Platforms return successfully');

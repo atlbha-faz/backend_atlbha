@@ -26,7 +26,7 @@ class ServiceController extends BaseController
     public function index()
     {
 
-        $success['Services']=ServiceResource::collection(Service::where('is_deleted',0)->get());
+        $success['Services']=ServiceResource::collection(Service::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الخدمات بنجاح','Services return successfully');
