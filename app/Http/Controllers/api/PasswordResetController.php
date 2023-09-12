@@ -192,7 +192,7 @@ $user_name = $request->user_name;
            return $this->sendError('Validation Error.', $validator->errors());
         }
 
-
+$user_name = $request->user_name;
         $user = User::where(
            function($query) {
              return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
@@ -243,7 +243,7 @@ $user_name = $request->user_name;
            return $this->sendError('Validation Error.', $validator->errors());
         }
 
-
+$user_name = $request->user_name;
         $user = User::where(
            function($query) {
              return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
