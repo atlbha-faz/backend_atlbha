@@ -193,7 +193,13 @@ $user_name = $request->user_name;
         }
 
 
-        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->first();
+        $user = User::where(
+           function($query) {
+             return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
+            })->where(
+           function($query )use ($user_name) {
+             return $query->where('user_name', $user_name)->orWhere('email', $user_name);
+            })->first();
         if (!$user){
             return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
         }
@@ -238,7 +244,13 @@ $user_name = $request->user_name;
         }
 
 
-        $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->latest()->first();
+        $user = User::where(
+           function($query) {
+             return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
+            })->where(
+           function($query )use ($user_name) {
+             return $query->where('user_name', $user_name)->orWhere('email', $user_name);
+            })->latest()->first();
 
         if($request->code == $user->code)
         {
