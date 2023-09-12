@@ -350,7 +350,7 @@ Route::middleware([AdminUser::class])->group(function () {
 Auth::routes();
 
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
-Route::middleware([StoreUser::class, CheckStorePermission::class])->group(function () {
+Route::middleware([StoreUser::class])->group(function () {
     Route::prefix('/Store')->group(function () {
         // import file
         Route::post('importFile', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importProducts']);
@@ -404,10 +404,10 @@ Route::middleware([StoreUser::class, CheckStorePermission::class])->group(functi
         Route::post('importproduct', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'store']);
         Route::post('updateimportproduct/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'updateimportproduct']);
         // category
-        Route::resource('category', App\Http\Controllers\api\storeDashboard\CategoryController::class);
-        Route::get('categoryStorechangeSatusall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeSatusall']);
-        Route::get('categoryStoredeleteall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteall']);
-        Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeStatus']);
+        Route::resource('category', App\Http\Controllers\api\storeDashboard\CategoryController::class, ['names' => 'store.categories']);
+        Route::get('categoryStorechangeSatusall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeSatusall'])->name('store.categories.changestatusall');
+        Route::get('categoryStoredeleteall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteall'])->name('store.categories.deleteall');
+        Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeStatus'])->name('store.categories.activate');;
         // coupon
         Route::get('changeCouponStatus/{id}', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeStatus']);
         Route::resource('coupons', App\Http\Controllers\api\storeDashboard\CouponController::class);
@@ -515,7 +515,7 @@ Route::middleware([StoreUser::class, CheckStorePermission::class])->group(functi
         Route::get('list', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'list'])->name('list');
 
         Route::resource('orders', App\Http\Controllers\api\storeDashboard\OrderController::class);
-        Route::get('index', [App\Http\Controllers\api\storeDashboard\IndexController::class, 'index'])->name('homepage-show');
+        Route::get('index', [App\Http\Controllers\api\storeDashboard\IndexController::class, 'index'])->name('homepage.show');
         Route::get('ordersdeleteall', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'deleteall']);
         Route::get('permissions', [App\Http\Controllers\api\storeDashboard\PermissionController::class, 'index'])->name('permissions');
         Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class);

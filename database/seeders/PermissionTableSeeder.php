@@ -19,8 +19,7 @@ class PermissionTableSeeder extends Seeder
             'action_type' => 'homepage',
             'name_ar' => 'الرئيسية',
             'parent_id' => null,
-            'type' => 'store',
-            'guard_name' => 'api']);
+            'type' => 'store']);
 
         Permission::create(['name' => 'homepage-show',
             'action_type' => 'show',
