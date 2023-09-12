@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Events\VerificationEvent;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\UserResource;
 use App\Models\Marketer;
 use App\Models\Setting;
 use App\Models\Store;
 use App\Models\User;
-use App\Models\Websiteorder;
-use App\Notifications\verificationNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -28,9 +24,9 @@ class AuthController extends BaseController
             return $this->sendError('stop_registration', 'تم ايقاف التسجيل');
 
         } else {
-            $request->package_id =1;
+            $request->package_id = 1;
             if ($request->user_type == 'store') {
-             
+
                 $input = $request->all();
                 $validator = Validator::make($input, [
                     'checkbox_field' => 'required|in:1',
@@ -40,7 +36,7 @@ class AuthController extends BaseController
                     //'store_name'=>'required_if:user_type,store|string|max:255',
 
                     //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                    'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
+                    'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
                     //'domain'=>'required_if:user_type,store|unique:stores',
 
                     //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -50,7 +46,7 @@ class AuthController extends BaseController
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
                     //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
-                   'periodtype' => 'required|in:6months,year',
+                    'periodtype' => 'required|in:6months,year',
                     'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                         return $query->whereIn('user_type', ['store', 'store_employee']);
                     })],
@@ -63,46 +59,45 @@ class AuthController extends BaseController
                     return $this->sendError('Validation Error.', $validator->errors());
                 }
             } else {
-                if ($setting->registration_marketer =="not_active") {
+                if ($setting->registration_marketer == "not_active") {
 
-         
                     return $this->sendError('stop_registration_markter', 'لايمكن تسجيل مندوب');
-             
-            }else {
-            
-                $input = $request->all();
-                $validator = Validator::make($input, [
-                    'checkbox_field' => 'required|in:1',
-                    'user_type' => 'required|in:store,marketer',
-                    // 'name'=>'required|string|max:255',
-                    'user_name' => 'required|string|max:255|unique:users',
-                    //'store_name'=>'required_if:user_type,store|string|max:255',
 
-                    //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                    'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
-                    //'domain'=>'required_if:user_type,store|unique:stores',
-                    //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-                    //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
-                    //'package_id' => 'required_if:user_type,store|exists:packages,id',
-                    //'country_id'=>'required_if:user_type,store|exists:countries,id',
-                    'city_id' => 'required_if:user_type,marketer|exists:cities,id',
-                    //'periodtype' => 'required_if:user_type,store|in:6months,year',
-                    'email' => 'nullable', 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                        return $query->whereIn('user_type', ['marketer']);
-                    }),
-                    ],
-                    'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                        return $query->whereIn('user_type', ['marketer']);
-                    }),
-                    ],
-                    'name' => 'required|string|max:255',
-                ]);
+                } else {
 
+                    $input = $request->all();
+                    $validator = Validator::make($input, [
+                        'checkbox_field' => 'required|in:1',
+                        'user_type' => 'required|in:store,marketer',
+                        // 'name'=>'required|string|max:255',
+                        'user_name' => 'required|string|max:255|unique:users',
+                        //'store_name'=>'required_if:user_type,store|string|max:255',
+
+                        //'store_email'=>'required_if:user_type,store|email|unique:stores',
+                        'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*~^&()_]).*$/',
+                        //'domain'=>'required_if:user_type,store|unique:stores',
+                        //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+                        //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
+                        //'package_id' => 'required_if:user_type,store|exists:packages,id',
+                        //'country_id'=>'required_if:user_type,store|exists:countries,id',
+                        'city_id' => 'required_if:user_type,marketer|exists:cities,id',
+                        //'periodtype' => 'required_if:user_type,store|in:6months,year',
+                        'email' => 'nullable', 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                            return $query->whereIn('user_type', ['marketer']);
+                        }),
+                        ],
+                        'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                            return $query->whereIn('user_type', ['marketer']);
+                        }),
+                        ],
+                        'name' => 'required|string|max:255',
+                    ]);
+
+                }
+                if ($validator->fails()) {
+                    return $this->sendError('Validation Error.', $validator->errors());
+                }
             }
-            if ($validator->fails()) {
-                return $this->sendError('Validation Error.', $validator->errors());
-            }
-        }
             if ($request->user_type == "store") {
 
                 $user = User::create([
@@ -157,11 +152,10 @@ class AuthController extends BaseController
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
                 $this->sendSms($request);
-            
 
-            $success['user'] = new UserResource($user);
-            $success['token'] = $user->createToken('authToken')->accessToken;
-            $success['status'] = 200;
+                $success['user'] = new UserResource($user);
+                $success['token'] = $user->createToken('authToken')->accessToken;
+                $success['status'] = 200;
 
             } else {
 
@@ -193,15 +187,13 @@ class AuthController extends BaseController
                     $request->code = $user->verify_code;
                     $request->phonenumber = $user->phonenumber;
                     $this->sendSms($request);
-                
-    
-                $success['user'] = new UserResource($user);
-                $success['status'] = 200;
-                } 
+
+                    $success['user'] = new UserResource($user);
+                    $success['status'] = 200;
+                }
 
             }
 
-          
             return $this->sendResponse($success, 'تم التسجيل بنجاح', 'Register Successfully');
         }
     }
@@ -221,45 +213,45 @@ class AuthController extends BaseController
 
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['admin','admin_employee']);
-  }
-  ])
+                $query->whereIn('user_type', ['admin', 'admin_employee']);
+            },
+            ])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['admin','admin_employee']);
-  }])
-        )  {
+                $query->whereIn('user_type', ['admin', 'admin_employee']);
+            }])
+        ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
         } /* elseif (
-            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['admin','admin_employee']);
-  }, 'verified' => 1])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['admin','admin_employee']);
-  }, 'verified' => 1])
+        !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
+        $query->whereIn('user_type',  ['admin','admin_employee']);
+        }, 'verified' => 1])
+        && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
+        $query->whereIn('user_type',  ['admin','admin_employee']);
+        }, 'verified' => 1])
         ) {
-           $user_name =$request->user_name;
-            $user = User::whereIn('user_type',  ['admin','admin_employee']) ->where(function($query) use ($user_name) {
-                    $query->where('user_name', $user_name)->orWhere('email', $user_name);
-                })
-                ->first();
+        $user_name =$request->user_name;
+        $user = User::whereIn('user_type',  ['admin','admin_employee']) ->where(function($query) use ($user_name) {
+        $query->where('user_name', $user_name)->orWhere('email', $user_name);
+        })
+        ->first();
 
-            if ($user) {
+        if ($user) {
 
-                $user->generateVerifyCode();
-                $request->code = $user->verify_code;
-                $request->phonenumber = $user->phonenumber;
-                $this->sendSms($request); // send and return its response
-            }
-
-            return $this->sendError('الحساب غير محقق', 'User not verified');
+        $user->generateVerifyCode();
+        $request->code = $user->verify_code;
+        $request->phonenumber = $user->phonenumber;
+        $this->sendSms($request); // send and return its response
         }
-        */
+
+        return $this->sendError('الحساب غير محقق', 'User not verified');
+        }
+         */
         $remember = request('remember');
         if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['admin','admin_employee']);
-  }, /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['admin','admin_employee']);
-  }, /*'verified' => 1 */])) {
+            $query->whereIn('user_type', ['admin', 'admin_employee']);
+        } /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
+            $query->whereIn('user_type', ['admin', 'admin_employee']);
+        } /*'verified' => 1 */])) {
             $user = auth()->user();
         }
 
@@ -284,33 +276,32 @@ class AuthController extends BaseController
         ]);
 
         if ($validator->fails()) {
-           
-           
+
             return $this->sendError(null, $validator->errors());
         }
-        
+
         if (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['store','store_employee']);
-  }
-  ])
+                $query->whereIn('user_type', ['store', 'store_employee']);
+            },
+            ])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['store','store_employee']);
-  }])
+                $query->whereIn('user_type', ['store', 'store_employee']);
+            }])
         ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
         } elseif (
             !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['store','store_employee']);
-  }, 'verified' => 1])
+                $query->whereIn('user_type', ['store', 'store_employee']);
+            }, 'verified' => 1])
             && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['store','store_employee']);
-  }, 'verified' => 1])
+                $query->whereIn('user_type', ['store', 'store_employee']);
+            }, 'verified' => 1])
         ) {
-            $user_name =$request->user_name;
-            $user = User::whereIn('user_type',  ['store','store_employee']) ->where(function($query) use ($user_name) {
-                    $query->where('user_name', $user_name)->orWhere('email', $user_name);
-                })
+            $user_name = $request->user_name;
+            $user = User::whereIn('user_type', ['store', 'store_employee'])->where(function ($query) use ($user_name) {
+                $query->where('user_name', $user_name)->orWhere('email', $user_name);
+            })
                 ->first();
 
             if ($user) {
@@ -324,14 +315,12 @@ class AuthController extends BaseController
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
         // $remember = request('remember');
-        
-     
 
         if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['store','store_employee']);
-  }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-       $query->whereIn('user_type',  ['store','store_employee']);
-  }, 'verified' => 1])) {
+            $query->whereIn('user_type', ['store', 'store_employee']);
+        }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
+            $query->whereIn('user_type', ['store', 'store_employee']);
+        }, 'verified' => 1])) {
             $user = auth()->user();
 
         }
