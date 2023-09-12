@@ -174,7 +174,7 @@ class PasswordResetController extends BaseController
         $validator = Validator::make($input, [
             //'email' => 'required|string|email',
             'user_name' => 'required|string',
-            'password' => ['required', 'confirmed', 'string', 'min:6', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_]).*$/'],
+            'password' => ['required', 'confirmed', 'string', 'min:6', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/'],
             'token' => 'required|string',
         ]);
 

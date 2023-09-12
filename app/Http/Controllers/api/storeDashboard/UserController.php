@@ -63,7 +63,7 @@ class UserController extends BaseController
             }),
             ],
             'status' => 'required|in:active,not_active',
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_]).*$/',
+            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['store_employee', 'store']);
             })],
@@ -157,7 +157,7 @@ class UserController extends BaseController
                     ->where('id', '!=', $user->id);
             }),
             ],
-            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_]).*$/',
+            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
             // 'password_confirm' => 'nullable|same:password',
             'status' => 'required|in:active,not_active',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {

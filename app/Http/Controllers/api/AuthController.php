@@ -36,7 +36,7 @@ class AuthController extends BaseController
                     //'store_name'=>'required_if:user_type,store|string|max:255',
 
                     //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                    'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_]).*$/',
+                    'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
                     //'domain'=>'required_if:user_type,store|unique:stores',
 
                     //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -74,7 +74,7 @@ class AuthController extends BaseController
                         //'store_name'=>'required_if:user_type,store|string|max:255',
 
                         //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                        'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_~^&()_]).*$/',
+                        'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*~^&()_]).*$/',
                         //'domain'=>'required_if:user_type,store|unique:stores',
                         //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
                         //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
