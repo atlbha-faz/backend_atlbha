@@ -350,7 +350,7 @@ Route::middleware([AdminUser::class])->group(function () {
 Auth::routes();
 
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
-Route::middleware([StoreUser::class])->group(function () {
+Route::middleware([StoreUser::class, CheckStorePermission::class])->group(function () {
     Route::prefix('/Store')->group(function () {
         // import file
         Route::post('importFile', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importProducts']);
@@ -515,7 +515,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('list', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'list'])->name('list');
 
         Route::resource('orders', App\Http\Controllers\api\storeDashboard\OrderController::class);
-        Route::get('index', [App\Http\Controllers\api\storeDashboard\IndexController::class, 'index']);
+        Route::get('index', [App\Http\Controllers\api\storeDashboard\IndexController::class, 'index'])->name('homepage-show');
         Route::get('ordersdeleteall', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'deleteall']);
         Route::get('permissions', [App\Http\Controllers\api\storeDashboard\PermissionController::class, 'index'])->name('permissions');
         Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class);
