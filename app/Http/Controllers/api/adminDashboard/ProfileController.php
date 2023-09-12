@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\User;
-use App\Models\Store;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\UserResource;
+use App\Models\Store;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends BaseController
 {
@@ -21,7 +21,7 @@ class ProfileController extends BaseController
     public function index()
     {
         $success['users'] = new UserResource(auth()->user());
-        $success['verification_count']=  Store::where('is_deleted',0)->where('verification_status','=','admin_waiting')->count();
+        $success['verification_count'] = Store::where('is_deleted', 0)->where('verification_status', '=', 'admin_waiting')->count();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'user showed successfully');
@@ -36,14 +36,14 @@ class ProfileController extends BaseController
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['admin_employee','admin'])
+                return $query->whereIn('user_type', ['admin_employee', 'admin'])
                     ->where('id', '!=', $user->id);
             }),
             ],
-            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
+            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_]).*$/',
             'confirm_password' => 'required_if:password,required|same:password',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['admin_employee','admin'])
+                return $query->whereIn('user_type', ['admin_employee', 'admin'])
                     ->where('id', '!=', $user->id);
             }),
             ],

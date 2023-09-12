@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class UserController extends BaseController
 {
@@ -24,11 +24,10 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if($storeAdmain!=null){
-        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-        }
-        else{
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        if ($storeAdmain != null) {
+            $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        } else {
             $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
 
         }
@@ -59,14 +58,14 @@ class UserController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
-           'email' => ['required','email', Rule::unique('users')->where(function ($query) {
-                    return $query->whereIn('user_type', ['store_employee','store']);
-                }),
-                ],
+            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                return $query->whereIn('user_type', ['store_employee', 'store']);
+            }),
+            ],
             'status' => 'required|in:active,not_active',
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
+            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_]).*$/',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['store_employee','store']);
+                return $query->whereIn('user_type', ['store_employee', 'store']);
             })],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
@@ -102,12 +101,11 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-        $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if($storeAdmain!=null){
-        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->first();
-        }
-        else{
-        $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->first();
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        if ($storeAdmain != null) {
+            $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->first();
+        } else {
+            $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->first();
 
         }
         if (is_null($user) || $user->is_deleted == 1) {
@@ -139,31 +137,31 @@ class UserController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if($storeAdmain!=null){
-        $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
-        } else{
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        if ($storeAdmain != null) {
+            $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
+        } else {
             $user = User::where('id', $id)->where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->first();
 
         }
-if (is_null($user) || $user->is_deleted == 1 ) {
-    return $this->sendError("المستخدم غير موجود", "user is't exists");
-}
+        if (is_null($user) || $user->is_deleted == 1) {
+            return $this->sendError("المستخدم غير موجود", "user is't exists");
+        }
 
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store_employee','store'])
+                return $query->whereIn('user_type', ['store_employee', 'store'])
                     ->where('id', '!=', $user->id);
             }),
             ],
-             'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
+            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_]).*$/',
             // 'password_confirm' => 'nullable|same:password',
             'status' => 'required|in:active,not_active',
-             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store_employee','store'])
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store_employee', 'store'])
                     ->where('id', '!=', $user->id);
             }),
             ],
@@ -176,7 +174,7 @@ if (is_null($user) || $user->is_deleted == 1 ) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-      
+
         $user->update([
             'name' => $request->input('name'),
             'user_name' => $request->input('user_name'),
@@ -210,11 +208,10 @@ if (is_null($user) || $user->is_deleted == 1 ) {
      */
     public function destroy($id)
     {
-        $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if($storeAdmain!=null){
-        $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
-        }
-        else{
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        if ($storeAdmain != null) {
+            $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
+        } else {
             $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->first();
 
         }
@@ -230,13 +227,11 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function deleteall(Request $request)
     {
-        $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if($storeAdmain!=null){
-        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
-        }
-        else
-        {
-     $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get();
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        if ($storeAdmain != null) {
+            $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
+        } else {
+            $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get();
         }
         if (count($users) > 0) {
             foreach ($users as $user) {
@@ -254,12 +249,10 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function changeSatusall(Request $request)
     {
-        $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if($storeAdmain!=null){
-        $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
-        }
-        else
-        {
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        if ($storeAdmain != null) {
+            $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
+        } else {
             $users = User::whereIn('id', $request->id)->where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get();
         }
         if (count($users) > 0) {
@@ -282,12 +275,10 @@ if (is_null($user) || $user->is_deleted == 1 ) {
     }
     public function changeStatus($id)
     {
-        $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if($storeAdmain!=null){
-        $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
-        }
-        else
-        {
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        if ($storeAdmain != null) {
+            $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->first();
+        } else {
             $user = User::where('id', $id)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->first();
 
         }
