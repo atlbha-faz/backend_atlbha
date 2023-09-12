@@ -22,7 +22,7 @@ class WebsiteSocialmediaController extends BaseController
      */
     public function index()
     {
-        $success['website_socialmedia']=website_socialmediaResource::collection(website_socialmedia::where('is_deleted',0)->get());
+        $success['website_socialmedia']=website_socialmediaResource::collection(website_socialmedia::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع وسائل التواصل بنجاح',' website_socialmedia return successfully');

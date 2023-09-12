@@ -25,7 +25,7 @@ class PackageController extends BaseController
      */
     public function index()
     {
-       $success['packages']=PackageResource::collection(Package::where('is_deleted',0)->get());
+       $success['packages']=PackageResource::collection(Package::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الباقات بنجاح','packages return successfully');

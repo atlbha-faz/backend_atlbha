@@ -15,7 +15,7 @@ class RegionController extends Controller
      */
     public function index()
     {
-       $success['regions']=RegionResource::collection(Region::where('is_deleted',0)->get());
+       $success['regions']=RegionResource::collection(Region::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المناطق بنجاح','regions return successfully');

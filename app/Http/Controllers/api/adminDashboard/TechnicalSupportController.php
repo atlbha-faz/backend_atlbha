@@ -38,7 +38,7 @@ class TechnicalSupportController extends BaseController
        $success['TechnicalsupportsCount']=TechnicalSupport::where('is_deleted',0)->count();
        $success['pending_Technicalsupports']=TechnicalSupport::where('is_deleted',0)->where('supportstatus','pending')->count();
        $success['finished_Technicalsupports']=TechnicalSupport::where('is_deleted',0)->where('supportstatus','finished')->count();
-       $success['Technicalsupports']=TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted',0)->get());
+       $success['Technicalsupports']=TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted',0)->orderByDesc('created_at')->get());
        $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الدعم الفني بنجاح','Technical Support return successfully');

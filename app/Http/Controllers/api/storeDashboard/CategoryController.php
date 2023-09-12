@@ -28,7 +28,7 @@ class CategoryController extends BaseController
                 ->where(function ($query) {
                     $query->where('store_id', auth()->user()->store_id)
                         ->OrWhere('store_id', null);
-                })->get());
+                })->orderByDesc('created_at')->get());
 
         // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
         $success['status'] = 200;

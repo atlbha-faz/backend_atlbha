@@ -18,7 +18,7 @@ class RoleController extends BaseController
      public function index()
     {
 
-                $success['roles']=RoleResource::collection(Role::where('type','store')->whereNot('name', 'المالك')->get());
+                $success['roles']=RoleResource::collection(Role::where('type','store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->get());
 
         $success['status']= 200;
 
@@ -28,7 +28,7 @@ class RoleController extends BaseController
     public function show($role)
     {
         $role= Role::query()->find($role);
-        if ( is_null($role) || $role->type!='store' || $role->name =='المالك'){
+        if ( is_null($role) || $role->type!='store' || $role->name =='المالك'|| $role->store_id!= auth()->user()->store_id){
                return $this->sendError("الدور غير موجود","Role is't exists");
                }
               $success['role']=New RoleResource($role);
@@ -56,7 +56,7 @@ class RoleController extends BaseController
             }
       
       
-    $role = Role::create(['name'=>$request->role_name , 'type'=>'store' ,'guard_name'=>'api']);
+    $role = Role::create(['name'=>$request->role_name , 'type'=>'store' ,'guard_name'=>'api','store_id' => auth()->user()->store_id,]);
       
     $role->syncPermissions($request->permissions);
 
@@ -69,7 +69,7 @@ class RoleController extends BaseController
     
      public function update(Request $request, Role $role)
     {
-        if (is_null($role) ||  $role->type!= 'store' || $role->name =='المالك'){
+        if (is_null($role) ||  $role->type!= 'store' || $role->name =='المالك'|| $role->store_id!= auth()->user()->store_id){
             return $this->sendError("الدور غير موجود"," Role is't exists");
        }
             $input = $request->all();
@@ -100,7 +100,7 @@ class RoleController extends BaseController
     
        public function destroy( Role $role)
     {
-        if (is_null($role) ||  $role->type!= 'store' || $role->name=='المالك'){
+        if (is_null($role) ||  $role->type!= 'store' || $role->name=='المالك' || $role->store_id!= auth()->user()->store_id){
             return $this->sendError("الدور غير موجود"," Role is't exists");
        }
            

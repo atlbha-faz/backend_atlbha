@@ -25,7 +25,7 @@ class TechnicalSupportController extends BaseController
      */
     public function index()
     {
-        $success['Technicalsupports'] = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $success['Technicalsupports'] = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'Technical Support return successfully');

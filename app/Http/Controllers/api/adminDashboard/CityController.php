@@ -24,7 +24,7 @@ class CityController extends BaseController
      */
     public function index()
     {
-        $success['cities']=CityResource::collection(City::where('is_deleted',0)->get());
+        $success['cities']=CityResource::collection(City::where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المدن بنجاح','cities return successfully');

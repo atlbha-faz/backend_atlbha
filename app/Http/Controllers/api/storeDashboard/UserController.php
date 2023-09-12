@@ -26,10 +26,10 @@ class UserController extends BaseController
     {
         $storeAdmain=User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if($storeAdmain!=null){
-        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get());
+        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id',  $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
         }
         else{
-            $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get());
+            $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
 
         }
         $success['status'] = 200;
@@ -159,8 +159,8 @@ if (is_null($user) || $user->is_deleted == 1 ) {
                     ->where('id', '!=', $user->id);
             }),
             ],
-            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
-            'password_confirm' => 'nullable|same:password',
+             'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@]).*$/',
+            // 'password_confirm' => 'nullable|same:password',
             'status' => 'required|in:active,not_active',
              'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
                 return $query->whereIn('user_type', ['store_employee','store'])
@@ -171,10 +171,12 @@ if (is_null($user) || $user->is_deleted == 1 ) {
             'role' => 'required|string|max:255|exists:roles,name',
 
         ]);
+
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
+      
         $user->update([
             'name' => $request->input('name'),
             'user_name' => $request->input('user_name'),
@@ -187,13 +189,12 @@ if (is_null($user) || $user->is_deleted == 1 ) {
         ]);
 
         if (!is_null($request->password)) {
-            $user->update([
-                'password' => $request->input('password'),
-            ]);
+            $user->password = $request->password;
+            $user->update();
         }
 
         $user->syncRoles($request->role);
-        $user->save();
+        // $user->save();
         $success['users'] = new UserResource($user);
         $success['status'] = 200;
 
