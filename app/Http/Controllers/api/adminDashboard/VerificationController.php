@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Carbon\Carbon;
-use App\Models\Note;
-use App\Models\User;
-use App\Models\Store;
-use App\Mail\SendMail;
-use Illuminate\Http\Request;
 use App\Events\VerificationEvent;
-use App\Http\Resources\NoteResource;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\VerificationResource;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\VerificationResource;
+use App\Mail\SendMail;
+use App\Models\Note;
+use App\Models\Store;
+use App\Models\User;
+use App\Notifications\verificationNotification;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class VerificationController extends BaseController
 {
@@ -47,7 +47,8 @@ class VerificationController extends BaseController
 
         $store->update(['verification_status' => 'accept',
             'verification_date' => $date]);
-        $users = User::where('store_id', $store->id)->get();
+
+        $user = User::where('store_id', $store->id)->where('user_type', 'store')->first();
         $data = [
             'message' => ' تم قبول توثيق المتجر',
             'store_id' => $store->id,
@@ -56,11 +57,8 @@ class VerificationController extends BaseController
             'object_id' => $store->id,
         ];
 
-        foreach ($users as $user) {
-            Notification::send($user, new verificationNotification($data));
-            Mail::to($user->email)->send(new SendMail($data));
-
-        }
+        Notification::send($user, new verificationNotification($data));
+        Mail::to($user->email)->send(new SendMail($data));
 
         event(new VerificationEvent($data));
         $success['store'] = new VerificationResource($store);
@@ -79,7 +77,8 @@ class VerificationController extends BaseController
         $date = Carbon::now()->toDateTimeString();
         $store->update(['verification_status' => 'reject',
             'verification_date' => $date]);
-        $users = User::where('store_id', $store->id)->get();
+        $user = User::where('store_id', $store->id)->where('user_type', 'store')->first();
+
         $data = [
             'message' => ' تم رفض توثيق المتجر',
             'store_id' => $store->id,
@@ -88,9 +87,9 @@ class VerificationController extends BaseController
             'object_id' => $store->id,
         ];
 
-        foreach ($users as $user) {
-            Notification::send($user, new verificationNotification($data));
-        }
+        Notification::send($user, new verificationNotification($data));
+
+        Mail::to($user->email)->send(new SendMail($data));
 
         event(new VerificationEvent($data));
         $success['store'] = new VerificationResource($store);
