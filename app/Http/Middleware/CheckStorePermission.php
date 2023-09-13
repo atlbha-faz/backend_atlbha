@@ -23,7 +23,7 @@ class CheckStorePermission
 
         if (!is_null($user)) {
 
-            if ($user->hasRole('المالك')) {
+            if ($user->hasRole('المالك') || $user->user_type == 'store') {
                 $hasPermission = true;
             }
 

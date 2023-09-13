@@ -27,7 +27,7 @@ class VerificationController extends BaseController
 
         // $success['activity']=Store::where('store_id',auth()->user()->store_id)->activities->first();
         $type = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('commercialregistertype')->first();
-    
+
             $success['name'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('store_name')->first();
             $success['city'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('city_id')->first();
 
@@ -89,7 +89,7 @@ class VerificationController extends BaseController
             'store_name' => $request->input('store_name')
 
         ]);
-      
+
 
         $store->activities()->sync($request->activity_id);
 

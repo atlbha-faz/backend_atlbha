@@ -19,50 +19,70 @@ class PermissionTableSeeder extends Seeder
             'action_type' => 'homepage',
             'name_ar' => 'الرئيسية',
             'parent_id' => null,
-            'type' => 'store']);
+            'type' => 'store',
+        ]);
 
-        Permission::create(['name' => 'homepage-show',
+        Permission::create(['name' => 'homepage.show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
             'parent_id' => 1,
-            'type' => 'store']);
+            'type' => 'store',
+        ]);
 
-        //////////////////////////////////////////////////////////////// 3
+//////////////////////////////////////////////////////////////// 3
 
-        Permission::create(['name' => 'categories',
+        Permission::create(['name' => 'store.store.categories',
             'action_type' => 'categories',
             'name_ar' => 'التصنيفات',
             'parent_id' => null,
-            'type' => 'store']);
+            'type' => 'store',
+        ]);
 
-        Permission::create(['name' => 'categories-show',
+        Permission::create(['name' => 'store.categories.index',
             'action_type' => 'show',
             'name_ar' => 'عرض',
             'parent_id' => 3,
-            'type' => 'store']);
-        Permission::create(['name' => 'categories-add',
+            'type' => 'store',
+        ]);
+        Permission::create(['name' => 'store.categories.store',
             'action_type' => 'add',
             'name_ar' => 'إضافة',
             'parent_id' => 3,
-            'type' => 'store']);
+            'type' => 'store',
+        ]);
 
-        Permission::create(['name' => 'categories-update',
+        Permission::create(['name' => 'store.categories.update',
             'action_type' => 'update',
             'name_ar' => 'تعديل',
             'parent_id' => 3,
-            'type' => 'store']);
-        Permission::create(['name' => 'categories-delete',
+            'type' => 'store',
+        ]);
+        Permission::create(['name' => 'store.categories.delete',
             'action_type' => 'delete',
             'name_ar' => 'حذف',
             'parent_id' => 3,
-            'type' => 'store']);
-        Permission::create(['name' => 'categories-activate',
+            'type' => 'store',
+        ]);
+        Permission::create(['name' => 'store.categories.activate',
             'action_type' => 'activate',
             'name_ar' => 'تفعيل / تعطيل',
             'parent_id' => 3,
-            'type' => 'store']);
+            'type' => 'store',
+        ]);
+        Permission::create(['name' => 'store.categories.changestatusall',
+            'action_type' => 'changestatusalls',
+            'name_ar' => 'تفعيل / تعطيل',
+            'parent_id' => 3,
+            'type' => 'store',
+        ]);
+        Permission::create(['name' => 'store.categories.deleteall',
+            'action_type' => 'deleteall',
+            'name_ar' => 'حذف',
+            'parent_id' => 3,
+            'type' => 'store',
+        ]);
 
-        //////////////////////////////////////////////////////////////// 9
+        ////////////////////////////////////////////////////////////////
 
         Permission::create(['name' => 'products',
             'action_type' => 'products',
@@ -73,7 +93,7 @@ class PermissionTableSeeder extends Seeder
         Permission::create(['name' => 'products-show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 9,
+            'parent_id' => 11,
             'type' => 'store']);
         Permission::create(['name' => 'products-add',
             'action_type' => 'add',
