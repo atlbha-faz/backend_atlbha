@@ -389,7 +389,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);
         // product
-        Route::resource('product', App\Http\Controllers\api\storeDashboard\ProductController::class);
+        Route::resource('product', App\Http\Controllers\api\storeDashboard\ProductController::class, ['names' => 'store.products']);
         Route::post('import-products', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importProducts']);
         Route::get('productchangeSatusall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeSatusall']);
         Route::get('productdeleteall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteall']);
