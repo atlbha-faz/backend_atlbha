@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
         } else {
             $special = 'غير مميز';
         }
-
+         $domain=$this->store_id !== null ? $this->store->domain  :'atlbha';
         return [
             'id' => $this->id,
 
@@ -46,7 +46,8 @@ class ProductResource extends JsonResource
             'importproduct' => $this->importproduct->count(),
             'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id', explode(',', $this->subcategory_id))->get()),
             'status' => $status,
-            'special' => $special,
+            'special' => $special,  
+             'url'=>'https://template.atlbha.com/'.$domain.'/shop/product/'.$this->id,
             'amount' => $this->amount,
             'productRating' => $this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
             'productRatingCount' => $this->productratecount($this->id) !== null ? $this->productratecount($this->id) : 0,

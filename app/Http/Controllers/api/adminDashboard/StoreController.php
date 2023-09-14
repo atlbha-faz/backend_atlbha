@@ -127,11 +127,12 @@ class StoreController extends BaseController
             'periodtype' => $request->periodtype,
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
-
-        ]);
-
-        $user->update([
-            'store_id' => $store->id]);
+                  ]);
+          $user->update([
+               'store_id' =>  $store->id
+            ]);
+           $user->assignRole("المالك");
+   
 
         if ($request->periodtype == "6months") {
             $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
@@ -166,6 +167,7 @@ class StoreController extends BaseController
 
         return $this->sendResponse($success, 'تم إضافة متجر بنجاح', ' store Added successfully');
     }
+
 
     /**
      * Display the specified resource.
