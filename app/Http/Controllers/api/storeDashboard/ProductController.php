@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\importsResource;
-use App\Http\Resources\ProductResource;
-use App\Imports\ProductsImport;
-use App\Models\Importproduct;
+use App\Models\Image;
 use App\Models\Product;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Importproduct;
+use App\Imports\ProductsImport;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\ProductResource;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
 {
@@ -67,7 +69,8 @@ class ProductController extends BaseController
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'discount_price' => ['nullable', 'numeric'],
-
+            'images' => 'nullable|array',
+            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'SEOdescription' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
@@ -102,7 +105,19 @@ class ProductController extends BaseController
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
         ]);
+        $productid = $product->id;
+        if ($request->hasFile("images")) {
+            $files = $request->file("images");
+            foreach ($files as $file) {
+                $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
+                $request['product_id'] = $productid;
+                $request['image'] = $imageName;
+                $filePath = 'images/product/' . $imageName;
+                $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+                Image::create($request->all());
 
+            }
+        }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
@@ -206,7 +221,8 @@ class ProductController extends BaseController
                 'stock' => ['required', 'numeric', 'gt:0'],
                 'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
                 'discount_price' => ['required', 'numeric'],
-
+                'images' => 'nullable|array',
+                'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
                 'SEOdescription' => 'nullable',
                 'category_id' => 'required|exists:categories,id',
                 'subcategory_id' => ['nullable', 'array'],
@@ -244,7 +260,27 @@ class ProductController extends BaseController
                 // 'store_id' => $request->input('store_id'),
 
             ]);
-
+            $productid = $product->id;
+            if ($request->hasFile("images")) {
+                $files = $request->file("images");
+    
+                $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
+                foreach ($image_id as $oid) {
+                    $image = Image::query()->find($oid);
+                    $image->update(['is_deleted' => 1]);
+    
+                }
+    
+                foreach ($files as $file) {
+                    $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
+                    $request['product_id'] = $productid;
+                    $request['image'] = $imageName;
+                    $filePath = 'images/product/' . $imageName;
+                    $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+                    Image::create($request->all());
+    
+                }
+            }
             $success['products'] = new ProductResource($product);
             $success['status'] = 200;
 

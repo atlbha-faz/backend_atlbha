@@ -79,6 +79,7 @@ class Kernel extends HttpKernel
         'AdminUser' => \App\Http\Middleware\AdminUser::class,
         'CustomerUser' => \App\Http\Middleware\CustomerUser::class,
         'setActiveStore' => \App\Http\Middleware\SetActiveStore::class,
+        // 'AdminCheckPermission' => \App\Http\Middleware\AdminCheckPermission::class,
 
 
     ];

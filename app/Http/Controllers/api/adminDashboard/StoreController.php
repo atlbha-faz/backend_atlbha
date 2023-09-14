@@ -137,7 +137,7 @@ class StoreController extends BaseController
 
           $user->update([
                'store_id' =>  $store->id]);
-
+  $user->assignRole("المالك");
          if($request->periodtype =="6months"){
            $end_at = date('Y-m-d',strtotime("+ 6 months", strtotime($store->created_at)));
          $store->update([
