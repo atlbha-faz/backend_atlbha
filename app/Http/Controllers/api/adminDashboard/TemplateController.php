@@ -133,7 +133,7 @@ class TemplateController extends BaseController
      {
         $template =Template::query()->find($template);
         if (is_null($template) || $template->is_deleted==1){
-            return $this->sendError("التصنيف غير موجودة"," template is't exists");
+            return $this->sendError("القسم غير موجودة"," template is't exists");
        }
         if($request->parent_id == null){
 

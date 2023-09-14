@@ -212,14 +212,14 @@ class AuthController extends BaseController
         //dd(Hash::make($request->password));
 
         if (
-            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['admin', 'admin_employee']);
-            },
-            ])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['admin', 'admin_employee']);
-            }])
-        ) {
+            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['admin','admin_employee']);
+  }
+  ])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['admin','admin_employee']);
+  }])
+        )  {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
         } /* elseif (
         !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
@@ -247,11 +247,11 @@ class AuthController extends BaseController
         }
          */
         $remember = request('remember');
-        if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-            $query->whereIn('user_type', ['admin', 'admin_employee']);
-        } /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-            $query->whereIn('user_type', ['admin', 'admin_employee']);
-        } /*'verified' => 1 */])) {
+        if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['admin','admin_employee']);
+  }, /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['admin','admin_employee']);
+  }, /*'verified' => 1 */])) {
             $user = auth()->user();
         }
 
@@ -281,22 +281,22 @@ class AuthController extends BaseController
         }
 
         if (
-            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['store', 'store_employee']);
-            },
-            ])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['store', 'store_employee']);
-            }])
+            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['store','store_employee']);
+  }
+  ])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['store','store_employee']);
+  }])
         ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
         } elseif (
-            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['store', 'store_employee']);
-            }, 'verified' => 1])
-            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['store', 'store_employee']);
-            }, 'verified' => 1])
+            !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['store','store_employee']);
+  }, 'verified' => 1])
+            && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['store','store_employee']);
+  }, 'verified' => 1])
         ) {
             $user_name = $request->user_name;
             $user = User::whereIn('user_type', ['store', 'store_employee'])->where(function ($query) use ($user_name) {
@@ -315,12 +315,14 @@ class AuthController extends BaseController
             return $this->sendError('الحساب غير محقق', 'User not verified');
         }
         // $remember = request('remember');
+        
+        
 
-        if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-            $query->whereIn('user_type', ['store', 'store_employee']);
-        }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-            $query->whereIn('user_type', ['store', 'store_employee']);
-        }, 'verified' => 1])) {
+        if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['store','store_employee']);
+  }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0,'status' => 'active', 'user_type' => function ($query) {
+       $query->whereIn('user_type',  ['store','store_employee']);
+  }, 'verified' => 1])) {
             $user = auth()->user();
 
         }
