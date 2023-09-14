@@ -220,7 +220,7 @@ class ProductController extends BaseController
                 'selling_price' => ['required', 'numeric', 'gt:0'],
                 'stock' => ['required', 'numeric', 'gt:0'],
                 'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-                'discount_price' => ['required', 'numeric'],
+                'discount_price' => ['nullable', 'numeric'],
                 'images' => 'nullable|array',
                 'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
                 'SEOdescription' => 'nullable',
