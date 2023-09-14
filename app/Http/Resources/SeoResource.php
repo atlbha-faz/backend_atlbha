@@ -19,12 +19,12 @@ class SeoResource extends JsonResource
         }else{
             $status = 'غير نشط';
         }
-        
+
         return [
             'id' =>$this->id,
             'index_page_title' => $this->index_page_title,
             'index_page_description' => $this->index_page_description,
-            'show_pages' => $this->show_pages,
+            // 'show_pages' => $this->show_pages,
             'link' => $this->link,
            'robots' => $this->robots,
             'key_words' => explode(',',$this->key_words),

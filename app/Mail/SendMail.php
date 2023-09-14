@@ -3,10 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class SendMail extends Mailable
@@ -30,8 +27,8 @@ class SendMail extends Mailable
      */
     public function build()
     {
-            
-        return $this->from('noreply@atlbha.com')->subject('E-mail from atlbha.net Contact Form')->view('send_mail_template')->with('data',$this->data);
+
+        return $this->from('noreply@atlbha.com')->subject('E-mail from atlbha.net Contact Form')->view('send_mail_template')->with('data', $this->data);
 
     }
 }

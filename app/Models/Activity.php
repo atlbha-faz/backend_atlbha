@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
+    
     use HasFactory;
          protected $fillable = ['name','icon','status','is_deleted'];
 
@@ -20,7 +21,7 @@ class Activity extends Model
         'store_id'
         );
   }
-    
+
     public function setIconAttribute($icon)
     {
         if (!is_null($icon)) {
@@ -40,6 +41,6 @@ class Activity extends Model
         }
         return asset('storage/images/icon/activity') . '/' . $icon;
     }
-    
+
 }
 

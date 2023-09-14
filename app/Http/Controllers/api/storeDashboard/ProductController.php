@@ -144,9 +144,9 @@ class ProductController extends BaseController
      */
     public function show($product)
     {
-      
+
         $product = Product::query()->find($product);
-       
+
         if (is_null($product) || $product->is_deleted == 1) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
         }

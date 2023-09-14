@@ -5,7 +5,9 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\StoreResource;
 use App\Models\Day_Store;
+use App\Models\Homepage;
 use App\Models\Store;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,8 +38,8 @@ class SettingController extends BaseController
             'domain' => ['required', 'string', 'not_regex:/^(https?:\/\/|ftp:\/\/)/i', 'unique:stores,domain,' . auth()->user()->store_id],
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
-            'store_email' => 'required|email|unique:stores,store_email,' . auth()->user()->store_id,
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:stores,store_email,' . auth()->user()->store_id],
+            'store_email' => 'required|email|unique:users,email,' . auth()->user()->id,
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber,' . auth()->user()->id],
             'working_status' => 'required|in:active,not_active',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
@@ -61,6 +63,20 @@ class SettingController extends BaseController
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
             'working_status' => $request->input('working_status'),
+        ]);
+        $store_user = User::where('is_deleted', 0)->where('id', auth()->user()->id)->where('user_type', 'store')->first();
+        $store_user->update([
+
+            'email' => $request->input('store_email'),
+
+            'phonenumber' => $request->input('phonenumber'),
+
+        ]);
+
+        $logohomepage = Homepage::updateOrCreate([
+            'store_id' => auth()->user()->store_id,
+        ], [
+            'logo' => $request->logo,
         ]);
 
         if ($request->input('working_status') == 'active') {
