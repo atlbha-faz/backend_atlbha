@@ -171,27 +171,27 @@ class HomepageController extends BaseController
     // }
 
     // //////////////////////////////////////
-    public function logoUpdate(Request $request)
-    {
+    // public function logoUpdate(Request $request)
+    // {
 
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'logo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-        $logohomepage = Homepage::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-        ], [
-            'logo' => $request->logo,
-        ]);
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+    //         'logo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+    //     ]);
+    //     if ($validator->fails()) {
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $logohomepage = Homepage::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+    //         'logo' => $request->logo,
+    //     ]);
 
-        $success['homepages'] = new HomepageResource($logohomepage);
-        $success['status'] = 200;
+    //     $success['homepages'] = new HomepageResource($logohomepage);
+    //     $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
-    }
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    // }
 
     public function banarUpdate(Request $request)
     {

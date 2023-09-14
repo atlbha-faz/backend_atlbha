@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('index_page_title');
             $table->string('index_page_description');
             $table->string('key_words');
-            $table->enum('show_pages',['short_link','name_link'])->default('name_link');
+            // $table->enum('show_pages',['short_link','name_link'])->default('name_link');
             $table->string('link');
             $table->longText('robots');
             $table->unsignedBigInteger('store_id')->nullable();

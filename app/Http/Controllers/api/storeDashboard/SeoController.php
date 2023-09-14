@@ -109,7 +109,7 @@ class SeoController extends BaseController
            $validator =  Validator::make($input ,[
             'index_page_title'=>'required|string|max:255',
             'index_page_description'=>'required|string',
-           'show_pages'=>'required|in:short_link,name_link',
+        //    'show_pages'=>'required|in:short_link,name_link',
            'key_words' =>'required',
 
            ]);
@@ -124,7 +124,7 @@ class SeoController extends BaseController
                'index_page_title' => $request->index_page_title,
                'index_page_description' => $request->index_page_description,
                'key_words' =>$request->key_words,
-               'show_pages' => $request->show_pages,
+            //    'show_pages' => $request->show_pages,
 
            ]);
 
