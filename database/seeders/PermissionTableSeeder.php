@@ -31,7 +31,7 @@ class PermissionTableSeeder extends Seeder
 
 //////////////////////////////////////////////////////////////// 3
 
-        Permission::create(['name' => 'store.store.categories',
+        Permission::create(['name' => 'store.categories',
             'action_type' => 'categories',
             'name_ar' => 'التصنيفات',
             'parent_id' => null,
@@ -84,160 +84,260 @@ class PermissionTableSeeder extends Seeder
 
         ////////////////////////////////////////////////////////////////
 
-        Permission::create(['name' => 'products',
+        Permission::create(['name' => 'store.products',
             'action_type' => 'products',
             'name_ar' => 'المنتجات',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'products-show',
+        Permission::create(['name' => 'store.products.index',
             'action_type' => 'show',
             'name_ar' => 'عرض',
             'parent_id' => 11,
             'type' => 'store']);
-        Permission::create(['name' => 'products-add',
+        Permission::create(['name' => 'store.products.store',
             'action_type' => 'add',
             'name_ar' => 'إضافة',
-            'parent_id' => 9,
+            'parent_id' => 11,
             'type' => 'store']);
 
-        Permission::create(['name' => 'products-update',
+        Permission::create(['name' => 'store.products.update',
             'action_type' => 'update',
             'name_ar' => 'تعديل',
-            'parent_id' => 9,
+            'parent_id' => 11,
             'type' => 'store']);
-        Permission::create(['name' => 'products-delete',
+        Permission::create(['name' => 'store.products.delete',
             'action_type' => 'delete',
             'name_ar' => 'حذف',
-            'parent_id' => 9,
+            'parent_id' => 11,
             'type' => 'store']);
-        Permission::create(['name' => 'products-activate',
+        Permission::create(['name' => 'store.products.activate',
             'action_type' => 'activate',
             'name_ar' => 'تفعيل / تعطيل',
-            'parent_id' => 9,
+            'parent_id' => 11,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.products.changestatusall',
+            'action_type' => 'changestatusall',
+            'name_ar' => 'تفعيل / تعطيل',
+            'parent_id' => 11,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.products.deleteall',
+            'action_type' => 'deleteall',
+            'name_ar' => 'حذف',
+            'parent_id' => 11,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.products.importfile',
+            'action_type' => 'importfile',
+            'name_ar' => 'رفع ملف',
+            'parent_id' => 11,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.products.duplicateproduct',
+            'action_type' => 'duplicateproduct',
+            'name_ar' => 'تكرار منتج',
+            'parent_id' => 11,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.products.deleteimport',
+            'action_type' => 'deleteimport',
+            'name_ar' => 'حذف منتج مستورد',
+            'parent_id' => 11,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.products.etlobhaShow',
+            'action_type' => 'etlobhaShow',
+            'name_ar' => 'عرض منتجات اطلبها',
+            'parent_id' => 11,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.products.etlbhasingleproduct',
+            'action_type' => 'etlbhasingleproduct',
+            'name_ar' => 'عرض تفاصيل منتج مستورد',
+            'parent_id' => 11,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.products.import',
+            'action_type' => 'import',
+            'name_ar' => 'استيراد منتج',
+            'parent_id' => 11,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.products.updateimport',
+            'action_type' => 'updateimport',
+            'name_ar' => 'تعديل منتج مستورد',
+            'parent_id' => 11,
             'type' => 'store']);
 
         //////////////////////////////////////////////////////////////// 15
 
-        Permission::create(['name' => 'orders',
+        Permission::create(['name' => 'store.orders',
             'action_type' => 'orders',
             'name_ar' => 'الطلبات',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'orders-show',
+        Permission::create(['name' => 'store.orders.index',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 15,
+            'parent_id' => 25,
             'type' => 'store']);
 
-        Permission::create(['name' => 'orders-update',
+        Permission::create(['name' => 'store.orders.update',
             'action_type' => 'update',
             'name_ar' => 'تعديل',
-            'parent_id' => 15,
+            'parent_id' => 25,
             'type' => 'store']);
-        Permission::create(['name' => 'orders-delete',
+        Permission::create(['name' => 'store.orders.delete',
             'action_type' => 'delete',
             'name_ar' => 'حذف',
-            'parent_id' => 15,
+            'parent_id' => 25,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.orders.deleteall',
+            'action_type' => 'deleteall',
+            'name_ar' => 'حذف',
+            'parent_id' => 25,
             'type' => 'store']);
 
         //////////////////////////////////////////////////////////////// 19
 
-        Permission::create(['name' => 'copons',
+        Permission::create(['name' => 'store.copons',
             'action_type' => 'copons',
             'name_ar' => 'الكوبونات',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'copons-show',
+        Permission::create(['name' => 'store.copons.index',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 19,
+            'parent_id' => 27,
             'type' => 'store']);
-        Permission::create(['name' => 'copons-add',
+        Permission::create(['name' => 'store.copons.store',
             'action_type' => 'add',
             'name_ar' => 'إضافة',
-            'parent_id' => 19,
+            'parent_id' => 27,
             'type' => 'store']);
 
-        Permission::create(['name' => 'copons-update',
+        Permission::create(['name' => 'store.copons.update',
             'action_type' => 'update',
             'name_ar' => 'تعديل',
-            'parent_id' => 19,
+            'parent_id' => 27,
             'type' => 'store']);
-        Permission::create(['name' => 'copons-delete',
+        Permission::create(['name' => 'store.copons.delete',
             'action_type' => 'delete',
             'name_ar' => 'حذف',
-            'parent_id' => 19,
+            'parent_id' => 27,
             'type' => 'store']);
-        Permission::create(['name' => 'copons-activate',
+        Permission::create(['name' => 'store.copons.activate',
             'action_type' => 'activate',
             'name_ar' => 'تفعيل / تعطيل',
-            'parent_id' => 19,
+            'parent_id' => 27,
             'type' => 'store']);
+        Permission::create(['name' => 'store.copons.changestatusall',
+            'action_type' => 'changestatusall',
+            'name_ar' => 'تفعيل / تعطيل',
+            'parent_id' => 27,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.copons.deleteall',
+            'action_type' => 'deleteall',
+            'name_ar' => 'حذف',
+            'parent_id' => 27,
+            'type' => 'store']);
+
         //////////////////////////////////////////////////////////////// 25
 
-        Permission::create(['name' => 'offers',
-            'action_type' => 'offers',
-            'name_ar' => 'العروض الخاصة',
-            'parent_id' => null,
-            'type' => 'store']);
+        // Permission::create(['name' => 'offers',
+        //     'action_type' => 'offers',
+        //     'name_ar' => 'العروض الخاصة',
+        //     'parent_id' => null,
+        //     'type' => 'store']);
 
-        Permission::create(['name' => 'offers-show',
-            'action_type' => 'show',
-            'name_ar' => 'عرض',
-            'parent_id' => 25,
-            'type' => 'store']);
-        Permission::create(['name' => 'offers-add',
-            'action_type' => 'add',
-            'name_ar' => 'إضافة',
-            'parent_id' => 25,
-            'type' => 'store']);
+        // Permission::create(['name' => 'offers-show',
+        //     'action_type' => 'show',
+        //     'name_ar' => 'عرض',
+        //     'parent_id' => 25,
+        //     'type' => 'store']);
+        // Permission::create(['name' => 'offers-add',
+        //     'action_type' => 'add',
+        //     'name_ar' => 'إضافة',
+        //     'parent_id' => 25,
+        //     'type' => 'store']);
 
-        Permission::create(['name' => 'offers-activate',
-            'action_type' => 'activate',
-            'name_ar' => 'تفعيل / تعطيل',
-            'parent_id' => 25,
-            'type' => 'store']);
+        // Permission::create(['name' => 'offers-activate',
+        // 'action_type' => 'activate',
+        // 'name_ar' => 'تفعيل / تعطيل',
+        // 'parent_id' => 25,
+        // 'type' => 'store']);
         //////////////////////////////////////////////////////////////// 29
 
-        Permission::create(['name' => 'abandoned-carts',
+        Permission::create(['name' => 'abandoned.carts',
             'action_type' => 'abandoned-carts',
             'name_ar' => 'السلات المتروكة',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'abandoned-carts-show',
+        Permission::create(['name' => 'abandoned.carts.show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
             'parent_id' => 29,
             'type' => 'store']);
-        Permission::create(['name' => 'abandoned-carts-delete',
+        Permission::create(['name' => 'abandoned.carts.delete',
             'action_type' => 'delete',
             'name_ar' => 'حذف',
             'parent_id' => 29,
             'type' => 'store']);
+        Permission::create(['name' => 'abandoned.carts.sendoffer',
+            'action_type' => 'delsendofferete',
+            'name_ar' => 'ارسال عرض',
+            'parent_id' => 29,
+            'type' => 'store']);
+
         //////////////////////////////////////////////////////////////// 32
 
-        Permission::create(['name' => 'keywords',
+        Permission::create(['name' => 'store.keywords',
             'action_type' => 'keywords',
             'name_ar' => 'الكلمات المفتاحية',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'keywords-show',
+        Permission::create(['name' => 'store.keywords.index',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 32,
+            'parent_id' => 33,
             'type' => 'store']);
 
-        Permission::create(['name' => 'keywords-update',
-            'action_type' => 'update',
-            'name_ar' => 'تعديل',
-            'parent_id' => 32,
+        Permission::create(['name' => 'store.keywords.updateseo',
+            'action_type' => 'updateseo',
+            'name_ar' => 'تعديل الكلمات المفتاحية',
+            'parent_id' => 33,
             'type' => 'store']);
+        Permission::create(['name' => 'store.keywords.updatelink',
+            'action_type' => 'تعديل رابط جوجل انليتكس',
+            'name_ar' => 'تعديل',
+            'parent_id' => 33,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.keywords.updaterobots',
+            'action_type' => 'updaterobots',
+            'name_ar' => 'تعديل ملف الروبوت',
+            'parent_id' => 33,
+            'type' => 'store']);
+
         //////////////////////////////////////////////////////////////// 35
+        Permission::create(['name' => 'store.subsicriptions',
+            'action_type' => 'subsicriptions',
+            'name_ar' => 'الاشتراكات البريدية',
+            'parent_id' => null,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.subsicriptions.show',
+            'action_type' => 'show',
+            'name_ar' => 'عرض',
+            'parent_id' => 38,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.subsicriptions.deleteall',
+            'action_type' => 'deleteall',
+            'name_ar' => 'حذف',
+            'parent_id' => 38,
+            'type' => 'store']);
+
+//////////////////////////////////////////////////////////////// 35
 
         Permission::create(['name' => 'celebrity-marketings',
             'action_type' => 'celebrity-marketings',
@@ -248,267 +348,346 @@ class PermissionTableSeeder extends Seeder
         Permission::create(['name' => 'celebrity-marketings-show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 35,
+            'parent_id' => 41,
             'type' => 'store']);
         //////////////////////////////////////////////////////////////// 37
 
-        Permission::create(['name' => 'ratings',
-            'action_type' => 'ratings',
+        Permission::create(['name' => 'store.comments',
+            'action_type' => 'comments',
             'name_ar' => 'التقييمات',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'ratings-show',
+        Permission::create(['name' => 'store.comments.index',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 37,
+            'parent_id' => 44,
             'type' => 'store']);
-        Permission::create(['name' => 'ratings-add',
+        Permission::create(['name' => 'store.comments.store',
             'action_type' => 'add',
             'name_ar' => 'إضافة',
-            'parent_id' => 37,
+            'parent_id' => 44,
             'type' => 'store']);
 
-        Permission::create(['name' => 'ratings-delete',
+        Permission::create(['name' => 'store.comments.delete',
             'action_type' => 'delete',
             'name_ar' => 'حذف',
-            'parent_id' => 37,
+            'parent_id' => 44,
             'type' => 'store']);
-        Permission::create(['name' => 'ratings-activate',
+        Permission::create(['name' => 'store.comments.activate',
             'action_type' => 'activate',
             'name_ar' => 'تفعيل / تعطيل',
-            'parent_id' => 37,
+            'parent_id' => 44,
             'type' => 'store']);
+        Permission::create(['name' => 'store.comments.activateall',
+            'action_type' => 'activateall',
+            'name_ar' => 'تفعيل جميع التعليقات',
+            'parent_id' => 44,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.comments.replaycomment',
+            'action_type' => 'replaycomment',
+            'name_ar' => 'رد على تعليق',
+            'parent_id' => 44,
+            'type' => 'store']);
+
         //////////////////////////////////////////////////////////////// 42
 
-        Permission::create(['name' => 'pages',
+        Permission::create(['name' => 'store.pages',
             'action_type' => 'pages',
             'name_ar' => 'الصفحات',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'pages-show',
+        Permission::create(['name' => 'store.pages.index',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 42,
+            'parent_id' => 52,
             'type' => 'store']);
-        Permission::create(['name' => 'pages-add',
+        Permission::create(['name' => 'store.pages.store',
             'action_type' => 'add',
             'name_ar' => 'إضافة',
-            'parent_id' => 42,
+            'parent_id' => 52,
             'type' => 'store']);
 
-        Permission::create(['name' => 'pages-update',
+        Permission::create(['name' => 'store.pages.update',
             'action_type' => 'update',
             'name_ar' => 'تعديل',
-            'parent_id' => 42,
+            'parent_id' => 52,
             'type' => 'store']);
-        Permission::create(['name' => 'pages-delete',
+        Permission::create(['name' => 'store.pages.delete',
             'action_type' => 'delete',
             'name_ar' => 'حذف',
-            'parent_id' => 42,
+            'parent_id' => 52,
             'type' => 'store']);
-        Permission::create(['name' => 'pages-activate',
+        Permission::create(['name' => 'store.pages.activate',
             'action_type' => 'activate',
             'name_ar' => 'تفعيل / تعطيل',
-            'parent_id' => 42,
+            'parent_id' => 52,
             'type' => 'store']);
+        Permission::create(['name' => 'store.pages.changestatusall',
+            'action_type' => 'changestatusall',
+            'name_ar' => 'تفعيل / تعطيل',
+            'parent_id' => 52,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.pages.deleteall',
+            'action_type' => 'deleteall',
+            'name_ar' => 'حذف',
+            'parent_id' => 52,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.pages.publish',
+            'action_type' => 'publish',
+            'name_ar' => 'نشر صفحة',
+            'parent_id' => 52,
+            'type' => 'store']);
+
         //////////////////////////////////////////////////////////////// 48
 
-        Permission::create(['name' => 'academy',
+        Permission::create(['name' => 'store.academy',
             'action_type' => 'academy',
             'name_ar' => 'الأكاديمية',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'academy-show',
+        Permission::create(['name' => 'store.academy.index',
+            'action_type' => 'index',
+            'name_ar' => ' عرض الكل',
+            'parent_id' => 61,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.academy.show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 48,
+            'parent_id' => 61,
+            'type' => 'store']);
+
+        //////////////////////////////////////////////////////////////// 50
+        Permission::create(['name' => 'store.explainvideos',
+            'action_type' => 'explainvideos',
+            'name_ar' => 'الشروحات',
+            'parent_id' => null,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.explainvideos.index',
+            'action_type' => 'index',
+            'name_ar' => ' عرض الكل',
+            'parent_id' => 64,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.explainvideos.show',
+            'action_type' => 'show',
+            'name_ar' => 'عرض',
+            'parent_id' => 64,
             'type' => 'store']);
 
         //////////////////////////////////////////////////////////////// 50
 
-        Permission::create(['name' => 'template',
+        Permission::create(['name' => 'store.template',
             'action_type' => 'template',
             'name_ar' => 'القالب',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'template-show',
-            'action_type' => 'show',
+        Permission::create(['name' => 'store.template.index',
+            'action_type' => 'index',
             'name_ar' => 'عرض',
-            'parent_id' => 50,
+            'parent_id' => 67,
             'type' => 'store']);
 
-        Permission::create(['name' => 'template-update',
-            'action_type' => 'update',
-            'name_ar' => 'تعديل',
-            'parent_id' => 50,
+        Permission::create(['name' => 'store.template.logoupdate',
+            'action_type' => 'logoupdate',
+            'name_ar' => 'تعديل الشعار',
+            'parent_id' => 67,
             'type' => 'store']);
+        Permission::create(['name' => 'store.template.sliderupdate',
+            'action_type' => 'sliderupdate',
+            'name_ar' => 'تعديل السلايدرات',
+            'parent_id' => 67,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.template.banarupdate',
+            'action_type' => 'banarupdate',
+            'name_ar' => 'تعديل البنارات',
+            'parent_id' => 67,
+            'type' => 'store']);
+
+        Permission::create(['name' => 'store.template.commentupdate',
+            'action_type' => 'commentupdate',
+            'name_ar' => 'تفعيل/تعطيل التعليقات',
+            'parent_id' => 67,
+            'type' => 'store']);
+
         //////////////////////////////////////////////////////////////// 53
 
-        Permission::create(['name' => 'documentation',
-            'action_type' => 'documentation',
+        Permission::create(['name' => 'store.verification',
+            'action_type' => 'verification',
             'name_ar' => 'توثيق المتجر',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'documentation-show',
+        Permission::create(['name' => 'store.verification.show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 53,
+            'parent_id' => 73,
             'type' => 'store']);
-        Permission::create(['name' => 'documentation-add',
+        Permission::create(['name' => 'store.verification.add',
             'action_type' => 'add',
             'name_ar' => 'إضافة',
-            'parent_id' => 53,
+            'parent_id' => 73,
             'type' => 'store']);
 
         //////////////////////////////////////////////////////////////// 56
 
-        Permission::create(['name' => 'socialmedia',
+        Permission::create(['name' => 'store.socialmedia',
             'action_type' => 'socialmedia',
             'name_ar' => 'صفحات التواصل',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'socialmedia-show',
+        Permission::create(['name' => 'store.socialmedia.show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 56,
+            'parent_id' => 77,
             'type' => 'store']);
 
-        Permission::create(['name' => 'socialmedia-update',
+        Permission::create(['name' => 'store.socialmedia.update',
             'action_type' => 'update',
             'name_ar' => 'تعديل',
-            'parent_id' => 56,
+            'parent_id' => 77,
             'type' => 'store']);
 
         //////////////////////////////////////////////////////////////// 59
 
-        Permission::create(['name' => 'package-upgrade',
-            'action_type' => 'package-upgrade',
-            'name_ar' => 'ترقية الباقة',
-            'parent_id' => null,
-            'type' => 'store']);
+        // Permission::create(['name' => 'package-upgrade',
+        //     'action_type' => 'package-upgrade',
+        //     'name_ar' => 'ترقية الباقة',
+        //     'parent_id' => null,
+        //     'type' => 'store']);
 
-        Permission::create(['name' => 'package-upgrade-show',
-            'action_type' => 'show',
-            'name_ar' => 'عرض',
-            'parent_id' => 59,
-            'type' => 'store']);
+        // Permission::create(['name' => 'package-upgrade-show',
+        //     'action_type' => 'show',
+        //     'name_ar' => 'عرض',
+        //     'parent_id' => 59,
+        //     'type' => 'store']);
 
-        Permission::create(['name' => 'package-upgrade-update',
-            'action_type' => 'update',
-            'name_ar' => 'تعديل',
-            'parent_id' => 59,
-            'type' => 'store']);
+        // Permission::create(['name' => 'package-upgrade-update',
+        //     'action_type' => 'update',
+        //     'name_ar' => 'تعديل',
+        //     'parent_id' => 59,
+        //     'type' => 'store']);
         //////////////////////////////////////////////////////////////// 62
 
-        Permission::create(['name' => 'technical-support',
-            'action_type' => 'technical-support',
+        Permission::create(['name' => 'store.technicalsupport',
+            'action_type' => 'technicalsupport',
             'name_ar' => 'الدعم الفني',
             'parent_id' => null,
             'type' => 'store']);
+        Permission::create(['name' => 'store.technicalsupport.index',
+            'action_type' => 'index',
+            'name_ar' => 'عرض الكل',
+            'parent_id' => 81,
+            'type' => 'store']);
 
-        Permission::create(['name' => 'technical-support-show',
+        Permission::create(['name' => 'store.technicalsupport.show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 62,
+            'parent_id' => 81,
             'type' => 'store']);
 
-        Permission::create(['name' => 'technical-support-update',
-            'action_type' => 'update',
-            'name_ar' => 'تعديل',
-            'parent_id' => 62,
+        Permission::create(['name' => 'store.technicalsupport.cahngestatus',
+            'action_type' => 'cahngestatus',
+            'name_ar' => 'تغيير الحالة',
+            'parent_id' => 81,
             'type' => 'store']);
-        Permission::create(['name' => 'technical-support-delete',
+        Permission::create(['name' => 'store.technicalsupport.delete',
             'action_type' => 'delete',
             'name_ar' => 'حذف',
-            'parent_id' => 62,
+            'parent_id' => 81,
             'type' => 'store']);
+        Permission::create(['name' => 'store.technicalsupport.deleteall',
+            'action_type' => 'deleteall',
+            'name_ar' => 'حذف الكل',
+            'parent_id' => 81,
+            'type' => 'store']);
+        Permission::create(['name' => 'store.technicalsupport.replay',
+            'action_type' => 'replay',
+            'name_ar' => 'رد',
+            'parent_id' => 81,
+            'type' => 'store']);
+
         //////////////////////////////////////////////////////////////// 66
 
-        Permission::create(['name' => 'shipping-companies',
+        Permission::create(['name' => 'store.shippingcompanies',
             'action_type' => 'shipping-companies',
             'name_ar' => 'شركات الشحن',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'shipping-companies-show',
-            'action_type' => 'show',
+        Permission::create(['name' => 'store.shippingcompanies.index',
+            'action_type' => 'index',
             'name_ar' => 'عرض',
-            'parent_id' => 66,
+            'parent_id' => 88,
             'type' => 'store']);
 
-        Permission::create(['name' => 'shipping-companies-activate',
+        Permission::create(['name' => 'store.shippingcompanies.activate',
             'action_type' => 'activate',
             'name_ar' => 'تفعيل / تعطيل',
-            'parent_id' => 66,
+            'parent_id' => 88,
             'type' => 'store']);
         //////////////////////////////////////////////////////////////// 69
 
-        Permission::create(['name' => 'payments-gateways',
-            'action_type' => 'payments-gateways',
+        Permission::create(['name' => 'store.paymentsgateways',
+            'action_type' => 'paymentsgateways',
             'name_ar' => 'بوابات الدفع',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'payments-gateways-show',
-            'action_type' => 'show',
+        Permission::create(['name' => 'store.paymentsgateways.index',
+            'action_type' => 'index',
             'name_ar' => 'عرض',
-            'parent_id' => 69,
+            'parent_id' => 91,
             'type' => 'store']);
 
-        Permission::create(['name' => 'payments-gateways-update',
-            'action_type' => 'update',
-            'name_ar' => 'تعديل',
-            'parent_id' => 69,
-            'type' => 'store']);
-
-        Permission::create(['name' => 'payments-gateways-activate',
+        Permission::create(['name' => 'store.paymentsgateways.activate',
             'action_type' => 'activate',
             'name_ar' => 'تفعيل / تعطيل',
-            'parent_id' => 69,
+            'parent_id' => 91,
             'type' => 'store']);
         //////////////////////////////////////////////////////////////// 73
 
-        Permission::create(['name' => 'basic-data',
-            'action_type' => 'basic-data',
+        Permission::create(['name' => 'store.basicdata',
+            'action_type' => 'basicdata',
             'name_ar' => 'البيانات الأساسية',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'basic-data-show',
+        Permission::create(['name' => 'store.basicdata.show',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 73,
+            'parent_id' => 94,
             'type' => 'store']);
 
-        Permission::create(['name' => 'basic-data-update',
+        Permission::create(['name' => 'store.basicdata.update',
             'action_type' => 'update',
             'name_ar' => 'تعديل',
-            'parent_id' => 73,
+            'parent_id' => 94,
             'type' => 'store']);
         //////////////////////////////////////////////////////////////// 76
 
-        Permission::create(['name' => 'maintenance-mode',
-            'action_type' => 'maintenance-mode',
+        Permission::create(['name' => 'store.maintenancemode',
+            'action_type' => 'maintenancemode',
             'name_ar' => 'وضع الصيانة',
             'parent_id' => null,
             'type' => 'store']);
 
-        Permission::create(['name' => 'maintenance-mode-show',
+        Permission::create(['name' => 'store.maintenancemode.index',
             'action_type' => 'show',
             'name_ar' => 'عرض',
-            'parent_id' => 76,
+            'parent_id' => 97,
             'type' => 'store']);
 
-        Permission::create(['name' => 'maintenance-mode-update',
-            'action_type' => 'update',
+        Permission::create(['name' => 'store.maintenancemode.updatemaintenance',
+            'action_type' => 'updatemaintenance',
             'name_ar' => 'تعديل',
-            'parent_id' => 76,
+            'parent_id' => 97,
             'type' => 'store']);
         //////////////////////////////////////////////////////////////// 79
 
