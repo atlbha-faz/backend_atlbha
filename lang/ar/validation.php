@@ -260,7 +260,7 @@ return [
         'exception_discount_product' => 'استثناء المنتجات المخفضة',
         'status' => 'الحالة',
         'service_id' => 'الخدمة',
-
+        'SEOdescription' => 'وصف الكلمات المفتاحية',
         'city' => 'المدينة',
         'country' => 'الدولة',
         'address' => 'العنوان',
