@@ -15,11 +15,11 @@ use App\Http\Resources\SubscriptionEmailResource;
 use App\Http\Resources\TechnicalsupportResource;
 use App\Models\Category;
 use App\Models\Comment;
-use App\Models\Page_page_category;
 use App\Models\Homepage;
 use App\Models\Importproduct;
 use App\Models\Package_store;
 use App\Models\Page;
+use App\Models\Page_page_category;
 use App\Models\Paymenttype;
 use App\Models\Product;
 use App\Models\Setting;
@@ -50,28 +50,40 @@ class IndexStoreController extends BaseController
             $s1 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus1', 'active')->pluck('slider1')->first();
             if (!is_null($s1)) {
                 $sliders[] = $s1;
+            } else {
+                $sliders[] = asset('assets/media/slider.png');
             }
             $s2 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus2', 'active')->pluck('slider2')->first();
             if (!is_null($s2)) {
                 $sliders[] = $s2;
+            } else {
+                $sliders[] = asset('assets/media/slider.png');
             }
             $s3 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus3', 'active')->pluck('slider3')->first();
             if (!is_null($s3)) {
                 $sliders[] = $s3;
+            } else {
+                $sliders[] = asset('assets/media/slider.png');
             }
             $success['sliders'] = $sliders;
             $banars = array();
             $b1 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus1', 'active')->pluck('banar1')->first();
             if (!is_null($b1)) {
                 $banars[] = $b1;
+            } else {
+                $banars[] = asset('assets/media/banar.png');
             }
             $b2 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus2', 'active')->pluck('banar2')->first();
             if (!is_null($b2)) {
                 $banars[] = $b2;
+            } else {
+                $banars[] = asset('assets/media/banar.png');
             }
             $b3 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus3', 'active')->pluck('banar3')->first();
             if (!is_null($b3)) {
                 $banars[] = $b3;
+            } else {
+                $banars[] = asset('assets/media/banar.png');
             }
             $success['banars'] = $banars;
             //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
@@ -216,28 +228,40 @@ class IndexStoreController extends BaseController
                 $s1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
                 if (!is_null($s1)) {
                     $sliders[] = $s1;
+                } else {
+                    $sliders[] = asset('assets/media/slider.png');
                 }
                 $s2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus2', 'active')->pluck('slider2')->first();
                 if (!is_null($s2)) {
                     $sliders[] = $s2;
+                } else {
+                    $sliders[] = asset('assets/media/slider.png');
                 }
                 $s3 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus3', 'active')->pluck('slider3')->first();
                 if (!is_null($s3)) {
                     $sliders[] = $s3;
+                } else {
+                    $sliders[] = asset('assets/media/slider.png');
                 }
                 $success['sliders'] = $sliders;
                 $banars = array();
                 $b1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus1', 'active')->pluck('banar1')->first();
                 if (!is_null($b1)) {
                     $banars[] = $b1;
+                } else {
+                    $banars[] = asset('assets/media/banar.png');
                 }
                 $b2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus2', 'active')->pluck('banar2')->first();
                 if (!is_null($b2)) {
                     $banars[] = $b2;
+                } else {
+                    $banars[] = asset('assets/media/banar.png');
                 }
                 $b3 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus3', 'active')->pluck('banar3')->first();
                 if (!is_null($b3)) {
                     $banars[] = $b3;
+                } else {
+                    $banars[] = asset('assets/media/banar.png');
                 }
                 $success['banars'] = $banars;
                 //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
