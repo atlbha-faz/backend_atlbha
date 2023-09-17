@@ -222,7 +222,7 @@ class ProductController extends BaseController
                 'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
                 'discount_price' => ['nullable', 'numeric'],
                 'images' => 'nullable|array',
-                'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
+                //'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
                 'SEOdescription' => 'nullable',
                 'category_id' => 'required|exists:categories,id',
                 'subcategory_id' => ['nullable', 'array'],
@@ -270,8 +270,35 @@ class ProductController extends BaseController
                     $image->update(['is_deleted' => 1]);
     
                 }
-    
-                foreach ($files as $file) {
+
+
+
+
+                  if ($request->hasFile("images")) {
+            $files = $request->images;
+
+            foreach ($files as $file) {
+//
+                if (is_uploaded_file($file)) {
+
+                    $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
+                    $request['product_id'] = $productid;
+                    $request['image'] = $imageName;
+                    $filePath = 'images/product/' . $imageName;
+                    $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+                    Image::create($request->all());
+                } else {
+
+                    $request['product_id'] = $productid;
+                    $existingImagePath = $file;
+                    $newImagePath = basename($file);
+                    $request['image'] = $newImagePath;
+                    Storage::copy($existingImagePath, $newImagePath);
+                    Image::create($request->all());
+                }
+            }
+        } 
+               /* foreach ($files as $file) {
                     $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
                     $request['product_id'] = $productid;
                     $request['image'] = $imageName;
@@ -279,7 +306,7 @@ class ProductController extends BaseController
                     $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
                     Image::create($request->all());
     
-                }
+                }*/
             }
             $success['products'] = new ProductResource($product);
             $success['status'] = 200;
