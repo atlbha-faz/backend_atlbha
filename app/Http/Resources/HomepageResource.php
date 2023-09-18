@@ -14,6 +14,24 @@ class HomepageResource extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->banar1 == null){
+            $this->banar1 = asset('assets/media/banar.png');
+        }
+        if($this->banar2 == null){
+            $this->banar2= asset('assets/media/banar.png');
+        }
+        if($this->banar3 == null){
+            $this->banar3 = asset('assets/media/banar.png');
+        }
+        if($this->slider1 == null){
+            $this->slider1 = asset('assets/media/slider.png');
+        }
+        if($this->slider2 == null){
+            $this->slider2 = asset('assets/media/slider.png');
+        }
+        if($this->slider3 == null){
+            $this->slider3 = asset('assets/media/slider.png');
+        }
          return [
             'id' =>$this->id,
             'logo' => $this->logo,
