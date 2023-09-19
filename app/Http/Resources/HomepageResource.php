@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Theme;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class HomepageResource extends JsonResource
