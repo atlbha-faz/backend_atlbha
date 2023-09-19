@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Theme;
+use App\Models\Theme as ThemeModels;
 
 class Theme extends Seeder
 {
