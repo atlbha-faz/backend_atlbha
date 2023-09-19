@@ -37,7 +37,12 @@ class CategoryController extends BaseController
 
             return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
         } else {
-            $success['categories'] = null;
+            $success['categories'] =  CategoryResource::collection(Category::
+                    where('is_deleted', 0)
+                    ->where('parent_id', null)
+                    ->where('for', 'store')
+                    ->where('store_id', auth()->user()->store_id)
+                    ->orderByDesc('created_at')->get());;
             $success['status'] = 200;
 
             return $this->sendResponse($success, ' لايوجد تصنيفات ', 'no categories');
