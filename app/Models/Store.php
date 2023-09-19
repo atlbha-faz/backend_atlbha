@@ -32,6 +32,10 @@ class Store extends Model
         $this->attributes['domain'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+    public function theme()
+    {
+    return $this->hasOne(Theme::class);
+    }
     public function products()
     {
         return $this->hasMany(Product::class);

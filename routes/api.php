@@ -183,7 +183,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::post('logoUpdate', [App\Http\Controllers\api\adminDashboard\HomepageController::class, 'logoUpdate'])->name('admin.homepage.logoUpdate');
         Route::post('banarUpdate', [App\Http\Controllers\api\adminDashboard\HomepageController::class, 'banarUpdate'])->name('admin.homepage.banarUpdate');
         Route::post('sliderUpdate', [App\Http\Controllers\api\adminDashboard\HomepageController::class, 'sliderUpdate'])->name('admin.homepage.sliderUpdate');
-
+        
         Route::resource('country', App\Http\Controllers\api\adminDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\adminDashboard\CityController::class);
         Route::resource('marketer', App\Http\Controllers\api\adminDashboard\MarketerController::class,['names' => 'admin.marketer']);
@@ -381,6 +381,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('banarUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'banarUpdate'])->name('store.template.banarupdate');
         Route::post('sliderUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'sliderUpdate'])->name('store.template.sliderupdate');
         Route::post('commentUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'commentUpdate'])->name('store.template.commentupdate');;
+        Route::post('themeUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeUpdate'])->name('store.template.themeUpdate');;
 
         // maintenance
         Route::resource('maintenance', App\Http\Controllers\api\storeDashboard\MaintenanceController::class, ['names' => 'store.maintenancemode']);
