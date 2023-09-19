@@ -98,6 +98,7 @@ class SelectorController extends BaseController
 
     public function mainCategories()
     {
+        if (auth()->user()->store->verification_status == "accept") {
         $success['categories'] = CategoryResource::collection(Category::
                 where('is_deleted', 0)
                 ->where('parent_id', null)
@@ -106,6 +107,15 @@ class SelectorController extends BaseController
                     $query->where('store_id', auth()->user()->store_id)
                         ->OrWhere('store_id', null);
                 })->where('status', 'active')->get());
+        }else{
+            
+        $success['categories'] = CategoryResource::collection(Category::
+                where('is_deleted', 0)
+                ->where('parent_id', null)
+                ->where('for', 'store')
+                ->where('store_id', auth()->user()->store_id)
+                ->where('status', 'active')->get());
+        }
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
