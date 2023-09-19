@@ -15,7 +15,7 @@ class Theme extends Seeder
      */
     public function run()
     {
-        Theme::create([
+        ThemeModels::create([
             'searchBorder' => "#8235DC",
             'searchBg' =>"#8235DC",
             'categoriesBg' => "#8235DC",
