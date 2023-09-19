@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\Theme;
 use App\Models\Comment;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
