@@ -22,7 +22,7 @@ class CategoryController extends BaseController
     public function index()
     {
         $store = auth()->user()->store_id;
-        if ($store->verification_status == "accept") {
+        if (auth()->user()->store->verification_status == "accept") {
             $success['categories'] = CategoryResource::collection(Category::
                     where('is_deleted', 0)
                     ->where('parent_id', null)
