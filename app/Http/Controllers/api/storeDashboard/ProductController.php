@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\Image;
-use App\Models\Product;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Imports\ProductsImport;
-use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
+use App\Imports\ProductsImport;
+use App\Models\Image;
+use App\Models\Importproduct;
+use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends BaseController
 {
@@ -33,7 +33,7 @@ class ProductController extends BaseController
         $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
 
         $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
-            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price',  'store_id']);
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $imports = importsResource::collection($import);
 
         $success['products'] = $products->merge($imports);
@@ -152,16 +152,15 @@ class ProductController extends BaseController
         }
 
         $newproduct = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $product->id)->first();
-         if($newproduct){
+        if ($newproduct) {
             $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $product->id)
-            ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price',  'store_id']);
+                ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
             $success['product'] = new importsResource($newimportproduct);
 
-              }
-              else{
-                $success['product'] = new ProductResource($product);
+        } else {
+            $success['product'] = new ProductResource($product);
 
-              }
+        }
 
         $success['status'] = 200;
 
@@ -200,7 +199,7 @@ class ProductController extends BaseController
                 'price' => $request->selling_price,
             ]);
             $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $id)
-            ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price',  'store_id']);
+                ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
 
             $success['products'] = new importsResource($newimportproduct);
             $success['status'] = 200;
@@ -263,50 +262,65 @@ class ProductController extends BaseController
             $productid = $product->id;
             if ($request->hasFile("images")) {
                 $files = $request->file("images");
-    
+
                 $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
                 foreach ($image_id as $oid) {
                     $image = Image::query()->find($oid);
                     $image->update(['is_deleted' => 1]);
-    
+
                 }
 
+                if ($request->hasFile("images")) {
+                    $files = $request->images;
 
+                    foreach ($files as $file) {
 
+                        if (is_uploaded_file($file)) {
 
-                  if ($request->hasFile("images")) {
-            $files = $request->images;
+                            $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
+                            $request['product_id'] = $productid;
+                            $request['image'] = $imageName;
+                            $filePath = 'images/product/' . $imageName;
+                            $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+                            Image::create($request->all());
+                        } else {
 
-            foreach ($files as $file) {
-//
-                if (is_uploaded_file($file)) {
+                            $request['product_id'] = $productid;
+                            $existingImagePath = $file;
+                            $newImagePath = basename($file);
+                            $request['image'] = $newImagePath;
+                            Storage::copy($existingImagePath, $newImagePath);
+                            Image::create($request->all());
+                        }
+                    }
+                }
+                /* foreach ($files as $file) {
+            $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
+            $request['product_id'] = $productid;
+            $request['image'] = $imageName;
+            $filePath = 'images/product/' . $imageName;
+            $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+            Image::create($request->all());
 
-                    $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
-                    $request['product_id'] = $productid;
-                    $request['image'] = $imageName;
-                    $filePath = 'images/product/' . $imageName;
-                    $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
-                    Image::create($request->all());
-                } else {
+            }*/
+            } else {
 
+                $files = $request->images;
+                $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
+                foreach ($image_id as $oid) {
+                    $image = Image::query()->find($oid);
+                    $image->update(['is_deleted' => 1]);
+                }
+                foreach ($files as $file) {
+                    $imageName = time() . '_' . $file;
                     $request['product_id'] = $productid;
                     $existingImagePath = $file;
                     $newImagePath = basename($file);
                     $request['image'] = $newImagePath;
                     Storage::copy($existingImagePath, $newImagePath);
                     Image::create($request->all());
+
                 }
-            }
-        } 
-               /* foreach ($files as $file) {
-                    $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
-                    $request['product_id'] = $productid;
-                    $request['image'] = $imageName;
-                    $filePath = 'images/product/' . $imageName;
-                    $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
-                    Image::create($request->all());
-    
-                }*/
             }
             $success['products'] = new ProductResource($product);
             $success['status'] = 200;
@@ -355,7 +369,7 @@ class ProductController extends BaseController
     {
 
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
-            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price',  'store_id']);
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
         if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
@@ -363,14 +377,14 @@ class ProductController extends BaseController
                 if (is_null($product)) {
                     return $this->sendError("المنتج غير موجود", "product is't exists");
                 }
-                $mainProduct=Product::where('id', $importproduct->id)->where('is_deleted', 0)->first();
+                $mainProduct = Product::where('id', $importproduct->id)->where('is_deleted', 0)->first();
                 $comments = $mainProduct->comment->where('store_id', auth()->user()->store_id);
-                if( $comments != null){
-                foreach($comments as $comment){
-                    $comment->update(['is_deleted' => 1]);
+                if ($comments != null) {
+                    foreach ($comments as $comment) {
+                        $comment->update(['is_deleted' => 1]);
+                    }
                 }
-            }
-            $product->delete();
+                $product->delete();
             }
         }
 
@@ -379,12 +393,12 @@ class ProductController extends BaseController
             foreach ($products as $product) {
 
                 $product->update(['is_deleted' => 1]);
-                $comments =$product->comment;
-                if( $comments != null){
-                foreach($comments as $comment){
-                    $comment->update(['is_deleted' => 1]);
+                $comments = $product->comment;
+                if ($comments != null) {
+                    foreach ($comments as $comment) {
+                        $comment->update(['is_deleted' => 1]);
+                    }
                 }
-            }
                 $success['products'] = new ProductResource($product);
 
             }

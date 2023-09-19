@@ -50,7 +50,7 @@ class EtlobhaController extends BaseController
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required','numeric','gte:'.(int)$request->purchasing_price],
+            'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
             // 'amount' => ['required', 'numeric'],
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
@@ -72,7 +72,7 @@ class EtlobhaController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-       
+
         if (($request->hasFile("cover"))) {
             $validator = Validator::make($input, [
                 'cover' => 'required |image| mimes:jpeg,png,jpg,gif,svg| max:2048',
@@ -100,7 +100,7 @@ class EtlobhaController extends BaseController
         } else {
             $subcategory = null;
         }
-      
+
         $product = Product::create([
             'name' => $request->name,
             'for' => 'etlobha',
@@ -196,12 +196,12 @@ class EtlobhaController extends BaseController
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:'.(int)$request->purchasing_price],
+            'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
 
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'images' => 'nullable|array',
-            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
+            // 'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             // 'data' => 'nullable|array',
             // 'data.*.type' => 'required|in:brand,color,wight,size',
             // 'data.*.title' => 'required|string',
@@ -290,7 +290,26 @@ class EtlobhaController extends BaseController
         //         ]);
         //     }
         // }
+        else {
 
+            $files = $request->images;
+            $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
+            foreach ($image_id as $oid) {
+                $image = Image::query()->find($oid);
+                $image->update(['is_deleted' => 1]);
+            }
+
+            foreach ($files as $file) {
+                $imageName = time() . '_' . $file;
+                $request['product_id'] = $productid;
+                $existingImagePath = $file;
+                $newImagePath = basename($file);
+                $request['image'] = $newImagePath;
+                Storage::copy($existingImagePath, $newImagePath);
+                Image::create($request->all());
+
+            }
+        }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
@@ -336,15 +355,15 @@ class EtlobhaController extends BaseController
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'etlobha')->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
-                
+
                 $imports = Importproduct::where('product_id', $product->id)->get();
-                 if (count($imports) > 0) {
-                foreach($imports as $import){
-                    
-                $import->delete();
+                if (count($imports) > 0) {
+                    foreach ($imports as $import) {
+
+                        $import->delete();
+                    }
                 }
-            }
-                
+
                 $product->update(['is_deleted' => 1]);
             }
             $success['products'] = ProductResource::collection($products);

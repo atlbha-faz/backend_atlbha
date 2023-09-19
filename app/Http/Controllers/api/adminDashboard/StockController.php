@@ -6,7 +6,6 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\ProductResource;
 use App\Imports\AdminProductImport;
 use App\Models\Image;
-use App\Models\Option;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -76,7 +75,7 @@ class StockController extends BaseController
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:'.(int)$request->purchasing_price],
+            'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
             // 'amount' => ['required', 'numeric'],
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
@@ -117,7 +116,7 @@ class StockController extends BaseController
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
             'cover' => $request->cover,
-             'amount' => 1,
+            'amount' => 1,
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
@@ -203,11 +202,11 @@ class StockController extends BaseController
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:'.(int)$request->purchasing_price],
+            'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'images' => 'nullable|array',
-            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
+            // 'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             // 'data' => 'nullable|array',
             // 'data.*.type' => 'required|in:brand,color,wight,size',
             // 'data.*.title' => 'required|string',
@@ -240,7 +239,7 @@ class StockController extends BaseController
             // 'less_qty' => $request->input('less_qty'),
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
-             'amount' => 1,
+            'amount' => 1,
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
 
@@ -263,6 +262,25 @@ class StockController extends BaseController
                 $request['image'] = $imageName;
                 $filePath = 'images/product/' . $imageName;
                 $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+                Image::create($request->all());
+
+            }
+        } else {
+
+            $files = $request->images;
+            $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
+            foreach ($image_id as $oid) {
+                $image = Image::query()->find($oid);
+                $image->update(['is_deleted' => 1]);
+            }
+         
+            foreach ($files as $file) {
+                $imageName = time() . '_' . $file;
+                $request['product_id'] = $productid;
+                $existingImagePath = $file;
+                $newImagePath = basename($file);
+                $request['image'] = $newImagePath;
+                Storage::copy($existingImagePath, $newImagePath);
                 Image::create($request->all());
 
             }
