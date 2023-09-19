@@ -380,8 +380,17 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('logoUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'logoUpdate'])->name('store.template.logoupdate');
         Route::post('banarUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'banarUpdate'])->name('store.template.banarupdate');
         Route::post('sliderUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'sliderUpdate'])->name('store.template.sliderupdate');
-        Route::post('commentUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'commentUpdate'])->name('store.template.commentupdate');;
-        Route::post('themeUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeUpdate'])->name('store.template.themeUpdate');;
+        Route::post('commentUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'commentUpdate'])->name('store.template.commentupdate');
+        Route::post('themeSearchUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeSearchUpdate'])->name('store.template.themeSearchUpdate');
+        Route::post('themeCategoriesUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeCategoriesUpdate'])->name('store.template.themeCategoriesUpdate');
+        Route::post('themeMenuUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeMenuUpdate'])->name('store.template.themeMenuUpdate');
+        Route::post('themeLayoutUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeLayoutUpdate'])->name('store.template.themeLayoutUpdate');
+        Route::post('themeIconUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeIconUpdate'])->name('store.template.themeIconUpdate');
+        Route::post('themeProductUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeProductUpdate'])->name('store.template.themeProductUpdate');
+        Route::post('themeFilterUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeFilterUpdate'])->name('store.template.themeFilterUpdate');
+        Route::post('themeMainUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeMainUpdate'])->name('store.template.themeMainUpdate');
+        Route::post('themeSubUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeSubUpdate'])->name('store.template.themeSubUpdate');
+        Route::post('themeFooterUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeFooterUpdate'])->name('store.template.themeFooterUpdate');
 
         // maintenance
         Route::resource('maintenance', App\Http\Controllers\api\storeDashboard\MaintenanceController::class, ['names' => 'store.maintenancemode']);
