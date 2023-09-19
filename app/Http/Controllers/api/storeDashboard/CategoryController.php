@@ -21,19 +21,33 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $success['categories'] = CategoryResource::collection(Category::
-                where('is_deleted', 0)
-                ->where('parent_id', null)
-                ->where('for', 'store')
-                ->where(function ($query) {
-                    $query->where('store_id', auth()->user()->store_id)
-                        ->OrWhere('store_id', null);
-                })->orderByDesc('created_at')->get());
+        $store = auth()->user()->store_id;
+        if (auth()->user()->store->verification_status == "accept") {
+            $success['categories'] = CategoryResource::collection(Category::
+                    where('is_deleted', 0)
+                    ->where('parent_id', null)
+                    ->where('for', 'store')
+                    ->where(function ($query) {
+                        $query->where('store_id', auth()->user()->store_id)
+                            ->OrWhere('store_id', null);
+                    })->orderByDesc('created_at')->get());
 
-        // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
-        $success['status'] = 200;
+            // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
+            $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+            return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+        } else {
+            $success['categories'] =  CategoryResource::collection(Category::
+                    where('is_deleted', 0)
+                    ->where('parent_id', null)
+                    ->where('for', 'store')
+                    ->where('store_id', auth()->user()->store_id)
+                    ->orderByDesc('created_at')->get());;
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, ' لايوجد تصنيفات ', 'no categories');
+
+        }
     }
 
     /**
