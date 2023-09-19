@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Models\Note;
+use App\Models\User;
+use App\Models\Store;
+use App\Models\Comment;
+use App\Models\Homepage;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\NoteResource;
 use App\Http\Resources\StoreResource;
-use App\Models\Comment;
-use App\Models\Note;
-use App\Models\Store;
-use App\Models\User;
-use App\Notifications\verificationNotification;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
 {
@@ -127,12 +128,26 @@ class StoreController extends BaseController
             'periodtype' => $request->periodtype,
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
-                  ]);
-          $user->update([
-               'store_id' =>  $store->id
-            ]);
-           $user->assignRole("المالك");
-   
+        ]);
+        $user->update([
+            'store_id' => $store->id,
+        ]);
+        $user->assignRole("المالك");
+        $Homepage = Homepage::create([
+            'banar1' => 'banar.png',
+            'banarstatus1' => 'active',
+            'banar2' => 'banar.png',
+            'banarstatus2' => 'active',
+            'banar3' => 'banar.png',
+            'banarstatus3' => 'active',
+            'slider1' => 'slider.png',
+            'sliderstatus1' => 'active',
+            'slider2' => 'slider.png',
+            'sliderstatus2' => 'active',
+            'slider3' => 'slider.png',
+            'sliderstatus3' => 'active',
+            'store_id' => $store->id,
+        ]);
 
         if ($request->periodtype == "6months") {
             $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
@@ -167,7 +182,6 @@ class StoreController extends BaseController
 
         return $this->sendResponse($success, 'تم إضافة متجر بنجاح', ' store Added successfully');
     }
-
 
     /**
      * Display the specified resource.
