@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use App\Models\Theme;
 use Illuminate\Database\Seeder;
 use App\Models\Theme as ThemeModels;
 
