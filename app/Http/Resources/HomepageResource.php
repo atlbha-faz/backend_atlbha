@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Theme;
+use App\Http\Resources\ThemeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class HomepageResource extends JsonResource
@@ -33,7 +34,7 @@ class HomepageResource extends JsonResource
         if($this->slider3 == null){
             $this->slider3 = asset('assets/media/slider.png');
         }
-        $defalt=Theme::where('store_id',null)->first();
+        $defalt=new ThemeResource(Theme::where('store_id',null)->first());
          return [
             'id' =>$this->id,
             'logo' => $this->logo,
@@ -55,7 +56,7 @@ class HomepageResource extends JsonResource
             // 'status' => $this->status !==null ? $this->status:'active',
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'store' => New StoreResource($this->store),
-            'theme' =>$this->store !==null? $this->store->theme:$defalt,
+            'theme' =>$this->store !==null?  new ThemeResource($this->store->theme):$defalt,
         ];
     }
 }

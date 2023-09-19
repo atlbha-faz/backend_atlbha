@@ -22,6 +22,7 @@ use App\Models\Page_page_category;
 use App\Http\Resources\DayResource;
 use App\Models\website_socialmedia;
 use App\Http\Resources\PageResource;
+use App\Http\Resources\ThemeResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
@@ -43,7 +44,7 @@ class IndexStoreController extends BaseController
 
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
             $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
-            $success['Theme'] =Theme::where('store_id',null)->first();
+            $success['Theme'] = new ThemeResource(Theme::where('store_id',null)->first());
             $success['domain'] = $id;
 
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
@@ -223,7 +224,7 @@ class IndexStoreController extends BaseController
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
                 $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
-                $success['Theme'] =Theme::where('store_id',$store_id)->first();
+                $success['Theme'] = new ThemeResource(Theme::where('store_id',$store_id)->first());
                 //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
                 $sliders = array();
                 $s1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
