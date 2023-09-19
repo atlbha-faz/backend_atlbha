@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\UserResource;
+use App\Models\User;
+use App\Models\Store;
+use App\Models\Theme;
+use App\Models\Setting;
 use App\Models\Homepage;
 use App\Models\Marketer;
-use App\Models\Setting;
-use App\Models\Store;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class AuthController extends BaseController
 {
@@ -142,6 +143,9 @@ class AuthController extends BaseController
                     'sliderstatus2' => 'active',
                     'slider3' => 'slider.png',
                     'sliderstatus3' => 'active',
+                    'store_id' => $store->id,
+                ]);
+                $theme = Theme::create([
                     'store_id' => $store->id,
                 ]);
                 if ($request->periodtype == "6months") {

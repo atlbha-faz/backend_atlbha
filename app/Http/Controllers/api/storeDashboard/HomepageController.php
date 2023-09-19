@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\HomepageResource;
+use App\Models\Theme;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
+use App\Http\Resources\HomepageResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class HomepageController extends BaseController
 {
@@ -21,7 +22,9 @@ class HomepageController extends BaseController
      */
     public function index()
     {
+       
         $success['Homepages'] = HomepageResource::collection(Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        // $success['Theme'] = Theme::where('store_id', auth()->user()->store_id)->get();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الصفحة الرئبسبة  بنجاح', 'Homepages return successfully');
@@ -192,6 +195,60 @@ class HomepageController extends BaseController
 
     //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     // }
+
+    public function themeUpdate(Request $request)
+    {
+
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'searchBorder' => ['required'],
+            'searchBg' => ['required'],
+            'categoriesBg' => ['required'],
+            'menuBg' => ['required'],
+            'layoutBg' => ['required'],
+            'iconsBg' => ['required'],
+            'productBorder' => ['required'],
+            'productBg' => ['required'],
+            'filtersBorder' => ['required'],
+            'filtersBg' => ['required'],
+            'mainButtonBg' => ['required'],
+            'mainButtonBorder' => ['required'],
+            'subButtonBg' => ['required'],
+            'subButtonBorder' => ['required'],
+            'footerBorder' => ['required'],
+            'footerBg' => ['required']
+          
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
+            'searchBorder' => $request->searchBorder,
+            'searchBg' =>$request->searchBg,
+            'categoriesBg' => $request->categoriesBg,
+            'menuBg' => $request->menuBg,
+            'layoutBg' => $request->layoutBg,
+            'iconsBg' =>$request->iconsBg,
+            'productBorder' => $request->productBorder,
+            'productBg' =>$request->productBg,
+            'filtersBorder' => $request->filtersBorder,
+            'filtersBg' => $request->filtersBg,
+            'mainButtonBg' => $request->mainButtonBg,
+            'mainButtonBorder' => $request->mainButtonBorder,
+            'subButtonBg' => $request->subButtonBg,
+            'subButtonBorder' => $request->subButtonBorder,
+            'footerBorder' => $request->footerBorder,
+            'footerBg' => $request->footerBg
+        ]);
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
+ 
+        $success['homepages'] = new HomepageResource($homepage);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    }
 
     public function banarUpdate(Request $request)
     {

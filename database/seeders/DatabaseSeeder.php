@@ -77,6 +77,7 @@ class DatabaseSeeder extends Seeder
 
             NewSeeder::class,
             DaySeeder::class,
+            Theme::class,
         ]);
 
 

@@ -148,7 +148,9 @@ class StoreController extends BaseController
             'sliderstatus3' => 'active',
             'store_id' => $store->id,
         ]);
-
+        $theme = Theme::create([
+            'store_id' => $store->id,
+        ]);
         if ($request->periodtype == "6months") {
             $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
             $store->update([
