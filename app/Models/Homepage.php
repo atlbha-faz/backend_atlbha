@@ -61,7 +61,7 @@ class Homepage extends Model implements Viewable
     {
         if (!is_null($banar1)) {
             if (gettype($banar1) != 'string') {
-                $i = $banar1->store('images/homepage', 'public');
+                $i = $banar1->store('assets/media', 'public');
                 $this->attributes['banar1'] = $banar1->hashName();
             } else {
                 $this->attributes['banar1'] = $banar1;
@@ -74,14 +74,14 @@ class Homepage extends Model implements Viewable
         if (is_null($banar1)) {
             return asset('assets/media/banar.png');
         }
-        return asset('storage/images/homepage') . '/' . $banar1;
+        return asset('assets/media') . '/' . $banar1;
     }
 
     public function setBanar2Attribute($banar2)
     {
         if (!is_null($banar2)) {
             if (gettype($banar2) != 'string') {
-                $i = $banar2->store('images/homepage', 'public');
+                $i = $banar2->store('assets/media', 'public');
                 $this->attributes['banar2'] = $banar2->hashName();
             } else {
                 $this->attributes['banar2'] = $banar2;
@@ -94,13 +94,13 @@ class Homepage extends Model implements Viewable
         if (is_null($banar2)) {
             return asset('assets/media/banar.png');
         }
-        return asset('storage/images/homepage') . '/' . $banar2;
+        return asset('assets/media') . '/' . $banar2;
     }
     public function setBanar3Attribute($banar3)
     {
         if (!is_null($banar3)) {
             if (gettype($banar3) != 'string') {
-                $i = $banar3->store('images/homepage', 'public');
+                $i = $banar3->store('assets/media', 'public');
                 $this->attributes['banar3'] = $banar3->hashName();
             } else {
                 $this->attributes['banar3'] = $banar3;
@@ -113,13 +113,13 @@ class Homepage extends Model implements Viewable
         if (is_null($banar3)) {
             return asset('assets/media/banar.png');
         }
-        return asset('storage/images/homepage') . '/' . $banar3;
+        return asset('assets/media') . '/' . $banar3;
     }
     public function setSlider1Attribute($slider1)
     {
         if (!is_null($slider1)) {
             if (gettype($slider1) != 'string') {
-                $i = $slider1->store('images/homepage', 'public');
+                $i = $slider1->store('assets/media', 'public');
                 $this->attributes['slider1'] = $slider1->hashName();
             } else {
                 $this->attributes['slider1'] = $slider1;
@@ -132,13 +132,13 @@ class Homepage extends Model implements Viewable
         if (is_null($slider1)) {
             return asset('assets/media/slider.png');
         }
-        return asset('storage/images/homepage') . '/' . $slider1;
+        return asset('assets/media') . '/' . $slider1;
     }
     public function setSlider2Attribute($slider2)
     {
         if (!is_null($slider2)) {
             if (gettype($slider2) != 'string') {
-                $i = $slider2->store('images/homepage', 'public');
+                $i = $slider2->store('assets/media', 'public');
                 $this->attributes['slider2'] = $slider2->hashName();
             } else {
                 $this->attributes['slider2'] = $slider2;
@@ -151,13 +151,13 @@ class Homepage extends Model implements Viewable
         if (is_null($slider2)) {
             return asset('assets/media/slider.png');
         }
-        return asset('storage/images/homepage') . '/' . $slider2;
+        return asset('assets/media') . '/' . $slider2;
     }
     public function setSlider3Attribute($slider3)
     {
         if (!is_null($slider3)) {
             if (gettype($slider3) != 'string') {
-                $i = $slider3->store('images/homepage', 'public');
+                $i = $slider3->store('assets/media', 'public');
                 $this->attributes['slider3'] = $slider3->hashName();
             } else {
                 $this->attributes['slider3'] = $slider3;
@@ -170,6 +170,6 @@ class Homepage extends Model implements Viewable
         if (is_null($slider3)) {
             return asset('assets/media/slider.png');
         }
-        return asset('storage/images/homepage') . '/' . $slider3;
+        return asset('assets/media') . '/' . $slider3;
     }
 }
