@@ -226,7 +226,7 @@ class HomepageController extends BaseController
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -253,7 +253,8 @@ class HomepageController extends BaseController
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -279,7 +280,8 @@ class HomepageController extends BaseController
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -306,7 +308,8 @@ class HomepageController extends BaseController
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -332,7 +335,8 @@ class HomepageController extends BaseController
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -361,7 +365,7 @@ class HomepageController extends BaseController
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -392,7 +396,7 @@ class HomepageController extends BaseController
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -415,6 +419,7 @@ class HomepageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           
            $theme->update([
          
             'mainButtonBg' => $request->mainButtonBg,
@@ -422,9 +427,10 @@ class HomepageController extends BaseController
             'subButtonBg' => $request->subButtonBg,
             'subButtonBorder' => $request->subButtonBorder,
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
+        // $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -477,7 +483,8 @@ class HomepageController extends BaseController
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
