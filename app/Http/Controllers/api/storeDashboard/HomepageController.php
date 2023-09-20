@@ -405,6 +405,8 @@ class HomepageController extends BaseController
          
             'mainButtonBg' => ['required'],
             'mainButtonBorder' => ['required'],
+            'subButtonBg' => ['required'],
+            'subButtonBorder' => ['required']
            
           
         ]);
@@ -416,35 +418,9 @@ class HomepageController extends BaseController
            $theme->update([
          
             'mainButtonBg' => $request->mainButtonBg,
-            'mainButtonBorder' => $request->mainButtonBorder
-        ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
-        $success['homepages'] = new HomepageResource($homepage);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
-    }
-    public function themeSubUpdate(Request $request)
-    {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-      
-            'subButtonBg' => ['required'],
-            'subButtonBorder' => ['required'],
-         
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-        
+            'mainButtonBorder' => $request->mainButtonBorder,
             'subButtonBg' => $request->subButtonBg,
             'subButtonBorder' => $request->subButtonBorder,
-          
         ]);
         $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
  
@@ -453,6 +429,32 @@ class HomepageController extends BaseController
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     }
+    // public function themeSubUpdate(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+      
+          
+         
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //           $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+    //        $theme->update([
+        
+           
+          
+    //     ]);
+    //     $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
+ 
+    //     $success['homepages'] = new HomepageResource($homepage);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    // }
     public function themeFooterUpdate(Request $request)
     {
 
