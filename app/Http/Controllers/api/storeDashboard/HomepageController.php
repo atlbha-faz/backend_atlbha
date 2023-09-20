@@ -419,6 +419,7 @@ class HomepageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           
            $theme->update([
          
             'mainButtonBg' => $request->mainButtonBg,
