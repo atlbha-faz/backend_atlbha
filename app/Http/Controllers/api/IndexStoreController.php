@@ -224,7 +224,7 @@ class IndexStoreController extends BaseController
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
                 $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
-               $them=Theme::where('store_id',$store_id)->first();
+               $theme=Theme::where('store_id',$store_id)->first();
                if( $theme !=null){
                 $success['Theme'] = new ThemeResource(Theme::where('store_id',$store_id)->first());
                }
