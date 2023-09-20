@@ -56,7 +56,7 @@ class HomepageResource extends JsonResource
             // 'status' => $this->status !==null ? $this->status:'active',
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'store' => New StoreResource($this->store),
-            'theme' =>$this->store !==null?  new ThemeResource($this->store->theme):$defalt,
+            // 'theme' =>$this->store !==null?  new ThemeResource($this->store->theme):$defalt,
         ];
     }
 }

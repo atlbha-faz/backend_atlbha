@@ -476,6 +476,7 @@ class IndexStoreController extends BaseController
         }
 
     }
+
     public function productPage($domain, $id)
     {
         if ($domain == 'atlbha') {
