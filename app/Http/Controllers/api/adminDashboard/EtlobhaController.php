@@ -242,7 +242,7 @@ class EtlobhaController extends BaseController
         $productid = $product->id;
 
         if ($request->hasFile("images")) {
-            $files = $request->file("images");
+            $files = $request->images;
 
             $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
             foreach ($image_id as $oid) {
@@ -252,12 +252,28 @@ class EtlobhaController extends BaseController
             }
 
             foreach ($files as $file) {
-                $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
-                $request['product_id'] = $productid;
-                $request['image'] = $imageName;
-                $filePath = 'images/product/' . $imageName;
-                $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
-                Image::create($request->all());
+                // $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
+                // $request['product_id'] = $productid;
+                // $request['image'] = $imageName;
+                // $filePath = 'images/product/' . $imageName;
+                // $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+                // Image::create($request->all());
+                if (is_uploaded_file($file)) {
+                    $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
+                    $request['product_id'] = $productid;
+                    $request['image'] = $imageName;
+                    $filePath = 'images/product/' . $imageName;
+                    $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+                    Image::create($request->all());
+                } else {
+
+                    $request['product_id'] = $productid;
+                    $existingImagePath = $file;
+                    $newImagePath = basename($file);
+                    $request['image'] = $newImagePath;
+                    Storage::copy($existingImagePath, $newImagePath);
+                    Image::create($request->all());
+                }
 
             }
         }
