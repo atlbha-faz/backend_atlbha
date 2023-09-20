@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Models\Theme;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
+use App\Http\Resources\ThemeResource;
 use App\Http\Resources\HomepageResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -30,6 +31,14 @@ class HomepageController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع الصفحة الرئبسبة  بنجاح', 'Homepages return successfully');
     }
 
+    public function theme()
+    {
+       
+         $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الهوية بنجاح', 'Theme return successfully');
+    }
     /**
      * Show the form for creating a new resource.
      *
