@@ -390,7 +390,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('themeProductUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeProductUpdate'])->name('store.template.themeProductUpdate');
         Route::post('themeFilterUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeFilterUpdate'])->name('store.template.themeFilterUpdate');
         Route::post('themeMainUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeMainUpdate'])->name('store.template.themeMainUpdate');
-        Route::post('themeSubUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeSubUpdate'])->name('store.template.themeSubUpdate');
+        // Route::post('themeSubUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeSubUpdate'])->name('store.template.themeSubUpdate');
         Route::post('themeFooterUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeFooterUpdate'])->name('store.template.themeFooterUpdate');
 
         // maintenance
