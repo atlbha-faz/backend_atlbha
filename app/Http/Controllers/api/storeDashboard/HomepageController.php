@@ -220,6 +220,28 @@ class HomepageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
             'searchBorder' => $request->searchBorder,
             'searchBg' =>$request->searchBg,
@@ -245,6 +267,28 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
            
@@ -272,6 +316,28 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
            
@@ -301,6 +367,28 @@ class HomepageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
        
             'layoutBg' => $request->layoutBg,
@@ -327,6 +415,28 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
        
@@ -356,6 +466,28 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
            
@@ -388,6 +520,28 @@ class HomepageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
       
             'filtersBorder' => $request->filtersBorder,
@@ -419,7 +573,28 @@ class HomepageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
          
             'mainButtonBg' => $request->mainButtonBg,
@@ -475,6 +650,28 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",                                      
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
               $theme=Theme::where('store_id', auth()->user()->store_id)->first();
            $theme->update([
      
