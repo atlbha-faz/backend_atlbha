@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('themes', function (Blueprint $table) {
             $table->id();
-            $table->string('searchBorder')->default("#8235DC");
-            $table->string('searchBg')->default("#8235DC");
-            $table->string('categoriesBg')->default("#8235DC");
-            $table->string('menuBg')->default("#8235DC");
+            $table->string('primaryBg')->default("#8235DC");
+            $table->string('secondaryBg')->default("#8235DC");
+            $table->string('headerBg')->default("#8235DC");
             $table->string('layoutBg')->default("#8235DC");
             $table->string('iconsBg')->default("#8235DC");
             $table->string('productBorder')->default("#8235DC");

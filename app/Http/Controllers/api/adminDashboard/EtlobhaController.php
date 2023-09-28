@@ -60,6 +60,11 @@ class EtlobhaController extends BaseController
             // 'data.*.type' => 'required|in:brand,color,wight,size',
             // 'data.*.title' => 'required|string',
             // 'data.*.value' => 'required|array',
+            'SEOdescription' => 'nullable',
+            'snappixel' => 'nullable|file|mimes:txt',
+            'tiktokpixel' => 'nullable|file|mimes:txt',
+            'twitterpixel' => 'nullable|file|mimes:txt',
+            'instapixel' => 'nullable|file|mimes:txt',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -86,15 +91,16 @@ class EtlobhaController extends BaseController
                 'cover' => 'required |string| max:2048',
                 // 'images.*' => ['required', 'string'],
             ]);
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
+            }
 
             $existingImagePath = $request->cover;
             $newImagePath = basename($request->cover);
             Storage::copy($existingImagePath, $newImagePath);
             $cover = $newImagePath;
         }
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+
         if ($request->subcategory_id != null) {
             $subcategory = implode(',', $request->subcategory_id);
         } else {
@@ -112,6 +118,11 @@ class EtlobhaController extends BaseController
             'stock' => $request->stock,
             'cover' => $cover,
             'amount' => 1,
+            'SEOdescription' => $request->SEOdescription,
+            'snappixel' => $request->snappixel,
+            'tiktokpixel' => $request->tiktokpixel,
+            'twitterpixel' => $request->twitterpixel,
+            'instapixel' => $request->instapixel,
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
@@ -206,6 +217,11 @@ class EtlobhaController extends BaseController
             // 'data.*.type' => 'required|in:brand,color,wight,size',
             // 'data.*.title' => 'required|string',
             // 'data.*.value' => 'required|array',
+            'SEOdescription' => 'nullable',
+            'snappixel' => 'nullable|file|mimes:txt',
+            'tiktokpixel' => 'nullable|file|mimes:txt',
+            'twitterpixel' => 'nullable|file|mimes:txt',
+            'instapixel' => 'nullable|file|mimes:txt',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -235,6 +251,11 @@ class EtlobhaController extends BaseController
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
             'amount' => 1,
+            'SEOdescription' => $request->input('SEOdescription'),
+            'snappixel' => $request->snappixel,
+            'tiktokpixel' => $request->tiktokpixel,
+            'twitterpixel' => $request->twitterpixel,
+            'instapixel' => $request->instapixel,
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
 

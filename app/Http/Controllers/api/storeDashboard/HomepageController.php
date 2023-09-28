@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\Theme;
-use App\Models\Homepage;
-use Illuminate\Http\Request;
-use App\Http\Resources\HomepageResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\HomepageResource;
+use App\Models\Homepage;
+use App\Models\Theme;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class HomepageController extends BaseController
 {
@@ -22,7 +22,7 @@ class HomepageController extends BaseController
      */
     public function index()
     {
-       
+
         $success['Homepages'] = HomepageResource::collection(Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
         // $success['Theme'] = Theme::where('store_id', auth()->user()->store_id)->get();
         $success['status'] = 200;
@@ -196,80 +196,77 @@ class HomepageController extends BaseController
     //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     // }
 
-    public function themeSearchUpdate(Request $request)
+    public function themePrimaryUpdate(Request $request)
     {
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'searchBorder' => ['required'],
-            'searchBg' => ['required'],
-          
-          
+            'primaryBg' => ['required'],
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-            'searchBorder' => $request->searchBorder,
-            'searchBg' =>$request->searchBg,
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+            'primaryBg' => $request->primaryBg,
+
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     }
-    public function themeCategoriesUpdate(Request $request)
+    public function themeSecondaryUpdate(Request $request)
     {
 
         $input = $request->all();
         $validator = Validator::make($input, [
-        
-            'categoriesBg' => ['required'],
-           
-          
+
+            'secondaryBg' => ['required'],
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-           
-            'categoriesBg' => $request->categoriesBg,
-            
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
+            'secondaryBg' => $request->secondaryBg,
+
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     }
-    public function themeMenuUpdate(Request $request)
+    public function themeHeaderUpdate(Request $request)
     {
 
         $input = $request->all();
         $validator = Validator::make($input, [
-          
-            'menuBg' => ['required'],
-          
+
+            'headerBg' => ['required'],
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-           
-            'menuBg' => $request->menuBg,
-            
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
+            'headerBg' => $request->headerBg,
+
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
@@ -280,23 +277,22 @@ class HomepageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-         
+
             'layoutBg' => ['required'],
-           
-          
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-       
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
             'layoutBg' => $request->layoutBg,
-            
+
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
@@ -307,22 +303,22 @@ class HomepageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-     
+
             'iconsBg' => ['required'],
-            
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-       
-            'iconsBg' =>$request->iconsBg,
-           
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
+            'iconsBg' => $request->iconsBg,
+
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
@@ -333,56 +329,53 @@ class HomepageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-          
+
             'productBorder' => ['required'],
             'productBg' => ['required'],
-        
-          
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-           
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
             'productBorder' => $request->productBorder,
-            'productBg' =>$request->productBg
-           
+            'productBg' => $request->productBg,
+
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     }
-  
- 
+
     public function themeFilterUpdate(Request $request)
     {
 
         $input = $request->all();
         $validator = Validator::make($input, [
-           
+
             'filtersBorder' => ['required'],
             'filtersBg' => ['required'],
-          
-          
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-      
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
             'filtersBorder' => $request->filtersBorder,
             'filtersBg' => $request->filtersBg,
-           
+
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
@@ -393,24 +386,23 @@ class HomepageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-         
+
             'mainButtonBg' => ['required'],
             'mainButtonBorder' => ['required'],
-           
-          
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-         
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
             'mainButtonBg' => $request->mainButtonBg,
-            'mainButtonBorder' => $request->mainButtonBorder
+            'mainButtonBorder' => $request->mainButtonBorder,
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
@@ -421,24 +413,24 @@ class HomepageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-      
+
             'subButtonBg' => ['required'],
             'subButtonBorder' => ['required'],
-         
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-        
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
             'subButtonBg' => $request->subButtonBg,
             'subButtonBorder' => $request->subButtonBorder,
-          
+
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 
@@ -449,23 +441,23 @@ class HomepageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-      
+
             'footerBorder' => ['required'],
-            'footerBg' => ['required']
-          
+            'footerBg' => ['required'],
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
-           $theme->update([
-     
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
             'footerBorder' => $request->footerBorder,
-            'footerBg' => $request->footerBg
+            'footerBg' => $request->footerBg,
         ]);
-        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
- 
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
         $success['homepages'] = new HomepageResource($homepage);
         $success['status'] = 200;
 

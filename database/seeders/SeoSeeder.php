@@ -16,12 +16,10 @@ class SeoSeeder extends Seeder
     public function run()
     {
         Seo::create([
-            'index_page_title' => 'عنوان الصفحة الرئيسية',
-            'index_page_description' => 'وصف الصفحة الرئيسية ',
+           'google_analytics' => "goog",
+            'pixel_ads' => $this->pixel_ads,
+            'metatags' => $this->metatags,
             'key_words' => 'الكلمات المفتاحية ',
-            'show_pages' => 'short_link',
-            'link' => 'ربط جوجل انليتكس Analytics Goo',
-            'robots' => 'إعدادات ملف Robots ',
 
         ]);
           Seo::create([
