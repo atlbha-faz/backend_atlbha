@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\HomepageResource;
-use App\Models\Homepage;
 use App\Models\Theme;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
+use App\Http\Resources\ThemeResource;
+use App\Http\Resources\HomepageResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
+
+
+
 
 class HomepageController extends BaseController
 {
@@ -30,6 +34,14 @@ class HomepageController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع الصفحة الرئبسبة  بنجاح', 'Homepages return successfully');
     }
 
+    public function theme()
+    {
+
+         $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الهوية بنجاح', 'Theme return successfully');
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -208,14 +220,36 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
-            'primaryBg' => $request->primaryBg,
-
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
+            'searchBorder' => $request->searchBorder,
+            'searchBg' =>$request->searchBg,
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -233,15 +267,38 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
 
-            'secondaryBg' => $request->secondaryBg,
+            'categoriesBg' => $request->categoriesBg,
 
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -259,15 +316,38 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
 
-            'headerBg' => $request->headerBg,
+            'menuBg' => $request->menuBg,
 
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -285,15 +365,38 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
 
             'layoutBg' => $request->layoutBg,
 
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -311,15 +414,38 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
 
-            'iconsBg' => $request->iconsBg,
+            'iconsBg' =>$request->iconsBg,
 
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -338,16 +464,38 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
 
             'productBorder' => $request->productBorder,
             'productBg' => $request->productBg,
 
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -367,16 +515,38 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
 
             'filtersBorder' => $request->filtersBorder,
             'filtersBg' => $request->filtersBg,
 
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
@@ -389,53 +559,79 @@ class HomepageController extends BaseController
 
             'mainButtonBg' => ['required'],
             'mainButtonBorder' => ['required'],
+            'subButtonBg' => ['required'],
+            'subButtonBorder' => ['required']
+
 
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
 
             'mainButtonBg' => $request->mainButtonBg,
             'mainButtonBorder' => $request->mainButtonBorder,
-        ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
-
-        $success['homepages'] = new HomepageResource($homepage);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
-    }
-    public function themeSubUpdate(Request $request)
-    {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-
-            'subButtonBg' => ['required'],
-            'subButtonBorder' => ['required'],
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
-
             'subButtonBg' => $request->subButtonBg,
             'subButtonBorder' => $request->subButtonBorder,
-
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        // $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     }
+    // public function themeSubUpdate(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //           $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+    //        $theme->update([
+
+
+
+    //     ]);
+    //     $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
+
+    //     $success['homepages'] = new HomepageResource($homepage);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    // }
     public function themeFooterUpdate(Request $request)
     {
 
@@ -450,15 +646,38 @@ class HomepageController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
-        $theme->update([
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+              if($theme == null){
+                Theme::create([
+                    'searchBorder' => "#e5e5e5",
+                    'searchBg' =>"#ffffff",
+                    'categoriesBg' => "#02466a",
+                    'menuBg' =>"#1dbbbe",
+                    'layoutBg' => "#ffffff",
+                    'iconsBg' =>"#1dbbbe",
+                    'productBorder' => "#ededed",
+                    'productBg' =>"#ffffff",
+                    'filtersBorder' => "#f0f0f0",
+                    'filtersBg' => "#ffffff",
+                    'mainButtonBg' =>"#1dbbbe",
+                    'mainButtonBorder' => "#1dbbbe",
+                    'subButtonBg' => "#02466a",
+                    'subButtonBorder' => "#02466a",
+                    'footerBorder' => "#ebebeb",
+                    'footerBg' => "#ffffff",
+                    'store_id'=>auth()->user()->store_id
+                ]);
+              }
+              $theme=Theme::where('store_id', auth()->user()->store_id)->first();
+           $theme->update([
 
             'footerBorder' => $request->footerBorder,
             'footerBg' => $request->footerBg,
         ]);
-        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+        $homepage=Homepage::where('store_id', auth()->user()->store_id)->first();
 
-        $success['homepages'] = new HomepageResource($homepage);
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');

@@ -16,23 +16,44 @@ class Theme extends Seeder
     public function run()
     {
         ThemeModels::create([
-            'searchBorder' => "#8235DC",
-            'searchBg' =>"#8235DC",
-            'categoriesBg' => "#8235DC",
-            'menuBg' =>"#8235DC",
-            'layoutBg' => "#8235DC",
-            'iconsBg' =>"#8235DC",
-            'productBorder' => "#8235DC",
-            'productBg' =>"#8235DC",
-            'filtersBorder' => "#8235DC",
-            'filtersBg' => "#8235DC",
-            'mainButtonBg' =>"#8235DC",
-            'mainButtonBorder' => "#8235DC",
-            'subButtonBg' => "#8235DC",
-            'subButtonBorder' => "#8235DC",
-            'footerBorder' => "#8235DC",
-            'footerBg' => "#8235DC",
+            'searchBorder' => "#e5e5e5",                                      
+            'searchBg' =>"#ffffff",
+            'categoriesBg' => "#02466a",
+            'menuBg' =>"#1dbbbe",
+            'layoutBg' => "#ffffff",
+            'iconsBg' =>"#1dbbbe",
+            'productBorder' => "#ededed",
+            'productBg' =>"#ffffff",
+            'filtersBorder' => "#f0f0f0",
+            'filtersBg' => "#ffffff",
+            'mainButtonBg' =>"#1dbbbe",
+            'mainButtonBorder' => "#1dbbbe",
+            'subButtonBg' => "#02466a",
+            'subButtonBorder' => "#02466a",
+            'footerBorder' => "#ebebeb",
+            'footerBg' => "#ffffff",
             'store_id'=>null
         ]);
+        ThemeModels::create([
+            'searchBorder' => "#e5e5e5",                                      
+            'searchBg' =>"#ffffff",
+            'categoriesBg' => "#02466a",
+            'menuBg' =>"#1dbbbe",
+            'layoutBg' => "#ffffff",
+            'iconsBg' =>"#1dbbbe",
+            'productBorder' => "#ededed",
+            'productBg' =>"#ffffff",
+            'filtersBorder' => "#f0f0f0",
+            'filtersBg' => "#ffffff",
+            'mainButtonBg' =>"#1dbbbe",
+            'mainButtonBorder' => "#1dbbbe",
+            'subButtonBg' => "#02466a",
+            'subButtonBorder' => "#02466a",
+            'footerBorder' => "#ebebeb",
+            'footerBg' => "#ffffff",
+            'store_id'=>170
+        ]);
+        
+      
     }
 }
