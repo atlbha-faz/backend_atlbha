@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
             NotificationSeeder::class,
 
             TechnicalSupportSeeder::class,
-            PermissionTableSeeder::class,
+            // PermissionTableSeeder::class,
 
             NewSeeder::class,
             DaySeeder::class,

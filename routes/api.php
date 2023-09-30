@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\api\storeDashboard\ReportController;
 use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
-use App\Http\Middleware\CheckStorePermission;
 use App\Http\Middleware\SetActiveStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -400,166 +399,166 @@ Route::middleware([StoreUser::class])->group(function () {
 
         Route::get('selector/page-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'pagesCategory']);
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);
-        Route::middleware([CheckStorePermission::class])->group(function () {
-            //cart
-            Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'show'])->name('abandoned.carts.show');
-            Route::get('admin', [App\Http\Controllers\api\storeDashboard\CartController::class, 'admin'])->name('abandoned.carts');
-            // Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
-            Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'delete'])->name('abandoned.carts.delete');
-            Route::post('sendOfferCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'sendOffer'])->name('abandoned.carts.sendoffer');
+        // Route::middleware([CheckStorePermission::class])->group(function () {
+        //cart
+        Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'show'])->name('abandoned.carts.show');
+        Route::get('admin', [App\Http\Controllers\api\storeDashboard\CartController::class, 'admin'])->name('abandoned.carts');
+        // Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
+        Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'delete'])->name('abandoned.carts.delete');
+        Route::post('sendOfferCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'sendOffer'])->name('abandoned.carts.sendoffer');
 
-            // page
-            Route::resource('page', App\Http\Controllers\api\storeDashboard\PageController::class, ['names' => 'store.pages']);
-            Route::post('page-publish', [App\Http\Controllers\api\storeDashboard\PageController::class, 'publish'])->name('store.pages.publish');
-            Route::get('pagechangeSatusall', [App\Http\Controllers\api\storeDashboard\PageController::class, 'changeSatusall'])->name('store.pages.changestatusall');
-            Route::get('pagedeleteall', [App\Http\Controllers\api\storeDashboard\PageController::class, 'deleteall'])->name('store.pages.deleteall');
-            Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class, 'changeStatus'])->name('store.pages.activate');
-            // academy
-            Route::resource('explainVideos', App\Http\Controllers\api\storeDashboard\ExplainVideosController::class, ['names' => 'store.explainvideos']);
-            Route::resource('course', App\Http\Controllers\api\storeDashboard\CourseController::class, ['names' => 'store.academy']);
+        // page
+        Route::resource('page', App\Http\Controllers\api\storeDashboard\PageController::class, ['names' => 'store.pages']);
+        Route::post('page-publish', [App\Http\Controllers\api\storeDashboard\PageController::class, 'publish'])->name('store.pages.publish');
+        Route::get('pagechangeSatusall', [App\Http\Controllers\api\storeDashboard\PageController::class, 'changeSatusall'])->name('store.pages.changestatusall');
+        Route::get('pagedeleteall', [App\Http\Controllers\api\storeDashboard\PageController::class, 'deleteall'])->name('store.pages.deleteall');
+        Route::post('changePageStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageController::class, 'changeStatus'])->name('store.pages.activate');
+        // academy
+        Route::resource('explainVideos', App\Http\Controllers\api\storeDashboard\ExplainVideosController::class, ['names' => 'store.explainvideos']);
+        Route::resource('course', App\Http\Controllers\api\storeDashboard\CourseController::class, ['names' => 'store.academy']);
 
-            // template
-            Route::post('logoUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'logoUpdate'])->name('store.template.logoupdate');
-            Route::post('banarUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'banarUpdate'])->name('store.template.banarupdate');
-            Route::post('sliderUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'sliderUpdate'])->name('store.template.sliderupdate');
-            Route::post('commentUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'commentUpdate'])->name('store.template.commentupdate');
-            Route::post('themePrimaryUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themePrimaryUpdate'])->name('store.template.themeSearchUpdate');
-            Route::post('themeSecondaryUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeSecondaryUpdate'])->name('store.template.themeCategoriesUpdate');
-            Route::post('themeHeaderUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeHeaderUpdate'])->name('store.template.themeMenuUpdate');
-            Route::post('themeLayoutUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeLayoutUpdate'])->name('store.template.themeLayoutUpdate');
-            Route::post('themeIconUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeIconUpdate'])->name('store.template.themeIconUpdate');
-            Route::post('themeProductUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeProductUpdate'])->name('store.template.themeProductUpdate');
-            Route::post('themeFilterUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeFilterUpdate'])->name('store.template.themeFilterUpdate');
-            Route::post('themeMainUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeMainUpdate'])->name('store.template.themeMainUpdate');
-            Route::post('themeSubUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeSubUpdate'])->name('store.template.themeSubUpdate');
-            Route::post('themeFooterUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeFooterUpdate'])->name('store.template.themeFooterUpdate');
+        // template
+        Route::post('logoUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'logoUpdate'])->name('store.template.logoupdate');
+        Route::post('banarUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'banarUpdate'])->name('store.template.banarupdate');
+        Route::post('sliderUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'sliderUpdate'])->name('store.template.sliderupdate');
+        Route::post('commentUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'commentUpdate'])->name('store.template.commentupdate');
+        Route::post('themePrimaryUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themePrimaryUpdate'])->name('store.template.themeSearchUpdate');
+        Route::post('themeSecondaryUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeSecondaryUpdate'])->name('store.template.themeCategoriesUpdate');
+        Route::post('themeHeaderUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeHeaderUpdate'])->name('store.template.themeMenuUpdate');
+        Route::post('themeLayoutUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeLayoutUpdate'])->name('store.template.themeLayoutUpdate');
+        Route::post('themeIconUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeIconUpdate'])->name('store.template.themeIconUpdate');
+        Route::post('themeProductUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeProductUpdate'])->name('store.template.themeProductUpdate');
+        Route::post('themeFilterUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeFilterUpdate'])->name('store.template.themeFilterUpdate');
+        Route::post('themeMainUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeMainUpdate'])->name('store.template.themeMainUpdate');
+        Route::post('themeSubUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeSubUpdate'])->name('store.template.themeSubUpdate');
+        Route::post('themeFooterUpdate', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'themeFooterUpdate'])->name('store.template.themeFooterUpdate');
 
-            // maintenance
-            Route::resource('maintenance', App\Http\Controllers\api\storeDashboard\MaintenanceController::class, ['names' => 'store.maintenancemode']);
-            Route::post('updateMaintenance', [App\Http\Controllers\api\storeDashboard\MaintenanceController::class, 'updateMaintenance'])->name('store.maintenancemode.updatemaintenance');
+        // maintenance
+        Route::resource('maintenance', App\Http\Controllers\api\storeDashboard\MaintenanceController::class, ['names' => 'store.maintenancemode']);
+        Route::post('updateMaintenance', [App\Http\Controllers\api\storeDashboard\MaintenanceController::class, 'updateMaintenance'])->name('store.maintenancemode.updatemaintenance');
 
-            // product
-            Route::resource('product', App\Http\Controllers\api\storeDashboard\ProductController::class, ['names' => 'store.products']);
-            Route::post('import-products', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importProducts'])->name('store.products.importfile');
-            Route::get('productchangeSatusall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeSatusall'])->name('store.products.changestatusall');
-            Route::get('productdeleteall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteall'])->name('store.products.deleteall');
-            Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeStatus'])->name('store.products.activate');
-            Route::get('deleteImport/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteImport'])->name('store.products.deleteimport');
-            Route::post('duplicateProduct/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'duplicateProduct'])->name('store.products.duplicateproduct');
+        // product
+        Route::resource('product', App\Http\Controllers\api\storeDashboard\ProductController::class, ['names' => 'store.products']);
+        Route::post('import-products', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importProducts'])->name('store.products.importfile');
+        Route::get('productchangeSatusall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeSatusall'])->name('store.products.changestatusall');
+        Route::get('productdeleteall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteall'])->name('store.products.deleteall');
+        Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeStatus'])->name('store.products.activate');
+        Route::get('deleteImport/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteImport'])->name('store.products.deleteimport');
+        Route::post('duplicateProduct/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'duplicateProduct'])->name('store.products.duplicateproduct');
 
-            // importProduct
-            Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
-            Route::get('etlobhaProductShow/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'show'])->name('store.products.etlbhasingleproduct');
+        // importProduct
+        Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
+        Route::get('etlobhaProductShow/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'show'])->name('store.products.etlbhasingleproduct');
 
-            Route::post('importproduct', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'store'])->name('store.products.import');
-            Route::post('updateimportproduct/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'updateimportproduct'])->name('store.products.updateimport');
-            // category
-            Route::resource('category', App\Http\Controllers\api\storeDashboard\CategoryController::class, ['names' => 'store.categories']);
-            Route::get('categoryStorechangeSatusall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeSatusall'])->name('store.categories.changestatusall');
-            Route::get('categoryStoredeleteall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteall'])->name('store.categories.deleteall');
-            Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeStatus'])->name('store.categories.activate');
-            // coupon
-            Route::get('changeCouponStatus/{id}', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeStatus'])->name('store.copons.activate');
-            Route::resource('coupons', App\Http\Controllers\api\storeDashboard\CouponController::class, ['names' => 'store.copons']);
-            Route::get('couponchangeSatusall', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeSatusall'])->name('store.copons.changestatusall');
-            Route::get('coupondeleteall', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'deleteall'])->name('store.copons.deleteall');
-            //  التوثيق
-            Route::get('verification_show', [App\Http\Controllers\api\storeDashboard\VerificationController::class, 'verification_show'])->name('store.verification.show');
-            Route::post('verification_update', [App\Http\Controllers\api\storeDashboard\VerificationController::class, 'verification_update'])->name('store.verification.add');
-            // social media
-            Route::get('socialMedia_store_show', [App\Http\Controllers\api\storeDashboard\storeInformationController::class, 'socialMedia_store_show'])->name('store.socialmedia.show');
-            Route::post('socialMedia_store_update', [App\Http\Controllers\api\storeDashboard\storeInformationController::class, 'socialMedia_store_update'])->name('store.socialmedia.update');
+        Route::post('importproduct', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'store'])->name('store.products.import');
+        Route::post('updateimportproduct/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'updateimportproduct'])->name('store.products.updateimport');
+        // category
+        Route::resource('category', App\Http\Controllers\api\storeDashboard\CategoryController::class, ['names' => 'store.categories']);
+        Route::get('categoryStorechangeSatusall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeSatusall'])->name('store.categories.changestatusall');
+        Route::get('categoryStoredeleteall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteall'])->name('store.categories.deleteall');
+        Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeStatus'])->name('store.categories.activate');
+        // coupon
+        Route::get('changeCouponStatus/{id}', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeStatus'])->name('store.copons.activate');
+        Route::resource('coupons', App\Http\Controllers\api\storeDashboard\CouponController::class, ['names' => 'store.copons']);
+        Route::get('couponchangeSatusall', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeSatusall'])->name('store.copons.changestatusall');
+        Route::get('coupondeleteall', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'deleteall'])->name('store.copons.deleteall');
+        //  التوثيق
+        Route::get('verification_show', [App\Http\Controllers\api\storeDashboard\VerificationController::class, 'verification_show'])->name('store.verification.show');
+        Route::post('verification_update', [App\Http\Controllers\api\storeDashboard\VerificationController::class, 'verification_update'])->name('store.verification.add');
+        // social media
+        Route::get('socialMedia_store_show', [App\Http\Controllers\api\storeDashboard\storeInformationController::class, 'socialMedia_store_show'])->name('store.socialmedia.show');
+        Route::post('socialMedia_store_update', [App\Http\Controllers\api\storeDashboard\storeInformationController::class, 'socialMedia_store_update'])->name('store.socialmedia.update');
 
-            // technical Support
-            // Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
-            Route::resource('technicalSupport', App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, ['names' => 'store.technicalsupport']);
-            Route::get('technicalSupportStoredeleteall', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'deleteall'])->name('store.technicalsupport.deleteall');
-            Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'changeStatus'])->name('store.technicalsupport.cahngestatus');
-            Route::post('replayTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'replay'])->name('store.technicalsupport.replay');
-            // Shipping company
-            Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'changeStatus'])->name('store.shippingcompanies.activate');
-            Route::resource('shippingtype', App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, ['names' => 'store.shippingcompanies']);
-            // payment type
-            Route::get('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class, 'changeStatus'])->name('store.paymentsgateways.activate');
-            Route::resource('paymenttype', App\Http\Controllers\api\storeDashboard\PaymenttypeController::class, ['names' => 'store.paymentsgateways']);
-            //offer
-            // Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\OfferController::class, 'changeStatus']);
-            // Route::resource('offer', App\Http\Controllers\api\storeDashboard\OfferController::class);
-            // SEO keywords
-            // Route::resource('seo', App\Http\Controllers\api\storeDashboard\SeoController::class, ['names' => 'store.keywords']);
-            // Route::post('updateSeo', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateSeo'])->name('store.keywords.updateseo');
-            // Route::post('updateLink', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateLink'])->name('store.keywords.updatelink');
-            // Route::post('updateRobots', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateRobots'])->name('store.keywords.updaterobots');
+        // technical Support
+        // Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
+        Route::resource('technicalSupport', App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, ['names' => 'store.technicalsupport']);
+        Route::get('technicalSupportStoredeleteall', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'deleteall'])->name('store.technicalsupport.deleteall');
+        Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'changeStatus'])->name('store.technicalsupport.cahngestatus');
+        Route::post('replayTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'replay'])->name('store.technicalsupport.replay');
+        // Shipping company
+        Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'changeStatus'])->name('store.shippingcompanies.activate');
+        Route::resource('shippingtype', App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, ['names' => 'store.shippingcompanies']);
+        // payment type
+        Route::get('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class, 'changeStatus'])->name('store.paymentsgateways.activate');
+        Route::resource('paymenttype', App\Http\Controllers\api\storeDashboard\PaymenttypeController::class, ['names' => 'store.paymentsgateways']);
+        //offer
+        // Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\storeDashboard\OfferController::class, 'changeStatus']);
+        // Route::resource('offer', App\Http\Controllers\api\storeDashboard\OfferController::class);
+        // SEO keywords
+        // Route::resource('seo', App\Http\Controllers\api\storeDashboard\SeoController::class, ['names' => 'store.keywords']);
+        // Route::post('updateSeo', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateSeo'])->name('store.keywords.updateseo');
+        // Route::post('updateLink', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateLink'])->name('store.keywords.updatelink');
+        // Route::post('updateRobots', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateRobots'])->name('store.keywords.updaterobots');
 
-            //  clients
-            // Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
-            // Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class, 'changeStatus']);
-            // Route::get('clientdeleteall', [App\Http\Controllers\api\storeDashboard\ClientController::class, 'deleteall']);
-            // //
-            Route::resource('homepage', App\Http\Controllers\api\storeDashboard\HomepageController::class, ['names' => 'store.template']);
-            // comments
-            Route::resource('comment', App\Http\Controllers\api\storeDashboard\CommentController::class, ['names' => 'store.comments']);
-            Route::get('commentchangeSatusall', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'changeSatusall'])->name('store.comments.changestatusall');
-            Route::post('replaycomment', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'replayComment'])->name('store.comments.replaycomment');
-            Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'changeStatus'])->name('store.comments.activate');
-            Route::get('commentActivation', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'commentActivation'])->name('store.comments.activateall');
-            // Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
+        //  clients
+        // Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
+        // Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class, 'changeStatus']);
+        // Route::get('clientdeleteall', [App\Http\Controllers\api\storeDashboard\ClientController::class, 'deleteall']);
+        // //
+        Route::resource('homepage', App\Http\Controllers\api\storeDashboard\HomepageController::class, ['names' => 'store.template']);
+        // comments
+        Route::resource('comment', App\Http\Controllers\api\storeDashboard\CommentController::class, ['names' => 'store.comments']);
+        Route::get('commentchangeSatusall', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'changeSatusall'])->name('store.comments.changestatusall');
+        Route::post('replaycomment', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'replayComment'])->name('store.comments.replaycomment');
+        Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'changeStatus'])->name('store.comments.activate');
+        Route::get('commentActivation', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'commentActivation'])->name('store.comments.activateall');
+        // Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
 
-            // Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
-            // etlobha comment
-            Route::post('etlobhaComment', [App\Http\Controllers\api\storeDashboard\EtlobhaController::class, 'etlobhaComment'])->name('store.etlbhacomment.add');
+        // Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
+        // etlobha comment
+        Route::post('etlobhaComment', [App\Http\Controllers\api\storeDashboard\EtlobhaController::class, 'etlobhaComment'])->name('store.etlbhacomment.add');
 
-            // users
-            Route::resource('user', App\Http\Controllers\api\storeDashboard\UserController::class, ['names' => 'store.users']);
-            Route::get('changeuserStatus/{id}', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeStatus'])->name('store.users.activate');
-            Route::get('userchangeSatusall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeSatusall'])->name('store.users.changestatusall');
-            Route::get('userdeleteall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'deleteall'])->name('store.users.deleteall');
-            //
+        // users
+        Route::resource('user', App\Http\Controllers\api\storeDashboard\UserController::class, ['names' => 'store.users']);
+        Route::get('changeuserStatus/{id}', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeStatus'])->name('store.users.activate');
+        Route::get('userchangeSatusall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeSatusall'])->name('store.users.changestatusall');
+        Route::get('userdeleteall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'deleteall'])->name('store.users.deleteall');
+        //
 
-            //  setting
-            Route::get('setting_store_show', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_show'])->name('store.basicdata.show');
-            Route::post('setting_store_update', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_update'])->name('store.basicdata.update');
+        //  setting
+        Route::get('setting_store_show', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_show'])->name('store.basicdata.show');
+        Route::post('setting_store_update', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_update'])->name('store.basicdata.update');
 
-            // notifications
-            Route::get('NotificationIndex', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'index'])->name('store.notifications.NotificationIndex');
-            Route::get('NotificationRead/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'read'])->name('store.notifications.NotificationRead');
-            Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'deleteNotification'])->name('store.notifications.NotificationDelete');
-            Route::get('NotificationDeleteAll', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'deleteNotificationAll'])->name('store.notifications.NotificationDeleteAll');
-            Route::get('NotificationShow/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'show'])->name('store.notifications.NotificationShow');
-            //  Etlobha services
-            Route::get('etlobhaservice/show', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'show'])->name('store.platformservices.show');
-            Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'store'])->name('store.platformservices.add');
-            Route::get('marketerRequest/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'marketerRequest'])->name('store.platformservices.marketerRequest');
+        // notifications
+        Route::get('NotificationIndex', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'index'])->name('store.notifications.NotificationIndex');
+        Route::get('NotificationRead/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'read'])->name('store.notifications.NotificationRead');
+        Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'deleteNotification'])->name('store.notifications.NotificationDelete');
+        Route::get('NotificationDeleteAll', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'deleteNotificationAll'])->name('store.notifications.NotificationDeleteAll');
+        Route::get('NotificationShow/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'show'])->name('store.notifications.NotificationShow');
+        //  Etlobha services
+        Route::get('etlobhaservice/show', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'show'])->name('store.platformservices.show');
+        Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'store'])->name('store.platformservices.add');
+        Route::get('marketerRequest/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'marketerRequest'])->name('store.platformservices.marketerRequest');
 
-            //  payment
-            Route::post('payment', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'payment']);
-            Route::get('callback', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'callback'])->name('callback');
-            Route::post('updateCharge/{id}', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'updateCharge']);
-            Route::get('list', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'list'])->name('list');
-            // order
-            Route::resource('orders', App\Http\Controllers\api\storeDashboard\OrderController::class, ['names' => 'store.orders']);
-            Route::get('index', [App\Http\Controllers\api\storeDashboard\IndexController::class, 'index'])->name('store.homepage.show');
-            Route::get('ordersdeleteall', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'deleteall'])->name('store.orders.deleteall');
-            Route::get('permissions', [App\Http\Controllers\api\storeDashboard\PermissionController::class, 'index'])->name('permissions');
-            Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class, ['names' => 'store.roles']);
-            // reports
-            Route::get('reports', [ReportController::class, 'index'])->name('store.reports.show');
+        //  payment
+        Route::post('payment', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'payment']);
+        Route::get('callback', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'callback'])->name('callback');
+        Route::post('updateCharge/{id}', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'updateCharge']);
+        Route::get('list', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'list'])->name('list');
+        // order
+        Route::resource('orders', App\Http\Controllers\api\storeDashboard\OrderController::class, ['names' => 'store.orders']);
+        Route::get('index', [App\Http\Controllers\api\storeDashboard\IndexController::class, 'index'])->name('store.homepage.show');
+        Route::get('ordersdeleteall', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'deleteall'])->name('store.orders.deleteall');
+        Route::get('permissions', [App\Http\Controllers\api\storeDashboard\PermissionController::class, 'index'])->name('permissions');
+        Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class, ['names' => 'store.roles']);
+        // reports
+        Route::get('reports', [ReportController::class, 'index'])->name('store.reports.show');
 
-            // subsicription
+        // subsicription
 
-            Route::get('subsicriptions', [SubscriptionEmailController::class, 'index'])->name('store.subsicriptions.show');
-            Route::get('subsicriptionsdeleteall', [SubscriptionEmailController::class, 'deleteall'])->name('store.subsicriptions.deleteall');
+        Route::get('subsicriptions', [SubscriptionEmailController::class, 'index'])->name('store.subsicriptions.show');
+        Route::get('subsicriptionsdeleteall', [SubscriptionEmailController::class, 'deleteall'])->name('store.subsicriptions.deleteall');
 
-            // website seo
-            Route::resource('seo', App\Http\Controllers\api\storeDashboard\SeoController::class, ['names' => 'store.seo']);
-            Route::post('updateGoogleAnalytics', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateGoogleAnalytics'])->name('store.seo.updateGoogleAnalytics');
-            Route::post('updateSnapPixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateSnapPixel'])->name('store.seo.updateSnapPixel');
-            Route::post('updateTiktokPixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateTiktokPixel'])->name('store.seo.updateTiktokPixel');
-            Route::post('updateTwitterpixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateTwitterpixel'])->name('store.seo.updateTwitterpixel');
-            Route::post('updateInstapixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateInstapixel'])->name('store.seo.updateInstapixel');
-            Route::post('updateMetaTags', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateMetaTags'])->name('store.seo.updateMetaTags');
-            Route::post('updateKeyWords', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateKeyWords'])->name('store.seo.updateKeyWords');
+        // website seo
+        Route::resource('seo', App\Http\Controllers\api\storeDashboard\SeoController::class, ['names' => 'store.seo']);
+        Route::post('updateGoogleAnalytics', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateGoogleAnalytics'])->name('store.seo.updateGoogleAnalytics');
+        Route::post('updateSnapPixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateSnapPixel'])->name('store.seo.updateSnapPixel');
+        Route::post('updateTiktokPixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateTiktokPixel'])->name('store.seo.updateTiktokPixel');
+        Route::post('updateTwitterpixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateTwitterpixel'])->name('store.seo.updateTwitterpixel');
+        Route::post('updateInstapixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateInstapixel'])->name('store.seo.updateInstapixel');
+        Route::post('updateMetaTags', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateMetaTags'])->name('store.seo.updateMetaTags');
+        Route::post('updateKeyWords', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateKeyWords'])->name('store.seo.updateKeyWords');
 
-        });
+        // });
     });
 });
