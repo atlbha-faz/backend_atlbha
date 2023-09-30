@@ -346,13 +346,13 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('atlobhaContactChangeStatus/{id}', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'changeStatus']);
         // website seo
         Route::resource('seo', App\Http\Controllers\api\adminDashboard\SeoController::class, ['names' => 'store.seo']);
-        Route::post('updateGoogleAnalytics', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateGoogleAnalytics'])->name('store.seo.updateGoogleAnalytics');
-        Route::post('updateSnapPixel', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSnapPixel'])->name('store.seo.updateSnapPixel');
-        Route::post('updateTiktokPixel', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateTiktokPixel'])->name('store.seo.updateTiktokPixel');
-        Route::post('updateTwitterpixel', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateTwitterpixel'])->name('store.seo.updateTwitterpixel');
-        Route::post('updateInstapixel', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateInstapixel'])->name('store.seo.updateInstapixel');
-        Route::post('updateMetaTags', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateMetaTags'])->name('store.seo.updateMetaTags');
-        Route::post('updateKeyWords', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateKeyWords'])->name('store.seo.updateKeyWords');
+        Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('store.seo.updateGoogleAnalytics');
+        // Route::post('updateSnapPixel', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSnapPixel'])->name('store.seo.updateSnapPixel');
+        // Route::post('updateTiktokPixel', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateTiktokPixel'])->name('store.seo.updateTiktokPixel');
+        // Route::post('updateTwitterpixel', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateTwitterpixel'])->name('store.seo.updateTwitterpixel');
+        // Route::post('updateInstapixel', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateInstapixel'])->name('store.seo.updateInstapixel');
+        // Route::post('updateMetaTags', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateMetaTags'])->name('store.seo.updateMetaTags');
+        // Route::post('updateKeyWords', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateKeyWords'])->name('store.seo.updateKeyWords');
 
     });
 });
@@ -551,13 +551,7 @@ Route::middleware([StoreUser::class])->group(function () {
 
         // website seo
         Route::resource('seo', App\Http\Controllers\api\storeDashboard\SeoController::class, ['names' => 'store.seo']);
-        Route::post('updateGoogleAnalytics', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateGoogleAnalytics'])->name('store.seo.updateGoogleAnalytics');
-        Route::post('updateSnapPixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateSnapPixel'])->name('store.seo.updateSnapPixel');
-        Route::post('updateTiktokPixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateTiktokPixel'])->name('store.seo.updateTiktokPixel');
-        Route::post('updateTwitterpixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateTwitterpixel'])->name('store.seo.updateTwitterpixel');
-        Route::post('updateInstapixel', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateInstapixel'])->name('store.seo.updateInstapixel');
-        Route::post('updateMetaTags', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateMetaTags'])->name('store.seo.updateMetaTags');
-        Route::post('updateKeyWords', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateKeyWords'])->name('store.seo.updateKeyWords');
+        Route::post('updateSeo', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateSeo'])->name('store.seo.updateGoogleAnalytics');
 
         // });
     });
