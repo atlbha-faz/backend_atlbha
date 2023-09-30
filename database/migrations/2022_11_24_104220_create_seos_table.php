@@ -15,16 +15,17 @@ return new class extends Migration
     {
         Schema::create('seos', function (Blueprint $table) {
             $table->id();
-            $table->string('index_page_title');
-            $table->string('index_page_description');
+            $table->string('google_analytics')->nullable();
+            $table->string('snappixel')->nullable();
+            $table->string('tiktokpixel')->nullable();
+            $table->string('twitterpixel')->nullable();
+            $table->string('instapixel')->nullable();
+            $table->string('metatags')->nullable();
             $table->string('key_words');
-            // $table->enum('show_pages',['short_link','name_link'])->default('name_link');
-            $table->string('link');
-            $table->longText('robots');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-            $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
+            $table->enum('status', ['active', 'not_active'])->default('active');
+            $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }

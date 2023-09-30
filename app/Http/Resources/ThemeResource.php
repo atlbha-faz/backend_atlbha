@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ThemeResource extends JsonResource
-{ 
+{
     /**
      * Transform the resource into an array.
      *
@@ -15,15 +15,14 @@ class ThemeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' =>$this->id,
-            'searchBorder' => $this->searchBorder,
-            'searchBg' =>$this->searchBg,
-            'categoriesBg' => $this->categoriesBg,
-            'menuBg' => $this->menuBg,
+            'id' => $this->id,
+            'primaryBg' => $this->primaryBg,
+            'secondaryBg' => $this->secondaryBg,
+            'headerBg' => $this->headerBg,
             'layoutBg' => $this->layoutBg,
-            'iconsBg' =>$this->iconsBg,
+            'iconsBg' => $this->iconsBg,
             'productBorder' => $this->productBorder,
-            'productBg' =>$this->productBg,
+            'productBg' => $this->productBg,
             'filtersBorder' => $this->filtersBorder,
             'filtersBg' => $this->filtersBg,
             'mainButtonBg' => $this->mainButtonBg,
@@ -32,7 +31,7 @@ class ThemeResource extends JsonResource
             'subButtonBorder' => $this->subButtonBorder,
             'footerBorder' => $this->footerBorder,
             'footerBg' => $this->footerBg,
-            'store' => New StoreResource($this->store),
+            'store' => new StoreResource($this->store),
         ];
     }
 }
