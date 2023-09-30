@@ -211,12 +211,18 @@ class SeoController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع تحسينات السيو بنجاح', 'Seo return successfully');
     }
-    public function updateGoogleAnalytics(Request $request)
+    public function updateSeo(Request $request)
     {
 
         $input = $request->all();
         $validator = Validator::make($input, [
             'google_analytics' => 'nullable|url',
+            'metatags' => 'nullable|string',
+            'snappixel' => 'nullable|string',
+            'tiktokpixel' => 'nullable|string',
+            'twitterpixel' => 'nullable|string',
+            'instapixel' => 'nullable|string',
+            'key_words' => 'required',
         ]);
         if ($validator->fails()) {
             # code...
@@ -226,166 +232,11 @@ class SeoController extends BaseController
             'store_id' => auth()->user()->store_id,
         ], [
             'google_analytics' => $request->google_analytics,
-
-        ]);
-
-        $success['seos'] = new SeoResource($seo);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
-
-    }
-    public function updateMetaTags(Request $request)
-    {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-
-            'metatags' => 'nullable|file|mimes:txt',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-
-        $seo = Seo::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-        ], [
-
             'metatags' => $request->metatags,
-
-        ]);
-
-        $success['seos'] = new SeoResource($seo);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
-
-    }
-    public function updateSnapPixel(Request $request)
-    {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-
-            'snappixel' => 'nullable|file|mimes:txt',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-        $seo = Seo::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-        ], [
-
-            'snappixel' => $request->input('snappixel'),
-
-        ]);
-
-        $success['seos'] = new SeoResource($seo);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
-
-    }
-    public function updateTiktokPixel(Request $request)
-    {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-
-            'tiktokpixel' => 'nullable|file|mimes:txt',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-        $seo = Seo::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-        ], [
-
-            'tiktokpixel' => $request->input('tiktokpixel'),
-
-        ]);
-
-        $success['seos'] = new SeoResource($seo);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
-
-    }
-    public function updateTwitterpixel(Request $request)
-    {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-
-            'twitterpixel' => 'nullable|file|mimes:txt',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-        $seo = Seo::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-        ], [
-
-            'twitterpixel' => $request->input('twitterpixel'),
-
-        ]);
-
-        $success['seos'] = new SeoResource($seo);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
-
-    }
-    public function updateInstapixel(Request $request)
-    {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-
-            'instapixel' => 'nullable|file|mimes:txt',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-        $seo = Seo::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-        ], [
-
-            'instapixel' => $request->input('instapixel'),
-
-        ]);
-
-        $success['seos'] = new SeoResource($seo);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
-
-    }
-
-    public function updateKeyWords(Request $request)
-    {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'key_words' => 'required',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-        $seo = Seo::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-        ], [
+            'snappixel' => $request->snappixel,
+            'tiktokpixel' => $request->tiktokpixel,
+            'twitterpixel' => $request->twitterpixel,
+            'instapixel' => $request->instapixel,
             'key_words' => $request->key_words,
 
         ]);
@@ -396,4 +247,189 @@ class SeoController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
 
     }
+    // public function updateGoogleAnalytics(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+    //         'google_analytics' => 'nullable|url',
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+    //         'google_analytics' => $request->google_analytics,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateMetaTags(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'metatags' => 'nullable|file|mimes:txt',
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'metatags' => $request->metatags,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateSnapPixel(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'snappixel' => 'nullable|file|mimes:txt',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'snappixel' => $request->input('snappixel'),
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateTiktokPixel(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'tiktokpixel' => 'nullable|file|mimes:txt',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'tiktokpixel' => $request->input('tiktokpixel'),
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateTwitterpixel(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'twitterpixel' => 'nullable|file|mimes:txt',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'twitterpixel' => $request->input('twitterpixel'),
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateInstapixel(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'instapixel' => 'nullable|file|mimes:txt',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'instapixel' => $request->input('instapixel'),
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+
+    // public function updateKeyWords(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+    //         'key_words' => 'required',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+    //         'key_words' => $request->key_words,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
 }
