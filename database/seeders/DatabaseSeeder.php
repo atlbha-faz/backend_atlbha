@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\DaySeeder;
-use Illuminate\Database\Seeder;
 use Database\Seeders\NotificationSeeder;
 use Database\Seeders\AdminPermissionTableSeeder;
 
@@ -17,7 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
 
         $this->call([
          ActivitySeeder::class,
@@ -73,6 +71,8 @@ class DatabaseSeeder extends Seeder
 
             NotificationSeeder::class,
 
+            TechnicalSupportSeeder::class,
+            // PermissionTableSeeder::class,
 
            TechnicalSupportSeeder::class,
             //  PermissionTableSeeder::class,
@@ -82,7 +82,6 @@ class DatabaseSeeder extends Seeder
             Theme::class,
             AdminPermissionTableSeeder::class
         ]);
-
 
     }
 }

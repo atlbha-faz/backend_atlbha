@@ -72,6 +72,10 @@ class ProductController extends BaseController
             'images' => 'nullable|array',
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'SEOdescription' => 'nullable',
+            'snappixel' => 'nullable|file|mimes:txt',
+            'tiktokpixel' => 'nullable|file|mimes:txt',
+            'twitterpixel' => 'nullable|file|mimes:txt',
+            'instapixel' => 'nullable|file|mimes:txt',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -100,7 +104,10 @@ class ProductController extends BaseController
             'cover' => $request->cover,
             'SEOdescription' => $request->SEOdescription,
             'discount_price' => $request->discount_price,
-
+            'snappixel' => $request->snappixel,
+            'tiktokpixel' => $request->tiktokpixel,
+            'twitterpixel' => $request->twitterpixel,
+            'instapixel' => $request->instapixel,
             'subcategory_id' => $subcategory,
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
@@ -223,6 +230,10 @@ class ProductController extends BaseController
                 'images' => 'nullable|array',
                 //'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
                 'SEOdescription' => 'nullable',
+                'snappixel' => 'nullable|file|mimes:txt',
+                'tiktokpixel' => 'nullable|file|mimes:txt',
+                'twitterpixel' => 'nullable|file|mimes:txt',
+                'instapixel' => 'nullable|file|mimes:txt',
                 'category_id' => 'required|exists:categories,id',
                 'subcategory_id' => ['nullable', 'array'],
                 'subcategory_id.*' => ['nullable', 'numeric',
@@ -253,7 +264,10 @@ class ProductController extends BaseController
                 'cover' => $request->cover,
                 'SEOdescription' => $request->input('SEOdescription'),
                 'discount_price' => $request->input('discount_price'),
-
+                'snappixel' => $request->snappixel,
+                'tiktokpixel' => $request->tiktokpixel,
+                'twitterpixel' => $request->twitterpixel,
+                'instapixel' => $request->instapixel,
                 'category_id' => $request->input('category_id'),
                 'subcategory_id' => $subcategory,
                 // 'store_id' => $request->input('store_id'),
@@ -302,6 +316,7 @@ class ProductController extends BaseController
                     $image = Image::query()->find($oid);
                     $image->update(['is_deleted' => $image->id]);
                 }
+                if($files != null){
                 foreach ($files as $file) {
                     $imageName = time() . '_' . $file;
                     $request['product_id'] = $productid;
@@ -312,6 +327,7 @@ class ProductController extends BaseController
                     Image::create($request->all());
 
                 }
+            }
             }
             $success['products'] = new ProductResource($product);
             $success['status'] = 200;

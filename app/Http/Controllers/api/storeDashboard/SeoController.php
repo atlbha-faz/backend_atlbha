@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\SeoResource;
 use App\Models\Seo;
 use Illuminate\Http\Request;
-use App\Http\Resources\SeoResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class SeoController extends BaseController
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -19,13 +19,13 @@ class SeoController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $success['Seo']=SeoResource::collection(Seo::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
-        $success['status']= 200;
+    // public function index()
+    // {
+    //     $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+    //     $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع الكلمات المفتاحية بنجاح','Seo return successfully');
-    }
+    //     return $this->sendResponse($success, 'تم ارجاع الكلمات المفتاحية بنجاح', 'Seo return successfully');
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -69,7 +69,6 @@ class SeoController extends BaseController
     //         'store_id'=> auth()->user()->store_id,
     //       ]);
 
-
     //      $success['seos']=New SeoResource($seo);
     //     $success['status']= 200;
 
@@ -102,93 +101,90 @@ class SeoController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function updateSeo(Request $request)
-    {
+    // public function updateSeo(Request $request)
+    // {
 
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
-            'index_page_title'=>'required|string|max:255',
-            'index_page_description'=>'required|string',
-        //    'show_pages'=>'required|in:short_link,name_link',
-           'key_words' =>'required',
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+    //         'index_page_title' => 'required|string|max:255',
+    //         'index_page_description' => 'required|string',
+    //         //    'show_pages'=>'required|in:short_link,name_link',
+    //         'key_words' => 'required',
 
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $seo=Seo::updateOrCreate([
-                'store_id'=> auth()->user()->store_id,
-                ],[
-               'index_page_title' => $request->index_page_title,
-               'index_page_description' => $request->index_page_description,
-               'key_words' =>$request->key_words,
-            //    'show_pages' => $request->show_pages,
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+    //         'index_page_title' => $request->index_page_title,
+    //         'index_page_description' => $request->index_page_description,
+    //         'key_words' => $request->key_words,
+    //         //    'show_pages' => $request->show_pages,
 
-           ]);
+    //     ]);
 
-           $success['seos']=New SeoResource($seo);
-           $success['status']= 200;
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','seo updated successfully');
-    }
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+    // }
 
-    public function updateLink(Request $request)
-    {
+    // public function updateLink(Request $request)
+    // {
 
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
 
-           'link'=>'required|url',
+    //         'link' => 'required|url',
 
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $seo=Seo::updateOrCreate([
-                'store_id'=> auth()->user()->store_id,
-                ],[
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
 
-               'link' => $request->input('link'),
+    //         'link' => $request->input('link'),
 
-           ]);
+    //     ]);
 
-           $success['seos']=New seoResource($seo);
-           $success['status']= 200;
+    //     $success['seos'] = new seoResource($seo);
+    //     $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','seo updated successfully');
-    }
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+    // }
 
-    public function updateRobots(Request $request)
-    {
+    // public function updateRobots(Request $request)
+    // {
 
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
 
-           'robots'=>'required|string',
+    //         'robots' => 'required|string',
 
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $seo=Seo::updateOrCreate([
-                'store_id'=> auth()->user()->store_id,
-                ],[
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
 
-               'robots' => $request->input('robots'),
+    //         'robots' => $request->input('robots'),
 
-           ]);
+    //     ]);
 
-           $success['seos']=New SeoResource($seo);
-           $success['status']= 200;
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','seo updated successfully');
-    }
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+    // }
     /**
      * Remove the specified resource from storage.
      *
@@ -207,5 +203,209 @@ class SeoController extends BaseController
     //        $success['status']= 200;
 
     //         return $this->sendResponse($success,'تم حذف الكلمات المفتاحية بنجاح','seo deleted successfully');
+    // }
+    public function index()
+    {
+        $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع تحسينات السيو بنجاح', 'Seo return successfully');
+    }
+    public function updateSeo(Request $request)
+    {
+
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'google_analytics' => 'nullable|url',
+            'metatags' => 'nullable|string',
+            'snappixel' => 'nullable|string',
+            'tiktokpixel' => 'nullable|string',
+            'twitterpixel' => 'nullable|string',
+            'instapixel' => 'nullable|string',
+            'key_words' => 'required',
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+        $seo = Seo::updateOrCreate([
+            'store_id' => auth()->user()->store_id,
+        ], [
+            'google_analytics' => $request->google_analytics,
+            'metatags' => $request->metatags,
+            'snappixel' => $request->snappixel,
+            'tiktokpixel' => $request->tiktokpixel,
+            'twitterpixel' => $request->twitterpixel,
+            'instapixel' => $request->instapixel,
+            'key_words' => $request->key_words,
+
+        ]);
+
+        $success['seos'] = new SeoResource($seo);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    }
+    // public function updateMetaTags(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'metatags' => 'nullable|file|mimes:txt',
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'metatags' => $request->metatags,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateSnapPixel(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'snappixel' => 'nullable|file|mimes:txt',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'snappixel' => $request->snappixel,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateTiktokPixel(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'tiktokpixel' => 'nullable|file|mimes:txt',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'tiktokpixel' => $request->tiktokpixel,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateTwitterpixel(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'twitterpixel' => 'nullable|file|mimes:txt',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'twitterpixel' => $request->twitterpixel,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+    // public function updateInstapixel(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+
+    //         'instapixel' => 'nullable|file|mimes:txt',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+
+    //         'instapixel' => $request->instapixel,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
+    // }
+
+    // public function updateKeyWords(Request $request)
+    // {
+
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+    //         'key_words' => 'required',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $seo = Seo::updateOrCreate([
+    //         'store_id' => auth()->user()->store_id,
+    //     ], [
+    //         'key_words' => $request->key_words,
+
+    //     ]);
+
+    //     $success['seos'] = new SeoResource($seo);
+    //     $success['status'] = 200;
+
+    //     return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
+
     // }
 }
