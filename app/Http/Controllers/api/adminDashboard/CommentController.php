@@ -91,7 +91,7 @@ class CommentController extends BaseController
    {
         $comment = Comment::query()->where('store_id',null)->where('product_id',null)->where('comment_for','store')->find($comment);
 
-        if (is_null($comment) ||$comment->is_deleted==1){
+        if (is_null($comment) ||$comment->is_deleted !=0){
         return $this->sendError("'التعليق غير موجودة","comment type is't exists");
         }
 
@@ -123,7 +123,7 @@ class CommentController extends BaseController
     public function update(Request $request, $comment)
       {
         $comment =  Comment::where('id', $comment)->first();
-         if (is_null($comment) ||$comment->is_deleted==1){
+         if (is_null($comment) ||$comment->is_deleted !=0){
          return $this->sendError(" التعليق غير موجود","comment is't exists");
           }
          $input = $request->all();
@@ -187,7 +187,7 @@ class CommentController extends BaseController
     // public function destroy($comment)
     //   {
     //    $comment = Comment::query()->find($comment);
-    //      if (is_null($comment) ||$comment->is_deleted==1){
+    //      if (is_null($comment) ||$comment->is_deleted !=0){
     //      return $this->sendError("التعليق غير موجود","comment is't exists");
     //      }
     //     $comment->update(['is_deleted' => 1]);
@@ -206,7 +206,7 @@ class CommentController extends BaseController
             foreach($comments as $comment)
             {
 
-                $comment->update(['is_deleted' => 1]);
+                $comment->update(['is_deleted' => $comment->id]);
          }
          }  
         $success['comments']=CommentResource::collection($comments);

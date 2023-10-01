@@ -51,7 +51,7 @@ class Theme extends Seeder
             'subButtonBorder' => "#02466a",
             'footerBorder' => "#ebebeb",
             'footerBg' => "#ffffff",
-            'store_id'=>170
+            'store_id'=>1
         ]);
         
       

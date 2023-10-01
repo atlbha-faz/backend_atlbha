@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 use Notification;
-use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 use App\Http\Resources\RoleResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -18,7 +19,7 @@ class RoleController extends BaseController
      public function index()
     {
 
-                $success['roles']=RoleResource::collection(Role::where('type','admin')->whereNot('id', 1)->get());
+                $success['roles']=RoleResource::collection(Role::where('type','admin')->whereNot('id', 1)->orderByDesc('created_at')->get());
 
         $success['status']= 200;
 
@@ -45,7 +46,9 @@ class RoleController extends BaseController
       
       $input = $request->all();
             $validator =  Validator::make($input ,[
-        'role_name' => 'required|string|max:255|unique:roles,name',
+        'role_name' => ['required','string','max:255',Rule::unique('roles','name')->where(function ($query) {
+            return $query->where('store_id',null);
+        })],
         'permissions' => 'required|array',
         'permissions.*' => 'nullable|exists:permissions,id',
              
@@ -74,7 +77,9 @@ class RoleController extends BaseController
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-                 'role_name' => 'required|string|max:255|unique:roles,name,'.$role->id,
+                 'role_name' => ['required','string','max:255',Rule::unique('roles','name')->where(function ($query) use($role) {
+                    return $query->where('store_id',null)->where('id','!=',$role->id);
+                })],
         'permissions' => 'required|array',
         'permissions.*' => 'nullable|exists:permissions,id',
 

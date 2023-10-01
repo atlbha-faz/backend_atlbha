@@ -90,7 +90,7 @@ class TechnicalSupportController extends BaseController
     public function show($technicalSupport)
     {
         $technicalSupport = TechnicalSupport::where('id', $technicalSupport)->where('store_id', auth()->user()->store_id)->first();
-        if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1) {
+        if (is_null($technicalSupport) || $technicalSupport->is_deleted != 0) {
             return $this->sendError("طلب الدعم الفني غير موجود", "Technical Support is't exists");
         }
 
@@ -120,7 +120,7 @@ class TechnicalSupportController extends BaseController
      */
     // public function update(Request $request, TechnicalSupport $technicalSupport)
     // {
-    //      if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
+    //      if (is_null($technicalSupport) || $technicalSupport->is_deleted !=0){
     //      return $this->sendError("طلب الدعم غير موجود","technicalSupport is't exists");
     //       }
     //      $input = $request->all();
@@ -154,7 +154,7 @@ class TechnicalSupportController extends BaseController
     public function changeStatus($id)
     {
         $technicalSupport = TechnicalSupport::query()->find($id);
-        if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1) {
+        if (is_null($technicalSupport) || $technicalSupport->is_deleted != 0) {
             return $this->sendError("طلب الدعم غير موجود", "technical Support is't exists");
         }
 
@@ -180,10 +180,10 @@ class TechnicalSupportController extends BaseController
     {
         $technicalSupport = TechnicalSupport::where('id', $technicalSupport)->where('store_id', auth()->user()->store_id)->first();
 
-        if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1) {
+        if (is_null($technicalSupport) || $technicalSupport->is_deleted != 0) {
             return $this->sendError("الصف غير موجودة", "technicalSupport is't exists");
         }
-        $technicalSupport->update(['is_deleted' => 1]);
+        $technicalSupport->update(['is_deleted' => $technicalSupport->id]);
 
         $success['technicalSupport'] = new TechnicalSupportResource($technicalSupport);
         $success['status'] = 200;
@@ -199,7 +199,7 @@ class TechnicalSupportController extends BaseController
         if (count($technicalSupports) > 0) {
             foreach ($technicalSupports as $technicalSupport) {
 
-                $technicalSupport->update(['is_deleted' => 1]);
+                $technicalSupport->update(['is_deleted' => $technicalSupport->id]);
                 $success['technicalSupports'] = new TechnicalSupportResource($technicalSupport);
 
             }

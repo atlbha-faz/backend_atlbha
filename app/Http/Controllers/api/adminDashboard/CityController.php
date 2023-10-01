@@ -79,7 +79,7 @@ class CityController extends BaseController
     public function show(City $city)
     {
          $city = City::query()->find($city->id);
-         if (is_null($city) || $city->is_deleted==1){
+         if (is_null($city) || $city->is_deleted !=0){
          return $this->sendError("المدينه غير موجودة","city is't exists");
          }
 
@@ -93,7 +93,7 @@ class CityController extends BaseController
     public function changeStatus($id)
     {
         $city = City::query()->find($id);
-         if (is_null($city) ||$city->is_deleted==1){
+         if (is_null($city) ||$city->is_deleted !=0){
          return $this->sendError("المدينه غير موجودة","city is't exists");
          }
 
@@ -130,7 +130,7 @@ class CityController extends BaseController
     public function update(Request $request, $city)
 {
     $city =  City::where('id', $city)->first();
-        if (is_null($city) || $city->is_deleted==1){
+        if (is_null($city) || $city->is_deleted !=0){
          return $this->sendError("المدينه غير موجودة","city is't exists");
     }
          $input = $request->all();
@@ -166,10 +166,10 @@ class CityController extends BaseController
      */
     public function destroy(City $city)
     {
-         if (is_null($city) ||$city->is_deleted==1){
+         if (is_null($city) ||$city->is_deleted !=0){
          return $this->sendError("المدينه غير موجودة","city is't exists");
          }
-        $city->update(['is_deleted' => 1]);
+        $city->update(['is_deleted' =>$city->id ]);
 
         $success['cities']=New CityResource($city);
         $success['status']= 200;
@@ -184,7 +184,7 @@ class CityController extends BaseController
             if(count($citys)>0){
            foreach($citys as $city)
            {
-             $city->update(['is_deleted' => 1]);
+             $city->update(['is_deleted' => $city->id]);
             $success['citys']=New cityResource($city);
 
             }

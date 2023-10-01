@@ -37,9 +37,9 @@ class SubscriptionsController extends BaseController
 
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
 
-                if (is_null($store_package) || $store_package->is_deleted == 1) {
+                if (is_null($store_package) || $store_package->is_deleted != 0) {
                 } else {
-                    $store_package->update(['is_deleted' => 1]);
+                    $store_package->update(['is_deleted' => $store_package->id]);
                 }
                 if ($store->package_id != null) {
                     $store->update(['package_id' => null]);
@@ -69,7 +69,7 @@ class SubscriptionsController extends BaseController
                 //   if( $store->package_id != null){
                 //   $store->update(['package_id' => null]);
                 //   }
-                if (is_null($store_package) || $store_package->is_deleted == 1) {
+                if (is_null($store_package) || $store_package->is_deleted != 0) {
                 } else {
                     if ($store_package->status === 'active') {
                         $store_package->update(['status' => 'not_active']);

@@ -30,7 +30,7 @@ return new class extends Migration
             $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
             $table->enum('status', ['active', 'not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
             $table->string('device_token')->nullable();
             $table->boolean('verified')->default(0);
             $table->integer('code')->nullable();
@@ -39,8 +39,9 @@ return new class extends Migration
             $table->timestamp('verify_code_expires_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->unique(['email', 'user_type']);
-            $table->unique(['phonenumber', 'user_type']);
+            $table->unique(['user_name','user_type','is_deleted']);
+            $table->unique(['email','user_type','is_deleted']);
+            $table->unique(['phonenumber', 'user_type','is_deleted']);
 
         });
     }

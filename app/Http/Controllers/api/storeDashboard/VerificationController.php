@@ -47,6 +47,8 @@ class VerificationController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'activity_id' => 'required|array',
+            'subcategory_id' => ['nullable', 'array'],
+          
             'commercialregistertype' => 'required|in:commercialregister,maeruf',
             'store_name' => 'required|unique:stores,store_name,' . auth()->user()->store_id,
             'city_id' => 'required',
@@ -91,7 +93,13 @@ class VerificationController extends BaseController
         ]);
 
 
-        $store->activities()->sync($request->activity_id);
+        // $store->activities()->sync($request->activity_id);
+        if ($request->subcategory_id != null) {
+            $subcategory = implode(',', $request->subcategory_id);
+        } else {
+            $subcategory = null;
+        }
+         $store->categories()->attach($request->activity_id,['subcategory_id' =>$subcategory] );
 
         $user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $user->update([

@@ -97,7 +97,7 @@ class ClientController extends BaseController
     public function show($client)
     {
        $client = Client::query()->find($client);
-       if (is_null($client ) ||$client->is_deleted==1){
+       if (is_null($client ) ||$client->is_deleted !=0){
          return $this->sendError("المندوب غير موجودة","client is't exists");
          }
         $success['$clients']=New ClientResource($client);
@@ -128,7 +128,7 @@ class ClientController extends BaseController
     public function update(Request $request, $client)
      {
         $client =  Client::where('id', $client)->first();
-        if (is_null($client ) ||$client->is_deleted==1){
+        if (is_null($client ) ||$client->is_deleted !=0){
             return $this->sendError("المندوب غير موجودة","client is't exists");
             }
 
@@ -173,7 +173,7 @@ class ClientController extends BaseController
       public function changeStatus($id)
     {
         $client = Client::query()->find($id);
-        if (is_null($client ) ||$client->is_deleted==1){
+        if (is_null($client ) ||$client->is_deleted !=0){
          return $this->sendError("العميل غير موجودة","client is't exists");
          }
         if($client->status === 'active'){
@@ -199,10 +199,10 @@ class ClientController extends BaseController
     public function destroy($client)
     {
          $client =Client::query()->find($client);
-       if (is_null($client ) ||$client->is_deleted==1){
+       if (is_null($client ) ||$client->is_deleted !=0){
          return $this->sendError("المندوب غير موجودة","client is't exists");
          }
-            $client->update(['is_deleted' => 1]);
+            $client->update(['is_deleted' => $client->id]);
 
 
          $success['clients']=New ClientResource($client);

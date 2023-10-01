@@ -50,7 +50,7 @@ class UnitController extends BaseController
     public function show($unit)
      {
           $unit = Unit::query()->find($unit);
-         if (is_null($unit) || $unit->is_deleted == 1){
+         if (is_null($unit) || $unit->is_deleted != 0){
          return $this->sendError("الوحدة غير موجودة","unit is't exists");
          }
 

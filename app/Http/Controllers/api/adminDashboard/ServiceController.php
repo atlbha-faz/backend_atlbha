@@ -84,7 +84,7 @@ class ServiceController extends BaseController
    /* public function show($service)
     {
         $service = Service::query()->find($service);
-        if (is_null($service) || $service->is_deleted==1){
+        if (is_null($service) || $service->is_deleted !=0){
         return $this->sendError("الخدمة غير موجودة","service is't exists");
         }
 
@@ -97,7 +97,7 @@ class ServiceController extends BaseController
     public function changeStatus($id)
     {
         $service = Service::query()->find($id);
-         if (is_null($service) || $service->is_deleted==1){
+         if (is_null($service) || $service->is_deleted !=0){
          return $this->sendError(" الخدمة غير موجودة","service is't exists");
          }
 
@@ -134,7 +134,7 @@ class ServiceController extends BaseController
      */
 /*    public function update(Request $request, Service $service)
     {
-        if (is_null($service) || $service->is_deleted==1){
+        if (is_null($service) || $service->is_deleted !=0){
             return $this->sendError("الخدمة غير موجودة","service is't exists");
        }
             $input = $request->all();
@@ -171,7 +171,7 @@ class ServiceController extends BaseController
 /*    public function destroy($service)
     {
         $service = Service::query()->find($service);
-        if (is_null($service) || $service->is_deleted==1){
+        if (is_null($service) || $service->is_deleted !=0){
             return $this->sendError("االخدمة غير موجودة","service is't exists");
             }
            $service->update(['is_deleted' => 1]);
@@ -190,7 +190,7 @@ class ServiceController extends BaseController
            foreach($services as $service)
            {
           
-             $service->update(['is_deleted' => 1]);
+             $service->update(['is_deleted' => $service->id]);
              $success['services']= New ServiceResource($service);
 
             }
@@ -205,7 +205,7 @@ class ServiceController extends BaseController
     public function showDetail($service)
     {
         $service = Service::where('id',$service)->first();
-        if (is_null($service) || $service->is_deleted==1){
+        if (is_null($service) || $service->is_deleted !=0){
             return $this->sendError("الخدمة غير موجودة","service is't exists");
             }
         $orders=  $service->websiteorders;

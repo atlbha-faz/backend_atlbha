@@ -117,7 +117,7 @@ class HomepageController extends BaseController
     // public function show($homepage)
     // {
     //     $Homepage= Homepage::query()->find($homepage);
-    //     if (is_null($Homepage) || $Homepage->is_deleted==1){
+    //     if (is_null($Homepage) || $Homepage->is_deleted !=0){
     //            return $this->sendError("االصفحة غير موجودة","Homepage is't exists");
     //            }
     //           $success['homepages']=New HomepageResource($Homepage);
@@ -128,7 +128,7 @@ class HomepageController extends BaseController
     // public function changeStatus($id)
     // {
     //     $Homepage = Homepage::query()->find($id);
-    //     if (is_null($Homepage) || $Homepage->is_deleted==1){
+    //     if (is_null($Homepage) || $Homepage->is_deleted !=0){
     //      return $this->sendError("الصفحة غير موجودة","Homepage is't exists");
     //      }
     //     if($Homepage->status === 'active'){
@@ -171,7 +171,7 @@ class HomepageController extends BaseController
     // public function destroy($homepage)
     // {
     //     $homepage =Homepage::query()->find($homepage);
-    //     if (is_null($homepage) || $homepage->is_deleted==1){
+    //     if (is_null($homepage) || $homepage->is_deleted !=0){
     //         return $this->sendError("الصفحة غير موجودة","Homepage is't exists");
     //         }
     //        $homepage->update(['is_deleted' => 1]);
@@ -758,7 +758,7 @@ class HomepageController extends BaseController
 // public function sliderUpdate(Request $request)
 // {
 //     $logohomepage = Homepage::where('store_id',auth()->user()->store_id)->first();
-//     if (is_null($logohomepage) || $logohomepage->is_deleted==1){
+//     if (is_null($logohomepage) || $logohomepage->is_deleted !=0){
 //         return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
 //    }
 //         $input = $request->all();

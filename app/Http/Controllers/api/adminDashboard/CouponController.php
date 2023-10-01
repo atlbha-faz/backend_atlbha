@@ -96,7 +96,7 @@ class CouponController extends BaseController
     public function show($coupon)
     {
         $coupon = Coupon::where('store_id', null)->where('id', $coupon)->first();
-        if (is_null($coupon) || $coupon->is_deleted == 1) {
+        if (is_null($coupon) || $coupon->is_deleted != 0) {
             return $this->sendError("الكوبون غير موجودة", "Coupon is't exists");
         }
         $success['Coupons'] = new CouponResource($coupon);
@@ -109,7 +109,7 @@ class CouponController extends BaseController
     public function changeStatus($id)
     {
         $coupon = Coupon::where('store_id', null)->where('id', $id)->first();
-        if (is_null($coupon) || $coupon->is_deleted == 1) {
+        if (is_null($coupon) || $coupon->is_deleted != 0) {
             return $this->sendError("الكوبون غير موجودة", "coupon is't exists");
         }
         if ($coupon->status === 'active') {
@@ -143,7 +143,7 @@ class CouponController extends BaseController
     public function update(Request $request, $coupon)
     {
         $coupon = Coupon::where('id', $coupon)->first();
-        if (is_null($coupon) || $coupon->is_deleted == 1 || $coupon->store_id != null) {
+        if (is_null($coupon) || $coupon->is_deleted != 0 || $coupon->store_id != null) {
             return $this->sendError("الكوبون غير موجودة", " coupon is't exists");
         }
         $input = $request->all();
@@ -184,10 +184,10 @@ class CouponController extends BaseController
     public function destroy($coupon)
     {
         $coupon = Coupon::where('store_id', null)->where('id', $coupon)->first();
-        if (is_null($coupon) || $coupon->is_deleted == 1) {
+        if (is_null($coupon) || $coupon->is_deleted != 0) {
             return $this->sendError("الكوبون غير موجودة", "coupon is't exists");
         }
-        $coupon->update(['is_deleted' => 1]);
+        $coupon->update(['is_deleted' => $coupon->id]);
 
         $success['coupons'] = new couponResource($coupon);
         $success['status'] = 200;
@@ -201,7 +201,7 @@ class CouponController extends BaseController
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
 
-                $coupon->update(['is_deleted' => 1]);
+                $coupon->update(['is_deleted' => $coupon->id]);
                 $success['coupons'] = new CouponResource($coupon);
 
             }

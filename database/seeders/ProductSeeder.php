@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Importproduct;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,6 +18,62 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
+                    Category::create([
+                'number' =>0003,
+                 'name' => 'أجهزة كمبيوتر',
+                 'icon'=>'cat.png',
+                 'parent_id'=>null,
+                'for'=>'store',
+                'store_id'=>1
+
+
+                ]);
+                Category::create([
+                    'number' =>0004,
+                     'name' => 'جوالات',
+                     'parent_id'=>3,
+                    'for'=>'store',
+                    'store_id'=>1
+                    ]);
+  Category::create([
+                    'number' =>0004,
+                     'name' => '2جوالات',
+                     'parent_id'=>3,
+                    'for'=>'store',
+                    'store_id'=>1
+                    ]);
+                  Category::create([
+                        'number' =>0005,
+                         'name' => 'هدايا والعاب',
+                         'parent_id'=>null,
+                         'icon'=>'cat.png',
+                        'for'=>'store',
+                        'store_id'=>2
+
+
+                        ]);
+     Category::create([
+                            'number' =>0006,
+                             'name' => 'العاب اطفال',
+                             'parent_id'=>5,
+                            'for'=>'store',
+                            'store_id'=>2
+                            ]);
+
+     Category::create([
+                            'number' =>0007,
+                             'name' => 'مستلزمات طبيه',
+                             'parent_id'=>null,
+                            'for'=>'etlobha',
+                            'store_id'=>null
+                            ]);
+                             Category::create([
+                            // 'number' =>0007,
+                             'name' => 'مستلزمات طبيه',
+                             'parent_id'=>7,
+                            'for'=>'etlobha',
+                            'store_id'=>null
+                            ]);
         Product::create([
             'name' =>'سماعة هيدفدون أصلية',
              'for'=>'etlobha',

@@ -86,7 +86,7 @@ class SeoController extends BaseController
     public function show($seo)
     {
         $seo= Seo::query()->find($seo);
-        if (is_null($seo) || $seo->is_deleted==1){
+        if (is_null($seo) || $seo->is_deleted !=0){
                return $this->sendError("االكلمات المفتاحية غير موجودة","Seo is't exists");
                }
               $success['seos']=New SeoResource($seo);
@@ -97,7 +97,7 @@ class SeoController extends BaseController
     public function changeStatus($id)
     {
         $seo = Seo::query()->find($id);
-        if (is_null($seo) || $seo->is_deleted==1){
+        if (is_null($seo) || $seo->is_deleted !=0){
          return $this->sendError("الكلمات المفتاحية غير موجودة","seo is't exists");
          }
         if($seo->status === 'active'){
@@ -132,7 +132,7 @@ class SeoController extends BaseController
     public function update(Request $request,  $seo)
     {
         $seo =Seo::query()->find($seo);
-        if (is_null($seo) || $seo->is_deleted==1){
+        if (is_null($seo) || $seo->is_deleted !=0){
             return $this->sendError("االكلمات المفتاحية غير موجودة"," seo is't exists");
        }
             $input = $request->all();
@@ -177,10 +177,10 @@ class SeoController extends BaseController
     public function destroy($seo)
     {
         $seo =Seo::query()->find($seo);
-        if (is_null($seo) || $seo->is_deleted==1){
+        if (is_null($seo) || $seo->is_deleted !=0){
             return $this->sendError("االكلمات المفتاحية غير موجودة","seo is't exists");
             }
-           $seo->update(['is_deleted' => 1]);
+           $seo->update(['is_deleted' => $seo->id]);
 
            $success['seos']=New SeoResource($seo);
            $success['status']= 200;

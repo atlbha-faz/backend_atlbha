@@ -90,7 +90,7 @@ class PackageController extends BaseController
     {
 
           $package = Package::query()->find($package);
-         if (is_null($package) || $package->is_deleted == 1){
+         if (is_null($package) || $package->is_deleted != 0){
          return $this->sendError(" الباقة غير موجودة","package is't exists");
          }
 
@@ -125,7 +125,7 @@ class PackageController extends BaseController
     {
         $package = Package::query()->find($package);
 
-         if (is_null($package) || $package->is_deleted==1){
+         if (is_null($package) || $package->is_deleted !=0){
          return $this->sendError(" الياقة غير موجود","package is't exists");
           }
          $input = $request->all();
@@ -168,7 +168,7 @@ class PackageController extends BaseController
          public function changeStatus($id)
     {
         $package = Package::query()->find($id);
-         if (is_null($package) || $package->is_deleted==1){
+         if (is_null($package) || $package->is_deleted !=0){
          return $this->sendError(" الباقة غير موجود","Package is't exists");
          }
 
@@ -194,10 +194,10 @@ class PackageController extends BaseController
     public function destroy($package)
      {
        $package = Package::query()->find($package);
-         if (is_null($package) || $package->is_deleted==1){
+         if (is_null($package) || $package->is_deleted !=0){
          return $this->sendError("الباقة غير موجودة","package is't exists");
          }
-        $package->update(['is_deleted' => 1]);
+        $package->update(['is_deleted' => $package->id]);
 
         $success['packages']=New PackageResource($package);
         $success['status']= 200;
@@ -211,10 +211,10 @@ class PackageController extends BaseController
             $packages =Package::whereIn('id',$request->id)->get();
            foreach($packages as $package)
            {
-             if (is_null($package) || $package->is_deleted==1 ){
+             if (is_null($package) || $package->is_deleted !=0 ){
                     return $this->sendError("الباقة غير موجودة","package is't exists");
              }
-             $package->update(['is_deleted' => 1]);
+             $package->update(['is_deleted' => $package->id]);
             $success['packages']=New PackageResource($package);
 
             }

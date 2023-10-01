@@ -62,7 +62,7 @@ class PostStoreController extends BaseController
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
 
-            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
                 return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
             if ($store->maintenance != null) {
@@ -190,7 +190,7 @@ class PostStoreController extends BaseController
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
 
-            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
                 return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
             if ($store->maintenance != null) {
@@ -318,7 +318,7 @@ class PostStoreController extends BaseController
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
-            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
                 return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
             if ($store->maintenance != null) {

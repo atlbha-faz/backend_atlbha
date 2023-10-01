@@ -35,7 +35,9 @@ class SettingController extends BaseController
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'description' => 'required|string',
             'store_address' => 'nullable|string',
-            'domain' => ['required', 'string', 'not_regex:/^(https?:\/\/|ftp:\/\/)/i', 'unique:stores,domain,' . auth()->user()->store_id],
+            'domain' => ['required', 'string', 'not_regex:/^(https?:\/\/|ftp:\/\/)/i',Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted',0)->where('id','!=', auth()->user()->store_id);
+            })],
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             //'store_email' => 'required|email|unique:users,email,' . auth()->user()->id,

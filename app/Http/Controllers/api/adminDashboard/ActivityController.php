@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\Activity;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Resources\ActivityResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -51,7 +52,9 @@ class ActivityController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255|unique:activities,name',
+            'name'=>['required','string','max:255',Rule::unique('activities')->where(function ($query) {
+                return $query->where('is_deleted', 0);
+            })],
                 'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         ]);
         if ($validator->fails())
@@ -102,12 +105,14 @@ class ActivityController extends BaseController
     {
         $activity = Activity::where('id', $activity)->first();
 
-        if ( is_null($activity) || $activity->is_deleted==1){
+        if ( is_null($activity) || $activity->is_deleted !=0){
             return $this->sendError("النشاط غير موجودة"," Activity is't exists");
        }
             $input = $request->all();
            $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255|unique:activities,name,'.$activity->id,
+                'name'=>['required','string','max:255',Rule::unique('activities')->where(function ($query) use ($activity) {
+                    return $query->where('is_deleted', 0)->where('id', '!=', $activity->id);
+                })],
                 'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
            ]);
@@ -143,7 +148,7 @@ class ActivityController extends BaseController
            foreach($activities as $activity)
            {
         
-               $activity->update(['is_deleted' => 1]);
+               $activity->update(['is_deleted' => $activity->id]);
               $success['activities']= New ActivityResource($activity);
 
             }

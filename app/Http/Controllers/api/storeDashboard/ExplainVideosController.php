@@ -43,7 +43,7 @@ class ExplainVideosController extends BaseController
     public function show($explainVideos)
     {
           $explainVideos = ExplainVideos::query()->find($explainVideos);
-         if (is_null($explainVideos) || $explainVideos->is_deleted == 1){
+         if (is_null($explainVideos) || $explainVideos->is_deleted != 0){
          return $this->sendError("الشرح غير موجودة","explainvideo is't exists");
          }
 

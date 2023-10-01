@@ -96,7 +96,7 @@ class RegionController extends Controller
     public function update(Request $request,  $region)
    {
          $region = Region::query()->find($region);
-        if (is_null($region) || $region->is_deleted==1){
+        if (is_null($region) || $region->is_deleted !=0){
          return $this->sendError("المنطقه غير موجودة","region is't exists");
     }
          $input = $request->all();
@@ -123,7 +123,7 @@ class RegionController extends Controller
  public function changeStatus($id)
     {
         $region = Region::query()->find($id);
-         if (is_null($region) ||$region->is_deleted==1){
+         if (is_null($region) ||$region->is_deleted !=0){
          return $this->sendError("المنطقه غير موجودة","city is't exists");
          }
 
@@ -147,10 +147,10 @@ class RegionController extends Controller
      */
     public function destroy(Region $region)
     {
-         if (is_null($region) ||$region->is_deleted==1){
+         if (is_null($region) ||$region->is_deleted !=0){
          return $this->sendError("المنطقه غير موجودة","region is't exists");
          }
-        $region->update(['is_deleted' => 1]);
+        $region->update(['is_deleted' => $region->id]);
 
         $success['regions']=New CityResource($region);
         $success['status']= 200;

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->double('yearly_price');
             $table->double('discount')->nullable()->default(0);
             $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }

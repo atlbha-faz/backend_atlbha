@@ -7,6 +7,7 @@ use App\Models\Store;
 use App\Models\Package;
 use App\Models\Package_store;
 use App\Models\activities_stores;
+use App\Models\categories_stores;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -24,7 +25,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'a@gmail.com',
             'domain' => 'https//www.a1.com',
             'icon' => 'Amazon_logo.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775431',
             'description' => 'this is amazon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -503,8 +504,8 @@ class StoreSeeder extends Seeder
             'start_at' => '2022-03-01',
             'end_at' => '2023-03-01',
         ]);
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>1
          ]);
          Store::create([
@@ -536,7 +537,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b2@gmail.com',
             'domain' => 'https//www.n14.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775432',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -559,7 +560,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b23@gmail.com',
             'domain' => 'https//www.n15.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775426',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -582,7 +583,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b3@gmail.com',
             'domain' => 'https//www.n16.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775434',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -605,7 +606,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b4@gmail.com',
             'domain' => 'https//www.n17.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775435',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -628,7 +629,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b5@gmail.com',
             'domain' => 'https//www.n18.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775436',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -651,7 +652,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b6@gmail.com',
             'domain' => 'https//www.n19.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775437',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -674,7 +675,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b7@gmail.com',
             'domain' => 'https//www.n20.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775438',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -697,7 +698,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b8@gmail.com',
             'domain' => 'https//www.n21.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775439',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -720,7 +721,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b9@gmail.com',
             'domain' => 'https//www.n24.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775410',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -743,7 +744,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b10@gmail.com',
             'domain' => 'https//www.n25.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775411',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -766,7 +767,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b11@gmail.com',
             'domain' => 'https//www.n26.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775412',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -789,7 +790,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b12@gmail.com',
             'domain' => 'https//www.n27.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775413',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -812,7 +813,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b13@gmail.com',
             'domain' => 'https//www.n28.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775414',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -835,7 +836,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b14@gmail.com',
             'domain' => 'https//www.n29.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775415',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -858,7 +859,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b15@gmail.com',
             'domain' => 'https//www.n30.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775416',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -881,7 +882,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b16@gmail.com',
             'domain' => 'https//www.n31.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775417',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -904,7 +905,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b17@gmail.com',
             'domain' => 'https//www.n32.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775419',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -927,7 +928,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b18@gmail.com',
             'domain' => 'https//www.n33.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775420',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -950,7 +951,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b19@gmail.com',
             'domain' => 'https//www.n34.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775421',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -973,7 +974,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b20@gmail.com',
             'domain' => 'https//www.n35.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775422',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -996,7 +997,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b21@gmail.com',
             'domain' => 'https//www.n36.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775423',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -1019,7 +1020,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'b22@gmail.com',
             'domain' => 'https//www.n37.com',
             'icon' => 'noon.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775424',
             'description' => 'this is noon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -1042,7 +1043,7 @@ class StoreSeeder extends Seeder
             'store_email' => 'o@gmail.com',
             'domain' => 'https//www.a30.com',
             'icon' => 'Amazon_logo.png',
-            'phonenumber' => '0096650775433',
+            'phonenumber' => '0096650775425',
             'description' => 'this is amazon store',
             'snapchat' => 'https//www.snapchat.com',
             'facebook' => 'https//www.facebook.com',
@@ -1071,8 +1072,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>2
          ]);
         
@@ -1085,8 +1086,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>3
          ]);
          Package_store::create([
@@ -1098,8 +1099,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>4
          ]);
          Package_store::create([
@@ -1111,8 +1112,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>5
          ]);
          Package_store::create([
@@ -1124,8 +1125,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>6
          ]);
          Package_store::create([
@@ -1137,8 +1138,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>7
          ]);
          Package_store::create([
@@ -1150,8 +1151,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>8
          ]);
          Package_store::create([
@@ -1163,8 +1164,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>9
          ]);
          Package_store::create([
@@ -1176,8 +1177,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>10
          ]);
          Package_store::create([
@@ -1189,8 +1190,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>11
          ]);
          Package_store::create([
@@ -1202,8 +1203,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>12
          ]);
          Package_store::create([
@@ -1215,8 +1216,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>13
          ]);
          Package_store::create([
@@ -1228,8 +1229,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>14
          ]);
          Package_store::create([
@@ -1241,8 +1242,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>15
          ]);
          Package_store::create([
@@ -1254,8 +1255,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>16
          ]);
          Package_store::create([
@@ -1267,8 +1268,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>17
          ]);
          Package_store::create([
@@ -1280,8 +1281,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>18
          ]);
          Package_store::create([
@@ -1293,8 +1294,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>19
          ]);
          Package_store::create([
@@ -1306,8 +1307,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>20
          ]);
          Package_store::create([
@@ -1319,8 +1320,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>21
          ]);
          Package_store::create([
@@ -1332,8 +1333,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>22
          ]);
          Package_store::create([
@@ -1345,8 +1346,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>23
          ]);
          Package_store::create([
@@ -1358,8 +1359,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>24
          ]);
          Package_store::create([
@@ -1371,8 +1372,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>25
          ]);
          Package_store::create([
@@ -1384,8 +1385,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>26
          ]);
          Package_store::create([
@@ -1397,8 +1398,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>27
          ]);
          Package_store::create([
@@ -1410,8 +1411,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>28
          ]);
          Package_store::create([
@@ -1423,8 +1424,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>29
          ]);
          Package_store::create([
@@ -1436,8 +1437,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>30
          ]);
          Package_store::create([
@@ -1449,8 +1450,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>31
          ]);
          Package_store::create([
@@ -1462,8 +1463,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>32
          ]);
 
@@ -1476,8 +1477,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>33
          ]);
         
@@ -1490,8 +1491,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>34
          ]);
         
@@ -1504,8 +1505,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>35
          ]);
         
@@ -1518,8 +1519,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>36
          ]);
         
@@ -1532,8 +1533,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>37
          ]);
 
@@ -1546,8 +1547,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>38
          ]);
         
@@ -1560,8 +1561,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>39
          ]);
         
@@ -1574,8 +1575,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>40
          ]);
          Package_store::create([
@@ -1587,8 +1588,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>41
          ]);
          Package_store::create([
@@ -1600,8 +1601,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>1,
+        categories_stores::create([
+       'category_id'=>1,
          'store_id'=>42
          ]);
          Package_store::create([
@@ -1613,8 +1614,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>2,
+        categories_stores::create([
+       'category_id'=>2,
          'store_id'=>43
          ]);
          Package_store::create([
@@ -1626,8 +1627,8 @@ class StoreSeeder extends Seeder
         ]);
         
         
-        activities_stores::create([
-       'activity_id'=>2,
+        categories_stores::create([
+       'category_id'=>2,
          'store_id'=>44
          ]);
     //      Store::create([
@@ -2094,12 +2095,12 @@ class StoreSeeder extends Seeder
     //         'special'=>'special',
 
     //     ]);
-    //     activities_stores::create([
-    //    'activity_id'=>1,
+    //     categories_stores::create([
+    //    'category_id'=>1,
     //      'store_id'=>1
     //     ]);
-    //       activities_stores::create([
-    //    'activity_id'=>1,
+    //       categories_stores::create([
+    //    'category_id'=>1,
     //      'store_id'=>2
     //     ]);
 

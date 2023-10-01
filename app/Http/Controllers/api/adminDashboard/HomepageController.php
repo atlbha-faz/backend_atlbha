@@ -86,7 +86,7 @@ class HomepageController extends BaseController
     {
         $logohomepage =Homepage::where('store_id',null)->first();
 
-        if (is_null($logohomepage) || $logohomepage->is_deleted==1){
+        if (is_null($logohomepage) || $logohomepage->is_deleted !=0){
             return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
        }
             $input = $request->all();
@@ -112,7 +112,7 @@ class HomepageController extends BaseController
 public function banarUpdate(Request $request)
 {
     $banarhomepage =Homepage::where('store_id',null)->first();
-    if (is_null($banarhomepage) || $banarhomepage->is_deleted==1){
+    if (is_null($banarhomepage) || $banarhomepage->is_deleted !=0){
         return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
    }
         $input = $request->all();
@@ -149,7 +149,7 @@ public function banarUpdate(Request $request)
 public function sliderUpdate(Request $request)
 {
     $sliderhomepage = Homepage::where('store_id',null)->first();
-    if (is_null($sliderhomepage) || $sliderhomepage->is_deleted==1){
+    if (is_null($sliderhomepage) || $sliderhomepage->is_deleted !=0){
         return $this->sendError("الصفحة غير موجودة"," homepage is't exists");
    }
         $input = $request->all();

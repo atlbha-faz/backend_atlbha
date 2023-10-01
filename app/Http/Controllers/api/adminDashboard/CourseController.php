@@ -151,7 +151,7 @@ class CourseController extends BaseController
     public function show($course)
     {
         $course = Course::where('id', $course)->first();
-        if (is_null($course) || $course->is_deleted == 1) {
+        if (is_null($course) || $course->is_deleted != 0) {
             return $this->sendError("الكورس غير موجودة", "course is't exists");
         }
 
@@ -183,7 +183,7 @@ class CourseController extends BaseController
     {
         $course = Course::where('id', $course)->first();
 
-        if (is_null($course) || $course->is_deleted == 1) {
+        if (is_null($course) || $course->is_deleted != 0) {
             return $this->sendError("الكورس غير موجودة", "course is't exists");
         }
         $input = $request->all();
@@ -358,7 +358,7 @@ class CourseController extends BaseController
     /* public function changeStatus($id)
     {
     $course = Course::query()->find($id);
-    if (is_null($course ) || $course->is_deleted==1){
+    if (is_null($course ) || $course->is_deleted !=0){
     return $this->sendError("الفيديو غير موجودة","explainvideo is't exists");
     }
 
@@ -384,10 +384,10 @@ class CourseController extends BaseController
     public function destroy($course)
     {
         $course = Course::where('id', $course)->first();
-        if (is_null($course) || $course->is_deleted == 1) {
+        if (is_null($course) || $course->is_deleted != 0) {
             return $this->sendError("الفيديو غير موجودة", "course is't exists");
         }
-        $course->update(['is_deleted' => 1]);
+        $course->update(['is_deleted' => $course->id]);
 
         $success['course'] = new CourseResource($course);
         $success['status'] = 200;
@@ -438,11 +438,11 @@ class CourseController extends BaseController
     public function deletevideo($video_id)
     {
         $video = Video::query()->find($video_id);
-        if (is_null($video) || $video->is_deleted == 1) {
+        if (is_null($video) || $video->is_deleted != 0) {
             return $this->sendError("الفيديو غير موجودة", "video is't exists");
         }
 
-        $video->update(['is_deleted' => 1]);
+        $video->update(['is_deleted' => $video->id]);
         $success['videos'] = new VideoResource($video);
         $success['status'] = 200;
 
@@ -451,10 +451,10 @@ class CourseController extends BaseController
     public function deleteunit($unit)
     {
         $unit = Unit::query()->find($unit);
-        if (is_null($unit) || $unit->is_deleted == 1) {
+        if (is_null($unit) || $unit->is_deleted != 0) {
             return $this->sendError("الوحدة غير موجودة", "unit is't exists");
         }
-        $unit->update(['is_deleted' => 1]);
+        $unit->update(['is_deleted' => $unit->id]);
 
         $success['unit'] = new UnitResource($unit);
         $success['status'] = 200;

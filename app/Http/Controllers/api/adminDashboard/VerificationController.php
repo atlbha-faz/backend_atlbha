@@ -40,7 +40,7 @@ class VerificationController extends BaseController
     public function acceptVerification($id)
     {
         $store = Store::query()->find($id);
-        if (is_null($store) || $store->is_deleted == 1) {
+        if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجود", "store is't exists");
         }
         $date = Carbon::now()->toDateTimeString();
@@ -71,7 +71,7 @@ class VerificationController extends BaseController
     public function rejectVerification($id)
     {
         $store = Store::query()->find($id);
-        if (is_null($store) || $store->is_deleted == 1) {
+        if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجود", "store is't exists");
         }
         $date = Carbon::now()->toDateTimeString();
@@ -101,7 +101,7 @@ class VerificationController extends BaseController
     /* public function destroy($store)
     {
     $store = Store::query()->find($store);
-    if (is_null($store) || $store->is_deleted==1){
+    if (is_null($store) || $store->is_deleted !=0){
     return $this->sendError("المتجر غير موجود","store is't exists");
     }
     $store->update(['is_deleted' => 1]);
@@ -139,12 +139,12 @@ class VerificationController extends BaseController
     public function verification_update(Request $request)
     {
         $store = Store::query()->find($request->store_id);
-        if (is_null($store) || $store->is_deleted == 1) {
+        if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجودة", " store is't exists");
         }
         $input = $request->all();
         $validator = Validator::make($input, [
-            'activity_id' => 'required|array',
+             'activity_id' => 'required|array',
             'store_name' => 'required|string',
             'link' => 'required|url',
             'file' => 'required|mimes:pdf,doc,excel',
@@ -176,7 +176,8 @@ class VerificationController extends BaseController
 
         ]);
 
-        $store->activities()->sync($request->activity_id);
+        //$store->activities()->sync($request->activity_id);
+        $store->categories()->sync($request->activity_id);
         $user = User::where('is_deleted', 0)->where('store_id', $request->store_id)->where('user_type', 'store')->first();
         $user->update([
             'name' => $request->input('name'),
@@ -193,7 +194,7 @@ class VerificationController extends BaseController
         $stores = Store::whereIn('id', $request->id)->where('is_deleted', 0)->get();
         if (count($stores) > 0) {
             foreach ($stores as $store) {
-                if (is_null($store) || $store->is_deleted == 1) {
+                if (is_null($store) || $store->is_deleted != 0) {
                     return $this->sendError("المتجر غير موجودة", " store is't exists");
                 }
                 $store->update([

@@ -25,8 +25,7 @@ class CategoryController extends BaseController
         if (auth()->user()->store->verification_status == "accept") {
             $success['categories'] = CategoryResource::collection(Category::
                     where('is_deleted', 0)
-                    ->where('parent_id', null)
-                    ->where('for', 'store')
+                    ->where('parent_id', null)    
                     ->where(function ($query) {
                         $query->where('store_id', auth()->user()->store_id)
                             ->OrWhere('store_id', null);
@@ -40,7 +39,6 @@ class CategoryController extends BaseController
             $success['categories'] =  CategoryResource::collection(Category::
                     where('is_deleted', 0)
                     ->where('parent_id', null)
-                    ->where('for', 'store')
                     ->where('store_id', auth()->user()->store_id)
                     ->orderByDesc('created_at')->get());;
             $success['status'] = 200;
@@ -94,7 +92,6 @@ class CategoryController extends BaseController
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
             'parent_id' => null,
-            'for' => 'store',
             'store_id' => auth()->user()->store_id,
         ]);
 
@@ -108,7 +105,6 @@ class CategoryController extends BaseController
                     'name' => $data['name'],
                     'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
                     'parent_id' => $category->id,
-                    'for' => 'store',
                     'store_id' => auth()->user()->store_id,
                 ]);
 
@@ -131,7 +127,7 @@ class CategoryController extends BaseController
     public function show($category)
     {
         $category = Category::query()->find($category);
-        if (is_null($category) || $category->is_deleted == 1) {
+        if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("القسم غير موجودة", "Category is't exists");
         }
         $success['categories'] = new CategoryResource($category);
@@ -164,7 +160,7 @@ class CategoryController extends BaseController
     public function changeStatus($id)
     {
         $category = Category::query()->find($id);
-        if (is_null($category) || $category->is_deleted == 1 || $category->store_id != auth()->user()->store_id) {
+        if (is_null($category) || $category->is_deleted != 0 || $category->store_id != auth()->user()->store_id) {
             return $this->sendError("القسم غير موجودة", "category is't exists");
         }
         if ($category->parent_id == null) {
@@ -200,7 +196,7 @@ class CategoryController extends BaseController
     {
         $category = Category::where('id', $category)->where('store_id', auth()->user()->store_id)->first();
 
-        if (is_null($category) || $category->is_deleted == 1) {
+        if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("التصنيف غير موجودة", " Category is't exists");
         }
         // if($request->parent_id == null){
@@ -232,7 +228,7 @@ class CategoryController extends BaseController
             if ($request->data != null) {
                 if (!(in_array($oid, array_column($request->data, 'id')))) {
                     $subcategory = Category::query()->find($oid);
-                    $subcategory->update(['is_deleted' => 1]);
+                    $subcategory->update(['is_deleted' => $subcategory->id]);
                 }
             }
         }
@@ -256,7 +252,7 @@ class CategoryController extends BaseController
                     'name' => $data['name'],
                     'parent_id' => $category_id,
                     'number' => $number,
-                    'for' => 'store',
+                 
                     // 'store_id'=> auth()->user()->store_id,
                     'is_deleted' => 0,
 
@@ -282,7 +278,7 @@ class CategoryController extends BaseController
     public function destroy($category)
     {
         $category = Category::query()->find($category);
-        if (is_null($category) || $category->is_deleted == 1 || $category->store_id != auth()->user()->store_id) {
+        if (is_null($category) || $category->is_deleted != 0 || $category->store_id != auth()->user()->store_id) {
             return $this->sendError("القسم غير موجودة", "category is't exists");
         }
         if ($category->parent_id == null) {
@@ -290,10 +286,10 @@ class CategoryController extends BaseController
 
             foreach ($categories as $subcategory) {
 
-                $subcategory->update(['is_deleted' => 1]);}
+                $subcategory->update(['is_deleted' => $subcategory->id]);}
         }
         //
-        $category->update(['is_deleted' => 1]);
+        $category->update(['is_deleted' => $category->id]);
 
         $success['activities'] = new CategoryResource($category);
         $success['status'] = 200;
@@ -312,9 +308,9 @@ class CategoryController extends BaseController
 
                     foreach ($categories as $subcategory) {
 
-                        $subcategory->update(['is_deleted' => 1]);
+                        $subcategory->update(['is_deleted' => $subcategory->id]);
                     }}
-                $category->update(['is_deleted' => 1]);
+                $category->update(['is_deleted' => $category->id]);
                 $success['categorys'] = new CategoryResource($category);
 
             }

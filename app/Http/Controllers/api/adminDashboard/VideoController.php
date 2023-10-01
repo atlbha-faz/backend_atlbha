@@ -116,7 +116,7 @@ class VideoController extends BaseController
     public function show($video)
     {
           $video = Video::query()->find($video);
-         if (is_null($video ) || $video->is_deleted == 1){
+         if (is_null($video ) || $video->is_deleted != 0){
          return $this->sendError("الوحدة غير موجودة","video is't exists");
          }
 
@@ -148,7 +148,7 @@ class VideoController extends BaseController
     public function update(Request $request,  $video)
      {
         $video =Video::query()->find($video);
-         if (is_null($video ) || $video->is_deleted==1){
+         if (is_null($video ) || $video->is_deleted !=0){
          return $this->sendError("الفيديو غير موجودة","video is't exists");
           }
          $input = $request->all();
@@ -194,7 +194,7 @@ class VideoController extends BaseController
   public function changeStatus($id)
     {
         $video = Video::query()->find($id);
-         if (is_null($video ) || $video->is_deleted==1){
+         if (is_null($video ) || $video->is_deleted !=0){
          return $this->sendError("الفيديو غير موجودة","video is't exists");
          }
 
@@ -220,10 +220,10 @@ class VideoController extends BaseController
     public function destroy($video)
      {
        $video = Video::query()->find($video);
-         if (is_null($video ) || $video->is_deleted==1){
+         if (is_null($video ) || $video->is_deleted !=0){
          return $this->sendError("الفيديو غير موجودة","video is't exists");
          }
-        $video->update(['is_deleted' => 1]);
+        $video->update(['is_deleted' => $video->id]);
 
         $success['video']=New VideoResource($video);
         $success['status']= 200;
