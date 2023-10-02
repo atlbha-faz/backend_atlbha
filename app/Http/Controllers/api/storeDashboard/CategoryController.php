@@ -42,7 +42,7 @@ class CategoryController extends BaseController
                     ->where('parent_id', null)
                     ->where('for', 'store')
                     ->where('store_id', auth()->user()->store_id)
-                    ->orderByDesc('created_at')->get());;
+                    ->orderByDesc('created_at')->get());
             $success['status'] = 200;
 
             return $this->sendResponse($success, ' لايوجد تصنيفات ', 'no categories');
