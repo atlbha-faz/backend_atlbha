@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\StoreResource;
-use App\Models\Day_Store;
-use App\Models\Homepage;
-use App\Models\Store;
 use App\Models\User;
+use App\Models\Store;
+use App\Models\Homepage;
+use App\Models\Day_Store;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SettingController extends BaseController
 {
