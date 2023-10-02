@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
             $table->string('store_name')->nullable();
-            $table->string('slug')->unique()->nullable();
-            $table->string('store_email')->unique()->nullable();
+            $table->string('slug')->nullable();
+            $table->string('store_email')->nullable();
             $table->string('domain')->nullable();
             $table->string('icon')->nullable();
             $table->string('store_address')->nullable();
@@ -52,6 +52,7 @@ return new class extends Migration
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
             $table->enum('working_status',['active','not_active'])->default('not_active');
             $table->timestamps();
+            $table->unique(['slug','is_deleted']);
             $table->unique(['domain','is_deleted']);
             $table->unique(['store_email','is_deleted']);
             $table->unique(['phonenumber','is_deleted']);

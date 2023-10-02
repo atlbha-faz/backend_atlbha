@@ -66,6 +66,7 @@ class StoreController extends BaseController
             'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
             })],
+
             'store_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
@@ -162,6 +163,7 @@ class StoreController extends BaseController
         $theme = Theme::create([
             'store_id' => $store->id,
         ]);
+
         if ($request->periodtype == "6months") {
             $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
             $store->update([
