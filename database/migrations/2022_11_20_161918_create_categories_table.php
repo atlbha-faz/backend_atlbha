@@ -26,7 +26,7 @@ return new class extends Migration
             $table->enum('status',['active','not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
-            $table->unique(['name','store_id','is_deleted']);
+           
         });
     }
 

@@ -20,10 +20,10 @@ class Category extends Model
         return $this->belongsTo(Category::class, 'parent_id');
     }
        
-    //  public function store()
-    // {
-    //     return $this->belongsTo(Store::class, 'store_id','id');
-    // }
+     public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id','id');
+    }
     public function stores()
     {
          return $this->belongsToMany(

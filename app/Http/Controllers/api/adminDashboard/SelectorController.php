@@ -138,9 +138,9 @@ class SelectorController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الأدوار بنجاح','Roles return successfully');
     }
-    public function subcategories($parnet)
+    public function subcategories(Request $request)
     {
-        $category = Category::whereIn('parent_id', $parnet)->where('is_deleted', 0)->where('status', 'active')->get();
+        $category = Category::whereIn('parent_id', $request->parnet)->where('is_deleted', 0)->where('status', 'active')->get();
 
         $success['categories'] = CategoryResource::collection($category);
         $success['status'] = 200;

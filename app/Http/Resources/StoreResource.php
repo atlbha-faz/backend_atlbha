@@ -120,7 +120,7 @@ class StoreResource extends JsonResource
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'working_status'=>$this->working_status,
          'workDays'=>DaystoreResource::collection($daystore),
-         'category' =>  CategoryResource::collection($this->categories),
+         'activity' =>  CategoryResource::collection($this->categories),
          'subcategory' =>  $this->categories->first() ==!null  ? CategoryResource::collection(\App\Models\Category::whereIn('id',  $subcategory)->get()): null,
     ];
     }

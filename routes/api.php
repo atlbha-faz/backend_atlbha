@@ -388,6 +388,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('selector/services', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'services']);
         Route::get('selector/children/{id}', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'children']);
         Route::get('selector/roles', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'roles']);
+        Route::get('selector/subcategories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'subcategories']);
 
         Route::get('selector/page-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'pagesCategory']);
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);

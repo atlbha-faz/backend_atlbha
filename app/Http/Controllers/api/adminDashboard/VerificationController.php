@@ -145,6 +145,7 @@ class VerificationController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
              'activity_id' => 'required|array',
+             'subcategory_id' => ['nullable', 'array'],
             'store_name' => 'required|string',
             'link' => 'required|url',
             'file' => 'required|mimes:pdf,doc,excel',
@@ -175,9 +176,15 @@ class VerificationController extends BaseController
             'file' => $request->input('file'),
 
         ]);
-
+        if ($request->subcategory_id != null) {
+            $subcategory = implode(',', $request->subcategory_id);
+        } else {
+            $subcategory = null;
+        }
+       
+         $store->categories()->sync($request->activity_id,['subcategory_id' =>$subcategory] );
         //$store->activities()->sync($request->activity_id);
-        $store->categories()->sync($request->activity_id);
+        // $store->categories()->sync($request->activity_id);
         $user = User::where('is_deleted', 0)->where('store_id', $request->store_id)->where('user_type', 'store')->first();
         $user->update([
             'name' => $request->input('name'),

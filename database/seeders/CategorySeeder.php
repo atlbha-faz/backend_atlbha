@@ -20,7 +20,7 @@ class CategorySeeder extends Seeder
          'name' => 'أجهزة كمبيوتر',
          'icon'=>'cat.png',
          'parent_id'=>null,
-        'for'=>'store',
+        
 
 
         ]);
@@ -28,7 +28,7 @@ class CategorySeeder extends Seeder
             'number' =>0002,
              'name' => 'جوالات',
              'parent_id'=>1,
-            'for'=>'store',
+            
 
             ]);
 

@@ -922,7 +922,7 @@ class IndexStoreController extends BaseController
             foreach ($prodtcts as $prodtct) {
                 $category[] = $prodtct->category;
             }
-            $adminCategory = Category::where('is_deleted', 0)->where('status', 'active')->where('for', 'store')
+            $adminCategory = Category::where('is_deleted', 0)->where('status', 'active')
                 ->Where('store_id', null)->with('products')->has('products')->get();
             $filters = array();
             $filters[0]["items"] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status', 'active')->where(function ($query) use ($store_id) {

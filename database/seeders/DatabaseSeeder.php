@@ -6,7 +6,7 @@ namespace Database\Seeders;
 use Database\Seeders\DaySeeder;
 use Database\Seeders\NotificationSeeder;
 use Database\Seeders\AdminPermissionTableSeeder;
-
+use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             RegionSeeder::class,
             CitySeeder::class,
             CategorySeeder ::class,
-            // PermissionTableSeeder::class,
+         
             CreateUserSeeder::class,
             PackageSeeder::class,
             TemplateSeeder::class,
@@ -75,12 +75,13 @@ class DatabaseSeeder extends Seeder
             // PermissionTableSeeder::class,
 
            TechnicalSupportSeeder::class,
-            //  PermissionTableSeeder::class,
+      
 
             NewSeeder::class,
             DaySeeder::class,
             Theme::class,
-            AdminPermissionTableSeeder::class
+            // AdminPermissionTableSeeder::class,
+            // PermissionTableSeeder::class
         ]);
 
     }

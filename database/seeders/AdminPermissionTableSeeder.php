@@ -19,12 +19,14 @@ class AdminPermissionTableSeeder extends Seeder
         Permission::create(['name' => 'admin.mainpage',
         'action_type' => 'admin.mainpage',
 'name_ar'=>'الرئيسية' ,
+'guard_name'=>'api',
 'parent_id'=>null,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.mainpage.index',
         'action_type' => 'index',
 'name_ar'=>'عرض' ,
+'guard_name'=>'api',
 'parent_id'=>1,
 'type'=>'admin']);
 
@@ -34,6 +36,7 @@ Permission::create(['name' => 'admin.etlobha',
         'action_type' => 'admin.etlobha',
      
 'name_ar'=>'سوق اطلبها' ,
+'guard_name'=>'api',
 'parent_id'=>null,
 'type'=>'admin']);
 
@@ -41,18 +44,20 @@ Permission::create(['name' => 'admin.etlobha.index',
         'action_type' => 'index',
      
 'name_ar'=>' عرض الكل' ,
+'guard_name'=>'api',
 'parent_id'=>3,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.etlobha.store',
         'action_type' => 'store',
      
 'name_ar'=>'إضافة' ,
+'guard_name'=>'api',
 'parent_id'=>3,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.etlobha.update',
         'action_type' => 'update',
-     
+        'guard_name'=>'api',
 'name_ar'=>'تعديل' ,
 'parent_id'=>3,
 'type'=>'admin']);
@@ -60,25 +65,30 @@ Permission::create(['name' => 'admin.etlobha.show',
         'action_type' => 'show',
      
 'name_ar'=>'عرض' ,
+'guard_name'=>'api',
 'parent_id'=>3,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.etlobha.deleteall',
         'action_type' => 'deleteall',
+        'guard_name'=>'api',
 'name_ar'=>'حذف' ,
 'parent_id'=> 3,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.etlobha.changeStatusall',
         'action_type' => 'changeStatusall',
+        'guard_name'=>'api',
 'name_ar'=>'تفعيل / تعطيل' ,
 'parent_id'=> 3,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.etlobha.specialStatus',
         'action_type' => 'specialStatus',
+        'guard_name'=>'api',
 'name_ar'=>'مميز / غير مميز' ,
 'parent_id'=> 3,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.etlobha.statistics',
         'action_type' => 'statistics',
+        'guard_name'=>'api',
 'name_ar'=>'احصائيات المنتج' ,
 'parent_id'=> 3,
 'type'=>'admin']);
@@ -89,33 +99,33 @@ Permission::create(['name' => 'admin.etlobha.statistics',
 
 Permission::create(['name' => 'admin.stock',
         'action_type' => 'admin.stock',
-     
+        'guard_name'=>'api',
 'name_ar'=>'المخزون ' ,
 'parent_id'=>null,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.stock.index',
         'action_type' => 'index',
-     
+        'guard_name'=>'api',
 'name_ar'=>' عرض الكل' ,
 'parent_id'=>12,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.stock.store',
         'action_type' => 'store',
-     
+        'guard_name'=>'api',
 'name_ar'=>'إضافة' ,
 'parent_id'=>12,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.stock.update',
         'action_type' => 'update',
-     
+        'guard_name'=>'api',
 'name_ar'=>'تعديل' ,
 'parent_id'=>12,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.stock.addToStore',
         'action_type' => 'addToStore',
-     
+        'guard_name'=>'api',
 'name_ar'=>'إضافة الى السوق' ,
 'parent_id'=>12,
 'type'=>'admin']);
@@ -126,6 +136,7 @@ Permission::create(['name' => 'admin.stock.deleteall',
 'type'=>'admin']);
 Permission::create(['name' => 'admin.stock.importStockProducts',
         'action_type' => 'importStockProducts',
+        'guard_name'=>'api',
 'name_ar'=>'تصدير ملف' ,
 'parent_id'=> 12,
 'type'=>'admin']);
@@ -134,43 +145,45 @@ Permission::create(['name' => 'admin.stock.importStockProducts',
 
 Permission::create(['name' => 'admin.platform',
         'action_type' => 'admin.platform',
-     
+        'guard_name'=>'api', 
 'name_ar'=>'السوق العام' ,
 'parent_id'=>null,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.platform.index',
         'action_type' => 'index',
-     
+        'guard_name'=>'api',
 'name_ar'=>' عرض الكل' ,
 'parent_id'=>19,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.platform.store',
         'action_type' => 'store',
-     
+        'guard_name'=>'api',
 'name_ar'=>'إضافة' ,
 'parent_id'=>19,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.platform.update',
         'action_type' => 'update',
-     
+        'guard_name'=>'api',
 'name_ar'=>'تعديل' ,
 'parent_id'=>19,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.platform.destroy',
         'action_type' => 'destroy',
-     
+        'guard_name'=>'api',
 'name_ar'=>'حذف ',
 'parent_id'=>19,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.platform.changePlatformStatus',
         'action_type' => 'changePlatformStatus',
+        'guard_name'=>'api',
 'name_ar'=>'تفعيل / تعطيل' ,
 'parent_id'=> 19,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.platform.show',
         'action_type' => 'show',
+        'guard_name'=>'api',
 'name_ar'=>'عرض',
 'parent_id'=> 19,
 'type'=>'admin']);
@@ -182,33 +195,33 @@ Permission::create(['name' => 'admin.platform.show',
 
 Permission::create(['name' => 'admin.activity',
         'action_type' => 'admin.activity',
-     
+        'guard_name'=>'api',
 'name_ar'=>'نشاط المتاجر' ,
 'parent_id'=>null,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.activity.index',
         'action_type' => 'index',
-     
+        'guard_name'=>'api',
 'name_ar'=>' عرض الكل' ,
 'parent_id'=>25,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.activity.store',
         'action_type' => 'store',
-     
+        'guard_name'=>'api',
 'name_ar'=>'إضافة' ,
 'parent_id'=>25,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.activity.update',
         'action_type' => 'update',
-     
+        'guard_name'=>'api',
 'name_ar'=>'تعديل' ,
 'parent_id'=>25,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.activity.deleteall',
         'action_type' => 'deleteall',
-     
+        'guard_name'=>'api',
 'name_ar'=>'حذف ',
 'parent_id'=>25,
 'type'=>'admin']);
@@ -228,7 +241,7 @@ Permission::create(['name' => 'admin.store.index',
 'type'=>'admin']);
 Permission::create(['name' => 'admin.store.store',
         'action_type' => 'store',
-     
+        'guard_name'=>'api',
 'name_ar'=>'إضافة' ,
 'parent_id'=>29,
 'type'=>'admin']);
@@ -241,22 +254,25 @@ Permission::create(['name' => 'admin.store.store',
 // 'type'=>'admin']);
 Permission::create(['name' => 'admin.store.destroy',
         'action_type' => 'destroy',
-     
+        'guard_name'=>'api',
 'name_ar'=>'حذف ',
 'parent_id'=>29,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.store.changeSatusall',
         'action_type' => 'changeSatusall',
+        'guard_name'=>'api',
 'name_ar'=>'تفعيل / تعطيل' ,
 'parent_id'=> 29,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.store.specialStatus',
         'action_type' => 'specialStatus',
+        'guard_name'=>'api',
 'name_ar'=>'مميز / غير مميز' ,
 'parent_id'=> 29,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.store.show',
         'action_type' => 'show',
+        'guard_name'=>'api',
 'name_ar'=>'عرض',
 'parent_id'=> 29,
 'type'=>'admin']);
@@ -266,33 +282,39 @@ Permission::create(['name' => 'admin.store.show',
 //////////////////////////////////////////////////////////////// 36
 Permission::create(['name' => 'admin.product',
         'action_type' => 'product',
+        'guard_name'=>'api',
 'name_ar'=>'المنتجات' ,
 'parent_id'=>null,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.product.index',
         'action_type' => 'index',
+        'guard_name'=>'api',
 'name_ar'=>' عرض الكل' ,
 'parent_id'=>36,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.product.show',
         'action_type' => 'show',
+        'guard_name'=>'api',
 'name_ar'=>'عرض' ,
 'parent_id'=>36,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.product.deleteall',
         'action_type' => 'deleteall',
+        'guard_name'=>'api',
 'name_ar'=>'حذف' ,
 'parent_id'=> 36,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.product.changeSatusall',
         'action_type' => 'changeSatusall',
+        'guard_name'=>'api',
 'name_ar'=>'تفعيل / تعطيل' ,
 'parent_id'=> 36,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.product.addNote',
         'action_type' => 'addNote',
+        'guard_name'=>'api',
 'name_ar'=>'  إضافة ملاحظة ' ,
 'parent_id'=> 36,
 'type'=>'admin']);
@@ -300,82 +322,97 @@ Permission::create(['name' => 'admin.product.addNote',
 //////////////////////////////////////////////////////////////// 42
 Permission::create(['name' => 'admin.verification',
         'action_type' => 'verification',
+        'guard_name'=>'api',
 'name_ar'=>'التوثيق' ,
 'parent_id'=>null,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.verification.index',
         'action_type' => 'index',
+        'guard_name'=>'api',
 'name_ar'=>'  عرض التوثيق'   ,
 'parent_id'=>42,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.verification.show',
         'action_type' => 'show',
+        'guard_name'=>'api',
 'name_ar'=>'عرض' ,
 'parent_id'=>42,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.verification.deleteall',
         'action_type' => 'deleteall',
+        'guard_name'=>'api',
 'name_ar'=>'حذف' ,
 'parent_id'=> 42,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.verification.changeSatusall',
         'action_type' => 'changeSatusall',
+        'guard_name'=>'api',
 'name_ar'=>'تفعيل / تعطيل' ,
 'parent_id'=> 42,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.verification.addNote',
         'action_type' => 'addNote',
+        'guard_name'=>'api',
 'name_ar'=>'  إضافة ملاحظة ' ,
 'parent_id'=> 42,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.verification.acceptVerification',
         'action_type' => 'acceptVerification',
+        'guard_name'=>'api',
 'name_ar'=>'قبول التوثيق' ,
 'parent_id'=> 42,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.verification.rejectVerification',
         'action_type' => 'rejectVerification',
+        'guard_name'=>'api',
 'name_ar'=>' رفض التوثيق' ,
 'parent_id'=> 42,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.verification.verification_update',
         'action_type' => 'verification_update',
+        'guard_name'=>'api',
 'name_ar'=>'  تعديل التوثيق' ,
 'parent_id'=> 42,
 'type'=>'admin']);
 //////////////////////////////////////////////////////////////// 50
 Permission::create(['name' => 'admin.package',
         'action_type' => 'package',
+        'guard_name'=>'api',
 'name_ar'=>'الباقات' ,
 'parent_id'=>null,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.package.index',
         'action_type' => 'index',
+        'guard_name'=>'api',
 'name_ar'=>' عرض الباقات' ,
 'parent_id'=>50,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.package.store',
         'action_type' => 'store',
+        'guard_name'=>'api',
 'name_ar'=>'  إضافة  ' ,
 'parent_id'=> 50,
 'type'=>'admin']);
 Permission::create(['name' => 'admin.package.update',
         'action_type' => 'update',
+        'guard_name'=>'api',
 'name_ar'=>'  تعديل  ' ,
 'parent_id'=> 50,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.package.show',
         'action_type' => 'show',
+        'guard_name'=>'api',
 'name_ar'=>'عرض' ,
 'parent_id'=>50,
 'type'=>'admin']);
 
 Permission::create(['name' => 'admin.package.changeSatusall',
         'action_type' => 'changeSatusall',
+        'guard_name'=>'api',
 'name_ar'=>'تفعيل / تعطيل' ,
 'parent_id'=> 50,
 'type'=>'admin']);
@@ -383,6 +420,7 @@ Permission::create(['name' => 'admin.package.changeSatusall',
 //////////////////////////////////////////////////////////////// 56
 Permission::create(['name' => 'admin.subscriptions',
         'action_type' => 'subscriptions',
+        'guard_name'=>'api',
 'name_ar'=>'الاشتراكات الحالية' ,
 'parent_id'=>null,
 'type'=>'admin']);

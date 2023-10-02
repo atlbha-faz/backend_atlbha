@@ -22,6 +22,7 @@ class CategoryController extends BaseController
     public function index()
     {
         $store = auth()->user()->store_id;
+      
         if (auth()->user()->store->verification_status == "accept") {
             $success['categories'] = CategoryResource::collection(Category::
                     where('is_deleted', 0)
@@ -37,13 +38,13 @@ class CategoryController extends BaseController
             return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
         } else {
             $success['categories'] =  CategoryResource::collection(Category::
-                    where('is_deleted', 0)
-                    ->where('parent_id', null)
-                    ->where('store_id', auth()->user()->store_id)
-                    ->orderByDesc('created_at')->get());;
-            $success['status'] = 200;
+            where('is_deleted', 0)
+            ->where('parent_id', null)
+            ->where('store_id', auth()->user()->store_id)
+            ->orderByDesc('created_at')->get());
+             $success['status'] = 200;
 
-            return $this->sendResponse($success, ' لايوجد تصنيفات ', 'no categories');
+             return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
         }
     }

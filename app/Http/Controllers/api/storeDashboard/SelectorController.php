@@ -102,7 +102,6 @@ class SelectorController extends BaseController
         $success['categories'] = CategoryResource::collection(Category::
                 where('is_deleted', 0)
                 ->where('parent_id', null)
-                ->where('for', 'store')
                 ->where(function ($query) {
                     $query->where('store_id', auth()->user()->store_id)
                         ->OrWhere('store_id', null);
@@ -112,7 +111,6 @@ class SelectorController extends BaseController
         $success['categories'] = CategoryResource::collection(Category::
                 where('is_deleted', 0)
                 ->where('parent_id', null)
-                ->where('for', 'store')
                 ->where('store_id', auth()->user()->store_id)
                 ->where('status', 'active')->get());
         }
@@ -223,9 +221,9 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
     }
-    public function subcategories($parnet)
+    public function subcategories(Request $request)
     {
-        $category = Category::whereIn('parent_id', $parnet)->where('is_deleted', 0)->where('status', 'active')->get();
+        $category = Category::whereIn('parent_id',$request->parnet)->where('is_deleted', 0)->where('status', 'active')->get();
 
         $success['categories'] = CategoryResource::collection($category);
         $success['status'] = 200;
