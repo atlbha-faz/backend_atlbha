@@ -51,7 +51,7 @@ class SettingController extends BaseController
     public function show($setting)
     {
           $setting = Setting::query()->find($setting);
-         if (is_null($setting) || $setting->is_deleted == 1){
+         if (is_null($setting) || $setting->is_deleted != 0){
          return $this->sendError("الاعدادات غير موجودة","settings is't exists");
          }
 
@@ -82,7 +82,7 @@ class SettingController extends BaseController
     public function update(Request $request,  $setting)
        {
          $setting =Setting::query()->find($setting);
-         if (is_null($setting) || $setting->is_deleted==1){
+         if (is_null($setting) || $setting->is_deleted !=0){
          return $this->sendError("\الاعداداتغير موجودة","setting is't exists");
           }
          $input = $request->all();
@@ -128,7 +128,7 @@ class SettingController extends BaseController
   public function changeStatus($id)
     {
         $setting = Setting::query()->find($id);
-         if (is_null($setting) || $setting->is_deleted==1){
+         if (is_null($setting) || $setting->is_deleted !=0){
          return $this->sendError("الاعدادات غير موجودة","setting is't exists");
          }
 
@@ -183,7 +183,7 @@ class SettingController extends BaseController
        public function registrationMarketer(Request $request)
     {
         $registrationMarketer = Setting::query()->where('is_deleted',0)->first();
-        if (is_null($registrationMarketer) || $registrationMarketer->is_deleted==1){
+        if (is_null($registrationMarketer) || $registrationMarketer->is_deleted !=0){
          return $this->sendError("الحالة غير موجودة","registrationMarketer is't exists");
          }
            

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('templates')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
 
             $table->timestamps();
         });

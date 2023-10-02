@@ -39,7 +39,7 @@ class StoreUserSeeder extends Seeder
  $user1=User::create([
         'user_id'=>3,
         'name' => 'روعه',
-        'user_name' =>'rawaa',
+        'user_name' =>'rawaa0',
         'email' =>'rawaa@gmail.com',
         'password' =>'12345678',
         'gender' =>'female',
@@ -90,7 +90,7 @@ class StoreUserSeeder extends Seeder
  $user1=User::create([
         'user_id'=>$i+4,
         'name' => 'روعه',
-        'user_name' =>'rawaa',
+        'user_name' =>'rawaa'.$i,
         'email' =>'rawaa'.$i.'@gmail.com',
         'password' =>'12345678',
         'gender' =>'female',

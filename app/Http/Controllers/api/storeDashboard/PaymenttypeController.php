@@ -82,7 +82,7 @@ class PaymenttypeController extends BaseController
      public function show($paymenttype)
      {
         $paymenttype = Paymenttype::query()->find($paymenttype);
-        if (is_null($paymenttype) || $paymenttype->is_deleted==1 || $paymenttype->status=="not_active"){
+        if (is_null($paymenttype) || $paymenttype->is_deleted !=0 || $paymenttype->status=="not_active"){
         return $this->sendError("'طريقة الدفع غير موجودة","payment type is't exists");
         }
 
@@ -113,7 +113,7 @@ class PaymenttypeController extends BaseController
      */
     // public function update(Request $request, Paymenttype $paymenttype)
     //  {
-    //      if (is_null($paymenttype) || $paymenttype->is_deleted==1){
+    //      if (is_null($paymenttype) || $paymenttype->is_deleted !=0){
     //      return $this->sendError("طريقة الدفع غير موجودة","payment type is't exists");
     //       }
     //      $input = $request->all();
@@ -143,7 +143,7 @@ class PaymenttypeController extends BaseController
      public function changeStatus($id)
     {
         $paymenttype = Paymenttype::query()->find($id);
-         if (is_null($paymenttype) || $paymenttype->is_deleted==1 || $paymenttype->status=="not_active" ){
+         if (is_null($paymenttype) || $paymenttype->is_deleted !=0 || $paymenttype->status=="not_active" ){
          return $this->sendError("شركة الدفع غير موجودة","paymenttype is't exists");
          }
          $paymenttype=paymenttype_store::where('paymentype_id',$id)->where('store_id',auth()->user()->store_id)->first();
@@ -176,7 +176,7 @@ class PaymenttypeController extends BaseController
     // public function destroy($paymenttype)
     //   {
     //    $paymenttype = Paymenttype::query()->find($paymenttype);
-    //      if (is_null($paymenttype) || $paymenttype->is_deleted==1){
+    //      if (is_null($paymenttype) || $paymenttype->is_deleted !=0){
     //      return $this->sendError("طريقةالدفع غير موجودة","payment type is't exists");
     //      }
     //     $paymenttype->update(['is_deleted' => 1]);

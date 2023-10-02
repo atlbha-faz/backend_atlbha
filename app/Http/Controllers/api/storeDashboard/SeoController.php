@@ -194,7 +194,7 @@ class SeoController extends BaseController
     // public function destroy($seo)
     // {
     //     $seo =Seo::query()->find($seo);
-    //     if (is_null($seo) || $seo->is_deleted==1){
+    //     if (is_null($seo) || $seo->is_deleted !=0){
     //         return $this->sendError("االكلمات المفتاحية غير موجودة","seo is't exists");
     //         }
     //        $seo->update(['is_deleted' => 1]);

@@ -27,7 +27,7 @@ class AtlobhaContactController extends BaseController
     public function show($contact)
     {
         $atlobhaContact= AtlobhaContact::query()->find($contact);
-        if (is_null($atlobhaContact) ||$atlobhaContact->is_deleted==1){
+        if (is_null($atlobhaContact) ||$atlobhaContact->is_deleted !=0){
             return $this->sendError("طلب الدعم غير موجود", "atlobhaContact is't exists");
                }
              $success['atlobhaContacts'] = new atlobhaContactResource($atlobhaContact);
@@ -40,7 +40,7 @@ class AtlobhaContactController extends BaseController
     public function changeStatus($id)
     {
         $atlobhaContact = AtlobhaContact::query()->find($id);
-        if (is_null($atlobhaContact) || $atlobhaContact->is_deleted == 1) {
+        if (is_null($atlobhaContact) || $atlobhaContact->is_deleted != 0) {
             return $this->sendError("طلب الدعم غير موجود", "atlobhaContact is't exists");
         }
 
@@ -64,7 +64,7 @@ class AtlobhaContactController extends BaseController
            foreach($atlobhaContacts as $atlobhaContact)
            {
         
-               $atlobhaContact->update(['is_deleted' => 1]);
+               $atlobhaContact->update(['is_deleted' => $atlobhaContact->id]);
               $success['atlobhaContacts']= New atlobhaContactResource($atlobhaContact);
 
             }

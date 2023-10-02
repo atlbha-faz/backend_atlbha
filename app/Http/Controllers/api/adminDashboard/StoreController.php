@@ -60,22 +60,32 @@ class StoreController extends BaseController
     {
 
         $input = $request->all();
+       
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'user_name' => 'required|string|max:255',
+            'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
+            })],
             'store_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['store', 'store_employee']);
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
             })],
-            'store_email' => 'required|email|unique:stores,store_email',
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
-            'domain' => 'required|string|unique:stores,domain',
+            'store_email' =>[ 'required','email',Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted',0);
+            })],
+             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
+            'domain' => ['required','string', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted',0);
+            })],
             'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users', 'phonenumber')->where(function ($query) {
-                return $query->whereIn('user_type', ['store', 'store_employee']);
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
             })],
 
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:stores,phonenumber'],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted',0);
+            })],
             'activity_id' => 'required|array',
+            'subcategory_id' => ['nullable', 'array'],
             //'package_id' =>'required',
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
@@ -177,7 +187,14 @@ class StoreController extends BaseController
         //       'end_at' => $end_at]);
 
         //  }
-        $store->activities()->attach($request->activity_id);
+        // $store->activities()->attach($request->activity_id);
+        if ($request->subcategory_id != null) {
+            $subcategory = implode(',', $request->subcategory_id);
+        } else {
+            $subcategory = null;
+        }
+       
+         $store->categories()->attach($request->activity_id,['subcategory_id' =>$subcategory] );
         $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
 
         $success['stores'] = new StoreResource($store);
@@ -195,7 +212,7 @@ class StoreController extends BaseController
     public function show($store)
     {
         $store = Store::query()->find($store);
-        if (is_null($store) || $store->is_deleted == 1) {
+        if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجودة", "store is't exists");
         }
 
@@ -227,29 +244,34 @@ class StoreController extends BaseController
     {
 
         $store = Store::query()->find($store);
-        if (is_null($store) || $store->is_deleted == 1) {
+        if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجود", "store is't exists");
         }
         $user = $store->user;
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'user_name' => 'required|string|max:255',
+            'user_name' =>  ['required', 'string', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
+                    ->where('id', '!=', $store->user->id);
+            })],
             'store_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
                     ->where('id', '!=', $store->user->id);
             })],
             'store_email' => 'required|email|unique:stores,store_email,' . $store->id,
             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
-            'domain' => 'required|string|unique:stores,domain,' . $store->id,
+            'domain' =>['required','string', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted',0)->where('id', '!=',$store->id);
+            })],
             'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users', 'phonenumber')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
                     ->where('id', '!=', $store->user->id);
             })],
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:stores,phonenumber,' . $store->id],
             // 'package_id' =>'required',
-            'activity_id' => 'required|array',
+             'activity_id' => 'required|array',
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'user_country_id' => 'required|exists:countries,id',
@@ -293,7 +315,8 @@ class StoreController extends BaseController
             'city_id' => $request->input('city_id'),
             'periodtype' => $request->input('periodtype'),
         ]);
-        $store->activities()->sync($request->activity_id);
+        // $store->activities()->sync($request->activity_id);
+        $store->categories()->sync($request->activity_id);
 
         if ($request->periodtype == "6months") {
             $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
@@ -321,7 +344,7 @@ class StoreController extends BaseController
 
         $stores = Store::whereIn('id', $request->id)->get();
         foreach ($stores as $store) {
-            if (is_null($store) || $store->is_deleted == 1) {
+            if (is_null($store) || $store->is_deleted != 0) {
                 return $this->sendError("المتجر غير موجود", " Store is't exists");
             }
 
@@ -342,7 +365,7 @@ class StoreController extends BaseController
     public function specialStatus($id)
     {
         $store = Store::query()->find($id);
-        if (is_null($store) || $store->is_deleted == 1) {
+        if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجود", "store is't exists");
         }
 
@@ -391,16 +414,16 @@ class StoreController extends BaseController
     public function destroy($store)
     {
         $store = Store::query()->find($store);
-        if (is_null($store) || $store->is_deleted == 1) {
+        if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجود", "store is't exists");
         }
-        $store->update(['is_deleted' => 1]);
+        $store->update(['is_deleted' => $store->id]);
         $users = User::where('store_id', $store->id)->get();
         foreach ($users as $user) {
-            $user->update(['is_deleted' => 1]);
+            $user->update(['is_deleted' => $user->id]);
             $comment = Comment::where('comment_for', 'store')->where('user_id', $user->id)->where('is_deleted', 0)->first();
             if ($comment != null) {
-                $comment->update(['is_deleted' => 1]);
+                $comment->update(['is_deleted' => $comment->id]);
             }
         }
 
@@ -439,7 +462,7 @@ class StoreController extends BaseController
         $store = Store::query()->find($request->store_id);
         $input = $request->all();
         $validator = Validator::make($input, [
-            'activity_id' => 'required|array',
+           'activity_id' => 'required|array',
             'store_name' => 'required|string',
             'link' => 'required|url',
             'file' => 'required|mimes:pdf,doc,excel',
@@ -471,7 +494,8 @@ class StoreController extends BaseController
 
         ]);
 
-        $store->activities()->sync($request->activity_id);
+        // $store->activities()->sync($request->activity_id);
+        $store->categories()->sync($request->activity_id);
         $user = User::where('is_deleted', 0)->where('store_id', $request->store_id)->where('user_type', 'store')->first();
         $user->update([
             'name' => $request->input('name'),
@@ -489,10 +513,10 @@ class StoreController extends BaseController
         if (count($stores) > 0) {
             foreach ($stores as $store) {
 
-                $store->update(['is_deleted' => 1]);
+                $store->update(['is_deleted' => $store->id]);
                 $users = User::where('store_id', $store->id)->get();
                 foreach ($users as $user) {
-                    $user->update(['is_deleted' => 1]);
+                    $user->update(['is_deleted' => $user->id]);
                 }
             }
             $success['stores'] = StoreResource::collection($stores);

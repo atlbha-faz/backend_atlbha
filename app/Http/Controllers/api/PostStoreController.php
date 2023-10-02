@@ -35,7 +35,7 @@ class PostStoreController extends BaseController
                 $tagarr[] = $tag;
             }
             $success['tags'] = $tagarr;
-            $success['category'] = Category::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->with('products')->has('products')->get();
+            $success['category'] = Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get();
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
             $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
@@ -62,7 +62,7 @@ class PostStoreController extends BaseController
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
 
-            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
                 return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
             if ($store->maintenance != null) {
@@ -155,7 +155,7 @@ class PostStoreController extends BaseController
                 }
                 $success['tags'] = $tagarr;
 
-                $success['category'] = Category::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->with('products')->has('products')->get();
+                $success['category'] = Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
                 $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->get());
                 // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
@@ -190,7 +190,7 @@ class PostStoreController extends BaseController
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
 
-            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
                 return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
             if ($store->maintenance != null) {
@@ -281,7 +281,7 @@ class PostStoreController extends BaseController
                     $tagarr[] = $tag;
                 }
                 $success['tags'] = $tagarr;
-                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->with('products')->has('products')->get());
+                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get());
                 $success['post'] = new PageResource(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $pageId)->first());
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
                 // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
@@ -318,7 +318,7 @@ class PostStoreController extends BaseController
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
-            if (is_null($store) || $store->is_deleted == 1 || is_null($store_package) || $store_package->status == "not_active") {
+            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
                 return $this->sendError("المتجر غير موجودة", "Store is't exists");
             }
             if ($store->maintenance != null) {

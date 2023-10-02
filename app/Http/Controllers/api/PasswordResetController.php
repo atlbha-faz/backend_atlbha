@@ -41,8 +41,7 @@ class PasswordResetController extends BaseController
             })->where(
             function ($query) use ($user_name) {
                 return $query->where('user_name', $user_name)->orWhere('email', $user_name);
-            })
-            ->first();
+            })->where('is_deleted',0)->first();
         if (!$user) {
             return $this->sendError('المستخدم غير موجود', 'We cant find a user with that username.');
         }
@@ -98,7 +97,7 @@ class PasswordResetController extends BaseController
             function ($query) use ($user_name) {
                 return $query->where('user_name', $user_name)->orWhere('email', $user_name);
             })
-            ->first();
+            ->where('is_deleted',0)->first();
         if (!$user) {
             return $this->sendError('المستخدم غير موجود', 'We cant find a user with that username.');
         }
@@ -116,7 +115,7 @@ class PasswordResetController extends BaseController
             $data = array(
                 'code' => $user->code,
             );
-
+         
             try {
                 Mail::to($user->email)->send(new SendCode($data));
             } catch (\Exception $e) {
@@ -190,7 +189,7 @@ $user_name = $request->user_name;
             })->where(
            function($query )use ($user_name) {
              return $query->where('user_name', $user_name)->orWhere('email', $user_name);
-            })->first();
+            })->where('is_deleted',0)->first();
         if (!$user){
             return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
         }
@@ -240,7 +239,7 @@ $user_name = $request->user_name;
             })->where(
            function($query )use ($user_name) {
              return $query->where('user_name', $user_name)->orWhere('email', $user_name);
-            })->latest()->first();
+            })->where('is_deleted',0)->latest()->first();
 
         if ($request->code == $user->code) {
             $passwordReset = PasswordReset::where('email', $user->email)->first();

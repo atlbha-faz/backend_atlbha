@@ -82,7 +82,7 @@ class CountryController extends  BaseController
     public function show(Country $country)
     {
         $country = Country::query()->find($country->id);
-  if (is_null($country) || $country->is_deleted==1){
+  if (is_null($country) || $country->is_deleted !=0){
          return $this->sendError("الدولة غير موجودة","country is't exists");
          }
         $success['$countries']=New CountryResource($country);
@@ -95,7 +95,7 @@ class CountryController extends  BaseController
      public function changeStatus($id)
     {
         $country = Country::query()->find($id);
-        if (is_null($country) || $country->is_deleted==1){
+        if (is_null($country) || $country->is_deleted !=0){
          return $this->sendError("الدولة غير موجودة","country is't exists");
          }
         if($country->status === 'active'){
@@ -131,7 +131,7 @@ class CountryController extends  BaseController
     public function update(Request $request,$country)
     {
          $country = Country::query()->find($country);
-        if (is_null($country) || $country->is_deleted==1){
+        if (is_null($country) || $country->is_deleted !=0){
          return $this->sendError("الدولة غير موجودة","country is't exists");
          }
         $input = $request->all();
@@ -164,11 +164,11 @@ class CountryController extends  BaseController
      */
     public function destroy(Country $country)
     {
-        if (is_null($country) || $country->is_deleted==1){
+        if (is_null($country) || $country->is_deleted !=0){
          return $this->sendError("الدولة غير موجودة","country is't exists");
          }
 
-            $country->update(['is_deleted' => 1]);
+            $country->update(['is_deleted' => $country->id ]);
 
         $success['country']=New CountryResource($country);
         $success['status']= 200;
@@ -186,7 +186,7 @@ class CountryController extends  BaseController
            {
           
             
-             $country->update(['is_deleted' => 1]);
+             $country->update(['is_deleted' => $country->id]);
             $success['$country']=New CountryResource($country);
             }
             $success['status']= 200;

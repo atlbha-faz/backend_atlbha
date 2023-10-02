@@ -97,7 +97,7 @@ class ProductController extends BaseController
         }
         $product = Product::create([
             'name' => $request->name,
-            'for' => 'store',
+        
             'description' => $request->description,
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
@@ -154,7 +154,7 @@ class ProductController extends BaseController
 
         $product = Product::query()->find($product);
 
-        if (is_null($product) || $product->is_deleted == 1) {
+        if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
         }
 
@@ -214,7 +214,7 @@ class ProductController extends BaseController
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
         } else {
             $product = Product::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
-            if (is_null($product) || $product->is_deleted == 1) {
+            if (is_null($product) || $product->is_deleted != 0) {
                 return $this->sendError(" المنتج غير موجود", "product is't exists");
             }
 
@@ -257,7 +257,7 @@ class ProductController extends BaseController
 
             $product->update([
                 'name' => $request->input('name'),
-                'for' => 'store',
+                
                 'description' => $request->input('description'),
                 'selling_price' => $request->input('selling_price'),
                 'stock' => $request->input('stock'),
@@ -279,7 +279,7 @@ class ProductController extends BaseController
                 $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
                 foreach ($image_id as $oid) {
                     $image = Image::query()->find($oid);
-                    $image->update(['is_deleted' => 1]);
+                    $image->update(['is_deleted' => $image->id]);
 
                 }
 
@@ -314,7 +314,7 @@ class ProductController extends BaseController
                 $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
                 foreach ($image_id as $oid) {
                     $image = Image::query()->find($oid);
-                    $image->update(['is_deleted' => 1]);
+                    $image->update(['is_deleted' => $image->id]);
                 }
                 if($files != null){
                 foreach ($files as $file) {
@@ -339,7 +339,7 @@ class ProductController extends BaseController
     public function changeStatus($id)
     {
         $product = Product::where('id', $id)->where('store_id', auth()->user()->store_id)->first();
-        if (is_null($product) || $product->is_deleted == 1) {
+        if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError("القسم غير موجودة", "product is't exists");
         }
         if ($product->status === 'active') {
@@ -362,10 +362,10 @@ class ProductController extends BaseController
     public function destroy($product)
     {
         $product = Product::where('id', $product)->where('store_id', auth()->user()->store_id)->first();
-        if (is_null($product) || $product->is_deleted == 1) {
+        if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
         }
-        $product->update(['is_deleted' => 1]);
+        $product->update(['is_deleted' => $product->id]);
 
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
@@ -388,7 +388,7 @@ class ProductController extends BaseController
                 $comments = $mainProduct->comment->where('store_id', auth()->user()->store_id);
                 if ($comments != null) {
                     foreach ($comments as $comment) {
-                        $comment->update(['is_deleted' => 1]);
+                        $comment->update(['is_deleted' => $comment->id]);
                     }
                 }
                 $product->delete();
@@ -399,11 +399,11 @@ class ProductController extends BaseController
         if (count($products) > 0) {
             foreach ($products as $product) {
 
-                $product->update(['is_deleted' => 1]);
+                $product->update(['is_deleted' => $product->id]);
                 $comments = $product->comment;
                 if ($comments != null) {
                     foreach ($comments as $comment) {
-                        $comment->update(['is_deleted' => 1]);
+                        $comment->update(['is_deleted' => $comment->id]);
                     }
                 }
                 $success['products'] = new ProductResource($product);
@@ -493,7 +493,7 @@ class ProductController extends BaseController
     //     // Find the existing product by ID
     //     $existingProduct = Product::where('store_id', auth()->user()->store_id)->find($productId);
 
-    //     if (!$existingProduct || $existingProduct->is_deleted == 1) {
+    //     if (!$existingProduct || $existingProduct->is_deleted != 0) {
     //         // Handle case where the product does not exist
     //         // or display an error message to the user
     //         return $this->sendError("المنتج غير موجود", "product is't exists");

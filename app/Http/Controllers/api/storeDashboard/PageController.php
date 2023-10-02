@@ -142,7 +142,7 @@ class PageController extends BaseController
     public function show($page)
     {
         $page = Page::query()->find($page);
-        if (is_null($page) || $page->is_deleted == 1) {
+        if (is_null($page) || $page->is_deleted != 0) {
             return $this->sendError("الصفحة غير موجودة", "Page is't exists");
         }
         $success['pages'] = new PageResource($page);
@@ -175,7 +175,7 @@ class PageController extends BaseController
     
         $page = Page::where('id', $page)->where('store_id', auth()->user()->store_id)->first();
 
-        if (is_null($page) || $page->is_deleted == 1) {
+        if (is_null($page) || $page->is_deleted != 0) {
             return $this->sendError("الصفحة غير موجودة", "Page is't exists");
         }
 
@@ -238,10 +238,10 @@ class PageController extends BaseController
     public function destroy($page)
     {
         $page = Page::where('store_id', auth()->user()->store_id)->where('id', $page)->first();
-        if (is_null($page) || $page->is_deleted == 1) {
+        if (is_null($page) || $page->is_deleted != 0) {
             return $this->sendError("الصفحة غير موجودة", "page is't exists");
         }
-        $page->update(['is_deleted' => 1]);
+        $page->update(['is_deleted' => $page->id]);
 
         $success['pages'] = new PageResource($page);
         $success['status'] = 200;
@@ -252,7 +252,7 @@ class PageController extends BaseController
     public function changeStatus($id)
     {
         $page = Page::where('store_id', auth()->user()->store_id)->where('id', $id)->first();
-        if (is_null($page) || $page->is_deleted == 1) {
+        if (is_null($page) || $page->is_deleted != 0) {
             return $this->sendError("الصفحة غير موجودة", "page is't exists");
         }
 
@@ -274,7 +274,7 @@ class PageController extends BaseController
         if (count($pages) > 0) {
             foreach ($pages as $page) {
 
-                $page->update(['is_deleted' => 1]);
+                $page->update(['is_deleted' => $page->id]);
                 $success['pages'] = new PageResource($page);
 
             }

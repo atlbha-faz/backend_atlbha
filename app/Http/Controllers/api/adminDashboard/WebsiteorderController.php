@@ -79,7 +79,7 @@ class WebsiteorderController extends BaseController
     public function show($websiteorder)
     {
         $websiteorder =Websiteorder::query()->find($websiteorder);
-        if (is_null($websiteorder) || $websiteorder->is_deleted==1){
+        if (is_null($websiteorder) || $websiteorder->is_deleted !=0){
                return $this->sendError("  الطلب غير موجودة","websiteorder is't exists");
                }
               $success['websiteorders']=New WebsiteorderResource($websiteorder);
@@ -109,7 +109,7 @@ class WebsiteorderController extends BaseController
     public function update(Request $request,  $websiteorder)
     {
         $websiteorder =Websiteorder::query()->find($websiteorder);
-        if ( is_null($websiteorder) || $websiteorder->is_deleted==1){
+        if ( is_null($websiteorder) || $websiteorder->is_deleted !=0){
             return $this->sendError(" الطلب غير موجودة"," websiteorder is't exists");
        }
             $input = $request->all();
@@ -147,10 +147,10 @@ class WebsiteorderController extends BaseController
     public function destroy( $websiteorder)
     {
         $websiteorder =Websiteorder::query()->find($websiteorder);
-        if (is_null($websiteorder)||$websiteorder->is_deleted==1){
+        if (is_null($websiteorder)||$websiteorder->is_deleted !=0){
             return $this->sendError(" الطلب غير موجودة","websiteorder is't exists");
             }
-           $websiteorder->update(['is_deleted' => 1]);
+           $websiteorder->update(['is_deleted' => $websiteorder->id]);
 
            $success['websiteorders']=New WebsiteorderResource($websiteorder);
            $success['status']= 200;
@@ -164,7 +164,7 @@ class WebsiteorderController extends BaseController
             if(count($websiteorders)>0){
            foreach($websiteorders as $websiteorder)
            {
-             $websiteorder->update(['is_deleted' => 1]);
+             $websiteorder->update(['is_deleted' => $websiteorder->id]);
             $success['websiteorder']=New WebsiteorderResource($websiteorder);
 
             }
@@ -187,7 +187,7 @@ class WebsiteorderController extends BaseController
            public function acceptService($websiteorder)
            {
             $websiteorder =Websiteorder::query()->where('type','service')->find($websiteorder);
-            if (is_null($websiteorder) || $websiteorder->is_deleted==1){
+            if (is_null($websiteorder) || $websiteorder->is_deleted !=0){
                 return $this->sendError("الطلب غير موجود","Order is't exists");
                 }
                $services= Service_Websiteorder::where('websiteorder_id',$websiteorder->id)->get();
@@ -223,7 +223,7 @@ class WebsiteorderController extends BaseController
            public function rejectService($websiteorder)
            {
             $websiteorder =Websiteorder::query()->where('type','service')->find($websiteorder);
-            if (is_null($websiteorder) || $websiteorder->is_deleted==1){
+            if (is_null($websiteorder) || $websiteorder->is_deleted !=0){
                 return $this->sendError("الطلب غير موجود","Order is't exists");
                 }
                 $services= Service_Websiteorder::where('websiteorder_id',$websiteorder->id)->get();

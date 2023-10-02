@@ -23,7 +23,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->get());
+        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
@@ -73,7 +73,7 @@ class CategoryController extends BaseController
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
             'parent_id' => null,
-            'for' => 'etlobha',
+           
             'store_id' => null,
         ]);
 
@@ -88,7 +88,7 @@ class CategoryController extends BaseController
                     'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
                     'name' => $data['name'],
                     'parent_id' => $category->id,
-                    'for' => 'etlobha',
+                    
                     'store_id' => null,
                 ]);
 
@@ -111,7 +111,7 @@ class CategoryController extends BaseController
     public function show($category)
     {
         $category = Category::query()->find($category);
-        if (is_null($category) || $category->is_deleted == 1 || $category->for == 'store') {
+        if (is_null($category) || $category->is_deleted != 0 ) {
             return $this->sendError("القسم غير موجودة", "Category is't exists");
         }
         $success['categories'] = new CategoryResource($category);
@@ -144,7 +144,7 @@ class CategoryController extends BaseController
     public function changeStatus($id)
     {
         $category = Category::query()->find($id);
-        if (is_null($category) || $category->is_deleted == 1 || $category->for == 'store') {
+        if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("القسم غير موجودة", "category is't exists");
         }
         if ($category->parent_id == null) {
@@ -179,7 +179,7 @@ class CategoryController extends BaseController
     public function update(Request $request, $category)
     {
         $category = Category::where('id', $category)->where('store_id', null)->first();
-        if (is_null($category) || $category->is_deleted == 1 || $category->for == 'store') {
+        if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("التصنيف غير موجودة", " Category is't exists");
         }
         $category_id = $category->id;
@@ -210,7 +210,7 @@ class CategoryController extends BaseController
             if ($request->data != null) {
                 if (!(in_array($oid, array_column($request->data, 'id')))) {
                     $subcategory = Category::query()->find($oid);
-                    $subcategory->update(['is_deleted' => 1]);
+                    $subcategory->update(['is_deleted' => $subcategory->id]);
                 }
             }
         }
@@ -232,7 +232,7 @@ class CategoryController extends BaseController
                     'name' => $data['name'],
                     'number' => $number,
                     'parent_id' => $category_id,
-                    'for' => 'etlobha',
+                   
                     'is_deleted' => 0,
 
                 ]);
@@ -255,8 +255,8 @@ class CategoryController extends BaseController
      */
     public function destroy($category)
     {
-        $category = Category::query()->where('for', 'etlobha')->where('store_id', null)->find($category);
-        if (is_null($category) || $category->is_deleted == 1) {
+        $category = Category::query()->where('store_id', null)->find($category);
+        if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("القسم غير موجودة", "category is't exists");
         }
         if ($category->parent_id == null) {
@@ -264,10 +264,10 @@ class CategoryController extends BaseController
 
             foreach ($categories as $subcategory) {
 
-                $subcategory->update(['is_deleted' => 1]);
+                $subcategory->update(['is_deleted' => $subcategory->id]);
             }
         }
-        $category->update(['is_deleted' => 1]);
+        $category->update(['is_deleted' =>  $category->id]);
 
         $success['categories'] = new CategoryResource($category);
         $success['status'] = 200;
@@ -277,17 +277,17 @@ class CategoryController extends BaseController
     public function deleteall(Request $request)
     {
 
-            $categorys =Category::whereIn('id',$request->id)->where('for','etlobha')->where('store_id', null)->where('is_deleted',0)->get();
+            $categorys =Category::whereIn('id',$request->id)->where('store_id', null)->where('is_deleted',0)->get();
             if(count($categorys)>0){
            foreach($categorys as $category)
            {
-             $category->update(['is_deleted' => 1]);
+             $category->update(['is_deleted' => $category->id]);
             $success['categorys']=New CategoryResource($category);
             if ($category->parent_id == null) {
-            $subs=Category::where('parent_id',$category->id)->where('for','etlobha')->where('is_deleted',0)->get();
+            $subs=Category::where('parent_id',$category->id)->where('is_deleted',0)->get();
             foreach($subs as $sub)
             {
-                $sub->update(['is_deleted' => 1]);
+                $sub->update(['is_deleted' => $sub->id]);
             }
             }
             } 
@@ -303,7 +303,7 @@ class CategoryController extends BaseController
     public function changeSatusall(Request $request)
     {
 
-        $categorys = Category::whereIn('id', $request->id)->where('for', 'etlobha')->where('is_deleted', 0)->get();
+        $categorys = Category::whereIn('id', $request->id)->where('is_deleted', 0)->get();
         if (count($categorys) > 0) {
             foreach ($categorys as $category) {
 
@@ -313,7 +313,7 @@ class CategoryController extends BaseController
                     $category->update(['status' => 'active']);
                 }
                 if ($category->parent_id == null) {
-                    $subs = Category::where('parent_id', $category->id)->where('for', 'etlobha')->where('is_deleted', 0)->get();
+                    $subs = Category::where('parent_id', $category->id)->where('is_deleted', 0)->get();
                     foreach ($subs as $sub) {
 
                         if ($sub->status === 'active') {

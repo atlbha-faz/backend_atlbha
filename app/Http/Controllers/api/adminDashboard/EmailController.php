@@ -45,7 +45,7 @@ class EmailController extends BaseController
         if (is_null($contact)){
             return $this->sendError("الرسالة غير موجود","contact is't exists");
             }
-            $contact->update(['is_deleted' => 1]);
+            $contact->update(['is_deleted' => $contact->id]);
 
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف الرسالة بنجاح','contact  deleted successfully');
@@ -56,7 +56,7 @@ class EmailController extends BaseController
         
           $contacts =Contact::whereIn('id',$request->id)->get();
      foreach($contacts  as $contact ){
-        $contact->update(['is_deleted' => 1]);
+        $contact->update(['is_deleted' => $contact->id]);
      }
            $success['status']= 200;
             return $this->sendResponse($success,'تم حذف الرسالة بنجاح','Contact deleted successfully');

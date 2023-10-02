@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\MarketerResource;
-use App\Models\Marketer;
 use App\Models\User;
+use App\Models\Marketer;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Resources\MarketerResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class MarketerController extends BaseController
 {
@@ -55,11 +56,18 @@ class MarketerController extends BaseController
         $validator = Validator::make($input, [
             'checkbox_field' => 'required|in:1',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
+                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
+            })],
             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
             'password_confirm' => 'required|same:password',
-            'user_name' => 'required|string|max:255',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'user_name' =>  ['required','string','max:255',Rule::unique('users')->where(function ($query) {
+                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
+            })],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
+                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
+            }),
+            ],
             'snapchat' => 'required|url',
             'facebook' => 'required|url',
             'twiter' => 'required|url',
@@ -117,7 +125,7 @@ class MarketerController extends BaseController
     {
         $marketer = Marketer::query()->find($marketer->id);
         $user = User::query()->find($marketer->user_id);
-        if (is_null($marketer) || $user->is_deleted == 1) {
+        if (is_null($marketer) || $user->is_deleted != 0) {
             return $this->sendError("المندوب غير موجودة", "marketer is't exists");
         }
         $success['$marketers'] = new MarketerResource($marketer);
@@ -149,17 +157,26 @@ class MarketerController extends BaseController
     {
         $marketer = Marketer::where('id', $marketer)->first();
         $user = User::query()->find($marketer->user_id);
-        if (is_null($user) || $user->is_deleted == 1) {
+        if (is_null($user) || $user->is_deleted != 0) {
             return $this->sendError(" المندوب غير موجود", "marketer is't exists");
         }
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $marketer->user->id,
+             'email' => ['required' , 'email', Rule::unique('users')->where(function ($query)use($marketer) {
+                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
+            }),
+            ],
             'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
             'password_confirm' => 'nullable|same:password',
-            'user_name' => 'required|string|max:255',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'user_name' => ['required','string','max:255',Rule::unique('users')->where(function ($query)use($marketer) {
+                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
+            }),
+            ],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',Rule::unique('users')->where(function ($query) use($marketer) {
+                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
+            }),
+            ],    
             'snapchat' => 'required',
             'facebook' => 'required',
             'twiter' => 'required',
@@ -217,7 +234,7 @@ class MarketerController extends BaseController
     {
         $marketer = Marketer::query()->find($id);
         $user = User::query()->find($marketer->user_id);
-        if (is_null($user) || $user->is_deleted == 1) {
+        if (is_null($user) || $user->is_deleted != 0) {
             return $this->sendError("المندوب غير موجودة", "user is't exists");
         }
         if ($user->status === 'active') {
@@ -241,10 +258,10 @@ class MarketerController extends BaseController
     public function destroy(Marketer $marketer)
     {
         $user = User::query()->find($marketer->user_id);
-        if (is_null($user) || $user->is_deleted == 1) {
+        if (is_null($user) || $user->is_deleted != 0) {
             return $this->sendError("المندوب غير موجودة", "user is't exists");
         }
-        $user->update(['is_deleted' => 1]);
+        $user->update(['is_deleted' => $user->id]);
 
         $success['marketers'] = new MarketerResource($marketer);
 
@@ -261,7 +278,7 @@ class MarketerController extends BaseController
         if (count($users) > 0) {
             foreach ($users as $user) {
 
-                $user->update(['is_deleted' => 1]);
+                $user->update(['is_deleted' => $user->id]);
 
             }
             $success['marketers'] = MarketerResource::collection($marketers);

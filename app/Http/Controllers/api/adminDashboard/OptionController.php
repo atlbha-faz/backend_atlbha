@@ -34,7 +34,7 @@ class OptionController extends BaseController
  public function optionsProduct($product_id)
    {
      $option =Option::where('product_id',$product_id)->first();
-        if (is_null($option) || $option->is_deleted==1){
+        if (is_null($option) || $option->is_deleted !=0){
         return $this->sendError("لايوجد خيارات لهذا المنتج","options is't exists");
         }
         $success['options']=OptionResource::collection(Option::where('is_deleted',0)->where('product_id',$product_id)->get());
@@ -105,7 +105,7 @@ class OptionController extends BaseController
     public function show($option)
    {
         $option =Option::query()->find($option);
-        if (is_null($option) || $option->is_deleted==1){
+        if (is_null($option) || $option->is_deleted !=0){
         return $this->sendError("الخيار غير موجود","option is't exists");
         }
 
@@ -162,7 +162,7 @@ class OptionController extends BaseController
     foreach ($options_id as $oid) {
       if (!(in_array($oid, array_column($request->data, 'id')))) {
         $option = Option::query()->find($oid);
-        $option->update(['is_deleted' => 1]);
+        $option->update(['is_deleted' => $option->id]);
       }
     }
 
@@ -192,7 +192,7 @@ class OptionController extends BaseController
        public function changeStatus($id)
     {
         $option = Option::query()->find($id);
-       if (is_null($option) || $option->is_deleted==1){
+       if (is_null($option) || $option->is_deleted !=0){
          return $this->sendError(" الخيار غير موجود","option is't exists");
          }
 
@@ -218,10 +218,10 @@ class OptionController extends BaseController
     public function destroy($option)
    {
        $option = Option::query()->find($option);
-         if (is_null($option) || $option->is_deleted==1){
+         if (is_null($option) || $option->is_deleted !=0){
          return $this->sendError("الخيار غير موجود","option is't exists");
          }
-        $option->update(['is_deleted' => 1]);
+        $option->update(['is_deleted' => $option->id]);
 
         $success['option']=New OptionResource($option);
         $success['status']= 200;

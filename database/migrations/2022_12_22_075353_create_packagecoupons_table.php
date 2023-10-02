@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('expire_date')->nullable();
             $table->unsignedBigInteger('total_redemptions')->nullable();
             $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }

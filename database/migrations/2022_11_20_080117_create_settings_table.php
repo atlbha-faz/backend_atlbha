@@ -31,7 +31,7 @@ return new class extends Migration
             $table->enum('registration_marketer',['active','not_active'])->default('active');
             $table->enum('status_marketer',['active','not_active'])->default('active');
             $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }

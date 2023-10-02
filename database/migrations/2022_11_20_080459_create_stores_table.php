@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('store_name')->nullable();
             $table->string('slug')->unique()->nullable();
             $table->string('store_email')->unique()->nullable();
-            $table->string('domain')->unique()->nullable();
+            $table->string('domain')->nullable();
             $table->string('icon')->nullable();
             $table->string('store_address')->nullable();
             $table->string('phonenumber')->nullable();
@@ -40,7 +40,7 @@ return new class extends Migration
             $table->enum('status',['active','not_active'])->default('active');
             $table->enum('commercialregistertype',['commercialregister','maeruf'])->default('commercialregister');
             $table->string('link')->nullable();
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
             $table->enum('special',['special','not_special'])->default('not_special');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -52,6 +52,9 @@ return new class extends Migration
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
             $table->enum('working_status',['active','not_active'])->default('not_active');
             $table->timestamps();
+            $table->unique(['domain','is_deleted']);
+            $table->unique(['store_email','is_deleted']);
+            $table->unique(['phonenumber','is_deleted']);
         });
     }
 

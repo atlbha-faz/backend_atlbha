@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('contact_id')->nullable();
             $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }

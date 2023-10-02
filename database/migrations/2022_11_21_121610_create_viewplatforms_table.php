@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('key');
             $table->string('value');
             $table->enum('status',['active','not_active'])->default('active');
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }

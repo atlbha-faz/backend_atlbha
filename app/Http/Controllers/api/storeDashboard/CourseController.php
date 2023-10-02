@@ -54,7 +54,7 @@ class CourseController extends BaseController
     public function show($course)
     {
           $course = Course::query()->find($course);
-         if (is_null($course ) || $course->is_deleted == 1){
+         if (is_null($course ) || $course->is_deleted != 0){
          return $this->sendError("الكورس غير موجودة","course is't exists");
          }
 

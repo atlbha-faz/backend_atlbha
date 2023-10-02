@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Product;
-
 use Carbon\Carbon;
+
+use App\Models\Product;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StoreResource extends JsonResource
@@ -15,9 +16,13 @@ class StoreResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+ 
     public function toArray($request)
     {
-
+        if( $this->categories->first() ==!null ){
+            $a=$this->categories->first()->pivot->subcategory_id;
+           $subcategory= explode(',',$a);
+        }
                 if($this->periodtype == null || $this->periodtype == '6months'){
                   $periodtype = 'شهور'.' '.'6';
         }else{
@@ -99,7 +104,7 @@ class StoreResource extends JsonResource
         'logo'=>$this->logo,
         'entity_type'=>$this->entity_type,
         'user' =>New UserResource($this->user),
-        'activity' =>ActivityResource::collection($this->activities),
+        // 'activity' =>ActivityResource::collection($this->activities),
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
         'periodtype'=>$periodtype,
@@ -114,7 +119,9 @@ class StoreResource extends JsonResource
              'package' =>$this->packagee($this->package_id),
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'working_status'=>$this->working_status,
-         'workDays'=>DaystoreResource::collection($daystore)
+         'workDays'=>DaystoreResource::collection($daystore),
+         'activity' =>  CategoryResource::collection($this->categories),
+         'subcategory' =>  $this->categories->first() ==!null  ? CategoryResource::collection(\App\Models\Category::whereIn('id',  $subcategory)->get()): null,
     ];
     }
 }

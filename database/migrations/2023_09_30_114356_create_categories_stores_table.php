@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('categories_stores', function (Blueprint $table) {
             $table->id();
-            $table->string('subject');
-            $table->text('message');
-            $table->unsignedBigInteger('store_id')->nullable();
+            $table->bigInteger('category_id')->unsigned();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->string('subcategory_id')->nullable();
+            $table->bigInteger('store_id')->unsigned();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-            $table->enum('status',['active','not_active'])->default('active');
-            $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('categories_stores');
     }
 };

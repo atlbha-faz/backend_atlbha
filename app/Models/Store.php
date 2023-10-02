@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Comment;
 use App\Models\Package;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Maintenance;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ class Store extends Model
     use HasFactory;
      protected $fillable = ['store_name','store_email','domain','slug','icon','description','business_license','phonenumber','commercialregistertype','link','verification_status','store_address',
      'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period','verification_date',
-     'periodtype','special','file','tiktok','working_status','status','is_deleted'];
+     'periodtype','special','file','tiktok','working_status','status','category_id','subcategory_id','is_deleted'];
 
     public function rate($id)
     {
@@ -72,6 +73,23 @@ class Store extends Model
             'activity_id'
         );
     }
+    public function categories()
+    {
+        return $this->belongsToMany(
+            Category::class,
+            'categories_stores',
+            'store_id',
+            'category_id')
+            ->withPivot('subcategory_id');
+    }
+//     public function category()
+//     {
+//         return $this->belongsTo(Category::class,'category_id','id');
+//     }
+//   public function subcategory()
+//     {
+//         return Category::whereIn('id',explode(',',$this->subcategory_id))->get();
+//     }
     public function packages()
     {
         return $this->belongsToMany(

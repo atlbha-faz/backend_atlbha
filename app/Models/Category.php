@@ -19,12 +19,20 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
-
+       
      public function store()
     {
         return $this->belongsTo(Store::class, 'store_id','id');
     }
-
+    public function stores()
+    {
+         return $this->belongsToMany(
+         Store::class,
+        'categories_stores',
+        'category_id',
+        'store_id'
+         )->withPivot('subcategory_id');
+  }
     public function products()
     {
         return $this->hasMany(Product::class);

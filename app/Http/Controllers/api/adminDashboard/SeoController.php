@@ -81,7 +81,6 @@ class SeoController extends BaseController
      * @param  \App\Models\Seo  $seo
      * @return \Illuminate\Http\Response
      */
-
     /**
      * Show the form for editing the specified resource.
      *

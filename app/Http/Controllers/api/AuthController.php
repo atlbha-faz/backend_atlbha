@@ -34,7 +34,9 @@ class AuthController extends BaseController
                     'checkbox_field' => 'required|in:1',
                     'user_type' => 'required|in:store,marketer',
                     // 'name'=>'required|string|max:255',
-                    'user_name' => 'required|string|max:255|unique:users',
+                    'user_name' => ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
+                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
+                    })],
                     //'store_name'=>'required_if:user_type,store|string|max:255',
 
                     //'store_email'=>'required_if:user_type,store|email|unique:stores',
@@ -50,10 +52,10 @@ class AuthController extends BaseController
                     //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
                     'periodtype' => 'required|in:6months,year',
                     'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                        return $query->whereIn('user_type', ['store', 'store_employee']);
+                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
                     })],
                     'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                        return $query->whereIn('user_type', ['store', 'store_employee']);
+                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
                     })],
 
                 ]);
@@ -72,7 +74,9 @@ class AuthController extends BaseController
                         'checkbox_field' => 'required|in:1',
                         'user_type' => 'required|in:store,marketer',
                         // 'name'=>'required|string|max:255',
-                        'user_name' => 'required|string|max:255|unique:users',
+                        'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
+                        return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
+                    })],
                         //'store_name'=>'required_if:user_type,store|string|max:255',
 
                         //'store_email'=>'required_if:user_type,store|email|unique:stores',
@@ -85,11 +89,11 @@ class AuthController extends BaseController
                         'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                         //'periodtype' => 'required_if:user_type,store|in:6months,year',
                         'email' => 'nullable', 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                            return $query->whereIn('user_type', ['marketer']);
+                            return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
                         }),
                         ],
                         'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                            return $query->whereIn('user_type', ['marketer']);
+                            return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
                         }),
                         ],
                         'name' => 'required|string|max:255',

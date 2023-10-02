@@ -83,7 +83,7 @@ class PackagecouponController extends BaseController
     public function show($packagecoupon)
     {
         $coupon =Packagecoupon::query()->find($packagecoupon);
-        if (is_null($coupon ) || $coupon->is_deleted==1){
+        if (is_null($coupon ) || $coupon->is_deleted !=0){
                return $this->sendError("الكوبون غير موجودة","Coupon is't exists");
                }
               $success['packagecoupon']=New PackagecouponResource($coupon);
@@ -95,7 +95,7 @@ class PackagecouponController extends BaseController
     public function changeStatus($id)
           {
               $coupon = Packagecoupon::query()->find($id);
-              if (is_null($coupon ) || $coupon->is_deleted==1){
+              if (is_null($coupon ) || $coupon->is_deleted !=0){
                return $this->sendError("الكوبون غير موجودة","coupon is't exists");
                }
               if($coupon->status === 'active'){
@@ -130,7 +130,7 @@ class PackagecouponController extends BaseController
     public function update(Request $request,  $packagecoupon)
     {
         $packagecoupon = Packagecoupon::query()->find($packagecoupon);
-        if (is_null($packagecoupon ) || $packagecoupon->is_deleted==1){
+        if (is_null($packagecoupon ) || $packagecoupon->is_deleted !=0){
             return $this->sendError("الكوبون غير موجودة"," packagecoupon is't exists");
        }
             $input = $request->all();
@@ -172,10 +172,10 @@ class PackagecouponController extends BaseController
     public function destroy($packagecoupon)
     {
         $packagecoupon=  Packagecoupon::query()->find($packagecoupon);
-        if (is_null($packagecoupon ) || $packagecoupon->is_deleted==1){
+        if (is_null($packagecoupon ) || $packagecoupon->is_deleted !=0){
             return $this->sendError("الكوبون غير موجودة","coupon is't exists");
             }
-           $packagecoupon->update(['is_deleted' => 1]);
+           $packagecoupon->update(['is_deleted' => $packagecoupon->id]);
 
            $success['packagecoupons']=New PackagecouponResource($packagecoupon);
            $success['status']= 200;

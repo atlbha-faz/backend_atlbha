@@ -79,7 +79,7 @@ class ContactController extends BaseController
     public function show($contact)
     {
         $contact= Contact::query()->find($contact);
-        if (is_null($contact) ||$contact->is_deleted==1){
+        if (is_null($contact) ||$contact->is_deleted !=0){
                return $this->sendError("بيانات التواصل غير موجودة","contact is't exists");
                }
               $success['contacts']=New ContactResource($contact);
@@ -90,7 +90,7 @@ class ContactController extends BaseController
     public function changeStatus($id)
     {
         $contact = Contact::query()->find($id);
-        if (is_null($contact) || $contact->is_deleted==1){
+        if (is_null($contact) || $contact->is_deleted !=0){
          return $this->sendError("بيانات التواصل غير موجودة","contact is't exists");
          }
         if($contact->status === 'active'){
@@ -125,7 +125,7 @@ class ContactController extends BaseController
     public function update(Request $request,$contact)
     {
         $contact =  Contact::where('id', $contact)->first();
-        if (is_null($contact) ||$contact->is_deleted==1){
+        if (is_null($contact) ||$contact->is_deleted !=0){
             return $this->sendError("بيانات التواصل غير موجودة"," contact is't exists");
        }
             $input = $request->all();
@@ -163,10 +163,10 @@ class ContactController extends BaseController
     public function destroy($contact)
     {
         $contact =contact::query()->find($contact);
-        if (is_null($contact) ||$contact->is_deleted==1){
+        if (is_null($contact) ||$contact->is_deleted !=0){
             return $this->sendError("بيانات التواصل غير موجودة","contact is't exists");
             }
-           $contact->update(['is_deleted' => 1]);
+           $contact->update(['is_deleted' => $contact->id]);
 
            $success['contacts']=New contactResource($contact);
            $success['status']= 200;
@@ -182,7 +182,7 @@ class ContactController extends BaseController
            foreach($contacts as $contact)
            {
              
-             $contact->update(['is_deleted' => 1]);
+             $contact->update(['is_deleted' => $contact->id]);
             $success['contacts']=New ContactResource($contact);
 
             }

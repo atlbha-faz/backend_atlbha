@@ -124,7 +124,7 @@ class ProductController extends BaseController
     public function show($product)
     {
         $product= Product::query()->find($product);
-        if (is_null($product) || $product->is_deleted==1 || $product->for =='etlobha'){
+        if (is_null($product) || $product->is_deleted !=0 || $product->for =='etlobha'){
                return $this->sendError("المنتج غير موجود","product is't exists");
                }
               $success['products']=New ProductResource($product);
@@ -138,7 +138,7 @@ class ProductController extends BaseController
       public function specialStatus($id)
     {
         $product = Product::query()->find($id);
-         if (is_null($product) || $product->is_deleted==1|| $product->for =='etlobha'){
+         if (is_null($product) || $product->is_deleted !=0|| $product->for =='etlobha'){
          return $this->sendError("المنتج غير موجود","product is't exists");
          }
 
@@ -212,7 +212,7 @@ class ProductController extends BaseController
    // public function update(Request $request, $id)
 //   {
 //          $product =Product::query()->find($id);
-//          if (is_null($product) || $product->is_deleted==1){
+//          if (is_null($product) || $product->is_deleted !=0){
 //          return $this->sendError(" المنتج غير موجود","product is't exists");
 //           }
 //          $input = $request->all();
@@ -292,7 +292,7 @@ class ProductController extends BaseController
            foreach($products as $product)
            {
             
-               $product->update(['is_deleted' => 1]);
+               $product->update(['is_deleted' => $product->id]);
             }
                $success['products']= ProductResource::collection($products);
                $success['status']= 200;

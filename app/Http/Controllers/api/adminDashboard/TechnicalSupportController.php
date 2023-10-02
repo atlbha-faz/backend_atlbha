@@ -26,15 +26,19 @@ class TechnicalSupportController extends BaseController
      */
     public function index()
      {
-      $success['Store_Technicalsupports']=count(DB::table('technical_supports')
+      $success['Store_Technicalsupports']=count(DB::table('technical_supports')->where('is_deleted',0)
       ->select( DB::raw('count(*) as total'))
       ->groupBy(DB::raw("store_id"))
       ->get());
+      if(TechnicalSupport::where('is_deleted',0)->count()>0){
       $success['percent_of_Store_Technicalsupports']=(count(DB::table('technical_supports')
       ->select( DB::raw('count(*) as total'))
       ->groupBy(DB::raw("store_id"))
       ->get())/(TechnicalSupport::where('is_deleted',0)->count())*100)."%";
-
+      }
+      else{
+        $success['percent_of_Store_Technicalsupports']="0%";
+      }
        $success['TechnicalsupportsCount']=TechnicalSupport::where('is_deleted',0)->count();
        $success['pending_Technicalsupports']=TechnicalSupport::where('is_deleted',0)->where('supportstatus','pending')->count();
        $success['finished_Technicalsupports']=TechnicalSupport::where('is_deleted',0)->where('supportstatus','finished')->count();
@@ -104,7 +108,7 @@ class TechnicalSupportController extends BaseController
     public function show($technicalSupport)
  {
           $technicalSupport = TechnicalSupport::query()->find($technicalSupport);
-         if (is_null($technicalSupport) || $technicalSupport->is_deleted == 1){
+         if (is_null($technicalSupport) || $technicalSupport->is_deleted != 0){
          return $this->sendError("طلب الدعم الفني غير موجود","Technical Support is't exists");
          }
 
@@ -135,7 +139,7 @@ class TechnicalSupportController extends BaseController
      */
     public function update(Request $request, TechnicalSupport $technicalSupport)
     {
-      /*   if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
+      /*   if (is_null($technicalSupport) || $technicalSupport->is_deleted !=0){
          return $this->sendError("طلب الدعم غير موجود","technicalSupport is't exists");
           }
          $input = $request->all();
@@ -181,7 +185,7 @@ class TechnicalSupportController extends BaseController
          }
              
         $technicalSupport = TechnicalSupport::query()->find($id);
-         if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
+         if (is_null($technicalSupport) || $technicalSupport->is_deleted !=0){
          return $this->sendError("طلب الدعم غير موجود","technical Support is't exists");
          }
 
@@ -203,10 +207,10 @@ class TechnicalSupportController extends BaseController
     public function destroy($technicalSupport)
    {
        $technicalSupport = TechnicalSupport::query()->find($technicalSupport);
-         if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
+         if (is_null($technicalSupport) || $technicalSupport->is_deleted !=0){
          return $this->sendError("الوحدة غير موجودة","technicalSupport is't exists");
          }
-        $technicalSupport->update(['is_deleted' => 1]);
+        $technicalSupport->update(['is_deleted' => $technicalSupport->id]);
 
         $success['technicalSupport']=New TechnicalSupportResource($technicalSupport);
         $success['status']= 200;
@@ -217,7 +221,7 @@ class TechnicalSupportController extends BaseController
     {
         $technicalSupports =TechnicalSupport::whereIn('id',$request->id)->get();
         foreach($technicalSupports as $technicalSupport){
-          if (is_null($technicalSupport) || $technicalSupport->is_deleted==1){
+          if (is_null($technicalSupport) || $technicalSupport->is_deleted !=0){
          return $this->sendError("الشكوى غير موجود","technicalSupport is't exists");
           }}
         foreach($technicalSupports as $technicalSupport)

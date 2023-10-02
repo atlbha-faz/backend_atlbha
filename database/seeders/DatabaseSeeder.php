@@ -5,8 +5,8 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\DaySeeder;
 use Database\Seeders\NotificationSeeder;
+use Database\Seeders\AdminPermissionTableSeeder;
 use Illuminate\Database\Seeder;
-
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -18,11 +18,12 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
-            ActivitySeeder::class,
+         ActivitySeeder::class,
             CountrySeeder::class,
             RegionSeeder::class,
             CitySeeder::class,
-            // PermissionTableSeeder::class,
+            CategorySeeder ::class,
+         
             CreateUserSeeder::class,
             PackageSeeder::class,
             TemplateSeeder::class,
@@ -32,7 +33,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             StoreSeeder::class,
             StoreUserSeeder::class,
-            CategorySeeder::class,
+            // CategorySeeder ::class,
             CurrencySeeder::class,
             ProductSeeder::class,
             ServiceSeeder::class,
@@ -46,7 +47,7 @@ class DatabaseSeeder extends Seeder
             PaymenttypeSeeder::class,
             OrderSeeder::class,
             OrderItemSeeder::class,
-            PlatformSeeder::class,
+           PlatformSeeder::class,
             ReplaycontactSeeder::class,
             // SeoSeeder::class,
             SettingSeeder::class,
@@ -73,9 +74,14 @@ class DatabaseSeeder extends Seeder
             TechnicalSupportSeeder::class,
             // PermissionTableSeeder::class,
 
+           TechnicalSupportSeeder::class,
+      
+
             NewSeeder::class,
             DaySeeder::class,
             Theme::class,
+            // AdminPermissionTableSeeder::class,
+            // PermissionTableSeeder::class
         ]);
 
     }

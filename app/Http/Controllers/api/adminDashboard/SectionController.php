@@ -60,7 +60,7 @@ class SectionController extends BaseController
     public function show($section)
     {
         $section= Section::query()->find($section);
-        if (is_null($section) || $section->is_deleted==1){
+        if (is_null($section) || $section->is_deleted !=0){
                return $this->sendError("القسم غير موجودة","Section is't exists");
                }
               $success['sections']=New SectionResource($section);
@@ -71,7 +71,7 @@ class SectionController extends BaseController
     public function changeStatus($id)
     {
         $section = Section::query()->find($id);
-        if (is_null($section) || $section->is_deleted==1){
+        if (is_null($section) || $section->is_deleted !=0){
          return $this->sendError("القسم غير موجودة","Section is't exists");
          }
         if($section->status === 'active'){
@@ -106,7 +106,7 @@ class SectionController extends BaseController
      */
     public function update(Request $request)
     {
-    //     if (is_null($section) || $section->is_deleted==1){
+    //     if (is_null($section) || $section->is_deleted !=0){
     //         return $this->sendError("القسم غير موجودة"," section is't exists");
     //    }
             $input = $request->all();
@@ -146,10 +146,10 @@ class SectionController extends BaseController
     public function destroy( $section)
     {
         $section =Section::query()->find($section);
-        if (is_null($section) || $section->is_deleted==1){
+        if (is_null($section) || $section->is_deleted !=0){
             return $this->sendError("القسم غير موجودة","section is't exists");
             }
-           $section->update(['is_deleted' => 1]);
+           $section->update(['is_deleted' => $section->id]);
 
            $success['sections']=New SectionResource($section);
            $success['status']= 200;

@@ -200,7 +200,7 @@ class StockController extends BaseController
     public function update(Request $request, $id)
     {
         $product = Product::query()->where('for', 'stock')->find($id);
-        if (is_null($product) || $product->is_deleted == 1) {
+        if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
         }
         $input = $request->all();
@@ -272,7 +272,7 @@ class StockController extends BaseController
             $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
             foreach ($image_id as $oid) {
                 $image = Image::query()->find($oid);
-                $image->update(['is_deleted' => 1]);
+                $image->update(['is_deleted' => $image->id]);
 
             }
 
@@ -301,7 +301,7 @@ class StockController extends BaseController
             $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
             foreach ($image_id as $oid) {
                 $image = Image::query()->find($oid);
-                $image->update(['is_deleted' => 1]);
+                $image->update(['is_deleted' => $image->id]);
             }
 
             foreach ($files as $file) {
@@ -364,7 +364,7 @@ class StockController extends BaseController
         if (count($products) > 0) {
             foreach ($products as $product) {
 
-                $product->update(['is_deleted' => 1]);
+                $product->update(['is_deleted' => $product->id]);
                 $success['products'] = new ProductResource($product);
 
             }
@@ -380,7 +380,7 @@ class StockController extends BaseController
     {
         $product = Product::query()->where('for', 'stock')->find($id);
 
-        if (is_null($product) || $product->is_deleted == 1) {
+        if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError("المنتج غير موجودة", "product is't exists");
         }
 

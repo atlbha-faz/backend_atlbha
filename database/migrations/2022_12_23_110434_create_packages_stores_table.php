@@ -25,7 +25,7 @@ return new class extends Migration
         $table->timestamp('end_at')->nullable();
         $table->enum('periodtype',['6months','year'])->default('year')->nullable();
         $table->enum('status',['active','not_active'])->default('active');
-        $table->boolean('is_deleted')->default(0);
+        $table->bigInteger('is_deleted')->default(0);
         $table->timestamps();
 
         });

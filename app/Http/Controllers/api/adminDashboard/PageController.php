@@ -150,7 +150,7 @@ class PageController extends BaseController
     public function show($page)
     {
         $page= Page::query()->find($page);
-        if (is_null($page) || $page->is_deleted==1){
+        if (is_null($page) || $page->is_deleted !=0){
                return $this->sendError("الصفحة غير موجودة","Page is't exists");
                }
               $success['pages']=New PageResource($page);
@@ -182,7 +182,7 @@ class PageController extends BaseController
     public function update(Request $request,  $page)
     {
         $page = Page::query()->find($page);
-        if (is_null($page) || $page->is_deleted==1){
+        if (is_null($page) || $page->is_deleted !=0){
          
             return $this->sendError("الصفحة غير موجودة","Page is't exists");
        }
@@ -246,10 +246,10 @@ class PageController extends BaseController
     public function destroy($page)
     {
         $page =Page::query()->find($page);
-        if (is_null($page) || $page->is_deleted==1){
+        if (is_null($page) || $page->is_deleted !=0){
             return $this->sendError("الصفحة غير موجودة","page is't exists");
             }
-           $page->update(['is_deleted' => 1]);
+           $page->update(['is_deleted' => $page->id]);
 
            $success['pages']=New PageResource($page);
            $success['status']= 200;
@@ -260,7 +260,7 @@ class PageController extends BaseController
       public function changeStatus($id)
     {
         $page = Page::query()->find($id);
-         if (is_null($page) || $page->is_deleted==1){
+         if (is_null($page) || $page->is_deleted !=0){
          return $this->sendError("  الصفحة غير موجودة","page is't exists");
          }
 
@@ -286,7 +286,7 @@ class PageController extends BaseController
            foreach($pages as $page)
            {
              
-             $page->update(['is_deleted' => 1]);
+             $page->update(['is_deleted' =>$page->id]);
             $success['pages']=New PageResource($page);
 
             }

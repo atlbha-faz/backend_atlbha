@@ -106,7 +106,7 @@ class CommentController extends BaseController
     public function show($comment)
    {
        $comment = Comment::where('id',$comment)->where('store_id',auth()->user()->store_id)->first();
-        if (is_null($comment) ||$comment->is_deleted==1){
+        if (is_null($comment) ||$comment->is_deleted !=0){
         return $this->sendError("التعليق غير موجود","comment type is't exists");
         }
 
@@ -137,7 +137,7 @@ class CommentController extends BaseController
      */
     public function update(Request $request, Comment $comment)
       {
-         if (is_null($comment) ||$comment->is_deleted==1){
+         if (is_null($comment) ||$comment->is_deleted !=0){
          return $this->sendError(" التعليق غير موجود","comment is't exists");
           }
          $input = $request->all();
@@ -171,7 +171,7 @@ class CommentController extends BaseController
     public function changeStatus($comment)
     {
        $comment = Comment::where('id',$comment)->first();
-         if (is_null($comment) ||$comment->is_deleted==1){
+         if (is_null($comment) ||$comment->is_deleted !=0){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
 
@@ -197,10 +197,10 @@ class CommentController extends BaseController
     public function destroy($comment)
       {
        $comment = Comment::where('id',$comment)->first();
-         if (is_null($comment) ||$comment->is_deleted==1 ||$comment->store_id != auth()->user()->store_id){
+         if (is_null($comment) ||$comment->is_deleted !=0 ||$comment->store_id != auth()->user()->store_id){
          return $this->sendError("التعليق غير موجود","comment is't exists");
          }
-        $comment->update(['is_deleted' => 1]);
+        $comment->update(['is_deleted' => $comment->id]);
 
         $success['comments']=New CommentResource($comment);
         $success['status']= 200;
@@ -281,7 +281,7 @@ class CommentController extends BaseController
 {
 
      $commentActivation = Homepage::where('store_id',auth()->user()->store_id)->first();
-        if (is_null($commentActivation) || $commentActivation->is_deleted==1 ){
+        if (is_null($commentActivation) || $commentActivation->is_deleted !=0 ){
          return $this->sendError("قسم التعليقات غير موجودة","comment's section is't exists");
          }
         if($commentActivation->	commentstatus === 'active'){

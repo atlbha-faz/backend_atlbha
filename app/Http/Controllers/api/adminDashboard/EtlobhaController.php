@@ -195,7 +195,7 @@ class EtlobhaController extends BaseController
     public function update(Request $request, $id)
     {
         $product = Product::query()->where('for', 'etlobha')->find($id);
-        if (is_null($product) || $product->is_deleted == 1) {
+        if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
         }
         $input = $request->all();
@@ -268,7 +268,7 @@ class EtlobhaController extends BaseController
             $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
             foreach ($image_id as $oid) {
                 $image = Image::query()->find($oid);
-                $image->update(['is_deleted' => 1]);
+                $image->update(['is_deleted' => $image->id]);
 
             }
 
@@ -333,7 +333,7 @@ class EtlobhaController extends BaseController
             $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
             foreach ($image_id as $oid) {
                 $image = Image::query()->find($oid);
-                $image->update(['is_deleted' => 1]);
+                $image->update(['is_deleted' => $image->id]);
             }
 
             foreach ($files as $file) {
@@ -356,7 +356,7 @@ class EtlobhaController extends BaseController
     public function show($product)
     {
         $product = Product::query()->where('for', 'etlobha')->find($product);
-        if (is_null($product) || $product->is_deleted == 1) {
+        if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
         }
 
@@ -370,7 +370,7 @@ class EtlobhaController extends BaseController
     public function specialStatus($id)
     {
         $product = Product::query()->where('for', 'etlobha')->find($id);
-        if (is_null($product) || $product->is_deleted == 1) {
+        if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
         }
 
@@ -401,7 +401,7 @@ class EtlobhaController extends BaseController
                     }
                 }
 
-                $product->update(['is_deleted' => 1]);
+                $product->update(['is_deleted' => $product->id]);
             }
             $success['products'] = ProductResource::collection($products);
             $success['status'] = 200;

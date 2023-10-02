@@ -41,7 +41,7 @@ class SelectorController extends BaseController
 
     public function etlobahCategory()
     {
-        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status','active')->where('for', 'etlobha')->where('parent_id', null)->where('store_id', null)->get());
+        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status','active')->where('parent_id', null)->where('store_id', null)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
@@ -133,11 +133,19 @@ class SelectorController extends BaseController
     }
  public function roles()
     {
-        $success['roles']=RoleResource::collection(Role::where('type','admin')->whereNot('id', 1)->get());
+        $success['roles']=RoleResource::collection(Role::where('type','admin')->whereNot('id', 1)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الأدوار بنجاح','Roles return successfully');
     }
+    public function subcategories(Request $request)
+    {
+        $category = Category::whereIn('parent_id', $request->parnet)->where('is_deleted', 0)->where('status', 'active')->get();
 
+        $success['categories'] = CategoryResource::collection($category);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم عرض الاقسام الفرعية بنجاح', 'sub_Category showed successfully');
+    }
 
 }

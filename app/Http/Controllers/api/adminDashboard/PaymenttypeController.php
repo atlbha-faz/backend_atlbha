@@ -78,7 +78,7 @@ class PaymenttypeController extends BaseController
      public function changeStatus($id)
     {
         $paymenttype = Paymenttype::query()->find($id);
-         if (is_null($paymenttype) || $paymenttype->is_deleted==1){
+         if (is_null($paymenttype) || $paymenttype->is_deleted !=0){
          return $this->sendError("شركة الشحن غير موجودة","paymenttype is't exists");
          }
 

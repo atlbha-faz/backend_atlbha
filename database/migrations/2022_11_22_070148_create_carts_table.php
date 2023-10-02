@@ -26,7 +26,7 @@ return new class extends Migration
             $table->double('discount_total')->nullable();
             $table->timestamp('discount_expire_date')->nullable();
             $table->boolean('free_shipping')->default(0);
-            $table->boolean('is_deleted')->default(0);
+            $table->bigInteger('is_deleted')->default(0);
             $table->string('message')->nullable();
             $table->timestamps();
             // $table->unique('user_id','store_id');

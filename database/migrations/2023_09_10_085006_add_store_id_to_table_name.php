@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('roles', function (Blueprint $table) {
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->unique(['name', 'guard_name','store_id']);
         });
     }
 

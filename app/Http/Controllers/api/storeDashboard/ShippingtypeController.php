@@ -79,7 +79,7 @@ class ShippingtypeController extends BaseController
     public function show($shippingtype)
      {
         $shippingtype = Shippingtype::query()->find($shippingtype);
-        if (is_null($shippingtype) || $shippingtype->is_deleted==1){
+        if (is_null($shippingtype) || $shippingtype->is_deleted !=0){
         return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
         }
 
@@ -110,7 +110,7 @@ class ShippingtypeController extends BaseController
      */
     // public function update(Request $request, Shippingtype $shippingtype)
     //     {
-    //      if (is_null($shippingtype) || $shippingtype->is_deleted==1){
+    //      if (is_null($shippingtype) || $shippingtype->is_deleted !=0){
     //      return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
     //       }
     //      $input = $request->all();
@@ -139,7 +139,7 @@ class ShippingtypeController extends BaseController
      public function changeStatus($id)
     {
         $shippingtype = Shippingtype::query()->find($id);
-        if (is_null($shippingtype) || $shippingtype->is_deleted==1 || $shippingtype->status=="not_active" ){
+        if (is_null($shippingtype) || $shippingtype->is_deleted !=0 || $shippingtype->status=="not_active" ){
         return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
         }
         $shippingtype=shippingtype_store::where('shippingtype_id',$id)->where('store_id',auth()->user()->store_id)->first();
@@ -170,7 +170,7 @@ class ShippingtypeController extends BaseController
     // public function destroy($shippingtype)
     //  {
     //    $shippingtype = Shippingtype::query()->find($shippingtype);
-    //      if (is_null($shippingtype) || $shippingtype->is_deleted==1){
+    //      if (is_null($shippingtype) || $shippingtype->is_deleted !=0){
     //      return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
     //      }
     //     $shippingtype->update(['is_deleted' => 1]);

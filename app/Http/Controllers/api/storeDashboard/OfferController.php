@@ -145,7 +145,7 @@ class OfferController extends BaseController
     public function show($offer)
    {
         $offer = Offer::query()->find($offer);
-        if (is_null($offer) || $offer->is_deleted==1 ||$offer->store_id != auth()->user()->store_id){
+        if (is_null($offer) || $offer->is_deleted !=0 ||$offer->store_id != auth()->user()->store_id){
         return $this->sendError("العرض غير موجود","offer is't exists");
         }
 
@@ -160,7 +160,7 @@ class OfferController extends BaseController
       public function changeStatus($id)
     {
         $offer = Offer::query()->find($id);
-         if (is_null($offer) || $offer->is_deleted==1 ||$offer->store_id != auth()->user()->store_id){
+         if (is_null($offer) || $offer->is_deleted !=0 ||$offer->store_id != auth()->user()->store_id){
          return $this->sendError(" العرض غير موجود","offer is't exists");
          }
 
@@ -297,10 +297,10 @@ class OfferController extends BaseController
     public function destroy($offer)
      {
         $offer = Offer::query()->find($offer);
-        if (is_null($offer) || $offer->is_deleted==1){
+        if (is_null($offer) || $offer->is_deleted !=0){
             return $this->sendError("العرض غير موجود","offer is't exists");
             }
-           $offer->update(['is_deleted' => 1]);
+           $offer->update(['is_deleted' => $offer->id]);
 
            $success['offers']=New OfferResource($offer);
            $success['status']= 200;

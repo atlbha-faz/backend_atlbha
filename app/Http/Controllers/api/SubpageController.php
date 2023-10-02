@@ -20,7 +20,7 @@ class SubpageController extends BaseController
     public function show($page_id)
     {
         $page= Page::query()->find($page_id);
-        if (is_null($page) || $page->is_deleted==1){
+        if (is_null($page) || $page->is_deleted !=0){
                return $this->sendError("الصفحة غير موجودة","Page is't exists");
                }
               $success['pages']=New PageResource($page);
