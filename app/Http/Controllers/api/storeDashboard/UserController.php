@@ -57,18 +57,18 @@ class UserController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'user_name' => ['required','string','max:255',Rule::unique('users')->where(function ($query) {
-                return $query->where('is_deleted',0);
+            'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
+                return $query->where('is_deleted', 0);
             }),
             ],
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted',0);
+                return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0);
             }),
             ],
             'status' => 'required|in:active,not_active',
             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted',0);
+                return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0);
             })],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => 'required|string|max:255|exists:roles,name',
@@ -154,12 +154,12 @@ class UserController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'user_name' => ['required','string','max:255',Rule::unique('users')->where(function ($query) {
-                return $query->where('is_deleted',0)->where('id', '!=', $user->id);
-            })
+            'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->where('is_deleted', 0)->where('id', '!=', $user->id);
+            }),
             ],
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store_employee', 'store']) ->where('is_deleted',0)
+                return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0)
                     ->where('id', '!=', $user->id);
             }),
             ],
@@ -167,7 +167,7 @@ class UserController extends BaseController
             // 'password_confirm' => 'nullable|same:password',
             'status' => 'required|in:active,not_active',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store_employee', 'store']) ->where('is_deleted',0)
+                return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0)
                     ->where('id', '!=', $user->id);
             }),
             ],
