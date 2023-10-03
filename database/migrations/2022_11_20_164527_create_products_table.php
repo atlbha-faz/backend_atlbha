@@ -31,10 +31,10 @@ return new class extends Migration
             $table->text("tags")->nullable();
             $table->double('discount_price')->nullable();
             $table->string('SEOdescription')->nullable();
-            $table->string('snappixel')->nullable();
-            $table->string('tiktokpixel')->nullable();
-            $table->string('twitterpixel')->nullable();
-            $table->string('instapixel')->nullable();
+            $table->text('snappixel')->nullable();
+            $table->text('tiktokpixel')->nullable();
+            $table->text('twitterpixel')->nullable();
+            $table->text('instapixel')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->string('subcategory_id')->nullable();
