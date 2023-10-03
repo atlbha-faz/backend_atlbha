@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('seos', function (Blueprint $table) {
             $table->id();
             $table->string('google_analytics')->nullable();
-            $table->string('snappixel')->nullable();
-            $table->string('tiktokpixel')->nullable();
-            $table->string('twitterpixel')->nullable();
-            $table->string('instapixel')->nullable();
+            $table->text('snappixel')->nullable();
+            $table->text('tiktokpixel')->nullable();
+            $table->text('twitterpixel')->nullable();
+            $table->text('instapixel')->nullable();
             $table->string('metatags')->nullable();
             $table->string('key_words');
             $table->unsignedBigInteger('store_id')->nullable();
