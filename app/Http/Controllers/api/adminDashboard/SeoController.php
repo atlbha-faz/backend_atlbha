@@ -205,7 +205,7 @@ class SeoController extends BaseController
     // }
     public function index()
     {
-        $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', null)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع تحسينات السيو بنجاح', 'Seo return successfully');

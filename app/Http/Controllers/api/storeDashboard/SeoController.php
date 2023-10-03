@@ -217,7 +217,7 @@ class SeoController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'google_analytics' => 'nullable|url',
-            'metatags' => 'nullable|string',
+            // 'metatags' => 'nullable|string',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
@@ -232,7 +232,7 @@ class SeoController extends BaseController
             'store_id' => auth()->user()->store_id,
         ], [
             'google_analytics' => $request->google_analytics,
-            'metatags' => $request->metatags,
+            // 'metatags' => $request->metatags,
             'snappixel' => $request->snappixel,
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
