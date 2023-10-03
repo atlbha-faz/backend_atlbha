@@ -182,7 +182,7 @@ class IndexStoreController extends BaseController
             }
 
             $success['workDays'] = DaystoreResource::collection($daystore);
-            $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', null)->get());
+            $success['Seo'] = new SeoResource(Seo::where('is_deleted', 0)->where('store_id', null)->first());
 
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
@@ -442,7 +442,7 @@ class IndexStoreController extends BaseController
                 }
 
                 $success['workDays'] = DaystoreResource::collection($daystore);
-                $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', $store_id)->get());
+                $success['Seo'] = new SeoResource(Seo::where('is_deleted', 0)->where('store_id', $store_id)->first());
 
                 $success['status'] = 200;
 
