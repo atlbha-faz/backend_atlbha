@@ -73,7 +73,9 @@ class SelectorController extends BaseController
 
   public function activities()
     {
-        $success['activities']=ActivityResource::collection(Activity::where('is_deleted',0)->where('status','active')->get());
+      
+      // $success['activities']=ActivityResource::collection(Activity::where('is_deleted',0)->where('status','active')->get());
+      $success['activities']=CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الأنشطة بنجاح','activities return successfully');
@@ -140,7 +142,16 @@ class SelectorController extends BaseController
     }
     public function subcategories(Request $request)
     {
-        $category = Category::whereIn('parent_id', $request->parnet)->where('is_deleted', 0)->where('status', 'active')->get();
+      $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'category_id'=>['required','array']
+                
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $category = Category::whereIn('parent_id', $request->category_id)->where('store_id', null)->where('is_deleted', 0)->where('status', 'active')->get();
 
         $success['categories'] = CategoryResource::collection($category);
         $success['status'] = 200;
