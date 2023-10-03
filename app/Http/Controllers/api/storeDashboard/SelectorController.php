@@ -24,9 +24,11 @@ use App\Http\Resources\importsResource;
 use App\Http\Resources\PackageResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ServiceResource;
+use Illuminate\Http\Request;
 use App\Http\Resources\ActivityResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\TemplateResource;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\PostCategoryResource;
 use App\Http\Resources\Page_categoryResource;
@@ -223,7 +225,16 @@ class SelectorController extends BaseController
     }
     public function subcategories(Request $request)
     {
-        $category = Category::whereIn('parent_id',$request->parnet)->where('is_deleted', 0)->where('status', 'active')->get();
+        
+        $input = $request->all();
+        $validator =  Validator::make($input ,[
+            'category_id'=>['required','array']
+        ]);
+        if ($validator->fails())
+        {
+            return $this->sendError(null,$validator->errors());
+        }
+        $category = Category::whereIn('parent_id',$request->category_id)->where('is_deleted', 0)->where('status', 'active')->get();
 
         $success['categories'] = CategoryResource::collection($category);
         $success['status'] = 200;
