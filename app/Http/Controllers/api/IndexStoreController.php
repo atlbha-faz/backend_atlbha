@@ -2,37 +2,39 @@
 
 namespace App\Http\Controllers\api;
 
-use DB;
-use Carbon\Carbon;
-use App\Models\Page;
-use App\Models\Store;
-use App\Models\Theme;
-use App\Models\Comment;
-use App\Models\Product;
-use App\Models\Setting;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\DayResource;
+use App\Http\Resources\DaystoreResource;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\MaintenanceResource;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\SeoResource;
+use App\Http\Resources\SubscriptionEmailResource;
+use App\Http\Resources\TechnicalsupportResource;
+use App\Http\Resources\ThemeResource;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Homepage;
-use App\Models\Paymenttype;
-use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Models\Package_store;
-use App\Models\TechnicalSupport;
-use App\Models\SubscriptionEmail;
+use App\Models\Page;
 use App\Models\Page_page_category;
-use App\Http\Resources\DayResource;
+use App\Models\Paymenttype;
+use App\Models\Product;
+use App\Models\Seo;
+use App\Models\Setting;
+use App\Models\Store;
+use App\Models\SubscriptionEmail;
+use App\Models\TechnicalSupport;
+use App\Models\Theme;
 use App\Models\website_socialmedia;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\ThemeResource;
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\importsResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\DaystoreResource;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\MaintenanceResource;
-use App\Http\Resources\TechnicalsupportResource;
-use App\Http\Resources\SubscriptionEmailResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController extends BaseController
 {
@@ -44,7 +46,7 @@ class IndexStoreController extends BaseController
 
             $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
             $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
-            $success['Theme'] = new ThemeResource(Theme::where('store_id',null)->first());
+            $success['Theme'] = new ThemeResource(Theme::where('store_id', null)->first());
             $success['domain'] = $id;
 
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
@@ -52,15 +54,15 @@ class IndexStoreController extends BaseController
             $s1 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus1', 'active')->pluck('slider1')->first();
             if (!is_null($s1)) {
                 $sliders[] = $s1;
-            } 
+            }
             $s2 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus2', 'active')->pluck('slider2')->first();
             if (!is_null($s2)) {
                 $sliders[] = $s2;
-            } 
+            }
             $s3 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('sliderstatus3', 'active')->pluck('slider3')->first();
             if (!is_null($s3)) {
                 $sliders[] = $s3;
-            } 
+            }
             $success['sliders'] = $sliders;
             $banars = array();
             $b1 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus1', 'active')->pluck('banar1')->first();
@@ -74,7 +76,7 @@ class IndexStoreController extends BaseController
             $b3 = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus3', 'active')->pluck('banar3')->first();
             if (!is_null($b3)) {
                 $banars[] = $b3;
-            } 
+            }
             $success['banars'] = $banars;
             //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
 
@@ -180,13 +182,14 @@ class IndexStoreController extends BaseController
             }
 
             $success['workDays'] = DaystoreResource::collection($daystore);
+            $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', null)->get());
 
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
 
         } else {
             $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
-         
+
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
@@ -212,10 +215,10 @@ class IndexStoreController extends BaseController
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
                 $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
-               $theme=Theme::where('store_id',$store_id)->first();
-               if( $theme !=null){
-                $success['Theme'] = new ThemeResource(Theme::where('store_id',$store_id)->first());
-               }
+                $theme = Theme::where('store_id', $store_id)->first();
+                if ($theme != null) {
+                    $success['Theme'] = new ThemeResource(Theme::where('store_id', $store_id)->first());
+                }
                 //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
                 $sliders = array();
                 $s1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
@@ -227,25 +230,25 @@ class IndexStoreController extends BaseController
                 $s2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus2', 'active')->pluck('slider2')->first();
                 if (!is_null($s2)) {
                     $sliders[] = $s2;
-                } 
+                }
                 $s3 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus3', 'active')->pluck('slider3')->first();
                 if (!is_null($s3)) {
                     $sliders[] = $s3;
-                } 
+                }
                 $success['sliders'] = $sliders;
                 $banars = array();
                 $b1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus1', 'active')->pluck('banar1')->first();
                 if (!is_null($b1)) {
                     $banars[] = $b1;
-                } 
+                }
                 $b2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus2', 'active')->pluck('banar2')->first();
                 if (!is_null($b2)) {
                     $banars[] = $b2;
-                } 
+                }
                 $b3 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus3', 'active')->pluck('banar3')->first();
                 if (!is_null($b3)) {
                     $banars[] = $b3;
-                } 
+                }
                 $success['banars'] = $banars;
                 //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
 
@@ -439,6 +442,8 @@ class IndexStoreController extends BaseController
                 }
 
                 $success['workDays'] = DaystoreResource::collection($daystore);
+                $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', $store_id)->get());
+
                 $success['status'] = 200;
 
                 return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
