@@ -58,7 +58,8 @@ class UserController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
-                return $query->where('is_deleted', 0);
+                return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0);
+
             }),
             ],
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
@@ -155,7 +156,7 @@ class UserController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->where('is_deleted', 0)->where('id', '!=', $user->id);
+                return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0)->where('id', '!=', $user->id);
             }),
             ],
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
