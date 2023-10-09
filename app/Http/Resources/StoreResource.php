@@ -121,7 +121,7 @@ class StoreResource extends JsonResource
         'working_status'=>$this->working_status,
          'workDays'=>DaystoreResource::collection($daystore),
          'activity' =>  CategoryResource::collection($this->categories),
-         'subcategory' =>  $this->categories->first() ==!null  ? CategoryResource::collection(\App\Models\Category::whereIn('id',  $subcategory)->get()): null,
+         'subcategory' =>  $this->categories->first() ==!null  ? CategoryResource::collection(\App\Models\Category::whereIn('id',  $subcategory)->get()): array(),
     ];
     }
 }

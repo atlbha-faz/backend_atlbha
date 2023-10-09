@@ -9,6 +9,7 @@ use App\Http\Resources\VerificationResource;
 use App\Mail\SendMail;
 use App\Models\Note;
 use App\Models\Store;
+use App\Models\categories_stores;
 use App\Models\User;
 use App\Notifications\verificationNotification;
 use Carbon\Carbon;
@@ -182,9 +183,13 @@ class VerificationController extends BaseController
             $subcategory = null;
         }
        
-         $store->categories()->sync($request->activity_id,['subcategory_id' =>$subcategory] );
-        //$store->activities()->sync($request->activity_id);
-        // $store->categories()->sync($request->activity_id);
+
+       $store->categories()->sync($request->activity_id);
+       $sub=categories_stores::where('store_id', $store->id)->first();
+       $sub->update([
+        'subcategory_id' =>  $subcategory,
+    ]);
+     
         $user = User::where('is_deleted', 0)->where('store_id', $request->store_id)->where('user_type', 'store')->first();
         $user->update([
             'name' => $request->input('name'),

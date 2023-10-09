@@ -14,6 +14,10 @@ class VerificationResource extends JsonResource
      */
     public function toArray($request)
     {
+        if( $this->categories->first() ==!null ){
+            $a=$this->categories->first()->pivot->subcategory_id;
+           $subcategory= explode(',',$a);
+        }
         
         if($this->status ==null || $this->status == 'active'){
             $status = 'نشط';
@@ -68,6 +72,8 @@ class VerificationResource extends JsonResource
        'status' => $status,
        'special' => $special ,
        'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+       'subcategory' =>  $this->categories->first() ==!null  ? CategoryResource::collection(\App\Models\Category::whereIn('id',  $subcategory)->get()): array(),
+
    ];
    }
 }
