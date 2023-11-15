@@ -62,7 +62,11 @@ class Homepage extends Model implements Viewable
         if (!is_null($banar1)) {
             if (gettype($banar1) != 'string') {
                 $i = $banar1->store('images/homepage', 'public');
+              
+
                 $this->attributes['banar1'] = $banar1->hashName();
+               
+
             } else {
                 $this->attributes['banar1'] = $banar1;
             }
@@ -72,7 +76,7 @@ class Homepage extends Model implements Viewable
     public function getBanar1Attribute($banar1)
     {
         if (is_null($banar1)) {
-            return asset('assets/media/banar.png');
+            return asset('assets/media/slider.png');
         }
         return asset('storage/images/homepage') . '/' . $banar1;
     }
@@ -82,7 +86,11 @@ class Homepage extends Model implements Viewable
         if (!is_null($banar2)) {
             if (gettype($banar2) != 'string') {
                 $i = $banar2->store('images/homepage', 'public');
+                
+
                 $this->attributes['banar2'] = $banar2->hashName();
+               
+
             } else {
                 $this->attributes['banar2'] = $banar2;
             }
@@ -92,7 +100,7 @@ class Homepage extends Model implements Viewable
     public function getBanar2Attribute($banar2)
     {
         if (is_null($banar2)) {
-            return asset('assets/media/banar.png');
+            return asset('assets/media/slider.png');
         }
         return asset('storage/images/homepage') . '/' . $banar2;
     }
@@ -101,7 +109,11 @@ class Homepage extends Model implements Viewable
         if (!is_null($banar3)) {
             if (gettype($banar3) != 'string') {
                 $i = $banar3->store('images/homepage', 'public');
+               
+
                 $this->attributes['banar3'] = $banar3->hashName();
+              
+
             } else {
                 $this->attributes['banar3'] = $banar3;
             }
@@ -111,7 +123,7 @@ class Homepage extends Model implements Viewable
     public function getBanar3Attribute($banar3)
     {
         if (is_null($banar3)) {
-            return asset('assets/media/banar.png');
+            return asset('assets/media/slider.png');
         }
         return asset('storage/images/homepage') . '/' . $banar3;
     }
@@ -120,7 +132,10 @@ class Homepage extends Model implements Viewable
         if (!is_null($slider1)) {
             if (gettype($slider1) != 'string') {
                 $i = $slider1->store('images/homepage', 'public');
+              
                 $this->attributes['slider1'] = $slider1->hashName();
+           
+
             } else {
                 $this->attributes['slider1'] = $slider1;
             }
@@ -139,7 +154,11 @@ class Homepage extends Model implements Viewable
         if (!is_null($slider2)) {
             if (gettype($slider2) != 'string') {
                 $i = $slider2->store('images/homepage', 'public');
+                ;
+
                 $this->attributes['slider2'] = $slider2->hashName();
+              
+
             } else {
                 $this->attributes['slider2'] = $slider2;
             }
@@ -158,7 +177,11 @@ class Homepage extends Model implements Viewable
         if (!is_null($slider3)) {
             if (gettype($slider3) != 'string') {
                 $i = $slider3->store('images/homepage', 'public');
+            
+
                 $this->attributes['slider3'] = $slider3->hashName();
+               
+
             } else {
                 $this->attributes['slider3'] = $slider3;
             }

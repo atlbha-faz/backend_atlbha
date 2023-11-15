@@ -26,13 +26,13 @@ class ExplainVideos extends Model
     //     }
     // }
 
-    public function getVideoAttribute($video)
-    {
-        if (is_null($video)) {
-            return   asset('assets/media/man.png');
-        }
-        return asset('storage/videos/explainvideo') . '/' . $video;
-    }
+    // public function getVideoAttribute($video)
+    // {
+    //     if (is_null($video)) {
+    //         return   asset('assets/media/man.png');
+    //     }
+    //     return asset('storage/videos/explainvideo') . '/' . $video;
+    // }
      public function seTthumbnailAttribute($thumbnail)
     {
         if (!is_null($thumbnail)) {

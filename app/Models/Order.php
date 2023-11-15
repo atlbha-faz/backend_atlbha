@@ -8,35 +8,72 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-     protected $fillable = ['order_number','user_id','city_id','quantity','total_price','tax','shipping_price','discount','order_status','payment_status'];
-
- public function user()
+    protected $fillable = ['order_number', 'store_id', 'user_id', 'quantity', 'total_price', 'tax', 'shipping_price', 'discount', 'paymentype_id','weight', 'shippingtype_id', 'order_status', 'payment_status', 'cod', 'description','subtotal','totalCount'];
+    protected $casts = [
+        'total_price' => 'float',
+        'subtotal' => 'float',
+        'weight' => 'float',
+         'totalCount'=>'integer',
+        'discount' => 'float',
+        'shipping_price' => 'float',
+        'tax' => 'float',    
+        'quantity'=>'integer'
+    ];
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-     public function city()
+    public function city()
     {
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
 
-       public function store()
+    public function store()
     {
         return $this->belongsTo(Store::class, 'store_id', 'id');
     }
 
-       public function products()
-    {
-          return $this->belongsToMany(
-          Product::class,
-          'order_items',
-          'order_id',
-          'product_id'
-     );
-    }
+    // public function products()
+    // {
+    //     return $this->belongsToMany(
+    //         Product::class,
+    //         'order_items',
+    //         'order_id',
+    //         'product_id'
+    //     );
+    // }
 
-     public function items()
+    public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
+    // public function shippingAddress()
+    // {
+    //     return $this->hasOne(OrderAddress::class, 'order_id', 'id');
+    // }
+
+    public function shipping()
+    {
+        return $this->hasOne(Shipping::class);
+    }
+    public function paymentype()
+    {
+        return $this->belongsTo(Paymenttype::class, 'paymentype_id', 'id');
+    }
+    public function shippingtype()
+    {
+        return $this->belongsTo(Shippingtype::class, 'shippingtype_id', 'id');
+    }
+       public function order_addresses()
+    {
+       return $this->belongsToMany(
+        OrderAddress::class,
+            'orders_order_addresses',
+            'order_id',
+            'order_address_id'
+       )->withPivot('type');
+    }
+
+   
 }

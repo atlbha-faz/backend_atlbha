@@ -9,5 +9,5 @@ class shippingtype_store extends Model
 {
     use HasFactory;
     protected $table="shippingtypes_stores";
-    protected $fillable = ['shippingtype_id','store_id'];
+    protected $fillable = ['shippingtype_id','store_id','price'];
 }

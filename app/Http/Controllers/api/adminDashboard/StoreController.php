@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\api\adminDashboard;
-
+use Exception;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Store;
@@ -16,6 +16,8 @@ use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\verificationNotification;
+use App\Mail\SendMail;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
@@ -34,7 +36,16 @@ class StoreController extends BaseController
     public function index()
     {
 
-        $success['stores'] = StoreResource::collection(Store::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['stores'] =
+       StoreResource::collection(Store::with(['categories' => function ($query) {
+    $query->select('name','icon');
+},'city' => function ($query) {
+    $query->select('id');
+},'country' => function ($query) {
+    $query->select('id');
+},'user' => function ($query) {
+    $query->select('id');
+}])->where('is_deleted', 0)->orderByDesc('created_at')->select('id','store_name','status','periodtype','special','created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
@@ -74,7 +85,7 @@ class StoreController extends BaseController
             'store_email' =>[ 'required','email',Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted',0);
             })],
-             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
+             'password' => 'required|min:8|string',
             'domain' => ['required','string', Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted',0);
             })],
@@ -263,7 +274,7 @@ class StoreController extends BaseController
                     ->where('id', '!=', $store->user->id);
             })],
             'store_email' => 'required|email|unique:stores,store_email,' . $store->id,
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
+            'password' => 'required|min:8|string',
             'domain' =>['required','string', Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted',0)->where('id', '!=',$store->id);
             })],
@@ -396,17 +407,39 @@ class StoreController extends BaseController
         $stores = Store::whereIn('id', $request->id)->where('is_deleted', 0)->get();
         if (count($stores) > 0) {
             foreach ($stores as $store) {
-
                 if ($store->status === 'active') {
                     $store->update(['status' => 'not_active']);
+                    $users = User::where('store_id', $store->id)->get();
+                    if($users !== null){
+                    foreach ($users as $user) {
+                        $user->update(['status' => 'not_active']);
+                    }
+                   }
                 } else {
                     $store->update(['status' => 'active']);
+                    $users = User::where('store_id', $store->id)->get();
+                    if($users !== null){
+                    foreach ($users as $user) {
+                        $user->update(['status' => 'active']);
+                            $data1= [
+                            'subject' => "قبول التسجيل",
+                            'message' => "تم قبول التسجيل",
+                            'store_id' => $store->id,
+                        ];
+                //              try {
+                //  Mail::to($user->email)->send(new SendMail($data1));
+                //  } catch (Exception $e) {
+                //   return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                //           }
+                    }
+                   }
                 }
                 $success['stores'] = new StoreResource($store);
 
             }
             $success['status'] = 200;
-            return $this->sendResponse($success, 'تم تعطيل المتجر بنجاح', 'store stop successfully');
+          return $this->sendResponse($success, 'تم تعديل الحالة بنجاح', 'store updated successfully');
+
         } else {
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');

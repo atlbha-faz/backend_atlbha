@@ -21,7 +21,9 @@ class PageController extends BaseController
      */
     public function index()
     {
-        $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
+    $query->select('id','name');
+}])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id','title','status','user_id','created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع  الصفحة بنجاح', 'Pages return successfully');
@@ -48,7 +50,7 @@ class PageController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'title' => 'required|string|max:255',
-            'page_desc' => 'required|string',
+            'page_desc' => 'required|string|max:100',
             'page_content' => 'required|string',
             'seo_title' => 'nullable|string',
             'seo_link' => 'nullable|url',
@@ -95,7 +97,7 @@ class PageController extends BaseController
         $validator = Validator::make($input, [
             'title' => 'required|string|max:255',
             'page_content' => 'required|string',
-            'page_desc' => 'required',
+            'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
             'seo_link' => 'nullable|url',
             'seo_desc' => 'nullable|string',
@@ -183,7 +185,7 @@ class PageController extends BaseController
         $validator = Validator::make($input, [
             'title' => 'required|string|max:255',
             'page_content' => 'required|string',
-            'page_desc' => 'required',
+            'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
             'seo_link' => 'nullable|url',
             'seo_desc' => 'nullable|string',

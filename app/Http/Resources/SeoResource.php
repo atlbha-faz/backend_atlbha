@@ -28,6 +28,7 @@ class SeoResource extends JsonResource
             'twitterpixel' => $this->twitterpixel,
             'instapixel' => $this->instapixel,
             // 'metatags' => $this->metatags,
+            'robot_link' => $this->robot_link,
             'key_words' => explode(',', $this->key_words),
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,

@@ -26,7 +26,9 @@ class PageController extends BaseController
      */
     public function index()
     {
-        $success['pages']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',null)->orderByDesc('created_at')->get());
+        $success['pages']=PageResource::collection(Page::with(['user' => function ($query) {
+    $query->select('id','name');
+}])->where('is_deleted',0)->where('store_id',null)->orderByDesc('created_at')->select('id','title','status','user_id','created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع  الصفحة بنجاح','Pages return successfully');

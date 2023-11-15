@@ -78,8 +78,8 @@ class StoreReportController extends  BaseController
 
         $success['count_of_stores']=Store::where('is_deleted',0)->where('status','active')->count();
         if(   $success['count_of_stores']>0){
-        $success['average_of_stores']=((Store::where('is_deleted',0)->where('status','active')->whereYear('created_at', Carbon::now()->year)
-        ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->where('status','active')->count())*100)."%";
+        $success['average_of_stores']=round(((Store::where('is_deleted',0)->where('status','active')->whereYear('created_at', Carbon::now()->year)
+        ->whereMonth('created_at', Carbon::now()->month)->count())/(Store::where('is_deleted',0)->where('status','active')->count())*100),2);
         }
         else{
           $success['average_of_stores']=0;
@@ -88,19 +88,19 @@ class StoreReportController extends  BaseController
           $q->where('is_deleted', 0);
                    })->count();
                    if( $success['count_of_marketers']>0){
-         $success['average_of_marketers']=((Marketer::whereHas('user', function($q){
+         $success['average_of_marketers']=round(((Marketer::whereHas('user', function($q){
             $q->where('is_deleted', 0);})->whereYear('created_at', Carbon::now()->year)
         ->whereMonth('created_at', Carbon::now()->month)->count())/(Marketer::whereHas('user', function($q){
             $q->where('is_deleted', 0);
-        })->count())*100)."%";
+        })->count())*100),2);
       }
       else{
         $success['average_of_marketers']=0;
       }
          $success['count_of_services']=Service::where('is_deleted',0)->count();
          if( $success['count_of_services']>0){
-            $success['average_of_services']=((Service::where('is_deleted',0)->whereYear('created_at', Carbon::now()->year)
-           ->whereMonth('created_at', Carbon::now()->month)->count())/(Service::where('is_deleted',0)->count())*100)."%";
+            $success['average_of_services']=round(((Service::where('is_deleted',0)->whereYear('created_at', Carbon::now()->year)
+           ->whereMonth('created_at', Carbon::now()->month)->count())/(Service::where('is_deleted',0)->count())*100),2);
          }
          else{
           $success['average_of_services']=0;

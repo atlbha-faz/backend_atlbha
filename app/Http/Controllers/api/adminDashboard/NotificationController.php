@@ -27,17 +27,18 @@ class NotificationController extends BaseController
     public function index()
     {
 
-        $success['count_of_notifications']=auth()->user()->Notifications->count();
+        $success['count_of_notifications']=auth()->user()->Notifications->where('read_at',null)->count();
         $success['notifications']=NotificationResource::collection(auth()->user()->Notifications);
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع الاشعارات بنجاح','Notifications return successfully');
     }
-    public function read($id){
+    public function read(Request $request){
 
-        $userUnreadNotification =  NotificationModel::query()->find($id);
+          $userUnreadNotifications =  NotificationModel::query()->whereIn('id', $request->id)->get();
+        foreach($userUnreadNotifications  as $userUnreadNotification ){
         $userUnreadNotification->update(['read_at' =>Carbon::now()]);
-
+}
         $success['notifications']=$userUnreadNotification;
         $success['status']= 200;
 

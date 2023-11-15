@@ -15,6 +15,7 @@ use App\Models\Template;
 use App\Models\Paymenttype;
 use App\Models\Postcategory;
 use App\Models\Page_category;
+use App\Models\Shipping;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\PlanResource;
@@ -32,6 +33,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\PostCategoryResource;
 use App\Http\Resources\Page_categoryResource;
+use App\Http\Resources\ShippingStoreResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class SelectorController extends BaseController
@@ -92,7 +94,9 @@ class SelectorController extends BaseController
 
     public function activities()
     {
-        $success['activities'] = ActivityResource::collection(Activity::where('is_deleted', 0)->where('status', 'active')->get());
+        // $success['activities'] = ActivityResource::collection(Activity::where('is_deleted', 0)->where('status', 'active')->get());
+              $success['activities']=CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at')->get());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الأنشطة بنجاح', 'activities return successfully');
@@ -100,22 +104,18 @@ class SelectorController extends BaseController
 
     public function mainCategories()
     {
-        if (auth()->user()->store->verification_status == "accept") {
+      
         $success['categories'] = CategoryResource::collection(Category::
                 where('is_deleted', 0)
                 ->where('parent_id', null)
-                ->where(function ($query) {
+                         ->where(function ($query) {
                     $query->where('store_id', auth()->user()->store_id)
                         ->OrWhere('store_id', null);
-                })->where('status', 'active')->get());
-        }else{
-            
-        $success['categories'] = CategoryResource::collection(Category::
-                where('is_deleted', 0)
-                ->where('parent_id', null)
-                ->where('store_id', auth()->user()->store_id)
+                })
                 ->where('status', 'active')->get());
-        }
+    
+            
+      
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
@@ -240,6 +240,15 @@ class SelectorController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الاقسام الفرعية بنجاح', 'sub_Category showed successfully');
+    }
+       public function show()
+    {
+        $shipping=Shipping::where('store_id',auth()->user()->store_id)->latest('updated_at')->first();
+
+        $success['shippingAddress'] = $shipping !== null? new ShippingStoreResource($shipping):null;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع عنوان المستودع بنجاح', 'address return successfully');
     }
 
 }

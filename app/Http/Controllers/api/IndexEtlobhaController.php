@@ -11,6 +11,7 @@ use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Activity;
+use App\Models\Category;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use App\Models\AtlobhaContact;
@@ -24,6 +25,7 @@ use App\Http\Resources\PackageResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ActivityResource;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\atlobhaContactResource;
 use App\Http\Resources\website_socialmediaResource;
@@ -48,30 +50,42 @@ class IndexEtlobhaController extends BaseController
         $success['banar2'] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus2', 'active')->pluck('banar2')->first();
         $success['banar3'] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus3', 'active')->pluck('banar3')->first();
 
-        $success['store_activities'] = ActivityResource::collection(Activity::where('is_deleted', 0)->where('status', 'active')->get());
-
+        $success['store_activities'] =CategoryResource::collection(Category::with(['subcategory' => function ($query) {
+                  $query->select('id');}])->where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['cities'] = CityResource::collection(City::where('is_deleted', 0)->where('status', 'active')->get());
 
         $success['section1'] = Section::where('id', 1)->pluck('name')->first();
         if (!is_null(Section::where('id', 1)->where('is_deleted', 0)->where('status', 'active')->first())) {
-            $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)
-                    ->where('store_id', null)->where('special', 'special')->get());
+            $success['products'] = ProductResource::collection(Product::with(['store'=> function ($query) {
+    $query->select('id','domain','store_name');
+},'category'=> function ($query) {
+    $query->select('id','name');}])->where('is_deleted', 0)->where('special', 'special')->select('id','name','status','cover','special','store_id','created_at','category_id','subcategory_id','selling_price','stock')->get());
         } else {
             $success['products'] = array();
         }
         $success['section2'] = Section::where('id', 2)->pluck('name')->first();
         if (!is_null(Section::where('id', 2)->where('is_deleted', 0)->where('status', 'active')->first())) {
-            $success['stores'] = StoreResource::collection(Store::where('is_deleted', 0)->where('special', 'special')->get());
+            $success['stores'] = StoreResource::collection(Store::with(['user'=> function ($query) {
+    $query->select('id');
+},'city'=> function ($query) {
+    $query->select('id','name');
+},'country'=> function ($query) {
+    $query->select('id','name');
+}])->where('is_deleted', 0)->where('special', 'special')->get());
         } else {
             $success['stores'] = array();
         }
-        $success['packages'] = PackageResource::collection(Package::where('is_deleted', 0)->get());
+        // $success['packages'] = PackageResource::collection(Package::where('is_deleted', 0)->get());
 
-        $success['comment'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'store')->where('status', 'active')->where('store_id', null)->where('product_id', null)->latest()->take(10)->get());
+        $success['comment'] = CommentResource::collection(Comment::with(['user'=>function ($query) {
+    $query->with(['store'=>function ($query) {
+    $query->select('id','domain','store_name','logo');
+    }]);
+    }])->where('is_deleted', 0)->where('comment_for', 'store')->where('status', 'active')->where('store_id', null)->where('product_id', null)->latest()->take(10)->get());
         $success['partners'] = PartnerResource::collection(Partner::where('is_deleted', 0)->get());
 
         $pages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
-        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id',null)->where('status', 'active')->whereIn('id', $pages)->get());
+        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id',null)->select('id','title','status','created_at')->where('status', 'active')->whereIn('id', $pages)->get());
         $success['website_socialmedia'] = website_socialmediaResource::collection(website_socialmedia::where('is_deleted', 0)->where('status', 'active')->get());
 
         $success['status'] = 200;

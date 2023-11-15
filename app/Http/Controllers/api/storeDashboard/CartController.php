@@ -35,7 +35,9 @@ class CartController extends BaseController
 
     public function admin()
     {
-        $success['cart'] = CartResource::collection(Cart::where('store_id', auth()->user()->store_id)->whereNot('count',0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->get());
+        $success['cart'] = CartResource::collection(Cart::with(['user','cartDetails' => function ($query) {
+    $query->select('id');
+}])->where('store_id', auth()->user()->store_id)->whereNot('count',0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->get(['id','user_id','total','count','created_at']));
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
 
@@ -148,7 +150,7 @@ class CartController extends BaseController
             'message' => 'required|string',
             //'discount_total' =>"required_if:discount_type,fixed,percent",
             'discount_value' => "required_if:discount_type,fixed,percent",
-            'discount_expire_date' => "required_if:discount_type,fixed,percent",
+            'discount_expire_date' => "required",
             'free_shipping' => 'in:0,1',
 
         ]);
@@ -156,30 +158,39 @@ class CartController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $cart = Cart::where('id', $request->id)->first();
-        $discount_total = $request->discount_value;
+          if ($request->discount_expire_date >= Carbon::now()) {
+        $discount_total = $request->discount_value == null ? 0 : $request->discount_value;
         if ($request->discount_type == "percent") {
             $discount_total = $cart->total * ($request->discount_value / 100);
         }
-        if($cart->discount_total==null){
+        if($cart->discount_total){
             $cart->discount_total=0;
         }
         $discount_total1=$cart->discount_total+$discount_total;
         $total=$cart->total- $discount_total;
         $cart->message = $request->message;
-        $cart->free_shipping = $request->free_shipping;
         $cart->discount_type = $request->discount_type;
         $cart->discount_value = $request->discount_value;
         $cart->discount_total = $discount_total1;
-        $cart->total =  $total;
+        if($request->free_shipping == 1 && $request->free_shipping != $cart->free_shipping){
+        $cart->total =  $total-$cart->shipping_price;
+          $cart->shipping_price=0;
+        }
+        else{
+            $cart->total =  $total;  
+        }
         $cart->discount_expire_date = $request->discount_expire_date;
+         $cart->free_shipping = $request->free_shipping;
          $cart->timestamps = false;
         $cart->save();
-
+    }
+ 
         $data = [
             'subject' => "cart offer",
             'message' => $request->message,
-            'store_id' => $cart->store_id,
+            'store_id' => $cart->store->store_name,
             'store_email' => $cart->store->store_email,
+            'discount_expire_date'=> $cart->discount_expire_date
         ];
 
         $user = User::where('id', $cart->user_id)->first();

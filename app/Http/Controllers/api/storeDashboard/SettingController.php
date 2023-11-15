@@ -22,7 +22,15 @@ class SettingController extends BaseController
 
     public function setting_store_show()
     {
-        $success['setting_store'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
+        // dd(auth()->user()->store_id);
+        $success['setting_store'] = new StoreResource(Store::with(['categories' => function ($query) {
+    $query->select('name');
+},'city' => function ($query) {
+    $query->select('id');
+},'country' => function ($query) {
+    $query->select('id');
+}])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
+        
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الاعدادات بنجاح', 'registration_status shown successfully');
@@ -36,7 +44,7 @@ class SettingController extends BaseController
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'description' => 'required|string',
             'store_address' => 'nullable|string',
-            'domain' => ['required', 'string', 'not_regex:/^(https?:\/\/|ftp:\/\/)/i',Rule::unique('stores')->where(function ($query) {
+            'domain' => ['required', 'alpha',Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted',0)->where('id','!=', auth()->user()->store_id);
             })],
             'country_id' => 'required|exists:countries,id',
@@ -62,7 +70,7 @@ class SettingController extends BaseController
             'domain' => $request->input('domain'),
             'country_id' => $request->input('country_id'),
             'city_id' => $request->input('city_id'),
-           // 'store_email' => $request->input('store_email'),
+            'store_email' => $request->input('store_email'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             //'phonenumber' => $request->input('phonenumber'),
             'working_status' => $request->input('working_status'),
@@ -140,6 +148,25 @@ class SettingController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل الاعدادات بنجاح', ' update successfully');
+    }
+    
+    public function checkDomain(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'domain' => ['required', 'alpha', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
+            })],
+        ]);
+        if ($validator->fails()) {
+            # code...
+
+            return $this->sendError(null, $validator->errors());
+        }
+
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'دومين صحيح', ' correct domain');
+
     }
 
 }

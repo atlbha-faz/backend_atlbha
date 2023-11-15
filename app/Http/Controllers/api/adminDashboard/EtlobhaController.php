@@ -8,6 +8,7 @@ use App\Models\Image;
 use App\Models\Importproduct;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +36,9 @@ class EtlobhaController extends BaseController
         }
         $success['not_active_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('status', 'not_active')->count();
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
-        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->get());
+        $success['products'] = ProductResource::collection(Product::with(['store','category'=>function ($query) {
+    $query->select('id','name');
+}])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select('id','name','status','cover','special','purchasing_price','selling_price','stock','category_id','store_id','subcategory_id','created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -65,6 +68,10 @@ class EtlobhaController extends BaseController
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
             'instapixel' => 'nullable|string',
+            'short_description' => 'required|string|max:100',
+            'robot_link' => 'nullable|string',
+            'google_analytics' => 'nullable|url',
+             'weight'=>'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -123,13 +130,23 @@ class EtlobhaController extends BaseController
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
             'instapixel' => $request->instapixel,
+            'short_description' => $request->short_description,
+            'robot_link' => $request->robot_link,
+            'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
+            'google_analytics' => $request->google_analytics,
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
 
         ]);
         $productid = $product->id;
-
+    //إستيراد الى متجر اطلبها
+       $atlbha_id= Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first(); 
+        $importproduct = Importproduct::create([
+            'product_id' =>  $product->id,
+            'store_id' => $atlbha_id,
+            'price' =>   $product->selling_price,
+        ]);
         if ($request->hasFile("images")) {
             $files = $request->images;
 
@@ -222,6 +239,10 @@ class EtlobhaController extends BaseController
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
             'instapixel' => 'nullable|string',
+            'short_description' => 'required|string|max:100',
+            'robot_link' => 'nullable|string',
+            'google_analytics' => 'nullable|url',
+             'weight'=>'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -256,6 +277,10 @@ class EtlobhaController extends BaseController
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
             'instapixel' => $request->instapixel,
+            'short_description' => $request->short_description,
+            'robot_link' => $request->robot_link,
+            'google_analytics' => $request->google_analytics,
+            'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
 
@@ -335,7 +360,7 @@ class EtlobhaController extends BaseController
                 $image = Image::query()->find($oid);
                 $image->update(['is_deleted' => $image->id]);
             }
-
+        if($files != null){
             foreach ($files as $file) {
                 $imageName = time() . '_' . $file;
                 $request['product_id'] = $productid;
@@ -344,7 +369,7 @@ class EtlobhaController extends BaseController
                 $request['image'] = $newImagePath;
                 Storage::copy($existingImagePath, $newImagePath);
                 Image::create($request->all());
-
+                }
             }
         }
         $success['products'] = new ProductResource($product);
