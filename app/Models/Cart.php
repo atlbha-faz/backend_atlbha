@@ -10,23 +10,34 @@ class Cart extends Model
 {
     use HasFactory;
     protected $table="carts";
-      protected $fillable = ['user_id','store_id','count','total','message','discount_type','discount_value','discount_total','free_shipping','discount_expire_date','is_deleted'];
+      protected $fillable = ['user_id','store_id','count','total','message','discount_type','subtotal','totalCount','discount_value','shipping_price','tax','weight','discount_total','free_shipping','discount_expire_date','is_deleted'];
+        protected $casts = [
+        'total' => 'float',
+        'subtotal' => 'float',
+        'count'=>'integer',
+         'totalCount'=>'integer',
+        'weight' => 'float',
+        'discount_value' => 'float',
+        'discount_total' => 'float',
+        'shipping_price' => 'float',
+        'tax' => 'float'
+    ];
       public function user()
     {
         return $this->belongsTo(User::class);
     }
-  
+
     public function store()
     {
          return $this->belongsTo(Store::class);
-        
+
     }
     public function cartDetails()
     {
         return $this->hasMany(CartDetail::class);
     }
-  
-    
-   
-     
+
+
+
+
 }

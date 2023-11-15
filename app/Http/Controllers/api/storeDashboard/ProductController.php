@@ -30,10 +30,15 @@ class ProductController extends BaseController
     public function index()
     {
 
-        $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-
+        $products = ProductResource::collection(Product::with(['store'=> function ($query) {
+    $query->select('id','domain','store_name');
+},'category'=> function ($query) {
+    $query->select('id','name');}])
+    ->where('is_deleted',0)->where('store_id', auth()->user()->store_id)->where('for','store')->orderByDesc('created_at')->select('id','name','status','cover','special','store_id','created_at','category_id','subcategory_id','selling_price','stock')->get()
+);
+     
         $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
-            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+            ->select(['products.id', 'products.name','products.status','products.cover','products.special','products.store_id','products.created_at','products.category_id','products.subcategory_id','products.selling_price','products.stock','importproducts.price', 'importproducts.status'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $imports = importsResource::collection($import);
 
         $success['products'] = $products->merge($imports);
@@ -64,18 +69,23 @@ class ProductController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
+            'for'=>'store',
             'description' => 'required|string',
             'selling_price' => ['required', 'numeric', 'gt:0'],
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'discount_price' => ['nullable', 'numeric'],
             'images' => 'nullable|array',
-            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
+            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:2048'],
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
             'instapixel' => 'nullable|string',
+            'short_description' => 'required|string|max:100',
+            'robot_link' => 'nullable|string',
+            'google_analytics' => 'nullable|url',
+            'weight'=>'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -97,7 +107,7 @@ class ProductController extends BaseController
         }
         $product = Product::create([
             'name' => $request->name,
-        
+          'for'=>"store",
             'description' => $request->description,
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
@@ -108,6 +118,10 @@ class ProductController extends BaseController
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
             'instapixel' => $request->instapixel,
+            'short_description' => $request->short_description,
+            'robot_link' => $request->robot_link,
+            'google_analytics' => $request->google_analytics,
+             'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
             'subcategory_id' => $subcategory,
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
@@ -234,6 +248,10 @@ class ProductController extends BaseController
                 'tiktokpixel' => 'nullable|string',
                 'twitterpixel' => 'nullable|string',
                 'instapixel' => 'nullable|string',
+                'short_description' => 'required|string|max:100',
+                 'robot_link' => 'nullable|string',
+                 'google_analytics' => 'nullable|url',
+                  'weight'=>'nullable',
                 'category_id' => 'required|exists:categories,id',
                 'subcategory_id' => ['nullable', 'array'],
                 'subcategory_id.*' => ['nullable', 'numeric',
@@ -268,6 +286,10 @@ class ProductController extends BaseController
                 'tiktokpixel' => $request->tiktokpixel,
                 'twitterpixel' => $request->twitterpixel,
                 'instapixel' => $request->instapixel,
+                'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
+                'short_description' => $request->short_description,
+                 'robot_link' => $request->robot_link,
+                 'google_analytics' => $request->google_analytics,
                 'category_id' => $request->input('category_id'),
                 'subcategory_id' => $subcategory,
                 // 'store_id' => $request->input('store_id'),
@@ -485,6 +507,24 @@ class ProductController extends BaseController
             // Handle validation failures
             return $failures;
         }
+
+    }
+      public function specialStatus($id)
+    {
+        $product = Product::query()->where('store_id', auth()->user()->store_id)->find($id);
+        if (is_null($product) || $product->is_deleted != 0) {
+            return $this->sendError(" المنتج غير موجود", "product is't exists");
+        }
+
+        if ($product->special === 'not_special') {
+            $product->update(['special' => 'special']);
+        } else {
+            $product->update(['special' => 'not_special']);
+        }
+        $success['product'] = new productResource($product);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');
 
     }
 

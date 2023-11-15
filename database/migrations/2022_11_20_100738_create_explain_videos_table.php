@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('explain_videos', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('video');
+            $table->text('video');
             $table->string('thumbnail');
             $table->time('duration');
             $table->text('link')->nullable();

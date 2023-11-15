@@ -26,7 +26,8 @@ class PasswordResetController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'user_name' => 'required|string',
+       'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/']
+
         ]);
 
         if ($validator->fails()) {
@@ -34,13 +35,13 @@ class PasswordResetController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $user_name = $request->user_name;
+        $phonenumber = $request->phonenumber;
         $user = User::where(
             function ($query) {
                 return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
             })->where(
-            function ($query) use ($user_name) {
-                return $query->where('user_name', $user_name)->orWhere('email', $user_name);
+            function ($query) use ($phonenumber) {
+                    return $query->where('phonenumber', $phonenumber);
             })->where('is_deleted',0)->first();
         if (!$user) {
             return $this->sendError('المستخدم غير موجود', 'We cant find a user with that username.');
@@ -172,8 +173,8 @@ class PasswordResetController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             //'email' => 'required|string|email',
-            'user_name' => 'required|string',
-            'password' => ['required', 'confirmed', 'string', 'min:6', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/'],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'password' => ['required', 'confirmed', 'string', 'min:8'],
             'token' => 'required|string',
         ]);
 
@@ -182,13 +183,13 @@ class PasswordResetController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-$user_name = $request->user_name;
+   $phonenumber = $request->phonenumber;
         $user = User::where(
-           function($query) {
-             return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
+            function ($query) {
+                return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
             })->where(
-           function($query )use ($user_name) {
-             return $query->where('user_name', $user_name)->orWhere('email', $user_name);
+            function ($query) use ($phonenumber) {
+                    return $query->where('phonenumber', $phonenumber)->orWhere('email', $phonenumber);
             })->where('is_deleted',0)->first();
         if (!$user){
             return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
@@ -223,7 +224,7 @@ $user_name = $request->user_name;
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'user_name' => 'required|string',
+           'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'code' => 'required|numeric',
         ]);
 
@@ -232,14 +233,14 @@ $user_name = $request->user_name;
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-$user_name = $request->user_name;
-        $user = User::where(
-           function($query) {
-             return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
+   $phonenumber = $request->phonenumber;
+        $user =  User::where(
+            function ($query) {
+                return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
             })->where(
-           function($query )use ($user_name) {
-             return $query->where('user_name', $user_name)->orWhere('email', $user_name);
-            })->where('is_deleted',0)->latest()->first();
+            function ($query) use ($phonenumber) {
+                    return $query->where('phonenumber', $phonenumber);
+            })->where('is_deleted',0)->first();
 
         if ($request->code == $user->code) {
             $passwordReset = PasswordReset::where('email', $user->email)->first();

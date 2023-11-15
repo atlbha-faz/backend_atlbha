@@ -14,10 +14,10 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'for', 'special', 'description', 'stock', 'cover', 'purchasing_price', 'amount', 'selling_price', 'quantity', 'less_qty', 'tags', 'discount_price', 'SEOdescription', 'snappixel', 'tiktokpixel', 'twitterpixel', 'instapixel', 'category_id', 'subcategory_id', 'store_id', 'status', 'is_deleted'];
-//     protected $casts = [
-//     'subcategory_id' => 'array',
-// ];
+    protected $fillable = ['name', 'slug', 'for', 'special', 'description', 'stock', 'cover', 'purchasing_price','amount','weight','selling_price', 'quantity', 'less_qty', 'tags', 'discount_price', 'SEOdescription', 'snappixel', 'tiktokpixel', 'twitterpixel', 'instapixel','robot_link' ,'short_description','google_analytics','weight','category_id', 'subcategory_id', 'store_id', 'status', 'is_deleted'];
+    protected $casts = [
+    'weight' => 'float',
+];
 
     public function cart()
     {
@@ -123,12 +123,12 @@ class Product extends Model
     public function productrate($product_id)
     {
 
-        return Comment::where('product_id', $product_id)->where('is_deleted', 0)->where('comment_for', 'product')->avg('rateing');
+        return Comment::where('product_id', $product_id)->where('is_deleted', 0)->where('status', 'active')->where('comment_for', 'product')->avg('rateing');
     }
     public function productratecount($product_id)
     {
 
-        return Comment::where('product_id', $product_id)->where('is_deleted', 0)->where('comment_for', 'product')->count();
+        return Comment::where('product_id', $product_id)->where('is_deleted', 0)->where('status', 'active')->where('comment_for', 'product')->count();
     }
     //اجمالي المبيعات
     public function getOrderTotal($product_id)

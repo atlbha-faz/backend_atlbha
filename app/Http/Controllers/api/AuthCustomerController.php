@@ -148,18 +148,20 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        $user = User::where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->where('is_deleted', 0)->latest()->first();
+        $user = User::where('user_type', 'customer')->where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->where('is_deleted', 0)->latest()->first();
         if (is_null($user)) {
 
             return $this->sendError('الحساب غير موجود', 'User not found');
         }
+    
         if ($request->code == $user->verify_code) {
+    
             $user->resetVerifyCode();
             $user->verified = 1;
             $user->save();
             $success['status'] = 200;
             $success['user'] = new UserResource($user);
-            if (is_null($user->phonenumber) || is_null($user->email) || is_null($user->user_name)) {
+            if (is_null($user->phonenumber) || is_null($user->email)) {
                 $success['token'] = null;
             } else {
                 $success['token'] = $user->createToken('authToken')->accessToken;
@@ -178,9 +180,11 @@ class AuthCustomerController extends BaseController
             $input = $request->all();
             $validator = Validator::make($input, [
                 'name' => 'required|string',
-                 'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
-                    return $query->where('user_type','customer')->where('is_deleted',0);
-                })],
+                //  'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
+                //     return $query->where('user_type','customer')->where('is_deleted',0);
+                // })],
+                'user_name' =>'nullable',
+                 'lastname' => 'nullable|string',
                 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                     return $query->where('user_type', 'customer')->where('is_deleted',0);
                 }),
@@ -192,7 +196,8 @@ class AuthCustomerController extends BaseController
             }
             $user->update([
                 'name' => $request->name,
-                'user_name' => $request->user_name,
+                // 'user_name' => $request->user_name,
+                'lastname' => $request->lastname,
                 'email' => $request->email,
 
             ]);
@@ -200,9 +205,11 @@ class AuthCustomerController extends BaseController
             $input = $request->all();
             $validator = Validator::make($input, [
                 'name' => 'required|string',
-                'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
-                    return $query->where('user_type', 'customer')->where('is_deleted',0);
-                })],
+                // 'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
+                //     return $query->where('user_type', 'customer')->where('is_deleted',0);
+                // })],
+                'user_name' =>'nullable',
+                 'lastname' => 'required|string',
                 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
                     return $query->where('user_type', 'customer')->where('is_deleted',0);
                 }),
@@ -216,7 +223,8 @@ class AuthCustomerController extends BaseController
             }
             $user->update([
                 'name' => $request->name,
-                'user_name' => $request->user_name,
+                // 'user_name' => $request->user_name,
+                'lastname' => $request->lastname,
                 'phonenumber' => $request->phonenumber,
 
             ]);

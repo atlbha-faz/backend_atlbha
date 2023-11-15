@@ -6,6 +6,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends BaseController
@@ -24,24 +25,29 @@ class CategoryController extends BaseController
         $store = auth()->user()->store_id;
       
         if (auth()->user()->store->verification_status == "accept") {
-            $success['categories'] = CategoryResource::collection(Category::
+
+            $success['categories'] = CategoryResource::collection(Category::with(['store'=> function ($query) {
+    $query->select('id');
+}])->
                     where('is_deleted', 0)
-                    ->where('parent_id', null)    
+                    ->where('parent_id', null)
                     ->where(function ($query) {
                         $query->where('store_id', auth()->user()->store_id)
                             ->OrWhere('store_id', null);
-                    })->orderByDesc('created_at')->get());
+                    })->orderByDesc('created_at')->select('id','name','status','icon','number','store_id','parent_id','created_at')->get());
 
             // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
         } else {
-            $success['categories'] =  CategoryResource::collection(Category::
+            $success['categories'] =  CategoryResource::collection(Category::with(['store'=> function ($query) {
+    $query->select('id');
+}])->
             where('is_deleted', 0)
             ->where('parent_id', null)
             ->where('store_id', auth()->user()->store_id)
-            ->orderByDesc('created_at')->get());
+            ->orderByDesc('created_at')->select('id','name','status','icon','number','store_id','parent_id','created_at')->get());
              $success['status'] = 200;
 
              return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
@@ -113,7 +119,7 @@ class CategoryController extends BaseController
 
             }
         }
-
+ \Artisan::call('cache:clear');
         $success['categories'] = new CategoryResource($category);
         $success['status'] = 200;
 
@@ -131,6 +137,7 @@ class CategoryController extends BaseController
         if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("القسم غير موجودة", "Category is't exists");
         }
+         \Artisan::call('cache:clear');
         $success['categories'] = new CategoryResource($category);
         $success['status'] = 200;
 
@@ -181,6 +188,7 @@ class CategoryController extends BaseController
         } else {
             $category->update(['status' => 'active']);
         }
+         \Artisan::call('cache:clear');
         $success['categories'] = new CategoryResource($category);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم تعدبل حالة القسم بنجاح', ' category status updared successfully');
@@ -312,6 +320,7 @@ class CategoryController extends BaseController
                         $subcategory->update(['is_deleted' => $subcategory->id]);
                     }}
                 $category->update(['is_deleted' => $category->id]);
+                 \Artisan::call('cache:clear');
                 $success['categorys'] = new CategoryResource($category);
 
             }
@@ -349,6 +358,7 @@ class CategoryController extends BaseController
                         }
                     }
                 }
+               
                 $success['categorys'] = new CategoryResource($category);
 
             }

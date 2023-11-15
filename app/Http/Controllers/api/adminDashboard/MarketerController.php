@@ -59,11 +59,14 @@ class MarketerController extends BaseController
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
             })],
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
-            'password_confirm' => 'required|same:password',
-            'user_name' =>  ['required','string','max:255',Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
-            })],
+            // 'password' => 'required|min:8|string',
+            // 'password_confirm' => 'required|same:password',
+            // 'user_name' =>  ['required','string','max:255',Rule::unique('users')->where(function ($query) {
+            //     return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
+            // })],
+            'password' => 'nullable',
+            'password_confirm' => 'nullable',
+            'user_name' => ' nullable',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
             }),
@@ -86,9 +89,9 @@ class MarketerController extends BaseController
         }
         $user = User::create([
             'name' => $request->name,
-            'user_name' => $request->user_name,
+            // 'user_name' => $request->user_name,
             'email' => $request->email,
-            'password' => $request->password,
+            // 'password' => $request->password,
             'phonenumber' => $request->phonenumber,
             'gender' => $request->gender,
             'image' => $request->image,
@@ -167,12 +170,15 @@ class MarketerController extends BaseController
                 return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
             }),
             ],
-            'password' => 'nullable|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
-            'password_confirm' => 'nullable|same:password',
-            'user_name' => ['required','string','max:255',Rule::unique('users')->where(function ($query)use($marketer) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
-            }),
-            ],
+            // 'password' => 'nullable|min:8|string',
+            // 'password_confirm' => 'nullable|same:password',
+            // 'user_name' => ['required','string','max:255',Rule::unique('users')->where(function ($query)use($marketer) {
+            //     return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
+            // }),
+            // ],
+            'password' => 'nullable',
+            'password_confirm' => 'nullable',
+            'user_name' => ' nullable',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',Rule::unique('users')->where(function ($query) use($marketer) {
                 return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
             }),
@@ -197,9 +203,9 @@ class MarketerController extends BaseController
         $user = User::query()->find($marketer->user_id);
         $user->update([
             'name' => $request->name,
-            'user_name' => $request->user_name,
+            // 'user_name' => $request->user_name,
             'email' => $request->email,
-            'password' => $request->password,
+            // 'password' => $request->password,
             'phonenumber' => $request->phonenumber,
             'gender' => $request->gender,
             'image' => $request->image,

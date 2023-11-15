@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Theme;
 use App\Http\Resources\ThemeResource;
+use App\Models\Theme;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class HomepageResource extends JsonResource
@@ -16,27 +16,27 @@ class HomepageResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->banar1 == null){
+        if ($this->banar1 == null) {
             $this->banar1 = asset('assets/media/banar.png');
         }
-        if($this->banar2 == null){
-            $this->banar2= asset('assets/media/banar.png');
+        if ($this->banar2 == null) {
+            $this->banar2 = asset('assets/media/banar.png');
         }
-        if($this->banar3 == null){
+        if ($this->banar3 == null) {
             $this->banar3 = asset('assets/media/banar.png');
         }
-        if($this->slider1 == null){
+        if ($this->slider1 == null) {
             $this->slider1 = asset('assets/media/slider.png');
         }
-        if($this->slider2 == null){
+        if ($this->slider2 == null) {
             $this->slider2 = asset('assets/media/slider.png');
         }
-        if($this->slider3 == null){
+        if ($this->slider3 == null) {
             $this->slider3 = asset('assets/media/slider.png');
         }
-        $defalt=new ThemeResource(Theme::where('store_id',null)->first());
-         return [
-            'id' =>$this->id,
+        $defalt = new ThemeResource(Theme::where('store_id', null)->first());
+        return [
+            'id' => $this->id,
             'logo' => $this->logo,
             'logo_footer' => $this->logo_footer,
             'banar1' => $this->banar1,
@@ -54,8 +54,8 @@ class HomepageResource extends JsonResource
             'slider3' => $this->slider3,
             'sliderstatus3' => $this->sliderstatus3,
             // 'status' => $this->status !==null ? $this->status:'active',
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
-            'store' => New StoreResource($this->store),
+            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
+            'store' => new StoreResource($this->store),
             // 'theme' =>$this->store !==null?  new ThemeResource($this->store->theme):$defalt,
         ];
     }

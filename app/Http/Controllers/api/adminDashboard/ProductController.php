@@ -28,7 +28,9 @@ class ProductController extends BaseController
     public function index()
     {
        {
-       $success['products']=ProductResource::collection(Product::where('is_deleted',0)->where('for','store')->orderByDesc('created_at')->get());
+       $success['products']=ProductResource::collection(Product::with(['store'=> function ($query) {
+    $query->select('id','domain','store_name');
+},'category'])->where('is_deleted',0)->where('for','store')->orderByDesc('created_at')->select('id','name','status','cover','special','store_id','created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المنتجات بنجاح','products return successfully');
@@ -135,23 +137,27 @@ class ProductController extends BaseController
 
     
     
-      public function specialStatus($id)
+      public function specialStatus(Request $request)
     {
-        $product = Product::query()->find($id);
-         if (is_null($product) || $product->is_deleted !=0|| $product->for =='etlobha'){
-         return $this->sendError("المنتج غير موجود","product is't exists");
-         }
+      $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'store')->get();
+  
+        if (count($products) > 0) {
+            foreach ($products as $product) {
 
-       if($product->special === 'not_special'){
-        $product->update(['special' => 'special']);
-        }
-        else{
-        $product->update(['special' => 'not_special']);
-        }
-        $success['product']=New ProductResource($product);
-        $success['status']= 200;
+                if ($product->special === 'not_special') {
+                    $product->update(['special' => 'special']);
+                } else {
+                    $product->update(['special' => 'not_special']);
+                }
+                $success['product'] = new ProductResource($product);
 
-         return $this->sendResponse($success,'تم تعديل حالة المنتج بنجاح','Product updated successfully');
+            }
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'Product updated successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
+        }
 
     }
     

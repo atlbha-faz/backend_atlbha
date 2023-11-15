@@ -14,11 +14,14 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
-
+use Notification;
+use App\Events\VerificationEvent;
+use App\Notifications\verificationNotification;
 class AuthController extends BaseController
 {
     protected $code;
 
+    
     public function register(Request $request)
     {
         $setting = Setting::orderBy('id', 'desc')->first();
@@ -34,13 +37,13 @@ class AuthController extends BaseController
                     'checkbox_field' => 'required|in:1',
                     'user_type' => 'required|in:store,marketer',
                     // 'name'=>'required|string|max:255',
-                    'user_name' => ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
-                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
+                    'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
+                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
                     })],
                     //'store_name'=>'required_if:user_type,store|string|max:255',
 
                     //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                    'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*]).*$/',
+                    'password' => 'required|min:8|string',
                     //'domain'=>'required_if:user_type,store|unique:stores',
 
                     //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -50,12 +53,12 @@ class AuthController extends BaseController
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
                     //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
-                    'periodtype' => 'required|in:6months,year',
+                    // 'periodtype' => 'required|in:6months,year',
                     'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
+                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
                     })],
                     'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
+                        return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
                     })],
 
                 ]);
@@ -74,13 +77,15 @@ class AuthController extends BaseController
                         'checkbox_field' => 'required|in:1',
                         'user_type' => 'required|in:store,marketer',
                         // 'name'=>'required|string|max:255',
-                        'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
-                        return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
-                    })],
+                        // 'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
+                        //     return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0);
+                        // })],
                         //'store_name'=>'required_if:user_type,store|string|max:255',
+                        'user_name' => 'nullable',
 
                         //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                        'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%@~^&()_*~^&()_]).*$/',
+                        // 'password' => 'required|min:8|string',
+                        'password' => 'nullable',
                         //'domain'=>'required_if:user_type,store|unique:stores',
                         //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
                         //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
@@ -89,11 +94,11 @@ class AuthController extends BaseController
                         'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                         //'periodtype' => 'required_if:user_type,store|in:6months,year',
                         'email' => 'nullable', 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                            return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
+                            return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0);
                         }),
                         ],
                         'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                            return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
+                            return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0);
                         }),
                         ],
                         'name' => 'required|string|max:255',
@@ -125,7 +130,7 @@ class AuthController extends BaseController
                     // 'phonenumber' => $request->phonenumber,
                     'package_id' => $request->package_id,
                     'user_id' => $userid,
-                    'periodtype' => $request->periodtype,
+                    'periodtype' => '6months',
                     //'country_id' => $request->country_id,
                     //  'city_id' => $request->city_id,
 
@@ -171,6 +176,26 @@ class AuthController extends BaseController
                 }
                 // $store->activities()->attach($request->activity_id);
                 $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
+                
+                if ($setting->registration_status == "registration_with_admin") {
+
+                    $user->update(['status'=>'not_active']);
+                    $store->update(['status'=>'not_active']);
+                     $users_admin = User::where('store_id', null)->whereIn('user_type', ['admin','admin_employee'])->get();
+
+                    $data = [
+                        'message' => 'طلب تسجيل',
+                        'store_id' => $store->id,
+                        'user_id' => $user->id,
+                        'type' => "Registration",
+                        'object_id' => $store->id,
+                    ];
+                    foreach ($users_admin as $user_admin) {
+                        Notification::send($user_admin, new verificationNotification($data));
+                    }
+                    event(new VerificationEvent($data));   
+                    return $this->sendError( 'تم التسجيل وبانتظار ادارة المنصة', 'waiting administration approval');
+                }
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
@@ -186,8 +211,8 @@ class AuthController extends BaseController
                     $user = User::create([
 
                         'email' => $request->email,
-                        'user_name' => $request->user_name,
-                        'password' => $request->password,
+                        // 'user_name' => $request->user_name,
+                        // 'password' => $request->password,
                         'phonenumber' => $request->phonenumber,
                         'user_type' => "marketer",
                         'name' => $request->name,
@@ -324,8 +349,7 @@ class AuthController extends BaseController
             $user_name = $request->user_name;
             $user = User::whereIn('user_type', ['store', 'store_employee'])->where(function ($query) use ($user_name) {
                 $query->where('user_name', $user_name)->orWhere('email', $user_name);
-            })
-                ->first();
+            }) ->first();
 
             if ($user) {
 
@@ -334,8 +358,9 @@ class AuthController extends BaseController
                 $request->phonenumber = $user->phonenumber;
                 $this->sendSms($request); // send and return its response
             }
-
+        
             return $this->sendError('الحساب غير محقق', 'User not verified');
+            
         }
         // $remember = request('remember');
 

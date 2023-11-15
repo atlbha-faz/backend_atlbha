@@ -50,7 +50,7 @@ class IndexController extends BaseController
         foreach ($products as $product) {
             $product_id[] = $product->id;
         }
-        $success['products'] = ProductResource::collection(Product::whereIn('id', $product_id)->where('is_deleted', 0)->get());
+        $success['products'] = ProductResource::collection(Product::whereIn('id', $product_id)->where('is_deleted', 0)->take(7)->get());
         $array_sales_monthly = array();
         $array_sales_weekly = array();
         $array_sales_daily = array();

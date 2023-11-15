@@ -23,7 +23,8 @@ return new class extends Migration
             $table->double('tax');
             $table->double('shipping_price');
             $table->double('discount')->nullable();
-
+             $table->double('subtotal')->nullable();
+              $table->integer('totalCount')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
 
