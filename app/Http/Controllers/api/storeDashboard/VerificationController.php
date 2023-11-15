@@ -23,7 +23,9 @@ class VerificationController extends BaseController
     public function verification_show()
     {
 
-        $success['stores'] = StoreResource::collection(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->get());
+        $success['stores'] = StoreResource::collection(Store::with(['categories' => function ($query) {
+    $query->select('name');
+}])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->get());
 
         // $success['activity']=Store::where('store_id',auth()->user()->store_id)->activities->first();
         $type = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('commercialregistertype')->first();
@@ -61,7 +63,10 @@ class VerificationController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        $store = Store::with(['categories' => function ($query) {
+    $query->select('name');
+
+}])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
 
         if ($store->verification_status == "admin_waiting" || $store->verification_status == "accept") {
             return $this->sendError("الطلب قيد المراجعه", "request is in process");
@@ -106,7 +111,7 @@ class VerificationController extends BaseController
             'name' => $request->input('name'),
         ]);
 
-        $success['store'] = store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        // $success['store'] = store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل الاعدادات بنجاح', 'registration_status update successfully');

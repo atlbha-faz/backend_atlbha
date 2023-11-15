@@ -58,6 +58,28 @@ SkipsOnFailure
          {$seo=$row['seo'];} else{
             $seo=null;
          }
+                if (isset($row['snappixel']) && $row['snappixel'] != null) {$snappixel = $row['snappixel'];} else {
+            $snappixel = null;
+        }
+        if (isset($row['tiktokpixel']) && $row['tiktokpixel'] != null) {$tiktokpixel = $row['tiktokpixel'];} else {
+            $tiktokpixel = null;
+        }
+        if (isset($row['twitterpixel']) && $row['twitterpixel'] != null) {$twitterpixel = $row['twitterpixel'];} else {
+            $twitterpixel = null;
+        }
+        if (isset($row['instapixel']) && $row['instapixel'] != null) {$instapixel = $row['instapixel'];} else {
+            $instapixel = null;
+        }
+
+        if (isset($row['robot_link']) && $row['robot_link'] != null) {$robot_link = $row['robot_link'];} else {
+            $robot_link = null;
+        }
+        if (isset($row['google_analytics']) && $row['google_analytics'] != null) {$google_analytics = $row['google_analytics'];} else {
+            $google_analytics = null;
+        }
+        if (isset($row['weight']) && $row['weight'] != null) {$weight = $row['weight'];} else {
+            $weight = null;
+        }
         return new Product([
 
            'name' => $row['name'],
@@ -65,7 +87,12 @@ SkipsOnFailure
             'description' => $row['description'],
             'selling_price' => $row['selling_price'],
 
-             'category_id' =>Category::where('name',$row['category_id'])->where('store_id',auth()->user()->store_id)->pluck('id')->first(),
+             'category_id' =>Category::where('name',$row['category_id'])->   where('is_deleted', 0)
+                ->where('parent_id', null)
+                         ->where(function ($query) {
+                    $query->where('store_id', auth()->user()->store_id)
+                        ->OrWhere('store_id', null);
+                })->pluck('id')->first(),
             // 'cover' => $row['4'],
             'SEOdescription'=> $seo,
            'discount_price'=>$discount_price,
@@ -73,6 +100,14 @@ SkipsOnFailure
             //'discount_percent'=>$row['discount_percent'],
 
              'stock' => $row['stock'],
+            'short_description' => $row['short_description'],
+            'snappixel' => $snappixel,
+            'tiktokpixel' => $tiktokpixel,
+            'twitterpixel' => $twitterpixel,
+            'instapixel' => $instapixel,
+            'robot_link' => $robot_link,
+            'google_analytics' => $google_analytics,
+            'weight' => $weight,
 
 
 
@@ -92,11 +127,19 @@ SkipsOnFailure
             '*.name' => 'required|string',
             '*.description'=>'required|string',
             '*.selling_price'=>['required','numeric','gt:0'],
+                '*.short_description' => 'required|string|max:100',
             '*.stock'=>['required','numeric','gt:0'],
             // 'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             '*.discount_price'=>['nullable','numeric'],
            // '*.discount_percent'=>['required','numeric'],
              '*.seo'=>'nullable',
+             '*.snappixel' => 'nullable',
+            '*.tiktokpixel' => 'nullable',
+            '*.twitterpixel' => 'nullable',
+            '*.instapixel' => 'nullable',
+            '*.robot_link' => 'nullable',
+            '*.google_analytics' => 'nullable',
+            '*.weight' => 'nullable',
             '*.category_id'=>'required|exists:categories,name',
             // '*.subcategory_id'=>['array'],
             '*.subcategory_id.*'=>['nullable','string']

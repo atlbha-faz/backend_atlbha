@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->double('total')->nullable();
             $table->integer('count')->nullable();
+            $table->double('subtotal')->nullable();
+            $table->integer('totalCount')->nullable();
             $table->enum('discount_type',['fixed','percent'])->nullable();
             $table->double('discount_value')->nullable();
             $table->double('discount_total')->nullable();

@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\api\storeDashboard;
-
+use Notification;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Marketer;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
+use App\Events\VerificationEvent;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\MarketerResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\WebsiteorderResource;
+use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class EtlobhaserviceController extends BaseController
@@ -57,6 +59,18 @@ class EtlobhaserviceController extends BaseController
          if($request->service_id!=null){
           $websiteorder->services()->attach($request->service_id);
          }
+         $data = [
+          'message' => 'طلب خدمة',
+          'store_id' => auth()->user()->store_id,
+          'user_id' => auth()->user()->id,
+          'type' => "service",
+          'object_id' => $websiteorder->id ,
+      ];
+      $userAdmains = User::where('user_type', 'admin')->get();
+      foreach ($userAdmains as $user) {
+          Notification::send($user, new verificationNotification($data));
+      }
+      event(new VerificationEvent($data));
          $success['Websiteorders']=New WebsiteorderResource($websiteorder );
         $success['status']= 200;
 

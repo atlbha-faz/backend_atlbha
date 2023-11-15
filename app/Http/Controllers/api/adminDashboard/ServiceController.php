@@ -132,7 +132,7 @@ class ServiceController extends BaseController
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-/*    public function update(Request $request, Service $service)
+ public function update(Request $request, Service $service)
     {
         if (is_null($service) || $service->is_deleted !=0){
             return $this->sendError("الخدمة غير موجودة","service is't exists");
@@ -141,7 +141,7 @@ class ServiceController extends BaseController
            $validator =  Validator::make($input ,[
             'name'=>'required|string|max:255',
             'description'=>'required|string',
-            'file'=>'required',
+            'file'=>'nullable',
             'price'=>['required','numeric','gt:0'],
            ]);
            if ($validator->fails())
@@ -152,7 +152,7 @@ class ServiceController extends BaseController
            $service->update([
                'name' => $request->input('name'),
                'description' => $request->input('description'),
-               'file' => $request->input('file'),
+               'file' => $request->file,
                'price' => $request->input('price'),
            ]);
 
@@ -161,7 +161,7 @@ class ServiceController extends BaseController
 
             return $this->sendResponse($success,'تم التعديل بنجاح','service updated successfully');
     }
-*/
+
     /**
      * Remove the specified resource from storage.
      *
@@ -219,6 +219,7 @@ class ServiceController extends BaseController
     
         $stores =Store::whereIn('id',$store_id)->where('is_deleted',0)->get();
        $success['stores']=  StoreResource::collection($stores);
+        $success['service']=New ServiceResource($service);
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم عرض الخدمة  بنجاح','service showed successfully');

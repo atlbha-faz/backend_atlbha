@@ -27,6 +27,8 @@ Route::get('selector/countries', [App\Http\Controllers\api\SelectorController::c
 Route::get('selector/activities', [App\Http\Controllers\api\SelectorController::class, 'activities']);
 Route::get('selector/packages', [App\Http\Controllers\api\SelectorController::class, 'packages']);
 Route::get('selector/addToCart', [App\Http\Controllers\api\SelectorController::class, 'addToCart']);
+Route::get('selector/getAllCity', [App\Http\Controllers\api\SelectorController::class, 'getAllCity']);
+Route::get('selector/testgetAllCity', [App\Http\Controllers\api\SelectorController::class, 'testgetAllCity']);
 
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
@@ -40,7 +42,7 @@ Route::post('/logincustomerphoneapi', 'App\Http\Controllers\api\AuthCustomerCont
 Route::post('/logincustomeremailapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer_email');
 Route::post('/registerUser/{id}', 'App\Http\Controllers\api\AuthCustomerController@registerUser');
 Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@verifyUser');
-
+Route::get('/logoutcustomer', 'App\Http\Controllers\api\AuthCustomerController@logout');
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\IndexEtlobhaController::class, 'index']);
@@ -66,6 +68,16 @@ Route::middleware([SetActiveStore::class])->group(function () {
 Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
 Route::post('addCart/{domain}', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
 Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'delete']);
+Route::post('cheackout/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'cheackout']);
+Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'paymentmethods']);
+Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'shippingcompany']);
+Route::post('applyCoupon/{domain}/{cart_id}', [App\Http\Controllers\api\CheckoutController::class, 'applyCoupon']);
+Route::get('ordersUser/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'ordersUser']);
+Route::get('orderUser/{domain}/{order_id}', [App\Http\Controllers\api\CheckoutController::class, 'orderUser']);
+Route::resource('OrderAddress', App\Http\Controllers\api\OrderAddressController::class);
+Route::get('show_default_address', [App\Http\Controllers\api\OrderAddressController::class, 'show_default_address']);
+Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\OrderAddressController::class, 'setDefaultAddress']);
+
 
 // Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 // المدونه
@@ -201,7 +213,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('servicedeleteall', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'deleteall'])->name('admin.service.deleteall');
 
         Route::get('NotificationIndex', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'index'])->name('admin.notification.index');
-        Route::get('NotificationRead/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'read'])->name('admin.notification.read');
+        Route::get('NotificationRead', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'read'])->name('admin.notification.read');
         // Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotification']);
         Route::get('NotificationDeleteAll', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotificationAll'])->name('admin.notification.deleteall');
         Route::get('NotificationShow/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'show'])->name('admin.notification.show');
@@ -318,7 +330,7 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::resource('roles', App\Http\Controllers\api\adminDashboard\RoleController::class, ['names' => 'admin.role']);
         Route::post('addProductNote', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'addNote'])->name('admin.product.addNote');
-        Route::get('productchangeSpecial/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'specialStatus']);
+        Route::get('productchangeSpecial', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'specialStatus']);
         Route::get('activitydeleteall', [App\Http\Controllers\api\adminDashboard\ActivityController::class, 'deleteall'])->name('admin.activity.deleteall');
 
         // Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
@@ -333,6 +345,8 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('specialStatus/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'specialStatus'])->name('admin.store.specialStatus');
         Route::get('rejectVerification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'rejectVerification'])->name('admin.verification.rejectVerification');
         Route::post('verification_update', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_update'])->name('admin.verification.verification_update');
+        Route::get('verification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_show'])->name('admin.verification.verification_show');
+
 //Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
 //
         Route::get('subscriptions', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'index'])->name('admin.subscriptions.index');
@@ -362,6 +376,9 @@ Route::middleware([StoreUser::class])->group(function () {
         // country
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
+        Route::get('getAllCity', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'getAllCity']);
+        Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
+        Route::get('PrintSmsaSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSmsaSticker']);
 
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);
@@ -395,6 +412,8 @@ Route::middleware([StoreUser::class])->group(function () {
 
         Route::get('selector/page-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'pagesCategory']);
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);
+         Route::get('showShippingAddress', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'show']);
+
         // Route::middleware([CheckStorePermission::class])->group(function () {
         //cart
         Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'show'])->name('abandoned.carts.show');
@@ -443,6 +462,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeStatus'])->name('store.products.activate');
         Route::get('deleteImport/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteImport'])->name('store.products.deleteimport');
         Route::post('duplicateProduct/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'duplicateProduct'])->name('store.products.duplicateproduct');
+        Route::get('specialStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'specialStatus'])->name('store.products.specialStatus');
 
         // importProduct
         Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
@@ -516,10 +536,10 @@ Route::middleware([StoreUser::class])->group(function () {
         //  setting
         Route::get('setting_store_show', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_show'])->name('store.basicdata.show');
         Route::post('setting_store_update', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_update'])->name('store.basicdata.update');
-
+        Route::get('checkDomain', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'checkDomain']);
         // notifications
         Route::get('NotificationIndex', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'index'])->name('store.notifications.NotificationIndex');
-        Route::get('NotificationRead/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'read'])->name('store.notifications.NotificationRead');
+        Route::get('NotificationRead', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'read'])->name('store.notifications.NotificationRead');
         Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'deleteNotification'])->name('store.notifications.NotificationDelete');
         Route::get('NotificationDeleteAll', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'deleteNotificationAll'])->name('store.notifications.NotificationDeleteAll');
         Route::get('NotificationShow/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'show'])->name('store.notifications.NotificationShow');

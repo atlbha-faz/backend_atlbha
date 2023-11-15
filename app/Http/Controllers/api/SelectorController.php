@@ -77,6 +77,72 @@ class SelectorController extends BaseController
          return $this->sendResponse($success,'تم ارجاع الباقات بنجاح','packages return successfully');
     }
 
+    public function getAllCity()
+    {
+     
+      $curl = curl_init();
+           $key= array(
+            'userId'=>env('GOTEX_UserId_KEY'),
+            'apiKey'=>env('GOTEX_API_KEY')
+           );
+        
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/saee/get-cities',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>json_encode($key),
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+          ),
+        ));
+        
+        $response = curl_exec($curl);
 
+        curl_close($curl);
+  
+        $success['cities'] = json_decode( $response);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم إرجاع المدن', ' cities successfully');
+    }
+      public function testgetAllCity()
+    { 
+      $curl = curl_init();
+
+$test = curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/saee/get-cities',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+ CURLOPT_POSTFIELDS =>'{"userId":"651d6aa9caff20c31d7404fc",
+"apiKey":"AkUJTmkHrEHPWc08xNTzc9dd2QtI7t6vCM@m!CZuIrv7#J#k6P7$j@JL0gVNVOPH1tV8VMfuRRdgf$fq4DuJcDmiYlfGkQ2Xp$RUK3@w@IRmqnEMdg@!O7jpcXOG!7eO4wSKwE8@LhDtvr3SzSJR6P"}',
+  CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/json'
+  ),
+));
+
+dd($test);
+   $response = curl_exec($curl);
+
+      
+if ($response === false) {
+        return "CURL Error: " . curl_error($curl);
+    }
+  curl_close($curl);
+
+ $success['cities'] = json_decode( $response);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم إرجاع المدن', ' cities successfully');
+    }
 
 }

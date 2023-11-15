@@ -85,13 +85,13 @@ class StoreResource extends JsonResource
         }
          return [
         'id' =>$this->id,
-        'store_name'=>$this->store_name,
+        'store_name'=>$this->store_name!==null ? $this->store_name:"",
         'slug'=>$this->slug,
         'domain'=>$this->domain,
         'phonenumber'=>$this->phonenumber,
         'store_email'=>$this->store_email,
         'icon' =>$this->icon,
-        'description'=>$this->description,
+        'description'=>$this->description!==null ? $this->description:"",
         'store_address'=>$this->store_address,
         'business_license'=>$this->business_license,
         'ID_file' =>$this->ID_file,

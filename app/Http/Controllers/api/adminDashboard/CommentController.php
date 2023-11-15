@@ -25,7 +25,11 @@ class CommentController extends BaseController
     public function index()
     {
 
-        $success['comment']=CommentResource::collection(Comment::where('is_deleted',0)->where('store_id',null)->where('product_id',null)->where('comment_for','store')->orderByDesc('created_at')->get());
+        $success['comment']=CommentResource::collection(Comment::with(['user'=>function ($query) {
+    $query->with(['store'=>function ($query) {
+    $query->select('id','domain','store_name','logo');
+    }]);
+}])->where('is_deleted',0)->where('store_id',null)->where('product_id',null)->where('comment_for','store')->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع التعليقات بنجاح','comments return successfully');

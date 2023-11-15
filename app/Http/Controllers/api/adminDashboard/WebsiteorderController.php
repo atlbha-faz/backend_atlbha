@@ -46,7 +46,7 @@ class WebsiteorderController extends BaseController
 
 
 
-        $success['Websiteorder']=WebsiteorderResource::collection(Websiteorder::where('is_deleted',0)->orderByDesc('created_at')->get());
+        $success['Websiteorder']=WebsiteorderResource::collection(Websiteorder::where('is_deleted',0)->orderByDesc('created_at')->select('id','status','order_number','type','created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع جميع الطلبات بنجاح','Websiteorder return successfully');
@@ -191,15 +191,18 @@ class WebsiteorderController extends BaseController
                 return $this->sendError("الطلب غير موجود","Order is't exists");
                 }
                $services= Service_Websiteorder::where('websiteorder_id',$websiteorder->id)->get();
-
+                  $serviceName=array();
                foreach( $services as  $service){
                 $service->update(['status' => 'accept']);
+                 $serviceName[]=Service::where('id',$service->service_id )->where('is_deleted',0)->value('name');
               }
+           
                $websiteorder->update(['status' => 'accept']);
 
                $users = User::where('store_id', $websiteorder->store_id)->get();
                $data = [
-                   'message' => ' تم قبول الخدمة',
+                 'message' =>' تم قبول خدمة'. implode(',',$serviceName),
+
                    'store_id' =>$websiteorder->store_id,
                    'user_id'=>auth()->user()->id,
                    'type'=>"service_accept",
@@ -227,13 +230,16 @@ class WebsiteorderController extends BaseController
                 return $this->sendError("الطلب غير موجود","Order is't exists");
                 }
                 $services= Service_Websiteorder::where('websiteorder_id',$websiteorder->id)->get();
+                   $serviceName=array();
                 foreach( $services as  $service){
                   $service->update(['status' => 'reject']);
+                   $serviceName[]=Service::where('id',$service->service_id )->where('is_deleted',0)->value('name');
                 }
+                   
                $websiteorder->update(['status' => 'reject']);
                $users = User::where('store_id', $websiteorder->store_id)->get();
                $data = [
-                   'message' => ' تم رفض الخدمة',
+                 'message' =>' تم رفض الخدمة'. implode(',',$serviceName),
                    'store_id' =>$websiteorder->store_id,
                    'user_id'=>auth()->user()->id,
                    'type'=>"service_reject",

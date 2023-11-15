@@ -25,7 +25,9 @@ class ProductResource extends JsonResource
         } else {
             $special = 'غير مميز';
         }
-        $domain = $this->store_id !== null ? $this->store->domain : 'atlbha';
+        $domain = $this->store_id  !== null ? $this->store->domain : 'atlbha';
+    
+
         return [
             'id' => $this->id,
 
@@ -37,18 +39,24 @@ class ProductResource extends JsonResource
             'purchasing_price' => $this->purchasing_price,
             'selling_price' => $this->selling_price,
             'quantity' => $this->quantity,
+             'weight'=> $this->weight !== null ? $this->weight * 1000 : 500,
             'less_qty' => $this->less_qty,
             'stock' => $this->stock,
             'tags' => $this->tags,
             'cover' => $this->cover,
-            'discount_price' => $this->discount_price !== null ? $this->discount_price : $this->selling_price,
+            'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
             'SEOdescription' => explode(',', $this->SEOdescription),
             'snappixel' => $this->snappixel,
             'tiktokpixel' => $this->tiktokpixel,
             'twitterpixel' => $this->twitterpixel,
             'instapixel' => $this->instapixel,
+             'short_description' => $this->short_description,
+            'robot_link' => $this->robot_link,
+            'google_analytics'=> $this->google_analytics,
             'importproduct' => $this->importproduct->count(),
-            'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id', explode(',', $this->subcategory_id))->get()),
+            'subcategory' => CategoryResource::collection(\App\Models\Category::with(['store'=> function ($query) {
+    $query->select('id');
+}])->whereIn('id', explode(',', $this->subcategory_id))->get()),
             'status' => $status,
             'special' => $special,
             'url' => 'https://template.atlbha.com/' . $domain . '/shop/product/' . $this->id,
@@ -59,12 +67,11 @@ class ProductResource extends JsonResource
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-
             'category' => new CategoryResource($this->category),
             'store' => new StoreResource($this->store),
             'images' => ImageResource::collection($this->image->where('is_deleted', 0)),
             'options' => OptionResource::collection($this->option),
-
+           
             'is_import' => false,
 
         ];

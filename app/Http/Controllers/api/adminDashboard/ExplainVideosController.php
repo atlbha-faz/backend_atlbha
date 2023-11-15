@@ -25,7 +25,9 @@ class ExplainVideosController extends BaseController
      */
     public function index()
     {
-       $success['explainvideos']=ExplainVideoResource::collection(ExplainVideos::where('is_deleted',0)->orderByDesc('created_at')->get());
+       $success['explainvideos']=ExplainVideoResource::collection(ExplainVideos::with(['user' => function ($query) {
+    $query->select('id');
+}])->where('is_deleted',0)->orderByDesc('created_at')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الفيديوهات المشروحة بنجاح','ExplainVideos return successfully');
@@ -111,7 +113,7 @@ class ExplainVideosController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'title'=>'required|string|max:255',
-            'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+            'video'=>'required|string',
             'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
            // 'link'=>'required|url',
 
@@ -120,31 +122,31 @@ class ExplainVideosController extends BaseController
         {
             return $this->sendError(null,$validator->errors());
         }
-        $fileName =  Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
-        $filePath = 'videos/explainvideo/' . $fileName;
+        // $fileName =  Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
+        // $filePath = 'videos/explainvideo/' . $fileName;
 
-        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
+        // $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
 
         // File URL to access the video in frontend
-        $url = Storage::disk('public')->url($filePath);
-        $getID3 = new \getID3();
-        $pathVideo = 'storage/videos/explainvideo/'. $fileName;
+        // $url = Storage::disk('public')->url($filePath);
+        // $getID3 = new \getID3();
+        // $pathVideo = 'storage/videos/explainvideo/'. $fileName;
 
-        $fileAnalyze = $getID3->analyze($pathVideo);
+        // $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
-        $playtimes = $fileAnalyze['playtime_seconds'];
-        $playtime=gmdate("H:i:s", $playtimes);
+        // $playtimes = $fileAnalyze['playtime_seconds'];
+        // $playtime=gmdate("H:i:s", $playtimes);
 
         // dd($playtime);
-        if ($isFileUploaded) {
+        // if ($isFileUploaded) {
         $explainvideos = ExplainVideos::create([
             'title' => $request->title,
-            'duration' => $playtime,
-            'video' => $fileName,
+            'duration' => 0,
+            'video' =>  $request->video,
             'thumbnail' =>$request->thumbnail,
             'user_id' => auth()->user()->id,
           ]);
-        }
+        // }
 
          // return new CountryResource($country);
          $success['explainvideos']=New ExplainVideoResource($explainvideos);
@@ -200,7 +202,7 @@ class ExplainVideosController extends BaseController
          $input = $request->all();
         $validator =  Validator::make($input ,[
              'title'=>'required|string|max:255',
-             'video'=>'nullable|mimes:mp4,ogx,oga,ogv,ogg,webm',
+             'video'=>'nullable|string',
              'thumbnail' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
              //'link'=>'required|url',
         ]);
@@ -212,29 +214,30 @@ class ExplainVideosController extends BaseController
 
         $explainvideos =$explainVideos->update([
             'title' => $request->input('title'),
+            'video' => $request->input('video'),
              'thumbnail' => $request->thumbnail,
           ]);
         if(!is_null($request->video)){
-       $fileName =  Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
-        $filePath = 'videos/explainvideo/' . $fileName;
+    //   $fileName =  Str::random(10) . time() . '.' . $request->video->getClientOriginalExtension();
+    //     $filePath = 'videos/explainvideo/' . $fileName;
 
-        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
+    //     $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
 
         // File URL to access the video in frontend
-        $url = Storage::disk('public')->url($filePath);
-        $getID3 = new \getID3();
-        $pathVideo = 'storage/videos/explainvideo/'. $fileName;
-        $fileAnalyze = $getID3->analyze($pathVideo);
+        // $url = Storage::disk('public')->url($filePath);
+        // $getID3 = new \getID3();
+        // $pathVideo = 'storage/videos/explainvideo/'. $fileName;
+        // $fileAnalyze = $getID3->analyze($pathVideo);
         // dd($fileAnalyze);
-        $playtimes = $fileAnalyze['playtime_seconds'];
-        $playtime=gmdate("H:i:s", $playtimes);
+        // $playtimes = $fileAnalyze['playtime_seconds'];
+        // $playtime=gmdate("H:i:s", $playtimes);
         // dd($playtime);
-        if ($isFileUploaded) {
+        // if ($isFileUploaded) {
         $explainvideos = $explainVideos->update([
-            'duration' => $playtime,
-             'video' => $fileName,
+            'duration' => 0,
+             'video' =>  $request->video,
           ]);
-        }
+        // }
         }
 
        //$country->fill($request->post())->update();

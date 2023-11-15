@@ -30,7 +30,7 @@ class CategoryResource extends JsonResource
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'store' => New StoreResource($this->store),
+             'store' => New StoreResource($this->store),
             // 'parent_id' => New CategoryResource($this->category),
             'subcategory' =>$this->subcategory,
             'countsubcategory' =>$this->subcategory->count(),

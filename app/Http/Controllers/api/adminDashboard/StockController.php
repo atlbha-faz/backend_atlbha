@@ -7,6 +7,8 @@ use App\Http\Resources\ProductResource;
 use App\Imports\AdminProductImport;
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\Importproduct;
+use App\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +47,9 @@ class StockController extends BaseController
         } else {
             $success['most_order'] = 0;
         }
-        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->get());
+        $success['products'] = ProductResource::collection(Product::with(['store','category'=>function ($query) {
+    $query->select('id','name','icon');
+}])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select('id','name','status','cover','special','purchasing_price','selling_price','stock','category_id','store_id','subcategory_id','created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -92,6 +96,10 @@ class StockController extends BaseController
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
             'instapixel' => 'nullable|string',
+            'short_description' => 'required|string|max:100',
+            'robot_link' => 'nullable|string',
+            'google_analytics' => 'nullable|url',
+             'weight'=>'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -127,6 +135,10 @@ class StockController extends BaseController
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
             'instapixel' => $request->instapixel,
+            'short_description' => $request->short_description,
+            'robot_link' => $request->robot_link,
+            'google_analytics' => $request->google_analytics,
+             'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
@@ -226,6 +238,10 @@ class StockController extends BaseController
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
             'instapixel' => 'nullable|string',
+            'short_description' => 'required|string|max:100',
+            'robot_link' => 'nullable|string',
+            'google_analytics' => 'nullable|url',
+             'weight'=>'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -260,6 +276,10 @@ class StockController extends BaseController
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
             'instapixel' => $request->instapixel,
+            'short_description' => $request->short_description,
+            'robot_link' => $request->robot_link,
+            'google_analytics' => $request->google_analytics,
+             'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
 
@@ -386,6 +406,13 @@ class StockController extends BaseController
 
         if ($product->for === 'stock') {
             $product->update(['for' => 'etlobha']);
+              //إستيراد الى متجر اطلبها
+       $atlbha_id= Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first(); 
+        $importproduct = Importproduct::create([
+            'product_id' =>  $product->id,
+            'store_id' => $atlbha_id,
+            'price' =>   $product->selling_price,
+        ]);
         }
 
         $success['products'] = new ProductResource($product);

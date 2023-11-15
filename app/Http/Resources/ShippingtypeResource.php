@@ -31,6 +31,8 @@ if($this->status ==null || $this->status == 'active'){
         'id' =>$this->id,
         'name'=>$this->name,
         'status' => $status,
+        'image'=>$this->image,
+        'cod' => $this->cod,
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
     ];
 

@@ -9,7 +9,7 @@ class Shippingtype extends Model
 
     {
     use HasFactory;
-    protected $fillable = ['name','status','is_deleted'];
+    protected $fillable = ['name','status','image','cod','is_deleted'];
 
       public function stores()
     {
@@ -20,6 +20,25 @@ class Shippingtype extends Model
         'store_id'
 
         );
+    }
+      public function setImageAttribute($image)
+    {
+        if (!is_null($image)) {
+            if (gettype($image) != 'string') {
+                $i = $image->store('images/shippingtype', 'public');
+                $this->attributes['image'] = $image->hashName();
+            } else {
+                $this->attributes['image'] = $image;
+            }
+        }
+    }
+
+    public function getImageAttribute($image)
+    {
+        if (is_null($image)) {
+            return   asset('assets/media/man.png');
+        }
+        return asset('storage/images/shippingtype') . '/' . $image;
     }
 
 

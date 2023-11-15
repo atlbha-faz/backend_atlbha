@@ -223,6 +223,7 @@ class SeoController extends BaseController
             'twitterpixel' => 'nullable|string',
             'instapixel' => 'nullable|string',
             'key_words' => 'required',
+            'robot_link' => 'nullable|string',
         ]);
         if ($validator->fails()) {
             # code...
@@ -238,6 +239,7 @@ class SeoController extends BaseController
             'twitterpixel' => $request->twitterpixel,
             'instapixel' => $request->instapixel,
             'key_words' => $request->key_words,
+            'robot_link' => $request->robot_link,
 
         ]);
 
