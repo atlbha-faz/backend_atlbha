@@ -80,12 +80,5 @@ class Course extends Model
         }
     }
 
-    public function getImageAttribute($image)
-    {
-        if (is_null($image)) {
-            return asset('assets/media/man.png');
-        }
-        return asset('storage/images/courses') . '/' . $image;
-    }
-
+  
 }
