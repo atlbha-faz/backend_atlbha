@@ -19,7 +19,7 @@ class ExplainVideoResource extends JsonResource
         }else{
             $status = 'غير نشط';
         }
-        
+
         return [
             'id' =>$this->id,
             'title' => $this->title,

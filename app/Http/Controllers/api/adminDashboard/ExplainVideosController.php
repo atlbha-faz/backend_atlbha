@@ -266,7 +266,8 @@ class ExplainVideosController extends BaseController
         }
 
         //$country->fill($request->post())->update();
-        $success['explainvideos'] = new ExplainVideoResource($explainVideos);
+        // dd()
+        $success['explainvideos'] = new ExplainVideoResource($explainVideosoObject);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'explainvideo updated successfully');
