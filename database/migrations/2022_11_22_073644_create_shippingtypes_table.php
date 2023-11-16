@@ -14,9 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('shippingtypes', function (Blueprint $table) {
-             $table->id();
+            $table->id();
             $table->string('name');
-            $table->enum('status',['active','not_active'])->default('active');
+            $table->boolean('cod')->default(0);
+            $table->enum('status', ['active', 'not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });

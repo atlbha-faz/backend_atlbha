@@ -26,6 +26,6 @@ class OrderAddress extends Model
             'order_id'
             );
     }
- 
+
 
 }

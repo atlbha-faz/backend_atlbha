@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\Unit;
-use App\Models\Video;
-use App\Models\Course;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CourseResource;
 use App\Http\Resources\UnitResource;
 use App\Http\Resources\VideoResource;
-use App\Http\Resources\CourseResource;
+use App\Models\Course;
+use App\Models\Unit;
+use App\Models\Video;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Support\Str;
 
 class CourseController extends BaseController
 {
@@ -31,8 +31,8 @@ class CourseController extends BaseController
     {
 
         $success['courses'] = CourseResource::collection(Course::with(['user' => function ($query) {
-    $query->select('id');
-}])->where('is_deleted', 0)->orderByDesc('created_at')->get());
+            $query->select('id');
+        }])->where('is_deleted', 0)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الكورسات المشروحة بنجاح', 'courses return successfully');
@@ -121,16 +121,21 @@ class CourseController extends BaseController
                     // $playtime = gmdate("H:i:s", $playtimes);
 
                     // if ($isFileUploaded) {
-                        $video = new Video([
-                            'duration' => 0,
-                            'video' => $videodata,
-                            'name' => 'course',
-                            'unit_id' => $unit->id,
-                        ]);
 
-                        $video->save();
+                    // fetch video id from vedio url
+                    preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $videodata, $matches);
 
-                    // }
+                    if (isset($matches[1])) {
+                        $videoId = $matches[1];
+                    }
+                    $video = new Video([
+                        'video' => $videodata,
+                        'unit_id' => $unit->id,
+                    ]);
+                    $videodata = $video->get_youtube_title($videoId);
+                    $video->name = $videodata[0]['title'];
+                    $video->duration = $videodata[0]['duration'];
+                    $video->save();
 
                 }
             }
@@ -333,16 +338,22 @@ class CourseController extends BaseController
 
                         // dd($playtime);
                         // if ($isFileUploaded) {
-                            $video = new Video([
-                                'duration' => 0,
-                                'video' => $videodata,
-                                'name' => 'course',
-                                'unit_id' => $unit->id,
-                            ]);
 
-                            $video->save();
+                        // fetch video id from vedio url
 
-                        // }
+                        preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $videodata, $matches);
+
+                        if (isset($matches[1])) {
+                            $videoId = $matches[1];
+                        }
+                        $video = new Video([
+                            'video' => $videodata,
+                            'unit_id' => $unit->id,
+                        ]);
+                        $videodata = $video->get_youtube_title($videoId);
+                        $video->name = $videodata[0]['title'];
+                        $video->duration = $videodata[0]['duration'];
+                        $video->save();
 
                     }
                 }
@@ -421,14 +432,28 @@ class CourseController extends BaseController
         // $playtime = $fileAnalyze['playtime_string'];
         // dd($playtime);
         // if ($isFileUploaded) {
-            $video = new Video([
-                'duration' => 0,
-                'video' => $request->video,
-                'name' => 'video',
-                'unit_id' => $request->unit_id,
-            ]);
+        preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $request->video, $matches);
 
-            $video->save();
+        if (isset($matches[1])) {
+            $videoId = $matches[1];
+        }
+        $video = new Video([
+            'video' => $request->video,
+            'unit_id' => $request->unit_id,
+        ]);
+        $videodata = $video->get_youtube_title($videoId);
+        $video->name = $videodata[0]['title'];
+        $video->duration = $videodata[0]['duration'];
+        $video->save();
+
+        // $video = new Video([
+        //     'duration' => 0,
+        //     'video' => $request->video,
+        //     'name' => 'video',
+        //     'unit_id' => $request->unit_id,
+        // ]);
+
+        // $video->save();
         // }
         $success['videos'] = new VideoResource($video);
         $success['status'] = 200;

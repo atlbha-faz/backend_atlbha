@@ -91,10 +91,10 @@ class CheckoutController extends BaseController
             $order->paymentype_id = $request->paymentype_id;
             $order->cod = $request->cod;
             $order->description = $request->description;
-      
+
             // Save the order to the database
             $order->save();
-       
+
             $shipping_price=shippingtype_store::where('shippingtype_id',  $order->shippingtype_id)->where('store_id',   $store_domain)->first();
             if( $shipping_price== null){
                 $shipping_price=35;
@@ -108,11 +108,11 @@ class CheckoutController extends BaseController
             else{
                 $extra_shipping_price=0;
             }
-           
+
             $order->update([
                 'shipping_price'=> $shipping_price
             ]);
-          
+
             // Loop through the cart items and associate them with the order
             foreach ($cart->cartDetails as $cartItem) {
             //   $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->where('store_id',$store_domain)->first();
@@ -124,7 +124,7 @@ class CheckoutController extends BaseController
                 //   $product-> quantity=  $product-> quantity-$cartItem->qty;
               }
             //   else{
-                  
+
             //   }
             }
             foreach ($cart->cartDetails as $cartItem) {
@@ -140,14 +140,14 @@ class CheckoutController extends BaseController
             $subtotal = OrderItem::where('order_id', $order->id)->get()->reduce(function ($total, $item) {
                 return $total + ($item->quantity * $item->price);
             });
-    
+
             $order->update([
                     'total_price' => $subtotal + $order->shipping_price+$extra_shipping_price
-            ]); 
-           $orderAddress=OrderAddress::where('user_id',auth()->user()->id)->where('id',$request->shippingAddress_id)->first(); 
-        
+            ]);
+           $orderAddress=OrderAddress::where('user_id',auth()->user()->id)->where('id',$request->shippingAddress_id)->first();
+
             if($orderAddress === null){
-                  
+
             $orderaddress = OrderAddress::create([
                 'city' => $request->city,
                 'street_address' => $request->street_address,
@@ -166,7 +166,7 @@ class CheckoutController extends BaseController
                 ]);
             }
         }
-      
+
             $order->order_addresses()->attach( $orderaddress->id,["type" => "shipping"]);
             }
             else{
@@ -186,12 +186,12 @@ class CheckoutController extends BaseController
                 ]);
             }
         }
-                
+
             }
- 
-      
+
+
             if ($order->paymentype_id == 4) {
-          
+
 //الدفع عند الاستلام
                 $order->update([
                     'total_price' => $order->total_price+10,
@@ -235,7 +235,7 @@ class CheckoutController extends BaseController
             }
 
             $success['order'] = new OrderResource($order);
-            
+
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
