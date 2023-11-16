@@ -36,7 +36,7 @@ class ProductController extends BaseController
     $query->select('id','name');}])
     ->where('is_deleted',0)->where('store_id', auth()->user()->store_id)->where('for','store')->orderByDesc('created_at')->select('id','name','status','cover','special','store_id','created_at','category_id','subcategory_id','selling_price','stock')->get()
 );
-     
+
         $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
             ->select(['products.id', 'products.name','products.status','products.cover','products.special','products.store_id','products.created_at','products.category_id','products.subcategory_id','products.selling_price','products.stock','importproducts.price', 'importproducts.status'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $imports = importsResource::collection($import);
@@ -73,10 +73,10 @@ class ProductController extends BaseController
             'description' => 'required|string',
             'selling_price' => ['required', 'numeric', 'gt:0'],
             'stock' => ['required', 'numeric', 'gt:0'],
-            'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:8048'],
             'discount_price' => ['nullable', 'numeric'],
             'images' => 'nullable|array',
-            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:2048'],
+            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:8048'],
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -275,7 +275,7 @@ class ProductController extends BaseController
 
             $product->update([
                 'name' => $request->input('name'),
-                
+
                 'description' => $request->input('description'),
                 'selling_price' => $request->input('selling_price'),
                 'stock' => $request->input('stock'),
