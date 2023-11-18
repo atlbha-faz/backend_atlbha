@@ -29,7 +29,7 @@ class ProductController extends BaseController
     {
        {
        $success['products']=ProductResource::collection(Product::with(['store'=> function ($query) {
-    $query->select('id','domain','store_name');
+    $query->select('id','domain','store_name','store_email');
 },'category'])->where('is_deleted',0)->where('for','store')->orderByDesc('created_at')->select('id','name','status','cover','special','store_id','created_at')->get());
         $success['status']= 200;
 
