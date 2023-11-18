@@ -322,7 +322,7 @@ class IndexStoreController extends BaseController
                 $success['pages'] = PageResource::collection(Page::with(['store' => function ($query) {
                   $query->select('id');},'user' => function ($query) {
                   $query->select('id');}])
-          ->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
+                  ->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
                 $success['lastPosts'] = PageResource::collection(Page::with(['store' => function ($query) {
                   $query->select('id');},'user' => function ($query) {
                   $query->select('id');}])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(6)->get());

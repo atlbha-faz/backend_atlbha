@@ -214,7 +214,7 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::get('NotificationIndex', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'index'])->name('admin.notification.index');
         Route::get('NotificationRead', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'read'])->name('admin.notification.read');
-        // Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotification']);
+         Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotification']);
         Route::get('NotificationDeleteAll', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotificationAll'])->name('admin.notification.deleteall');
         Route::get('NotificationShow/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'show'])->name('admin.notification.show');
         Route::post('addEmail', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'addEmail'])->name('admin.email.store');
