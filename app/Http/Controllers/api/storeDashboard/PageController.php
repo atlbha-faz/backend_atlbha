@@ -49,7 +49,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:255',
+            'title' => 'required|alpha|max:40',
             'page_desc' => 'required|string|max:100',
             'page_content' => 'required|string',
             'seo_title' => 'nullable|string',
@@ -95,7 +95,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:255',
+            'title' => 'required|alpha|max:40',
             'page_content' => 'required|string',
             'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
@@ -174,7 +174,7 @@ class PageController extends BaseController
 
     public function update(Request $request, $page)
     {
-    
+
         $page = Page::where('id', $page)->where('store_id', auth()->user()->store_id)->first();
 
         if (is_null($page) || $page->is_deleted != 0) {
@@ -183,7 +183,7 @@ class PageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:255',
+            'title' => 'required|alpha|max:40',
             'page_content' => 'required|string',
             'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
@@ -211,19 +211,19 @@ class PageController extends BaseController
         if ($request->pageCategory) {
             $page->page_categories()->sync($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
-            
+
                 $page->update([
                     'image' => $request->image,
                     'postcategory_id' => $request->postCategory_id,
                 ]);
             }else{
-           
+
                 $page->update([
                     'image' =>null,
                     'postcategory_id' => null,
                 ]);
             }
-            
+
         }
         $success['pages'] = new PageResource($page);
         $success['status'] = 200;
