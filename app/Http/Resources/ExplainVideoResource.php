@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
+use Illuminate\Support\Str;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,10 +21,13 @@ class ExplainVideoResource extends JsonResource
             $status = 'غير نشط';
         }
 
+$videoSrc = Str::between($this->video, 'src="', '" title');
+
         return [
             'id' =>$this->id,
             'title' => $this->title,
             'video' => $this->video,
+            'videoSrc'=>$videoSrc,
             'thumbnail' => $this->thumbnail,
             'duration' => $this->duration,
             'status' => $status,

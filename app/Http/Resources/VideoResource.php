@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class VideoResource extends JsonResource
 {
@@ -14,22 +15,24 @@ class VideoResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
+        if ($this->status == null || $this->status == 'active') {
             $status = 'نشط';
-        }else{
+        } else {
             $status = 'غير نشط';
         }
-        
+        $videoSrc = Str::between($this->video, 'src="', '" title');
+
         return [
-            'id' =>$this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'video' => $this->video,
-            'duration'=> $this->duration,
+            'videoSrc' => $videoSrc,
+            'duration' => $this->duration,
             'status' => $status,
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            
+
         ];
     }
 }
