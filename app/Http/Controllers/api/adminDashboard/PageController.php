@@ -54,7 +54,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'title'=>'required|string|max:255',
+            'title'=>'required|alpha|max:40',
             'page_desc'=>'required',
             'page_content'=>'required',
             'seo_title'=>'nullable',
@@ -102,7 +102,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'title'=>'required|string|max:255',
+            'title'=>'required|alpha|max:40',
             'page_content'=>'required',
             'page_desc'=>'required',
             'seo_title'=>'nullable',
@@ -185,13 +185,13 @@ class PageController extends BaseController
     {
         $page = Page::query()->find($page);
         if (is_null($page) || $page->is_deleted !=0){
-         
+
             return $this->sendError("الصفحة غير موجودة","Page is't exists");
        }
 
             $input = $request->all();
            $validator =  Validator::make($input ,[
-            'title'=>'required|string|max:255',
+            'title'=>'required|alpha|max:40',
             'page_desc'=>'required',
             'page_content'=>'required',
             'seo_title'=>'nullable',
@@ -226,7 +226,7 @@ class PageController extends BaseController
               ]);
             }
             else{
-           
+
                 $page->update([
                     'image' =>null,
                     'postcategory_id' => null,
@@ -287,7 +287,7 @@ class PageController extends BaseController
             if(count($pages)>0){
            foreach($pages as $page)
            {
-             
+
              $page->update(['is_deleted' =>$page->id]);
             $success['pages']=New PageResource($page);
 
@@ -308,7 +308,7 @@ class PageController extends BaseController
                     if(count($pages)>0){
                 foreach($pages as $page)
                 {
-                    
+
                     if($page->status === 'active'){
                 $page->update(['status' => 'not_active']);
                 }
@@ -327,5 +327,5 @@ class PageController extends BaseController
         return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');
         }
         }
-    
+
 }

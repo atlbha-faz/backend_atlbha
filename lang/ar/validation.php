@@ -48,7 +48,7 @@ return [
     'email' => 'يجب أن يكون :attribute عنوان بريد إلكتروني صحيح البُنية',
     'ends_with' => ' :attribute يجب ان ينتهي بأحد القيم التالية :value.',
     'enum' => 'الحقل :attribute غير صحيح',
-    'exists' => 'الحقل :attribute لاغٍ',
+    'exists' => 'الحقل :attribute غير صحيح',
     'file' => ' :attribute يجب أن يكون من ملفا.',
     'filled' => 'الحقل :attribute إجباري',
     'gt' => [
@@ -64,7 +64,7 @@ return [
         'string' => ' :attribute يجب ان يكون اكبر من او يساوي :value حروفٍ/حرفًا.',
     ],
     'image' => 'يجب أن يكون الحقل :attribute صورةً',
-    'in' => 'الحقل :attribute لاغٍ',
+    'in' => 'الحقل :attribute غير صحيح',
     'in_array' => 'الحقل :attribute غير موجود في :other.',
     'integer' => 'يجب أن يكون الحقل :attribute عددًا صحيحًا',
     'ip' => 'يجب أن يكون الحقل :attribute عنوان IP ذا بُنية صحيحة',
@@ -102,7 +102,7 @@ return [
     ],
     'min_digits' => 'الحقل :attribute يجب أن يحتوي :min أرقام على الأقل.',
     'multiple_of' => 'الحقل :attribute يجب أن يكون من مضاعفات :value.',
-    'not_in' => 'الحقل :attribute لاغٍ',
+    'not_in' => 'الحقل :attribute غير صحيح',
     'not_regex' => 'حقل :attribute نوعه غير صحيح',
     'numeric' => 'يجب على الحقل :attribute أن يكون رقمًا',
     'password' => [
