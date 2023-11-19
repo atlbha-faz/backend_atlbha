@@ -23,7 +23,7 @@ class ImportproductController extends BaseController
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
         $imports = Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
-        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNotIn('id', $imports)->orderByDesc('created_at')->select('id','name','cover','selling_price','purchasing_price','stock','created_at','category_id','subcategory_id')->get());
+        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNotIn('id', $imports)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'created_at', 'category_id', 'subcategory_id')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -42,16 +42,29 @@ class ImportproductController extends BaseController
         $validator = Validator::make($input, [
             'price' => ['required', 'numeric',
                 'gte:' . $purchasing_price],
+            'qty' => ['required', 'numeric'],
             'product_id' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-        $importproduct = Importproduct::create([
-            'product_id' => $request->product_id,
-            'store_id' => auth()->user()->store_id,
-            'price' => $request->price,
-        ]);
+        $product = Product::where('id', $request->product_id)->first();
+        if ($request->qty > $product->stock) {
+            return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
+        } else {
+            $importproduct = Importproduct::create([
+                'product_id' => $request->product_id,
+                'store_id' => auth()->user()->store_id,
+                'price' => $request->price,
+                'qty' => $request->qty,
+
+            ]);
+            $newStock = $product->stock - $importproduct->qty;
+            $product->update([
+                'stock' => $newStock,
+            ]);
+        }
+
         $success['importproducts'] = new ImportproductResource($importproduct);
         $success['status'] = 200;
 
@@ -80,15 +93,28 @@ class ImportproductController extends BaseController
             $validator = Validator::make($input, [
                 'price' => ['required', 'numeric',
                     'gte:' . $purchasing_price],
-
+                'qty' => ['required', 'numeric'],
             ]);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
+            $qty = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->value('qty');
+            $product = Product::where('id', $id)->first();
+            if ($request->qty > $product->stock + $qty) {
 
-            $importproduct->update([
-                'price' => $request->price,
-            ]);
+                return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
+            } else {
+                $importproduct->update([
+                    'price' => $request->price,
+                    'qty' => $request->qty,
+
+                ]);
+                $newStock = ($product->stock + $qty) - $importproduct->qty;
+                $product->update([
+                    'stock' => $newStock,
+                ]);
+            }
+
             $success['importproducts'] = new ImportproductResource($importproduct);
             $success['status'] = 200;
 
