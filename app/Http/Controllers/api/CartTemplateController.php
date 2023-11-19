@@ -174,7 +174,7 @@ class CartTemplateController extends BaseController
                 if ($validator->fails()) {
                     return $this->sendError(null, $validator->errors());
                 }
-      
+
                 $store = Store::where('domain', $domain)->first();
                 $store_id = $store->id;
 
@@ -203,7 +203,7 @@ class CartTemplateController extends BaseController
                          }
                          else {
                             $success['status'] = 200;
-    
+
                         return $this->sendResponse($success, ' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
                          }
                     }
@@ -222,11 +222,11 @@ class CartTemplateController extends BaseController
                         $extra_shipping_price=($weight-15)*3;
                     }
                     else{
-                        $extra_shipping_price=0;   
+                        $extra_shipping_price=0;
                     }
-                 
+
                     $total = $subtotal + Cart::where('id', $cartid)->value('shipping_price');
-                     
+
                     $cart->update([
                         'total' => $total+$extra_shipping_price,
                         'count' => CartDetail::where('cart_id', $cartid)->count(),
@@ -235,18 +235,18 @@ class CartTemplateController extends BaseController
                         'tax'=> $tax,
                         'weight'=> $weight
                     ]);
-                    
-                   
+
+
                     $success = new CartResource($cart);
                     $success['status'] = 200;
                     return $this->sendResponse($success, 'تم إضافة  السلة بنجاح', 'Cart Added successfully');
-                    
+
                     }
             }
     }
 public function delete($domain, $id)
     {
-    
+
         $store = Store::where('domain', $domain)->first();
         $cart_id = Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->pluck('id')->first();
         $cart = CartDetail::where('id', $id)->first();
@@ -273,19 +273,19 @@ public function delete($domain, $id)
             $extra_shipping_price=( $newCart->weight-15)*3;
         }
         else{
-            $extra_shipping_price=0; 
+            $extra_shipping_price=0;
         }
         $newCart->update([
-        
+
             'tax'=>$newCart->total * 0.15,
             'shipping_price'=>$newCart->shipping_price
         ]);
-       
+
         $newCart->update([
             'subtotal'=>$newCart->total-$newCart->tax,
             'total' => $newCart->total+$newCart->shipping_price+$extra_shipping_price
         ]);
-  
+
         if($newCart->count == 0)
         {
         $newCart->delete();
