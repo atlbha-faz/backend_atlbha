@@ -197,7 +197,7 @@ public function show($order)
        
               $ship_id=null;
               $track_id=null;
-    //  return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
+         return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
 
 
             }
@@ -264,7 +264,7 @@ public function show($order)
           else{
             $ship_id=null;
             $track_id=null;
-            //   return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
+            return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
 
           }
          $shipping=Shipping::create([
