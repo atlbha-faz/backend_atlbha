@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\Cart;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Store;
+use App\Models\Coupon;
+use App\Models\Product;
+use App\Models\OrderItem;
+use App\Models\CartDetail;
+use App\Models\OrderAddress;
+use Illuminate\Http\Request;
+use App\Models\coupons_users;
+use App\Models\Importproduct;
+use App\Models\coupons_products;
+use App\Models\shippingtype_store;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\ShippingtypeResource;
-use App\Models\Cart;
-use App\Models\Product;
-use App\Models\CartDetail;
-use App\Models\Coupon;
-use App\Models\shippingtype_store;
-use App\Models\coupons_products;
-use App\Models\coupons_users;
-use App\Models\Order;
-use App\Models\OrderAddress;
-use App\Models\OrderItem;
-use App\Models\Store;
-use App\Models\User;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CheckoutController extends BaseController
 {
