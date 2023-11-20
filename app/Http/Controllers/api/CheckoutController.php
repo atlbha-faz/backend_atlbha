@@ -115,17 +115,22 @@ class CheckoutController extends BaseController
 
             // Loop through the cart items and associate them with the order
             foreach ($cart->cartDetails as $cartItem) {
-            //   $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->where('store_id',$store_domain)->first();
-                $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->first();
+              $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->where('store_id',$store_domain)->first();
+                // $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->first();
               if( $product != null){
                     $product->update([
                         'stock'=> $product->stock-$cartItem->qty
                         ]);
                 //   $product-> quantity=  $product-> quantity-$cartItem->qty;
               }
-            //   else{
-
-            //   }
+              else{
+        $importProduct=Importproduct::where('product_id', $cartItem->product_id)->where('store_id',$store_domain)->first();
+        if( $product != null){
+        $importProduct->update([
+            'qty'=> $importProduct->qty-$cartItem->qty
+            ]);
+        }
+              }
             }
             foreach ($cart->cartDetails as $cartItem) {
                 $orderItem = new OrderItem();

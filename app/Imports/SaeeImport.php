@@ -29,18 +29,18 @@ SkipsOnFailure
     */
     public function model(array $row)
     {
-        $name_en=City::where('name_en',$row['name_en'])->pluck('name_en')->first();
-        $region_id=Region::where('name_en',$row['province'])->pluck('id')->first();
-        $saeeCity = City::updateOrCreate([
-                     'name_en' =>  $name_en,
-                            ], [
-                                'name' => $row['name'],
-                                'name_en' => $row['name_en'],
-                                'region_id' => $region_id,
-                                'country_id' => 1,
-                                'code' => 966
-                            ]);
-        return  $saeeCity;
+        // $name_en=City::where('name_en',$row['name_en'])->pluck('name_en')->first();
+        // $region_id=Region::where('name_en',$row['province'])->pluck('id')->first();
+        // $saeeCity = City::updateOrCreate([
+        //              'name_en' =>  $name_en,
+        //                     ], [
+        //                         'name' => $row['name'],
+        //                         'name_en' => $row['name_en'],
+        //                         'region_id' => $region_id,
+        //                         'country_id' => 1,
+        //                         'code' => 966
+        //                     ]);
+        // return  $saeeCity;
     }
 
     public function rules(): array {
