@@ -50,11 +50,11 @@ SkipsOnFailure
          else{
             $sub_categories=null;
          }
-         if(isset($row['discount_price']) &&  $row['discount_price']!=null ) 
+         if(isset($row['discount_price']) &&  $row['discount_price']!=null )
          {$discount_price=$row['discount_price'];} else{
             $discount_price=null;
          }
-         if(isset($row['seo']) &&  $row['seo']!=null ) 
+         if(isset($row['seo']) &&  $row['seo']!=null )
          {$seo=$row['seo'];} else{
             $seo=null;
          }
@@ -117,7 +117,7 @@ SkipsOnFailure
 
 
 
-        return $product;
+        // return $product;
 
 
     }
