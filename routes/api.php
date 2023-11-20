@@ -463,6 +463,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('deleteImport/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteImport'])->name('store.products.deleteimport');
         Route::post('duplicateProduct/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'duplicateProduct'])->name('store.products.duplicateproduct');
         Route::get('specialStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'specialStatus'])->name('store.products.specialStatus');
+        Route::post('importcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importcities']);
 
         // importProduct
         Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
