@@ -126,7 +126,7 @@ class CheckoutController extends BaseController
               }
               else{
         $importProduct=Importproduct::where('product_id', $cartItem->product_id)->where('store_id',$store_domain)->first();
-        if( $product != null){
+        if( $importProduct != null){
         $importProduct->update([
             'qty'=> $importProduct->qty-$cartItem->qty
             ]);

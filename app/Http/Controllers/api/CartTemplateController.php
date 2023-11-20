@@ -190,7 +190,10 @@ class CartTemplateController extends BaseController
                         ]);
                         $cartid = $cart->id;
                         foreach ($request->data as $data) {
-                       $product_quantity = Product::where('id', $data['id'])->pluck('stock')->first();
+                       $product_quantity = Product::where('id', $data['id'])->where('store_id',$store_id)->pluck('stock')->first();
+                       if($product_quantity == null){
+                        $product_quantity = Importproduct::where('product_id', $data['id'])->where('store_id',$store_id)->pluck('qty')->first();
+                       }
                          if ($product_quantity >= $data['qty']) {
                             $cartDetail = CartDetail::updateOrCreate([
                                 'cart_id' => $cartid,
