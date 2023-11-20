@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\Models\Region;
 use App\Models\ShippingCity;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
@@ -12,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
 use Throwable;
 
-class SaeeImport implements ToModel,
+class SmsaImport implements ToModel,
 WithHeadingRow,
 SkipsOnError,
 WithValidation,
@@ -28,19 +27,18 @@ SkipsOnFailure
     public function model(array $row)
     {
         $name_en = ShippingCity::where('name_en', $row['name_en'])->pluck('name_en')->first();
-        $region_id = Region::where('name_en', $row['province'])->pluck('id')->first();
-        $saeeCity = ShippingCity::updateOrCreate([
+
+        $smsaCity = ShippingCity::updateOrCreate([
             'name_en' => $name_en,
         ], [
             'name' => $row['name'],
-            'name_en' => $row['name_en'],
-            'region_id' => $region_id,
+
             'country_id' => 1,
 
         ]);
-        $saeeCity->shippingtypes()->attach(1);
+        $smsaCity->shippingtypes()->attach(2);
 
-        return $saeeCity;
+        return $smsaCity;
     }
 
     public function rules(): array

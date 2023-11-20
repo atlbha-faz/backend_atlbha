@@ -78,7 +78,6 @@ Route::resource('OrderAddress', App\Http\Controllers\api\OrderAddressController:
 Route::get('show_default_address', [App\Http\Controllers\api\OrderAddressController::class, 'show_default_address']);
 Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\OrderAddressController::class, 'setDefaultAddress']);
 
-
 // Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
 // المدونه
 Route::get('postStore/{id}', [App\Http\Controllers\api\PostStoreController::class, 'index']);
@@ -214,7 +213,7 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::get('NotificationIndex', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'index'])->name('admin.notification.index');
         Route::get('NotificationRead', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'read'])->name('admin.notification.read');
-         Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotification']);
+        Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotification']);
         Route::get('NotificationDeleteAll', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotificationAll'])->name('admin.notification.deleteall');
         Route::get('NotificationShow/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'show'])->name('admin.notification.show');
         Route::post('addEmail', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'addEmail'])->name('admin.email.store');
@@ -412,7 +411,7 @@ Route::middleware([StoreUser::class])->group(function () {
 
         Route::get('selector/page-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'pagesCategory']);
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);
-         Route::get('showShippingAddress', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'show']);
+        Route::get('showShippingAddress', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'show']);
 
         // Route::middleware([CheckStorePermission::class])->group(function () {
         //cart
@@ -464,6 +463,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('duplicateProduct/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'duplicateProduct'])->name('store.products.duplicateproduct');
         Route::get('specialStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'specialStatus'])->name('store.products.specialStatus');
         Route::post('importcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importcities']);
+        Route::post('importsmsacities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importsmsacities']);
 
         // importProduct
         Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
