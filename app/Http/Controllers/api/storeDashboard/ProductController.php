@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
+use VideoThumbnail;
 
 class ProductController extends BaseController
 {
@@ -30,15 +31,15 @@ class ProductController extends BaseController
     public function index()
     {
 
-        $products = ProductResource::collection(Product::with(['store'=> function ($query) {
-    $query->select('id','domain','store_name');
-},'category'=> function ($query) {
-    $query->select('id','name');}])
-    ->where('is_deleted',0)->where('store_id', auth()->user()->store_id)->where('for','store')->orderByDesc('created_at')->select('id','name','status','cover','special','store_id','created_at','category_id','subcategory_id','selling_price','stock')->get()
-);
+        $products = ProductResource::collection(Product::with(['store' => function ($query) {
+            $query->select('id', 'domain', 'store_name');
+        }, 'category' => function ($query) {
+            $query->select('id', 'name');}])
+                ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->get()
+        );
 
         $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
-            ->select(['products.id', 'products.name','products.status','products.cover','products.special','products.store_id','products.created_at','products.category_id','products.subcategory_id','products.selling_price','products.stock','importproducts.price', 'importproducts.status'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
+            ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.price', 'importproducts.status'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $imports = importsResource::collection($import);
 
         $success['products'] = $products->merge($imports);
@@ -69,14 +70,14 @@ class ProductController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'for'=>'store',
+            'for' => 'store',
             'description' => 'required|string',
             'selling_price' => ['required', 'numeric', 'gt:0'],
             'stock' => ['required', 'numeric', 'gt:0'],
-            'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:8048'],
+            'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'discount_price' => ['nullable', 'numeric'],
             'images' => 'nullable|array',
-            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:8048'],
+            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:2048'],
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -85,7 +86,7 @@ class ProductController extends BaseController
             'short_description' => 'required|string|max:100',
             'robot_link' => 'nullable|string',
             'google_analytics' => 'nullable|url',
-            'weight'=>'nullable',
+            'weight' => 'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -107,7 +108,7 @@ class ProductController extends BaseController
         }
         $product = Product::create([
             'name' => $request->name,
-          'for'=>"store",
+            'for' => "store",
             'description' => $request->description,
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
@@ -121,7 +122,7 @@ class ProductController extends BaseController
             'short_description' => $request->short_description,
             'robot_link' => $request->robot_link,
             'google_analytics' => $request->google_analytics,
-             'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
+            'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'subcategory_id' => $subcategory,
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
@@ -130,12 +131,30 @@ class ProductController extends BaseController
         if ($request->hasFile("images")) {
             $files = $request->file("images");
             foreach ($files as $file) {
+
                 $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
                 $request['product_id'] = $productid;
                 $request['image'] = $imageName;
                 $filePath = 'images/product/' . $imageName;
                 $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
+
                 Image::create($request->all());
+                $mimeType = $file->getClientMimeType();
+
+                // if (strpos($mimeType, 'video/') === 0) {
+                //     $thumbnail = VideoThumbnail::createThumbnail(
+                //         storage_path('app/public/images/product/'.$imageName),
+
+                //         storage_path('app/public/images/product/thumb'),
+                //         'thumbnail.jpg',
+                //         2,
+                //         1920,
+                //         1080
+                //     );
+                //     // dd($filePath);
+
+                //     dd($thumbnail);
+                // }
 
             }
         }
@@ -249,9 +268,9 @@ class ProductController extends BaseController
                 'twitterpixel' => 'nullable|string',
                 'instapixel' => 'nullable|string',
                 'short_description' => 'required|string|max:100',
-                 'robot_link' => 'nullable|string',
-                 'google_analytics' => 'nullable|url',
-                  'weight'=>'nullable',
+                'robot_link' => 'nullable|string',
+                'google_analytics' => 'nullable|url',
+                'weight' => 'nullable',
                 'category_id' => 'required|exists:categories,id',
                 'subcategory_id' => ['nullable', 'array'],
                 'subcategory_id.*' => ['nullable', 'numeric',
@@ -286,10 +305,10 @@ class ProductController extends BaseController
                 'tiktokpixel' => $request->tiktokpixel,
                 'twitterpixel' => $request->twitterpixel,
                 'instapixel' => $request->instapixel,
-                'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
+                'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
                 'short_description' => $request->short_description,
-                 'robot_link' => $request->robot_link,
-                 'google_analytics' => $request->google_analytics,
+                'robot_link' => $request->robot_link,
+                'google_analytics' => $request->google_analytics,
                 'category_id' => $request->input('category_id'),
                 'subcategory_id' => $subcategory,
                 // 'store_id' => $request->input('store_id'),
@@ -338,18 +357,18 @@ class ProductController extends BaseController
                     $image = Image::query()->find($oid);
                     $image->update(['is_deleted' => $image->id]);
                 }
-                if($files != null){
-                foreach ($files as $file) {
-                    $imageName = time() . '_' . $file;
-                    $request['product_id'] = $productid;
-                    $existingImagePath = $file;
-                    $newImagePath = basename($file);
-                    $request['image'] = $newImagePath;
-                    Storage::copy($existingImagePath, $newImagePath);
-                    Image::create($request->all());
+                if ($files != null) {
+                    foreach ($files as $file) {
+                        $imageName = time() . '_' . $file;
+                        $request['product_id'] = $productid;
+                        $existingImagePath = $file;
+                        $newImagePath = basename($file);
+                        $request['image'] = $newImagePath;
+                        Storage::copy($existingImagePath, $newImagePath);
+                        Image::create($request->all());
 
+                    }
                 }
-            }
             }
             $success['products'] = new ProductResource($product);
             $success['status'] = 200;
@@ -509,7 +528,7 @@ class ProductController extends BaseController
         }
 
     }
-      public function specialStatus($id)
+    public function specialStatus($id)
     {
         $product = Product::query()->where('store_id', auth()->user()->store_id)->find($id);
         if (is_null($product) || $product->is_deleted != 0) {

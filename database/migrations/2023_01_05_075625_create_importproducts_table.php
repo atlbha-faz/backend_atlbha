@@ -20,6 +20,7 @@ return new class extends Migration
             $table->bigInteger('store_id')->unsigned();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->double('price');
+            $table->integer('qty');
             $table->enum('status',['active','not_active'])->default('active');
             $table->timestamps();
         });
