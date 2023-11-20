@@ -40,7 +40,7 @@ class importsResource extends JsonResource
             'quantity' => $this->quantity,
               'weight'=> $this->weight !== null ? $this->weight * 1000 : 500,
             'less_qty' => $this->less_qty,
-            'stock' => $this->stock,
+            'stock' => $this->qty,
             'tags' => $this->tags,
             'cover' => $this->cover,
             'discount_price' => $this->discount_price,
