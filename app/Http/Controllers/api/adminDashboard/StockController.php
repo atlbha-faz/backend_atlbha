@@ -85,7 +85,7 @@ class StockController extends BaseController
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'images' => 'required|array',
-            'images.*' => ['required', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
+            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             // 'data' => 'nullable|array',
             // 'data.*.type' => 'required|in:brand,color,wight,size',
@@ -407,7 +407,7 @@ class StockController extends BaseController
         if ($product->for === 'stock') {
             $product->update(['for' => 'etlobha']);
               //إستيراد الى متجر اطلبها
-       $atlbha_id= Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first(); 
+       $atlbha_id= Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
         $importproduct = Importproduct::create([
             'product_id' =>  $product->id,
             'store_id' => $atlbha_id,
