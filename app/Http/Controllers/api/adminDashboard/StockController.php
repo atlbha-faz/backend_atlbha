@@ -333,7 +333,7 @@ class StockController extends BaseController
                 $image = Image::query()->find($oid);
                 $image->update(['is_deleted' => $image->id]);
             }
-
+            if($files != null){
             foreach ($files as $file) {
                 $imageName = time() . '_' . $file;
                 $request['product_id'] = $productid;
@@ -344,6 +344,7 @@ class StockController extends BaseController
                 Image::create($request->all());
 
             }
+        }
         }
 
         // $option = Option::where('product_id', $id);
