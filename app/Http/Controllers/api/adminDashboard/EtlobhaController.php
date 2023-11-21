@@ -58,7 +58,7 @@ class EtlobhaController extends BaseController
             // 'amount' => ['required', 'numeric'],
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
-            'images' => 'required|array',
+            'images' => 'nullable|array',
             // 'data' => 'nullable|array',
             // 'data.*.type' => 'required|in:brand,color,wight,size',
             // 'data.*.title' => 'required|string',
@@ -141,7 +141,7 @@ class EtlobhaController extends BaseController
         ]);
         $productid = $product->id;
     //إستيراد الى متجر اطلبها
-       $atlbha_id= Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first(); 
+       $atlbha_id= Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
         $importproduct = Importproduct::create([
             'product_id' =>  $product->id,
             'store_id' => $atlbha_id,
