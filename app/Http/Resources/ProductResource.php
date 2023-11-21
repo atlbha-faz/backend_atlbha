@@ -45,7 +45,7 @@ class ProductResource extends JsonResource
             'tags' => $this->tags,
             'cover' => $this->cover,
             'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
-            'SEOdescription' => explode(',', $this->SEOdescription),
+            'SEOdescription' => $this->SEOdescription !== null? explode(',', $this->SEOdescription):aaray(),
             'snappixel' => $this->snappixel,
             'tiktokpixel' => $this->tiktokpixel,
             'twitterpixel' => $this->twitterpixel,
