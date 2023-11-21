@@ -23,7 +23,7 @@ class ImportproductController extends BaseController
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
         $imports = Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
-        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNotIn('id', $imports)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'created_at', 'category_id', 'subcategory_id')->get());
+        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock',0)->whereNotIn('id', $imports)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'created_at', 'category_id', 'subcategory_id')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
