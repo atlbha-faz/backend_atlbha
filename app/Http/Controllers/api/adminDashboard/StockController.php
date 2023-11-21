@@ -186,9 +186,19 @@ class StockController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+   
+    public function show($product)
     {
-        //
+        $product = Product::query()->where('for', 'stock')->find($product);
+        if (is_null($product) || $product->is_deleted != 0) {
+            return $this->sendError(" المنتج غير موجود", "product is't exists");
+        }
+
+        $success['product'] = new productResource($product);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم عرض المنتج بنجاح', 'product showed successfully');
+
     }
 
     /**
