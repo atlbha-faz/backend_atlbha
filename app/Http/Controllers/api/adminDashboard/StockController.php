@@ -84,7 +84,7 @@ class StockController extends BaseController
             // 'amount' => ['required', 'numeric'],
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
-            'images' => 'required|array',
+            'images' => 'nullable|array',
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             // 'data' => 'nullable|array',
@@ -186,7 +186,7 @@ class StockController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-   
+
     public function show($product)
     {
         $product = Product::query()->where('for', 'stock')->find($product);
