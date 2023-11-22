@@ -194,7 +194,7 @@ class ProductController extends BaseController
         $newproduct = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $product->id)->first();
         if ($newproduct) {
             $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $product->id)
-                ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+                ->first(['products.*','importproducts.qty', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
             $success['product'] = new importsResource($newimportproduct);
 
         } else {
