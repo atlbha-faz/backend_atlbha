@@ -465,6 +465,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('specialStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'specialStatus'])->name('store.products.specialStatus');
         Route::post('importcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importcities']);
         Route::post('importsmsacities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importsmsacities']);
+        Route::post('importimilecities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importimilecities']);
 
         // importProduct
         Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
