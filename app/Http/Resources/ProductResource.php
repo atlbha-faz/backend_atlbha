@@ -45,7 +45,7 @@ class ProductResource extends JsonResource
             'tags' => $this->tags,
             'cover' => $this->cover,
             'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
-            'SEOdescription' => $this->SEOdescription !== null? explode(',', $this->SEOdescription):array(),
+            'SEOdescription' => $this->SEOdescription !== ""? explode(',', $this->SEOdescription):array(),
             'snappixel' => $this->snappixel,
             'tiktokpixel' => $this->tiktokpixel,
             'twitterpixel' => $this->twitterpixel,
@@ -55,8 +55,8 @@ class ProductResource extends JsonResource
             'google_analytics'=> $this->google_analytics,
             'importproduct' => $this->importproduct->count(),
             'subcategory' => CategoryResource::collection(\App\Models\Category::with(['store'=> function ($query) {
-    $query->select('id');
-}])->whereIn('id', explode(',', $this->subcategory_id))->get()),
+             $query->select('id');
+            }])->whereIn('id', explode(',', $this->subcategory_id))->get()),
             'status' => $status,
             'special' => $special,
             'url' => 'https://template.atlbha.com/' . $domain . '/shop/product/' . $this->id,
