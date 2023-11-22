@@ -2,39 +2,38 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\City;
-use App\Models\Plan;
-use App\Models\Store;
-use App\Models\Country;
-use App\Models\Package;
-use App\Models\Product;
-use App\Models\Service;
-use App\Models\Activity;
-use App\Models\Category;
-use App\Models\Template;
-use App\Models\Paymenttype;
-use App\Models\Postcategory;
-use App\Models\Page_category;
-use App\Models\Shipping;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CityResource;
-use App\Http\Resources\PlanResource;
-use App\Http\Resources\StoreResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\PackageResource;
+use App\Http\Resources\Page_categoryResource;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\PlanResource;
+use App\Http\Resources\PostCategoryResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ServiceResource;
-use Illuminate\Http\Request;
-use App\Http\Resources\ActivityResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\TemplateResource;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\PaymenttypeResource;
-use App\Http\Resources\PostCategoryResource;
-use App\Http\Resources\Page_categoryResource;
 use App\Http\Resources\ShippingStoreResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\TemplateResource;
+use App\Models\Category;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Package;
+use App\Models\Page_category;
+use App\Models\Paymenttype;
+use App\Models\Plan;
+use App\Models\Postcategory;
+use App\Models\Product;
+use App\Models\Service;
+use App\Models\Shipping;
+use App\Models\Shippingtype;
+use App\Models\Store;
+use App\Models\Template;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class SelectorController extends BaseController
 {
@@ -95,7 +94,7 @@ class SelectorController extends BaseController
     public function activities()
     {
         // $success['activities'] = ActivityResource::collection(Activity::where('is_deleted', 0)->where('status', 'active')->get());
-              $success['activities']=CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at')->get());
+        $success['activities'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at')->get());
 
         $success['status'] = 200;
 
@@ -104,18 +103,16 @@ class SelectorController extends BaseController
 
     public function mainCategories()
     {
-      
+
         $success['categories'] = CategoryResource::collection(Category::
                 where('is_deleted', 0)
                 ->where('parent_id', null)
-                         ->where(function ($query) {
+                ->where(function ($query) {
                     $query->where('store_id', auth()->user()->store_id)
                         ->OrWhere('store_id', null);
                 })
                 ->where('status', 'active')->get());
-    
-            
-      
+
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
@@ -130,7 +127,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم عرض الاقسام الفرعية بنجاح', 'sub_Category showed successfully');
     }
 
-     public function mainCategories_etlobha()
+    public function mainCategories_etlobha()
     {
         $success['categories'] = CategoryResource::collection(Category::
                 where('is_deleted', 0)
@@ -144,17 +141,16 @@ class SelectorController extends BaseController
 
     }
 
-
     public function etlobahCategory()
     {
-        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status','active')->where('parent_id', null)->where('store_id', null)->get());
+        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)->where('store_id', null)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
     }
     public function roles()
     {
-        $success['roles'] = DB::table('roles')->where('type','store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->get();
+        $success['roles'] = DB::table('roles')->where('type', 'store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->get();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الأدوار بنجاح', 'roles return successfully');
@@ -225,30 +221,39 @@ class SelectorController extends BaseController
     }
     public function subcategories(Request $request)
     {
-        
+
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'category_id'=>['required','array']
+        $validator = Validator::make($input, [
+            'category_id' => ['required', 'array'],
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
-        $category = Category::whereIn('parent_id',$request->category_id)->where('is_deleted', 0)->where('status', 'active')->get();
+        $category = Category::whereIn('parent_id', $request->category_id)->where('is_deleted', 0)->where('status', 'active')->get();
 
         $success['categories'] = CategoryResource::collection($category);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الاقسام الفرعية بنجاح', 'sub_Category showed successfully');
     }
-       public function show()
+    public function show()
     {
-        $shipping=Shipping::where('store_id',auth()->user()->store_id)->latest('updated_at')->first();
+        $shipping = Shipping::where('store_id', auth()->user()->store_id)->latest('updated_at')->first();
 
-        $success['shippingAddress'] = $shipping !== null? new ShippingStoreResource($shipping):null;
+        $success['shippingAddress'] = $shipping !== null ? new ShippingStoreResource($shipping) : null;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع عنوان المستودع بنجاح', 'address return successfully');
+    }
+    public function shippingcities($id)
+    {
+        $shippingCompany = Shippingtype::query()->find($id);
+        $success['cities'] = ShippingCitiesResource::collection($shippingCompany->shippingcities);
+
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع  المدن بنجاح', 'city return successfully');
+
     }
 
 }

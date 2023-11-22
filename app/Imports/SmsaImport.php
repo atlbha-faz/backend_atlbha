@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Region;
 use App\Models\ShippingCity;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
@@ -27,12 +28,14 @@ SkipsOnFailure
     public function model(array $row)
     {
         $name_en = ShippingCity::where('name_en', $row['name_en'])->pluck('name_en')->first();
+        $region_id = Region::where('name_en', $row['province'])->pluck('id')->first();
 
         $smsaCity = ShippingCity::updateOrCreate([
             'name_en' => $name_en,
         ], [
             'name' => $row['name'],
-
+            'name_en' => $row['name_en'],
+            'region_id' => $region_id,
             'country_id' => 1,
 
         ]);
