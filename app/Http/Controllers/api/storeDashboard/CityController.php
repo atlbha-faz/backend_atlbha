@@ -90,6 +90,33 @@ class CityController extends BaseController
             return $failures;
         }
     }
+  public function importimilecities(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'file' => 'required|mimes:csv,txt,xlsx,xls',
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
 
+        try {
+
+            // Excel::import(new SaeeImport, $request->file);
+            Excel::import(new SmsaImport,request()->file('file'));
+
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم إضافة المنتجات بنجاح', 'products Added successfully');
+        } catch (ValidationException $e) {
+            // Handle other import error
+            // return "eroee";
+            $failures = $e->failures();
+
+            // Handle validation failures
+            return $failures;
+        }
+    }
 
 }
