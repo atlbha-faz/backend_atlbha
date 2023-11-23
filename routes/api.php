@@ -375,7 +375,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
         Route::get('getAllCity', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'getAllCity']);
-        Route::get('PrintSticker/{order_id}/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSticker']);
+        Route::get('PrintImileSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintImileSticker']);
         Route::get('PrintSmsaSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSmsaSticker']);
         Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
 

@@ -285,17 +285,18 @@ class OrderController extends BaseController
             'userId' => env('GOTEX_UserId_KEY'),
             'apiKey' => env('GOTEX_API_KEY'),
             'companyName' => auth()->user()->store->domain,
-            'contacts' => auth()->user()->store->store_name,
+            'contacts' => auth()->user()->name,
             'country' => "KSA",
-            'city' => $request->city,
-            'address' => $request->street_address,
-            'phone' => auth()->user()->phonenumber,
-            'email' => auth()->user()->email,
+            'city' =>  $request->city,
+            'address' =>$request->street_address,
+            'phone' => substr(auth()->user()->phonenumber,1),
+            'Email' => auth()->user()->email,
             'backupPhone' => "",
-            'attentions' => "this is consignor address",
+            'Attentions' => "this is consignor address",
           );
           $imile = new ImileService();
           $imileClient = $imile->addClient($client);
+              
           $data = array(
             'userId' => env('GOTEX_UserId_KEY'),
             'apiKey' => env('GOTEX_API_KEY'),
@@ -309,9 +310,10 @@ class OrderController extends BaseController
             'skuName' => $order->description,
             'skuTotal' => $order->totalCount,
             'weight' => $order->weight,
-            'cod' => $order->cashondelivery,
+            'cod' =>true,
             'shipmentValue' => $order->total_price
           );
+          
           $imileData = $imile->createOrder($data);
           $ship = $imileData;
 
@@ -348,7 +350,8 @@ class OrderController extends BaseController
           } else {
             $ship_id = null;
             $track_id = null;
-            return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
+                   $success['shippingCompany'] =  $ship->msg->message;
+            return $this->sendResponse($success,"message","h");
           }
         }
       }
@@ -390,27 +393,17 @@ class OrderController extends BaseController
 
     return $this->sendResponse($success, 'تم إرجاع المدن', ' cities successfully');
   }
-  public function PrintSticker($order_id,$id)
+  public function PrintImileSticker($id)
   {
     $key = array(
       'userId' => env('GOTEX_UserId_KEY'),
       'apiKey' => env('GOTEX_API_KEY')
     );
-    $order = Order::where('id', $order_id)->first();
-    if($order_id ==null){
-      return $this->sendError("'الطلب غير موجود", "Order is't exists");
-    }
-    if ($order->shippingtype->id == 1) {
-      $url='https://dashboard.go-tex.net/gotex-co-test/saee/print-sticker/' . $id;
-    } elseif ($order->shippingtype->id == 2) {
-      $url = 'https://dashboard.go-tex.net/gotex-co-test/smsa/print-sticker/' . $id;
-    }
-  else{
-    $url='https://dashboard.go-tex.net/gotex-co-test/imile/print-sticker/' . $id;
-  }
+  
+
     $curl = curl_init();
     curl_setopt_array($curl, array(
-      CURLOPT_URL => $url,
+      CURLOPT_URL =>'https://dashboard.go-tex.net/gotex-co-test/imile/print-sticker/'. $id,
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
