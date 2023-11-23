@@ -103,7 +103,7 @@ class CityController extends BaseController
         try {
 
             // Excel::import(new SaeeImport, $request->file);
-            Excel::import(new SmsaImport, request()->file('file'));
+            Excel::import(new ImileImport, request()->file('file'));
 
             $success['status'] = 200;
 
