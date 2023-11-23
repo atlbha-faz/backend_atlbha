@@ -45,7 +45,7 @@ class StoreController extends BaseController
     $query->select('id');
 },'user' => function ($query) {
     $query->select('id');
-}])->where('is_deleted', 0)->orderByDesc('created_at')->select('id','store_name','status','periodtype','special','created_at')->get());
+}])->where('is_deleted', 0)->orderByDesc('created_at')->select('id','store_name','status','periodtype','special','verification_status','verification_date','created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
@@ -264,21 +264,21 @@ class StoreController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'user_name' =>  ['required', 'string', Rule::unique('users')->where(function ($query) use ($user) {
+            'user_name' =>  ['required', 'string', Rule::unique('users')->where(function ($query) use ($store) {
                 return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
                     ->where('id', '!=', $store->user->id);
             })],
             'store_name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
+            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($store) {
                 return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
                     ->where('id', '!=', $store->user->id);
             })],
             'store_email' => 'required|email|unique:stores,store_email,' . $store->id,
             'password' => 'required|min:8|string',
-            'domain' =>['required','string', Rule::unique('stores')->where(function ($query) {
+            'domain' =>['required','string', Rule::unique('stores')->where(function ($query) use ($store) {
                 return $query->where('is_deleted',0)->where('id', '!=',$store->id);
             })],
-            'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users', 'phonenumber')->where(function ($query) use ($user) {
+            'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users', 'phonenumber')->where(function ($query) use ($store) {
                 return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
                     ->where('id', '!=', $store->user->id);
             })],
