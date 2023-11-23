@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('seos', function (Blueprint $table) {
             $table->id();
-            $table->string('google_analytics')->nullable();
+            $table->longText('robot_link')->nullable();
+            $table->longText('google_analytics')->nullable();
             $table->text('snappixel')->nullable();
             $table->text('tiktokpixel')->nullable();
             $table->text('twitterpixel')->nullable();

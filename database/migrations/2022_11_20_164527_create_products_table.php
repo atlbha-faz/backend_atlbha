@@ -31,6 +31,10 @@ return new class extends Migration
             $table->text("tags")->nullable();
             $table->double('discount_price')->nullable();
             $table->string('SEOdescription')->nullable();
+            $table->longText('robot_link')->nullable();
+            $table->longText('google_analytics')->nullable();
+            $table->double('weight')->default(0.5)->nullable();
+            $table->longText('short_description');
             $table->text('snappixel')->nullable();
             $table->text('tiktokpixel')->nullable();
             $table->text('twitterpixel')->nullable();
