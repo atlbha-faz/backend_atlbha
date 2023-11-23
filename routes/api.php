@@ -59,7 +59,6 @@ Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'index']);
     Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
     Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\IndexStoreController::class, 'addSubsicription']);
-
 });
 
 Route::middleware([SetActiveStore::class])->group(function () {
@@ -144,7 +143,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('selector/roles', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'roles']);
         Route::get('selector/subcategories', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'subcategories']);
 
-//Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
+        //Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
         Route::resource('pagecategory', App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
@@ -153,12 +152,12 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::get('changeCityStatus/{id}', [App\Http\Controllers\api\adminDashboard\CityController::class, 'changeStatus']);
         // Route::get('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class, 'changeStatus']);
         // Route::get('changeExplainVideosStatus/{id}', [App\Http\Controllers\api\adminDashboard\ExplainVideosController::class, 'changeStatus']);
-//Route::get('changeCourseStatus/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class,'changeStatus']);
+        //Route::get('changeCourseStatus/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class,'changeStatus']);
         // Route::get('changeUnitStatus/{id}', [App\Http\Controllers\api\adminDashboard\UnitController::class, 'changeStatus']);
         // Route::get('changeVideoStatus/{id}', [App\Http\Controllers\api\adminDashboard\VideoController::class, 'changeStatus']);
         // Route::get('changeActivityStatus/{id}', [App\Http\Controllers\api\adminDashboard\ActivityController::class, 'changeStatus']);
         Route::get('changePlatformStatus/{id}', [App\Http\Controllers\api\adminDashboard\PlatformController::class, 'changeStatus'])->name('admin.platform.changePlatformStatus');
-//Route::get('changeServiceStatus/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class,'changeStatus']);
+        //Route::get('changeServiceStatus/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class,'changeStatus']);
         // Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class, 'changeStatus']);
         // Route::get('changeStoreCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class, 'changeStatus']);
         Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'changeStatus'])->name('admin.shippingtype.changeStatus');
@@ -337,7 +336,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::post('registrationMarketer', [App\Http\Controllers\api\adminDashboard\SettingController::class, 'registrationMarketer'])->name('admin.marketer.registrationMarketer');
         Route::get('contactdeleteall', [App\Http\Controllers\api\adminDashboard\ContactController::class, 'deleteall']);
         // Route::post('shippOrder', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'shippOrder']);
-//
+        //
         Route::get('verification', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'index'])->name('admin.verification.index');
         Route::get('verificationdeleteall', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'deleteall'])->name('admin.verification.deleteall');
         Route::post('addStoreNote', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'addNote'])->name('admin.verification.addNote');
@@ -347,8 +346,8 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::post('verification_update', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_update'])->name('admin.verification.verification_update');
         Route::get('verification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_show'])->name('admin.verification.verification_show');
 
-//Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
-//
+        //Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
+        //
         Route::get('subscriptions', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'index'])->name('admin.subscriptions.index');
         Route::post('addAlert', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'addAlert'])->name('admin.subscriptions.addAlert');
         Route::get('subscriptionsdeleteall', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'deleteall'])->name('admin.subscriptions.deleteall');
@@ -362,7 +361,6 @@ Route::middleware([AdminUser::class])->group(function () {
         // });
         // uodate seo
         Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('store.seo.updateGoogleAnalytics');
-
     });
 });
 Auth::routes();
@@ -377,8 +375,9 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
         Route::get('getAllCity', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'getAllCity']);
-        Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
+        Route::get('PrintSticker/{order_id}/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSticker']);
         Route::get('PrintSmsaSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSmsaSticker']);
+        Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
 
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);

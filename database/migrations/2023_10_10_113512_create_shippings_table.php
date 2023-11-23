@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('shippings', function (Blueprint $table) {
             $table->id();
             $table->string('shipping_id');
+            $table->string('track_id')->nullable();
             $table->longText('description')->nullable();
             $table->string('city')->nullable();
             $table->string('streetaddress')->nullable();
+            $table->string('district')->nullable();
             $table->double('price')->nullable();
             $table->integer('quantity')->nullable();
             $table->double('weight')->nullable();
