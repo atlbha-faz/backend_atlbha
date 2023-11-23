@@ -261,7 +261,7 @@ class IndexStoreController extends BaseController
             $specialproducts = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store_id)->select('id', 'name', 'status','stock', 'cover', 'special', 'selling_price', 'purchasing_price', 'discount_price', 'created_at')->get());
 
             $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('products.special', 'special')->orderBy('products.created_at', 'desc')
-                ->get(['products.*', '','importproducts.price','importproducts.qty','importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+                ->get(['products.*','importproducts.price','importproducts.qty','importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
             $imports = importsResource::collection($import);
 
             $success['specialProducts'] = $specialproducts->merge($imports);
