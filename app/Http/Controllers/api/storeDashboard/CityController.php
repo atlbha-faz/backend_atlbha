@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\City;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CityResource;
 use App\Imports\SaeeImport;
 use App\Imports\SmsaImport;
-use Illuminate\Support\Str;
+use App\Models\City;
+use App\Models\shippingcities_shippingtypes;
+use App\Models\ShippingCity;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Resources\CityResource;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CityController extends BaseController
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -27,10 +26,10 @@ class CityController extends BaseController
      */
     public function index()
     {
-        $success['cities']=CityResource::collection(City::where('is_deleted',0)->orderByDesc('created_at')->get());
-        $success['status']= 200;
+        $success['cities'] = CityResource::collection(City::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع المدن بنجاح','cities return successfully');
+        return $this->sendResponse($success, 'تم ارجاع المدن بنجاح', 'cities return successfully');
 
     }
 
@@ -48,7 +47,7 @@ class CityController extends BaseController
         try {
 
             // Excel::import(new SaeeImport, $request->file);
-            Excel::import(new SaeeImport,request()->file('file'));
+            Excel::import(new SaeeImport, request()->file('file'));
 
             $success['status'] = 200;
 
@@ -62,7 +61,7 @@ class CityController extends BaseController
             return $failures;
         }
     }
-     public function importsmsacities(Request $request)
+    public function importsmsacities(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -76,7 +75,7 @@ class CityController extends BaseController
         try {
 
             // Excel::import(new SaeeImport, $request->file);
-            Excel::import(new SmsaImport,request()->file('file'));
+            Excel::import(new SmsaImport, request()->file('file'));
 
             $success['status'] = 200;
 
@@ -90,7 +89,7 @@ class CityController extends BaseController
             return $failures;
         }
     }
-  public function importimilecities(Request $request)
+    public function importimilecities(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -104,7 +103,7 @@ class CityController extends BaseController
         try {
 
             // Excel::import(new SaeeImport, $request->file);
-            Excel::import(new SmsaImport,request()->file('file'));
+            Excel::import(new SmsaImport, request()->file('file'));
 
             $success['status'] = 200;
 
@@ -118,5 +117,17 @@ class CityController extends BaseController
             return $failures;
         }
     }
+    public function fiximport(Request $request)
+    {
+        $cities = ShippingCity::whereIn('region_id', [14, 15, 16, 17, 18])->get();
 
+        foreach ($cities as $city) {
+            $shipping_citest = shippingcities_shippingtypes::where('shipping_city_id', $city->id)->first();
+
+            $shipping_citest->update([
+                'shippingtype_id' => 3,
+            ]);
+        }
+        return 200;
+    }
 }
