@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Region;
 use App\Models\ShippingCity;
 use Maatwebsite\Excel\Concerns\ToModel;
 
@@ -29,7 +30,7 @@ SkipsOnFailure
             'country_id' => 1,
 
         ]);
-        $saeeCity->shippingtypes()->attach(1);
+        $saeeCity->shippingtypes()->attach(3);
 
         return $saeeCity;
     }
