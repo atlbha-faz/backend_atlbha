@@ -119,7 +119,7 @@ class CityController extends BaseController
     }
     public function fiximport(Request $request)
     {
-        $cities = ShippingCity::whereIn('region_id', [14, 15, 16, 17, 18])->get();
+        $cities = ShippingCity::whereIn('region_id', [28, 29, 30, 31, 32])->get();
 
         foreach ($cities as $city) {
             $shipping_citest = shippingcities_shippingtypes::where('shipping_city_id', $city->id)->first();
