@@ -283,7 +283,7 @@ class IndexStoreController extends BaseController
                 $import = Importproduct::where('product_id', $order->id)->where('store_id', $store_id)->first();
                 if (!is_null($import)) {
                     $arr2[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $order->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
-                        ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+                        ->first(['products.*', 'importproducts.price','importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
                     $moreSalesImports = importsResource::collection($arr2);
                 } else {
                     $arr1[] = Product::with(['store' => function ($query) {
