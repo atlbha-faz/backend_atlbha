@@ -377,7 +377,7 @@ class IndexStoreController extends BaseController
                         ->first(['products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
                     $ratingsImports = importsResource::collection($ratingsimport);
                 } else {
-                    $arr[] = Product::where('id', $rating->id)->select('id', 'name', 'status', 'cover', 'special', 'selling_price', 'purchasing_price', 'discount_price', 'status', 'created_at')->first();
+                    $arr[] = Product::where('id', $rating->id)->select('id', 'name', 'status', 'cover','stock' ,'special', 'selling_price', 'purchasing_price', 'discount_price', 'status', 'created_at')->first();
                 }
             }
 
