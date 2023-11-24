@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GotexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,12 @@ Route::get('/roqia', function () {
 
 Route::get('/tagpage', function () {
     return view('tagpage');
+});
+Route::get('/test', function () {
+    $res = app(GotexController::class)->printSticker('655f5689ebfe6bfa43d3ea2b');
+    // dd( $res);
+     return $res->body();
+    
 });
 
 Auth::routes();

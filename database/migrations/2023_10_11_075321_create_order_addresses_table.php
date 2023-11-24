@@ -22,9 +22,12 @@ return new class extends Migration
             $table->string('street_address');
             $table->string('city');
             $table->string('postal_code')->nullable();
+            $table->string('default_address')->nullable();
             $table->string('district')->nullable(); // الحي
             $table->unsignedBigInteger('order_id')->nullable();
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->unsignedBigInteger('shippingtype_id')->nullable();
+            $table->foreign('shippingtype_id')->references('id')->on('shippingtypes')->onDelete('cascade');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('shippingtype_id')->nullable();

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\api\storeDashboard;
-
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\shippingResource;
@@ -356,7 +356,6 @@ class OrderController extends BaseController
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
         }
     }
-    
     public function getAllCity()
     {
         $key = array(
@@ -390,32 +389,42 @@ class OrderController extends BaseController
         return $this->sendResponse($success, 'تم إرجاع المدن', ' cities successfully');
     }
     public function PrintImileSticker($id)
-    {
-        $key = array(
+    {        $key = array(
             'userId' => env('GOTEX_UserId_KEY'),
             'apiKey' => env('GOTEX_API_KEY'),
         );
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/imile/print-sticker/' . $id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($key),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-            ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        $success['Sticker'] = json_decode($response);
+        // $curl = curl_init();
+        // curl_setopt_array($curl, array(
+        //     CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/imile/print-sticker/' . $id,
+        //     CURLOPT_RETURNTRANSFER => true,
+        //     CURLOPT_ENCODING => '',
+        //     CURLOPT_MAXREDIRS => 10,
+        //     CURLOPT_TIMEOUT => 0,
+        //     CURLOPT_FOLLOWLOCATION => true,
+        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST => 'POST',
+        //     CURLOPT_POSTFIELDS => json_encode($key),
+        //     CURLOPT_HTTPHEADER => array(
+        //         'Content-Type: application/json',
+        //     ),
+        // ));
+        // $response = curl_exec($curl);
+        // curl_close($curl);
+        $response = Http::post( 'https://dashboard.go-tex.net/gotex-co-test/imile/print-sticker/'.$id, [
+            'userId' => env('GOTEX_UserId_KEY'),
+            'apiKey' => env('GOTEX_API_KEY'),
+        ]);
+        if ($response->successful()) {
+            $data = $response->json();
+             // Get the response data as JSON
+            // Process the data...
+        } else {
+            $statusCode = $response->status();
+            $data = $response->body();
+        
+            // Handle the error...
+        }
+        $success['Sticker'] =   $data;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم الإرجاع بنجاح', ' print Sticker successfully');
@@ -444,7 +453,9 @@ class OrderController extends BaseController
         ));
 
         $response = curl_exec($curl);
-
+        if (curl_errno($curl)) {
+            echo 'Request Error:' . curl_error($curl);
+        }
         curl_close($curl);
         $success['Sticker'] = json_decode($response);
         $success['status'] = 200;

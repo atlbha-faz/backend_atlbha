@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Facade;
 
 return [
-
+    'GOTEX_API_KEY' => env('GOTEX_API_KEY','651d6aa9caff20c31d7404fc'),
+    'GOTEX_UserId_KEY' =>env('GOTEX_UserId_KEY','AkUJTmkHrEHPWc08xNTzc9dd2QtI7t6vCM@m!CZuIrv7#J#k6P7$j@JL0gVNVOPH1tV8VMfuRRdgf$fq4DuJcDmiYlfGkQ2Xp$RUK3@w@IRmqnEMdg@!O7jpcXOG!7eO4wSKwE8@LhDtvr3SzSJR6P'),
     /*
     |--------------------------------------------------------------------------
     | Application Name

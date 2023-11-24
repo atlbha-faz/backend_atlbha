@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
@@ -22,6 +23,9 @@ return new class extends Migration
             $table->double('total')->nullable();
             $table->integer('count')->nullable();
             $table->double('subtotal')->nullable();
+            $table->double('shipping_price')->nullable();
+            $table->double('tax')->nullable();
+            $table->double('weight')->nullable();
             $table->integer('totalCount')->nullable();
             $table->enum('discount_type',['fixed','percent'])->nullable();
             $table->double('discount_value')->nullable();
