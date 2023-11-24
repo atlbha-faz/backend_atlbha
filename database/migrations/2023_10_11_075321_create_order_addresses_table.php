@@ -30,6 +30,9 @@ return new class extends Migration
             $table->foreign('shippingtype_id')->references('id')->on('shippingtypes')->onDelete('cascade');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('shippingtype_id')->nullable();
+            $table->foreign('shippingtype_id')->references('id')->on('shippingtypes')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Coupon;
-use App\Models\Product;
-use App\Models\OrderItem;
-use App\Models\CartDetail;
-use App\Models\OrderAddress;
-use Illuminate\Http\Request;
-use App\Models\coupons_users;
-use App\Models\Importproduct;
-use App\Models\coupons_products;
-use App\Models\shippingtype_store;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\ShippingtypeResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\Cart;
+use App\Models\CartDetail;
+use App\Models\Coupon;
+use App\Models\coupons_products;
+use App\Models\coupons_users;
+use App\Models\Importproduct;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\shippingtype_store;
+use App\Models\Store;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends BaseController
 {
@@ -54,7 +53,7 @@ class CheckoutController extends BaseController
                 'street_address' => 'required|string',
                 'district' => 'required|string',
                 'postal_code' => 'nullable|string',
-                'default_address'=>'required',
+                'default_address' => 'required',
                 'paymentype_id' => 'required|exists:paymenttypes,id',
                 'shippingtype_id' => 'required|exists:shippingtypes,id',
                 'cod' => 'nullable',
@@ -84,7 +83,7 @@ class CheckoutController extends BaseController
             $order->totalCount = $cart->totalCount;
             $order->subtotal = $cart->subtotal;
             $order->tax = $cart->tax;
-             $order->discount = $cart->discount_total;
+            $order->discount = $cart->discount_total;
             $order->order_status = "new";
             $order->payment_status = "pending";
             $order->store_id = $store_domain;
@@ -96,42 +95,39 @@ class CheckoutController extends BaseController
             // Save the order to the database
             $order->save();
 
-            $shipping_price=shippingtype_store::where('shippingtype_id',  $order->shippingtype_id)->where('store_id',   $store_domain)->first();
-            if( $shipping_price== null){
-                $shipping_price=35;
+            $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
+            if ($shipping_price == null) {
+                $shipping_price = 35;
+            } else {
+                $shipping_price = $shipping_price->price;
             }
-            else{
-                $shipping_price=$shipping_price->price;
-            }
-            if($order->weight>15){
-                 $extra_shipping_price=($order->weight-15)*3;
-            }
-            else{
-                $extra_shipping_price=0;
+            if ($order->weight > 15) {
+                $extra_shipping_price = ($order->weight - 15) * 3;
+            } else {
+                $extra_shipping_price = 0;
             }
 
             $order->update([
-                'shipping_price'=> $shipping_price
+                'shipping_price' => $shipping_price,
             ]);
 
             // Loop through the cart items and associate them with the order
             foreach ($cart->cartDetails as $cartItem) {
-              $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->where('store_id',$store_domain)->first();
+                $product = Product::where('is_deleted', 0)->where('id', $cartItem->product_id)->where('store_id', $store_domain)->first();
                 // $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->first();
-              if( $product != null){
+                if ($product != null) {
                     $product->update([
-                        'stock'=> $product->stock-$cartItem->qty
+                        'stock' => $product->stock - $cartItem->qty,
+                    ]);
+                    //   $product-> quantity=  $product-> quantity-$cartItem->qty;
+                } else {
+                    $importProduct = Importproduct::where('product_id', $cartItem->product_id)->where('store_id', $store_domain)->first();
+                    if ($importProduct != null) {
+                        $importProduct->update([
+                            'qty' => $importProduct->qty - $cartItem->qty,
                         ]);
-                //   $product-> quantity=  $product-> quantity-$cartItem->qty;
-              }
-              else{
-        $importProduct=Importproduct::where('product_id', $cartItem->product_id)->where('store_id',$store_domain)->first();
-        if( $importProduct != null){
-        $importProduct->update([
-            'qty'=> $importProduct->qty-$cartItem->qty
-            ]);
-        }
-              }
+                    }
+                }
             }
             foreach ($cart->cartDetails as $cartItem) {
                 $orderItem = new OrderItem();
@@ -148,62 +144,62 @@ class CheckoutController extends BaseController
             });
 
             $order->update([
-                    'total_price' => $subtotal + $order->shipping_price+$extra_shipping_price
+                'total_price' => $subtotal + $order->shipping_price + $extra_shipping_price,
             ]);
-           $orderAddress=OrderAddress::where('user_id',auth()->user()->id)->where('id',$request->shippingAddress_id)->first();
+            $orderAddress = OrderAddress::where('user_id', auth()->user()->id)->where('id', $request->shippingAddress_id)->first();
 
-            if($orderAddress === null){
+            if ($orderAddress === null) {
 
-            $orderaddress = OrderAddress::create([
-                'city' => $request->city,
-                'street_address' => $request->street_address,
-                'district' => $request->district,
-                'postal_code' => $request->postal_code,
-                'default_address' =>$request->default_address,
-                'user_id' => auth()->user()->id,
+                $orderaddress = OrderAddress::create([
+                    'city' => $request->city,
+                    'street_address' => $request->street_address,
+                    'district' => $request->district,
+                    'postal_code' => $request->postal_code,
+                    'default_address' => $request->default_address,
+                    'user_id' => auth()->user()->id,
+                    'shippingtype_id' => $request->shippingtype_id,
 
-            ]);
+                ]);
                 if ($orderaddress->default_address === '1') {
 
-            $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id',$orderaddress->id)->get();
-            foreach ($addresses as $address) {
-                $address->update([
-                    'default_address' => 0,
-                ]);
-            }
-        }
+                    $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $orderaddress->id)->get();
+                    foreach ($addresses as $address) {
+                        $address->update([
+                            'default_address' => 0,
+                        ]);
+                    }
+                }
 
-            $order->order_addresses()->attach( $orderaddress->id,["type" => "shipping"]);
-            }
-            else{
+                $order->order_addresses()->attach($orderaddress->id, ["type" => "shipping"]);
+            } else {
                 $orderAddress->update([
                     'city' => $request->city,
                     'street_address' => $request->street_address,
                     'district' => $request->district,
                     'postal_code' => $request->postal_code,
+                    'shippingtype_id' => $request->shippingtype_id,
                 ]);
-             $order->order_addresses()->attach( $orderAddress->id,["type" => "shipping"]);
-                 if ($orderAddress->default_address === '1') {
+                $order->order_addresses()->attach($orderAddress->id, ["type" => "shipping"]);
+                if ($orderAddress->default_address === '1') {
 
-            $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id',$orderAddress->id)->get();
-            foreach ($addresses as $address) {
-                $address->update([
-                    'default_address' => 0,
-                ]);
+                    $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $orderAddress->id)->get();
+                    foreach ($addresses as $address) {
+                        $address->update([
+                            'default_address' => 0,
+                        ]);
+                    }
+                }
+
             }
-        }
-
-            }
-
 
             if ($order->paymentype_id == 4) {
 
 //الدفع عند الاستلام
                 $order->update([
-                    'total_price' => $order->total_price+10,
+                    'total_price' => $order->total_price + 10,
                     'payment_status' => "pending",
                     'order_status' => "new",
-                    'cod'=>1
+                    'cod' => 1,
                 ]);
 
                 $cart->delete();
@@ -234,7 +230,7 @@ class CheckoutController extends BaseController
                 $order->update([
                     'payment_status' => "pending",
                     'order_status' => "new",
-                    'cod'=>0
+                    'cod' => 0,
                 ]);
 
                 $cart->delete();
@@ -304,7 +300,7 @@ class CheckoutController extends BaseController
                                 'total' => $cartAfterdiscount,
                                 'discount_type' => 'fixed',
                                 'discount_value' => $coupon->discount,
-                                'discount_total' =>($cart->discount_total !== null?$cart->discount_total:0)+$coupon->discount,
+                                'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + $coupon->discount,
 
                             ]);
 
@@ -317,7 +313,7 @@ class CheckoutController extends BaseController
                                 'total' => $cartAfterdiscount,
                                 'discount_type' => 'percent',
                                 'discount_value' => $coupon->discount . '%',
-                                'discount_total' =>($cart->discount_total !== null?$cart->discount_total:0)+ round($cartCopun, 2),
+                                'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
                             ]);
 
                         }
@@ -350,7 +346,7 @@ class CheckoutController extends BaseController
                                         'total' => $cartAfterdiscount,
                                         'discount_type' => 'fixed',
                                         'discount_value' => $coupon->discount,
-                                        'discount_total' =>($cart->discount_total !== null?$cart->discount_total:0)+ $coupon->discount,
+                                        'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + $coupon->discount,
                                     ]);
 
                                 } else {
@@ -367,7 +363,7 @@ class CheckoutController extends BaseController
                                         'total' => $cartAfterdiscount,
                                         'discount_type' => 'percent',
                                         'discount_value' => $coupon->discount . '%',
-                                        'discount_total' => ($cart->discount_total !== null?$cart->discount_total:0)+round($cartCopun, 2),
+                                        'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
                                     ]);
 
                                 }
@@ -381,13 +377,12 @@ class CheckoutController extends BaseController
                     return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
 
                 }
+            } else {
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
+
             }
-            else {
-                    $success['status'] = 200;
-
-                    return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
-
-                }
             $success['cart'] = new CartResource($cart);
             $success['status'] = 200;
 
@@ -401,7 +396,8 @@ class CheckoutController extends BaseController
         }
 
     }
-    public function ordersUser(Request $request, $domain){
+    public function ordersUser(Request $request, $domain)
+    {
         $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
         if ($store_domain == null) {
             $success['status'] = 200;
@@ -417,7 +413,8 @@ class CheckoutController extends BaseController
 
         }
     }
-    public function orderUser(Request $request, $domain,$order_id){
+    public function orderUser(Request $request, $domain, $order_id)
+    {
         $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
         if ($store_domain == null) {
             $success['status'] = 200;
@@ -425,7 +422,7 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
 
         } else {
-            $order= Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->where('id',$order_id)->first();
+            $order = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->where('id', $order_id)->first();
             $success['order'] = new OrderResource($order);
             $success['status'] = 200;
 

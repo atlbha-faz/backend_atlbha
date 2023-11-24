@@ -15,14 +15,14 @@ class OrderAddressResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' =>$this->id,
-            'city'=>$this->city,
-            'street_address'=>$this->street_address,
-            'district'=>$this->district,
-            'postal_code'=>$this->postal_code,
+            'id' => $this->id,
+            'city' => $this->city,
+            'street_address' => $this->street_address,
+            'district' => $this->district,
+            'postal_code' => $this->postal_code,
             // 'type'=>$this->type,
-            'default_address'=>$this->default_address,
-            // 'user_id'=>$this->user != null ? New UserResource($this->user):null,
+            'default_address' => $this->default_address,
+            'shippingtype_id' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
         ];
     }
 }

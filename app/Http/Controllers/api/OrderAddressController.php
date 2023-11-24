@@ -54,6 +54,7 @@ class OrderAddressController extends BaseController
             'street_address' => 'required|string',
             'district' => 'required|string',
             'postal_code' => 'nullable|string',
+
             // 'type' => 'required|in:billing,shipping',
             // 'default_address' => 'required',
 
@@ -66,14 +67,14 @@ class OrderAddressController extends BaseController
             'street_address' => $request->street_address,
             'district' => $request->district,
             'postal_code' => $request->postal_code,
-            // 'type' => $request->type,
+            // 'shippingtype_id' => $request->shippingtype_id,
             'default_address' => $request->default_address,
             'user_id' => auth()->user()->id,
 
         ]);
-    if ($orderAddress->default_address === '1') {
+        if ($orderAddress->default_address === '1') {
 
-            $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id',$orderAddress->id)->get();
+            $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $orderAddress->id)->get();
             foreach ($addresses as $address) {
                 $address->update([
                     'default_address' => 0,
@@ -95,8 +96,8 @@ class OrderAddressController extends BaseController
      */
     public function show($id)
     {
-         $orderAddress = orderAddress::query()->find($id);
-        if (is_null($orderAddress) ) {
+        $orderAddress = orderAddress::query()->find($id);
+        if (is_null($orderAddress)) {
             return $this->sendError("العنوان غير موجود", " orderAddress is't exists");
         }
         $success['orderAddress'] = new OrderAddressResource($orderAddress);
@@ -104,7 +105,7 @@ class OrderAddressController extends BaseController
 
         return $this->sendResponse($success, 'تم عرض القسم بنجاح', 'orderAddress showed successfully');
     }
-    
+
     public function show_default_address()
     {
         $orderAddress = orderAddress::where('user_id', auth()->user()->id)->where('default_address', 1)->first();
@@ -145,7 +146,7 @@ class OrderAddressController extends BaseController
         }
         $input = $request->all();
         $validator = Validator::make($input, [
-           'city' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
             'street_address' => 'required|string',
             'district' => 'required|string',
             'postal_code' => 'nullable|string',
@@ -162,13 +163,14 @@ class OrderAddressController extends BaseController
             'street_address' => $request->input('street_address'),
             'district' => $request->input('district'),
             'postal_code' => $request->input('postal_code'),
+            // 'shippingtype_id' => $request->input('shippingtype_id'),
             // 'type' => $request->input('type'),
             'default_address' => $request->default_address,
             'user_id' => auth()->user()->id,
         ]);
-    if ($orderAddress->default_address === '1') {
+        if ($orderAddress->default_address === '1') {
 
-            $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id',$orderAddress->id)->get();
+            $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $orderAddress->id)->get();
             foreach ($addresses as $address) {
                 $address->update([
                     'default_address' => 0,
@@ -201,7 +203,7 @@ class OrderAddressController extends BaseController
         return $this->sendResponse($success, 'تم حذف العنوان بنجاح', ' order Address deleted successfully');
 
     }
-      public function setDefaultAddress($id)
+    public function setDefaultAddress($id)
     {
         $orderAddres = orderAddress::where('id', $id)->where('user_id', auth()->user()->id)->first();
 
@@ -209,11 +211,11 @@ class OrderAddressController extends BaseController
             return $this->sendError("العنوان غير موجود", " orderAddress is't exists");
         }
 
-         if ($orderAddres->default_address == 0) {
-              $orderAddres->update([
-                    'default_address' => 1,
-                ]);
-            $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id',$id)->get();
+        if ($orderAddres->default_address == 0) {
+            $orderAddres->update([
+                'default_address' => 1,
+            ]);
+            $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $id)->get();
             foreach ($addresses as $address) {
                 $address->update([
                     'default_address' => 0,
