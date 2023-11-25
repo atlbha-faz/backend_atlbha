@@ -55,7 +55,7 @@ class PageController extends BaseController
             'seo_title' => 'nullable|string',
             'seo_link' => 'nullable|url',
             'seo_desc' => 'nullable|string',
-            'tags' => 'required',
+            'tags' => 'nullable',
             //'name'=>'required|exists:page_categories,id'
 
         ]);
