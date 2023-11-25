@@ -146,6 +146,7 @@ class EtlobhaController extends BaseController
             'product_id' =>  $product->id,
             'store_id' => $atlbha_id,
             'price' =>   $product->selling_price,
+            'qty'=> $product->stock,
         ]);
         if ($request->hasFile("images")) {
             $files = $request->images;
