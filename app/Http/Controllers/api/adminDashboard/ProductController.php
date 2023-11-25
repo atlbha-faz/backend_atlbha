@@ -137,9 +137,9 @@ class ProductController extends BaseController
 
     
     
-      public function specialStatus($id)
+      public function specialStatusall(Request $request)
     {
-      $products = Product::whereIn('id', $id)->where('is_deleted', 0)->where('for', 'store')->get();
+      $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'store')->get();
   
         if (count($products) > 0) {
             foreach ($products as $product) {
@@ -158,6 +158,27 @@ class ProductController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
+
+    }
+    public function specialStatus($id)
+    {
+      $product= Product::where('id', $id)->where('is_deleted', 0)->where('for', 'store')->first();
+  
+      if (is_null($product) || $product->is_deleted !=0 ){
+        return $this->sendError("المنتج غير موجود","product is't exists");
+        }
+         
+                if ($product->special === 'not_special') {
+                    $product->update(['special' => 'special']);
+                } else {
+                    $product->update(['special' => 'not_special']);
+                }
+                $success['product'] = new ProductResource($product);
+
+            
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'Product updated successfully');
+        
 
     }
     
