@@ -64,12 +64,12 @@ class ImportproductController extends BaseController
                 'stock' => $newStock,
             ]);
             //إستيراد الى متجر اطلبها
-            // $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-            // $importproduct->update([
-            //     'product_id' => $product->id,
-            //     'store_id' => $atlbha_id,
-            //     'qty' => $product->stock,
-            // ]);
+            $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+            $importproduct->update([
+                'product_id' => $product->id,
+                'store_id' => $atlbha_id,
+                'qty' => $product->stock,
+            ]);
 
         }
 
