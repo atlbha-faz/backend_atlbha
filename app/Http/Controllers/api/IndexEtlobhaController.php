@@ -84,7 +84,7 @@ class IndexEtlobhaController extends BaseController
     }])->where('is_deleted', 0)->where('comment_for', 'store')->where('status', 'active')->where('store_id', null)->where('product_id', null)->latest()->take(10)->get());
         $success['partners'] = PartnerResource::collection(Partner::where('is_deleted', 0)->get());
 
-        $pages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
+        $pages = Page_page_category::where('page_category_id', 3)->pluck('page_id')->toArray();
         $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id',null)->select('id','title','status','created_at')->where('status', 'active')->whereIn('id', $pages)->get());
         $success['website_socialmedia'] = website_socialmediaResource::collection(website_socialmedia::where('is_deleted', 0)->where('status', 'active')->get());
 
