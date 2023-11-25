@@ -137,9 +137,9 @@ class ProductController extends BaseController
 
     
     
-      public function specialStatus(Request $request)
+      public function specialStatus($id)
     {
-      $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'store')->get();
+      $products = Product::whereIn('id', $id)->where('is_deleted', 0)->where('for', 'store')->get();
   
         if (count($products) > 0) {
             foreach ($products as $product) {
