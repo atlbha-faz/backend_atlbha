@@ -329,7 +329,8 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::resource('roles', App\Http\Controllers\api\adminDashboard\RoleController::class, ['names' => 'admin.role']);
         Route::post('addProductNote', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'addNote'])->name('admin.product.addNote');
-        Route::get('productchangeSpecial', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'specialStatus']);
+        Route::get('productchangeSpecial/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'specialStatus']);
+        Route::get('productchangeSpecial', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'specialStatusall']);
         Route::get('activitydeleteall', [App\Http\Controllers\api\adminDashboard\ActivityController::class, 'deleteall'])->name('admin.activity.deleteall');
 
         // Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
