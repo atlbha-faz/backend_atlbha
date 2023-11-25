@@ -87,7 +87,7 @@
    <td  style="
     border-bottom-right-radius: 98px;
 "> <div class="headContainer">
-<h2 class="headTitle"> عرض الخصم</h2>
+<h2 class="headTitle"> عرض السلة</h2>
 <img src="/images/sale.png" class="headerImag"/>
 
 </div>
@@ -95,14 +95,14 @@
   </tr>
   <tr >
         <td>
-  <img src="/images/logo.png" width="30%" height="25%"/>
+  <!-- <img src="/images/logo.png" width="30%" height="25%"/> -->
 </td>
 </tr>
   <tr>
         <td style="text-align:center;">
  
        <p style=" text-align:center; font-weight:bold; display:inline;
-       ">حصلت على كود خصم</p>
+       ">{{$data['message']}}</p>
        <img src="/images/congratulations.png" class="codeImag" />
 
      </td>
@@ -132,13 +132,13 @@ padding:10px
   width:20%;
   margin:auto;
   ">
-    كود الخصم
+  
 </td>
 </tr>
   <tr style=" margin-bottom:60px; padding-top:20px; font-weight:500">
   <td style="text-align: center; padding:30px 0 30px 0">
   <span style="text-align: center;">ينتهي بتاريخ</span>
-  <span >20 May 20223</span>
+  <span >{{$data['discount_expire_date']}}</span>
 </td>
 </tr>
  
@@ -149,9 +149,12 @@ padding:10px
   <div >
     
     <ul class="socialMedia">
-      <li>r</li>  
-      <li>r</li>  
-      <li>r</li>  
+      <li>{{$data['store_id']}}</li>  
+     
+</ul>
+<ul class="socialMedia">
+      <li>{{$data['store_email']}}</li>  
+     
 </ul>
 </div>
   </td>
