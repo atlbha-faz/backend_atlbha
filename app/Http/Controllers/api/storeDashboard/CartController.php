@@ -190,6 +190,7 @@ class CartController extends BaseController
             'message' => $request->message,
             'store_id' => $cart->store->store_name,
             'store_email' => $cart->store->store_email,
+            'store_domain' => $cart->store->domain,
             'discount_expire_date'=> $cart->discount_expire_date
         ];
 
