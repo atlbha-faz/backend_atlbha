@@ -103,7 +103,7 @@
  
        <p style=" text-align:center; font-weight:bold; display:inline;
        ">{{$data['message']}} 
-       <a href='https://template.atlbha.com/'.{{$data['store_domain']}}></a></p>
+       <a href="{{ 'https://template.atlbha.com/' . $data['store_domain'] }}">{{$data['store_id']}}</a></p>
        <img src="/images/congratulations.png" class="codeImag" />
 
      </td>
