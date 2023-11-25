@@ -54,13 +54,13 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'title'=>'required|alpha|max:40',
+            'title'=>'required|string|max:40',
             'page_desc'=>'required',
             'page_content'=>'required',
             'seo_title'=>'nullable',
             'seo_link'=>'nullable',
             'seo_desc'=>'nullable',
-            'tags'=>'required',
+            'tags'=>'nullable',
             //'name'=>'required|exists:page_categories,id'
             // 'user_id'=>'exists:users,id',
 
@@ -102,13 +102,13 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'title'=>'required|alpha|max:40',
+            'title'=>'required|string|max:40',
             'page_content'=>'required',
             'page_desc'=>'required',
             'seo_title'=>'nullable',
             'seo_link'=>'nullable',
             'seo_desc'=>'nullable',
-            'tags'=>'required',
+            'tags'=>'nullable',
             // 'user_id'=>'exists:users,id',
 
 
@@ -191,13 +191,13 @@ class PageController extends BaseController
 
             $input = $request->all();
            $validator =  Validator::make($input ,[
-            'title'=>'required|alpha|max:40',
+            'title'=>'required|string|max:40',
             'page_desc'=>'required',
             'page_content'=>'required',
             'seo_title'=>'nullable',
             'seo_link'=>'nullable',
             'seo_desc'=>'nullable',
-            'tags'=>'required',
+            'tags'=>'nullable',
 
            ]);
            if ($validator->fails())
