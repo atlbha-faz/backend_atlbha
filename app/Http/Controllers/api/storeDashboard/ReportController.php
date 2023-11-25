@@ -18,8 +18,8 @@ class ReportController extends BaseController
     {$input = $request->all();
 
         $validator = Validator::make($input, [
-            'startDate' => 'date',
-            'endDate' => 'date',
+            // 'startDate' => 'date',
+            // 'endDate' => 'date',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
