@@ -49,7 +49,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|alpha|max:40',
+            'title' => 'required|string|max:40',
             'page_desc' => 'required|string|max:100',
             'page_content' => 'required|string',
             'seo_title' => 'nullable|string',
@@ -95,13 +95,13 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|alpha|max:40',
+            'title' => 'required|string|max:40',
             'page_content' => 'required|string',
             'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
             'seo_link' => 'nullable|url',
             'seo_desc' => 'nullable|string',
-            'tags' => 'required',
+            'tags' => 'nullable',
             // 'name'=>'required|exists:page_categories,id'
 
         ]);
@@ -183,13 +183,13 @@ class PageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|alpha|max:40',
+            'title' => 'required|string|max:40',
             'page_content' => 'required|string',
             'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
             'seo_link' => 'nullable|url',
             'seo_desc' => 'nullable|string',
-            'tags' => 'required',
+            'tags' => 'nullable',
             // 'name'=>'required|exists:page_categories,id'
             // 'store_id'=>'required|exists:stores,id',
             // 'usre_id'=>'required|exists:users,id',
