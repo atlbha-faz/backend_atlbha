@@ -99,11 +99,11 @@
 </td>
 </tr>
   <tr>
-        <td style="text-align:center;">
+        <td style=" text-align:center; font-weight:bold; display:inline">
  
-       <p style=" text-align:center; font-weight:bold; display:inline;
-       ">{{htmlspecialchars(trim(strip_tags($data['message'])))}} 
-       <a href="{{ 'https://template.atlbha.com/' . $data['store_domain'] }}">{{$data['store_id']}}</a></p>
+      
+     {{htmlspecialchars(trim(strip_tags($data['message'])))}} 
+       <a href="{{ 'https://template.atlbha.com/' . $data['store_domain'] }}">{{$data['store_id']}}</a>
        <!-- <img src="/images/congratulations.png" class="codeImag" /> -->
 
      </td>
