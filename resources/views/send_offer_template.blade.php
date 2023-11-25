@@ -88,7 +88,7 @@
     border-bottom-right-radius: 98px;
 "> <div class="headContainer">
 <h2 class="headTitle"> عرض السلة</h2>
-<img src="/images/sale.png" class="headerImag"/>
+<!-- <img src="/images/sale.png" class="headerImag"/> -->
 
 </div>
 </td>
@@ -99,12 +99,12 @@
 </td>
 </tr>
   <tr>
-        <td style="text-align:center;">
+        <td style=" text-align:center; font-weight:bold; display:inline">
  
-       <p style=" text-align:center; font-weight:bold; display:inline;
-       ">{{$data['message']}} 
-       <a href='https://template.atlbha.com/'.{{$data['store_domain']}}></a></p>
-       <img src="/images/congratulations.png" class="codeImag" />
+      
+     {{htmlspecialchars(trim(strip_tags($data['message'])))}} 
+       <a href="{{ 'https://template.atlbha.com/' . $data['store_domain'] }}">{{$data['store_id']}}</a>
+       <!-- <img src="/images/congratulations.png" class="codeImag" /> -->
 
      </td>
 
@@ -145,7 +145,7 @@ padding:10px
  
 <tr style="background-color: #0000001A ; text-align: center;">
   <td style="text-align: center;"> 
-  <img src="/images/logo.png" width="30%" height="25%"/>
+  <!-- <img src="/images/logo.png" width="30%" height="25%"/> -->
   
   <div >
     
