@@ -27,9 +27,11 @@ class GotexController extends Controller
         ];
         return Http::asJson()->withHeaders([
             'Content-Length' => strlen(json_encode($content)),
+            'Host'=>'127.0.0.1'
             ])->withOptions([
                 'verify'=>false  ])
-            ->post($url, $content );
+            ->post($url,$content);
+        // return http::get('https://google.com');
         // $url->__toString();
     }
 
