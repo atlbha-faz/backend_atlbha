@@ -18,15 +18,16 @@ class ReportController extends BaseController
     {$input = $request->all();
 
         $validator = Validator::make($input, [
-            'startDate' => 'date',
-            'endDate' => 'date',
+            // 'startDate' => 'date',
+            // 'endDate' => 'date',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
         $startDate = $request->startDate;
         $endDate = $request->endDate;
-        if (is_null($request->startDate) || is_null($request->endDate)) {
+
+        if (!isset($startDate) || $startDate == "" || isset($endDate) || $endDate == "") {
 
             $success['total_sales'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->sum('total_price');
             $success['products_costs'] = Product::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->sum('purchasing_price');
