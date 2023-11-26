@@ -310,8 +310,7 @@ class OrderController extends BaseController
                     );
 
                     $imileData = $imile->createOrder($data);
-                    $ship = $imileData;
-
+                    $ship = $imileData;             
                     $success['shippingCompany'] = $ship;
                     if (isset($ship->data)) {
                         $ship_id = $ship->data->_id;
