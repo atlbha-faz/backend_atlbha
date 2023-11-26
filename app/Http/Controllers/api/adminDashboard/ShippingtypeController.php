@@ -96,7 +96,10 @@ class ShippingtypeController extends BaseController
      */
     public function wallet()
     {
-
+        $key = array(
+            'userId' => env('GOTEX_UserId_KEY'),
+            'apiKey' => env('GOTEX_API_KEY'),
+        );
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -108,10 +111,7 @@ class ShippingtypeController extends BaseController
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_POSTFIELDS => '{
-    "userId": "651d6aa9caff20c31d7404fc",
-    "apiKey": "AkUJTmkHrEHPWc08xNTzc9dd2QtI7t6vCM@m!CZuIrv7#J#k6P7$j@JL0gVNVOPH1tV8VMfuRRdgf$fq4DuJcDmiYlfGkQ2Xp$RUK3@w@IRmqnEMdg@!O7jpcXOG!7eO4wSKwE8@LhDtvr3SzSJR6P"
-}',
+            CURLOPT_POSTFIELDS => json_encode($key),
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
             ),
@@ -120,6 +120,10 @@ class ShippingtypeController extends BaseController
         $response = curl_exec($curl);
 
         curl_close($curl);
+        $success['Wallet'] = json_decode($response);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم عرض المحفظة', 'wallet show successfully');
     }
 
 }
