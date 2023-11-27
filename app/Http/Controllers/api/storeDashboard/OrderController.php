@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\api\storeDashboard;
-use Illuminate\Support\Facades\Http;
+
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\shippingResource;
@@ -11,9 +11,11 @@ use App\Models\OrderItem;
 use App\Models\OrderOrderAddress;
 use App\Models\Shipping;
 use App\Services\ImileService;
+use App\Services\JTService;
 use App\Services\SaeeService;
 use App\Services\SmsaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use in;
 
@@ -114,6 +116,8 @@ class OrderController extends BaseController
                         $url = 'https://dashboard.go-tex.net/gotex-co-test/saee/cancel-order';
                     } elseif ($order->shippingtype->id == 3) {
                         $url = 'https://dashboard.go-tex.net/gotex-co-test/imile/cancel-order';
+                    } elseif ($order->shippingtype->id == 4) {
+                        $url = 'https://dashboard.go-tex.net/gotex-co-test/jt/cancel-order';
                     }
                     $curl = curl_init();
                     $data = array(
@@ -174,8 +178,8 @@ class OrderController extends BaseController
                         'Cod' => true,
                         'shipmentValue' => $order->total_price,
                     );
-                    $smsa = new SmsaService();
-                    $smsaData = $smsa->createOrder($data);
+                    $JT = new SmsaService();
+                    $smsaData = $JT->createOrder($data);
                     $ship = $smsaData;
                     $success['shippingCompany'] = $ship;
                     if (isset($ship->data)) {
@@ -303,14 +307,14 @@ class OrderController extends BaseController
                         'c_city' => $address->city,
                         'c_address' => $request->street_address,
                         'skuName' => $order->description,
-                        'skuTotal' => $order->totalCount,
+                        'skuTotal' => 1,
                         'weight' => $order->weight,
                         'cod' => true,
                         'shipmentValue' => $order->total_price,
                     );
 
                     $imileData = $imile->createOrder($data);
-                    $ship = $imileData;             
+                    $ship = $imileData;
                     $success['shippingCompany'] = $ship;
                     if (isset($ship->data)) {
                         $ship_id = $ship->data->_id;
@@ -347,12 +351,70 @@ class OrderController extends BaseController
                         $success['shippingCompany'] = $ship->msg->message;
                         return $this->sendResponse($success, "message", "h");
                     }
-                }
-            }
-            $success['orders'] = new OrderResource($order);
-            $success['status'] = 200;
+                } elseif ($order->shippingtype->id == 4) {
+                    $data = array(
+                        'userId' => env('GOTEX_UserId_KEY'),
+                        'apiKey' => env('GOTEX_API_KEY'),
+                        're_name' => $order->user->name,
+                        're_mobile' => $order->user->phonenumber,
+                        're_prov' => $address->district,
+                        're_city' => $address->city,
+                        's_name' => auth()->user()->store->store_name,
+                        's_mobile' => auth()->user()->phonenumber,
+                        's_prov' => $request->district,
+                        's_city' => $request->city,
+                        'weight' => $order->weight,
+                        'description' => $order->description,
+                        'totalQuantity' => 1,
+                        'goodsType' => 'ITN4',
+                        'Cod' => true,
+                        'shipmentValue' => $order->total_price,
+                    );
+                    $JT = new JTService();
+                    $JTData = $JT->createOrder($data);
+                    $ship = $JTData;
+                    $success['shippingCompany'] = $ship;
+                    if (isset($ship->data)) {
+                        $ship_id = $ship->data->_id;
+                        $track_id = $ship->data->data->data->billCode;
+                        $order->update([
+                            'order_status' => $request->input('status'),
+                        ]);
+                        foreach ($order->items as $orderItem) {
+                            $orderItem->update([
+                                'order_status' => $request->input('status'),
+                            ]);
+                        }
+                        $shipping = Shipping::create([
+                            'shipping_id' => $ship_id,
+                            'track_id' => $track_id,
+                            'description' => $order->description,
+                            'quantity' => $order->quantity,
+                            'price' => $order->total_price,
+                            'weight' => $request->weight,
+                            'district' => $request->district,
+                            'city' => $request->city,
+                            'streetaddress' => $request->street_address,
+                            'customer_id' => $order->user_id,
+                            'shippingtype_id' => $order->shippingtype_id,
+                            'order_id' => $order->id,
+                            'shipping_status' => $order->order_status,
+                            'store_id' => $order->store_id,
+                            'cashondelivery' => $order->cashondelivery,
+                        ]);
+                        $success['shipping'] = new shippingResource($shipping);
+                    } else {
 
-            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+                        $ship_id = null;
+                        $track_id = null;
+                        return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
+                    }
+                }
+                $success['orders'] = new OrderResource($order);
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+            }
         }
     }
     public function getAllCity()
@@ -388,7 +450,8 @@ class OrderController extends BaseController
         return $this->sendResponse($success, 'تم إرجاع المدن', ' cities successfully');
     }
     public function PrintImileSticker($id)
-    {        $key = array(
+    {
+        $key = array(
             'userId' => env('GOTEX_UserId_KEY'),
             'apiKey' => env('GOTEX_API_KEY'),
         );
@@ -409,7 +472,7 @@ class OrderController extends BaseController
         ));
         $response = curl_exec($curl);
         curl_close($curl);
-       
+
         $success['Sticker'] = json_decode($response);
         $success['status'] = 200;
 
@@ -456,7 +519,7 @@ class OrderController extends BaseController
         );
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/smsa/print-sticker/' . $id,
+            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/JT/print-sticker/' . $id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -478,7 +541,36 @@ class OrderController extends BaseController
 
         return $this->sendResponse($success, 'تم الإرجاع بنجاح', ' print Sticker successfully');
     }
+    public function PrintJTSticker($id)
+    {
+        $key = array(
+            'userId' => env('GOTEX_UserId_KEY'),
+            'apiKey' => env('GOTEX_API_KEY'),
+        );
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/jt/print-sticker/' . $id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($key),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+            ),
+        ));
 
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $success['Sticker'] = json_decode($response);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم الإرجاع بنجاح', ' print Sticker successfully');
+    }
     public function deleteall(Request $request)
     {
 

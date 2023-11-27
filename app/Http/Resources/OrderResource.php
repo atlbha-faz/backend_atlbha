@@ -36,11 +36,13 @@ class OrderResource extends JsonResource
             $track = 'https://www.saee.sa/ar/track-your-shipment/';
         } elseif ($this->shippingtype->id ==2) {
             $track = 'https://sdm.smsaexpress.com/';
-        } 
+        }
         elseif ($this->shippingtype->id ==3) {
             $track = 'https://www.imile.com/ar/track/';
-        }  
-      
+        }
+         elseif ($this->shippingtype->id ==4) {
+            $track = 'https://www.imile.com/ar/track/';
+        }
 
         return [
             'id' => $this->id,
@@ -61,7 +63,7 @@ class OrderResource extends JsonResource
             'created_at' => $this->created_at,
             'orderItem' => OrderItemsResource::collection($this->items),
             // 'OrderAddress' => $this->shippingAddress != null ? new OrderAddressResource($this->shippingAddress) : null,
-            
+
             'OrderAddress' => $orderAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $orderAddress)->first()):null,
             //   'billingAddress' => $billingAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $billingAddress)->first()):null,
 

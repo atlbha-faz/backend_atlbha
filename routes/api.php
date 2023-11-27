@@ -379,6 +379,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('PrintImileSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintImileSticker']);
         Route::get('PrintSmsaSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSmsaSticker']);
         Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
+        Route::get('PrintJTSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintJTSticker']);
 
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);
@@ -466,6 +467,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('importcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importcities']);
         Route::post('importsmsacities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importsmsacities']);
         Route::post('importimilecities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importimilecities']);
+        Route::post('importjtcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importjtcities']);
         Route::get('fiximport', [App\Http\Controllers\api\storeDashboard\CityController::class, 'fiximport']);
 
         // importProduct
