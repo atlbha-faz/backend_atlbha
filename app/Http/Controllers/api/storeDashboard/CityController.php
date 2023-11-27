@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\City;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CityResource;
+use App\Imports\ImileImport;
+use App\Imports\JTImport;
 use App\Imports\SaeeImport;
 use App\Imports\SmsaImport;
-use App\Imports\ImileImport;
+use App\Models\City;
+use App\Models\shippingcities_shippingtypes;
 use App\Models\ShippingCity;
 use Illuminate\Http\Request;
-use App\Http\Resources\CityResource;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
-use App\Models\shippingcities_shippingtypes;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CityController extends BaseController
 {
@@ -105,6 +106,34 @@ class CityController extends BaseController
 
             // Excel::import(new SaeeImport, $request->file);
             Excel::import(new ImileImport, request()->file('file'));
+
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم إضافة المنتجات بنجاح', 'products Added successfully');
+        } catch (ValidationException $e) {
+            // Handle other import error
+            // return "eroee";
+            $failures = $e->failures();
+
+            // Handle validation failures
+            return $failures;
+        }
+    }
+    public function importjtcities(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'file' => 'required|mimes:csv,txt,xlsx,xls',
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+
+        try {
+
+            // Excel::import(new SaeeImport, $request->file);
+            Excel::import(new JTImport, request()->file('file'));
 
             $success['status'] = 200;
 
