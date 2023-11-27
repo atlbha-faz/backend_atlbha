@@ -382,6 +382,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('PrintSmsaSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSmsaSticker']);
         Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
         Route::get('PrintJTSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintJTSticker']);
+        Route::get('PrintSticker/{order}/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSticker']);
 
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);
