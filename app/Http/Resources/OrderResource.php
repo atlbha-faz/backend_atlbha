@@ -41,6 +41,7 @@ class OrderResource extends JsonResource
         } elseif ($this->shippingtype->id == 4) {
             $track = 'https://www.jtexpress-sa.com/trajectoryQuery';
         }
+        $subtotal = $this->subtotal - $this->tax;
 
         return [
             'id' => $this->id,
@@ -54,7 +55,7 @@ class OrderResource extends JsonResource
             'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,
             'tax' => round($this->tax, 2),
             'shipping_price' => $this->shipping_price,
-            'subtotal' => round(($this->subtotal - $this->tax), 2),
+            'subtotal' => round($subtotal, 2),
             'total_price' => round($this->total_price, 2),
             'discount' => $this->discount != null ? $this->discount : 0,
             'status' => $status,
