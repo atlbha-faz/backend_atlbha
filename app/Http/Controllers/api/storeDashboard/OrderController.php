@@ -452,6 +452,9 @@ class OrderController extends BaseController
     public function PrintSticker($order,$id)
     { 
         $order = Order::where('id', $order)->first();
+        if ($order->order_status == "canceled" || $order->order_status == "new"  ) {
+            return $this->sendError("لا يمكن طباعة الاستيكر", "cant not print Sticker");
+        }
         if ($order->shippingtype->id == 1) {
             $url = 'https://dashboard.go-tex.net/gotex-co-test/saee/print-sticker/' . $id;
         } elseif ($order->shippingtype->id == 2) {
