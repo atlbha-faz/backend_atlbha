@@ -215,7 +215,8 @@ class OrderController extends BaseController
 
                         $ship_id = null;
                         $track_id = null;
-                        return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
+                        $success['shippingCompany'] = $ship->msg->message;
+                        return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
                 } elseif ($order->shippingtype->id == 1) {
 
@@ -276,7 +277,8 @@ class OrderController extends BaseController
                     } else {
                         $ship_id = null;
                         $track_id = null;
-                        return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
+                        $success['shippingCompany'] = $ship->msg->message;
+                        return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
                 } elseif ($order->shippingtype->id == 3) {
                     //imile company
@@ -349,7 +351,7 @@ class OrderController extends BaseController
                         $ship_id = null;
                         $track_id = null;
                         $success['shippingCompany'] = $ship->msg->message;
-                        return $this->sendResponse($success, "message", "h");
+                        return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
                 } elseif ($order->shippingtype->id == 4) {
                     $data = array(
@@ -407,7 +409,8 @@ class OrderController extends BaseController
 
                         $ship_id = null;
                         $track_id = null;
-                        return $this->sendError("لا يمكن إنشاء شحنة بسب عدم وجود رصيد", "cant create shipping");
+                        $success['shippingCompany'] = $ship->msg->message;
+                        return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
                 }
                 $success['orders'] = new OrderResource($order);
