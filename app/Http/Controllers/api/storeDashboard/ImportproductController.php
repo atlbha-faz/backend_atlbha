@@ -33,6 +33,7 @@ class ImportproductController extends BaseController
 
     public function store(Request $request)
     {
+
         $importedproduct = Importproduct::where('product_id', $request->product_id)->where('store_id', auth()->user()->store_id)->first();
         if ($importedproduct) {
             return $this->sendError(" تم استيراده مسبقا ", "imported");
@@ -58,7 +59,6 @@ class ImportproductController extends BaseController
                 'store_id' => auth()->user()->store_id,
                 'price' => $request->price,
                 'qty' => $request->qty,
-
             ]);
             $newStock = $product->stock - $importproduct->qty;
             $product->update([
@@ -66,11 +66,22 @@ class ImportproductController extends BaseController
             ]);
             //إستيراد الى متجر اطلبها
             $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-            $importproduct->update([
+            $importAtlbha = Importproduct::where('product_id', $request->product_id)->where('store_id', $atlbha_id)->first();
+            if($importAtlbha == null){
+                $importAtlbha = Importproduct::create([
+                    'product_id' => $request->product_id,
+                    'store_id' => $atlbha_id,
+                    'price' => $product->selling_price,
+                    'qty' => $product->stock,
+                ]); 
+            }
+            else{
+            $importAtlbha->update([
                 'product_id' => $product->id,
                 'store_id' => $atlbha_id,
                 'qty' => $product->stock,
             ]);
+            }
 
         }
 
