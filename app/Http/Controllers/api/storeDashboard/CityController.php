@@ -160,6 +160,15 @@ class CityController extends BaseController
         }
         return 200;
     }
+    public function fixActive()
+    {
+
+            $cities = ShippingCity::whereIn('region_id', [28, 29, 30, 31, 32])->get();
+            foreach ($cities as $city) {
+                    $city->update(['status' => 'not_active']);
+            }
+            return 200;
+    }
     public function fixCity()
     {
         $citiesName=[
@@ -218,8 +227,9 @@ class CityController extends BaseController
             "Jeddah"];
             $cities = ShippingCity::whereIn('name_en', $citiesName)->whereIn('region_id', [28, 29, 30, 31, 32])->get();
             foreach ($cities as $city) {
-                    $city->update(['status' => 'not_active']);
+                    $city->update(['status' => 'active']);
             }
             return 200;
     }
+
 }

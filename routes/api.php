@@ -473,6 +473,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('importjtcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importjtcities']);
         Route::get('fiximport', [App\Http\Controllers\api\storeDashboard\CityController::class, 'fiximport']);
         Route::get('fixCity', [App\Http\Controllers\api\storeDashboard\CityController::class, 'fixCity']);
+        Route::get('fixActive', [App\Http\Controllers\api\storeDashboard\CityController::class, 'fixActive']);
 
         // importProduct
         Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
