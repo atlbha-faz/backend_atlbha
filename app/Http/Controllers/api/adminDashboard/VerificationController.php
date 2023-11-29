@@ -7,9 +7,9 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\NoteResource;
 use App\Http\Resources\VerificationResource;
 use App\Mail\SendMail;
+use App\Models\categories_stores;
 use App\Models\Note;
 use App\Models\Store;
-use App\Models\categories_stores;
 use App\Models\User;
 use App\Notifications\verificationNotification;
 use Carbon\Carbon;
@@ -32,19 +32,19 @@ class VerificationController extends BaseController
      */
     public function index()
     {
-$stores= Store::with(['city' => function ($query) {
-    $query->select('id');
-},'country' => function ($query) {
-    $query->select('id');
-},'user' => function ($query) {
-    $query->select('id','name','email');
-}])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->limit(20)->get();
-        $success['stores'] =VerificationResource::collection($stores);
+        $stores = Store::with(['city' => function ($query) {
+            $query->select('id');
+        }, 'country' => function ($query) {
+            $query->select('id');
+        }, 'user' => function ($query) {
+            $query->select('id', 'name', 'email');
+        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->limit(20)->get();
+        $success['stores'] = VerificationResource::collection($stores);
 
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
-    }     
+    }
     public function acceptVerification($id)
     {
         $store = Store::query()->find($id);
@@ -119,17 +119,17 @@ $stores= Store::with(['city' => function ($query) {
 
     return $this->sendResponse($success,'تم حذف المتجر بنجاح','store deleted successfully');
     }*/
-  public function verification_show($id)
+    public function verification_show($id)
     {
         $store = Store::query()->find($id);
         if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجودة", " store is't exists");
         }
-        $success['store']= new VerificationResource(Store::where('is_deleted', 0)->where('id',$store->id)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->first());
+        $success['store'] = new VerificationResource(Store::where('is_deleted', 0)->where('id', $store->id)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->first());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
-    
+
     }
     public function addNote(Request $request)
     {
@@ -161,19 +161,19 @@ $stores= Store::with(['city' => function ($query) {
         if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجودة", " store is't exists");
         }
-         $user = User::where('is_deleted', 0)->where('store_id', $request->store_id)->where('user_type', 'store')->first();
+        $user = User::where('is_deleted', 0)->where('store_id', $request->store_id)->where('user_type', 'store')->first();
 
         $input = $request->all();
         $validator = Validator::make($input, [
-             'activity_id' => 'required|array',
-             'subcategory_id' => ['nullable', 'array'],
+            'activity_id' => 'required|array',
+            'subcategory_id' => ['nullable', 'array'],
             'store_name' => 'required|string',
-            'link' => 'required|url',
+            // 'link' => 'required|url',
             'file' => 'required|mimes:pdf,doc,excel',
             'name' => 'required|string|max:255',
             'store_id' => 'required',
-        'email' => 'nullable|email|unique:users,email,' . $user->id.'|unique:stores,store_email,' . $store->id,
-            'phonenumber' => ['nullable', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber,' . $user->id,'unique:stores,phonenumber,' . $store->id,]
+            'email' => 'nullable|email|unique:users,email,' . $user->id . '|unique:stores,store_email,' . $store->id,
+            'phonenumber' => ['nullable', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber,' . $user->id, 'unique:stores,phonenumber,' . $store->id],
         ]);
         if ($validator->fails()) {
             # code...
@@ -195,7 +195,7 @@ $stores= Store::with(['city' => function ($query) {
         event(new VerificationEvent($data));
         $store->update([
             'store_name' => $request->input('store_name'),
-            'link' => $request->input('link'),
+            // 'link' => $request->input('link'),
             'file' => $request->input('file'),
             'store_email' => $request->input('email'),
             'phonenumber' => $request->input('phonenumber'),
@@ -206,19 +206,18 @@ $stores= Store::with(['city' => function ($query) {
         } else {
             $subcategory = null;
         }
-       
 
-       $store->categories()->sync($request->activity_id);
-       $sub=categories_stores::where('store_id', $store->id)->first();
-       $sub->update([
-        'subcategory_id' =>  $subcategory,
-    ]);
-     
+        $store->categories()->sync($request->activity_id);
+        $sub = categories_stores::where('store_id', $store->id)->first();
+        $sub->update([
+            'subcategory_id' => $subcategory,
+        ]);
+
         $user = User::where('is_deleted', 0)->where('store_id', $request->store_id)->where('user_type', 'store')->first();
         $user->update([
             'name' => $request->input('name'),
-              'email' => $request->input('email'),
-            'phonenumber' => $request->input('phonenumber')
+            'email' => $request->input('email'),
+            'phonenumber' => $request->input('phonenumber'),
         ]);
 
         $success['store'] = Store::where('is_deleted', 0)->where('id', $request->store_id)->first();
@@ -236,7 +235,7 @@ $stores= Store::with(['city' => function ($query) {
                     return $this->sendError("المتجر غير موجودة", " store is't exists");
                 }
                 $store->update([
-                    'link' => null,
+                    // 'link' => null,
                     'file' => null,
                     'verification_status' => 'pending',
                 ]);

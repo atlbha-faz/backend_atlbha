@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use Notification;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Store;
-use Illuminate\Http\Request;
 use App\Events\VerificationEvent;
-use App\Http\Resources\StoreResource;
-use Illuminate\Support\Facades\Validator;
-use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\StoreResource;
+use App\Models\Store;
+use App\Models\User;
+use App\Notifications\verificationNotification;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Notification;
 
 class VerificationController extends BaseController
 {
@@ -24,16 +24,16 @@ class VerificationController extends BaseController
     {
 
         $success['stores'] = StoreResource::collection(Store::with(['categories' => function ($query) {
-    $query->select('name');
-}])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->get());
+            $query->select('name');
+        }])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->get());
 
         // $success['activity']=Store::where('store_id',auth()->user()->store_id)->activities->first();
         $type = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('commercialregistertype')->first();
 
-            $success['name'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('store_name')->first();
-            $success['city'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('city_id')->first();
+        $success['name'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('store_name')->first();
+        $success['city'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('city_id')->first();
 
-     if ($type == 'maeruf') {
+        if ($type == 'maeruf') {
             $success['link'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('link')->first();
         }
         $success['file'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('file')->first();
@@ -50,11 +50,11 @@ class VerificationController extends BaseController
         $validator = Validator::make($input, [
             'activity_id' => 'required|array',
             'subcategory_id' => ['nullable', 'array'],
-          
+
             'commercialregistertype' => 'required|in:commercialregister,maeruf',
             'store_name' => 'required|unique:stores,store_name,' . auth()->user()->store_id,
             'city_id' => 'required',
-            'link' => 'required_if:commercialregistertype,maeruf',
+            // 'link' => 'required_if:commercialregistertype,maeruf',
             'file' => 'required|mimes:pdf',
             'name' => 'required|string|max:255',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -64,14 +64,14 @@ class VerificationController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $store = Store::with(['categories' => function ($query) {
-    $query->select('name');
+            $query->select('name');
 
-}])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        }])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
 
         if ($store->verification_status == "admin_waiting" || $store->verification_status == "accept") {
             return $this->sendError("الطلب قيد المراجعه", "request is in process");
         }
-        $users = User::where('store_id', null)->whereIn('user_type', ['admin','admin_employee'])->get();
+        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->get();
 
         $data = [
             'message' => 'طلب توثيق',
@@ -88,15 +88,14 @@ class VerificationController extends BaseController
         $store->update([
             'commercialregistertype' => $request->input('commercialregistertype'),
             'city_id' => $request->input('city_id'),
-            'link' => $request->input('link'),
+            // 'link' => $request->input('link'),
             'file' => $request->file,
             'phonenumber' => $request->input('phonenumber'),
             'verification_status' => "admin_waiting",
-            'verification_date'=>  $date ,
-            'store_name' => $request->input('store_name')
+            'verification_date' => $date,
+            'store_name' => $request->input('store_name'),
 
         ]);
-
 
         // $store->activities()->sync($request->activity_id);
         if ($request->subcategory_id != null) {
@@ -104,7 +103,7 @@ class VerificationController extends BaseController
         } else {
             $subcategory = null;
         }
-         $store->categories()->attach($request->activity_id,['subcategory_id' =>$subcategory] );
+        $store->categories()->attach($request->activity_id, ['subcategory_id' => $subcategory]);
 
         $user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $user->update([

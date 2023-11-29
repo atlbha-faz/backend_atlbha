@@ -18,20 +18,20 @@ class VerificationResource extends JsonResource
             $a=$this->categories->first()->pivot->subcategory_id;
            $subcategory= explode(',',$a);
         }
-        
+
         if($this->status ==null || $this->status == 'active'){
             $status = 'نشط';
         }else{
             $status = 'غير نشط';
         }
-        
-         
+
+
         if($this->special ==null || $this->special == 'special'){
             $special = 'مميز';
         }else{
             $special = 'غير مميز';
         }
-        
+
          if($this->verification_status ==null || $this->verification_status == 'pending'){
             $verification_status = 'لم يتم الطلب';
         }elseif($this->verification_status == 'admin_waiting'){
@@ -51,7 +51,7 @@ class VerificationResource extends JsonResource
        'description'=>$this->description,
        'business_license'=>$this->business_license,
        'file' =>$this->file,
-       'link' =>$this->link,
+    //    'link' =>$this->link,
        'snapchat'=>$this->snapchat,
        'facebook' =>$this->facebook,
        'twiter'=>$this->twiter,
