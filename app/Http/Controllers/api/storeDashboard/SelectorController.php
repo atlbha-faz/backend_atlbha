@@ -248,7 +248,7 @@ class SelectorController extends BaseController
     public function shippingcities($id)
     {
         $shippingCompany = Shippingtype::query()->find($id);
-        $success['cities'] = ShippingCitiesResource::collection($shippingCompany->shippingcities->where('status', 'active'));
+        $success['cities'] = ShippingCitiesResource::collection($shippingCompany->shippingcities()->where('status', 'active')->get());
 
         $success['status'] = 200;
 
