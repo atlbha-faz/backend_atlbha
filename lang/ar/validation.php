@@ -406,7 +406,7 @@ return [
         "subcategory_id" => "تصنيف فرعي",
         "street address"=>"العنوان",
         "ready"=>"جاهز للشحن",
-        "qty"=>"الكمية"
+        "qty"=>"كمية المنتج"
     ],
 
 ];
