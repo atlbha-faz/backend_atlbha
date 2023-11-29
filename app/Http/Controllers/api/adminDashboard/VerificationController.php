@@ -32,7 +32,9 @@ class VerificationController extends BaseController
      */
     public function index()
     {
-$stores= Store::with(['city' => function ($query) {
+$stores= Store::with(['categories' => function ($query) {
+    $query->select('name','icon');
+},'city' => function ($query) {
     $query->select('id');
 },'country' => function ($query) {
     $query->select('id');

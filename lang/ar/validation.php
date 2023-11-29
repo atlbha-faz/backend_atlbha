@@ -405,7 +405,8 @@ return [
         "price_to" => "السعر الى",
         "subcategory_id" => "تصنيف فرعي",
         "street address"=>"العنوان",
-        "ready"=>"جاهز للشحن"
+        "ready"=>"جاهز للشحن",
+        "qty"=>"الكمية"
     ],
 
 ];
