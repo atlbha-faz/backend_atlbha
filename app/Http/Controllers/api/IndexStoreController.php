@@ -22,15 +22,12 @@ use App\Models\Importproduct;
 use App\Models\Package_store;
 use App\Models\Page;
 use App\Models\Page_page_category;
-use App\Models\Paymenttype;
 use App\Models\Product;
 use App\Models\Seo;
-use App\Models\Setting;
 use App\Models\Store;
 use App\Models\SubscriptionEmail;
 use App\Models\TechnicalSupport;
 use App\Models\Theme;
-use App\Models\website_socialmedia;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -258,10 +255,10 @@ class IndexStoreController extends BaseController
             //  $success['blogs']=PageResource::collection(Page::where('is_deleted',0)->where('store_id',$id)->where('postcategory_id','!=',null)->get());
 
             // special products
-            $specialproducts = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store_id)->select('id', 'name', 'status', 'cover', 'special', 'stock','selling_price', 'purchasing_price', 'discount_price', 'created_at')->get());
+            $specialproducts = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store_id)->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'created_at')->get());
 
             $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('products.special', 'special')->orderBy('products.created_at', 'desc')
-                ->get(['products.*', 'importproducts.price','importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+                ->get(['products.*', 'importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
             $imports = importsResource::collection($import);
 
             $success['specialProducts'] = $specialproducts->merge($imports);
@@ -283,14 +280,14 @@ class IndexStoreController extends BaseController
                 $import = Importproduct::where('product_id', $order->id)->where('store_id', $store_id)->first();
                 if (!is_null($import)) {
                     $arr2[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $order->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
-                        ->first(['products.*', 'importproducts.price','importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+                        ->first(['products.*', 'importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
                     $moreSalesImports = importsResource::collection($arr2);
                 } else {
                     $arr1[] = Product::with(['store' => function ($query) {
                         $query->select('id', 'domain', 'store_name');
                     }, 'category' => function ($query) {
                         $query->select('id', 'name');
-                    }])->where('id', $order->id)->select('id', 'name', 'status', 'cover', 'special','stock' ,'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->first();
+                    }])->where('id', $order->id)->select('id', 'name', 'status', 'cover', 'special', 'stock', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->first();
                 }
             }
             $products = ProductResource::collection($arr1);
@@ -305,9 +302,9 @@ class IndexStoreController extends BaseController
             $resentproduct = ProductResource::collection(Product::with([
                 'category' => function ($query) {
                     $query->select('id', 'name');
-                }
-            ])->where('is_deleted', 0)->select('id', 'name', 'status', 'stock','cover', 'special', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->where('status', 'active')
-                ->where('store_id', $store_id)->orderByDesc('created_at')->get());
+                },
+            ])->where('is_deleted', 0)->select('id', 'name', 'status', 'stock', 'cover', 'special', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->where('status', 'active')
+                    ->where('store_id', $store_id)->orderByDesc('created_at')->get());
             $success['resentArrivede'] = $resentproduct->merge($resentimports);
             ////////////////////////////////////////
             // $resent_arrivede_by_category = Category::where('is_deleted', 0)->where('store_id', $store_id)->whereHas('products', function ($query) use ($store_id) {
@@ -325,7 +322,7 @@ class IndexStoreController extends BaseController
             }, 'user' => function ($query) {
                 $query->select('id');
             }])
-                ->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
+                    ->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
             $success['lastPosts'] = PageResource::collection(Page::with(['store' => function ($query) {
                 $query->select('id');
             }, 'user' => function ($query) {
@@ -342,8 +339,8 @@ class IndexStoreController extends BaseController
             $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)->where(function ($query) use ($store_id) {
                 $query->where('store_id', $store_id)
                     ->OrWhere('store_id', null)->whereHas('products', function ($query) use ($store_id) {
-                        $query->where('is_deleted', 0)->where('store_id', $store_id);
-                    });
+                    $query->where('is_deleted', 0)->where('store_id', $store_id);
+                });
             })->with('products')->get()->merge($category);
             if ($categories != null) {
                 $success['category'] = CategoryResource::collection($categories);
@@ -377,7 +374,7 @@ class IndexStoreController extends BaseController
                         ->first(['products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
                     $ratingsImports = importsResource::collection($ratingsimport);
                 } else {
-                    $arr[] = Product::where('id', $rating->id)->select('id', 'name', 'status', 'cover','stock' ,'special', 'selling_price', 'purchasing_price', 'discount_price', 'status', 'created_at')->first();
+                    $arr[] = Product::where('id', $rating->id)->select('id', 'name', 'status', 'cover', 'stock', 'special', 'selling_price', 'purchasing_price', 'discount_price', 'status', 'created_at')->first();
                 }
             }
 
@@ -424,7 +421,7 @@ class IndexStoreController extends BaseController
             $verificayion_arr = array();
             if ($store->verification_status == 'accept') {
                 if ($store->commercialregistertype == 'maeruf') {
-                    $verificayion_arr['link'] = $store->link;
+                    // $verificayion_arr['link'] = $store->link;
                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                 } else {
                     $verificayion_arr['link'] = null;
@@ -562,7 +559,7 @@ class IndexStoreController extends BaseController
             }
             if ($product != null) {
                 $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')
-                    ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
+                        ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
             }
 
             $commentStatus = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('commentstatus', 'active')->first();
@@ -595,7 +592,7 @@ class IndexStoreController extends BaseController
             $arr = array();
             if ($store->verification_status == 'accept') {
                 if ($store->commercialregistertype == 'maeruf') {
-                    $arr['link'] = $store->link;
+                    // $arr['link'] = $store->link;
                     $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                 } else {
                     $arr['link'] = null;
@@ -904,20 +901,20 @@ class IndexStoreController extends BaseController
         $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
         if (is_null($filter_category)) {
             $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
-                ->where('importproducts.store_id', $store_id)
-                ->whereIn('products.id', $imports_id)
-                ->when($price_from, function ($query, $price_from) {
-                    $query->where('importproducts.price', '>=', $price_from);
-                })->when($price_to, function ($query, $price_to) {
+                    ->where('importproducts.store_id', $store_id)
+                    ->whereIn('products.id', $imports_id)
+                    ->when($price_from, function ($query, $price_from) {
+                        $query->where('importproducts.price', '>=', $price_from);
+                    })->when($price_to, function ($query, $price_to) {
                     $query->where('importproducts.price', '<=', $price_to);
                 })->select('products.*', 'importproducts.qty', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
         } else {
             $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
-                ->where('importproducts.store_id', $store_id)
-                ->whereIn('products.id', $imports_id)
-                ->where(function ($query) use ($filter_category) {
-                    $query->where('products.category_id', $filter_category)->orWhere('products.subcategory_id', $filter_category);
-                })->when($price_from, function ($query, $price_from) {
+                    ->where('importproducts.store_id', $store_id)
+                    ->whereIn('products.id', $imports_id)
+                    ->where(function ($query) use ($filter_category) {
+                        $query->where('products.category_id', $filter_category)->orWhere('products.subcategory_id', $filter_category);
+                    })->when($price_from, function ($query, $price_from) {
                     $query->where('importproducts.price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('importproducts.price', '<=', $price_to);
@@ -928,7 +925,7 @@ class IndexStoreController extends BaseController
         }, 'category' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('status', 'active')
-            ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
+                ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
                 $query->where('category_id', $filter_category)->orWhere('subcategory_id', $filter_category);
             })->when($price_from, function ($query, $price_from) {
                 $query->where('selling_price', '>=', $price_from);
@@ -951,8 +948,8 @@ class IndexStoreController extends BaseController
         }])->where('is_deleted', 0)->where('status', 'active')->where(function ($query) use ($store_id) {
             $query->where('store_id', $store_id)
                 ->OrWhere('store_id', null)->whereHas('products', function ($query) use ($store_id) {
-                    $query->where('is_deleted', 0)->where('store_id', $store_id);
-                });
+                $query->where('is_deleted', 0)->where('store_id', $store_id);
+            });
         })->with('products')->get()->merge($category));
 
         $filters[0]["name"] = "التصنيفات";
@@ -986,34 +983,34 @@ class IndexStoreController extends BaseController
         $success['Products'] = $products;
 
         /*   $success['storeName']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_name')->first();
-            $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
-            $success['storeAddress']=Store::where('is_deleted', 0)->where('id', $request->store_id)->pluck('store_address')->first();
-            $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('phonenumber')->first();
-            $success['description']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('description')->first();
-            $success['snapchat']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('snapchat')->first();
-            $success['facebook']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('facebook')->first();
-            $success['twiter']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('twiter')->first();
-            $success['youtube']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('youtube')->first();
-            $success['instegram']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('instegram')->first();
-            $store=Store::where('is_deleted',0)->where('id',$request->store_id)->first();
-            $arr=array();
-            if($store->verification_status == 'accept'){
-            if($store->commercialregistertype == 'maeruf'){
-            $arr['link']= $store->link;
-            $arr['image']= 'https://backend.atlbha.com/assets/media/maroof.png';
-            }
-            else{
-            $arr['link']= null;
-            $arr['image']= 'https://backend.atlbha.com/assets/media/new_commerce.png';
-            }
-            $verificayionMethod=$arr;
-            }
-            else{
-            $verificayionMethod =null ;
-            }
-            $success['verificayionMethod']=$verificayionMethod ;
+        $success['storeEmail']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('store_email')->first();
+        $success['storeAddress']=Store::where('is_deleted', 0)->where('id', $request->store_id)->pluck('store_address')->first();
+        $success['phonenumber']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('phonenumber')->first();
+        $success['description']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('description')->first();
+        $success['snapchat']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('snapchat')->first();
+        $success['facebook']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('facebook')->first();
+        $success['twiter']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('twiter')->first();
+        $success['youtube']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('youtube')->first();
+        $success['instegram']=Store::where('is_deleted',0)->where('id',$request->store_id)->pluck('instegram')->first();
+        $store=Store::where('is_deleted',0)->where('id',$request->store_id)->first();
+        $arr=array();
+        if($store->verification_status == 'accept'){
+        if($store->commercialregistertype == 'maeruf'){
+        $arr['link']= $store->link;
+        $arr['image']= 'https://backend.atlbha.com/assets/media/maroof.png';
+        }
+        else{
+        $arr['link']= null;
+        $arr['image']= 'https://backend.atlbha.com/assets/media/new_commerce.png';
+        }
+        $verificayionMethod=$arr;
+        }
+        else{
+        $verificayionMethod =null ;
+        }
+        $success['verificayionMethod']=$verificayionMethod ;
 
-             */
+         */
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
         $product_ids = Importproduct::where('store_id', $store_id)->orderBy('created_at', 'desc')->pluck('product_id')->toArray();
         $importprodtcts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')->whereIn('products.id', $product_ids)->select('products.*', 'importproducts.qty', 'importproducts.price')->orderBy('importproducts.created_at', 'desc')->take(5)->get();
@@ -1100,21 +1097,21 @@ class IndexStoreController extends BaseController
         $query = $request->input('query');
         $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
         $imports_products = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
-            ->where('importproducts.store_id', $store->id)
-            ->whereIn('products.id', $imports_id)
-            ->where('products.name', 'like', '%' . $query . '%')
-            ->when($category, function ($query, $category) {
-                $query->where('products.category_id', $category)->orWhere('products.subcategory_id', $category);
-            })
-            ->get(['products.*', 'importproducts.qty', 'importproducts.price']));
+                ->where('importproducts.store_id', $store->id)
+                ->whereIn('products.id', $imports_id)
+                ->where('products.name', 'like', '%' . $query . '%')
+                ->when($category, function ($query, $category) {
+                    $query->where('products.category_id', $category)->orWhere('products.subcategory_id', $category);
+                })
+                ->get(['products.*', 'importproducts.qty', 'importproducts.price']));
 
         $products = ProductResource::collection(Product::where('is_deleted', 0)
-            ->where('store_id', $store_id)
-            ->where('name', 'like', '%' . $query . '%')
-            ->when($category, function ($query, $category) {
-                $query->where('category_id', $category)->orWhere('subcategory_id', $category);
-            })
-            ->get());
+                ->where('store_id', $store_id)
+                ->where('name', 'like', '%' . $query . '%')
+                ->when($category, function ($query, $category) {
+                    $query->where('category_id', $category)->orWhere('subcategory_id', $category);
+                })
+                ->get());
 
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
         $success['searchProducts'] = $products->merge($imports_products);

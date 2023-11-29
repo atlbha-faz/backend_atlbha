@@ -114,7 +114,7 @@ class PostStoreController extends BaseController
                 $arr = array();
                 if ($store->verification_status == 'accept') {
                     if ($store->commercialregistertype == 'maeruf') {
-                        $arr['link'] = $store->link;
+                        // $arr['link'] = $store->link;
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
@@ -373,7 +373,7 @@ class PostStoreController extends BaseController
                 $arr = array();
                 if ($store->verification_status == 'accept') {
                     if ($store->commercialregistertype == 'maeruf') {
-                        $arr['link'] = $store->link;
+                        // $arr['link'] = $store->link;
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
