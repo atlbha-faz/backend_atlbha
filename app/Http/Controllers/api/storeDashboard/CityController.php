@@ -160,4 +160,66 @@ class CityController extends BaseController
         }
         return 200;
     }
+    public function fixCity()
+    {
+        $citiesName=[
+            "Makkah City",
+            "Al Awamiyah",
+            "Al Badayea",
+            "Tayma",
+            "Taif",
+            "Al Khurma",
+            "Abha",
+            "Uglat Asugour",
+            "Yanbu",
+            "Al Qurayyat",
+            "Sharorah",
+            "Thadiq",
+            "Ayn Ibn Fuhayd",
+            "Howtat Bani Tamim",
+            "Turbah",
+            "Najran",
+            "Al-Kharj",
+            "Al Qatif",
+            "Khamis Mushait",
+            "Al Husayy",
+            "Arar",
+            "Khulais",
+            "Al Ajfar",
+            "Sabya",
+            "Mecca",
+            "Al Jubail",
+            "Qaryat Al Ulya",
+            "Jazan",
+            "Az Zulfi",
+            "Tabuk",
+            "Al Duwadimi",
+            "Ahad Rafidah",
+            "Hafar Al Batin",
+            "Baish",
+            "Ar Rass",
+            "Ar Ruwaidah",
+           "Al Khobar",
+            "Buraydah",
+            "Al Aqiq",
+            "Alhuwaya",
+            "Anak",
+            "Medina",
+            "Al Hofuf",
+            "Ajman",
+            "Khamis",
+            "Samtah",
+            "Al Aflag",
+            "RiyadhA",
+            "Makkah",
+            "Madinah",
+            "Riyadh",
+            "Dammam",
+            "Jeddah"];
+            $cities = ShippingCity::whereIn('name_en', $citiesName)->whereIn('region_id', [28, 29, 30, 31, 32])->get();
+            foreach ($cities as $city) {
+                    $city->update(['status' => 'not_active']);
+            }
+            return 200;
+    }
 }
