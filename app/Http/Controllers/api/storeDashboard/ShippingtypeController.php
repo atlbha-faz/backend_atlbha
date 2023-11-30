@@ -159,11 +159,10 @@ class ShippingtypeController extends BaseController
            $shippingtype = shippingtype_store::create([
                'shippingtype_id'=>$id ,
                'store_id'=>auth()->user()->store_id,
-               'price'=>$request->price,
+               'price'=>$request->price!==null ? $request->price:35,
            ]);
 
            $success['shippingtypes']=$shippingtype;
-
        }
       
        $success['status']= 200;
