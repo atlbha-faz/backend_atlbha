@@ -23,7 +23,7 @@ class ShippingtypeController extends BaseController
     public function index()
     {
 
-        $success['shippingtypes'] = ShippingtypeResource::collection(Shippingtype::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['shippingtypes'] = ShippingtypeResource::collection(Shippingtype::whereNot('id',5)->where('is_deleted', 0)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع شركات الشحن بنجاح', 'Shippingtype return successfully');
