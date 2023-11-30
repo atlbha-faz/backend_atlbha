@@ -277,7 +277,7 @@ class OrderController extends BaseController
                     } else {
                         $ship_id = null;
                         $track_id = null;
-                        $success['shippingCompany'] = $ship->msg->message;
+                        $success['shippingCompany'] = $ship->msg;
                         return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
                 } elseif ($order->shippingtype->id == 3) {

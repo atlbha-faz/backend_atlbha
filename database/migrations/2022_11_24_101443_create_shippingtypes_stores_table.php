@@ -19,6 +19,7 @@ return new class extends Migration
          $table->foreign('shippingtype_id')->references('id')->on('shippingtypes')->onDelete('cascade');
         $table->bigInteger('store_id')->unsigned();
         $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+        $table->double('price')->nullable();
         $table->timestamps();
         });
     }
