@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\OrderAddressResource;
 use App\Models\OrderAddress;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,14 +21,28 @@ class OrderAddressController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['orderAddress'] = OrderAddressResource::collection(OrderAddress::where('user_id', auth()->user()->id)->get());
+        if ($request->domain == null) {
+            $success['status'] = 200;
 
-        $success['status'] = 200;
+            return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
+        } else {
+            $store = Store::where('domain', $request->domain)->first();
+            $activeShippings = $store->shippingtypes()->get();
+            $ids = array();
+            if (count($activeShippings) > 0) {
+                foreach ($activeShippings as $activeShipping) {
+                    $ids[] = $activeShipping->id;
+                }
+            }
+            $success['orderAddress'] = OrderAddressResource::collection(OrderAddress::whereIn('shippingtype_id', $ids)->where('user_id', auth()->user()->id)->get());
 
-        return $this->sendResponse($success, 'تم ارجاع العناوين بنجاح', 'order Address return successfully');
+            $success['status'] = 200;
 
+            return $this->sendResponse($success, 'تم ارجاع العناوين بنجاح', 'order Address return successfully');
+
+        }
     }
 
     /**
