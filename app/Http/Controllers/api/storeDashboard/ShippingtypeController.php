@@ -136,7 +136,7 @@ class ShippingtypeController extends BaseController
     // }
 
 
-     public function changeStatus($id)
+     public function changeStatus($id,Request $request)
     {
         $shippingtype = Shippingtype::query()->find($id);
         if (is_null($shippingtype) || $shippingtype->is_deleted !=0 || $shippingtype->status=="not_active" ){
@@ -148,9 +148,18 @@ class ShippingtypeController extends BaseController
           $shippingtype->delete();
        }
        else{
+        $input = $request->all();
+        $validator = Validator::make($input, [
+        
+            'price' => ['nullable', 'numeric', 'gt:0'],
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
            $shippingtype = shippingtype_store::create([
                'shippingtype_id'=>$id ,
-               'store_id'=>auth()->user()->store_id
+               'store_id'=>auth()->user()->store_id,
+               'price'=>$request->price,
            ]);
 
            $success['shippingtypes']=$shippingtype;

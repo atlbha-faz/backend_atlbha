@@ -18,7 +18,7 @@ class Shippingtype extends Model
             'shippingtype_id',
             'store_id'
 
-        );
+        )->withPivot('price');
     }
     public function setImageAttribute($image)
     {

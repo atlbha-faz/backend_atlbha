@@ -34,6 +34,7 @@ if($this->status ==null || $this->status == 'active'){
         'image'=>$this->image,
         'cod' => $this->cod,
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+        'price'=>$this->stores!==null ? $this->stores:null,
     ];
 
     
