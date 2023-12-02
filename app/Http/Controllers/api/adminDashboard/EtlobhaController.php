@@ -38,7 +38,7 @@ class EtlobhaController extends BaseController
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
         $success['products'] = ProductResource::collection(Product::with(['store','category'=>function ($query) {
     $query->select('id','name');
-}])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select('id','name','status','cover','special','purchasing_price','selling_price','stock','category_id','store_id','subcategory_id','created_at')->get());
+}])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select('id','name','status','cover','special','purchasing_price','selling_price','stock','category_id','store_id','subcategory_id','created_at','admin_special')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -400,10 +400,10 @@ class EtlobhaController extends BaseController
             return $this->sendError(" المنتج غير موجود", "product is't exists");
         }
 
-        if ($product->special === 'not_special') {
-            $product->update(['special' => 'special']);
+        if ($product->admin_special === 'not_special') {
+            $product->update(['admin_special' => 'special']);
         } else {
-            $product->update(['special' => 'not_special']);
+            $product->update(['admin_special' => 'not_special']);
         }
         $success['product'] = new productResource($product);
         $success['status'] = 200;
