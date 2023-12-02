@@ -118,7 +118,8 @@ class OrderController extends BaseController
                         $url = 'https://dashboard.go-tex.net/gotex-co-test/imile/cancel-order';
                     } elseif ($order->shippingtype->id == 4) {
                         $url = 'https://dashboard.go-tex.net/gotex-co-test/jt/cancel-order';
-                    }
+                    } 
+                    if (in_array($order->shippingtype->id, [1,3,4])){
                     $curl = curl_init();
                     $data = array(
                         'userId' => env('GOTEX_UserId_KEY'),
@@ -145,6 +146,7 @@ class OrderController extends BaseController
                     curl_close($curl);
 
                     $success['shippingCompany'] = json_decode($response);
+                }
                     $success['shipping'] = new shippingResource($shippings);
                     return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
