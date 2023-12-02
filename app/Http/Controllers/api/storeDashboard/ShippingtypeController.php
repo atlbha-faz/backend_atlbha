@@ -168,6 +168,28 @@ class ShippingtypeController extends BaseController
        $success['status']= 200;
         return $this->sendResponse($success,'تم تعديل حالة طريقة  الشحن بنجاح','shipping type updated successfully');
     }
+    public function updatePrice(Request $request,$id)
+    {
+        $shippingtypeCompany = Shippingtype::query()->find($id);
+        $shippingtype=shippingtype_store::where('shippingtype_id',$id)->where('store_id',auth()->user()->store_id)->first();
+        if (is_null($shippingtype)  ){
+            return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
+            }
+            $input = $request->all();
+        $validator = Validator::make($input, [
+        
+            'price' => ['nullable', 'numeric', 'gt:0'],
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+            $shippingtype->update([
+                'price'=>$request->price
+            ]);
+            $success['shippingtypes']=New ShippingtypeResource($shippingtypeCompany);
+            $success['status']= 200;
+        return $this->sendResponse($success,'تم تعديل حالة طريقة  الشحن بنجاح','shipping type updated successfully');
+    }
 
     /**
      * Remove the specified resource from storage.
