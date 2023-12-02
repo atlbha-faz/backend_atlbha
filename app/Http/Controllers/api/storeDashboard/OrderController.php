@@ -199,7 +199,7 @@ class OrderController extends BaseController
                             'description' => $order->description,
                             'quantity' => $order->quantity,
                             'price' => $order->total_price,
-                            'weight' => $request->weight,
+                            'weight' => $order->weight,
                             'district' => $request->district,
                             'city' => $request->city,
                             'streetaddress' => $request->street_address,
@@ -262,7 +262,7 @@ class OrderController extends BaseController
                             'description' => $order->description,
                             'quantity' => $order->quantity,
                             'price' => $order->total_price,
-                            'weight' => $request->weight,
+                            'weight' => $order->weight,
                             'district' => $request->district,
                             'city' => $request->city,
                             'streetaddress' => $request->street_address,
@@ -335,7 +335,7 @@ class OrderController extends BaseController
                             'description' => $order->description,
                             'quantity' => $order->quantity,
                             'price' => $order->total_price,
-                            'weight' => $request->weight,
+                            'weight' => $order->weight,
                             'district' => $request->district,
                             'city' => $request->city,
                             'streetaddress' => $request->street_address,
@@ -393,7 +393,7 @@ class OrderController extends BaseController
                             'description' => $order->description,
                             'quantity' => $order->quantity,
                             'price' => $order->total_price,
-                            'weight' => $request->weight,
+                            'weight' => $order->weight,
                             'district' => $request->district,
                             'city' => $request->city,
                             'streetaddress' => $request->street_address,
@@ -412,6 +412,33 @@ class OrderController extends BaseController
                         $success['shippingCompany'] = $ship->msg->message;
                         return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
+                }else{
+                    $order->update([
+                        'order_status' => $request->input('status'),
+                    ]);
+                    foreach ($order->items as $orderItem) {
+                        $orderItem->update([
+                            'order_status' => $request->input('status'),
+                        ]);
+                    } 
+                    $shipping = Shipping::create([
+                        'shipping_id' => $order->order_number,
+                        'track_id' => null,
+                        'description' => $order->description,
+                        'quantity' => $order->quantity,
+                        'price' => $order->total_price,
+                        'weight' => $order->weight,
+                        'district' => $request->district,
+                        'city' => $request->city,
+                        'streetaddress' => $request->street_address,
+                        'customer_id' => $order->user_id,
+                        'shippingtype_id' => $order->shippingtype_id,
+                        'order_id' => $order->id,
+                        'shipping_status' => $order->order_status,
+                        'store_id' => $order->store_id,
+                        'cashondelivery' => $order->cashondelivery,
+                    ]);
+                    $success['shipping'] = new shippingResource($shipping);
                 }
                 $success['orders'] = new OrderResource($order);
                 $success['status'] = 200;
