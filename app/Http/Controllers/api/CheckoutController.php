@@ -6,7 +6,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\PaymenttypeResource;
-use App\Http\Resources\ShippingtypeResource;
+use App\Http\Resources\ShippingtypeTemplateResource;
 use App\Models\Cart;
 use App\Models\CartDetail;
 use App\Models\Coupon;
@@ -21,6 +21,7 @@ use App\Models\shippingtype_store;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends BaseController
@@ -255,11 +256,18 @@ class CheckoutController extends BaseController
 
     public function shippingcompany($domain)
     {
+
         $store = Store::where('is_deleted', 0)->where('domain', $domain)->first();
-        $success['shipping_company'] = ShippingtypeResource::collection($store->shippingtypes);
+
+        $shippingcompanys = DB::table('shippingtypes_stores')
+            ->join('shippingtypes', 'shippingtypes.id', '=', 'shippingtypes_stores.shippingtype_id')->where('shippingtypes_stores.store_id', $store->id) // joining the contacts table , where user_id and contact_user_id are same
+            ->select('shippingtypes.*', 'shippingtypes_stores.price')
+            ->get();
+
+        $success['shipping_company'] = ShippingtypeTemplateResource::collection($shippingcompanys);
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'Payment Types return successfully');
+        return $this->sendResponse($success, 'تم ارجاع طرق الشحن بنجاح', 'shipping Types return successfully');
     }
 
     public function applyCoupon(Request $request, $domain, $cart_id)

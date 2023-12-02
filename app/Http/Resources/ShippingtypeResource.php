@@ -14,36 +14,42 @@ class ShippingtypeResource extends JsonResource
      */
     public function toArray($request)
     {
-        if(auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee'){
-            if($this->stores()->where('store_id',auth()->user()->store_id )->first() != null){
-          $status = 'نشط';
-      }else{
-          $status = 'غير نشط';
-      }
-      }else{
-if($this->status ==null || $this->status == 'active'){
-            $status = 'نشط';
-        }else{
-            $status = 'غير نشط';
-        }
-        }
-        if(auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee' ){
-            $price=null;
-        }
-        else{
-            $price=count($this->stores)==0 ? 0:$this->stores[0]->pivot->price;
-        }
-        
-     return [
-        'id' =>$this->id,
-        'name'=>$this->name,
-        'status' => $status,
-        'image'=>$this->image,
-        'cod' => $this->cod,
-        'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
-         'price'=>$price,
-    ];
 
-    
-}
+        if (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
+            if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null) {
+                $status = 'نشط';
+            } else {
+                $status = 'غير نشط';
+            }
+        } else {
+            if ($this->status == null || $this->status == 'active') {
+                $status = 'نشط';
+            } else {
+                $status = 'غير نشط';
+            }
+        }
+        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee') {
+            $price = null;
+        } elseif (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
+            if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null) {
+                $priceobject = \App\Models\shippingtype_store::where('shippingtype_id', $this->id)->where('store_id', auth()->user()->store_id)->first();
+                $price = $priceobject->price;
+            } else {
+                $price = 0;
+            }
+        } else {
+            $price = count($this->stores) == 0 ? 0 : null;
+        }
+
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'status' => $status,
+            'image' => $this->image,
+            'cod' => $this->cod,
+            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
+            'price' => $price,
+        ];
+
+    }
 }
