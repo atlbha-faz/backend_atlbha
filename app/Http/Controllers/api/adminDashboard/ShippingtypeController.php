@@ -84,7 +84,7 @@ class ShippingtypeController extends BaseController
         $success['shippingtypes'] = new ShippingtypeResource($shippingtype);
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم تعديل حالة شركة الدفع بنجاح', 'shipping type updated successfully');
+        return $this->sendResponse($success, 'تم تعديل حالة شركة الشحن بنجاح', 'shipping type updated successfully');
 
     }
 
