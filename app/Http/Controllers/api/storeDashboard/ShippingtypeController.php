@@ -180,6 +180,7 @@ class ShippingtypeController extends BaseController
         
             'price' => ['nullable', 'numeric', 'gt:0'],
         ]);
+        
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
