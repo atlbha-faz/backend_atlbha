@@ -150,7 +150,7 @@ class ShippingtypeController extends BaseController
        else{
         $input = $request->all();
         $validator = Validator::make($input, [
-        
+
             'price' => ['nullable', 'numeric', 'gt:0'],
         ]);
         if ($validator->fails()) {
@@ -164,9 +164,9 @@ class ShippingtypeController extends BaseController
 
            $success['shippingtypes']=$shippingtype;
        }
-      
+
        $success['status']= 200;
-        return $this->sendResponse($success,'تم تعديل حالة طريقة  الشحن بنجاح','shipping type updated successfully');
+        return $this->sendResponse($success,'تم تعديل حالة طريقةالشحن بنجاح','shipping type updated successfully');
     }
     public function updatePrice(Request $request,$id)
     {
