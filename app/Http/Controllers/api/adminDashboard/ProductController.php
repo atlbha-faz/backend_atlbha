@@ -135,19 +135,19 @@ class ProductController extends BaseController
                return $this->sendResponse($success,'تم عرض المنتج بنجاح','product showed successfully');
     }
 
-    
-    
+
+
       public function specialStatusall(Request $request)
     {
       $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'store')->get();
-  
+
         if (count($products) > 0) {
             foreach ($products as $product) {
 
-                if ($product->special === 'not_special') {
-                    $product->update(['special' => 'special']);
+                if ($product->admin_special === 'not_special') {
+                    $product->update(['admin_special' => 'special']);
                 } else {
-                    $product->update(['special' => 'not_special']);
+                    $product->update(['admin_special' => 'not_special']);
                 }
                 $success['product'] = new ProductResource($product);
 
@@ -163,25 +163,25 @@ class ProductController extends BaseController
     public function specialStatus($id)
     {
       $product= Product::where('id', $id)->where('is_deleted', 0)->where('for', 'store')->first();
-  
+
       if (is_null($product) || $product->is_deleted !=0 ){
         return $this->sendError("المنتج غير موجود","product is't exists");
         }
-         
-                if ($product->special === 'not_special') {
-                    $product->update(['special' => 'special']);
+
+                if ($product->admin_special === 'not_special') {
+                    $product->update(['admin_special' => 'special']);
                 } else {
-                    $product->update(['special' => 'not_special']);
+                    $product->update(['admin_special' => 'not_special']);
                 }
                 $success['product'] = new ProductResource($product);
 
-            
+
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'Product updated successfully');
-        
+
 
     }
-    
+
        public function changeSatusall(Request $request)
     {
 
@@ -318,13 +318,13 @@ class ProductController extends BaseController
             if(count($products)>0){
            foreach($products as $product)
            {
-            
+
                $product->update(['is_deleted' => $product->id]);
             }
                $success['products']= ProductResource::collection($products);
                $success['status']= 200;
                 return $this->sendResponse($success,'تم حذف المنتج بنجاح','product deleted successfully');
-               } 
+               }
                else{
                 $success['status']= 200;
             return $this->sendResponse($success,'المدخلات غير صحيحة','id does not exit');

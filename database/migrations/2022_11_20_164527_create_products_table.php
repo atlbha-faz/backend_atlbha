@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('slug');
             $table->enum('for', ['store', 'etlobha', 'stock'])->default('etlobha');
             $table->enum('special', ['special', 'not_special'])->default('not_special');
+            $table->enum('admin_special', ['special', 'not_special'])->default('not_special');
             $table->longText('description');
             $table->boolean('amount')->default(0);
             $table->double('purchasing_price')->nullable();
