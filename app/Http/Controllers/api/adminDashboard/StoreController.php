@@ -45,7 +45,7 @@ class StoreController extends BaseController
     $query->select('id');
 },'user' => function ($query) {
     $query->select('id');
-}])->where('is_deleted', 0)->orderByDesc('created_at')->select('id','store_name','status','periodtype','special','verification_status','verification_date','created_at')->get());
+}])->where('is_deleted', 0)->orderByDesc('created_at')->select('id','store_name','domain','status','periodtype','special','verification_status','verification_date','created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
@@ -71,7 +71,7 @@ class StoreController extends BaseController
     {
 
         $input = $request->all();
-       
+
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
@@ -206,7 +206,7 @@ class StoreController extends BaseController
         } else {
             $subcategory = null;
         }
-       
+
          $store->categories()->attach($request->activity_id,['subcategory_id' =>$subcategory] );
         $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
 
