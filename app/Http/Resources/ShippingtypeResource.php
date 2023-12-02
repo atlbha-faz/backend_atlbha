@@ -27,6 +27,13 @@ if($this->status ==null || $this->status == 'active'){
             $status = 'غير نشط';
         }
         }
+        if(auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee' ){
+            $price=null;
+        }
+        else{
+            $price=count($this->stores)==0 ? 0:$this->stores[0]->pivot->price;
+        }
+        
      return [
         'id' =>$this->id,
         'name'=>$this->name,
@@ -34,6 +41,7 @@ if($this->status ==null || $this->status == 'active'){
         'image'=>$this->image,
         'cod' => $this->cod,
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+         'price'=>$price,
     ];
 
     

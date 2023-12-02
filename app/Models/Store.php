@@ -172,8 +172,7 @@ class Store extends Model
             'shippingtypes_stores',
             'store_id',
             'shippingtype_id'
-
-        );
+        )->withPivot('price');
     }
     public function paymenttypes()
     {

@@ -127,9 +127,13 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم إرجاع المدن', ' cities successfully');
     }
     public function shippingcities($id)
-    {
+    {  
+        //if shipping is another
+        if($id == 5){
+            $id=4;
+        }
         $shippingCompany = Shippingtype::query()->find($id);
-        $success['cities'] = ShippingCitiesResource::collection($shippingCompany->shippingcities()->where('status', 'active')->get());
+        $success['cities'] =  $shippingCompany !== null ? ShippingCitiesResource::collection($shippingCompany->shippingcities()->where('status', 'active')->get()) : array();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المدن بنجاح', 'city return successfully');
