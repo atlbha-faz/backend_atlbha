@@ -40,6 +40,8 @@ class OrderResource extends JsonResource
             $track = 'https://www.imile.com/ar/track/';
         } elseif ($this->shippingtype->id == 4) {
             $track = 'https://www.jtexpress-sa.com/trajectoryQuery';
+        }else{
+        $track=null;
         }
         $subtotal = $this->subtotal - $this->tax;
 
