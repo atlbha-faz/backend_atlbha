@@ -96,17 +96,17 @@ class CheckoutController extends BaseController
 
             // Save the order to the database
             $order->save();
-             if ($cart->free_shipping == 1){
-                $shipping_price=$cart->shipping_price;
-             }
-             else{
-            $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
-            if ($shipping_price == null) {
-                $shipping_price = 35;
+
+            if ($cart->free_shipping == 1) {
+                $shipping_price = $cart->shipping_price;
             } else {
-                $shipping_price = $shipping_price->price;
+                $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
+                if ($shipping_price == null) {
+                    $shipping_price = 35;
+                } else {
+                    $shipping_price = $shipping_price->price;
+                }
             }
-           }
             if ($order->weight > 15) {
                 $extra_shipping_price = ($order->weight - 15) * 3;
             } else {
@@ -115,6 +115,7 @@ class CheckoutController extends BaseController
 
             $order->update([
                 'shipping_price' => $shipping_price,
+                'total_price' => $order->total_price + $extra_shipping_price,
             ]);
 
             // Loop through the cart items and associate them with the order
@@ -149,9 +150,6 @@ class CheckoutController extends BaseController
                 return $total + ($item->quantity * $item->price);
             });
 
-            $order->update([
-                'total_price' => $subtotal + $order->shipping_price + $extra_shipping_price,
-            ]);
             $orderAddress = OrderAddress::where('user_id', auth()->user()->id)->where('id', $request->shippingAddress_id)->first();
 
             if ($orderAddress === null) {
@@ -200,7 +198,7 @@ class CheckoutController extends BaseController
 
             if ($order->paymentype_id == 4) {
 
-            //الدفع عند الاستلام
+                //الدفع عند الاستلام
                 $order->update([
                     'total_price' => $order->total_price + 10,
                     'payment_status' => "pending",
@@ -309,7 +307,7 @@ class CheckoutController extends BaseController
                     if ($coupon->coupon_apply == 'all') {
                         if ($coupon->free_shipping == 1) {
                             $cart->update([
-                                'free_shipping'=>1,
+                                'free_shipping' => 1,
                                 'shipping_price' => 0,
                                 'total' => $cart->total - $cart->shipping_price,
                             ]);
