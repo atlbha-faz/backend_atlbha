@@ -112,11 +112,21 @@ class CheckoutController extends BaseController
             } else {
                 $extra_shipping_price = 0;
             }
-
+            if ($cart->free_shipping == 1) 
+             {
             $order->update([
                 'shipping_price' => $shipping_price,
-                'total_price' => $order->total_price + $extra_shipping_price,
+                'total_price' => $order->total_price+ $extra_shipping_price,
             ]);
+           }
+           else{
+            $order->update([
+                'shipping_price' => $shipping_price,
+                'total_price' => ($order->total_price-35)+$shipping_price+ $extra_shipping_price,
+            ]);
+
+           }
+            
 
             // Loop through the cart items and associate them with the order
             foreach ($cart->cartDetails as $cartItem) {
