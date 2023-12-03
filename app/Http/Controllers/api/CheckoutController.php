@@ -42,6 +42,7 @@ class CheckoutController extends BaseController
 
         } else {
             $cart = Cart::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->first();
+
             if ($cart == null) {
                 $success['status'] = 200;
 
@@ -199,7 +200,7 @@ class CheckoutController extends BaseController
 
             if ($order->paymentype_id == 4) {
 
-//الدفع عند الاستلام
+            //الدفع عند الاستلام
                 $order->update([
                     'total_price' => $order->total_price + 10,
                     'payment_status' => "pending",
@@ -306,6 +307,15 @@ class CheckoutController extends BaseController
                 $useCouponAll = coupons_users::where('coupon_id', $coupon->id)->get();
                 if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
                     if ($coupon->coupon_apply == 'all') {
+                        if ($coupon->free_shipping == 1) {
+                            $cart->update([
+                                'free_shipping'=>1,
+                                'shipping_price' => 0,
+                                'total' => $cart->total - $cart->shipping_price,
+                            ]);
+
+                        }
+
                         if ($coupon->discount_type == 'fixed') {
                             $cartAfterdiscount = $cart->total - $coupon->discount;
                             $cart->update([
@@ -326,13 +336,6 @@ class CheckoutController extends BaseController
                                 'discount_type' => 'percent',
                                 'discount_value' => $coupon->discount . '%',
                                 'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
-                            ]);
-
-                        }
-                        if ($coupon->free_shipping == 1) {
-                            $cart->update([
-                                'shipping_price' => 0,
-                                'total' => $cart->total - $cart->shipping_price,
                             ]);
 
                         }
