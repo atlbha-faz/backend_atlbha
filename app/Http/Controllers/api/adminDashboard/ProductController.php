@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Store;
+use App\Mail\SendCode;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Events\VerificationEvent;
