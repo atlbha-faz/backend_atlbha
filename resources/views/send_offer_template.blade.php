@@ -103,7 +103,7 @@
  
       
      {{htmlspecialchars(trim(strip_tags($data['message'])))}}
-     "للحصول على العرض يرجى زيارة رابط المتجر التالي" 
+    للحصول على العرض يرجى زيارة رابط المتجر التالي
        <a href="{{ 'https://template.atlbha.com/' . $data['store_domain'] }}">{{$data['store_id']}}</a>
        <!-- <img src="/images/congratulations.png" class="codeImag" /> -->
 
