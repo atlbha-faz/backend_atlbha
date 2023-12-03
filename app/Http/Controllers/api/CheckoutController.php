@@ -42,7 +42,7 @@ class CheckoutController extends BaseController
 
         } else {
             $cart = Cart::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->first();
-           
+
             if ($cart == null) {
                 $success['status'] = 200;
 
@@ -200,7 +200,7 @@ class CheckoutController extends BaseController
 
             if ($order->paymentype_id == 4) {
 
-//الدفع عند الاستلام
+            //الدفع عند الاستلام
                 $order->update([
                     'total_price' => $order->total_price + 10,
                     'payment_status' => "pending",
@@ -309,6 +309,7 @@ class CheckoutController extends BaseController
                     if ($coupon->coupon_apply == 'all') {
                         if ($coupon->free_shipping == 1) {
                             $cart->update([
+                                'free_shipping'=>1,
                                 'shipping_price' => 0,
                                 'total' => $cart->total - $cart->shipping_price,
                             ]);

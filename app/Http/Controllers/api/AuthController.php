@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Theme;
-use App\Models\Setting;
+use App\Events\VerificationEvent;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\UserResource;
+use App\Mail\SendCode;
 use App\Models\Homepage;
 use App\Models\Marketer;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
-use Notification;
-use App\Events\VerificationEvent;
+use App\Models\Setting;
+use App\Models\Store;
+use App\Models\Theme;
+use App\Models\User;
 use App\Notifications\verificationNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Notification;
+
 class AuthController extends BaseController
 {
     protected $code;
 
-    
     public function register(Request $request)
     {
         $setting = Setting::orderBy('id', 'desc')->first();
@@ -176,12 +178,12 @@ class AuthController extends BaseController
                 }
                 // $store->activities()->attach($request->activity_id);
                 $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
-                
+
                 if ($setting->registration_status == "registration_with_admin") {
 
-                    $user->update(['status'=>'not_active']);
-                    $store->update(['status'=>'not_active']);
-                     $users_admin = User::where('store_id', null)->whereIn('user_type', ['admin','admin_employee'])->get();
+                    $user->update(['status' => 'not_active']);
+                    $store->update(['status' => 'not_active']);
+                    $users_admin = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->get();
 
                     $data = [
                         'message' => 'طلب تسجيل',
@@ -193,13 +195,22 @@ class AuthController extends BaseController
                     foreach ($users_admin as $user_admin) {
                         Notification::send($user_admin, new verificationNotification($data));
                     }
-                    event(new VerificationEvent($data));   
-                    return $this->sendError( 'تم التسجيل وبانتظار ادارة المنصة', 'waiting administration approval');
+                    event(new VerificationEvent($data));
+                    return $this->sendError('تم التسجيل وبانتظار ادارة المنصة', 'waiting administration approval');
                 }
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                $this->sendSms($request);
+                // $this->sendSms($request); كود ارسال الجوال
+                $data = array(
+                    'code' => $user->verify_code,
+                );
+
+                try {
+                    Mail::to($user->email)->send(new SendCode($data));
+                } catch (\Exception $e) {
+                    return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                }
 
                 $success['user'] = new UserResource($user);
                 $success['token'] = $user->createToken('authToken')->accessToken;
@@ -234,7 +245,16 @@ class AuthController extends BaseController
                     $user->generateVerifyCode();
                     $request->code = $user->verify_code;
                     $request->phonenumber = $user->phonenumber;
-                    $this->sendSms($request);
+                    // $this->sendSms($request); كود ارسال الجوال
+                    $data = array(
+                        'code' => $user->verify_code,
+                    );
+
+                    try {
+                        Mail::to($user->email)->send(new SendCode($data));
+                    } catch (\Exception $e) {
+                        return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                    }
 
                     $success['user'] = new UserResource($user);
                     $success['status'] = 200;
@@ -349,18 +369,28 @@ class AuthController extends BaseController
             $user_name = $request->user_name;
             $user = User::whereIn('user_type', ['store', 'store_employee'])->where(function ($query) use ($user_name) {
                 $query->where('user_name', $user_name)->orWhere('email', $user_name);
-            }) ->first();
+            })->first();
 
             if ($user) {
 
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                $this->sendSms($request); // send and return its response
+                // $this->sendSms($request); // send and return its response
+                $data = array(
+                    'code' => $user->verify_code,
+                );
+
+                try {
+                    Mail::to($user->email)->send(new SendCode($data));
+                } catch (\Exception $e) {
+                    return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                }
+
             }
-        
+
             return $this->sendError('الحساب غير محقق', 'User not verified');
-            
+
         }
         // $remember = request('remember');
 
@@ -414,7 +444,16 @@ class AuthController extends BaseController
 
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            $this->sendSms($request); // send and return its response
+            // $this->sendSms($request); // send and return its response
+            $data = array(
+                'code' => $user->verify_code,
+            );
+
+            try {
+                Mail::to($user->email)->send(new SendCode($data));
+            } catch (\Exception $e) {
+                return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+            }
 
         }
 
