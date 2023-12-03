@@ -341,7 +341,6 @@ class ProductController extends BaseController
         event(new VerificationEvent($note)); 
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
-
         return $this->sendResponse($success, 'تم إضافة ملاحظة بنجاح', 'note Added successfully');
     }
 }
