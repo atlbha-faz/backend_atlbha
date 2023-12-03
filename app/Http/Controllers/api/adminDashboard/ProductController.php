@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\NoteResource;
-use App\Http\Resources\ProductResource;
 use App\Models\Note;
-use App\Models\Product;
-use App\Models\Store;
 use App\Models\User;
-use App\Notifications\verificationNotification;
+use App\Models\Store;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
+use App\Events\VerificationEvent;
+use App\Http\Resources\NoteResource;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
 {
