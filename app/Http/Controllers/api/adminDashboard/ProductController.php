@@ -11,6 +11,7 @@ use App\Http\Resources\NoteResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
@@ -337,10 +338,19 @@ class ProductController extends BaseController
             'product_id' => $request->product_id,
         ]);
         $store = Store::query()->find($request->store_id);
-        Notification::send($store->store_email, new verificationNotification($note));
-        event(new VerificationEvent($note)); 
+        $data = [
+            'message' => $request->details,
+            'store_id' => $store->id,
+            'user_id' => $store->user_id,
+            'type' => $request->subject,
+            'object_id' => $request->product_id,
+        ];
+       
+        Notification::send($store->store_email, new verificationNotification($data));
+        event(new VerificationEvent($data)); 
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
+
         return $this->sendResponse($success, 'تم إضافة ملاحظة بنجاح', 'note Added successfully');
     }
 }
