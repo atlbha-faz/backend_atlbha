@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Store;
-use App\Mail\SendCode;
+use App\Mail\SendMail;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Events\VerificationEvent;
@@ -351,7 +351,7 @@ class ProductController extends BaseController
         $user = User::query()->find($store->user_id);
         Notification::send($user, new verificationNotification($data));
         event(new VerificationEvent($data));
-        Mail::to($user->email)->send(new SendCode($data));
+        Mail::to($user->email)->send(new SendMail($data));
 
 
         // Notification::send($user, new verificationNotification($data));
