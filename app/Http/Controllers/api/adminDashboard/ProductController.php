@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\NoteResource;
-use App\Http\Resources\ProductResource;
 use App\Models\Note;
+use App\Models\Store;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Events\VerificationEvent;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
 {
@@ -333,7 +336,9 @@ class ProductController extends BaseController
             'store_id' => $request->store_id,
             'product_id' => $request->product_id,
         ]);
-
+        $store = Store::query()->find($request->store_id);
+        Notification::send($store->store_email, new verificationNotification($note));
+        event(new VerificationEvent($note)); 
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
 
