@@ -32,7 +32,7 @@ class verificationNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database','mail'];
     }
 
     /**
@@ -48,8 +48,8 @@ class verificationNotification extends Notification
         ->line($this->data['message'])
         ->line('شكرا');
     }
-  
-            
+
+
 
     /**
      * Get the array representation of the notification.
@@ -68,17 +68,17 @@ class verificationNotification extends Notification
              'type'=> $this->data['type'],
              'object_id'=> $this->data['object_id']
          ];
-     } 
+     }
     public function toDatabase($notifiable)
     {
         return [
-     
+
             'user_id'=>$this->data['user_id'],
             'message' => $this->data['message'],
             'store_id' => $this->data['store_id'],
             'type'=> $this->data['type'],
             'object_id'=> $this->data['object_id']
-         
+
         ];
     }
 }

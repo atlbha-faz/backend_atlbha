@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\Note;
-use App\Models\Store;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Events\VerificationEvent;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\NoteResource;
 use App\Http\Resources\ProductResource;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Notification;
+use App\Models\Note;
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\User;
 use App\Notifications\verificationNotification;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends BaseController
 {
@@ -345,9 +346,14 @@ class ProductController extends BaseController
             'type' => $request->subject,
             'object_id' => $request->product_id,
         ];
-       
-        Notification::send($store->store_email, new verificationNotification($data));
-        event(new VerificationEvent($data)); 
+        $user = User::query()->find($store->user_id);
+        Notification::send($user, new verificationNotification($data));
+        event(new VerificationEvent($data));
+        Mail::to($user->email)->send(new SendCode($data));
+
+
+        // Notification::send($user, new verificationNotification($data));
+        // event(new VerificationEvent(c));
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
 
