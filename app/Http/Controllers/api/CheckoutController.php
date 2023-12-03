@@ -96,13 +96,17 @@ class CheckoutController extends BaseController
 
             // Save the order to the database
             $order->save();
-
+             if ($cart->free_shipping == 1){
+                $shipping_price=$cart->shipping_price;
+             }
+             else{
             $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
             if ($shipping_price == null) {
                 $shipping_price = 35;
             } else {
                 $shipping_price = $shipping_price->price;
             }
+           }
             if ($order->weight > 15) {
                 $extra_shipping_price = ($order->weight - 15) * 3;
             } else {
