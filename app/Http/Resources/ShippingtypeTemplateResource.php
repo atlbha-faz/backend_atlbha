@@ -21,7 +21,7 @@ class ShippingtypeTemplateResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'status' => $status,
-            'image' => $this->image,
+            'image' =>asset('storage/images/shippingtype') . '/' . $this->image,
             'cod' => $this->cod,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'price' => $this->price,
