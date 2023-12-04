@@ -51,7 +51,7 @@ class VerificationResource extends JsonResource
        'description'=>$this->description,
        'business_license'=>$this->business_license,
        'file' =>$this->file,
-    //    'link' =>$this->link,
+       'link' =>$this->link,
        'snapchat'=>$this->snapchat,
        'facebook' =>$this->facebook,
        'twiter'=>$this->twiter,
