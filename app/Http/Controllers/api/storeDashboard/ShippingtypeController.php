@@ -178,7 +178,7 @@ class ShippingtypeController extends BaseController
             $input = $request->all();
         $validator = Validator::make($input, [
         
-            'price' => ['nullable', 'numeric', 'gt:0'],
+            'price' => ['nullable', 'numeric'],
         ]);
         
         if ($validator->fails()) {
