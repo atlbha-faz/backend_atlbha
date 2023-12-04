@@ -33,9 +33,9 @@ class VerificationController extends BaseController
         $success['name'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('store_name')->first();
         $success['city'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('city_id')->first();
 
-        // if ($type == 'maeruf') {
-        //     $success['link'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('link')->first();
-        // }
+        if ($type == 'maeruf') {
+            $success['link'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('link')->first();
+        }
         $success['file'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('file')->first();
         $success['username'] = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->pluck('name')->first();
         $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('phonenumber')->first();
@@ -54,7 +54,7 @@ class VerificationController extends BaseController
             'commercialregistertype' => 'required|in:commercialregister,maeruf',
             'store_name' => 'required|unique:stores,store_name,' . auth()->user()->store_id,
             'city_id' => 'required',
-            // 'link' => 'required_if:commercialregistertype,maeruf',
+            'link' => 'required_if:commercialregistertype,maeruf',
             'file' => 'required|mimes:pdf',
             'name' => 'required|string|max:255',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
@@ -88,7 +88,7 @@ class VerificationController extends BaseController
         $store->update([
             'commercialregistertype' => $request->input('commercialregistertype'),
             'city_id' => $request->input('city_id'),
-            // 'link' => $request->input('link'),
+            'link' => $request->input('link'),
             'file' => $request->file,
             'phonenumber' => $request->input('phonenumber'),
             'verification_status' => "admin_waiting",
