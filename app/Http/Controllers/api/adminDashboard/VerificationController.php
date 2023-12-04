@@ -60,7 +60,7 @@ class VerificationController extends BaseController
 
         $user = User::where('store_id', $store->id)->where('user_type', 'store')->first();
         $data = [
-            'message' => ' تم قبول توثيق المتجر',
+            'message' => 'تم قبول توثيق المتجر في منصة اطلبها',
             'store_id' => $store->id,
             'user_id' => auth()->user()->id,
             'type' => "store_request",
