@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\StoreResource;
-use App\Models\Store;
-use App\Models\User;
-use App\Notifications\verificationNotification;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Notification;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Store;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Events\VerificationEvent;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class VerificationController extends BaseController
 {
@@ -57,7 +58,9 @@ class VerificationController extends BaseController
             'link' => 'required_if:commercialregistertype,maeruf',
             'file' => 'required|mimes:pdf',
             'name' => 'required|string|max:255',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted',0);
+            })],
         ]);
         if ($validator->fails()) {
             # code...
