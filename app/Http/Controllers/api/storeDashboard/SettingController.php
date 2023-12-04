@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Homepage;
-use App\Models\Day_Store;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Resources\StoreResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\StoreResource;
+use App\Models\Day_Store;
+use App\Models\Homepage;
+use App\Models\Store;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SettingController extends BaseController
 {
@@ -24,13 +24,13 @@ class SettingController extends BaseController
     {
         // dd(auth()->user()->store_id);
         $success['setting_store'] = new StoreResource(Store::with(['categories' => function ($query) {
-    $query->select('name');
-},'city' => function ($query) {
-    $query->select('id');
-},'country' => function ($query) {
-    $query->select('id');
-}])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
-        
+            $query->select('name');
+        }, 'city' => function ($query) {
+            $query->select('id');
+        }, 'country' => function ($query) {
+            $query->select('id');
+        }])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الاعدادات بنجاح', 'registration_status shown successfully');
@@ -44,13 +44,14 @@ class SettingController extends BaseController
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'description' => 'required|string',
             'store_address' => 'nullable|string',
-            'domain' => ['required', 'alpha',Rule::unique('stores')->where(function ($query) {
-                return $query->where('is_deleted',0)->where('id','!=', auth()->user()->store_id);
+            'store_name'=> 'required|string',
+            'domain' => ['required', 'alpha', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
             })],
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             //'store_email' => 'required|email|unique:users,email,' . auth()->user()->id,
-           // 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber,' . auth()->user()->id],
+            // 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber,' . auth()->user()->id],
             'working_status' => 'required|in:active,not_active',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
@@ -71,19 +72,20 @@ class SettingController extends BaseController
             'country_id' => $request->input('country_id'),
             'city_id' => $request->input('city_id'),
             'store_email' => $request->input('store_email'),
+            'store_name' => $request->input('store_name'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             //'phonenumber' => $request->input('phonenumber'),
             'working_status' => $request->input('working_status'),
         ]);
         $store_user = User::where('is_deleted', 0)->where('id', auth()->user()->id)->where('user_type', 'store')->first();
-       /* $store_user->update([
+        /* $store_user->update([
 
-            'email' => $request->input('store_email'),
+        'email' => $request->input('store_email'),
 
-            'phonenumber' => $request->input('phonenumber'),
+        'phonenumber' => $request->input('phonenumber'),
 
         ]);
-        */
+         */
 
         $logohomepage = Homepage::updateOrCreate([
             'store_id' => auth()->user()->store_id,
@@ -149,7 +151,7 @@ class SettingController extends BaseController
 
         return $this->sendResponse($success, 'تم تعديل الاعدادات بنجاح', ' update successfully');
     }
-    
+
     public function checkDomain(Request $request)
     {
         $input = $request->all();
