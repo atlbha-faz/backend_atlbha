@@ -23,8 +23,8 @@ class ImportproductController extends BaseController
     {
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
-        $imports = Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
-        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->whereNotIn('id', $imports)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'created_at', 'category_id', 'subcategory_id')->get());
+        // $imports = Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
+        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'created_at', 'category_id', 'subcategory_id')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -35,9 +35,9 @@ class ImportproductController extends BaseController
     {
 
         $importedproduct = Importproduct::where('product_id', $request->product_id)->where('store_id', auth()->user()->store_id)->first();
-        if ($importedproduct) {
-            return $this->sendError(" تم استيراده مسبقا ", "imported");
-        }
+        // if ($importedproduct) {
+        //     return $this->sendError(" تم استيراده مسبقا ", "imported");
+        // }
         $purchasing_price = Product::where('id', $request->product_id)->value('purchasing_price');
 
         $input = $request->all();
