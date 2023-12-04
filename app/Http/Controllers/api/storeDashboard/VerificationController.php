@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\StoreResource;
-use App\Models\Store;
-use App\Models\User;
-use App\Notifications\verificationNotification;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Notification;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Store;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Events\VerificationEvent;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class VerificationController extends BaseController
 {
