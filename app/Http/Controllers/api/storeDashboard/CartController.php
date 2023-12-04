@@ -148,11 +148,11 @@ class CartController extends BaseController
         $validator = Validator::make($input, [
             //'id'=>'required|exists:carts,id',
             'message' => 'required|string',
+            'discount_type'=>"nullable",
             //'discount_total' =>"required_if:discount_type,fixed,percent",
             'discount_value' => "required_if:discount_type,fixed,percent",
-            'discount_expire_date' => "required",
-            'free_shipping' => 'in:0,1',
-
+            'free_shipping' => 'nullable|in:0,1',
+            'discount_expire_date' =>"required_if:discount_type,fixed,percent|required_if:free_shipping,1",
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
