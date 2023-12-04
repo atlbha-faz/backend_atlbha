@@ -153,7 +153,6 @@ class CartController extends BaseController
             'discount_value' => "required_if:discount_type,fixed,percent",
             'free_shipping' => 'nullable|in:0,1',
             'discount_expire_date' =>"required_if:discount_type,fixed,percent|required_if:free_shipping,1",
-
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
