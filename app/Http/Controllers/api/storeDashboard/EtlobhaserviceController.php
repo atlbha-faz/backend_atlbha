@@ -65,6 +65,9 @@ class EtlobhaserviceController extends BaseController
           $array1 =array($service->id);
           $result=array_merge($request->service_id,$array1);
         }
+        else{
+          $result=$request->service_id;
+        }
          if($request->service_id!=null){
           $websiteorder->services()->attach($result);
          }
