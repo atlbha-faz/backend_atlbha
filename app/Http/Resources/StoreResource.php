@@ -2,9 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
-
-use App\Models\Product;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,109 +16,103 @@ class StoreResource extends JsonResource
 
     public function toArray($request)
     {
-        if( $this->categories->first() ==!null ){
-            $a=$this->categories->first()->pivot->subcategory_id;
-           $subcategory= explode(',',$a);
+        if ($this->categories->first() == !null) {
+            $a = $this->categories->first()->pivot->subcategory_id;
+            $subcategory = explode(',', $a);
         }
-                if($this->periodtype == null || $this->periodtype == '6months'){
-                  $periodtype = 'شهور'.' '.'6';
-        }else{
+        if ($this->periodtype == null || $this->periodtype == '6months') {
+            $periodtype = 'شهور' . ' ' . '6';
+        } else {
             $periodtype = 'سنوي';
         }
 
-        if($this->status ==null || $this->status == 'active'){
+        if ($this->status == null || $this->status == 'active') {
             $status = 'نشط';
-        }else{
+        } else {
             $status = 'غير نشط';
         }
 
-        if($this->special ==null || $this->special == 'special'){
+        if ($this->special == null || $this->special == 'special') {
             $special = 'مميز';
-        }else{
+        } else {
             $special = 'غير مميز';
         }
 
-        if($this->working_status == 'not_active'){
-            foreach(\App\Models\Day::get() as $day){
-                   if($day->name =="Friday"){
-                   $daystore[] = (object) [
-            'day' => new DayResource($day),
-            'from' => null,
-            'to' => null,
-            'status' => 'not_active'
-            ];
+        if ($this->working_status == 'not_active') {
+            foreach (\App\Models\Day::get() as $day) {
+                if ($day->name == "Friday") {
+                    $daystore[] = (object) [
+                        'day' => new DayResource($day),
+                        'from' => null,
+                        'to' => null,
+                        'status' => 'not_active',
+                    ];
 
-                }else{
+                } else {
 
-                      $daystore[] = (object) [
-            'day' => new DayResource($day),
-            'from' => '08:00:00',
-            'to' => '22:00:00',
-            'status' => 'active'
-            ];
+                    $daystore[] = (object) [
+                        'day' => new DayResource($day),
+                        'from' => '08:00:00',
+                        'to' => '22:00:00',
+                        'status' => 'active',
+                    ];
+
+                }
 
             }
 
-
-            }
-
-
-        }else{
+        } else {
             $daystore = $this->daystore;
         }
 
-
-
-
-
-         if($this->verification_status ==null || $this->verification_status == 'pending'){
+        if ($this->verification_status == null || $this->verification_status == 'pending') {
             $verification_status = 'لم يتم الطلب';
-        }elseif($this->verification_status == 'admin_waiting'){
+        } elseif ($this->verification_status == 'admin_waiting') {
             $verification_status = 'جاري التوثيق';
-        }elseif($this->verification_status == 'accept'){
+        } elseif ($this->verification_status == 'accept') {
             $verification_status = 'تم التوثيق';
-        }elseif($this->verification_status == 'reject'){
+        } elseif ($this->verification_status == 'reject') {
             $verification_status = 'التوثيق مرفوض';
         }
-         return [
-        'id' =>$this->id,
-        'store_name'=>$this->store_name!==null ? $this->store_name:"",
-        'slug'=>$this->slug,
-        'domain'=>$this->domain,
-        'phonenumber'=>$this->phonenumber,
-        'store_email'=>$this->store_email,
-        'icon' =>$this->icon,
-        'description'=>$this->description!==null ? $this->description:"",
-        'store_address'=>$this->store_address,
-        'business_license'=>$this->business_license,
-        'ID_file' =>$this->ID_file,
-        'link' =>$this->link,
-        'snapchat'=>$this->snapchat,
-        'facebook' =>$this->facebook,
-        'twiter'=>$this->twiter,
-        'youtube'=>$this->youtube,
-        'instegram' =>$this->instegram,
-        'logo'=>$this->logo,
-        'entity_type'=>$this->entity_type,
-        'user' =>New UserResource($this->user),
-        // 'activity' =>ActivityResource::collection($this->activities),
-        'country' => New CountryResource($this->country),
-        'city' => New CityResource($this->city),
-        'periodtype'=>$periodtype,
-        'left'=>$this->left($this->id),
-        'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
-        'verification_status'=>$verification_status,
-        'verification_date'=>$this->verification_date,
-        'status' => $status,
-        'special' => $special,
-        'commercialregistertype'=>$this->commercialregistertype,
-        // 'package' =>$this->packagee($this->packages->last()->package_id),
-             'package' =>$this->packagee($this->package_id),
-        'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
-        'working_status'=>$this->working_status,
-         'workDays'=>DaystoreResource::collection($daystore),
-         'activity' =>  CategoryResource::collection($this->categories),
-         'subcategory' =>  $this->categories->first() ==!null  ? CategoryResource::collection(\App\Models\Category::whereIn('id',  $subcategory)->get()): array(),
-    ];
+        return [
+            'id' => $this->id,
+            'store_name' => $this->store_name !== null ? $this->store_name : "",
+            'slug' => $this->slug,
+            'domain' => $this->domain,
+            'phonenumber' => $this->phonenumber,
+            'store_email' => $this->store_email,
+            'icon' => $this->icon,
+            'description' => $this->description !== null ? $this->description : "",
+            'store_address' => $this->store_address,
+            'business_license' => $this->business_license,
+            'ID_file' => $this->ID_file,
+            'link' => $this->link,
+            'snapchat' => $this->snapchat,
+            'facebook' => $this->facebook,
+            'twiter' => $this->twiter,
+            'youtube' => $this->youtube,
+            'instegram' => $this->instegram,
+            'logo' => $this->logo,
+            'entity_type' => $this->entity_type,
+            'user' => new UserResource($this->user),
+            // 'activity' =>ActivityResource::collection($this->activities),
+            'country' => new CountryResource($this->country),
+            'city' => new CityResource($this->city),
+            'periodtype' => $periodtype,
+            'left' => $this->left($this->id),
+            'rate' => $this->rate($this->id) !== null ? $this->rate($this->id) : 0,
+            'verification_status' => $verification_status,
+            'verification_date' => $this->verification_date,
+            'status' => $status,
+            'special' => $special,
+            'verification_type' => $this->verification_type,
+            // 'package' =>$this->packagee($this->packages->last()->package_id),
+            'package' => $this->packagee($this->package_id),
+            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
+            'working_status' => $this->working_status,
+            'workDays' => DaystoreResource::collection($daystore),
+            'activity' => CategoryResource::collection($this->categories),
+            'subcategory' => $this->categories->first() == !null ? CategoryResource::collection(\App\Models\Category::whereIn('id', $subcategory)->get()) : array(),
+        ];
     }
 }

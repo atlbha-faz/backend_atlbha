@@ -113,7 +113,7 @@ class PostStoreController extends BaseController
                 $store = Store::where('is_deleted', 0)->where('id', $id)->first();
                 $arr = array();
                 if ($store->verification_status == 'accept') {
-                    if ($store->commercialregistertype == 'maeruf') {
+                    if ($store->verification_type == 'maeruf') {
                         // $arr['link'] = $store->link;
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
@@ -243,7 +243,7 @@ class PostStoreController extends BaseController
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $arr = array();
                 if ($store->verification_status == 'accept') {
-                    if ($store->commercialregistertype == 'maeruf') {
+                    if ($store->verification_type == 'maeruf') {
                         $arr['link'] = $store->link;
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {
@@ -372,7 +372,7 @@ class PostStoreController extends BaseController
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $arr = array();
                 if ($store->verification_status == 'accept') {
-                    if ($store->commercialregistertype == 'maeruf') {
+                    if ($store->verification_type == 'maeruf') {
                         // $arr['link'] = $store->link;
                         $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                     } else {

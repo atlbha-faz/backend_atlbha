@@ -30,11 +30,11 @@ class VerificationResource extends JsonResource
         } else {
             $special = 'غير مميز';
         }
-        if ($this->commercialregistertype == null || $this->commercialregistertype == 'commercialregister') {
-            $verification_type = 'commercialregister';
-        } else {
-            $verification_type = 'freelancing';
-        }
+        // if ($this->verification_type == null || $this->verification_type == 'commercialregister') {
+        //     $verification_type = 'commercialregister';
+        // } else {
+        //     $verification_type = 'freelancing';
+        // }
 
         if ($this->verification_status == null || $this->verification_status == 'pending') {
             $verification_status = 'لم يتم الطلب';
@@ -57,7 +57,7 @@ class VerificationResource extends JsonResource
             'file' => $this->file,
             'link' => $this->link,
             'owner_name' => $this->owner_name,
-            'verification_type' => $verification_type,
+            'verification_type' => $this->verification_type,
             'commercial_name' => $this->commercial_name,
             'snapchat' => $this->snapchat,
             'facebook' => $this->facebook,

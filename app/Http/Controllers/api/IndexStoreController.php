@@ -420,7 +420,7 @@ class IndexStoreController extends BaseController
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $verificayion_arr = array();
             if ($store->verification_status == 'accept') {
-                if ($store->commercialregistertype == 'maeruf') {
+                if ($store->verification_type == 'maeruf') {
                     // $verificayion_arr['link'] = $store->link;
                      $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.jpeg';
                 } else {
@@ -591,7 +591,7 @@ class IndexStoreController extends BaseController
             //dd( $store);
             $arr = array();
             if ($store->verification_status == 'accept') {
-                if ($store->commercialregistertype == 'maeruf') {
+                if ($store->verification_type == 'maeruf') {
                     // $arr['link'] = $store->link;
                     $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                 } else {
@@ -753,7 +753,7 @@ class IndexStoreController extends BaseController
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $arr = array();
             if ($store->verification_status == 'accept') {
-                if ($store->commercialregistertype == 'maeruf') {
+                if ($store->verification_type == 'maeruf') {
                     $arr['link'] = $store->link;
                     $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
                 } else {
@@ -995,7 +995,7 @@ class IndexStoreController extends BaseController
         $store=Store::where('is_deleted',0)->where('id',$request->store_id)->first();
         $arr=array();
         if($store->verification_status == 'accept'){
-        if($store->commercialregistertype == 'maeruf'){
+        if($store->verification_type == 'maeruf'){
         $arr['link']= $store->link;
         $arr['image']= 'https://backend.atlbha.com/assets/media/maroof.png';
         }

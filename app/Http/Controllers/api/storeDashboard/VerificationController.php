@@ -29,7 +29,7 @@ class VerificationController extends BaseController
         }])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->get());
 
         // $success['activity']=Store::where('store_id',auth()->user()->store_id)->activities->first();
-        $type = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('commercialregistertype')->first();
+        $type = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('verification_type')->first();
 
         $success['name'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('store_name')->first();
         $success['city'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('city_id')->first();
@@ -56,12 +56,12 @@ class VerificationController extends BaseController
         $validator = Validator::make($input, [
             'activity_id' => 'required|array',
             'subcategory_id' => ['nullable', 'array'],
-            'commercialregistertype' => 'required|in:commercialregister,maeruf',
+            'verification_type' => 'required|in:commercialregister,maeruf',
             'city_id' => 'required',
-            'link' => 'required_if:commercialregistertype,maeruf',
+            'link' => 'required_if:verification_type,maeruf',
             'file' => 'required|mimes:pdf',
             'owner_name' => 'nullable|string|max:255',
-            'commercial_name' => 'required_if:commercialregistertype,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
+            'commercial_name' => 'required_if:verification_type,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
             // 'name' => 'required|string|max:255',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
                 return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
@@ -94,7 +94,7 @@ class VerificationController extends BaseController
         event(new VerificationEvent($data));
         $date = Carbon::now()->toDateTimeString();
         $store->update([
-            'commercialregistertype' => $request->input('commercialregistertype'),
+            'verification_type' => $request->input('verification_type'),
             'city_id' => $request->input('city_id'),
             'link' => $request->input('link'),
             'file' => $request->file,
