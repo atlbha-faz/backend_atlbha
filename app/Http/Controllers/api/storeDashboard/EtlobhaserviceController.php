@@ -79,10 +79,10 @@ class EtlobhaserviceController extends BaseController
           'object_id' => $websiteorder->id ,
       ];
       $userAdmains = User::where('user_type', 'admin')->get();
-      // foreach ($userAdmains as $user) {
-      //     Notification::send($user, new verificationNotification($data));
-      // }
-      // event(new VerificationEvent($data));
+      foreach ($userAdmains as $user) {
+          Notification::send($user, new verificationNotification($data));
+      }
+      event(new VerificationEvent($data));
          $success['Websiteorders']=New WebsiteorderResource($websiteorder );
         $success['status']= 200;
 
