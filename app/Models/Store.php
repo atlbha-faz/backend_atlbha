@@ -2,23 +2,23 @@
 
 namespace App\Models;
 
-use DateTime;
-use Carbon\Carbon;
+use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Maintenance;
 use App\Models\Package;
 use App\Models\Product;
-use App\Models\Category;
-use App\Models\Maintenance;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Store extends Model
 {
     use HasFactory;
-     protected $fillable = ['store_name','store_email','domain','slug','icon','description','business_license','phonenumber','commercialregistertype','link','verification_status','store_address',
-     'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period','verification_date',
-     'periodtype','special','file','tiktok','working_status','status','category_id','subcategory_id','is_deleted','owner_name'];
+    protected $fillable = ['store_name', 'store_email', 'domain', 'slug', 'icon', 'description', 'business_license', 'phonenumber', 'commercialregistertype', 'link', 'verification_status', 'store_address',
+        'snapchat', 'facebook', 'twiter', 'youtube', 'instegram', 'logo', 'entity_type', 'user_id', 'activity_id', 'package_id', 'country_id', 'city_id', 'user_country_id', 'user_city_id', 'category_id', 'start_at', 'end_at', 'period', 'verification_date',
+        'periodtype', 'special', 'file', 'tiktok', 'working_status', 'status', 'category_id', 'subcategory_id', 'is_deleted', 'owner_name', 'commercial_name'];
 
     public function rate($id)
     {
@@ -35,7 +35,7 @@ class Store extends Model
     }
     public function theme()
     {
-    return $this->hasOne(Theme::class);
+        return $this->hasOne(Theme::class);
     }
     public function products()
     {
@@ -119,16 +119,15 @@ class Store extends Model
     }
 
     public function left($id)
-    {  $store= Store::where('id', $id)->first();
-        if($store->package_id == null){
+    {$store = Store::where('id', $id)->first();
+        if ($store->package_id == null) {
             return 0;
-        }
-        else{
-        $day = Store::select('end_at')->where('id', $id)->first();
-        $date1 = new DateTime($day->end_at);
-        $now_date = Carbon::now();
-        $interval = $date1->diff($now_date);
-        return $interval->days;
+        } else {
+            $day = Store::select('end_at')->where('id', $id)->first();
+            $date1 = new DateTime($day->end_at);
+            $now_date = Carbon::now();
+            $interval = $date1->diff($now_date);
+            return $interval->days;
         }
     }
     public function period($id)
@@ -147,12 +146,11 @@ class Store extends Model
     }
     public function packagestatus($id)
     {
-        $store= Store::where('id', $id)->first();
-        $store_package=Package_store::where('package_id',$store->package_id)->where('store_id',$store->id)->orderBy('id', 'DESC')->first();
-        if($store_package !=null){
-        return    $store_package->status;
-        }
-        else{
+        $store = Store::where('id', $id)->first();
+        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+        if ($store_package != null) {
+            return $store_package->status;
+        } else {
             return null;
         }
     }
@@ -272,7 +270,7 @@ class Store extends Model
     {
         return $this->hasMany(Comment::class);
     }
-      public function maintenance()
+    public function maintenance()
     {
         return $this->hasOne(Maintenance::class);
     }
