@@ -44,7 +44,7 @@ class SettingController extends BaseController
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'description' => 'required|string',
             'store_address' => 'nullable|string',
-            'store_name'=> 'required|string',
+            'store_name'=> 'nullable|string',
             'domain' => ['required', 'alpha', Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
             })],

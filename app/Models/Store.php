@@ -18,7 +18,7 @@ class Store extends Model
     use HasFactory;
      protected $fillable = ['store_name','store_email','domain','slug','icon','description','business_license','phonenumber','commercialregistertype','link','verification_status','store_address',
      'snapchat','facebook','twiter','youtube','instegram','logo','entity_type','user_id','activity_id','package_id','country_id','city_id','user_country_id','user_city_id','category_id','start_at','end_at','period','verification_date',
-     'periodtype','special','file','tiktok','working_status','status','category_id','subcategory_id','is_deleted'];
+     'periodtype','special','file','tiktok','working_status','status','category_id','subcategory_id','is_deleted','owner_name'];
 
     public function rate($id)
     {
@@ -121,7 +121,7 @@ class Store extends Model
     public function left($id)
     {  $store= Store::where('id', $id)->first();
         if($store->package_id == null){
-            return 0;  
+            return 0;
         }
         else{
         $day = Store::select('end_at')->where('id', $id)->first();
@@ -153,7 +153,7 @@ class Store extends Model
         return    $store_package->status;
         }
         else{
-            return null; 
+            return null;
         }
     }
     public function user()
