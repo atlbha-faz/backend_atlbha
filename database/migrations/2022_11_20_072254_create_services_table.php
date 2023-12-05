@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
              $table->id();
             $table->string('name');
-            $table->longText('description');
-            $table->string('file');
-            $table->double('price');
+            $table->longText('description')->nullable();
+            $table->string('file')->nullable();
+            $table->double('price')->default(0);
             $table->enum('status',['active','not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
