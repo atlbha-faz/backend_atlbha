@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use Notification;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\Service;
 use App\Models\Marketer;
 use App\Models\Websiteorder;
 use Illuminate\Http\Request;
@@ -36,8 +37,8 @@ class EtlobhaserviceController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-
-            'service_id'=>'required|array|exists:services,id'
+            'service_id'=>'required|array|exists:services,id',
+            'name'=>'nullable|string'
         ]);
         if ($validator->fails())
         {
@@ -56,8 +57,16 @@ class EtlobhaserviceController extends BaseController
             'order_number'=> str_pad($number, 4, '0', STR_PAD_LEFT),
             'store_id'=>auth()->user()->store_id,
           ]);
+          if($request->has('name') && $request->name!=null){
+          $service = Service::create([
+            'name' => $request->name,
+            'status'=>'not_active'
+          ]);
+          $array1 =array($service->id);
+          $result=array_merge($request->service_id,$array1);
+        }
          if($request->service_id!=null){
-          $websiteorder->services()->attach($request->service_id);
+          $websiteorder->services()->attach($result);
          }
          $data = [
           'message' => 'طلب خدمة',
@@ -67,10 +76,10 @@ class EtlobhaserviceController extends BaseController
           'object_id' => $websiteorder->id ,
       ];
       $userAdmains = User::where('user_type', 'admin')->get();
-      foreach ($userAdmains as $user) {
-          Notification::send($user, new verificationNotification($data));
-      }
-      event(new VerificationEvent($data));
+      // foreach ($userAdmains as $user) {
+      //     Notification::send($user, new verificationNotification($data));
+      // }
+      // event(new VerificationEvent($data));
          $success['Websiteorders']=New WebsiteorderResource($websiteorder );
         $success['status']= 200;
 
