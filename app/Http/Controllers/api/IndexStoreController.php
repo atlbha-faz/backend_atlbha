@@ -422,8 +422,7 @@ class IndexStoreController extends BaseController
             if ($store->verification_status == 'accept') {
                 if ($store->commercialregistertype == 'maeruf') {
                     // $verificayion_arr['link'] = $store->link;
-                    // $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
-                    $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
+                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.jpeg';
                 } else {
                     $verificayion_arr['link'] = null;
                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
