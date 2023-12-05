@@ -14,66 +14,72 @@ class VerificationResource extends JsonResource
      */
     public function toArray($request)
     {
-        if( $this->categories->first() ==!null ){
-            $a=$this->categories->first()->pivot->subcategory_id;
-           $subcategory= explode(',',$a);
+        if ($this->categories->first() == !null) {
+            $a = $this->categories->first()->pivot->subcategory_id;
+            $subcategory = explode(',', $a);
         }
 
-        if($this->status ==null || $this->status == 'active'){
+        if ($this->status == null || $this->status == 'active') {
             $status = 'نشط';
-        }else{
+        } else {
             $status = 'غير نشط';
         }
 
-
-        if($this->special ==null || $this->special == 'special'){
+        if ($this->special == null || $this->special == 'special') {
             $special = 'مميز';
-        }else{
+        } else {
             $special = 'غير مميز';
         }
+        if ($this->commercialregistertype == null || $this->commercialregistertype == 'commercialregister') {
+            $verification_type = 'commercialregister';
+        } else {
+            $verification_type = 'freelancing';
+        }
 
-         if($this->verification_status ==null || $this->verification_status == 'pending'){
+        if ($this->verification_status == null || $this->verification_status == 'pending') {
             $verification_status = 'لم يتم الطلب';
-        }elseif($this->verification_status == 'admin_waiting'){
+        } elseif ($this->verification_status == 'admin_waiting') {
             $verification_status = 'جاري التوثيق';
-        }elseif($this->verification_status == 'accept'){
+        } elseif ($this->verification_status == 'accept') {
             $verification_status = 'تم التوثيق';
-        }elseif($this->verification_status == 'reject'){
+        } elseif ($this->verification_status == 'reject') {
             $verification_status = 'التوثيق مرفوض';
         }
         return [
-       'id' =>$this->id,
-       'store_name'=>$this->store_name,
-       'domain'=>$this->domain,
-       'phonenumber'=>$this->phonenumber,
-       'store_email'=>$this->store_email,
-       'icon' =>$this->icon,
-       'description'=>$this->description,
-       'business_license'=>$this->business_license,
-       'file' =>$this->file,
-       'link' =>$this->link,
-       'snapchat'=>$this->snapchat,
-       'facebook' =>$this->facebook,
-       'twiter'=>$this->twiter,
-       'youtube'=>$this->youtube,
-       'instegram' =>$this->instegram,
-       'logo'=>$this->logo,
-       'entity_type'=>$this->entity_type,
-       'user' =>New UserResource($this->user),
-    //    'activity' =>ActivityResource::collection($this->activities),
-       'country' => New CountryResource($this->country),
-       'city' => New CityResource($this->city),
-       'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
-       'periodtype'=>$this->periodtype,
-       'left'=>$this->left($this->id),
-       'verification_status'=>$verification_status,
-       'verification_date'=>$this->verification_date,
-       'activity' =>  CategoryResource::collection($this->categories),
-       'status' => $status,
-       'special' => $special ,
-       'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
-       'subcategory' =>  $this->categories->first() ==!null  ? CategoryResource::collection(\App\Models\Category::whereIn('id',  $subcategory)->get()): array(),
+            'id' => $this->id,
+            'store_name' => $this->store_name,
+            'domain' => $this->domain,
+            'phonenumber' => $this->phonenumber,
+            'store_email' => $this->store_email,
+            'icon' => $this->icon,
+            'description' => $this->description,
+            'business_license' => $this->business_license,
+            'file' => $this->file,
+            'link' => $this->link,
+            'owner_name' => $this->owner_name,
+            'verification_type' => $verification_type,
+            'snapchat' => $this->snapchat,
+            'facebook' => $this->facebook,
+            'twiter' => $this->twiter,
+            'youtube' => $this->youtube,
+            'instegram' => $this->instegram,
+            'logo' => $this->logo,
+            //    'entity_type'=>$this->entity_type,
+            'user' => new UserResource($this->user),
+            //    'activity' =>ActivityResource::collection($this->activities),
+            'country' => new CountryResource($this->country),
+            'city' => new CityResource($this->city),
+            'rate' => $this->rate($this->id) !== null ? $this->rate($this->id) : 0,
+            'periodtype' => $this->periodtype,
+            'left' => $this->left($this->id),
+            'verification_status' => $verification_status,
+            'verification_date' => $this->verification_date,
+            'activity' => CategoryResource::collection($this->categories),
+            'status' => $status,
+            'special' => $special,
+            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
+            'subcategory' => $this->categories->first() == !null ? CategoryResource::collection(\App\Models\Category::whereIn('id', $subcategory)->get()) : array(),
 
-   ];
-   }
+        ];
+    }
 }

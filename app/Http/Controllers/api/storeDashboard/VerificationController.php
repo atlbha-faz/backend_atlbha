@@ -57,7 +57,8 @@ class VerificationController extends BaseController
             'city_id' => 'required',
             'link' => 'required_if:commercialregistertype,maeruf',
             'file' => 'required|mimes:pdf',
-            'name' => 'required|string|max:255',
+            'owner_name' => 'required|string|max:255',
+            // 'name' => 'required|string|max:255',
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted',0);
             })],
@@ -84,7 +85,7 @@ class VerificationController extends BaseController
             'object_id' => auth()->user()->store_id,
         ];
         foreach ($users as $user) {
-            Notification::send($user, new verificationNotification($data));
+            // Notification::send($user, new verificationNotification($data));
         }
         event(new VerificationEvent($data));
         $date = Carbon::now()->toDateTimeString();
@@ -97,6 +98,7 @@ class VerificationController extends BaseController
             'verification_status' => "admin_waiting",
             'verification_date' => $date,
             'store_name' => $request->input('store_name'),
+            'owner_name' => $request->input('owner_name'),
 
         ]);
 
@@ -109,9 +111,9 @@ class VerificationController extends BaseController
         $store->categories()->attach($request->activity_id, ['subcategory_id' => $subcategory]);
 
         $user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        $user->update([
-            'name' => $request->input('name'),
-        ]);
+        // $user->update([
+        //     'name' => $request->input('name'),
+        // ]);
 
         // $success['store'] = store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $success['status'] = 200;
