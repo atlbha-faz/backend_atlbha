@@ -58,6 +58,7 @@ class VerificationResource extends JsonResource
             'link' => $this->link,
             'owner_name' => $this->owner_name,
             'verification_type' => $verification_type,
+            'commercial_name' => $commercial_name,
             'snapchat' => $this->snapchat,
             'facebook' => $this->facebook,
             'twiter' => $this->twiter,

@@ -52,6 +52,7 @@ return new class extends Migration
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
             $table->enum('working_status', ['active', 'not_active'])->default('not_active');
             $table->string('owner_name')->nullable();
+            $table->string('commercial_name')->nullable();
             $table->timestamps();
             $table->unique(['slug', 'is_deleted']);
             $table->unique(['domain', 'is_deleted']);

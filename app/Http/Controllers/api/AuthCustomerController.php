@@ -153,9 +153,9 @@ class AuthCustomerController extends BaseController
 
             return $this->sendError('الحساب غير موجود', 'User not found');
         }
-    
+
         if ($request->code == $user->verify_code) {
-    
+
             $user->resetVerifyCode();
             $user->verified = 1;
             $user->save();
@@ -183,10 +183,10 @@ class AuthCustomerController extends BaseController
                 //  'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
                 //     return $query->where('user_type','customer')->where('is_deleted',0);
                 // })],
-                'user_name' =>'nullable',
-                 'lastname' => 'nullable|string',
+                'user_name' => 'nullable',
+                'lastname' => 'nullable|string',
                 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                    return $query->where('user_type', 'customer')->where('is_deleted',0);
+                    return $query->where('user_type', 'customer')->where('is_deleted', 0);
                 }),
                 ],
             ]);
@@ -208,10 +208,10 @@ class AuthCustomerController extends BaseController
                 // 'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
                 //     return $query->where('user_type', 'customer')->where('is_deleted',0);
                 // })],
-                'user_name' =>'nullable',
-                 'lastname' => 'required|string',
+                'user_name' => 'nullable',
+                'lastname' => 'required|string',
                 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                    return $query->where('user_type', 'customer')->where('is_deleted',0);
+                    return $query->where('user_type', 'customer')->where('is_deleted', 0);
                 }),
                 ],
 
