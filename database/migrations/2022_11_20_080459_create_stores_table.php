@@ -38,7 +38,7 @@ return new class extends Migration
             $table->timestamp('verification_date')->nullable();
             $table->enum('periodtype', ['6months', 'year'])->default('year')->nullable();
             $table->enum('status', ['active', 'not_active'])->default('active');
-            $table->enum('commercialregistertype', ['commercialregister', 'maeruf'])->default('commercialregister');
+            $table->enum('verification_type', ['commercialregister', 'maeruf'])->default('commercialregister');
             $table->string('link')->nullable();
             $table->bigInteger('is_deleted')->default(0);
             $table->enum('special', ['special', 'not_special'])->default('not_special');

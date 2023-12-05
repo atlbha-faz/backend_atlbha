@@ -393,7 +393,7 @@ return [
         'video' => 'الفيديو',
         'unit_id' => 'الوحدة',
         'sevices' => 'الخدمة',
-        'commercialregistertype' => 'السجل التجاري/ معروف',
+        'verification_type' => 'السجل التجاري/ معروف',
         'fixed' => "قيمة ثابتة",
         'fixed_amount' => "قيمة ثابتة",
         'percent' => "نسبة",
@@ -404,9 +404,9 @@ return [
         "price_from" => "السعر من",
         "price_to" => "السعر الى",
         "subcategory_id" => "تصنيف فرعي",
-        "street_address"=>"العنوان",
-        "ready"=>"جاهز للشحن",
-        "qty"=>"كمية المنتج"
+        "street_address" => "العنوان",
+        "ready" => "جاهز للشحن",
+        "qty" => "كمية المنتج",
     ],
 
 ];
