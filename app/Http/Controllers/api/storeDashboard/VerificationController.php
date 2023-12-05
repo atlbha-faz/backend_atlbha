@@ -47,6 +47,11 @@ class VerificationController extends BaseController
 
     public function verification_update(Request $request)
     {
+        $store = Store::with(['categories' => function ($query) {
+            $query->select('name');
+
+        }])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+
         $input = $request->all();
         $validator = Validator::make($input, [
             'activity_id' => 'required|array',
@@ -58,8 +63,8 @@ class VerificationController extends BaseController
             'owner_name' => 'nullable|string|max:255',
             'commercial_name' => 'required_if:commercialregistertype,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
             // 'name' => 'required|string|max:255',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) {
-                return $query->where('is_deleted', 0);
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
+                return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
             })],
         ]);
         if ($validator->fails()) {
