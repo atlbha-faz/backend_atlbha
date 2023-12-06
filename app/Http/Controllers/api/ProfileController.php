@@ -61,21 +61,5 @@ class ProfileController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'modify  successfully');
 
     }
-    public function activateAccount($id)
-    {
-        $user = User::where('id', $id)->first();
 
-        if (is_null($user) || $user->is_deleted != 0) {
-            return $this->sendError("المستخدم غير موجودة", "user is't exists");
-        }
-        if ($user->status === 'active') {
-            $user->update(['status' => 'not_active']);
-        } else {
-            $user->update(['status' => 'active']);
-        }
-        $success['users'] = new UserResource($user);
-        $success['status'] = 200;
-        return $this->sendResponse($success, 'تم تعدبل حالة المستخدم بنجاح', 'user status updared successfully');
-
-    }
 }
