@@ -194,6 +194,10 @@ class WebsiteorderController extends BaseController
                   $serviceName=array();
                foreach( $services as  $service){
                 $service->update(['status' => 'accept']);
+                $serviceNEW=Service::where('id',$service->service_id )->where('status','not_active')->first();
+                if($serviceNEW !=null){
+                    return $this->sendError("يجب تفعيل الخدمة الجديدة اولا","Service is't active");
+                }
                  $serviceName[]=Service::where('id',$service->service_id )->where('is_deleted',0)->value('name');
               }
            
@@ -233,6 +237,10 @@ class WebsiteorderController extends BaseController
                    $serviceName=array();
                 foreach( $services as  $service){
                   $service->update(['status' => 'reject']);
+                  $serviceNEW=Service::where('id',$service->service_id )->where('status','not_active')->first();
+                  if($serviceNEW !=null){
+                      return $this->sendError("يجب تفعيل الخدمة الجديدة اولا","Service is't active");
+                  }
                    $serviceName[]=Service::where('id',$service->service_id )->where('is_deleted',0)->value('name');
                 }
                    
