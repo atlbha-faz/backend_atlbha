@@ -58,7 +58,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('productSearch', [App\Http\Controllers\api\IndexStoreController::class, 'productSearch']);
     Route::get('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'index']);
     Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
-    Route::get('activateAccount', [App\Http\Controllers\api\ProfileCustomerController::class, 'activateAccount']);
+    Route::get('activateAccount/{id}', [App\Http\Controllers\api\ProfileCustomerController::class, 'activateAccount']);
     Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\IndexStoreController::class, 'addSubsicription']);
 });
 
