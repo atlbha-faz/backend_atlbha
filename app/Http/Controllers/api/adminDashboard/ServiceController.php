@@ -226,4 +226,25 @@ class ServiceController extends BaseController
 
         return $this->sendResponse($success,'تم عرض الخدمة  بنجاح','service showed successfully');
     }
+    
+    public function changeStatus($id)
+    {
+        $service = Service::query()->find($id);
+         if (is_null($service) || $service->is_deleted !=0){
+         return $this->sendError("  الخدمة غير موجودة","service is't exists");
+         }
+
+        if($service->status === 'active'){
+        $service->update(['status' => 'not_active']);
+        }
+        else{
+        $service->update(['status' => 'active']);
+        }
+        $success['services']=New ServiceResource($service);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة الخدمة بنجاح','service updated successfully');
+
+
+    }
 }

@@ -110,8 +110,6 @@ class PageController extends BaseController
             'seo_desc'=>'nullable',
             'tags'=>'nullable',
             // 'user_id'=>'exists:users,id',
-
-
         ]);
         if ($validator->fails())
         {
@@ -276,8 +274,6 @@ class PageController extends BaseController
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم تعديل حالة الصفحة بنجاح','page updated successfully');
-
-
     }
 
   public function deleteall(Request $request)
