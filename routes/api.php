@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\api\storeDashboard\ReportController;
-use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
-use App\Http\Middleware\SetActiveStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SetActiveStore;
+use App\Http\Controllers\api\storeDashboard\ReportController;
+use App\Http\Controllers\api\adminDashboard\ServiceController;
+use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -210,6 +211,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('platform', App\Http\Controllers\api\adminDashboard\PlatformController::class, ['names' => 'admin.platform']);
         Route::resource('service', App\Http\Controllers\api\adminDashboard\ServiceController::class, ['names' => 'admin.service']);
         Route::get('service/showDetail/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'showDetail'])->name('admin.service.showdetail');
+        Route::get('service/changeStatus/{id}', [ServiceController::class, 'changeStatus'])->name('admin.service.changeStatus');
 
         Route::get('servicedeleteall', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'deleteall'])->name('admin.service.deleteall');
 
