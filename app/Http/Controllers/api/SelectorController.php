@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ActivityResource;
+use DB;
+use App\Models\City;
+use App\Models\User;
+use App\Models\Country;
+use App\Models\Package;
+use App\Models\Activity;
+use App\Models\Shippingtype;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\PackageResource;
+use App\Http\Resources\ActivityResource;
 use App\Http\Resources\ShippingCitiesResource;
-use App\Models\Activity;
-use App\Models\City;
-use App\Models\Country;
-use App\Models\Package;
-use App\Models\Shippingtype;
-use DB;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SelectorController extends BaseController
 {
