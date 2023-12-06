@@ -52,11 +52,15 @@ class AuthCustomerController extends BaseController
 
         } else {
             $user = User::where('phonenumber', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->first();
+            if($user->status =='not_active'){
+                return $this->sendError("الحساب غير مفعل", "user is't active");
+            }
+            else{
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
             $this->sendSms($request); // send and return its response
-
+            }
         }
 
         $success['user'] = new UserResource($user);
@@ -104,7 +108,10 @@ class AuthCustomerController extends BaseController
 
         } else {
             $user = User::where('email', $request->email)->where('user_type', 'customer')->where('is_deleted', 0)->first();
-
+            if($user->status =='not_active'){
+                return $this->sendError("الحساب غير مفعل", "user is't active");
+            }
+            else{
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $data = array(
@@ -113,7 +120,7 @@ class AuthCustomerController extends BaseController
 
             //  $request->phonenumber = $user->phonenumber;
             Mail::to($user->email)->send(new SendCode($data));
-
+        }
         }
 
         $success['user'] = new UserResource($user);

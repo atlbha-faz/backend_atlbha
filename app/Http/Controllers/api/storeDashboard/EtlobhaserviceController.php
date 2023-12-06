@@ -37,7 +37,7 @@ class EtlobhaserviceController extends BaseController
     {
         $input = $request->all();
         $validator =  Validator::make($input ,[
-            'service_id'=>'required|array|exists:services,id',
+            'service_id'=>'nullable|array|exists:services,id',
             'name'=>'nullable|string'
         ]);
         if ($validator->fails())
@@ -63,12 +63,19 @@ class EtlobhaserviceController extends BaseController
             'status'=>'not_active'
           ]);
           $array1 =array($service->id);
+          if($request->service_id!=null){
           $result=array_merge($request->service_id,$array1);
         }
         else{
-          $result=$request->service_id;
+          $result=$array1;
         }
-         if($request->service_id!=null){
+        }
+        else{
+          if($request->service_id!=null){
+          $result=$request->service_id;
+          }
+        }
+         if($result!=null){
           $websiteorder->services()->attach($result);
          }
          $data = [
@@ -79,10 +86,10 @@ class EtlobhaserviceController extends BaseController
           'object_id' => $websiteorder->id ,
       ];
       $userAdmains = User::where('user_type', 'admin')->get();
-      // foreach ($userAdmains as $user) {
-      //     Notification::send($user, new verificationNotification($data));
-      // }
-      // event(new VerificationEvent($data));
+      foreach ($userAdmains as $user) {
+          Notification::send($user, new verificationNotification($data));
+      }
+      event(new VerificationEvent($data));
          $success['Websiteorders']=New WebsiteorderResource($websiteorder );
         $success['status']= 200;
 
