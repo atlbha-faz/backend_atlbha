@@ -11,6 +11,7 @@ use App\Models\Activity;
 use App\Models\Shippingtype;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\PackageResource;
 use App\Http\Resources\ActivityResource;
