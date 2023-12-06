@@ -30,6 +30,7 @@ Route::get('selector/addToCart', [App\Http\Controllers\api\SelectorController::c
 Route::get('selector/getAllCity', [App\Http\Controllers\api\SelectorController::class, 'getAllCity']);
 Route::get('selector/testgetAllCity', [App\Http\Controllers\api\SelectorController::class, 'testgetAllCity']);
 Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorController::class, 'shippingcities']);
+Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
 
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
@@ -58,7 +59,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('productSearch', [App\Http\Controllers\api\IndexStoreController::class, 'productSearch']);
     Route::get('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'index']);
     Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
-    Route::get('activateAccount/{id}', [App\Http\Controllers\api\ProfileCustomerController::class, 'activateAccount']);
+    Route::get('deactivateAccount', [App\Http\Controllers\api\ProfileCustomerController::class, 'deactivateAccount']);
     Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\IndexStoreController::class, 'addSubsicription']);
 });
 

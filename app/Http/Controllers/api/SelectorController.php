@@ -139,5 +139,20 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع المدن بنجاح', 'city return successfully');
 
     }
+    public function activateAccount($id)
+    {
+        $user = User::where('id', $id)->first();
+
+        if (is_null($user) || $user->is_deleted != 0) {
+            return $this->sendError("المستخدم غير موجودة", "user is't exists");
+        }
+        if ($user->status === 'not_active') {
+            $user->update(['status' => 'active']);
+        }
+        $success['users'] = new UserResource($user);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم تفعيل المستخدم بنجاح', 'user status updated successfully');
+
+    }
 
 }
