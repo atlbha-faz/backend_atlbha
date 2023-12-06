@@ -163,7 +163,7 @@ class CityController extends BaseController
     public function fixActive()
     {
 
-            $cities = ShippingCity::whereIn('region_id', [28, 29, 30, 31, 32])->get();
+            $cities = ShippingCity::whereIn('region_id', [14, 15, 16, 17, 18])->get();
             foreach ($cities as $city) {
                     $city->update(['status' => 'not_active']);
             }
@@ -225,7 +225,7 @@ class CityController extends BaseController
             "Riyadh",
             "Dammam",
             "Jeddah"];
-            $cities = ShippingCity::whereIn('name_en', $citiesName)->whereIn('region_id', [28, 29, 30, 31, 32])->get();
+            $cities = ShippingCity::whereIn('name_en', $citiesName)->whereIn('region_id', [14, 15, 16, 17, 18])->get();
             foreach ($cities as $city) {
                     $city->update(['status' => 'active']);
             }
