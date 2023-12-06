@@ -143,7 +143,7 @@ class ServiceController extends BaseController
             'description'=>'required|string',
             'file'=>'nullable',
             'price'=>['required','numeric','gt:0'],
-            'status'=>['required','in:active,not_active']
+            'status'=>['nullable','in:active,not_active']
            ]);
            if ($validator->fails())
            {
