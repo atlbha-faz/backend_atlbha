@@ -49,7 +49,7 @@ class StockController extends BaseController
         }
         $success['products'] = ProductResource::collection(Product::with(['store','category'=>function ($query) {
     $query->select('id','name','icon');
-}])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select('id','name','status','cover','special','purchasing_price','selling_price','stock','category_id','store_id','subcategory_id','created_at')->get());
+}])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select('id','name','status','cover','special','purchasing_price','selling_price','stock','category_id','store_id','subcategory_id','created_at','description','short_description')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
