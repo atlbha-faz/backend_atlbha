@@ -38,7 +38,7 @@ class ProductController extends BaseController
         );
 
         $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
-            ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'importproducts.description', 'importproducts.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
+            ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $imports = importsResource::collection($import);
 
         $success['products'] = $products->merge($imports);
