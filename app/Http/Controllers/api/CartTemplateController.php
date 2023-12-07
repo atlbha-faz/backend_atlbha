@@ -180,13 +180,6 @@ class CartTemplateController extends BaseController
             $store_id = $store->id;
 
             if (!is_null($request->data)) {
-                $preCartDetail = CartDetail::where('product_id', $data['id'])->where('cart_id', $cartid)->first();
-                if ($preCartDetail) {
-                    $lastQuantity = $preCartDetail->qty;
-                } else {
-                    $lastQuantity = 0;
-                }
-
                 $cart = Cart::updateOrCreate([
                     'user_id' => auth()->user()->id,
                     'store_id' => $store_id,
@@ -203,11 +196,18 @@ class CartTemplateController extends BaseController
                         $product_quantity = Importproduct::where('product_id', $data['id'])->where('store_id', $store_id)->pluck('qty')->first();
                     }
                     if ($product_quantity >= $data['qty']) {
+                        $preCartDetail = CartDetail::where('product_id', $data['id'])->where('cart_id', $cartid)->first();
+                        if ($preCartDetail) {
+                            $lastQuantity = $preCartDetail->qty;
+                        } else {
+                            $lastQuantity = 0;
+                        }
+
                         $cartDetail = CartDetail::updateOrCreate([
                             'cart_id' => $cartid,
                             'product_id' => $data['id'],
                         ], [
-                            'qty' => $data['qty'],
+                            'qty' => $lastQuantity + $data['qty'],
                             'price' => $data['price'],
                             //  'option'=>$data['option'],
                         ]);
