@@ -22,8 +22,8 @@ class PageController extends BaseController
     public function index()
     {
         $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
-    $query->select('id','name');
-}])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id','title','status','user_id','created_at')->get());
+            $query->select('id', 'name');
+        }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status', 'user_id', 'created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع  الصفحة بنجاح', 'Pages return successfully');
@@ -73,7 +73,7 @@ class PageController extends BaseController
             'store_id' => auth()->user()->store_id,
             'user_id' => auth()->user()->id,
             'status' => "not_active",
-
+            'postcategory_id' => 'required',
         ]);
         //$request->input('name', []);
         if ($request->pageCategory) {
@@ -103,7 +103,7 @@ class PageController extends BaseController
             'seo_desc' => 'nullable|string',
             'tags' => 'nullable',
             // 'name'=>'required|exists:page_categories,id'
-
+            'postcategory_id' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -193,6 +193,7 @@ class PageController extends BaseController
             // 'name'=>'required|exists:page_categories,id'
             // 'store_id'=>'required|exists:stores,id',
             // 'usre_id'=>'required|exists:users,id',
+            'postcategory_id' => 'required',
         ]);
         if ($validator->fails()) {
             # code...
@@ -216,10 +217,10 @@ class PageController extends BaseController
                     'image' => $request->image,
                     'postcategory_id' => $request->postCategory_id,
                 ]);
-            }else{
+            } else {
 
                 $page->update([
-                    'image' =>null,
+                    'image' => null,
                     'postcategory_id' => null,
                 ]);
             }
