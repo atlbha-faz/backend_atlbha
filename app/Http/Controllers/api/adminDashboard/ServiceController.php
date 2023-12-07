@@ -143,7 +143,7 @@ class ServiceController extends BaseController
             'description'=>'required|string',
             'file'=>'nullable',
             'price'=>['required','numeric','gt:0'],
-            'status'=>['required','in:active,not_active']
+            'status'=>['nullable','in:active,not_active']
            ]);
            if ($validator->fails())
            {
@@ -225,5 +225,26 @@ class ServiceController extends BaseController
        $success['status']= 200;
 
         return $this->sendResponse($success,'تم عرض الخدمة  بنجاح','service showed successfully');
+    }
+    
+    public function changeStatus($id)
+    {
+        $service = Service::query()->find($id);
+         if (is_null($service) || $service->is_deleted !=0){
+         return $this->sendError("  الخدمة غير موجودة","service is't exists");
+         }
+
+        if($service->status === 'active'){
+        $service->update(['status' => 'not_active']);
+        }
+        else{
+        $service->update(['status' => 'active']);
+        }
+        $success['services']=New ServiceResource($service);
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم تعديل حالة الخدمة بنجاح','service updated successfully');
+
+
     }
 }
