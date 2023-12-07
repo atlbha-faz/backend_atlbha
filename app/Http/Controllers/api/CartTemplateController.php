@@ -196,12 +196,12 @@ class CartTemplateController extends BaseController
                         $product_quantity = Importproduct::where('product_id', $data['id'])->where('store_id', $store_id)->pluck('qty')->first();
                     }
                     if ($product_quantity >= $data['qty']) {
-                
+
                         $cartDetail = CartDetail::updateOrCreate([
                             'cart_id' => $cartid,
                             'product_id' => $data['id'],
                         ], [
-                            'qty' => $lastQuantity + $data['qty'],
+                            'qty' => $data['qty'],
                             'price' => $data['price'],
                             //  'option'=>$data['option'],
                         ]);
