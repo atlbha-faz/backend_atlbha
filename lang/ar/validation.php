@@ -407,7 +407,7 @@ return [
         "street_address" => "العنوان",
         "ready" => "جاهز للشحن",
         "qty" => "كمية المنتج",
-        "postcategory_id" => "تصنيف الصفحة",
+        "pageCategory" => "تصنيف الصفحة",
     ],
 
 ];
