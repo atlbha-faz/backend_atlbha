@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CartResource;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\PaymenttypeResource;
-use App\Http\Resources\ShippingtypeTemplateResource;
 use App\Models\Cart;
-use App\Models\CartDetail;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Store;
 use App\Models\Coupon;
-use App\Models\coupons_products;
+use App\Models\Product;
+use App\Models\OrderItem;
+use App\Models\CartDetail;
+use App\Models\Paymenttype;
+use App\Models\OrderAddress;
+use Illuminate\Http\Request;
 use App\Models\coupons_users;
 use App\Models\Importproduct;
-use App\Models\Order;
-use App\Models\OrderAddress;
-use App\Models\OrderItem;
-use App\Models\Product;
+use App\Models\coupons_products;
 use App\Models\shippingtype_store;
-use App\Models\Store;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\CartResource;
+use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\ShippingtypeTemplateResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CheckoutController extends BaseController
 {
@@ -49,7 +50,8 @@ class CheckoutController extends BaseController
                 'district' => 'required|string',
                 'postal_code' => 'nullable|string',
                 'default_address' => 'required',
-                'paymentype_id' => 'required|exists:paymenttypes,id',  
+                'paymentype_id' => 'required|exists:paymenttypes,id',
+               
                 'cod' => 'nullable',
                 'description' => 'required|string',
 
@@ -126,8 +128,8 @@ class CheckoutController extends BaseController
                 if ($product != null) {
                     $product->update([
                         'stock' => $product->stock - $cartItem->qty,
-                    ]);
-                } 
+                    ]);                
+                }
             }
             foreach ($cart->cartDetails as $cartItem) {
                 $orderItem = new OrderItem();
@@ -241,14 +243,14 @@ class CheckoutController extends BaseController
 
         
     }
-    // public function paymentmethods($domain)
-    // {
+    public function paymentmethods()
+    {
       
-    //     $success['payment_types'] = PaymenttypeResource::collection($store->paymenttypes);
-    //     $success['status'] = 200;
+        $success['payment_types'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->orderByDesc('created_at')->whereNot('id',4)->get());
+        $success['status'] = 200;
 
-    //     return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'Payment Types return successfully');
-    // }
+        return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'Payment Types return successfully');
+    }
 
 
 

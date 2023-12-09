@@ -372,7 +372,7 @@ Route::middleware([AdminUser::class])->group(function () {
         // import orders
         Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index']);
         Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show']);
-        Route::get('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update']);
+        Route::PUT('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update']);
     });
 });
 Auth::routes();
@@ -440,6 +440,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('deleteImportCart/{id}', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'delete']);
         // cheackout import
         Route::post('cheackoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'cheackOut']);
+        //  paymenttype import
+        Route::get('paymentmethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'paymentmethods']);
         // page
         Route::resource('page', App\Http\Controllers\api\storeDashboard\PageController::class, ['names' => 'store.pages']);
         Route::post('page-publish', [App\Http\Controllers\api\storeDashboard\PageController::class, 'publish'])->name('store.pages.publish');

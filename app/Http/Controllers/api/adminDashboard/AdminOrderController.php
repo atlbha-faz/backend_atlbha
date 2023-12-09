@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Models\User;
 use App\Models\Order;
+use App\Models\Store;
+use App\Models\Product;
+use App\Models\Shipping;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
 use App\Models\OrderOrderAddress;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\shippingResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -31,7 +37,7 @@ class AdminOrderController extends BaseController
             $q->where('store_id',null);
         })->count();
 
-        $storeID =
+   
 
         $data = OrderResource::collection(Order::with(['user', 'shipping', 'items' => function ($query) {
             $query->select('id');
@@ -90,8 +96,67 @@ class AdminOrderController extends BaseController
             }
         }else{
             if ($request->status === "completed") {
-                
-                
+                $storeAdmain = User::whereIn('user_type', ['store','store_employee'])->where('id', $order->user_id)->first();
+                  
+              if($storeAdmain != null)  {
+                $storeid = Store::where('id',$storeAdmain->store_id)->first();
+               
+              }
+                foreach ($order->items as $orderItem) {
+
+                $product = Product::where('id', $orderItem->product_id)->first();
+           
+                    $importproduct = Importproduct::create([
+                        'product_id' => $orderItem->product_id,
+                        'store_id' => $storeid->id,
+                        'price' => $orderItem->price,
+                        'qty' => $orderItem->quantity,
+                    ]);
+                    $newStock = $product->stock - $importproduct->qty;
+                    $product->update([
+                        'stock' => $newStock,
+                    ]);
+                    //إستيراد الى متجر اطلبها
+                    $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+                    $importAtlbha = Importproduct::where('product_id', $request->product_id)->where('store_id', $atlbha_id)->first();
+                    if($importAtlbha == null){
+                        $importAtlbha = Importproduct::create([
+                            'product_id' => $orderItem->product_id,
+                            'store_id' => $atlbha_id,
+                            'price' => $product->selling_price,
+                            'qty' => $product->stock,
+                        ]); 
+                    }
+                    else{
+                    $importAtlbha->update([
+                        'product_id' => $product->id,
+                        'store_id' => $atlbha_id,
+                        'qty' => $product->stock,
+                    ]);
+                    }
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     $shipping = Shipping::create([
                         'shipping_id' => $order->order_number,
                         'track_id' => null,
