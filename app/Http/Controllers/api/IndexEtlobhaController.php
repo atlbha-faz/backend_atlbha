@@ -83,7 +83,7 @@ class IndexEtlobhaController extends BaseController
         $pages = Page_page_category::where('page_category_id', 3)->pluck('page_id')->toArray();
         $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'created_at')->where('status', 'active')->whereIn('id', $pages)->get());
         $success['website_socialmedia'] = website_socialmediaResource::collection(website_socialmedia::where('is_deleted', 0)->where('status', 'active')->get());
-        $success['setting'] =new SettingResource(Setting::orderBy('id', 'desc')->first());
+        // $success['setting'] =new SettingResource(Setting::orderBy('id', 'desc')->first());
 
         $success['status'] = 200;
 
