@@ -6,18 +6,19 @@ use App\Models\Note;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
+use App\Mail\SendMail;
 use App\Models\Comment;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Events\VerificationEvent;
 use App\Http\Resources\NoteResource;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\verificationNotification;
-use App\Mail\SendMail;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
@@ -350,6 +351,46 @@ class StoreController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'store updated successfully');
+    }
+
+    public function updateProfile(Request $request, $store)
+    {
+
+        $store = Store::query()->find($store);
+        if (is_null($store) || $store->is_deleted != 0) {
+            return $this->sendError("المتجر غير موجود", "store is't exists");
+        }
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', $store->id)->first();
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
+            'user_name' =>  ['required', 'string', Rule::unique('users')->where(function ($query) use ($storeAdmain) {
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
+                    ->where('id', '!=', $storeAdmain->id);
+            })],
+            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($storeAdmain) {
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
+                    ->where('id', '!=', $storeAdmain->id);
+            })],
+            'password' => 'required|min:8|string',
+       
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+     
+        $storeAdmain->update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'user_name' => $request->input('user_name'),
+            'password' => $request->input('password'),
+        ]);
+
+        $success['user'] = new UserResource($storeAdmain);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'user updated successfully');
     }
 
     public function changeStatus(Request $request)
