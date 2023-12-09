@@ -10,6 +10,7 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\SettingResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\website_socialmediaResource;
 use App\Models\AtlobhaContact;
@@ -22,6 +23,7 @@ use App\Models\Page_page_category;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
+use App\Models\Setting;
 use App\Models\Store;
 use App\Models\website_socialmedia;
 use Illuminate\Http\Request;
@@ -83,7 +85,7 @@ class IndexEtlobhaController extends BaseController
         $pages = Page_page_category::where('page_category_id', 3)->pluck('page_id')->toArray();
         $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'created_at')->where('status', 'active')->whereIn('id', $pages)->get());
         $success['website_socialmedia'] = website_socialmediaResource::collection(website_socialmedia::where('is_deleted', 0)->where('status', 'active')->get());
-        // $success['setting'] =new SettingResource(Setting::orderBy('id', 'desc')->first());
+        $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
 
         $success['status'] = 200;
 
