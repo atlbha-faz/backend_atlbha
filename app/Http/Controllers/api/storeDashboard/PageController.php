@@ -57,7 +57,8 @@ class PageController extends BaseController
             'seo_desc' => 'nullable|string',
             'tags' => 'nullable',
             //'name'=>'required|exists:page_categories,id'
-
+            'pageCategory' => ['required', 'array'],
+            'pageCategory.*' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -73,7 +74,7 @@ class PageController extends BaseController
             'store_id' => auth()->user()->store_id,
             'user_id' => auth()->user()->id,
             'status' => "not_active",
-            'postcategory_id' => 'required',
+
         ]);
         //$request->input('name', []);
         if ($request->pageCategory) {
@@ -103,7 +104,8 @@ class PageController extends BaseController
             'seo_desc' => 'nullable|string',
             'tags' => 'nullable',
             // 'name'=>'required|exists:page_categories,id'
-            'postcategory_id' => 'required',
+            'pageCategory' => ['required', 'array'],
+            'pageCategory.*' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -193,7 +195,8 @@ class PageController extends BaseController
             // 'name'=>'required|exists:page_categories,id'
             // 'store_id'=>'required|exists:stores,id',
             // 'usre_id'=>'required|exists:users,id',
-            'postcategory_id' => 'required',
+              'pageCategory' => ['required', 'array'],
+            'pageCategory.*' => 'required',
         ]);
         if ($validator->fails()) {
             # code...
