@@ -19,7 +19,7 @@ class SettingResource extends JsonResource
         }else{
             $status = 'غير نشط';
         }
-        
+
         return [
             'id' =>$this->id,
             'name' => $this->name,
