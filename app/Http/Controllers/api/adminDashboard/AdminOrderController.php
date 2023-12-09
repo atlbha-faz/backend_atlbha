@@ -1,0 +1,121 @@
+<?php
+
+namespace App\Http\Controllers\api\adminDashboard;
+
+use App\Models\Order;
+use Illuminate\Http\Request;
+use App\Models\OrderOrderAddress;
+use App\Http\Resources\OrderResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
+
+class AdminOrderController extends BaseController
+{
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+    public function index()
+    {
+        $success['new'] = Order::where('store_id', null)->where('order_status', 'new')->count();
+        $success['completed'] = Order::whereHas('items', function ($q) {
+            $q->where('store_id',null)->where('order_status', 'completed');
+        })->count();
+
+        $success['not_completed'] = Order::where('store_id',null)->where('order_status', 'not_completed')->count();
+        $success['canceled'] = Order::whereHas('items', function ($q) {
+            $q->where('store_id',null)->where('order_status', 'canceled');
+        })->count();
+
+        $success['all'] = Order::whereHas('items', function ($q) {
+            $q->where('store_id',null);
+        })->count();
+
+        $storeID =
+
+        $data = OrderResource::collection(Order::with(['user', 'shipping', 'items' => function ($query) {
+            $query->select('id');
+        }])->where('store_id',null)->orderByDesc('id')->get(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status']));
+
+        $success['orders'] = $data;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'Orders return successfully');
+    }
+    public function show($order)
+    {
+        $order = Order::where('id', $order)->whereHas('items', function ($q) {
+            $q->where('store_id', null);
+        })->first();
+        if (is_null($order)) {
+            return $this->sendError("'الطلب غير موجود", "Order is't exists");
+        }
+
+        $success['orders'] = new OrderResource($order);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم عرض الطلب بنجاح', 'Order showed successfully');
+    }
+
+    public function update(Request $request, $order)
+    {
+        $order = Order::where('id', $order)->whereHas('items', function ($q) {
+            $q->where('store_id', null);
+        })->first();
+        if (is_null($order)) {
+            return $this->sendError("'الطلب غير موجود", "Order is't exists");
+        }
+
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
+
+            'city' => 'required_if:status,==,ready',
+            'street_address' => 'required_if:status,==,ready',
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+
+        if ($request->input('status') !== "completed") {
+
+            $order->update([
+                'order_status' => $request->input('status'),
+            ]);
+            foreach ($order->items as $orderItem) {
+                $orderItem->update([
+                    'order_status' => $request->input('status'),
+                ]);
+            }
+        }else{
+            if ($request->status === "completed") {
+                
+                
+                    $shipping = Shipping::create([
+                        'shipping_id' => $order->order_number,
+                        'track_id' => null,
+                        'description' => $order->description,
+                        'quantity' => $order->quantity,
+                        'price' => $order->total_price,
+                        'weight' => $order->weight,
+                        'district' => $request->district,
+                        'city' => $request->city,
+                        'streetaddress' => $request->street_address,
+                        'customer_id' => $order->user_id,
+                        'shippingtype_id' => null,
+                        'order_id' => $order->id,
+                        'shipping_status' => $order->order_status,
+                        'store_id' => null,
+                        'cashondelivery' => $order->cashondelivery,
+                    ]);
+                    $success['shipping'] = new shippingResource($shipping);
+                }
+                $success['orders'] = new OrderResource($order);
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+            }
+        }
+    
+}
