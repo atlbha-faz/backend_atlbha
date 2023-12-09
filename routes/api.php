@@ -278,6 +278,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('option', App\Http\Controllers\api\adminDashboard\OptionController::class);
         Route::resource('user', App\Http\Controllers\api\adminDashboard\UserController::class, ['names' => 'admin.user']);
         Route::resource('etlobha', App\Http\Controllers\api\adminDashboard\EtlobhaController::class, ['names' => 'admin.etlobha']);
+        Route::post('updateProfile/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'updateProfile']);
 
         Route::get('statistics/{id}', [App\Http\Controllers\api\adminDashboard\EtlobhaController::class, 'statistics'])->name('admin.etlobha.statistics');
 
@@ -368,6 +369,10 @@ Route::middleware([AdminUser::class])->group(function () {
         // });
         // uodate seo
         Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('store.seo.updateGoogleAnalytics');
+        // import orders
+        Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index']);
+        Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show']);
+        Route::get('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update']);
     });
 });
 Auth::routes();
@@ -429,7 +434,12 @@ Route::middleware([StoreUser::class])->group(function () {
         // Route::post('addCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'addToCart']);
         Route::get('deleteCart', [App\Http\Controllers\api\storeDashboard\CartController::class, 'delete'])->name('abandoned.carts.delete');
         Route::post('sendOfferCart/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'sendOffer'])->name('abandoned.carts.sendoffer');
-
+        //  import cart
+        Route::get('showImportCart', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'index']);
+        Route::post('addImportCart', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'addToCart']);
+        Route::get('deleteImportCart/{id}', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'delete']);
+        // cheackout import
+        Route::post('cheackoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'cheackOut']);
         // page
         Route::resource('page', App\Http\Controllers\api\storeDashboard\PageController::class, ['names' => 'store.pages']);
         Route::post('page-publish', [App\Http\Controllers\api\storeDashboard\PageController::class, 'publish'])->name('store.pages.publish');
