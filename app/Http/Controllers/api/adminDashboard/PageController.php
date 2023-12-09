@@ -60,7 +60,8 @@ class PageController extends BaseController
             'tags' => 'nullable',
             //'name'=>'required|exists:page_categories,id'
             // 'user_id'=>'exists:users,id',
-            'postcategory_id' => 'required',
+            'pageCategory' => ['required', 'array'],
+            'pageCategory.*' => 'required',
 
         ]);
         if ($validator->fails()) {
@@ -105,7 +106,8 @@ class PageController extends BaseController
             'seo_desc' => 'nullable',
             'tags' => 'nullable',
             // 'user_id'=>'exists:users,id',
-            'postcategory_id' => 'required',
+            'pageCategory' => ['required', 'array'],
+            'pageCategory.*' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -188,7 +190,8 @@ class PageController extends BaseController
             'seo_link' => 'nullable',
             'seo_desc' => 'nullable',
             'tags' => 'nullable',
-            'postcategory_id' => 'required',
+            'pageCategory' => ['required', 'array'],
+            'pageCategory.*' => 'required',
         ]);
         if ($validator->fails()) {
             # code...
