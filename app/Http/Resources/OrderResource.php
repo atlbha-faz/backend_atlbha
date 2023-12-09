@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Store;
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -40,11 +42,21 @@ class OrderResource extends JsonResource
             $track = 'https://www.imile.com/ar/track/';
         } elseif ($this->shippingtype->id == 4) {
             $track = 'https://www.jtexpress-sa.com/trajectoryQuery';
-        }else{
-        $track=null;
+        } else {
+            $track = null;
         }
         $subtotal = $this->subtotal - $this->tax;
+        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee') {
+            $storeAdmain = User::whereIn('user_type', ['store', 'store_employee'])->where('id', $this->user->id)->first();
+            if ($storeAdmain != null) {
+                $store = Store::where('id', $storeAdmain->store_id)->first();
+            } else {
+                $store = null;
+            }
 
+        } else {
+            $store = null;
+        }
         return [
             'id' => $this->id,
             'order_number' => $this->order_number,
@@ -76,6 +88,7 @@ class OrderResource extends JsonResource
             'cod' => $this->cod,
             'codprice' => $this->cod = 1 ? 10 : 0,
             'description' => $this->description,
+            'store' => $store,
         ];
     }
 }
