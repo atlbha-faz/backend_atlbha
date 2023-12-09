@@ -53,7 +53,7 @@ class AuthCustomerController extends BaseController
         } else {
             $user = User::where('phonenumber', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->first();
             if ($user->status == 'not_active') {
-                $user->status == 'active';
+                $user->status ='active';
             } 
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
@@ -108,7 +108,7 @@ class AuthCustomerController extends BaseController
         } else {
             $user = User::where('email', $request->email)->where('user_type', 'customer')->where('is_deleted', 0)->first();
             if ($user->status == 'not_active') {
-                $user->status == 'active';
+                $user->status ='active';
             } 
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
