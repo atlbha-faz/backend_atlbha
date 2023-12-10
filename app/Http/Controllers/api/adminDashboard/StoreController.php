@@ -360,7 +360,7 @@ class StoreController extends BaseController
         if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجود", "store is't exists");
         }
-        $storeAdmain = User::where('user_type', 'store')->where('store_id', $store->id)->first();
+        $storeAdmain = User::where('user_type','store')->where('store_id', $store->id)->first();
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',

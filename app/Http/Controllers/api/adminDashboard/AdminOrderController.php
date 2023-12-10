@@ -105,20 +105,30 @@ class AdminOrderController extends BaseController
                 foreach ($order->items as $orderItem) {
 
                 $product = Product::where('id', $orderItem->product_id)->first();
-           
+                $importOrder = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $storeid->id)->first();
+                if($importOrder == null){
                     $importproduct = Importproduct::create([
                         'product_id' => $orderItem->product_id,
                         'store_id' => $storeid->id,
                         'price' => $orderItem->price,
                         'qty' => $orderItem->quantity,
                     ]);
-                    $newStock = $product->stock - $importproduct->qty;
+                   }
+                   else{
+                    $qty=$importOrder->qty;
+                    $importOrder->update([
+                        'price' => $orderItem->price,
+                        'qty' => $qty+$orderItem->quantity,
+                    ]);
+                   }
+
+                    $newStock = $product->stock - $orderItem->quantity;
                     $product->update([
                         'stock' => $newStock,
                     ]);
                     //إستيراد الى متجر اطلبها
                     $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-                    $importAtlbha = Importproduct::where('product_id', $request->product_id)->where('store_id', $atlbha_id)->first();
+                    $importAtlbha = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $atlbha_id)->first();
                     if($importAtlbha == null){
                         $importAtlbha = Importproduct::create([
                             'product_id' => $orderItem->product_id,
