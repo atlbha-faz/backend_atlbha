@@ -30,12 +30,18 @@ class ShippingtypeResource extends JsonResource
         }
         if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee') {
             $price = null;
+            $time = null;
+
         } elseif (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
             if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null) {
                 $priceobject = \App\Models\shippingtype_store::where('shippingtype_id', $this->id)->where('store_id', auth()->user()->store_id)->first();
                 $price = $priceobject->price;
+                $time = $priceobject->time;
+
             } else {
                 $price = 0;
+                $time = 0;
+
             }
         } else {
             $price = count($this->stores) == 0 ? 0 : null;
@@ -49,6 +55,8 @@ class ShippingtypeResource extends JsonResource
             'cod' => $this->cod,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'price' => $price,
+            'time' => $time,
+
         ];
 
     }

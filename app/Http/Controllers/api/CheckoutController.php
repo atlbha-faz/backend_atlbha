@@ -112,7 +112,7 @@ class CheckoutController extends BaseController
             } else {
                 $extra_shipping_price = 0;
             }
-            if ($cart->free_shipping == 1) 
+            if ($cart->free_shipping == 1)
              {
             $order->update([
                 'shipping_price' => $shipping_price,
@@ -126,7 +126,7 @@ class CheckoutController extends BaseController
             ]);
 
            }
-            
+
 
             // Loop through the cart items and associate them with the order
             foreach ($cart->cartDetails as $cartItem) {
@@ -274,7 +274,7 @@ class CheckoutController extends BaseController
 
         $shippingcompanys = DB::table('shippingtypes_stores')
             ->join('shippingtypes', 'shippingtypes.id', '=', 'shippingtypes_stores.shippingtype_id')->where('shippingtypes_stores.store_id', $store->id) // joining the contacts table , where user_id and contact_user_id are same
-            ->select('shippingtypes.*', 'shippingtypes_stores.price')
+            ->select('shippingtypes.*', 'shippingtypes_stores.price','shippingtypes_stores.time')
             ->get();
 
         $success['shipping_company'] = ShippingtypeTemplateResource::collection($shippingcompanys);
