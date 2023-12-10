@@ -32,7 +32,7 @@ class CheckoutController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function cheackOut(Request $request)
+    public function checkOut(Request $request)
     {
 
             $cart = Cart::where('user_id', auth()->user()->id)->where('store_id', null)->first();

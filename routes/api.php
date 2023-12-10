@@ -439,7 +439,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('addImportCart', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'addToCart']);
         Route::get('deleteImportCart/{id}', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'delete']);
         // cheackout import
-        Route::post('cheackoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'cheackOut']);
+        Route::post('checkoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'checkOut']);
         //  paymenttype import
         Route::get('paymentmethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'paymentmethods']);
         // page
