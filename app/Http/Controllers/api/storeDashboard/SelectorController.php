@@ -106,11 +106,11 @@ class SelectorController extends BaseController
 
         $success['categories'] = CategoryResource::collection(Category::
                 where('is_deleted', 0)
-                ->where('parent_id', null)
-                ->where(function ($query) {
-                    $query->where('store_id', auth()->user()->store_id)
-                        ->OrWhere('store_id', null);
-                })
+                ->where('parent_id', null)->where('store_id', null)
+                // ->where(function ($query) {
+                //     $query->where('store_id', auth()->user()->store_id)
+                //         ->OrWhere('store_id', null);
+                // })
                 ->where('status', 'active')->get());
 
         $success['status'] = 200;
