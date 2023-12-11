@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\api\adminDashboard\ServiceController;
+use App\Http\Controllers\api\storeDashboard\ReportController;
+use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
+use App\Http\Middleware\SetActiveStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\SetActiveStore;
-use App\Http\Controllers\api\storeDashboard\ReportController;
-use App\Http\Controllers\api\adminDashboard\ServiceController;
-use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -251,7 +251,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('comment', App\Http\Controllers\api\adminDashboard\CommentController::class, ['names' => 'admin.comment']);
         Route::get('commentchangeSatusall', [App\Http\Controllers\api\adminDashboard\CommentController::class, 'changeSatusall'])->name('admin.comment.changeSatusall');
         Route::get('commentdeleteall', [App\Http\Controllers\api\adminDashboard\CommentController::class, 'deleteall'])->name('admin.comment.deleteall');
-          
+
         Route::resource('page', App\Http\Controllers\api\adminDashboard\PageController::class, ['names' => 'admin.page']);
         //Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\PageController::class,"relatedPage"]);
         Route::post('page-publish', [App\Http\Controllers\api\adminDashboard\PageController::class, 'publish'])->name('admin.page.publish');
@@ -278,7 +278,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('option', App\Http\Controllers\api\adminDashboard\OptionController::class);
         Route::resource('user', App\Http\Controllers\api\adminDashboard\UserController::class, ['names' => 'admin.user']);
         Route::resource('etlobha', App\Http\Controllers\api\adminDashboard\EtlobhaController::class, ['names' => 'admin.etlobha']);
-        Route::post('updateProfile/{id}',[App\Http\Controllers\api\adminDashboard\StoreController::class,'updateProfile']);
+        Route::post('updateProfile/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'updateProfile']);
 
         Route::get('statistics/{id}', [App\Http\Controllers\api\adminDashboard\EtlobhaController::class, 'statistics'])->name('admin.etlobha.statistics');
 
@@ -417,6 +417,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('selector/countries', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'countries']);
         Route::get('selector/activities', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'activities']);
         Route::get('selector/mainCategories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'mainCategories']);
+        Route::get('selector/productCategories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'productCategories']);
+
         Route::get('selector/etlobahCategory', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'etlobahCategory']);
         Route::get('selector/services', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'services']);
         Route::get('selector/children/{id}', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'children']);
