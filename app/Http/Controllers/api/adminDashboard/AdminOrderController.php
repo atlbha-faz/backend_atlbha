@@ -148,19 +148,14 @@ class AdminOrderController extends BaseController
 
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+                $order->update([
+                    'order_status' => $request->input('status'),
+                ]);
+                foreach ($order->items as $orderItem) {
+                    $orderItem->update([
+                        'order_status' => $request->input('status'),
+                    ]);
+                }
 
 
 

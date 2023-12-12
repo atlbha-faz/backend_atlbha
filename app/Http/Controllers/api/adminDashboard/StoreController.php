@@ -504,6 +504,10 @@ class StoreController extends BaseController
                 $comment->update(['is_deleted' => $comment->id]);
             }
         }
+        $products=Product::where('store_id', $store->id)->get();
+        foreach ($products as $product) {
+            $product->update(['is_deleted' => $product->id]);
+        }
 
         $success['store'] = new StoreResource($store);
         $success['status'] = 200;

@@ -261,7 +261,6 @@ class AuthController extends BaseController
                     $success['user'] = new UserResource($user);
                     $success['status'] = 200;
                 }
-
             }
 
             return $this->sendResponse($success, 'تم التسجيل بنجاح', 'Register Successfully');
