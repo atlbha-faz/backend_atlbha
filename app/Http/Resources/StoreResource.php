@@ -86,7 +86,7 @@ class StoreResource extends JsonResource
             'store_address' => $this->store_address,
             'business_license' => $this->business_license,
             'ID_file' => $this->ID_file,
-            'link' => $this->link,
+            // 'link' => $this->link,
             'snapchat' => $this->snapchat,
             'facebook' => $this->facebook,
             'twiter' => $this->twiter,
