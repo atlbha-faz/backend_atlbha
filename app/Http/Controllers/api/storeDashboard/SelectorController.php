@@ -157,7 +157,11 @@ class SelectorController extends BaseController
 
     public function etlobahCategory()
     {
-        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)->where('store_id', null)->get());
+        $success['categories'] = CategoryResource::collection(Category::
+        where('is_deleted', 0)
+        ->where('status', 'active')
+        ->where('parent_id', null
+        )->where('store_id', null)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');

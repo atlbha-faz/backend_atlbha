@@ -58,7 +58,7 @@ class VerificationController extends BaseController
             'subcategory_id' => ['nullable', 'array'],
             'verification_type' => 'required|in:commercialregister,maeruf',
             'city_id' => 'required',
-            'link' => 'required_if:verification_type,maeruf',
+            'link' => 'nullable',
             'file' => 'required|mimes:pdf',
             'owner_name' => 'nullable|string|max:255',
             'commercial_name' => 'required_if:verification_type,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
@@ -96,7 +96,7 @@ class VerificationController extends BaseController
         $store->update([
             'verification_type' => $request->input('verification_type'),
             'city_id' => $request->input('city_id'),
-            'link' => $request->input('link'),
+            // 'link' => $request->input('link'),
             'file' => $request->file,
             'phonenumber' => $request->input('phonenumber'),
             'verification_status' => "admin_waiting",
