@@ -45,6 +45,8 @@ class ShippingtypeResource extends JsonResource
             }
         } else {
             $price = count($this->stores) == 0 ? 0 : null;
+            $time =  null;
+
         }
 
         return [

@@ -31,7 +31,9 @@ class AuthController extends BaseController
             return $this->sendError('stop_registration', 'تم ايقاف التسجيل');
 
         } else {
-            $request->package_id = 1;
+            $request->package_id = 2;
+          $request->periodtype ="6months";
+
             if ($request->user_type == 'store') {
 
                 $input = $request->all();

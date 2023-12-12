@@ -129,7 +129,9 @@ class StoreController extends BaseController
 
         $userid = $user->id;
 
-        $request->package_id = 1;
+       $request->package_id = 2;
+      $request->periodtype = "6months";
+
         $store = Store::create([
             'store_name' => $request->store_name,
             'store_email' => $request->store_email,
@@ -373,13 +375,13 @@ class StoreController extends BaseController
                     ->where('id', '!=', $storeAdmain->id);
             })],
             'password' => 'required|min:8|string',
-       
+
         ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
         }
-     
+
         $storeAdmain->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),

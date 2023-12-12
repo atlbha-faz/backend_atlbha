@@ -23,7 +23,7 @@ class CategoryController extends BaseController
     public function index()
     {
         $store = auth()->user()->store_id;
-      
+
         if (auth()->user()->store->verification_status == "accept") {
 
             $success['categories'] = CategoryResource::collection(Category::with(['store'=> function ($query) {
@@ -98,6 +98,7 @@ class CategoryController extends BaseController
             'name' => $request->name,
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
+            'for' =>'store',
             'parent_id' => null,
             'store_id' => auth()->user()->store_id,
         ]);
@@ -261,7 +262,7 @@ class CategoryController extends BaseController
                     'name' => $data['name'],
                     'parent_id' => $category_id,
                     'number' => $number,
-                 
+
                     // 'store_id'=> auth()->user()->store_id,
                     'is_deleted' => 0,
 
@@ -358,7 +359,7 @@ class CategoryController extends BaseController
                         }
                     }
                 }
-               
+
                 $success['categorys'] = new CategoryResource($category);
 
             }
