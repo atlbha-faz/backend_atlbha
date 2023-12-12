@@ -63,8 +63,8 @@ class CourseController extends BaseController
             'description' => 'required|string',
             'tags' => 'required',
             'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'data.*.video.*' => 'required|string',
-            'data.*.title' => 'required|string|max:255',
+            'data.*.video.*' => 'nullable|string',
+            'data.*.title' => 'nullable|string|max:255',
             'data.*.file.*' => 'nullable|mimes:pdf,doc,excel',
             // 'user_id'=>'required|exists:users,id'
         ]);
@@ -80,7 +80,7 @@ class CourseController extends BaseController
             'image' => $request->image,
             'user_id' => auth()->user()->id,
         ]);
-
+     if(isset($request->data)){
         foreach ($request->data as $data) {
             $file = array();
             if (isset($data['file'])) {
@@ -140,7 +140,7 @@ class CourseController extends BaseController
                 }
             }
         }
-
+    }
         // return new CountryResource($country);
         $success['courses'] = new CourseResource($course);
         $success['status'] = 200;
@@ -294,6 +294,7 @@ class CourseController extends BaseController
         }
 
         }*/
+        if(isset($request->data)){
         if (!is_null($request->data)) {
             foreach ($request->data as $data) {
                 $file = array();
@@ -360,7 +361,7 @@ class CourseController extends BaseController
             }
 
         }
-
+    }
         //$country->fill($request->post())->update();
         $success['courses'] = new CourseResource($course);
         $success['status'] = 200;
