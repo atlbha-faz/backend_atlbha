@@ -42,7 +42,6 @@ class VerificationController extends BaseController
             $query->select('id', 'name', 'email');
         }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('updated_at')->get();
         $success['stores'] = VerificationResource::collection($stores);
-
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
