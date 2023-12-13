@@ -28,7 +28,7 @@ class PostController extends BaseController
         $postCategory_id = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->first();
         if ($postCategory_id != null) {
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->get());
-            $pages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
+            $pages = Page_page_category::where('page_category_id', 5)->pluck('page_id')->toArray();
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
             $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $pages)->get());
             return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
@@ -45,7 +45,7 @@ class PostController extends BaseController
         $post = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $id)->first();
         if ($post != null) {
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $id)->get());
-            $pages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
+            $pages = Page_page_category::where('page_category_id', 5)->pluck('page_id')->toArray();
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
             $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $pages)->get());
             return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
