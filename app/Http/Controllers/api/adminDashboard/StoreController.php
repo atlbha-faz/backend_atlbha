@@ -8,6 +8,7 @@ use App\Models\Store;
 use App\Models\Theme;
 use App\Mail\SendMail;
 use App\Models\Comment;
+use App\Models\Product;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
