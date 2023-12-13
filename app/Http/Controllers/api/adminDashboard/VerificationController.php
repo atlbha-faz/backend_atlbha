@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
+
 class VerificationController extends BaseController
 {
     public function __construct()
@@ -149,7 +150,18 @@ class VerificationController extends BaseController
             'store_id' => $request->store_id,
             'product_id' => null,
         ]);
-
+        $store = Store::query()->find($request->store_id);
+        $data = [
+            'message' => $request->details,
+            'store_id' => $store->id,
+            'user_id' => $store->user_id,
+            'type' => $request->subject,
+            'object_id' =>null,
+        ];
+        $user = User::query()->find($store->user_id);
+        Notification::send($user, new verificationNotification($data));
+        event(new VerificationEvent($data));
+        Mail::to($user->email)->send(new SendMail($data));
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
 
