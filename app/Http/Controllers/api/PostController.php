@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\PageResource;
 use App\Models\Page;
-use App\Models\Page_page_category;
+use App\Models\Homepage;
 use App\Models\Postcategory;
+use App\Models\Page_page_category;
+use App\Http\Resources\PageResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class PostController extends BaseController
 {
@@ -22,6 +23,17 @@ class PostController extends BaseController
         $pages = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
         $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $pages)->get());
         return $this->sendResponse($success, 'تم ارجاع المدونة بنجاح', 'posts return successfully');
+    }
+    public function start()
+    {
+       
+       //مقالات كيف ابدأ
+        $startpages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
+        $success['start'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'created_at')->where('status', 'active')->whereIn('id',$startpages)->get());
+        $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
+        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'created_at')->where('status', 'active')->whereIn('id', $startpages )->get());
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم ارجاع صفحة كيف ابدأ بنجاح', 'start index return successfully');
     }
     public function show($postCategory_id)
     {
