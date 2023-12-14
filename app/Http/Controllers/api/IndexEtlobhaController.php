@@ -93,6 +93,7 @@ class IndexEtlobhaController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع الرئيسية بنجاح', 'etlobha index return successfully');
     }
+ 
     public function store(Request $request)
     {
 
