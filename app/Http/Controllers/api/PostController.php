@@ -30,7 +30,7 @@ class PostController extends BaseController
        //مقالات كيف ابدأ
         $startpages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
         $success['start'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->where('status', 'active')->whereIn('id',$startpages)->get());
-        $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
+        // $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
         $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'created_at')->where('status', 'active')->whereIn('id', $startpages )->get());
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع صفحة كيف ابدأ بنجاح', 'start index return successfully');
