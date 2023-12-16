@@ -29,9 +29,11 @@ class Service extends Model
     public function getFileAttribute($file)
     {
         if (is_null($file)) {
-            return   "";
+            return null;
         }
+        else{
         return asset('storage/images/service') . '/' . $file;
+        }
     }
     public function websiteorders()
     {
