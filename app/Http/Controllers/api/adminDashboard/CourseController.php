@@ -305,6 +305,7 @@ class CourseController extends BaseController
                 $file = array();
                 if (isset($data['file'])) {
                     foreach ($data['file'] as $filedata) {
+                        if(is_file($filedata)){
                         if ($filedata->getClientOriginalName() != null) {
                             $fileName = Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
 
@@ -315,6 +316,7 @@ class CourseController extends BaseController
                             $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
                         }
                     }
+                }
                 }
 
                 $unit = new Unit([
