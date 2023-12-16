@@ -103,7 +103,7 @@ class CourseController extends BaseController
 
             $unit->save();
             if (isset($data['video'])) {
-                if (!is_null($data['video'])) {
+                if (!is_null($data['video']) && $data['video'] !="") {
                 foreach ($data['video'] as $videodata) {
 
                     // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
@@ -322,7 +322,7 @@ class CourseController extends BaseController
 
                 $unit->save();
                 if (isset($data['video'])) {
-                    if (!is_null($data['video'])) {
+                    if (!is_null($data['video']) && $data['video'] !="") {
                     foreach ($data['video'] as $videodata) {
 
                         // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
