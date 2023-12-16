@@ -103,6 +103,7 @@ class CourseController extends BaseController
 
             $unit->save();
             if (isset($data['video'])) {
+                if (!is_null($data['video'])) {
                 foreach ($data['video'] as $videodata) {
 
                     // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
@@ -140,6 +141,7 @@ class CourseController extends BaseController
                 }
             }
         }
+    }
     }
         // return new CountryResource($country);
         $success['courses'] = new CourseResource($course);
@@ -320,6 +322,7 @@ class CourseController extends BaseController
 
                 $unit->save();
                 if (isset($data['video'])) {
+                    if (!is_null($data['video'])) {
                     foreach ($data['video'] as $videodata) {
 
                         // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
@@ -359,7 +362,7 @@ class CourseController extends BaseController
                     }
                 }
             }
-
+        }
         }
     }
         //$country->fill($request->post())->update();
