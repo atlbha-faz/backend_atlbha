@@ -85,6 +85,7 @@ class CourseController extends BaseController
             $file = array();
             if (isset($data['file'])) {
                 foreach ($data['file'] as $filedata) {
+                    if(is_file($filedata)){
                     if ($filedata->getClientOriginalName() != null) {
                         $fileName = Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
                         $file[] = $fileName;
@@ -94,6 +95,7 @@ class CourseController extends BaseController
                     }
 
                 }
+            }
             }
             $unit = new Unit([
                 'title' => $data['title'],
