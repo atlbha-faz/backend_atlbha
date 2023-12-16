@@ -81,6 +81,7 @@ class StoreResource extends JsonResource
             'domain' => $this->domain,
             'phonenumber' => $this->phonenumber,
             'store_email' => $this->store_email,
+            'owner_name' => $this->owner_name,
             'icon' => $this->icon,
             'description' => $this->description !== null ? $this->description : "",
             'store_address' => $this->store_address,
