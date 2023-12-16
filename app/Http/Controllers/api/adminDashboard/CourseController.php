@@ -128,16 +128,17 @@ class CourseController extends BaseController
 
                     if (isset($matches[1])) {
                         $videoId = $matches[1];
-                    }
+                    
                     $video = new Video([
                         'video' => $videodata,
                         'unit_id' => $unit->id,
                     ]);
+                    
                     $videodata = $video->get_youtube_title($videoId);
                     $video->name = $videodata[0]['title'];
                     $video->duration = $videodata[0]['duration'];
                     $video->save();
-
+                }
                 }
             }
         }
@@ -349,7 +350,7 @@ class CourseController extends BaseController
 
                         if (isset($matches[1])) {
                             $videoId = $matches[1];
-                        }
+                        
                         $video = new Video([
                             'video' => $videodata,
                             'unit_id' => $unit->id,
@@ -358,7 +359,7 @@ class CourseController extends BaseController
                         $video->name = $videodata[0]['title'];
                         $video->duration = $videodata[0]['duration'];
                         $video->save();
-
+                    }
                     }
                 }
             }
