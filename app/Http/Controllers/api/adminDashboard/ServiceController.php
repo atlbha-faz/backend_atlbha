@@ -54,7 +54,7 @@ class ServiceController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'file' => 'required',
+            'file' => 'nullable',
             'price' => ['required', 'numeric', 'gt:0'],
         ]);
         if ($validator->fails()) {

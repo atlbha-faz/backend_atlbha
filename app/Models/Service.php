@@ -29,7 +29,7 @@ class Service extends Model
     public function getFileAttribute($file)
     {
         if (is_null($file)) {
-            return   asset('assets/media/man.png');
+            return   "";
         }
         return asset('storage/images/service') . '/' . $file;
     }
