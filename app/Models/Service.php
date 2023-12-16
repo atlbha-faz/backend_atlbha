@@ -24,6 +24,9 @@ class Service extends Model
                 $this->attributes['file'] = $file;
             }
         }
+        else {
+            $this->attributes['file'] = $file;
+        }
     }
 
     public function getFileAttribute($file)
