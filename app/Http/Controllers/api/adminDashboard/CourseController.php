@@ -63,8 +63,8 @@ class CourseController extends BaseController
             'description' => 'required|string',
             'tags' => 'required',
             'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'data.*.video.*' => 'required|string',
-            'data.*.title' => 'required|string|max:255',
+            'data.*.video.*' => 'nullable|string',
+            'data.*.title' => 'nullable|string|max:255',
             'data.*.file.*' => 'nullable|mimes:pdf,doc,excel',
             // 'user_id'=>'required|exists:users,id'
         ]);
