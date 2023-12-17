@@ -227,9 +227,9 @@ class IndexStoreController extends BaseController
             if (!is_null($s1)) {
                 $sliders[] = $s1;
             } 
-            // else {
-            //     $sliders[] = asset('assets/media/slider.png');
-            // }
+            else {
+                $sliders[] = asset('assets/media/slider.png');
+            }
             $s2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus2', 'active')->pluck('slider2')->first();
             if (!is_null($s2)) {
                 $sliders[] = $s2;
