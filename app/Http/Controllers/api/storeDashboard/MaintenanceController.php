@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\MaintenanceResource;
 use App\Models\Maintenance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\MaintenanceResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class MaintenanceController extends BaseController
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -21,10 +21,10 @@ class MaintenanceController extends BaseController
      */
     public function index()
     {
-        $success['Maintenances']=MaintenanceResource::collection(Maintenance::where('is_deleted',0)->where('store_id',auth()->user()->store_id)->get());
-        $success['status']= 200;
+        $success['Maintenances'] = MaintenanceResource::collection(Maintenance::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع و ضع الصيانة بنجاح','Maintenances return successfully');
+        return $this->sendResponse($success, 'تم ارجاع و ضع الصيانة بنجاح', 'Maintenances return successfully');
     }
 
     /**
@@ -47,30 +47,35 @@ class MaintenanceController extends BaseController
     public function updateMaintenance(Request $request)
     {
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'title'=>'required|string|max:255',
-            'message'=>'required',
-        //    'store_id'=>'required|exists:stores,id'
+        $validator = Validator::make($input, [
+            'title' => 'required|string|max:255',
+            'message' => 'required',
+            //    'store_id'=>'required|exists:stores,id'
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
-         $maintenance =Maintenance::updateOrCreate([
-            'store_id'   => auth()->user()->store_id,
-               ],[
+        $maintenance = Maintenance::updateOrCreate([
+            'store_id' => auth()->user()->store_id,
+        ], [
 
             'title' => $request->title,
             'message' => $request->message,
             'status' => $request->status,
 
-          ]);
+        ]);
 
+        if ($maintenance->status === 'active') {
+            $success['maintenances'] = new MaintenanceResource($maintenance);
+            $success['status'] = 200;
 
-         $success['maintenances']=New MaintenanceResource($maintenance);
-        $success['status']= 200;
+            return $this->sendResponse($success, 'تم تفعيل وضع الصيانه بنجاح', ' maintenance updated successfully');
+        } else {
+            $success['maintenances'] = new MaintenanceResource($maintenance);
+            $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم إضافة و ضع الصيانة بنجاح',' maintenance Added successfully');
+            return $this->sendResponse($success, 'تم الغاء وضع الصيانه بنجاح', ' maintenance updated successfully');
+        }
     }
 
     /**
@@ -118,10 +123,6 @@ class MaintenanceController extends BaseController
     //      return $this->sendResponse($success,'تم تعدبل حالة الصيانة بنجاح',' maintenance status updared successfully');
 
     // }
-
-
-
-
 
     /**
      * Update the specified resource in storage.
