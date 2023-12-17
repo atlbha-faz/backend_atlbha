@@ -32,9 +32,10 @@ class CategoryController extends BaseController
                     ->where('parent_id', null)
                     ->where(function ($query) {
                         $query->where('store_id', auth()->user()->store_id)
-                            ->OrWhere('store_id', null)->has('products')->whereHas('products', function ($query) {
-                            $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
-                        });
+                            ->OrWhere('store_id', null);
+                        //     ->has('products')->whereHas('products', function ($query) {
+                        //     $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
+                        // });
                     })->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->get());
 
             // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
