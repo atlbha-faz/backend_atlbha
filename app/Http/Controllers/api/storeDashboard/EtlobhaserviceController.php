@@ -38,7 +38,8 @@ class EtlobhaserviceController extends BaseController
         $input = $request->all();
         $validator =  Validator::make($input ,[
             'service_id'=>'nullable|array|exists:services,id',
-            'name'=>'nullable|string'
+            'name'=>'nullable|string',
+            'description'=>'nullable|string'
         ]);
         if ($validator->fails())
         {
@@ -60,6 +61,7 @@ class EtlobhaserviceController extends BaseController
           if($request->has('name') && $request->name!=null){
           $service = Service::create([
             'name' => $request->name,
+            'description'=> $request->description,
             'status'=>'not_active'
           ]);
           $array1 =array($service->id);
