@@ -24,14 +24,19 @@ class Service extends Model
                 $this->attributes['file'] = $file;
             }
         }
+        else {
+            $this->attributes['file'] = $file;
+        }
     }
 
     public function getFileAttribute($file)
     {
         if (is_null($file)) {
-            return   asset('assets/media/man.png');
+            return null;
         }
+        else{
         return asset('storage/images/service') . '/' . $file;
+        }
     }
     public function websiteorders()
     {

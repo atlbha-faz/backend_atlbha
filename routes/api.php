@@ -99,6 +99,7 @@ Route::post('storeClientVisit', [App\Http\Controllers\api\VisitCountController::
 Route::get('visit', [App\Http\Controllers\api\VisitCountController::class, 'visit']);
 
 Route::get('posts', [App\Http\Controllers\api\PostController::class, 'index']);
+Route::get('start', [App\Http\Controllers\api\PostController::class, 'start']);
 Route::get('show/{id}', [App\Http\Controllers\api\PostController::class, 'show']);
 Route::get('show_post/{id}', [App\Http\Controllers\api\PostController::class, 'show_post']);
 

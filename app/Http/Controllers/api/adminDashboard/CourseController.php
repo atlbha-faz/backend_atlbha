@@ -64,7 +64,7 @@ class CourseController extends BaseController
             'tags' => 'required',
             'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'data.*.video.*' => 'nullable|string',
-            'data.*.title' => 'nullable|string|max:255',
+            'data.*.title' => 'required|string|max:255',
             'data.*.file.*' => 'nullable|mimes:pdf,doc,excel',
             // 'user_id'=>'required|exists:users,id'
         ]);
@@ -80,11 +80,12 @@ class CourseController extends BaseController
             'image' => $request->image,
             'user_id' => auth()->user()->id,
         ]);
-
+     if(isset($request->data)){
         foreach ($request->data as $data) {
             $file = array();
             if (isset($data['file'])) {
                 foreach ($data['file'] as $filedata) {
+                    if(is_file($filedata)){
                     if ($filedata->getClientOriginalName() != null) {
                         $fileName = Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
                         $file[] = $fileName;
@@ -95,6 +96,7 @@ class CourseController extends BaseController
 
                 }
             }
+            }
             $unit = new Unit([
                 'title' => $data['title'],
                 'file' => count($file) > 0 ? implode(',', $file) : null,
@@ -103,6 +105,7 @@ class CourseController extends BaseController
 
             $unit->save();
             if (isset($data['video'])) {
+                if (!is_null($data['video']) && $data['video'] !="") {
                 foreach ($data['video'] as $videodata) {
 
                     // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
@@ -127,20 +130,22 @@ class CourseController extends BaseController
 
                     if (isset($matches[1])) {
                         $videoId = $matches[1];
-                    }
+
                     $video = new Video([
                         'video' => $videodata,
                         'unit_id' => $unit->id,
                     ]);
+
                     $videodata = $video->get_youtube_title($videoId);
                     $video->name = $videodata[0]['title'];
                     $video->duration = $videodata[0]['duration'];
                     $video->save();
-
+                }
                 }
             }
         }
-
+    }
+    }
         // return new CountryResource($country);
         $success['courses'] = new CourseResource($course);
         $success['status'] = 200;
@@ -199,7 +204,7 @@ class CourseController extends BaseController
             'description' => 'required|string',
             'tags' => 'required',
             'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'data.*.video.*' => 'required|string',
+            'data.*.video.*' => 'nullable|string',
             'data.*.title' => 'required|string|max:255',
             'data.*.file.*' => 'nullable|mimes:pdf,doc,excel',
         ]);
@@ -294,11 +299,13 @@ class CourseController extends BaseController
         }
 
         }*/
+        if(isset($request->data)){
         if (!is_null($request->data)) {
             foreach ($request->data as $data) {
                 $file = array();
                 if (isset($data['file'])) {
                     foreach ($data['file'] as $filedata) {
+                        if(is_file($filedata)){
                         if ($filedata->getClientOriginalName() != null) {
                             $fileName = Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
 
@@ -310,6 +317,7 @@ class CourseController extends BaseController
                         }
                     }
                 }
+                }
 
                 $unit = new Unit([
                     'title' => $data['title'],
@@ -319,6 +327,7 @@ class CourseController extends BaseController
 
                 $unit->save();
                 if (isset($data['video'])) {
+                    if (!is_null($data['video']) && $data['video'] !="") {
                     foreach ($data['video'] as $videodata) {
 
                         // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
@@ -345,7 +354,7 @@ class CourseController extends BaseController
 
                         if (isset($matches[1])) {
                             $videoId = $matches[1];
-                        }
+
                         $video = new Video([
                             'video' => $videodata,
                             'unit_id' => $unit->id,
@@ -354,13 +363,13 @@ class CourseController extends BaseController
                         $video->name = $videodata[0]['title'];
                         $video->duration = $videodata[0]['duration'];
                         $video->save();
-
+                    }
                     }
                 }
             }
-
         }
-
+        }
+    }
         //$country->fill($request->post())->update();
         $success['courses'] = new CourseResource($course);
         $success['status'] = 200;

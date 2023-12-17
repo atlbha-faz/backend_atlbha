@@ -8,6 +8,7 @@ use App\Models\Store;
 use App\Models\Theme;
 use App\Mail\SendMail;
 use App\Models\Comment;
+use App\Models\Product;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -365,7 +366,6 @@ class StoreController extends BaseController
         $storeAdmain = User::where('user_type','store')->where('store_id', $store->id)->first();
         $input = $request->all();
         $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
             'user_name' =>  ['required', 'string', Rule::unique('users')->where(function ($query) use ($storeAdmain) {
                 return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
                     ->where('id', '!=', $storeAdmain->id);
@@ -383,7 +383,6 @@ class StoreController extends BaseController
         }
 
         $storeAdmain->update([
-            'name' => $request->input('name'),
             'email' => $request->input('email'),
             'user_name' => $request->input('user_name'),
             'password' => $request->input('password'),
@@ -503,6 +502,10 @@ class StoreController extends BaseController
             if ($comment != null) {
                 $comment->update(['is_deleted' => $comment->id]);
             }
+        }
+        $products=Product::where('store_id', $store->id)->get();
+        foreach ($products as $product) {
+            $product->update(['is_deleted' => $product->id]);
         }
 
         $success['store'] = new StoreResource($store);
