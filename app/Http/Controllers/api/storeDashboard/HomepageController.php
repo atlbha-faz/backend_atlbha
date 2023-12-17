@@ -669,7 +669,57 @@ class HomepageController extends BaseController
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     }
+   public function themeFontColorUpdate(Request $request)
+    {
 
+        $input = $request->all();
+        $validator = Validator::make($input, [
+
+            'fontColor' => ['nullable'],
+
+
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        if ($theme == null) {
+            Theme::create([
+
+                'primaryBg' => "#ffffff",
+                'secondaryBg' => "#02466a",
+                'headerBg' => "#1dbbbe",
+                'layoutBg' => "#ffffff",
+                'iconsBg' => "#1dbbbe",
+                'productBorder' => "#ededed",
+                'productBg' => "#ffffff",
+                'filtersBorder' => "#f0f0f0",
+                'filtersBg' => "#ffffff",
+                'mainButtonBg' => "#1dbbbe",
+                'mainButtonBorder' => "#1dbbbe",
+                'subButtonBg' => "#02466a",
+                'subButtonBorder' => "#02466a",
+                'footerBorder' => "#ebebeb",
+                'footerBg' => "#ffffff",
+                'fontColor' =>"#000",
+                'store_id' => auth()->user()->store_id,
+            ]);
+        }
+        $theme = Theme::where('store_id', auth()->user()->store_id)->first();
+        $theme->update([
+
+            'fontColor' => $request->fontColor,
+
+        ]);
+        $homepage = Homepage::where('store_id', auth()->user()->store_id)->first();
+
+        $success['Theme'] = new ThemeResource(Theme::where('store_id', auth()->user()->store_id)->first());
+
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
+    }
     public function banarUpdate(Request $request)
     {
 

@@ -31,6 +31,7 @@ class ThemeResource extends JsonResource
             // 'subButtonBorder' => $this->subButtonBorder,
             'footerBorder' => $this->footerBorder,
             'footerBg' => $this->footerBg,
+            'fontColor' => $this->fontColor,
             'store' => new StoreResource($this->store),
         ];
     }

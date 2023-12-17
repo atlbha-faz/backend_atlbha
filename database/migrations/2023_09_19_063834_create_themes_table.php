@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('subButtonBorder')->default("#8235DC");
             $table->string('footerBorder')->default("#ebebeb");
             $table->string('footerBg')->default("#ffffff");
+            $table->string('fontColor')->default("#000");
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->timestamps();
