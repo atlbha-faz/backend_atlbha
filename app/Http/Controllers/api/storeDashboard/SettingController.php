@@ -25,12 +25,6 @@ class SettingController extends BaseController
         // dd(auth()->user()->store_id);
         $success['setting_store'] = new StoreResource(Store::with(['categories' => function ($query) {
             $query->select('name');
-        }, 'city' => function ($query) {
-            $query->select('id');
-            $query->select('name');
-        }, 'country' => function ($query) {
-            $query->select('id');
-            $query->select('name');
         }])->where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
 
         $success['status'] = 200;
