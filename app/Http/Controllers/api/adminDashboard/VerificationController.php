@@ -182,7 +182,7 @@ class VerificationController extends BaseController
             'subcategory_id' => ['nullable', 'array'],
             'store_name' => 'required|string',
             // 'link' => 'required|url',
-            'file' => 'required|mimes:pdf,doc,excel',
+            'file' => 'required',
             'name' => 'required|string|max:255',
             'store_id' => 'required',
             'email' => 'nullable|email|unique:users,email,' . $user->id . '|unique:stores,store_email,' . $store->id,
