@@ -24,9 +24,7 @@ class AdminOrderController extends BaseController
     public function index()
     {
         $success['new'] = Order::where('store_id', null)->where('order_status', 'new')->count();
-        $success['completed'] = Order::whereHas('items', function ($q) {
-            $q->where('store_id',null)->where('order_status', 'completed');
-        })->count();
+        $success['completed'] = Order::where('store_id',null)->where('order_status', 'completed')->count();
 
         $success['not_completed'] = Order::where('store_id',null)->where('order_status', 'not_completed')->count();
         $success['canceled'] = Order::whereHas('items', function ($q) {
