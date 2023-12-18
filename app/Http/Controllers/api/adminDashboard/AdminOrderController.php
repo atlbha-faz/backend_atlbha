@@ -94,6 +94,11 @@ class AdminOrderController extends BaseController
                     'order_status' => $request->input('status'),
                 ]);
             }
+        
+            $success['orders'] = new OrderResource($order);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
         }else{
             if ($request->status === "completed") {
                 $storeAdmain = User::whereIn('user_type', ['store','store_employee'])->where('id', $order->user_id)->first();
@@ -187,5 +192,6 @@ class AdminOrderController extends BaseController
                 return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
             }
         }
+        
     
 }
