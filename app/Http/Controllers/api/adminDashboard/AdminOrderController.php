@@ -24,9 +24,7 @@ class AdminOrderController extends BaseController
     public function index()
     {
         $success['new'] = Order::where('store_id', null)->where('order_status', 'new')->count();
-        $success['completed'] = Order::whereHas('items', function ($q) {
-            $q->where('store_id',null)->where('order_status', 'completed');
-        })->count();
+        $success['completed'] = Order::where('store_id',null)->where('order_status', 'completed')->count();
 
         $success['not_completed'] = Order::where('store_id',null)->where('order_status', 'not_completed')->count();
         $success['canceled'] = Order::whereHas('items', function ($q) {
@@ -41,7 +39,7 @@ class AdminOrderController extends BaseController
 
         $data = OrderResource::collection(Order::with(['user', 'shipping', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id',null)->orderByDesc('id')->get(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status']));
+        }])->where('store_id',null)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'order_status']));
 
         $success['orders'] = $data;
         $success['status'] = 200;
