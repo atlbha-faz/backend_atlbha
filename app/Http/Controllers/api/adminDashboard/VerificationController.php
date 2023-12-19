@@ -208,7 +208,7 @@ class VerificationController extends BaseController
         $store->update([
             'store_name' => $request->input('store_name'),
             // 'link' => $request->input('link'),
-            'file' => $request->input('file'),
+            'file' => $request->file,
             'store_email' => $request->input('email'),
             // 'phonenumber' => $request->input('phonenumber'),
 
