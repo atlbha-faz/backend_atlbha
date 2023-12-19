@@ -183,7 +183,7 @@ class VerificationController extends BaseController
             'store_name' => 'required|string',
             // 'link' => 'required|url',
             'file' => 'required',
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'store_id' => 'required',
             'email' => 'nullable|email|unique:users,email,' . $user->id . '|unique:stores,store_email,' . $store->id,
             'phonenumber' => ['nullable', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber,' . $user->id, 'unique:stores,phonenumber,' . $store->id],
@@ -211,9 +211,14 @@ class VerificationController extends BaseController
             // 'link' => $request->input('link'),
             'file' => $request->input('file'),
             'store_email' => $request->input('email'),
-            'phonenumber' => $request->input('phonenumber'),
+            // 'phonenumber' => $request->input('phonenumber'),
 
         ]);
+        if(is_null($store->phonenumber)){
+            $store->update([
+                'phonenumber' => $request->input('phonenumber'),
+                ]);
+        }
         if ($request->subcategory_id != null) {
             $subcategory = implode(',', $request->subcategory_id);
         } else {
@@ -228,7 +233,7 @@ class VerificationController extends BaseController
 
         $user = User::where('is_deleted', 0)->where('store_id', $request->store_id)->where('user_type', 'store')->first();
         $user->update([
-            'name' => $request->input('name'),
+            // 'name' => $request->input('name'),
             'email' => $request->input('email'),
             'phonenumber' => $request->input('phonenumber'),
         ]);
