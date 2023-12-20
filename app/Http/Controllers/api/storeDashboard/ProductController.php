@@ -446,7 +446,7 @@ class ProductController extends BaseController
                         $comment->update(['is_deleted' => $comment->id]);
                     }
                 }
-                $success['products'] = new ProductResource($product);
+                // $success['products'] = new ProductResource($product);
 
             }
 
