@@ -244,6 +244,7 @@ class SeoController extends BaseController
         ]);
 
         $success['seos'] = new SeoResource($seo);
+        $success['Seo'] = new SeoResource($seo);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
