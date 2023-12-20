@@ -143,6 +143,8 @@ class SettingController extends BaseController
             }
         }
         $success['storeSetting'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
+        $success['setting_store'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل الاعدادات بنجاح', ' update successfully');
