@@ -451,6 +451,18 @@ class ProductController extends BaseController
             }
 
         }
+        $productss = ProductResource::collection(Product::with(['store' => function ($query) {
+            $query->select('id', 'domain', 'store_name');
+        }, 'category' => function ($query) {
+            $query->select('id', 'name');}])
+                ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->get()
+        );
+
+        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
+            ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
+        $imports = importsResource::collection($import);
+
+        $success['products'] = $productss->merge($imports);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
