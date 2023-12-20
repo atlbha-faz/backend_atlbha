@@ -219,14 +219,14 @@ class IndexStoreController extends BaseController
             $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
             $theme = Theme::where('store_id', $store_id)->first();
             if ($theme != null) {
-                $success['Theme'] = new ThemeResource(Theme::where('store_id', $store_id)->select('id', 'primaryBg', 'secondaryBg', 'headerBg', 'layoutBg', 'iconsBg', 'footerBorder', 'footerBg')->first());
+                $success['Theme'] = new ThemeResource(Theme::where('store_id', $store_id)->select('id', 'primaryBg', 'secondaryBg', 'headerBg', 'layoutBg', 'iconsBg', 'footerBorder', 'footerBg','fontColor')->first());
             }
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
             $sliders = array();
             $s1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
             if (!is_null($s1)) {
                 $sliders[] = $s1;
-            } 
+            }
             else {
                 $sliders[] = asset('assets/media/slider.png');
             }
