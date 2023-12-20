@@ -114,6 +114,8 @@ class StoreResource extends JsonResource
             'workDays' => DaystoreResource::collection($daystore),
             'activity' => CategoryResource::collection($this->categories),
             'subcategory' => $this->categories->first() == !null ? CategoryResource::collection(\App\Models\Category::whereIn('id', $subcategory)->get()) : array(),
+            'created_at' => (string) $this->created_at,
+            // 'updated_at' => (string) $this->updated_at,
         ];
     }
 }
