@@ -152,7 +152,7 @@ class PaymenttypeController extends BaseController
             $success['paymenttypes'] = $paymenttype;
 
         }
-        $success['paymenttypes'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
+        $success['paymenttypesall'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة طريقة الدفع بنجاح', 'payment type updated successfully');
