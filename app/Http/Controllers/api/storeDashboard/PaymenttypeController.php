@@ -1,18 +1,16 @@
 <?php
 
-
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\PaymenttypeResource;
 use App\Models\Paymenttype;
 use App\Models\paymenttype_store;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\PaymenttypeResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class PaymenttypeController extends BaseController
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -22,12 +20,12 @@ class PaymenttypeController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index()
-     {
+    {
 
-        $success['paymenttypes']=PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->where('status', 'active')->orderByDesc('created_at')->get());
-        $success['status']= 200;
+        $success['paymenttypes'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع طرق الدفع بنجاح','payment types return successfully');
+        return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'payment types return successfully');
     }
 
     /**
@@ -53,7 +51,6 @@ class PaymenttypeController extends BaseController
 //             'name'=>'required|string|max:255',
 //             'image'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
 
-
 //         ]);
 //         if ($validator->fails())
 //          {
@@ -65,13 +62,11 @@ class PaymenttypeController extends BaseController
 
 //           ]);
 
-
 //          $success['paymenttypes']=New PaymenttypeResource($paymenttype);
 //          $success['status']= 200;
 
 //           return $this->sendResponse($success,'تم إضافة طرق دفع بنجاح',' Payment type Added successfully');
 //     }
-
 
     /**
      * Display the specified resource.
@@ -79,19 +74,18 @@ class PaymenttypeController extends BaseController
      * @param  \App\Models\Paymenttype  $paymenttype
      * @return \Illuminate\Http\Response
      */
-     public function show($paymenttype)
-     {
+    public function show($paymenttype)
+    {
         $paymenttype = Paymenttype::query()->find($paymenttype);
-        if (is_null($paymenttype) || $paymenttype->is_deleted !=0 || $paymenttype->status=="not_active"){
-        return $this->sendError("'طريقة الدفع غير موجودة","payment type is't exists");
+        if (is_null($paymenttype) || $paymenttype->is_deleted != 0 || $paymenttype->status == "not_active") {
+            return $this->sendError("'طريقة الدفع غير موجودة", "payment type is't exists");
         }
 
-       $success['paymenttypes']=New PaymenttypeResource($paymenttype);
-       $success['status']= 200;
+        $success['paymenttypes'] = new PaymenttypeResource($paymenttype);
+        $success['status'] = 200;
 
-        return $this->sendResponse($success,'تم عرض طريقة الدفع بنجاح','payment type showed successfully');
-     }
-
+        return $this->sendResponse($success, 'تم عرض طريقة الدفع بنجاح', 'payment type showed successfully');
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -131,7 +125,6 @@ class PaymenttypeController extends BaseController
 
     //     'image' => $request->input('image'),
 
-
     //      ]);
     //      //$country->fill($request->post())->update();
     //         $success['paymenttypes']=New PaymenttypeResource($paymenttype);
@@ -140,30 +133,29 @@ class PaymenttypeController extends BaseController
     //         return $this->sendResponse($success,'تم التعديل بنجاح','payment type updated successfully');
     // }
 
-     public function changeStatus($id)
+    public function changeStatus($id)
     {
         $paymenttype = Paymenttype::query()->find($id);
-         if (is_null($paymenttype) || $paymenttype->is_deleted !=0 || $paymenttype->status=="not_active" ){
-         return $this->sendError("شركة الدفع غير موجودة","paymenttype is't exists");
-         }
-         $paymenttype=paymenttype_store::where('paymentype_id',$id)->where('store_id',auth()->user()->store_id)->first();
-
-        if( $paymenttype != null){
-           $paymenttype->delete();
+        if (is_null($paymenttype) || $paymenttype->is_deleted != 0 || $paymenttype->status == "not_active") {
+            return $this->sendError("شركة الدفع غير موجودة", "paymenttype is't exists");
         }
-        else{
+        $paymenttype = paymenttype_store::where('paymentype_id', $id)->where('store_id', auth()->user()->store_id)->first();
+
+        if ($paymenttype != null) {
+            $paymenttype->delete();
+        } else {
             $paymenttype = paymenttype_store::create([
-                'paymentype_id'=>$id ,
-                'store_id'=>auth()->user()->store_id
+                'paymentype_id' => $id,
+                'store_id' => auth()->user()->store_id,
             ]);
 
-            $success['paymenttypes']=$paymenttype;
+            $success['paymenttypes'] = $paymenttype;
 
         }
-       
-        $success['status']= 200;
+        $success['paymenttypes'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم تعديل حالة طريقة الدفع بنجاح','payment type updated successfully');
+        return $this->sendResponse($success, 'تم تعديل حالة طريقة الدفع بنجاح', 'payment type updated successfully');
 
     }
 
@@ -183,7 +175,7 @@ class PaymenttypeController extends BaseController
 
     //     $success['paymenttypes']=New PaymenttypeResource($paymenttype);
     //     $success['status']= 200;
-    // 
+    //
 
     //      return $this->sendResponse($success,'تم حذف طريقةالدفع بنجاح','payment type deleted successfully');
     // }
