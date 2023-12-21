@@ -433,6 +433,7 @@ class IndexStoreController extends BaseController
                 $verificayionMethod = null;
             }
             $success['verificayionMethod'] = $verificayionMethod;
+            $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
 
             if ($store->working_status == 'not_active') {
                 foreach (\App\Models\Day::get() as $day) {
