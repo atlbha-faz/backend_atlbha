@@ -451,6 +451,10 @@ class ProductController extends BaseController
             }
 
         }
+        if(count($products) < 1 && count($importproducts) < 1){
+            return $this->sendError("المنتج غير موجود", "product is't exists");
+
+        }
         $productss = ProductResource::collection(Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
