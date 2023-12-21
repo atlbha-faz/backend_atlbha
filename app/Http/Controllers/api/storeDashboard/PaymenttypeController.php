@@ -149,10 +149,10 @@ class PaymenttypeController extends BaseController
                 'store_id' => auth()->user()->store_id,
             ]);
 
-            $success['paymenttypes'] = $paymenttype;
+            $success['paymenttype'] = $paymenttype;
 
         }
-        $success['paymenttypesall'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
+        $success['paymenttypes'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة طريقة الدفع بنجاح', 'payment type updated successfully');
