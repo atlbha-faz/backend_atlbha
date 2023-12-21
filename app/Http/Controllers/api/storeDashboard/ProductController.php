@@ -417,6 +417,7 @@ class ProductController extends BaseController
 
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
             ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
+            
         if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
@@ -436,6 +437,7 @@ class ProductController extends BaseController
         }
 
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+   
         if (count($products) > 0) {
             foreach ($products as $product) {
 
