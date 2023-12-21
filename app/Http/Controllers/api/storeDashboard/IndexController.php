@@ -114,7 +114,7 @@ class IndexController extends BaseController
         if ($success['sales_avg'] > $sales_avg_prev) {
             $success['sales_avg_compare'] = 1;
         }
-
+        $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع بنجاح', 'return successfully');
