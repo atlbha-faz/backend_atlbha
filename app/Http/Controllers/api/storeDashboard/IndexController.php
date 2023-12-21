@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\importsResource;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\ProductResource;
-use App\Models\Importproduct;
+use DB;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
-use DB;
+use App\Models\Setting;
+use App\Models\Importproduct;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexController extends BaseController
 {
@@ -114,7 +115,7 @@ class IndexController extends BaseController
         if ($success['sales_avg'] > $sales_avg_prev) {
             $success['sales_avg_compare'] = 1;
         }
-
+        // $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع بنجاح', 'return successfully');

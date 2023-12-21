@@ -32,6 +32,8 @@ Route::get('selector/getAllCity', [App\Http\Controllers\api\SelectorController::
 Route::get('selector/testgetAllCity', [App\Http\Controllers\api\SelectorController::class, 'testgetAllCity']);
 Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorController::class, 'shippingcities']);
 Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
+Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
+
 
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
