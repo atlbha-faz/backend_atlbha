@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Package;
+use App\Models\Setting;
 use App\Models\Activity;
 use App\Models\Shippingtype;
 use App\Http\Resources\CartResource;
@@ -157,4 +158,10 @@ class SelectorController extends BaseController
 
     }
 
+  public function registrationMarketer(){
+    $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
+    $success['status'] = 200;
+        return $this->sendResponse($success, 'تم عرض حالة المندوب بنجاح', 'registration_marketer show successfully');
+
+  }
 }
