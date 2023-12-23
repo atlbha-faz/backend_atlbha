@@ -81,7 +81,8 @@ class ShippingtypeController extends BaseController
         } else {
             $shippingtype->update(['status' => 'active']);
         }
-        $success['shippingtypes'] = new ShippingtypeResource($shippingtype);
+        $success['shippingtype'] = new ShippingtypeResource($shippingtype);
+        $success['shippingtypes'] = ShippingtypeResource::collection(Shippingtype::whereNot('id',5)->where('is_deleted', 0)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة شركة الشحن بنجاح', 'shipping type updated successfully');
