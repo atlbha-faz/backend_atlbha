@@ -153,7 +153,7 @@ class ShippingtypeController extends BaseController
                 'shippingtype_id' => $id,
                 'store_id' => auth()->user()->store_id,
                 'price' => $request->price !== null ? $request->price : 35,
-                'time' => $request->time,
+                'time' => $request->time !== null ? $request->time : 1,
             ]);
 
             $success['shippingtypes'] = $shippingtype;
@@ -181,7 +181,7 @@ class ShippingtypeController extends BaseController
         }
         $shippingtype->update([
             'price' => $request->price,
-            'time' => ($request->time == null ? 1 :$request->time),
+            'time' => $request->time,
         ]);
         $success['shippingtypes'] = new ShippingtypeResource($shippingtypeCompany);
         $success['status'] = 200;
