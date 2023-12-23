@@ -181,7 +181,7 @@ class ShippingtypeController extends BaseController
         }
         $shippingtype->update([
             'price' => $request->price,
-            'time' => $request->time,
+            'time' => ($request->time == null ? 1 :$request->time),
         ]);
         $success['shippingtypes'] = new ShippingtypeResource($shippingtypeCompany);
         $success['status'] = 200;
