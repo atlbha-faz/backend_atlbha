@@ -80,7 +80,8 @@ class ShippingtypeController extends BaseController
             return $this->sendError("شركة الشحن غير موجودة", "shippingtype is't exists");
         }
 
-        $success['shippingtypes'] = new ShippingtypeResource($shippingtype);
+        $success['shippingtype'] = new ShippingtypeResource($shippingtype);
+        $success['shippingtypes'] = ShippingtypeResource::collection(Shippingtype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الشركة بنجاح', 'shippingtype showed successfully');
