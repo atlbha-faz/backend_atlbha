@@ -81,7 +81,6 @@ class ShippingtypeController extends BaseController
         }
 
         $success['shippingtype'] = new ShippingtypeResource($shippingtype);
-        $success['shippingtypes'] = ShippingtypeResource::collection(Shippingtype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الشركة بنجاح', 'shippingtype showed successfully');
@@ -157,9 +156,9 @@ class ShippingtypeController extends BaseController
                 'time' => $request->time,
             ]);
 
-            $success['shippingtypes'] = $shippingtype;
+            $success['shippingtype'] = $shippingtype;
         }
-
+        $success['shippingtypes'] = ShippingtypeResource::collection(Shippingtype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم تعديل حالة طريقةالشحن بنجاح', 'shipping type updated successfully');
     }
