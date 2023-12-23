@@ -30,7 +30,7 @@ class ShippingtypeResource extends JsonResource
         }
         if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee') {
             $price = null;
-            $time = null;
+            $time = 0;
 
         } elseif (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
             if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null) {
@@ -45,7 +45,7 @@ class ShippingtypeResource extends JsonResource
             }
         } else {
             $price = count($this->stores) == 0 ? 0 : null;
-            $time =  null;
+            $time =  0;
 
         }
 
