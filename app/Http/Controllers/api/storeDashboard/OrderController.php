@@ -30,7 +30,7 @@ class OrderController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $success['new'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'new')->count();
         $success['completed'] = Order::whereHas('items', function ($q) {
@@ -46,12 +46,19 @@ class OrderController extends BaseController
             $q->where('store_id', auth()->user()->store_id);
         })->count();
 
-        $storeID =
+        if ($request->has('page')) {
+            $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
+                $query->select('id');
+            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status'])->paginate(8));
+            $success['page_count'] = $data->lastPage();
 
-        $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
-            $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->get(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status']));
+        } else {
 
+            $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
+                $query->select('id');
+            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->get(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status']));
+
+        }
         $success['orders'] = $data;
         $success['status'] = 200;
 
@@ -118,35 +125,35 @@ class OrderController extends BaseController
                         $url = 'https://dashboard.go-tex.net/gotex-co-test/imile/cancel-order';
                     } elseif ($order->shippingtype->id == 4) {
                         $url = 'https://dashboard.go-tex.net/gotex-co-test/jt/cancel-order';
-                    } 
-                    if (in_array($order->shippingtype->id, [1,3,4])){
-                    $curl = curl_init();
-                    $data = array(
-                        'userId' => env('GOTEX_UserId_KEY'),
-                        'apiKey' => env('GOTEX_API_KEY'),
-                        'orderId' => $shippings->shipping_id,
-                    );
-                    $new_data = json_encode($data);
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => $url,
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => $new_data,
-                        CURLOPT_HTTPHEADER => array(
-                            'Content-Type: application/json',
-                        ),
-                    ));
+                    }
+                    if (in_array($order->shippingtype->id, [1, 3, 4])) {
+                        $curl = curl_init();
+                        $data = array(
+                            'userId' => env('GOTEX_UserId_KEY'),
+                            'apiKey' => env('GOTEX_API_KEY'),
+                            'orderId' => $shippings->shipping_id,
+                        );
+                        $new_data = json_encode($data);
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => $url,
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => $new_data,
+                            CURLOPT_HTTPHEADER => array(
+                                'Content-Type: application/json',
+                            ),
+                        ));
 
-                    $response = curl_exec($curl);
-                    curl_close($curl);
+                        $response = curl_exec($curl);
+                        curl_close($curl);
 
-                    $success['shippingCompany'] = json_decode($response);
-                }
+                        $success['shippingCompany'] = json_decode($response);
+                    }
                     $success['shipping'] = new shippingResource($shippings);
                     return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
@@ -414,7 +421,7 @@ class OrderController extends BaseController
                         $success['shippingCompany'] = $ship->msg->message;
                         return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
-                }else{
+                } else {
                     $order->update([
                         'order_status' => $request->input('status'),
                     ]);
@@ -422,7 +429,7 @@ class OrderController extends BaseController
                         $orderItem->update([
                             'order_status' => $request->input('status'),
                         ]);
-                    } 
+                    }
                     $shipping = Shipping::create([
                         'shipping_id' => $order->order_number,
                         'track_id' => null,
@@ -481,18 +488,17 @@ class OrderController extends BaseController
 
         return $this->sendResponse($success, 'تم إرجاع المدن', ' cities successfully');
     }
-    public function PrintSticker($order,$id)
-    { 
+    public function PrintSticker($order, $id)
+    {
         $order = Order::where('id', $order)->first();
-        if ($order->order_status == "canceled" || $order->order_status == "new"  ) {
+        if ($order->order_status == "canceled" || $order->order_status == "new") {
             return $this->sendError("لا يمكن طباعة الاستيكر", "cant not print Sticker");
         }
         if ($order->shippingtype->id == 1) {
             $url = 'https://dashboard.go-tex.net/gotex-co-test/saee/print-sticker/' . $id;
         } elseif ($order->shippingtype->id == 2) {
-            $url = 'https://dashboard.go-tex.net/gotex-co-test/smsa/print-sticker/'. $id;
-        }
-         elseif ($order->shippingtype->id == 3) {
+            $url = 'https://dashboard.go-tex.net/gotex-co-test/smsa/print-sticker/' . $id;
+        } elseif ($order->shippingtype->id == 3) {
             $url = 'https://dashboard.go-tex.net/gotex-co-test/imile/print-sticker/' . $id;
         } elseif ($order->shippingtype->id == 4) {
             $url = 'https://dashboard.go-tex.net/gotex-co-test/jt/print-sticker/' . $id;

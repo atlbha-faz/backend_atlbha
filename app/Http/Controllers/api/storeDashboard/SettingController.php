@@ -36,8 +36,8 @@ class SettingController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'icon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'icon' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'logo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'description' => 'required|string',
             'store_address' => 'nullable|string',
             'store_name'=> 'nullable|string',
