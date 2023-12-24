@@ -256,7 +256,6 @@ class ProductController extends BaseController
             $input = $request->all();
             $validator = Validator::make($input, [
                 'name' => 'required|string|max:255',
-
                 'description' => 'required|string',
                 'selling_price' => ['required', 'numeric', 'gt:0'],
                 'stock' => ['required', 'numeric', 'gt:0'],
