@@ -73,7 +73,7 @@ class CategoryController extends BaseController
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
             'parent_id' => null,
-           
+
             'store_id' => null,
         ]);
 
@@ -88,7 +88,7 @@ class CategoryController extends BaseController
                     'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
                     'name' => $data['name'],
                     'parent_id' => $category->id,
-                    
+
                     'store_id' => null,
                 ]);
 
@@ -232,7 +232,7 @@ class CategoryController extends BaseController
                     'name' => $data['name'],
                     'number' => $number,
                     'parent_id' => $category_id,
-                   
+
                     'is_deleted' => 0,
 
                 ]);
@@ -290,7 +290,7 @@ class CategoryController extends BaseController
                 $sub->update(['is_deleted' => $sub->id]);
             }
             }
-            } 
+            }
 
             $success['status'] = 200;
 

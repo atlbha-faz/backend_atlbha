@@ -408,7 +408,7 @@ return [
         "ready" => "جاهز للشحن",
         "qty" => "كمية المنتج",
         "pageCategory" => "تصنيف الصفحة",
-        "paymentype_id" => "طريقة الشحن",
+        "paymentype_id" => "طريقة الدفع",
     ],
 
 ];

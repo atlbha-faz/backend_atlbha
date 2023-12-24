@@ -10,6 +10,7 @@ use App\Models\Image;
 use App\Models\Importproduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
+// use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -41,7 +42,9 @@ class ProductController extends BaseController
             ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $imports = importsResource::collection($import);
 
-        $success['products'] = $products->merge($imports);
+        $collection = $products->merge($imports);
+
+        $success['products'] = $collection;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -417,7 +420,7 @@ class ProductController extends BaseController
 
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
             ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
-            
+
         if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
@@ -437,7 +440,7 @@ class ProductController extends BaseController
         }
 
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
-   
+
         if (count($products) > 0) {
             foreach ($products as $product) {
 
@@ -453,7 +456,7 @@ class ProductController extends BaseController
             }
 
         }
-        if(count($products) < 1 && count($importproducts) < 1){
+        if (count($products) < 1 && count($importproducts) < 1) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
 
         }
