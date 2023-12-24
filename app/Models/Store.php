@@ -197,9 +197,11 @@ class Store extends Model
     public function getLogoAttribute($logo)
     {
         if (is_null($logo)) {
-            return asset('assets/media/logo.svg');
+            return null;
         }
+        else{
         return asset('storage/images/storelogo') . '/' . $logo;
+        }
     }
 
     public function setIconAttribute($icon)
@@ -217,9 +219,11 @@ class Store extends Model
     public function getIconAttribute($icon)
     {
         if (is_null($icon)) {
-            return asset('assets/media/logo.svg');
+            return null;
         }
+        else{
         return asset('storage/images/storeicon') . '/' . $icon;
+        }
     }
 
     public function setFileAttribute($file)
