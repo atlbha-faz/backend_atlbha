@@ -199,8 +199,11 @@ class Store extends Model
         if (is_null($logo)) {
             return null;
         } else {
+            if (filter_var($logo, FILTER_VALIDATE_URL)) {
+                return $logo;} else {
+                return asset('storage/images/storelogo') . '/' . $logo;}
 
-            return asset('storage/images/storelogo') . '/' . $logo;}
+        }
 
     }
 
@@ -223,8 +226,12 @@ class Store extends Model
         if (is_null($icon)) {
             return null;
         } else {
+            if (filter_var($icon, FILTER_VALIDATE_URL)) {
+                return $icon;} else {
+                return asset('storage/images/storeicon') . '/' . $icon;
 
-            return asset('storage/images/storeicon') . '/' . $icon;}
+            }
+        }
 
     }
 
@@ -245,6 +252,7 @@ class Store extends Model
         if (is_null($file)) {
             return asset('assets/media/man.png');
         }
+
         return asset('storage/files/store') . '/' . $file;
     }
 
