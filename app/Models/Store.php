@@ -198,15 +198,20 @@ class Store extends Model
     {
         if (is_null($logo)) {
             return null;
-        }
-        else{
-        return asset('storage/images/storelogo') . '/' . $logo;
+        } else {
+            if (is_file($logo)) {
+                return asset('storage/images/storelogo') . '/' . $logo;} else {
+                return $logo;
+
+            }
         }
     }
 
     public function setIconAttribute($icon)
     {
+
         if (!is_null($icon)) {
+
             if (gettype($icon) != 'string') {
                 $i = $icon->store('images/storeicon', 'public');
                 $this->attributes['icon'] = $icon->hashName();
@@ -220,9 +225,12 @@ class Store extends Model
     {
         if (is_null($icon)) {
             return null;
-        }
-        else{
-        return asset('storage/images/storeicon') . '/' . $icon;
+        } else {
+            if (is_file($icon)) {
+                return asset('storage/images/storeicon') . '/' . $icon;} else {
+                return $icon;
+
+            }
         }
     }
 

@@ -34,10 +34,28 @@ class SettingController extends BaseController
 
     public function setting_store_update(Request $request)
     {
+
         $input = $request->all();
+        if (request()->hasFile($key)) {
+            $validator2 = Validator::make($input, [
+                'icon' => ['required|image'],
+                'logo' => ['required|image'],
+            ]);
+        } else {
+            $validator2 = Validator::make($input, [
+                'icon' => ['required|string'],
+                'logo' => ['required|string'],
+            ]);
+
+        }
+if ($validator2->fails()) {
+    # code...
+    return $this->sendError(null, $validator2->errors());
+}
+
         $validator = Validator::make($input, [
-            'icon' => ['required'],
-            'logo' => ['required'],
+            // 'icon' => ['required'],
+            // 'logo' => ['required'],
             'description' => 'required|string',
             'store_address' => 'nullable|string',
             'store_name' => 'nullable|string',
