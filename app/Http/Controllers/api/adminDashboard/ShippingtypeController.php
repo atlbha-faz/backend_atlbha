@@ -81,7 +81,7 @@ class ShippingtypeController extends BaseController
         } else {
             $shippingtype->update(['status' => 'active']);
         }
-        $success['shippingtypes'] = new ShippingtypeResource($shippingtype);
+        $success['shippingtype'] = new ShippingtypeResource($shippingtype);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة شركة الشحن بنجاح', 'shipping type updated successfully');
@@ -110,7 +110,7 @@ class ShippingtypeController extends BaseController
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => json_encode($key),
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
