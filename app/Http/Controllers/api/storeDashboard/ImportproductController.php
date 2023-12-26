@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\Store;
-use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\CategoryResource;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\ImportproductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ImportproductResource;
+use App\Http\Resources\ProductResource;
+use App\Models\Category;
+use App\Models\Importproduct;
+use App\Models\Product;
+use App\Models\Store;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ImportproductController extends BaseController
 {
@@ -19,12 +19,18 @@ class ImportproductController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function etlobhaShow()
+    public function etlobhaShow(Request $request)
     {
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
         // $imports = Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
-        $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'created_at', 'category_id', 'subcategory_id')->get());
+        if ($request->has('page')) {
+            $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'created_at', 'category_id', 'subcategory_id')->paginate(15));
+            $success['page_count'] = $products->lastPage();
+            $success['products'] = $products;
+        } else {
+            $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'created_at', 'category_id', 'subcategory_id')->get());
+        }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -67,20 +73,19 @@ class ImportproductController extends BaseController
             //إستيراد الى متجر اطلبها
             $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
             $importAtlbha = Importproduct::where('product_id', $request->product_id)->where('store_id', $atlbha_id)->first();
-            if($importAtlbha == null){
+            if ($importAtlbha == null) {
                 $importAtlbha = Importproduct::create([
                     'product_id' => $request->product_id,
                     'store_id' => $atlbha_id,
                     'price' => $product->selling_price,
                     'qty' => $product->stock,
-                ]); 
-            }
-            else{
-            $importAtlbha->update([
-                'product_id' => $product->id,
-                'store_id' => $atlbha_id,
-                'qty' => $product->stock,
-            ]);
+                ]);
+            } else {
+                $importAtlbha->update([
+                    'product_id' => $product->id,
+                    'store_id' => $atlbha_id,
+                    'qty' => $product->stock,
+                ]);
             }
 
         }

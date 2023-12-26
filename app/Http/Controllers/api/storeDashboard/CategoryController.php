@@ -19,41 +19,84 @@ class CategoryController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $store = auth()->user()->store_id;
+// pagination
+        if ($request->has('page')) {
+            if (auth()->user()->store->verification_status == "accept") {
 
-        if (auth()->user()->store->verification_status == "accept") {
+                $categories = CategoryResource::collection(Category::with(['store' => function ($query) {
+                    $query->select('id');
+                }])->
+                        where('is_deleted', 0)
+                        ->where('parent_id', null)
+                        ->where(function ($query) {
+                            $query->where('store_id', auth()->user()->store_id)
+                                ->OrWhere('store_id', null);
+                            //     ->has('products')->whereHas('products', function ($query) {
+                            //     $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
+                            // });
+                        })->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->paginate(8));
 
-            $success['categories'] = CategoryResource::collection(Category::with(['store' => function ($query) {
-                $query->select('id');
-            }])->
-                    where('is_deleted', 0)
-                    ->where('parent_id', null)
-                    ->where(function ($query) {
-                        $query->where('store_id', auth()->user()->store_id)
-                            ->OrWhere('store_id', null);
-                        //     ->has('products')->whereHas('products', function ($query) {
-                        //     $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
-                        // });
-                    })->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->get());
+                // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
 
-            // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
-            $success['status'] = 200;
+                $success['page_count'] = $categories->lastPage();
+                $success['categories'] = $categories;
 
-            return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+            } else {
+                $categories = CategoryResource::collection(Category::with(['store' => function ($query) {
+                    $query->select('id');
+                }])->
+                        where('is_deleted', 0)
+                        ->where('parent_id', null)
+                        ->where('store_id', auth()->user()->store_id)
+                        ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->paginate(8));
+
+                $success['page_count'] = $categories->lastPage();
+                $success['categories'] = $categories;
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+
+            }
+
         } else {
-            $success['categories'] = CategoryResource::collection(Category::with(['store' => function ($query) {
-                $query->select('id');
-            }])->
-                    where('is_deleted', 0)
-                    ->where('parent_id', null)
-                    ->where('store_id', auth()->user()->store_id)
-                    ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->get());
-            $success['status'] = 200;
+            if (auth()->user()->store->verification_status == "accept") {
 
-            return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+                $success['categories'] = CategoryResource::collection(Category::with(['store' => function ($query) {
+                    $query->select('id');
+                }])->
+                        where('is_deleted', 0)
+                        ->where('parent_id', null)
+                        ->where(function ($query) {
+                            $query->where('store_id', auth()->user()->store_id)
+                                ->OrWhere('store_id', null);
+                            //     ->has('products')->whereHas('products', function ($query) {
+                            //     $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
+                            // });
+                        })->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->get());
 
+                // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+            } else {
+                $success['categories'] = CategoryResource::collection(Category::with(['store' => function ($query) {
+                    $query->select('id');
+                }])->
+                        where('is_deleted', 0)
+                        ->where('parent_id', null)
+                        ->where('store_id', auth()->user()->store_id)
+                        ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->get());
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+
+            }
         }
     }
 

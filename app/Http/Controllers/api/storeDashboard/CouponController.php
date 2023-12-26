@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use Carbon\Carbon;
-use App\Models\Coupon;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Http\Resources\CouponResource;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CouponResource;
+use App\Models\Coupon;
+use App\Models\Importproduct;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CouponController extends BaseController
 {
@@ -22,9 +22,16 @@ class CouponController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['coupons'] = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        if ($request->has('page')) {
+
+            $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(8));
+            $success['page_count'] = $coupons->lastPage();
+            $success['coupons'] = $coupons;
+        } else {
+            $success['coupons'] = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الكوبونات بنجاح', 'coupons return successfully');
@@ -51,9 +58,9 @@ class CouponController extends BaseController
         // dd($request->free_shipping);
         $input = $request->all();
         $validator = Validator::make($input, [
-            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/','max:255', Rule::unique('coupons')->where(function ($query) {
-                        return $query->where('store_id', auth()->user()->store_id)->where('is_deleted',0);
-                    })],
+            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/', 'max:255', Rule::unique('coupons')->where(function ($query) {
+                return $query->where('store_id', auth()->user()->store_id)->where('is_deleted', 0);
+            })],
             'discount_type' => 'required|in:fixed,percent',
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
@@ -63,8 +70,8 @@ class CouponController extends BaseController
             'user_redemptions' => ['required', 'numeric', 'gt:0'],
             'free_shipping' => ['required', 'in:0,1'],
             'exception_discount_product' => ['nullable', 'in:0,1'],
-            'coupon_apply' => [ 'required','in:all,selected_product'],
-            'select_product_id'=>'required_if:coupon_apply,selected_product',
+            'coupon_apply' => ['required', 'in:all,selected_product'],
+            'select_product_id' => 'required_if:coupon_apply,selected_product',
             // 'select_category_id'=>'required_if:coupon_apply,selected_category',
             // 'select_payment_id'=>'required_if:coupon_apply,selected_payment',
             'status' => 'nullable|in:active,not_active',
@@ -91,18 +98,18 @@ class CouponController extends BaseController
         ]);
 
         switch ($request->coupon_apply) {
-            case ('selected_product'):{
-                // $coupon->products()->attach($request->select_product_id);
-                foreach($request->select_product_id as $product){
-                   $import= Importproduct::where('product_id',$product)->where('store_id',auth()->user()->store_id)->first();
-                   if( $import != null){
-                    $coupon->products()->attach( $product,["import" => 1]);
-                   }else{
-                    $coupon->products()->attach( $product,["import" => 0]);
+            case ('selected_product'): {
+                    // $coupon->products()->attach($request->select_product_id);
+                    foreach ($request->select_product_id as $product) {
+                        $import = Importproduct::where('product_id', $product)->where('store_id', auth()->user()->store_id)->first();
+                        if ($import != null) {
+                            $coupon->products()->attach($product, ["import" => 1]);
+                        } else {
+                            $coupon->products()->attach($product, ["import" => 0]);
 
-                   }
+                        }
+                    }
                 }
-            }
                 break;
             case ('selected_category'):
                 $coupon->categories()->attach($request->select_category_id);
@@ -190,9 +197,9 @@ class CouponController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
 
-            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/','max:255', Rule::unique('coupons')->where(function ($query) use ($coupon) {
-                        return $query->where('store_id', auth()->user()->store_id)->where('is_deleted',0)->where('id', '!=', $coupon->id);
-                    })],
+            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/', 'max:255', Rule::unique('coupons')->where(function ($query) use ($coupon) {
+                return $query->where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->where('id', '!=', $coupon->id);
+            })],
             'discount_type' => 'required|in:fixed,percent',
             'total_price' => ['required', 'numeric', 'gt:0'],
             'discount' => ['required', 'numeric', 'gt:0'],
@@ -203,9 +210,9 @@ class CouponController extends BaseController
             'total_redemptions' => ['required', 'numeric', 'gt:0'],
             'user_redemptions' => ['required', 'numeric', 'gt:0'],
             'coupon_apply' => ['required ', 'in:all,selected_product,selected_category,selected_payment'],
-            'select_product_id'=>'required_if:coupon_apply,selected_product',
-            'select_category_id'=>'required_if:coupon_apply,selected_category',
-            'select_payment_id'=>'required_if:coupon_apply,selected_payment',
+            'select_product_id' => 'required_if:coupon_apply,selected_product',
+            'select_category_id' => 'required_if:coupon_apply,selected_category',
+            'select_payment_id' => 'required_if:coupon_apply,selected_payment',
         ]);
         if ($validator->fails()) {
             # code...
@@ -229,17 +236,17 @@ class CouponController extends BaseController
         ]);
 
         switch ($request->coupon_apply) {
-            case ('selected_product'):{
-                foreach($request->select_product_id as $product){
-                   $import= Importproduct::where('product_id',$product)->where('store_id',auth()->user()->store_id)->first();
-                   if( $import != null){
-                    $coupon->products()->sync( $product,["import" => 1]);
-                   }else{
-                    $coupon->products()->sync( $product,["import" => 0]);
+            case ('selected_product'): {
+                    foreach ($request->select_product_id as $product) {
+                        $import = Importproduct::where('product_id', $product)->where('store_id', auth()->user()->store_id)->first();
+                        if ($import != null) {
+                            $coupon->products()->sync($product, ["import" => 1]);
+                        } else {
+                            $coupon->products()->sync($product, ["import" => 0]);
 
-                   }
+                        }
+                    }
                 }
-            }
                 break;
             case ('selected_category'):
                 $coupon->categories()->sync($request->select_category_id);
@@ -247,7 +254,6 @@ class CouponController extends BaseController
             case ('selected_payment'):
                 $coupon->paymenttypes()->sync($request->select_payment_id);
                 break;
-
 
         }
 
