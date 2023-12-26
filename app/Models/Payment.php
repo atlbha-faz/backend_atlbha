@@ -11,7 +11,7 @@ class Payment extends Model
     protected $fillable = ['paymenDate','paymentType','paymentTransectionID','paymentCardID','orderID'];
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'orderID', 'id');
     }
 
 }
