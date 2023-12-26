@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\CourseResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+
 class CourseController extends BaseController
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -18,13 +18,18 @@ class CourseController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->has('page')) {
+            $courses = CourseResource::collection(Course::where('is_deleted', 0)->orderByDesc('created_at')->paginate(8));
+            $success['page_count'] = $courses->lastPage();
+            $success['courses'] = $courses;
+        } else {
+            $success['courses'] = CourseResource::collection(Course::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        }
+        $success['status'] = 200;
 
-       $success['courses']=CourseResource::collection(Course::where('is_deleted',0)->orderByDesc('created_at')->get());
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم ارجاع الكورسات المشروحة بنجاح','courses return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الكورسات المشروحة بنجاح', 'courses return successfully');
     }
 
     /**
@@ -44,7 +49,6 @@ class CourseController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-
     /**
      * Display the specified resource.
      *
@@ -53,16 +57,15 @@ class CourseController extends BaseController
      */
     public function show($course)
     {
-          $course = Course::query()->find($course);
-         if (is_null($course ) || $course->is_deleted != 0){
-         return $this->sendError("الكورس غير موجودة","course is't exists");
-         }
+        $course = Course::query()->find($course);
+        if (is_null($course) || $course->is_deleted != 0) {
+            return $this->sendError("الكورس غير موجودة", "course is't exists");
+        }
 
+        $success['course'] = new CourseResource($course);
+        $success['status'] = 200;
 
-        $success['course']=New CourseResource($course);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم عرض بنجاح','course showed successfully');
+        return $this->sendResponse($success, 'تم عرض بنجاح', 'course showed successfully');
     }
 
     /**
@@ -71,6 +74,5 @@ class CourseController extends BaseController
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-
 
 }

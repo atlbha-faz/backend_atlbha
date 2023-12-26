@@ -4,13 +4,13 @@ namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\TechnicalsupportResource;
-use App\Models\TechnicalSupport;
-use Illuminate\Support\Facades\Mail;
-use App\Models\Store;
 use App\Mail\SendMail2;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Store;
+use App\Models\TechnicalSupport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class TechnicalSupportController extends BaseController
 {
@@ -23,9 +23,16 @@ class TechnicalSupportController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['Technicalsupports'] = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        if ($request->has('page')) {
+
+            $Technicalsupports = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
+            $success['page_count'] = $Technicalsupports->lastPage();
+            $success['Technicalsupports'] = $Technicalsupports;
+        } else {
+            $success['Technicalsupports'] = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'Technical Support return successfully');
@@ -213,47 +220,44 @@ class TechnicalSupportController extends BaseController
         }
 
     }
-public function replay(Request $request)
+    public function replay(Request $request)
     {
-       $input = $request->all();
-        $validator =  Validator::make($input ,[
+        $input = $request->all();
+        $validator = Validator::make($input, [
             // 'subject'=>'required|string|max:255',
-            'replay_text'=>'required|string|max:255',
-            'technical_support_id'=>'required|exists:technical_supports,id',
+            'replay_text' => 'required|string|max:255',
+            'technical_support_id' => 'required|exists:technical_supports,id',
 
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
 
-
-       /* $replay = Replaycomment::create([
-            'comment_text' => $request->comment_text,
-            'comment_id' => $request->comment_id,
-            'user_id' => auth()->user()->id,
+        /* $replay = Replaycomment::create([
+        'comment_text' => $request->comment_text,
+        'comment_id' => $request->comment_id,
+        'user_id' => auth()->user()->id,
         ]);*/
-        $store=Store::where('id', auth()->user()->store_id)->value('store_name');
+        $store = Store::where('id', auth()->user()->store_id)->value('store_name');
         //dd(Store::where('id', auth()->user()->store_id)->get());
-        $data= [
-            'subject' =>"رد على رسالة تواصل معنا",
+        $data = [
+            'subject' => "رد على رسالة تواصل معنا",
             'message' => $request->replay_text,
-            'store_id' =>    $store,
-            'store_email' =>    Store::where('id', auth()->user()->store_id)->first()->store_email,
+            'store_id' => $store,
+            'store_email' => Store::where('id', auth()->user()->store_id)->first()->store_email,
         ];
-        $replaytechnicalsupport =technicalSupport::where('id',$request->technical_support_id)->where('is_deleted',0)->first();
-          if($replaytechnicalsupport->user != null)
-          {
+        $replaytechnicalsupport = technicalSupport::where('id', $request->technical_support_id)->where('is_deleted', 0)->first();
+        if ($replaytechnicalsupport->user != null) {
             // Notification::send($replaycomment->user , new emailNotification($data));
             try {
                 Mail::to($replaytechnicalsupport->user->email)->send(new SendMail2($data));
             } catch (Exception $e) {
                 return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
             }
-          }
+        }
         // $success['replays']=New ReplaycommentResource($replay);
-        $success['status']= 200;
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم اضافة رد بنجاح',' Added successfully');
+        return $this->sendResponse($success, 'تم اضافة رد بنجاح', ' Added successfully');
     }
 }

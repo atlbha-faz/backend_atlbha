@@ -53,13 +53,18 @@ class AuthCustomerController extends BaseController
         } else {
             $user = User::where('phonenumber', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->first();
             if ($user->status == 'not_active') {
-                $user->status ='active';
-            } 
-                $user->generateVerifyCode();
-                $request->code = $user->verify_code;
-                $request->phonenumber = $user->phonenumber;
-                $this->sendSms($request); // send and return its response
-            
+                $user->status = 'active';
+            }
+            $user->generateVerifyCode();
+            $request->code = $user->verify_code;
+            $request->phonenumber = $user->phonenumber;
+            // $this->sendSms($request); // send and return its response
+            $data = array(
+                'code' => $request->code,
+            );
+
+            Mail::to($user->email)->send(new SendCode($data));
+
         }
 
         $success['user'] = new UserResource($user);
@@ -108,17 +113,17 @@ class AuthCustomerController extends BaseController
         } else {
             $user = User::where('email', $request->email)->where('user_type', 'customer')->where('is_deleted', 0)->first();
             if ($user->status == 'not_active') {
-                $user->status ='active';
-            } 
-                $user->generateVerifyCode();
-                $request->code = $user->verify_code;
-                $data = array(
-                    'code' => $request->code,
-                );
+                $user->status = 'active';
+            }
+            $user->generateVerifyCode();
+            $request->code = $user->verify_code;
+            $data = array(
+                'code' => $request->code,
+            );
 
-                //  $request->phonenumber = $user->phonenumber;
-                Mail::to($user->email)->send(new SendCode($data));
-            
+            //  $request->phonenumber = $user->phonenumber;
+            Mail::to($user->email)->send(new SendCode($data));
+
         }
 
         $success['user'] = new UserResource($user);

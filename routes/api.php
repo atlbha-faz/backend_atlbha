@@ -34,7 +34,6 @@ Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorCon
 Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
 
-
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
@@ -486,6 +485,9 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('productchangeSatusall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeSatusall'])->name('store.products.changestatusall');
         Route::get('productdeleteall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteall'])->name('store.products.deleteall');
         Route::get('deleteItems', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteItems'])->name('store.products.deleteItems');
+
+        Route::get('products', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'products'])->name('store.products.products');
+        Route::get('importedProducts', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importedProducts']);
         Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeStatus'])->name('store.products.activate');
         Route::get('deleteImport/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteImport'])->name('store.products.deleteimport');
         Route::post('duplicateProduct/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'duplicateProduct'])->name('store.products.duplicateproduct');
