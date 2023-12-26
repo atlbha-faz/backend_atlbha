@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ExplainVideoResource;
 use App\Models\ExplainVideos;
 use Illuminate\Http\Request;
-use App\Http\Resources\ExplainVideoResource;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+
 class ExplainVideosController extends BaseController
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -18,21 +18,26 @@ class ExplainVideosController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-       $success['explainvideos']=ExplainVideoResource::collection(ExplainVideos::where('is_deleted',0)->orderByDesc('created_at')->get());
-        $success['status']= 200;
+        if ($request->has('page')) {
 
-         return $this->sendResponse($success,'تم ارجاع الفيديوهات المشروحة بنجاح','ExplainVideos return successfully');
+            $explainvideos = ExplainVideoResource::collection(ExplainVideos::where('is_deleted', 0)->orderByDesc('created_at')->paginate(8));
+            $success['page_count'] = $explainvideos->lastPage();
+            $success['explainvideos'] = $explainvideos;
+        } else {
+            $success['explainvideos'] = ExplainVideoResource::collection(ExplainVideos::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        }
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الفيديوهات المشروحة بنجاح', 'ExplainVideos return successfully');
     }
-
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-
 
     /**
      * Display the specified resource.
@@ -42,22 +47,15 @@ class ExplainVideosController extends BaseController
      */
     public function show($explainVideos)
     {
-          $explainVideos = ExplainVideos::query()->find($explainVideos);
-         if (is_null($explainVideos) || $explainVideos->is_deleted != 0){
-         return $this->sendError("الشرح غير موجودة","explainvideo is't exists");
-         }
+        $explainVideos = ExplainVideos::query()->find($explainVideos);
+        if (is_null($explainVideos) || $explainVideos->is_deleted != 0) {
+            return $this->sendError("الشرح غير موجودة", "explainvideo is't exists");
+        }
 
+        $success['explainvideos'] = new ExplainVideoResource($explainVideos);
+        $success['status'] = 200;
 
-        $success['explainvideos']=New ExplainVideoResource($explainVideos);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم  عرض بنجاح','explainvideo showed successfully');
+        return $this->sendResponse($success, 'تم  عرض بنجاح', 'explainvideo showed successfully');
     }
-
-
-
-
-
-
 
 }

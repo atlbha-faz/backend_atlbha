@@ -22,14 +22,29 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if ($storeAdmain != null) {
-            $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-        } else {
-            $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        if ($request->has('page')) {
+            if ($storeAdmain != null) {
+                $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
+                $success['page_count'] = $users->lastPage();
+                $success['users'] = $users;
+            } else {
+                $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
+                $success['page_count'] = $users->lastPage();
+                $success['users'] = $users;
 
+            }
+
+        } else {
+
+            if ($storeAdmain != null) {
+                $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+            } else {
+                $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+
+            }
         }
         $success['status'] = 200;
 
