@@ -59,7 +59,7 @@ class Order extends Model
     }
     public function payment()
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasOne(Payment::class,'orderID', 'id');
     }
     public function paymentype()
     {

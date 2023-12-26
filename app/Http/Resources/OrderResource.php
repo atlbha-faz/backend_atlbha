@@ -82,7 +82,7 @@ class OrderResource extends JsonResource
 
             'shipping' => $this->shipping != null ? new shippingResource($this->shipping) : null,
 
-            // 'paymenttypes' => $this->payment != null ? new PaymentResource($this->payment) : null,
+            'paymenttypes' => $this->payment != null ? new PaymentResource($this->payment) : null,
             'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
             'trackingLink' => $track,
             'cod' => $this->cod,
