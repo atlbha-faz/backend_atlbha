@@ -49,7 +49,7 @@ class OrderController extends BaseController
         if ($request->has('page')) {
             $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
                 $query->select('id');
-            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status'])->paginate(8));
+            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status','created_at'])->paginate(8));
             $success['page_count'] = $data->lastPage();
 
         } else {
