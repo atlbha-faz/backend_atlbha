@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\ValueResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OptionResource extends JsonResource
+class AttributeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,12 +15,11 @@ class OptionResource extends JsonResource
      */
     public function toArray($request)
     {
-   
-             return [
+        return [
+            'id' =>$this->id,
             'name' => $this->name,
-            'price' => $this->price,
-            'quantity' => $this->quantity,
-         
+            'type' => $this->type,
+            'values'=>ValueResource::collection(json_decode( $this->pivot->value))
         ];
     }
 }

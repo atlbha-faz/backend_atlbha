@@ -77,7 +77,7 @@ class ProductResource extends JsonResource
             'store' => new StoreResource($this->store),
             'images' => ImageResource::collection($this->image->where('is_deleted', 0)),
             'options' => OptionResource::collection($this->option),
-
+                'attributes' =>AttributeResource::collection($this->attributes),
             'is_import' => false,
 
         ];
