@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
             VideoSeeder::class,
             ExplainvideoSeeder::class,
             ClientSeeder::class,
-            OptiontSeeder::class,
+            // OptiontSeeder::class,
             CommentSeeder::class,
             ReplayCommentSeeder::class,
             HomepageSeeder::class,
@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
             CartSeeder::class,
             CartDetailSeeder::class,
 
-            NotificationSeeder::class,
+            // NotificationSeeder::class,
 
             TechnicalSupportSeeder::class,
             // PermissionTableSeeder::class,

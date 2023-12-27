@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ProductResource;
-use App\Models\Image;
-use App\Models\Importproduct;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Store;
 use Carbon\Carbon;
+use App\Models\Image;
+use App\Models\Order;
+use App\Models\Store;
+use App\Models\Value;
+use App\Models\Option;
+use App\Models\Product;
+use App\Models\Attribute;
+use App\Models\Attribute_product;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class EtlobhaController extends BaseController
 {
@@ -202,7 +206,53 @@ class EtlobhaController extends BaseController
         //         $options[] = $option;
         //     }
         // }
+           
+        if (!is_null($request->attribute)) {
+            foreach ($request->attribute as $attribute) {
+             
+                    $option = new Attribute([
+                        'name'=>$attribute['title'],
+                        'type'=>$attribute['type']
+                    ]);
+                    $option->save();
+             
+                foreach ($attribute['value'] as $attributeValue) {
+               
+                $value = new Value([
+                    'attribute_id'=> $option->id,
+                    'value'=> $attributeValue,
+                ]);
+                $value->save();
+                   
+                $values[] = $value;
+                $valuesid[]=$value->id;
+            }
 
+            $attruibtevalues=Value::where('attribute_id', $option->id)->whereIn('id',$valuesid)->get();
+             $product->attributes()->attach($option->id,['value'=>json_encode( $attruibtevalues)]);
+        }
+        }
+        
+            if (!is_null($request->data)) {
+         
+            foreach ($request->data as $data) {
+                $data['name']=[
+                    "ar"=>implode(',', $data['name'])   
+                ];
+              
+                $option = new Option([
+                    'price' => $data['price'],
+                    'quantity' => $data['quantity'],
+                    'name' =>  $data['name'],
+                    'product_id' => $productid,
+
+                ]);
+
+                $option->save();
+                $options[] = $option;
+               
+                     }
+        }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
@@ -372,6 +422,63 @@ class EtlobhaController extends BaseController
                 Image::create($request->all());
                 }
             }
+        }
+        $preAttributes=Attribute_product::where('product_id',$productid)->get();
+        foreach(  $preAttributes as   $preAttribute)
+        {
+            $preAttribute->delete();
+        }
+        
+        $preOptions=Option::where('product_id',$productid)->get();
+        foreach(   $preOptions as    $preOption)
+        {
+        $preOption->delete();
+        }
+        if (!is_null($request->attribute)) {
+            foreach ($request->attribute as $attribute) {
+             
+                    $option = new Attribute([
+                        'name'=>$attribute['title'],
+                        'type'=>$attribute['type']
+                    ]);
+                    $option->save();
+             
+                foreach ($attribute['value'] as $attributeValue) {
+               
+                $value = new Value([
+                    'attribute_id'=> $option->id,
+                    'value'=> $attributeValue,
+                ]);
+                $value->save();
+                   
+                $values[] = $value;
+                $valuesid[]=$value->id;
+            }
+
+            $attruibtevalues=Value::where('attribute_id', $option->id)->whereIn('id',$valuesid)->get();
+             $product->attributes()->attach($option->id,['value'=>json_encode( $attruibtevalues)]);
+        }
+        }
+        
+            if (!is_null($request->data)) {
+         
+            foreach ($request->data as $data) {
+                $data['name']=[
+                    "ar"=>implode(',', $data['name'])   
+                ];
+              
+                $option = new Option([
+                    'price' => $data['price'],
+                    'quantity' => $data['quantity'],
+                    'name' =>  $data['name'],
+                    'product_id' => $productid,
+
+                ]);
+
+                $option->save();
+                $options[] = $option;
+               
+                     }
         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;

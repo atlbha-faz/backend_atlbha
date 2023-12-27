@@ -84,6 +84,16 @@ class Product extends Model
         return $this->hasMany(Option::class);
     }
 
+    
+    public function attributes()
+    {
+       return $this->belongsToMany(
+        Attribute::class,
+            'attributes_products',
+            'product_id',
+            'attribute_id',
+            )->withPivot("value");
+       }
     // public function sluggable(): array
     // {
     //     return [
@@ -92,14 +102,14 @@ class Product extends Model
     //         ]
     //     ];
     // }
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name'] = $value;
-        $slug = Str::slug($value);
-        $count = Product::whereRaw("slug REGEXP '^{$slug}(-[0-9]*)?$'")->count();
-        $this->attributes['slug'] = ($count > 0) ? "{$slug}-{$count}" : $slug;
+    // public function setNameAttribute($value)
+    // {
+    //     $this->attributes['name'] = $value;
+    //     $slug = Str::slug($value);
+    //     $count = Product::whereRaw("slug REGEXP '^{$slug}(-[0-9]*)?$'")->count();
+    //     $this->attributes['slug'] = ($count > 0) ? "{$slug}-{$count}" : $slug;
 
-    }
+    // }
 
     public function offers()
     {
