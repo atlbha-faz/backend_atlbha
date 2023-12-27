@@ -159,6 +159,9 @@ class OrderController extends BaseController
 
                 }
             }
+            $success['order'] = new OrderResource($order);
+            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+
         } else {
             if ($request->status === "ready") {
                 $orderAddress = OrderOrderAddress::where('order_id', $order->id)->where('type', 'shipping')->value('order_address_id');
