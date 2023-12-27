@@ -57,6 +57,10 @@ class Order extends Model
     {
         return $this->hasOne(Shipping::class);
     }
+    public function payment()
+    {
+        return $this->hasOne(Payment::class,'orderID', 'id');
+    }
     public function paymentype()
     {
         return $this->belongsTo(Paymenttype::class, 'paymentype_id', 'id');
