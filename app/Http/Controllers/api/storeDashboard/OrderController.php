@@ -154,7 +154,9 @@ class OrderController extends BaseController
 
                         $success['shippingCompany'] = json_decode($response);
                     }
+                    
                     $success['shipping'] = new shippingResource($shippings);
+                    $success['orders'] = new OrderResource($order);
                     return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
                 }
