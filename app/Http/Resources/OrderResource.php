@@ -86,7 +86,7 @@ class OrderResource extends JsonResource
             'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
             'trackingLink' => $track,
             'cod' => $this->cod,
-            'codprice' => $this->cod = 1 ? 10 : 0,
+            'codprice' => $this->cod == 1 ? 10 : 0,
             'description' => $this->description,
             'store' => $store,
         ];
