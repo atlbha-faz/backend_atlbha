@@ -121,7 +121,7 @@ SkipsOnFailure
         return [
             '*.name' => 'required|string',
             '*.description' => 'required|string',
-            '*.purchasing_price' => ['nullable', 'numeric', 'gt:0'],
+            '*.purchasing_price' => ['required', 'numeric', 'gt:0'],
             '*.selling_price' => ['required', 'numeric'],
             '*.short_description' => 'required|string|max:100',
             // '*.quantity'=>['required','numeric','gt:0'],
