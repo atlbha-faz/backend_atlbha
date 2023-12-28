@@ -159,7 +159,7 @@ class OrderController extends BaseController
 
                 }
             }
-            $success['order'] = new OrderResource($order);
+            $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
         } else {

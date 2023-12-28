@@ -179,6 +179,7 @@ class ProductController extends BaseController
             'subcategory_id' => $subcategory,
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
+            'amount'=>$request->amount,
         ]);
         $productid = $product->id;
         if ($request->hasFile("images")) {
@@ -409,6 +410,7 @@ class ProductController extends BaseController
                 'google_analytics' => $request->google_analytics,
                 'category_id' => $request->input('category_id'),
                 'subcategory_id' => $subcategory,
+                'amount'=>$request->amount,
                 // 'store_id' => $request->input('store_id'),
 
             ]);
