@@ -131,7 +131,7 @@ class StoreController extends BaseController
         $userid = $user->id;
 
        $request->package_id = 2;
-      $request->periodtype = "6months";
+      $request->periodtype = "3months";
 
         $store = Store::create([
             'store_name' => $request->store_name,
@@ -191,7 +191,7 @@ class StoreController extends BaseController
                 'start_at' => $store->created_at,
                 'end_at' => $end_at]);
         } else {
-            $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
+            $end_at = date('Y-m-d', strtotime("+ 3 months", strtotime($store->created_at)));
             $store->update([
                 'start_at' => $store->created_at,
                 'end_at' => $end_at]);

@@ -32,7 +32,7 @@ class AuthController extends BaseController
 
         } else {
             $request->package_id = 2;
-          $request->periodtype ="6months";
+          $request->periodtype ="3months";
 
             if ($request->user_type == 'store') {
 
@@ -173,7 +173,7 @@ class AuthController extends BaseController
                         'end_at' => $end_at]);
 
                 } else {
-                    $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
+                    $end_at = date('Y-m-d', strtotime("+ 3 months", strtotime($store->created_at)));
                     $store->update([
                         'start_at' => $store->created_at,
                         'end_at' => $end_at]);
