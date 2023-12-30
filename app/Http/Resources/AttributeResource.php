@@ -18,7 +18,7 @@ class AttributeResource extends JsonResource
         return [
             'id' =>$this->id,
             'name' => $this->name,
-            'type' => $this->type,
+            // 'type' => $this->type,
             'values'=>ValueResource::collection(json_decode( $this->pivot->value))
         ];
     }
