@@ -149,8 +149,8 @@ class ProductController extends BaseController
 
             ],
             'amount' => 'nullable|in:0,1',
-            'data.*.price' => 'array|required_if:amount,1',
-            'data.*.quantity' => 'array|required_if:amount,1',
+            'data.*.price' => 'numeric|required_if:amount,1',
+            'data.*.quantity' => 'numeric|required_if:amount,1',
             // 'store_id'=>'required|exists:stores,id',
         ]);
         if ($validator->fails()) {
@@ -399,8 +399,8 @@ class ProductController extends BaseController
 
                 ],
                 'amount' => 'nullable|in:0,1',
-                'data.*.price' => 'array|required_if:amount,1',
-                'data.*.quantity' => 'array|required_if:amount,1',
+                'data.*.price' => 'numeric|required_if:amount,1',
+                'data.*.quantity' => 'numeric|required_if:amount,1',
             ]);
 
             if ($validator->fails()) {
