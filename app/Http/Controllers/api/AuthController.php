@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api;
 use App\Events\VerificationEvent;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\UserResource;
-use App\Mail\SendCode;
 use App\Models\Homepage;
 use App\Models\Marketer;
 use App\Models\Setting;
@@ -15,7 +14,6 @@ use App\Models\User;
 use App\Notifications\verificationNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Notification;
@@ -32,7 +30,7 @@ class AuthController extends BaseController
 
         } else {
             $request->package_id = 2;
-          $request->periodtype ="3months";
+            $request->periodtype = "3months";
 
             if ($request->user_type == 'store') {
 
@@ -60,6 +58,8 @@ class AuthController extends BaseController
                     // 'periodtype' => 'required|in:6months,year',
                     'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                         return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
+                    }), Rule::unique('stores', 'store_email')->where(function ($query) {
+                        return $query->where('is_deleted', 0);
                     })],
                     'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
                         return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
@@ -377,7 +377,7 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                 $this->sendSms($request); // send and return its response
+                $this->sendSms($request); // send and return its response
                 // $data = array(
                 //     'code' => $user->verify_code,
                 // );
