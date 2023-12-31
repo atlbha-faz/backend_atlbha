@@ -333,7 +333,10 @@ class IndexStoreController extends BaseController
             $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
             $category = array();
             foreach ($prodtcts as $prodtct) {
-                $category[] = $prodtct->category;
+                $category[] =  Category::with(['subcategory'=>function ($query) use($prodtct) {
+                    $query->where('id',$prodtct->subcategory_id);
+                }])->where('is_deleted', 0)->where('id',$prodtct->category_id
+                )->where('status', 'active')->first();
             }
             // $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->with('products')->has('products')->get()->merge($category));
 
