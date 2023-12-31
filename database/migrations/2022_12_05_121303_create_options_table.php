@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('options', function (Blueprint $table) {
             $table->id();
             $table->json('name');
-            $table->double('price')->default(0);
-            $table->integer('quantity')->default(0);
+            $table->double('price')->nullable();
+            $table->integer('quantity')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
            $table->enum('status',['active','not_active'])->default('active');

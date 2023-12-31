@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->integer('qty')->nullable();
             $table->double('price')->nullable();
-            $table->string('option')->nullable();
+            $table->longText('options')->nullable();
             $table->timestamps();
         });
     }

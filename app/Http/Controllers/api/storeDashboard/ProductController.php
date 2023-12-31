@@ -217,7 +217,7 @@ class ProductController extends BaseController
              
                     $option = new Attribute([
                         'name'=>$attribute['title'],
-                        'type'=>$attribute['type']
+                        // 'type'=>$attribute['type']
                     ]);
                     $option->save();
              
@@ -239,7 +239,7 @@ class ProductController extends BaseController
         }
         
             if (!is_null($request->data)) {
-         
+         if($product->amount == 1 ){
             foreach ($request->data as $data) {
                 $data['name']=[
                     "ar"=>implode(',', $data['name'])   
@@ -257,6 +257,7 @@ class ProductController extends BaseController
                 $options[] = $option;
                
                      }
+                    }
         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
@@ -486,7 +487,7 @@ class ProductController extends BaseController
                  
                         $option = new Attribute([
                             'name'=>$attribute['title'],
-                            'type'=>$attribute['type']
+                            // 'type'=>$attribute['type']
                         ]);
                         $option->save();
                  
@@ -508,7 +509,7 @@ class ProductController extends BaseController
             }
             
                 if (!is_null($request->data)) {
-             
+                    if($product->amount == 1 ){
                 foreach ($request->data as $data) {
                     $data['name']=[
                         "ar"=>implode(',', $data['name'])   
@@ -526,6 +527,7 @@ class ProductController extends BaseController
                     $options[] = $option;
                    
                          }
+                        }
             }
             $success['products'] = new ProductResource($product);
             $success['status'] = 200;

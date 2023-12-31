@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Option;
+use App\Models\Attribute;
+use App\Models\Attribute_product;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderItemsResource extends JsonResource
@@ -14,14 +17,18 @@ class OrderItemsResource extends JsonResource
      */
     public function toArray($request)
     {
+        $q = Option::where('id',$this->option_id)->where('product_id',$this->product->id)->first();
+        $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
+        $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
+        $array = explode(',', $q->name['ar']);
+        $options = array_combine($array,$attribute);
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
             'quantity' => $this->quantity,
             'price' => $this->price,
             'sum' => $this->subtotal($this->id),
-        //   'shipping' => $this->order->shipping != null ? new  shippingResource ($this->order->shipping) : null,
-
+            'options' => $this->option_id !== null ? $options :null,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
 

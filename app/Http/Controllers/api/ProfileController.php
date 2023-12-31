@@ -49,7 +49,7 @@ class ProfileController extends BaseController
             'phonenumber' => $request->input('phonenumber'),
             'image' => $request->image,
         ]);
-        if (!is_null($request->password)) {
+        if (!is_null($request->password )) {
             $user->update([
                 'password' => $request->input('password'),
             ]);
