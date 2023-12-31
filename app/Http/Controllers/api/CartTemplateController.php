@@ -198,7 +198,7 @@ class CartTemplateController extends BaseController
                 $options = array();
 
                 foreach ($request->data as $data) {
-                    if (!is_null($data['option_id'])) {
+                    if (isset($data['option_id']) && !is_null($data['option_id'])) {
                     $q = Option::where('id',$data['option_id'])->where('product_id', $data['id'])->first();
                     if (is_null($q->quantity)) {
                         $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
@@ -210,6 +210,7 @@ class CartTemplateController extends BaseController
                         }
                    }
                    else{
+                    $data['option_id']=null;
                     $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
                    }
                     if ($product_quantity == null) {
