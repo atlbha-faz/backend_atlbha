@@ -4,9 +4,11 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
+use App\Http\Resources\OptionResource;
 use App\Models\Cart;
 use App\Models\CartDetail;
 use App\Models\Importproduct;
+use App\Models\Option;
 use App\Models\Package_store;
 use App\Models\Product;
 use App\Models\Store;
@@ -171,6 +173,8 @@ class CartTemplateController extends BaseController
                 ],
                 'data.*.price' => 'required|numeric',
                 'data.*.qty' => 'required|numeric',
+                'data.*.option_id' => 'nullable|exists:options,id',
+            
             ]);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
@@ -180,6 +184,7 @@ class CartTemplateController extends BaseController
             $store_id = $store->id;
 
             if (!is_null($request->data)) {
+
                 $cart = Cart::updateOrCreate([
                     'user_id' => auth()->user()->id,
                     'store_id' => $store_id,
@@ -190,21 +195,45 @@ class CartTemplateController extends BaseController
                     'tax' => 0,
                 ]);
                 $cartid = $cart->id;
+                $options = array();
+
                 foreach ($request->data as $data) {
+                    if (!is_null($data['option_id'])) {
+                    $q = Option::where('id',$data['option_id'])->where('product_id', $data['id'])->first();
+                    if (is_null($q->quantity)) {
+                        $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
+                    } else {
+                        $q = Option::where('id',$data['option_id'])->where('product_id', $data['id'])->first();
+                        $array = explode(',', $q->name['ar']);
+                            $product_quantity = $q->quantity;
+                        
+                        }
+                   }
+                   else{
                     $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
+                   }
                     if ($product_quantity == null) {
                         $product_quantity = Importproduct::where('product_id', $data['id'])->where('store_id', $store_id)->pluck('qty')->first();
                     }
                     if ($product_quantity >= $data['qty']) {
-
-                        $cartDetail = CartDetail::updateOrCreate([
+                        $cartDetail=CartDetail::where( 'cart_id', $cartid)->where(
+                        'product_id',$data['id'])->where('option_id',$data['option_id'])->first();
+                         if( $cartDetail){
+                            $cartDetail->update([
+                                'qty' => $data['qty'],
+                                'price' => $data['price'],
+                            ]);
+                         }
+                         else{
+                        $cartDetail = CartDetail::create([
                             'cart_id' => $cartid,
                             'product_id' => $data['id'],
-                        ], [
                             'qty' => $data['qty'],
                             'price' => $data['price'],
-                            //  'option'=>$data['option'],
+                           'option_id' =>  $data['option_id']
                         ]);
+                    }
+
                     } else {
                         $success['status'] = 200;
 
@@ -353,5 +382,35 @@ class CartTemplateController extends BaseController
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
+    public function showDetailOption(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+            'name' => 'nullable|array',
+        ]);
 
+        if (!is_null($request->name)) {
+
+            $options = $request->name;
+            $optionsDB = Option::where('product_id', $request->id)->get();
+            foreach ($optionsDB as $optionDB) {
+                $array = explode(',', $optionDB->name['ar']);
+
+                $d = array_diff($options, $array);
+                if (empty($d)) {
+                    $restult = new OptionResource($optionDB);
+                    $success = $restult;
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم العرض بنجاح', 'Showed successfully');
+                }
+            }
+            $restult = "No option available";
+            $success = $restult;
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم العرض بنجاح', 'Showed successfully');
+
+        }
+
+    }
 }
