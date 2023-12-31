@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends BaseController
 {
@@ -32,9 +32,9 @@ class ProfileController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'user_name' =>  ['required', 'string', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type',['store_employee', 'store'])
-                    ->where('id', '!=', $user->id)->where('is_deleted',0);
+            'user_name' => ['required', 'string', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store_employee', 'store'])
+                    ->where('id', '!=', $user->id)->where('is_deleted', 0);
             }),
             ],
             // 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
@@ -62,7 +62,7 @@ class ProfileController extends BaseController
             // 'phonenumber' => $request->input('phonenumber'),
             'image' => $request->image,
         ]);
-        if (!is_null($request->password)) {
+        if ($request->has('password')) {
             $user->update([
                 'password' => $request->input('password'),
             ]);

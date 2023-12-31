@@ -1,26 +1,21 @@
 <?php
 
 namespace App\Http\Controllers\api\adminDashboard;
-use Exception;
+
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\UserResource;
+use App\Models\Comment;
+use App\Models\Homepage;
 use App\Models\Note;
-use App\Models\User;
+use App\Models\Product;
 use App\Models\Store;
 use App\Models\Theme;
-use App\Mail\SendMail;
-use App\Models\Comment;
-use App\Models\Product;
-use App\Models\Homepage;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Events\VerificationEvent;
-use App\Http\Resources\NoteResource;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\verificationNotification;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class StoreController extends BaseController
 {
@@ -39,15 +34,15 @@ class StoreController extends BaseController
     {
 
         $success['stores'] =
-       StoreResource::collection(Store::with(['categories' => function ($query) {
-    $query->select('name','icon');
-},'city' => function ($query) {
-    $query->select('id');
-},'country' => function ($query) {
-    $query->select('id');
-},'user' => function ($query) {
-    $query->select('id');
-}])->where('is_deleted', 0)->orderByDesc('created_at')->select('id','store_name','domain','status','periodtype','logo','icon','special','verification_status','verification_date','created_at')->get());
+        StoreResource::collection(Store::with(['categories' => function ($query) {
+            $query->select('name', 'icon');
+        }, 'city' => function ($query) {
+            $query->select('id');
+        }, 'country' => function ($query) {
+            $query->select('id');
+        }, 'user' => function ($query) {
+            $query->select('id');
+        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'status', 'periodtype', 'logo', 'icon', 'special', 'verification_status', 'verification_date', 'created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
@@ -76,27 +71,27 @@ class StoreController extends BaseController
 
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
+            'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
             })],
 
             'store_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
             })],
-            'store_email' =>[ 'required','email',Rule::unique('stores')->where(function ($query) {
-                return $query->where('is_deleted',0);
+            'store_email' => ['required', 'email', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted', 0);
             })],
-             'password' => 'required|min:8|string',
-            'domain' => ['required','string', Rule::unique('stores')->where(function ($query) {
-                return $query->where('is_deleted',0);
+            'password' => 'required|min:8|string',
+            'domain' => ['required', 'string', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted', 0);
             })],
             'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users', 'phonenumber')->where(function ($query) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0);
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
             })],
 
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) {
-                return $query->where('is_deleted',0);
+                return $query->where('is_deleted', 0);
             })],
             'activity_id' => 'required|array',
             'subcategory_id' => ['nullable', 'array'],
@@ -130,8 +125,8 @@ class StoreController extends BaseController
 
         $userid = $user->id;
 
-       $request->package_id = 2;
-      $request->periodtype = "6months";
+        $request->package_id = 2;
+        $request->periodtype = "3months";
 
         $store = Store::create([
             'store_name' => $request->store_name,
@@ -191,7 +186,7 @@ class StoreController extends BaseController
                 'start_at' => $store->created_at,
                 'end_at' => $end_at]);
         } else {
-            $end_at = date('Y-m-d', strtotime("+ 2 weeks", strtotime($store->created_at)));
+            $end_at = date('Y-m-d', strtotime("+ 3 months", strtotime($store->created_at)));
             $store->update([
                 'start_at' => $store->created_at,
                 'end_at' => $end_at]);
@@ -211,7 +206,7 @@ class StoreController extends BaseController
             $subcategory = null;
         }
 
-         $store->categories()->attach($request->activity_id,['subcategory_id' =>$subcategory] );
+        $store->categories()->attach($request->activity_id, ['subcategory_id' => $subcategory]);
         $store->packages()->attach($request->package_id, ['start_at' => $store->created_at, 'end_at' => $end_at, 'periodtype' => $request->periodtype, 'packagecoupon_id' => $request->packagecoupon]);
 
         $success['stores'] = new StoreResource($store);
@@ -268,27 +263,27 @@ class StoreController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'user_name' =>  ['required', 'string', Rule::unique('users')->where(function ($query) use ($store) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
+            'user_name' => ['required', 'string', Rule::unique('users')->where(function ($query) use ($store) {
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $store->user->id);
             })],
             'store_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($store) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $store->user->id);
             })],
             'store_email' => 'required|email|unique:stores,store_email,' . $store->id,
             'password' => 'required|min:8|string',
-            'domain' =>['required','string', Rule::unique('stores')->where(function ($query) use ($store) {
-                return $query->where('is_deleted',0)->where('id', '!=',$store->id);
+            'domain' => ['required', 'string', Rule::unique('stores')->where(function ($query) use ($store) {
+                return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
             })],
             'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users', 'phonenumber')->where(function ($query) use ($store) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $store->user->id);
             })],
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:stores,phonenumber,' . $store->id],
             // 'package_id' =>'required',
-             'activity_id' => 'required|array',
+            'activity_id' => 'required|array',
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'user_country_id' => 'required|exists:countries,id',
@@ -363,15 +358,15 @@ class StoreController extends BaseController
         if (is_null($store) || $store->is_deleted != 0) {
             return $this->sendError("المتجر غير موجود", "store is't exists");
         }
-        $storeAdmain = User::where('user_type','store')->where('store_id', $store->id)->first();
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', $store->id)->first();
         $input = $request->all();
         $validator = Validator::make($input, [
-            'user_name' =>  ['required', 'string', Rule::unique('users')->where(function ($query) use ($storeAdmain) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
+            'user_name' => ['required', 'string', Rule::unique('users')->where(function ($query) use ($storeAdmain) {
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $storeAdmain->id);
             })],
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($storeAdmain) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted',0)
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $storeAdmain->id);
             })],
             'password' => 'required|min:8|string',
@@ -452,35 +447,35 @@ class StoreController extends BaseController
                 if ($store->status === 'active') {
                     $store->update(['status' => 'not_active']);
                     $users = User::where('store_id', $store->id)->get();
-                    if($users !== null){
-                    foreach ($users as $user) {
-                        $user->update(['status' => 'not_active']);
+                    if ($users !== null) {
+                        foreach ($users as $user) {
+                            $user->update(['status' => 'not_active']);
+                        }
                     }
-                   }
                 } else {
                     $store->update(['status' => 'active']);
                     $users = User::where('store_id', $store->id)->get();
-                    if($users !== null){
-                    foreach ($users as $user) {
-                        $user->update(['status' => 'active']);
-                            $data1= [
-                            'subject' => "قبول التسجيل",
-                            'message' => "تم قبول التسجيل",
-                            'store_id' => $store->id,
-                        ];
-                //              try {
-                //  Mail::to($user->email)->send(new SendMail($data1));
-                //  } catch (Exception $e) {
-                //   return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
-                //           }
+                    if ($users !== null) {
+                        foreach ($users as $user) {
+                            $user->update(['status' => 'active']);
+                            $data1 = [
+                                'subject' => "قبول التسجيل",
+                                'message' => "تم قبول التسجيل",
+                                'store_id' => $store->id,
+                            ];
+                            //              try {
+                            //  Mail::to($user->email)->send(new SendMail($data1));
+                            //  } catch (Exception $e) {
+                            //   return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                            //           }
+                        }
                     }
-                   }
                 }
                 $success['stores'] = new StoreResource($store);
 
             }
             $success['status'] = 200;
-          return $this->sendResponse($success, 'تم تعديل الحالة بنجاح', 'store updated successfully');
+            return $this->sendResponse($success, 'تم تعديل الحالة بنجاح', 'store updated successfully');
 
         } else {
             $success['status'] = 200;
@@ -503,7 +498,7 @@ class StoreController extends BaseController
                 $comment->update(['is_deleted' => $comment->id]);
             }
         }
-        $products=Product::where('store_id', $store->id)->get();
+        $products = Product::where('store_id', $store->id)->get();
         foreach ($products as $product) {
             $product->update(['is_deleted' => $product->id]);
         }

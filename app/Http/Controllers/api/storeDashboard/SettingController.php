@@ -54,8 +54,8 @@ class SettingController extends BaseController
 // }
 
         $validator = Validator::make($input, [
-            'icon' => ['required'],
-            'logo' => ['required'],
+            'icon' => ['nullable'],
+            'logo' => ['nullable'],
             'description' => 'required|string',
             'store_address' => 'nullable|string',
             'store_name' => 'nullable|string',

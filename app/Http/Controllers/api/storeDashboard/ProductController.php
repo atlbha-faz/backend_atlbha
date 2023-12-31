@@ -6,13 +6,13 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
 use App\Imports\ProductsImport;
-use App\Models\Image;
-use App\Models\Importproduct;
-use App\Models\Product;
-use App\Models\Value;
-use App\Models\Option;
 use App\Models\Attribute;
 use App\Models\Attribute_product;
+use App\Models\Image;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Product;
+use App\Models\Value;
 use Illuminate\Http\Request;
 // use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Storage;
@@ -148,7 +148,9 @@ class ProductController extends BaseController
                 }),
 
             ],
-
+            'amount' => 'nullable|in:0,1',
+            'data.*.price' => 'array|required_if:amount,1',
+            'data.*.quantity' => 'array|required_if:amount,1',
             // 'store_id'=>'required|exists:stores,id',
         ]);
         if ($validator->fails()) {
@@ -179,7 +181,7 @@ class ProductController extends BaseController
             'subcategory_id' => $subcategory,
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
-            'amount'=>$request->amount,
+            'amount' => $request->amount,
         ]);
         $productid = $product->id;
         if ($request->hasFile("images")) {
@@ -212,52 +214,69 @@ class ProductController extends BaseController
 
             }
         }
-        if (!is_null($request->attribute)) {
+        if ($request->has('attribute') && !is_null($request->attribute)) {
             foreach ($request->attribute as $attribute) {
-             
-                    $option = new Attribute([
-                        'name'=>$attribute['title'],
-                        // 'type'=>$attribute['type']
-                    ]);
-                    $option->save();
-             
-                foreach ($attribute['value'] as $attributeValue) {
-               
-                $value = new Value([
-                    'attribute_id'=> $option->id,
-                    'value'=> $attributeValue,
-                ]);
-                $value->save();
-                   
-                $values[] = $value;
-                $valuesid[]=$value->id;
-            }
 
-            $attruibtevalues=Value::where('attribute_id', $option->id)->whereIn('id',$valuesid)->get();
-             $product->attributes()->attach($option->id,['value'=>json_encode( $attruibtevalues)]);
+                $option = new Attribute([
+                    'name' => $attribute['title'],
+                    // 'type'=>$attribute['type']
+                ]);
+                $option->save();
+
+                foreach ($attribute['value'] as $attributeValue) {
+
+                    $value = new Value([
+                        'attribute_id' => $option->id,
+                        'value' => $attributeValue,
+                    ]);
+                    $value->save();
+
+                    $values[] = $value;
+                    $valuesid[] = $value->id;
+                }
+
+                $option = new Attribute([
+                    'name' => $attribute['title'],
+                    // 'type'=>$attribute['type']
+                ]);
+                $option->save();
+
+                foreach ($attribute['value'] as $attributeValue) {
+
+                    $value = new Value([
+                        'attribute_id' => $option->id,
+                        'value' => $attributeValue,
+                    ]);
+                    $value->save();
+
+                    $values[] = $value;
+                    $valuesid[] = $value->id;
+                }
+
+                $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
+            }
         }
-        }
-        
-            if (!is_null($request->data)) {
-         if($product->amount == 1 ){
+
+        if ($request->has('data') && !is_null($request->data)) {
             foreach ($request->data as $data) {
-                $data['name']=[
-                    "ar"=>implode(',', $data['name'])   
+                $data['name'] = [
+                    "ar" => implode(',', $data['name']),
                 ];
-              
+
                 $option = new Option([
-                    'price' => $data['price'],
-                    'quantity' => $data['quantity'],
-                    'name' =>  $data['name'],
+                    'price' => (isset($data['price']) && $data['price'] !== null) ? $data['price'] : null,
+                    'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
+                    'name' => $data['name'],
                     'product_id' => $productid,
 
                 ]);
 
                 $option->save();
                 $options[] = $option;
-               
-                     }
-                    }
+
+            }
+
         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
@@ -379,7 +398,9 @@ class ProductController extends BaseController
                     }),
 
                 ],
-
+                'amount' => 'nullable|in:0,1',
+                'data.*.price' => 'array|required_if:amount,1',
+                'data.*.quantity' => 'array|required_if:amount,1',
             ]);
 
             if ($validator->fails()) {
@@ -411,7 +432,7 @@ class ProductController extends BaseController
                 'google_analytics' => $request->google_analytics,
                 'category_id' => $request->input('category_id'),
                 'subcategory_id' => $subcategory,
-                'amount'=>$request->amount,
+                'amount' => $request->amount,
                 // 'store_id' => $request->input('store_id'),
 
             ]);
@@ -471,63 +492,70 @@ class ProductController extends BaseController
                     }
                 }
             }
-            $preAttributes=Attribute_product::where('product_id',$productid)->get();
-            foreach(  $preAttributes as   $preAttribute)
-            {
+            $preAttributes = Attribute_product::where('product_id', $productid)->get();
+            foreach ($preAttributes as $preAttribute) {
                 $preAttribute->delete();
             }
-            
-            $preOptions=Option::where('product_id',$productid)->get();
-            foreach(   $preOptions as    $preOption)
-            {
-            $preOption->delete();
+
+            $preOptions = Option::where('product_id', $productid)->get();
+            foreach ($preOptions as $preOption) {
+                $preOption->delete();
             }
-            if (!is_null($request->attribute)) {
+            if ($request->has('attribute') && !is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
-                 
-                        $option = new Attribute([
-                            'name'=>$attribute['title'],
-                            // 'type'=>$attribute['type']
+
+                    $option = new Attribute([
+                        'name' => $attribute['title'],
+                        // 'type'=>$attribute['type']
+                    ]);
+                    $option->save();
+
+                    foreach ($attribute['value'] as $attributeValue) {
+
+                        $value = new Value([
+                            'attribute_id' => $option->id,
+                            'value' => $attributeValue,
                         ]);
                         $option->save();
-                 
-                    foreach ($attribute['value'] as $attributeValue) {
-                   
-                    $value = new Value([
-                        'attribute_id'=> $option->id,
-                        'value'=> $attributeValue,
-                    ]);
-                    $value->save();
-                       
-                    $values[] = $value;
-                    $valuesid[]=$value->id;
+
+                        foreach ($attribute['value'] as $attributeValue) {
+
+                            $value = new Value([
+                                'attribute_id' => $option->id,
+                                'value' => $attributeValue,
+                            ]);
+                            $value->save();
+
+                            $values[] = $value;
+                            $valuesid[] = $value->id;
+                        }
+
+                        $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                        $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
+                    }
                 }
-    
-                $attruibtevalues=Value::where('attribute_id', $option->id)->whereIn('id',$valuesid)->get();
-                 $product->attributes()->attach($option->id,['value'=>json_encode( $attruibtevalues)]);
             }
-            }
-            
-                if (!is_null($request->data)) {
-                    if($product->amount == 1 ){
+
+            if ($request->has('data') && !is_null($request->data)) {
+
                 foreach ($request->data as $data) {
-                    $data['name']=[
-                        "ar"=>implode(',', $data['name'])   
+                    $data['name'] = [
+                        "ar" => implode(',', $data['name']),
                     ];
-                  
+
                     $option = new Option([
                         'price' => $data['price'],
                         'quantity' => $data['quantity'],
-                        'name' =>  $data['name'],
+                        'name' => $data['name'],
                         'product_id' => $productid,
-    
+
                     ]);
-    
+
                     $option->save();
                     $options[] = $option;
-                   
-                         }
-                        }
+
+                }
+
             }
             $success['products'] = new ProductResource($product);
             $success['status'] = 200;
