@@ -26,7 +26,7 @@ class IndexController extends BaseController
      */
     public function index()
     {
-        $success['visits'] = 10;
+        $success['visits'] = 0;
         $success['orders_count'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id);
         })->count();
