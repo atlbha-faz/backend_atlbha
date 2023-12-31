@@ -27,6 +27,7 @@ return new class extends Migration
            $table->double('discount');
            $table->integer('quantity');
            $table->double('total_price');
+           $table->longText('options')->nullable();
            $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled'])->default('new');
            $table->enum('payment_status', ['pending', 'paid', 'failed'])
             ->default('pending');

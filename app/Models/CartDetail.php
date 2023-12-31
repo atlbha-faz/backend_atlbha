@@ -9,9 +9,11 @@ class CartDetail extends Model
 {
     use HasFactory;
     protected $table="cart_details";
-    protected $fillable = ['cart_id','product_id','qty','price','option','is_deleted'];
+    protected $fillable = ['cart_id','product_id','qty','price','option_id','is_deleted'];
 
-
+    // protected $casts = [
+    //     'options' => 'array', 
+    // ];
     public function cart()
     {
         return $this->belongsTo(Cart::class);

@@ -149,8 +149,8 @@ class ProductController extends BaseController
 
             ],
             'amount' => 'nullable|in:0,1',
-            'data.*.price' => 'array|required_if:amount,1',
-            'data.*.quantity' => 'array|required_if:amount,1',
+            'data.*.price' => 'numeric|required_if:amount,1',
+            'data.*.quantity' => 'numeric|required_if:amount,1',
             // 'store_id'=>'required|exists:stores,id',
         ]);
         if ($validator->fails()) {
@@ -214,8 +214,26 @@ class ProductController extends BaseController
 
             }
         }
-        if (!is_null($request->attribute)) {
+        if ($request->has('attribute') && !is_null($request->attribute)) {
             foreach ($request->attribute as $attribute) {
+
+                $option = new Attribute([
+                    'name' => $attribute['title'],
+                    // 'type'=>$attribute['type']
+                ]);
+                $option->save();
+
+                foreach ($attribute['value'] as $attributeValue) {
+
+                    $value = new Value([
+                        'attribute_id' => $option->id,
+                        'value' => $attributeValue,
+                    ]);
+                    $value->save();
+
+                    $values[] = $value;
+                    $valuesid[] = $value->id;
+                }
 
                 $option = new Attribute([
                     'name' => $attribute['title'],
@@ -240,16 +258,15 @@ class ProductController extends BaseController
             }
         }
 
-        if (!is_null($request->data)) {
-
+        if ($request->has('data') && !is_null($request->data)) {
             foreach ($request->data as $data) {
                 $data['name'] = [
                     "ar" => implode(',', $data['name']),
                 ];
 
                 $option = new Option([
-                    'price' => $data['price'],
-                    'quantity' => $data['quantity'],
+                    'price' => (isset($data['price']) && $data['price'] !== null) ? $data['price'] : null,
+                    'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                     'name' => $data['name'],
                     'product_id' => $productid,
 
@@ -259,6 +276,7 @@ class ProductController extends BaseController
                 $options[] = $option;
 
             }
+
         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
@@ -381,8 +399,8 @@ class ProductController extends BaseController
 
                 ],
                 'amount' => 'nullable|in:0,1',
-                'data.*.price' => 'array|required_if:amount,1',
-                'data.*.quantity' => 'array|required_if:amount,1',
+                'data.*.price' => 'numeric|required_if:amount,1',
+                'data.*.quantity' => 'numeric|required_if:amount,1',
             ]);
 
             if ($validator->fails()) {
@@ -483,7 +501,7 @@ class ProductController extends BaseController
             foreach ($preOptions as $preOption) {
                 $preOption->delete();
             }
-            if (!is_null($request->attribute)) {
+            if ($request->has('attribute') && !is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
 
                     $option = new Attribute([
@@ -498,18 +516,27 @@ class ProductController extends BaseController
                             'attribute_id' => $option->id,
                             'value' => $attributeValue,
                         ]);
-                        $value->save();
+                        $option->save();
 
-                        $values[] = $value;
-                        $valuesid[] = $value->id;
+                        foreach ($attribute['value'] as $attributeValue) {
+
+                            $value = new Value([
+                                'attribute_id' => $option->id,
+                                'value' => $attributeValue,
+                            ]);
+                            $value->save();
+
+                            $values[] = $value;
+                            $valuesid[] = $value->id;
+                        }
+
+                        $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                        $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
                     }
-
-                    $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
-                    $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
                 }
             }
 
-            if (!is_null($request->data)) {
+            if ($request->has('data') && !is_null($request->data)) {
 
                 foreach ($request->data as $data) {
                     $data['name'] = [
@@ -528,6 +555,7 @@ class ProductController extends BaseController
                     $options[] = $option;
 
                 }
+
             }
             $success['products'] = new ProductResource($product);
             $success['status'] = 200;
