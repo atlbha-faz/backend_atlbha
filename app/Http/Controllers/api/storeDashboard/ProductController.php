@@ -566,6 +566,7 @@ class ProductController extends BaseController
     public function updateCategory(Request $request)
     {
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        
         if (count($products) < 0) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
 
