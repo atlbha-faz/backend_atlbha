@@ -17,13 +17,14 @@ class CartDetailResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
+    {  if( $this->option_id !== null)
+        {
         $q = Option::where('id',$this->option_id)->where('product_id',$this->product->id)->first();
         $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
         $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
         $array = explode(',', $q->name['ar']);
         $options = array_combine($array,$attribute);
-
+        }
         return [
             'id' => $this->id,
            'product' => New ProductResource($this->product),
