@@ -333,19 +333,26 @@ class IndexStoreController extends BaseController
             $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
             $category = array();
             foreach ($prodtcts as $prodtct) {
-                $category[] =  Category::with(['subcategory'=>function ($query) use($prodtct) {
-                    $query->where('id',$prodtct->subcategory_id);
-                }])->where('is_deleted', 0)->where('id',$prodtct->category_id
+                $category[] = Category::with(['subcategory' => function ($query) use ($prodtct) {
+                    $query->where('id', $prodtct->subcategory_id);
+                }])->where('is_deleted', 0)->where('id', $prodtct->category_id
                 )->where('status', 'active')->first();
             }
             // $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->with('products')->has('products')->get()->merge($category));
+            $originalcategory = array();
+            $originalProdutcts = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->get();
+            foreach ($originalProdutcts as $originalProdutct) {
+                $mainCategory = Category::with(['subcategory' => function ($query) use ($originalProdutct) {
+                    $query->where('id', $originalProdutct->subcategory_id);
+                }])->where('is_deleted', 0)->where('id', $originalProdutct->category_id
+                )->where('store_id', null)->where('parent_id', null)->where('status', 'active')->first();
+                if ($mainCategory !== null) {
+                    $originalcategory[] = $mainCategory;
+                }
+            }
 
-            $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)->where(function ($query) use ($store_id) {
-                $query->where('store_id', $store_id)
-                    ->OrWhere('store_id', null)->whereHas('products', function ($query) use ($store_id) {
-                    $query->where('is_deleted', 0)->where('store_id', $store_id);
-                });
-            })->with('products')->get()->merge($category);
+            $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
+                ->where('store_id', $store_id)->get()->merge($originalcategory)->merge($category);
             if ($categories != null) {
                 $success['category'] = CategoryResource::collection($categories);
             } else {
