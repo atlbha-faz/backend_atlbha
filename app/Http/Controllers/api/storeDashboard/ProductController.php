@@ -598,12 +598,12 @@ class ProductController extends BaseController
                 'subcategory_id' => $subcategory,
 
             ]);
-            $success['products'] = new ProductResource($product);
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
 
         }
+        // $success['products'] = new ProductResource($product);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
 
     }
     public function changeStatus($id)
