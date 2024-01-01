@@ -82,6 +82,6 @@ class Kernel extends HttpKernel
         'setActiveStore' => \App\Http\Middleware\SetActiveStore::class,
         'AdminCheckPermission' => \App\Http\Middleware\AdminCheckPermission::class,
         // 'CheckStorePermission' => \App\Http\Middleware\CheckStorePermission::class,
-        // 'cors' => \App\Http\Middleware\CORS::class,
+        'cors' => \App\Http\Middleware\CORS::class,
     ];
 }
