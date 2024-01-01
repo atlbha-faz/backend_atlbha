@@ -48,8 +48,9 @@ Route::post('/registerUser/{id}', 'App\Http\Controllers\api\AuthCustomerControll
 Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@verifyUser');
 Route::get('/logoutcustomer', 'App\Http\Controllers\api\AuthCustomerController@logout');
 //  index Ettlobha page
-
+Route::group([ 'middleware'=> 'cors'], function() {
 Route::get('index', [App\Http\Controllers\api\IndexEtlobhaController::class, 'index']);
+});
 Route::post('atlobhaContactAdd', [App\Http\Controllers\api\IndexEtlobhaController::class, 'store']);
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
