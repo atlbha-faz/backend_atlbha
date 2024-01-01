@@ -28,6 +28,7 @@ use App\Models\Store;
 use App\Models\SubscriptionEmail;
 use App\Models\TechnicalSupport;
 use App\Models\Theme;
+use App\Models\User;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -219,15 +220,14 @@ class IndexStoreController extends BaseController
             $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
             $theme = Theme::where('store_id', $store_id)->first();
             if ($theme != null) {
-                $success['Theme'] = new ThemeResource(Theme::where('store_id', $store_id)->select('id', 'primaryBg', 'secondaryBg', 'headerBg', 'layoutBg', 'iconsBg', 'footerBorder', 'footerBg','fontColor')->first());
+                $success['Theme'] = new ThemeResource(Theme::where('store_id', $store_id)->select('id', 'primaryBg', 'secondaryBg', 'headerBg', 'layoutBg', 'iconsBg', 'footerBorder', 'footerBg', 'fontColor')->first());
             }
             //  $success['logoFooter']=Homepage::where('is_deleted',0)->where('store_id',$id)->pluck('logo_footer')->first();
             $sliders = array();
             $s1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
             if (!is_null($s1)) {
                 $sliders[] = $s1;
-            }
-            else {
+            } else {
                 $sliders[] = asset('assets/media/slider.png');
             }
             $s2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus2', 'active')->pluck('slider2')->first();
@@ -409,7 +409,7 @@ class IndexStoreController extends BaseController
             $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
             $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
             $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
-            $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
+            $success['phonenumber'] = User::where('is_deleted', 0)->where('store_id', $store_id)->pluck('phonenumber')->first();
             $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
             $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
             $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
@@ -423,7 +423,7 @@ class IndexStoreController extends BaseController
             if ($store->verification_status == 'accept') {
                 if ($store->verification_type == 'maeruf') {
                     // $verificayion_arr['link'] = $store->link;
-                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.jpeg';
+                    $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.jpeg';
                 } else {
                     $verificayion_arr['link'] = null;
                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
@@ -575,7 +575,7 @@ class IndexStoreController extends BaseController
             $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
             $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
             $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
-            $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
+            $success['phonenumber'] = User::where('is_deleted', 0)->where('store_id', $store_id)->pluck('phonenumber')->first();
             $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
 
             $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
@@ -744,7 +744,7 @@ class IndexStoreController extends BaseController
             $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
             $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
             $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
-            $success['phonenumber'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('phonenumber')->first();
+            $success['phonenumber'] = User::where('is_deleted', 0)->where('store_id', $store_id)->pluck('phonenumber')->first();
             $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
             $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
             $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
