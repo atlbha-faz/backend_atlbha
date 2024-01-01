@@ -20,9 +20,9 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
-
+        \App\Http\Middleware\corsMiddleware::class,
         //wafaa commit
-       // \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        // \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
     /**
@@ -44,6 +44,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\CORS::class,
         ],
         'api-session' => [
             \App\Http\Middleware\EncryptCookies::class,
@@ -51,7 +52,7 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ]
+        ],
     ];
 
     /**
@@ -79,9 +80,8 @@ class Kernel extends HttpKernel
         'AdminUser' => \App\Http\Middleware\AdminUser::class,
         'CustomerUser' => \App\Http\Middleware\CustomerUser::class,
         'setActiveStore' => \App\Http\Middleware\SetActiveStore::class,
-         'AdminCheckPermission' => \App\Http\Middleware\AdminCheckPermission::class,
+        'AdminCheckPermission' => \App\Http\Middleware\AdminCheckPermission::class,
         // 'CheckStorePermission' => \App\Http\Middleware\CheckStorePermission::class,
-
-
+        'cors' => \App\Http\Middleware\CORS::class,
     ];
 }
