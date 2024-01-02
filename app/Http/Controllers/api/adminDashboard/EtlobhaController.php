@@ -54,7 +54,7 @@ class EtlobhaController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:25',
             'description' => 'required|string',
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
@@ -207,24 +207,24 @@ class EtlobhaController extends BaseController
         //         $options[] = $option;
         //     }
         // }
-           
+
         if (!is_null($request->attribute)) {
             foreach ($request->attribute as $attribute) {
-             
+
                     $option = new Attribute([
                         'name'=>$attribute['title'],
                         'type'=>$attribute['type']
                     ]);
                     $option->save();
-             
+
                 foreach ($attribute['value'] as $attributeValue) {
-               
+
                 $value = new Value([
                     'attribute_id'=> $option->id,
                     'value'=> $attributeValue,
                 ]);
                 $value->save();
-                   
+
                 $values[] = $value;
                 $valuesid[]=$value->id;
             }
@@ -233,14 +233,14 @@ class EtlobhaController extends BaseController
              $product->attributes()->attach($option->id,['value'=>json_encode( $attruibtevalues)]);
         }
         }
-        
+
             if (!is_null($request->data)) {
-         
+
             foreach ($request->data as $data) {
                 $data['name']=[
-                    "ar"=>implode(',', $data['name'])   
+                    "ar"=>implode(',', $data['name'])
                 ];
-              
+
                 $option = new Option([
                     'price' => $data['price'],
                     'quantity' => $data['quantity'],
@@ -251,7 +251,7 @@ class EtlobhaController extends BaseController
 
                 $option->save();
                 $options[] = $option;
-               
+
                      }
         }
         $success['products'] = new ProductResource($product);
@@ -269,7 +269,7 @@ class EtlobhaController extends BaseController
         }
         $input = $request->all();
         $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:25',
             'description' => 'required|string',
             // 'amount' => ['required', 'numeric'],
 
@@ -430,7 +430,7 @@ class EtlobhaController extends BaseController
         {
             $preAttribute->delete();
         }
-        
+
         $preOptions=Option::where('product_id',$productid)->get();
         foreach(   $preOptions as    $preOption)
         {
@@ -438,21 +438,21 @@ class EtlobhaController extends BaseController
         }
         if (!is_null($request->attribute)) {
             foreach ($request->attribute as $attribute) {
-             
+
                     $option = new Attribute([
                         'name'=>$attribute['title'],
                         'type'=>$attribute['type']
                     ]);
                     $option->save();
-             
+
                 foreach ($attribute['value'] as $attributeValue) {
-               
+
                 $value = new Value([
                     'attribute_id'=> $option->id,
                     'value'=> $attributeValue,
                 ]);
                 $value->save();
-                   
+
                 $values[] = $value;
                 $valuesid[]=$value->id;
             }
@@ -461,14 +461,14 @@ class EtlobhaController extends BaseController
              $product->attributes()->attach($option->id,['value'=>json_encode( $attruibtevalues)]);
         }
         }
-        
+
             if (!is_null($request->data)) {
-         
+
             foreach ($request->data as $data) {
                 $data['name']=[
-                    "ar"=>implode(',', $data['name'])   
+                    "ar"=>implode(',', $data['name'])
                 ];
-              
+
                 $option = new Option([
                     'price' => $data['price'],
                     'quantity' => $data['quantity'],
@@ -479,7 +479,7 @@ class EtlobhaController extends BaseController
 
                 $option->save();
                 $options[] = $option;
-               
+
                      }
         }
         $success['products'] = new ProductResource($product);
