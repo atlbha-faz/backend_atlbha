@@ -33,7 +33,7 @@ Route::get('selector/testgetAllCity', [App\Http\Controllers\api\SelectorControll
 Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorController::class, 'shippingcities']);
 Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
-
+Route::get('try', [App\Http\Controllers\api\SelectorController::class, 'try']);
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
@@ -135,6 +135,13 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::get('callback', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'callback'])->name('callback');
         // Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
         // Route::get('list', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'list'])->name('list');
+        Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index']);
+        Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show']);
+        Route::PUT('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update']);
+
+        Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
+        Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
+        Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
 
         Route::get('selector/etlobahCategory', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'etlobahCategory']);
         Route::get('selector/years', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'years']);
@@ -155,6 +162,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
         // Route::middleware([AdminCheckPermission::class])->group(function () {
+            
         // Route::get('changeCountryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'changeStatus']);
         // Route::get('changeCityStatus/{id}', [App\Http\Controllers\api\adminDashboard\CityController::class, 'changeStatus']);
         // Route::get('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class, 'changeStatus']);
@@ -268,13 +276,11 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class);
         // Route::resource('template', App\Http\Controllers\api\adminDashboard\TemplateController::class);
         Route::resource('coupons', App\Http\Controllers\api\adminDashboard\CouponController::class, ['names' => 'admin.coupon']);
-        Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
-        Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
-        Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
+
         Route::resource('section', App\Http\Controllers\api\adminDashboard\SectionController::class, ['names' => 'admin.section']);
         Route::resource('contact', App\Http\Controllers\api\adminDashboard\ContactController::class);
         Route::resource('replaycontact', App\Http\Controllers\api\adminDashboard\ReplaycontactController::class);
-        Route::resource('seo', App\Http\Controllers\api\adminDashboard\SeoController::class);
+        Route::resource('seo', App\Http\Controllers\api\adminDashboard\SeoController::class,['names' => 'admin.seo']);
         Route::resource('setting', App\Http\Controllers\api\adminDashboard\SettingController::class, ['names' => 'admin.setting']);
         Route::resource('store', App\Http\Controllers\api\adminDashboard\StoreController::class, ['names' => 'admin.store']);
         Route::resource('offer', App\Http\Controllers\api\adminDashboard\OfferController::class);
@@ -374,11 +380,10 @@ Route::middleware([AdminUser::class])->group(function () {
         // uodate seo
         Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('store.seo.updateGoogleAnalytics');
         // import orders
-        Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index']);
-        Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show']);
-        Route::PUT('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update']);
+
     });
-});
+    });
+// });
 Auth::routes();
 
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
