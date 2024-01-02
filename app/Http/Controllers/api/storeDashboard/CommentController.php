@@ -204,7 +204,7 @@ class CommentController extends BaseController
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy($comment)
+    public function destroy(Request $request, $comment)
     {
         $comment = Comment::where('id', $comment)->first();
         if (is_null($comment) || $comment->is_deleted != 0 || $comment->store_id != auth()->user()->store_id) {
