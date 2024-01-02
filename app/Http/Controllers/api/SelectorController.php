@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use DB;
 use App\Models\City;
+use Spatie\Permission\Models\Role;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Package;
@@ -162,6 +163,33 @@ class SelectorController extends BaseController
     $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
     $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض حالة المندوب بنجاح', 'registration_marketer show successfully');
+
+  }
+  public function try()
+  {
+      $role = Role::create(['name'=>"productEntry" , 'type'=>'admin' ,'guard_name'=>'api']);
+      $arr=array();
+      for ($i = 3; $i <= 25; $i++) {
+          $arr[]=$i;
+      }
+     
+      $role->syncPermissions($arr);
+      $user = User::create([
+          'name' => "مدخل منتجات",
+          'user_name' => "Entery",
+          'user_type' => 'admin_employee',
+          'email' => "a@gmail.com",
+          'password' => "1234567",
+          'phonenumber' => "+966502356892",
+          // 'image' => $request->image,
+          'verified' => 1,
+
+      ]);
+   
+      $user->assignRole($role->name);
+      $success['status'] = 200;
+      $success['object'] =  $result;
+      return $this->sendResponse($success, 'تم', 'user  successfully');
 
   }
 }
