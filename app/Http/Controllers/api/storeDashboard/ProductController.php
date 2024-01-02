@@ -122,7 +122,7 @@ class ProductController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:25',
             'for' => 'store',
             'description' => 'required|string',
             'selling_price' => ['required', 'numeric', 'gt:0'],
@@ -373,7 +373,7 @@ class ProductController extends BaseController
 
             $input = $request->all();
             $validator = Validator::make($input, [
-                'name' => 'required|string|max:255',
+                'name' => 'required|string|max:25',
                 'description' => 'required|string',
                 'selling_price' => ['required', 'numeric', 'gt:0'],
                 'stock' => ['required', 'numeric', 'gt:0'],
@@ -566,7 +566,7 @@ class ProductController extends BaseController
     public function updateCategory(Request $request)
     {
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
-        
+
         if (count($products) < 0) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
 
