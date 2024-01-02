@@ -19,7 +19,7 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
-       
+
      public function store()
     {
         return $this->belongsTo(Store::class, 'store_id','id');
@@ -52,7 +52,7 @@ class Category extends Model
     public function getIconAttribute($icon)
     {
         if (is_null($icon)) {
-            return   asset('assets/media/man.png');
+            return   asset('assets/media/category_defulte.png');
         }
         return asset('storage/images/icon/category') . '/' . $icon;
     }
