@@ -121,7 +121,7 @@ class CategoryController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'icon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'icon' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'data.*.name' => 'nullable|string|max:255',
             'data.*.id' => 'nullable|numeric',
 
