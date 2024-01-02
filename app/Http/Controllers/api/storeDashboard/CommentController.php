@@ -41,7 +41,7 @@ class CommentController extends BaseController
                 $query->select('id', 'name', 'user_type', 'image');
             }, 'product' => function ($query) {
                 $query->select('id', 'name');
-            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
+            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
             $success['page_count'] = $comment_of_products->lastPage();
             $success['comment_of_products'] = $comment_of_products;
         } else {
@@ -223,7 +223,7 @@ class CommentController extends BaseController
             $query->select('id', 'name', 'user_type', 'image');
         }, 'product' => function ($query) {
             $query->select('id', 'name');
-        }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
+        }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
         $success['page_count'] = $comment_of_products->lastPage();
         $success['comment_of_products'] = $comment_of_products;
 
