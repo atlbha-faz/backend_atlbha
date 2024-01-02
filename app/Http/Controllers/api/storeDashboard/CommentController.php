@@ -213,6 +213,22 @@ class CommentController extends BaseController
         $comment->update(['is_deleted' => $comment->id]);
 
         $success['comments'] = new CommentResource($comment);
+        $success['comment_of_store'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'store')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        $product_id = array();
+        $products = Product::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->get();
+        foreach ($products as $product) {
+            $product_id[] = $product->id;
+        }
+            $comment_of_products = CommentResource::collection(Comment::with(['user' => function ($query) {
+                $query->select('id', 'name', 'user_type', 'image');
+            }, 'product' => function ($query) {
+                $query->select('id', 'name');
+            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
+            $success['page_count'] = $comment_of_products->lastPage();
+            $success['comment_of_products'] = $comment_of_products;
+
+        $success['commentActivation'] = Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->pluck('commentstatus')->first();
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم حذف التعليق بنجاح', ' comment deleted successfully');
