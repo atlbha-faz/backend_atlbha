@@ -122,7 +122,7 @@ class ProductController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:25',
             'for' => 'store',
             'description' => 'required|string',
             'selling_price' => ['required', 'numeric', 'gt:0'],
@@ -373,7 +373,7 @@ class ProductController extends BaseController
 
             $input = $request->all();
             $validator = Validator::make($input, [
-                'name' => 'required|string|max:255',
+                'name' => 'required|string|max:25',
                 'description' => 'required|string',
                 'selling_price' => ['required', 'numeric', 'gt:0'],
                 'stock' => ['required', 'numeric', 'gt:0'],
@@ -563,7 +563,50 @@ class ProductController extends BaseController
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
         }
     }
+    public function updateCategory(Request $request)
+    {
+        $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
 
+        if (count($products) < 0) {
+            return $this->sendError("المنتج غير موجود", "product is't exists");
+
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'subcategory_id' => ['nullable', 'array'],
+            'subcategory_id.*' => ['nullable', 'numeric',
+                Rule::exists('categories', 'id')->where(function ($query) {
+                    return $query->join('categories', 'id', 'parent_id');
+                }),
+
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+        if ($request->subcategory_id != null) {
+            $subcategory = implode(',', $request->subcategory_id);
+        } else {
+            $subcategory = null;
+        }
+
+        foreach ($products as $product) {
+
+            $product->update([
+                'category_id' => $request->input('category_id'),
+                'subcategory_id' => $subcategory,
+
+            ]);
+
+        }
+        // $success['products'] = new ProductResource($product);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
+
+    }
     public function changeStatus($id)
     {
         $product = Product::where('id', $id)->where('store_id', auth()->user()->store_id)->first();

@@ -50,6 +50,7 @@ Route::get('/logoutcustomer', 'App\Http\Controllers\api\AuthCustomerController@l
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\IndexEtlobhaController::class, 'index']);
+
 Route::post('atlobhaContactAdd', [App\Http\Controllers\api\IndexEtlobhaController::class, 'store']);
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
@@ -492,6 +493,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('productchangeSatusall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'changeSatusall'])->name('store.products.changestatusall');
         Route::get('productdeleteall', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteall'])->name('store.products.deleteall');
         Route::get('deleteItems', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'deleteItems'])->name('store.products.deleteItems');
+        Route::post('updateCategory', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'updateCategory'])->name('store.products.updateCategory');
 
         Route::get('products', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'products'])->name('store.products.products');
         Route::get('importedProducts', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importedProducts']);
