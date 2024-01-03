@@ -208,51 +208,52 @@ class EtlobhaController extends BaseController
         //         $options[] = $option;
         //     }
         // }
+        if ($request->has('attribute')) {
+            if (!is_null($request->attribute)) {
+                foreach ($request->attribute as $attribute) {
 
-        if (!is_null($request->attribute)) {
-            foreach ($request->attribute as $attribute) {
-
-                $option = new Attribute([
-                    'name' => $attribute['title'],
-                    'type' => $attribute['type'],
-                ]);
-                $option->save();
-
-                foreach ($attribute['value'] as $attributeValue) {
-
-                    $value = new Value([
-                        'attribute_id' => $option->id,
-                        'value' => $attributeValue,
+                    $option = new Attribute([
+                        'name' => $attribute['title'],
+                        'type' => $attribute['type'],
                     ]);
-                    $value->save();
+                    $option->save();
 
-                    $values[] = $value;
-                    $valuesid[] = $value->id;
+                    foreach ($attribute['value'] as $attributeValue) {
+
+                        $value = new Value([
+                            'attribute_id' => $option->id,
+                            'value' => $attributeValue,
+                        ]);
+                        $value->save();
+
+                        $values[] = $value;
+                        $valuesid[] = $value->id;
+                    }
+
+                    $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                    $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
                 }
-
-                $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
-                $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
             }
         }
+        if ($request->has('data')) {
+            if (!is_null($request->data)) {
 
-        if (!is_null($request->data)) {
+                foreach ($request->data as $data) {
+                    $data['name'] = [
+                        "ar" => implode(',', $data['name']),
+                    ];
 
-            foreach ($request->data as $data) {
-                $data['name'] = [
-                    "ar" => implode(',', $data['name']),
-                ];
+                    $option = new Option([
+                        'price' => $data['price'],
+                        'quantity' => $data['quantity'],
+                        'name' => $data['name'],
+                        'product_id' => $productid,
 
-                $option = new Option([
-                    'price' => $data['price'],
-                    'quantity' => $data['quantity'],
-                    'name' => $data['name'],
-                    'product_id' => $productid,
+                    ]);
 
-                ]);
-
-                $option->save();
-                $options[] = $option;
-
+                    $option->save();
+                    $options[] = $option;
+                }
             }
         }
         $success['products'] = new ProductResource($product);
@@ -428,14 +429,19 @@ class EtlobhaController extends BaseController
             }
         }
         $preAttributes = Attribute_product::where('product_id', $productid)->get();
+        if($preAttributes != null)
+        {
         foreach ($preAttributes as $preAttribute) {
             $preAttribute->delete();
         }
-
+    }
         $preOptions = Option::where('product_id', $productid)->get();
+          if($preOptions != null){
         foreach ($preOptions as $preOption) {
             $preOption->delete();
         }
+    }
+        if ($request->has('attribute')) {
         if (!is_null($request->attribute)) {
             foreach ($request->attribute as $attribute) {
 
@@ -461,7 +467,8 @@ class EtlobhaController extends BaseController
                 $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
             }
         }
-
+    }
+    if ($request->has('data')) {
         if (!is_null($request->data)) {
 
             foreach ($request->data as $data) {
@@ -481,6 +488,7 @@ class EtlobhaController extends BaseController
                 $options[] = $option;
 
             }
+        }
         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
