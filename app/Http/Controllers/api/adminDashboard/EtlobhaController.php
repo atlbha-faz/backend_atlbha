@@ -158,7 +158,7 @@ class EtlobhaController extends BaseController
             $files = $request->images;
 
             foreach ($files as $file) {
-//
+
                 if (is_uploaded_file($file)) {
 
                     $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
@@ -178,17 +178,17 @@ class EtlobhaController extends BaseController
                 }
             }
         } else {
-
-            $files = $request->images;
-            foreach ($files as $file) {
-                $imageName = time() . '_' . $file;
-                $request['product_id'] = $productid;
-                $existingImagePath = $file;
-                $newImagePath = basename($file);
-                $request['image'] = $newImagePath;
-                Storage::copy($existingImagePath, $newImagePath);
-                Image::create($request->all());
-
+            if ($request->has('images')) {
+                $files = $request->images;
+                foreach ($files as $file) {
+                    $imageName = time() . '_' . $file;
+                    $request['product_id'] = $productid;
+                    $existingImagePath = $file;
+                    $newImagePath = basename($file);
+                    $request['image'] = $newImagePath;
+                    Storage::copy($existingImagePath, $newImagePath);
+                    Image::create($request->all());
+                }
             }
         }
 
@@ -407,22 +407,23 @@ class EtlobhaController extends BaseController
         //     }
         // }
         else {
-
-            $files = $request->images;
-            $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
-            foreach ($image_id as $oid) {
-                $image = Image::query()->find($oid);
-                $image->update(['is_deleted' => $image->id]);
-            }
-            if ($files != null) {
-                foreach ($files as $file) {
-                    $imageName = time() . '_' . $file;
-                    $request['product_id'] = $productid;
-                    $existingImagePath = $file;
-                    $newImagePath = basename($file);
-                    $request['image'] = $newImagePath;
-                    Storage::copy($existingImagePath, $newImagePath);
-                    Image::create($request->all());
+            if ($request->has('images')) {
+                $files = $request->images;
+                $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
+                foreach ($image_id as $oid) {
+                    $image = Image::query()->find($oid);
+                    $image->update(['is_deleted' => $image->id]);
+                }
+                if ($files != null) {
+                    foreach ($files as $file) {
+                        $imageName = time() . '_' . $file;
+                        $request['product_id'] = $productid;
+                        $existingImagePath = $file;
+                        $newImagePath = basename($file);
+                        $request['image'] = $newImagePath;
+                        Storage::copy($existingImagePath, $newImagePath);
+                        Image::create($request->all());
+                    }
                 }
             }
         }
