@@ -227,6 +227,9 @@ class CommentController extends BaseController
         }, 'product' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
+        $pageNumber = request()->query('page', 1);
+        $success['current_page'] = $comment_of_products->currentPage();
+
         $success['page_count'] = $comment_of_products->lastPage();
         $success['comment_of_products'] = $comment_of_products;
 

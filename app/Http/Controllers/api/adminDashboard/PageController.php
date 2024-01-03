@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\PageResource;
 use App\Models\Page;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -108,6 +109,9 @@ class PageController extends BaseController
             // 'user_id'=>'exists:users,id',
             'pageCategory' => ['required', 'array'],
             'pageCategory.*' => 'required',
+            'postcategory_id' => Rule::requiredIf(function () {
+                return in_array('1', request('pageCategory'));
+            }),
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -192,6 +196,9 @@ class PageController extends BaseController
             'tags' => 'nullable',
             'pageCategory' => ['required', 'array'],
             'pageCategory.*' => 'required',
+            'postcategory_id' => Rule::requiredIf(function () {
+                return in_array('1', request('pageCategory'));
+            }),
         ]);
         if ($validator->fails()) {
             # code...
