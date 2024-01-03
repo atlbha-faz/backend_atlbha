@@ -1384,7 +1384,7 @@ Permission::create(['name' => 'admin.seo.store',
 'parent_id'=>199,
 'type'=>'admin']);
 
-Permission::create(['name' => 'admin.seo.update',
+Permission::create(['name' => 'admin.seo.updateGoogleAnalytics',
         'action_type' => 'update',
      
 'name_ar'=>'تعديل' ,

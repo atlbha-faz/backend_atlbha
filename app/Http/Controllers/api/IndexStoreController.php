@@ -341,6 +341,7 @@ class IndexStoreController extends BaseController
                     $category[]= $categoryOne;
                  }
             }
+           
             // $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->with('products')->has('products')->get()->merge($category));
             $originalcategory = array();
             $originalProdutcts = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->get();
