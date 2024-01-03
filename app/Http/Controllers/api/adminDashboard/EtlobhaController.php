@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Carbon\Carbon;
-use App\Models\Image;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Value;
-use App\Models\Option;
-use App\Models\Product;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ProductResource;
 use App\Models\Attribute;
 use App\Models\Attribute_product;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use App\Models\Image;
 use App\Models\Importproduct;
-use Illuminate\Validation\Rule;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\Value;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class EtlobhaController extends BaseController
 {
@@ -40,9 +40,9 @@ class EtlobhaController extends BaseController
         }
         $success['not_active_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('status', 'not_active')->count();
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
-        $success['products'] = ProductResource::collection(Product::with(['store','category'=>function ($query) {
-    $query->select('id','name');
-}])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select('id','name','status','cover','special','purchasing_price','selling_price','stock','category_id','store_id','subcategory_id','created_at','admin_special')->get());
+        $success['products'] = ProductResource::collection(Product::with(['store', 'category' => function ($query) {
+            $query->select('id', 'name');
+        }])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'admin_special')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -55,13 +55,13 @@ class EtlobhaController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
-            'description' => 'required|string',
+            'description' => 'required|string|max:100',
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
             // 'amount' => ['required', 'numeric'],
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
-            // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
+            'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'images' => 'nullable|array',
             // 'data' => 'nullable|array',
             // 'data.*.type' => 'required|in:brand,color,wight,size',
@@ -75,7 +75,8 @@ class EtlobhaController extends BaseController
             'short_description' => 'required|string|max:100',
             'robot_link' => 'nullable|string',
             'google_analytics' => 'nullable|url',
-             'weight'=>'nullable',
+            'weight' => 'nullable',
+
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -122,7 +123,7 @@ class EtlobhaController extends BaseController
             'name' => $request->name,
             'for' => 'etlobha',
             // 'quantity' => $request->quantity,
-            // 'less_qty' => $request->less_qty,
+            'less_qty' => $request->less_qty,
             'description' => $request->description,
             'purchasing_price' => $request->purchasing_price,
             'selling_price' => $request->selling_price,
@@ -136,22 +137,22 @@ class EtlobhaController extends BaseController
             'instapixel' => $request->instapixel,
             'short_description' => $request->short_description,
             'robot_link' => $request->robot_link,
-            'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
+            'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'google_analytics' => $request->google_analytics,
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
-            'amount'=>$request->amount,
+            'amount' => $request->amount,
 
         ]);
         $productid = $product->id;
-    //إستيراد الى متجر اطلبها
-       $atlbha_id= Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+        //إستيراد الى متجر اطلبها
+        $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
         $importproduct = Importproduct::create([
-            'product_id' =>  $product->id,
+            'product_id' => $product->id,
             'store_id' => $atlbha_id,
-            'price' =>   $product->selling_price,
-            'qty'=> $product->stock,
+            'price' => $product->selling_price,
+            'qty' => $product->stock,
         ]);
         if ($request->hasFile("images")) {
             $files = $request->images;
@@ -211,40 +212,40 @@ class EtlobhaController extends BaseController
         if (!is_null($request->attribute)) {
             foreach ($request->attribute as $attribute) {
 
-                    $option = new Attribute([
-                        'name'=>$attribute['title'],
-                        'type'=>$attribute['type']
-                    ]);
-                    $option->save();
+                $option = new Attribute([
+                    'name' => $attribute['title'],
+                    'type' => $attribute['type'],
+                ]);
+                $option->save();
 
                 foreach ($attribute['value'] as $attributeValue) {
 
-                $value = new Value([
-                    'attribute_id'=> $option->id,
-                    'value'=> $attributeValue,
-                ]);
-                $value->save();
+                    $value = new Value([
+                        'attribute_id' => $option->id,
+                        'value' => $attributeValue,
+                    ]);
+                    $value->save();
 
-                $values[] = $value;
-                $valuesid[]=$value->id;
+                    $values[] = $value;
+                    $valuesid[] = $value->id;
+                }
+
+                $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
             }
-
-            $attruibtevalues=Value::where('attribute_id', $option->id)->whereIn('id',$valuesid)->get();
-             $product->attributes()->attach($option->id,['value'=>json_encode( $attruibtevalues)]);
-        }
         }
 
-            if (!is_null($request->data)) {
+        if (!is_null($request->data)) {
 
             foreach ($request->data as $data) {
-                $data['name']=[
-                    "ar"=>implode(',', $data['name'])
+                $data['name'] = [
+                    "ar" => implode(',', $data['name']),
                 ];
 
                 $option = new Option([
                     'price' => $data['price'],
                     'quantity' => $data['quantity'],
-                    'name' =>  $data['name'],
+                    'name' => $data['name'],
                     'product_id' => $productid,
 
                 ]);
@@ -252,7 +253,7 @@ class EtlobhaController extends BaseController
                 $option->save();
                 $options[] = $option;
 
-                     }
+            }
         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
@@ -270,11 +271,11 @@ class EtlobhaController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
-            'description' => 'required|string',
+            'description' => 'required|string|max:100',
             // 'amount' => ['required', 'numeric'],
 
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
-            // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
+            'less_qty' => ['required', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
@@ -294,7 +295,7 @@ class EtlobhaController extends BaseController
             'short_description' => 'required|string|max:100',
             'robot_link' => 'nullable|string',
             'google_analytics' => 'nullable|url',
-             'weight'=>'nullable',
+            'weight' => 'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -320,7 +321,7 @@ class EtlobhaController extends BaseController
             'purchasing_price' => $request->input('purchasing_price'),
             'selling_price' => $request->input('selling_price'),
             // 'quantity' => $request->input('quantity'),
-            // 'less_qty' => $request->input('less_qty'),
+            'less_qty' => $request->input('less_qty'),
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
             'amount' => 1,
@@ -332,10 +333,10 @@ class EtlobhaController extends BaseController
             'short_description' => $request->short_description,
             'robot_link' => $request->robot_link,
             'google_analytics' => $request->google_analytics,
-            'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
+            'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
-            'amount'=>$request->amount,
+            'amount' => $request->amount,
 
         ]);
         $productid = $product->id;
@@ -413,66 +414,64 @@ class EtlobhaController extends BaseController
                 $image = Image::query()->find($oid);
                 $image->update(['is_deleted' => $image->id]);
             }
-        if($files != null){
-            foreach ($files as $file) {
-                $imageName = time() . '_' . $file;
-                $request['product_id'] = $productid;
-                $existingImagePath = $file;
-                $newImagePath = basename($file);
-                $request['image'] = $newImagePath;
-                Storage::copy($existingImagePath, $newImagePath);
-                Image::create($request->all());
+            if ($files != null) {
+                foreach ($files as $file) {
+                    $imageName = time() . '_' . $file;
+                    $request['product_id'] = $productid;
+                    $existingImagePath = $file;
+                    $newImagePath = basename($file);
+                    $request['image'] = $newImagePath;
+                    Storage::copy($existingImagePath, $newImagePath);
+                    Image::create($request->all());
                 }
             }
         }
-        $preAttributes=Attribute_product::where('product_id',$productid)->get();
-        foreach(  $preAttributes as   $preAttribute)
-        {
+        $preAttributes = Attribute_product::where('product_id', $productid)->get();
+        foreach ($preAttributes as $preAttribute) {
             $preAttribute->delete();
         }
 
-        $preOptions=Option::where('product_id',$productid)->get();
-        foreach(   $preOptions as    $preOption)
-        {
-        $preOption->delete();
+        $preOptions = Option::where('product_id', $productid)->get();
+        foreach ($preOptions as $preOption) {
+            $preOption->delete();
         }
         if (!is_null($request->attribute)) {
             foreach ($request->attribute as $attribute) {
 
-                    $option = new Attribute([
-                        'name'=>$attribute['title'],
-                        'type'=>$attribute['type']
-                    ]);
-                    $option->save();
+                $option = new Attribute([
+                    'name' => $attribute['title'],
+                    'type' => $attribute['type'],
+                ]);
+                $option->save();
 
                 foreach ($attribute['value'] as $attributeValue) {
 
-                $value = new Value([
-                    'attribute_id'=> $option->id,
-                    'value'=> $attributeValue,
-                ]);
-                $value->save();
+                    $value = new Value([
+                        'attribute_id' => $option->id,
+                        'value' => $attributeValue,
+                    ]);
+                    $value->save();
 
-                $values[] = $value;
-                $valuesid[]=$value->id;
+                    $values[] = $value;
+                    $valuesid[] = $value->id;
+                }
+
+                $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
             }
-
-            $attruibtevalues=Value::where('attribute_id', $option->id)->whereIn('id',$valuesid)->get();
-             $product->attributes()->attach($option->id,['value'=>json_encode( $attruibtevalues)]);
-        }
         }
 
-            if (!is_null($request->data)) {
+        if (!is_null($request->data)) {
 
             foreach ($request->data as $data) {
-                $data['name']=[
-                    "ar"=>implode(',', $data['name'])
+                $data['name'] = [
+                    "ar" => implode(',', $data['name']),
                 ];
 
                 $option = new Option([
                     'price' => $data['price'],
                     'quantity' => $data['quantity'],
-                    'name' =>  $data['name'],
+                    'name' => $data['name'],
                     'product_id' => $productid,
 
                 ]);
@@ -480,7 +479,7 @@ class EtlobhaController extends BaseController
                 $option->save();
                 $options[] = $option;
 
-                     }
+            }
         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
