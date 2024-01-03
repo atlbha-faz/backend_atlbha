@@ -6,8 +6,8 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\ProductResource;
 use App\Imports\AdminProductImport;
 use App\Models\Image;
-use App\Models\Product;
 use App\Models\Importproduct;
+use App\Models\Product;
 use App\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -47,9 +47,9 @@ class StockController extends BaseController
         } else {
             $success['most_order'] = 0;
         }
-        $success['products'] = ProductResource::collection(Product::with(['store','category'=>function ($query) {
-    $query->select('id','name','icon');
-}])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select('id','name','status','cover','special','purchasing_price','selling_price','stock','category_id','store_id','subcategory_id','created_at','description','short_description')->get());
+        $success['products'] = ProductResource::collection(Product::with(['store', 'category' => function ($query) {
+            $query->select('id', 'name', 'icon');
+        }])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'description', 'short_description')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -77,13 +77,13 @@ class StockController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
-            'description' => 'required|string',
+            'description' => 'required|string|max:100',
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
             // 'amount' => ['required', 'numeric'],
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
-            // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
+            'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'images' => 'nullable|array',
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
@@ -99,7 +99,7 @@ class StockController extends BaseController
             'short_description' => 'required|string|max:100',
             'robot_link' => 'nullable|string',
             'google_analytics' => 'nullable|url',
-             'weight'=>'nullable',
+            'weight' => 'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -123,7 +123,7 @@ class StockController extends BaseController
             'name' => $request->name,
             'for' => 'stock',
             // 'quantity' => $request->quantity,
-            // 'less_qty' => $request->less_qty,
+            'less_qty' => $request->less_qty,
             'description' => $request->description,
             'purchasing_price' => $request->purchasing_price,
             'selling_price' => $request->selling_price,
@@ -138,7 +138,7 @@ class StockController extends BaseController
             'short_description' => $request->short_description,
             'robot_link' => $request->robot_link,
             'google_analytics' => $request->google_analytics,
-             'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
+            'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
@@ -228,11 +228,11 @@ class StockController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
-            'description' => 'required|string',
+            'description' => 'required|string|max:100',
             // 'amount' => ['required', 'numeric'],
 
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
-            // 'less_qty' => ['required_if:amount,0', 'numeric', 'gt:0'],
+            'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
@@ -251,7 +251,7 @@ class StockController extends BaseController
             'short_description' => 'required|string|max:100',
             'robot_link' => 'nullable|string',
             'google_analytics' => 'nullable|url',
-             'weight'=>'nullable',
+            'weight' => 'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -277,7 +277,7 @@ class StockController extends BaseController
             'purchasing_price' => $request->input('purchasing_price'),
             'selling_price' => $request->input('selling_price'),
             // 'quantity' => $request->input('quantity'),
-            // 'less_qty' => $request->input('less_qty'),
+            'less_qty' => $request->input('less_qty'),
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
             'amount' => 1,
@@ -289,7 +289,7 @@ class StockController extends BaseController
             'short_description' => $request->short_description,
             'robot_link' => $request->robot_link,
             'google_analytics' => $request->google_analytics,
-             'weight'=> (!is_null($request->weight) ? $request->weight/ 1000 : 0.5),
+            'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
 
@@ -333,18 +333,18 @@ class StockController extends BaseController
                 $image = Image::query()->find($oid);
                 $image->update(['is_deleted' => $image->id]);
             }
-            if($files != null){
-            foreach ($files as $file) {
-                $imageName = time() . '_' . $file;
-                $request['product_id'] = $productid;
-                $existingImagePath = $file;
-                $newImagePath = basename($file);
-                $request['image'] = $newImagePath;
-                Storage::copy($existingImagePath, $newImagePath);
-                Image::create($request->all());
+            if ($files != null) {
+                foreach ($files as $file) {
+                    $imageName = time() . '_' . $file;
+                    $request['product_id'] = $productid;
+                    $existingImagePath = $file;
+                    $newImagePath = basename($file);
+                    $request['image'] = $newImagePath;
+                    Storage::copy($existingImagePath, $newImagePath);
+                    Image::create($request->all());
 
+                }
             }
-        }
         }
 
         // $option = Option::where('product_id', $id);
@@ -417,14 +417,14 @@ class StockController extends BaseController
 
         if ($product->for === 'stock') {
             $product->update(['for' => 'etlobha']);
-              //إستيراد الى متجر اطلبها
-       $atlbha_id= Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-        $importproduct = Importproduct::create([
-            'product_id' =>  $product->id,
-            'store_id' => $atlbha_id,
-            'price' =>   $product->selling_price,
-            'qty'=> $product->stock,
-        ]);
+            //إستيراد الى متجر اطلبها
+            $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+            $importproduct = Importproduct::create([
+                'product_id' => $product->id,
+                'store_id' => $atlbha_id,
+                'price' => $product->selling_price,
+                'qty' => $product->stock,
+            ]);
         }
 
         $success['products'] = new ProductResource($product);
