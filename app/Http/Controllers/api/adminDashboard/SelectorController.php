@@ -73,7 +73,7 @@ class SelectorController extends BaseController
 
   public function activities()
     {
-      
+
       // $success['activities']=ActivityResource::collection(Activity::where('is_deleted',0)->where('status','active')->get());
       $success['activities']=CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at')->get());
         $success['status']= 200;
@@ -128,7 +128,7 @@ class SelectorController extends BaseController
 
      public function page_categories()
     {
-        $success['categories']=Page_categoryResource::collection(Page_category::where('is_deleted',0)->where('status','active')->get());
+        $success['categories']=Page_categoryResource::collection(Page_category::where('is_deleted',0)->where('id',2)->where('status','active')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع تصنيفات الصفحات بنجاح','Page Categories return successfully');
@@ -145,7 +145,7 @@ class SelectorController extends BaseController
       $input = $request->all();
         $validator =  Validator::make($input ,[
             'category_id'=>['required','array']
-                
+
         ]);
         if ($validator->fails())
         {
