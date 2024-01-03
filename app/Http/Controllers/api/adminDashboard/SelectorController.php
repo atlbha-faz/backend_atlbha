@@ -128,7 +128,7 @@ class SelectorController extends BaseController
 
      public function page_categories()
     {
-        $success['categories']=Page_categoryResource::collection(Page_category::where('is_deleted',0)->where('id',2)->where('status','active')->get());
+        $success['categories']=Page_categoryResource::collection(Page_category::where('is_deleted',0)->where('id','!=',2)->where('status','active')->get());
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع تصنيفات الصفحات بنجاح','Page Categories return successfully');
