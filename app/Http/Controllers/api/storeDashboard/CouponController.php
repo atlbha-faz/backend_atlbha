@@ -26,7 +26,7 @@ class CouponController extends BaseController
     {
         if ($request->has('page')) {
 
-            $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(8));
+            $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(5));
             $success['page_count'] = $coupons->lastPage();
             $success['coupons'] = $coupons;
         } else {
@@ -305,6 +305,46 @@ class CouponController extends BaseController
     {
 
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        if (count($coupons) > 0) {
+            foreach ($coupons as $coupon) {
+
+                if ($coupon->status === 'active') {
+                    $coupon->update(['status' => 'not_active']);
+                } else {
+                    $coupon->update(['status' => 'active']);
+                }
+                $success['coupons'] = new CouponResource($coupon);
+            }
+
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم تعديل حالة الكوبون بنجاح', 'coupon updated successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'الكوبون غير صحيح', 'coupon does not exit');
+        }
+    }
+    public function deleteItems()
+    {
+        $coupons = Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+
+        if (count($coupons) > 0) {
+            foreach ($coupons as $coupon) {
+
+                $coupon->update(['is_deleted' => $coupon->id]);
+                $success['coupons'] = new CouponResource($coupon);
+            }
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم حذف الكوبون بنجاح', 'coupon deleted successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'الكوبون غير صحيح', 'coupon does not exit');
+        }
+    }
+    public function changeSatusItems()
+    {
+
+        $coupons = Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
 

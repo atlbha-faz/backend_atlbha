@@ -136,10 +136,7 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::get('callback', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'callback'])->name('callback');
         // Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
         // Route::get('list', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'list'])->name('list');
-        Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index']);
-        Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show']);
-        Route::PUT('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update']);
-
+       
         Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
@@ -162,6 +159,8 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('pagecategory', App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
+        Route::get('wallet', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'wallet']);
+    
         // Route::middleware([AdminCheckPermission::class])->group(function () {
             
         // Route::get('changeCountryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'changeStatus']);
@@ -221,6 +220,12 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::resource('unit', App\Http\Controllers\api\adminDashboard\UnitController::class);
         // Route::resource('video', App\Http\Controllers\api\adminDashboard\VideoController::class);
         Route::resource('activity', App\Http\Controllers\api\adminDashboard\ActivityController::class, ['names' => 'admin.activity']);
+
+        Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index'])->name('admin.adminOrder.index');
+        Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show'])->name('admin.adminOrder.show');
+        Route::PUT('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update'])->name('admin.adminOrder.update');
+
+
         Route::resource('platform', App\Http\Controllers\api\adminDashboard\PlatformController::class, ['names' => 'admin.platform']);
         Route::resource('service', App\Http\Controllers\api\adminDashboard\ServiceController::class, ['names' => 'admin.service']);
         Route::get('service/showDetail/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'showDetail'])->name('admin.service.showdetail');
@@ -258,7 +263,7 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class);
 
         Route::resource('shippingtype', App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, ['names' => 'admin.shippingtype']);
-        Route::get('wallet', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'wallet'])->name('admin.shippingtype.wallet');
+
 
         Route::resource('paymenttype', App\Http\Controllers\api\adminDashboard\PaymenttypeController::class, ['names' => 'admin.paymenttype']);
         Route::resource('comment', App\Http\Controllers\api\adminDashboard\CommentController::class, ['names' => 'admin.comment']);
@@ -289,7 +294,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('option', App\Http\Controllers\api\adminDashboard\OptionController::class);
         Route::resource('user', App\Http\Controllers\api\adminDashboard\UserController::class, ['names' => 'admin.user']);
         Route::resource('etlobha', App\Http\Controllers\api\adminDashboard\EtlobhaController::class, ['names' => 'admin.etlobha']);
-        Route::post('updateProfile/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'updateProfile']);
+
 
         Route::get('statistics/{id}', [App\Http\Controllers\api\adminDashboard\EtlobhaController::class, 'statistics'])->name('admin.etlobha.statistics');
 
@@ -306,8 +311,8 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('websiteorder', App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, ['names' => 'admin.websiteorder']);
         Route::get('websiteorderdeleteall', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'deleteall'])->name('admin.websiteorder.deleteall');
 
-        Route::post('acceptStore/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'acceptStore']);
-        Route::post('rejectStore/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'rejectStore']);
+        // Route::post('acceptStore/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'acceptStore']);
+        // Route::post('rejectStore/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'rejectStore']);
         Route::post('acceptService/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'acceptService'])->name('admin.websiteorder.acceptService');
         Route::post('rejectService/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'rejectService'])->name('admin.websiteorder.rejectService');
 
@@ -379,9 +384,9 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('atlobhaContactChangeStatus/{id}', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'changeStatus'])->name('admin.atlobhaContact.changeStatus');
         // });
         // uodate seo
-        Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('store.seo.updateGoogleAnalytics');
-        // import orders
-
+        Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('admin.seo.updateGoogleAnalytics');
+        // update passward for stores
+        Route::post('updateProfile/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'updateProfile'])->name('admin.store.updateProfile');
     });
     });
 // });
@@ -438,7 +443,9 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('selector/page-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'pagesCategory']);
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);
         Route::get('showShippingAddress', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'show']);
-
+        //couponall
+        Route::get('couponchangeSatusItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeSatusItems']);
+        Route::get('coupondeleteItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'deleteItems']);
         // Route::middleware([CheckStorePermission::class])->group(function () {
         //cart
         Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'show'])->name('abandoned.carts.show');
