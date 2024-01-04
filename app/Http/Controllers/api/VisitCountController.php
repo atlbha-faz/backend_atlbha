@@ -17,7 +17,7 @@ class VisitCountController extends BaseController
         //retrieve visitors and page view data for the current day and the last seven days
         $analyticsData = \Analytics::fetchVisitorsAndPageViews(Period::days(7));
 
-       //retrieve visitors and page views since the 6 months ago
+        //retrieve visitors and page views since the 6 months ago
         $analyticsData1 = \Analytics::fetchVisitorsAndPageViews(Period::months(6));
         $analyticsData3 = \Analytics::performQuery(
             Period::months(12),
@@ -30,16 +30,15 @@ class VisitCountController extends BaseController
         );
 
         $rows1 = $analyticsData3->rows;
-if( $rows1 != null){foreach ($rows1 as $row) {
-    $country = $row[0];
-    $city = $row[1];
-    $platform = $row[2];
-    $deviceCategory = $row[3];
+        if ($rows1 != null) {foreach ($rows1 as $row) {
+            $country = $row[0];
+            $city = $row[1];
+            $platform = $row[2];
+            $deviceCategory = $row[3];
 
-    // Do something with the country, city, platform, and device type
-}
-}
-
+            // Do something with the country, city, platform, and device type
+        }
+        }
 
         $data1 = \Analytics::performQuery(
             Period::months(12),
@@ -51,27 +50,27 @@ if( $rows1 != null){foreach ($rows1 as $row) {
         );
 
         $rows = $data1->rows;
-if($rows != null){
-        $totalUsers = array_sum(array_column($rows, 1));
+        if ($rows != null) {
+            $totalUsers = array_sum(array_column($rows, 1));
 
-        $averages = [];
+            $averages = [];
 
-        foreach ($rows as $row) {
-            $deviceCategory = $row[0];
-            $users = $row[1];
+            foreach ($rows as $row) {
+                $deviceCategory = $row[0];
+                $users = $row[1];
 
-            if ($totalUsers !== 0) {
-                $averageUsers = round(($users / $totalUsers) * 100, 2);
-            } else {
-                $averageUsers = 0;
+                if ($totalUsers !== 0) {
+                    $averageUsers = round(($users / $totalUsers) * 100, 2);
+                } else {
+                    $averageUsers = 0;
+                }
+
+                $averages[] = [
+                    'deviceCategory' => $deviceCategory,
+                    'averageUsers' => $averageUsers,
+                ];
             }
-
-            $averages[] = [
-                'deviceCategory' => $deviceCategory,
-                'averageUsers' => $averageUsers,
-            ];
         }
-    }
         $success['analyticsData'] = $analyticsData;
         $success['analyticsData1'] = $analyticsData1;
         $success['analyticsData3'] = $rows1;
