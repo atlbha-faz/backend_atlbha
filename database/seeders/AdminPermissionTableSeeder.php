@@ -193,34 +193,29 @@ Permission::create(['name' => 'admin.platform.show',
 
 
 
-Permission::create(['name' => 'admin.activity',
-        'action_type' => 'admin.activity',
+Permission::create(['name' => 'admin.adminOrder',
+        'action_type' => 'admin.adminOrder',
         'guard_name'=>'api',
-'name_ar'=>'نشاط المتاجر' ,
+'name_ar'=>'طلبات سوق اطلبها' ,
 'parent_id'=>null,
 'type'=>'admin']);
 
-Permission::create(['name' => 'admin.activity.index',
+Permission::create(['name' => 'admin.adminOrder.index',
         'action_type' => 'index',
         'guard_name'=>'api',
 'name_ar'=>' عرض الكل' ,
 'parent_id'=>25,
 'type'=>'admin']);
-Permission::create(['name' => 'admin.activity.store',
-        'action_type' => 'store',
-        'guard_name'=>'api',
-'name_ar'=>'إضافة' ,
-'parent_id'=>25,
-'type'=>'admin']);
 
-Permission::create(['name' => 'admin.activity.update',
+
+Permission::create(['name' => 'admin.adminOrder.update',
         'action_type' => 'update',
         'guard_name'=>'api',
 'name_ar'=>'تعديل' ,
 'parent_id'=>25,
 'type'=>'admin']);
-Permission::create(['name' => 'admin.activity.deleteall',
-        'action_type' => 'deleteall',
+Permission::create(['name' => 'admin.adminOrder.show',
+        'action_type' => 'show',
         'guard_name'=>'api',
 'name_ar'=>'حذف ',
 'parent_id'=>25,
@@ -246,12 +241,12 @@ Permission::create(['name' => 'admin.store.store',
 'parent_id'=>29,
 'type'=>'admin']);
 
-// Permission::create(['name' => 'admin.store.update',
-//         'action_type' => 'update',
+Permission::create(['name' => 'admin.store.updateProfile',
+        'action_type' => 'update',
      
-// 'name_ar'=>'تعديل' ,
-// 'parent_id'=>6,
-// 'type'=>'admin']);
+'name_ar'=>' تعديل كلمة المرور' ,
+'parent_id'=>6,
+'type'=>'admin']);
 Permission::create(['name' => 'admin.store.destroy',
         'action_type' => 'destroy',
         'guard_name'=>'api',
@@ -276,6 +271,8 @@ Permission::create(['name' => 'admin.store.show',
 'name_ar'=>'عرض',
 'parent_id'=> 29,
 'type'=>'admin']);
+
+
 
 
 
@@ -469,6 +466,12 @@ Permission::create(['name' => 'admin.service.index',
 'parent_id'=>61,
 'type'=>'admin']);
 
+Permission::create(['name' => 'admin.service.update',
+        'action_type' => 'update',
+        'guard_name'=>'api',
+'name_ar'=>' التعديل ' ,
+'parent_id'=>61,
+'type'=>'admin']);
 
 Permission::create(['name' => 'admin.service.deleteall',
         'action_type' => 'deleteall',
@@ -635,7 +638,12 @@ Permission::create(['name' => 'admin.page',
 'name_ar'=>'الصفحات' ,
 'parent_id'=>null,
 'type'=>'admin']);
-
+Permission::create(['name' => 'admin.page.index',
+'action_type' => 'show',
+'guard_name'=>'api',
+'name_ar'=> ' عرض الكل ' ,
+'parent_id'=>87,
+'type'=>'admin']);
 Permission::create(['name' => 'admin.page.show',
         'action_type' => 'show',
         'guard_name'=>'api',
@@ -867,7 +875,7 @@ Permission::create(['name' => 'admin.marketer.registrationmarketer',
 Permission::create(['name' => 'admin.category',
         'action_type' => 'category',
         'guard_name'=>'api',
-'name_ar'=>'تصنيفات السوق' ,
+'name_ar'=>'التصنيفات والنشاطات ' ,
 'parent_id'=>null,
 'type'=>'admin']);
 
@@ -911,50 +919,50 @@ Permission::create(['name' => 'admin.category.changesatusall',
 
 //////////////////////////////////////////////////////////////// 129
 
-Permission::create(['name' => 'admin.storecategory',
-        'action_type' => 'storecategory',
-        'guard_name'=>'api',
-'name_ar'=>'تصنيفات المتاجر' ,
-'parent_id'=>null,
-'type'=>'admin']);
+// Permission::create(['name' => 'admin.storecategory',
+//         'action_type' => 'storecategory',
+//         'guard_name'=>'api',
+// 'name_ar'=>'تصنيفات المتاجر' ,
+// 'parent_id'=>null,
+// 'type'=>'admin']);
 
-Permission::create(['name' => 'admin.storecategory.index',
-        'action_type' => 'index',
-        'guard_name'=>'api',
-'name_ar'=>'   عرض تصنيفات المتاجر' ,
-'parent_id'=>129,
-'type'=>'admin']);
-Permission::create(['name' => 'admin.storecategory.show',
-        'action_type' => 'show',
-        'guard_name'=>'api',
-'name_ar'=>'عرض' ,
-'parent_id'=>129,
-'type'=>'admin']);
-Permission::create(['name' => 'admin.storecategory.store',
-        'action_type' => 'store',
-        'guard_name'=>'api',
-'name_ar'=>'إضافة' ,
-'parent_id'=>129,
-'type'=>'admin']);
+// Permission::create(['name' => 'admin.storecategory.index',
+//         'action_type' => 'index',
+//         'guard_name'=>'api',
+// 'name_ar'=>'   عرض تصنيفات المتاجر' ,
+// 'parent_id'=>129,
+// 'type'=>'admin']);
+// Permission::create(['name' => 'admin.storecategory.show',
+//         'action_type' => 'show',
+//         'guard_name'=>'api',
+// 'name_ar'=>'عرض' ,
+// 'parent_id'=>129,
+// 'type'=>'admin']);
+// Permission::create(['name' => 'admin.storecategory.store',
+//         'action_type' => 'store',
+//         'guard_name'=>'api',
+// 'name_ar'=>'إضافة' ,
+// 'parent_id'=>129,
+// 'type'=>'admin']);
 
-Permission::create(['name' => 'admin.storecategory.update',
-        'action_type' => 'update',
-        'guard_name'=>'api',
-'name_ar'=>'تعديل' ,
-'parent_id'=>129,
-'type'=>'admin']);
-Permission::create(['name' => 'admin.storecategory.deleteall',
-        'action_type' => 'deleteall',
-        'guard_name'=>'api',
-'name_ar'=>'حذف' ,
-'parent_id'=> 129,
-'type'=>'admin']);
-Permission::create(['name' => 'admin.storecategory.changesatusall',
-        'action_type' => 'changesatusall',
-        'guard_name'=>'api',
-'name_ar'=>'تفعيل / تعطيل' ,
-'parent_id'=> 129,
-'type'=>'admin']);
+// Permission::create(['name' => 'admin.storecategory.update',
+//         'action_type' => 'update',
+//         'guard_name'=>'api',
+// 'name_ar'=>'تعديل' ,
+// 'parent_id'=>129,
+// 'type'=>'admin']);
+// Permission::create(['name' => 'admin.storecategory.deleteall',
+//         'action_type' => 'deleteall',
+//         'guard_name'=>'api',
+// 'name_ar'=>'حذف' ,
+// 'parent_id'=> 129,
+// 'type'=>'admin']);
+// Permission::create(['name' => 'admin.storecategory.changesatusall',
+//         'action_type' => 'changesatusall',
+//         'guard_name'=>'api',
+// 'name_ar'=>'تفعيل / تعطيل' ,
+// 'parent_id'=> 129,
+// 'type'=>'admin']);
 
 //////////////////////////////////////////////////////////////// 136
 
@@ -977,12 +985,12 @@ Permission::create(['name' => 'admin.websiteorder.show',
 'parent_id'=>136,
 'type'=>'admin']);
 
-Permission::create(['name' => 'admin.websiteorder.update',
-        'action_type' => 'update',
-        'guard_name'=>'api',
-'name_ar'=>'تعديل' ,
-'parent_id'=>136,
-'type'=>'admin']);
+// Permission::create(['name' => 'admin.websiteorder.update',
+//         'action_type' => 'update',
+//         'guard_name'=>'api',
+// 'name_ar'=>'تعديل' ,
+// 'parent_id'=>136,
+// 'type'=>'admin']);
 Permission::create(['name' => 'admin.wbsiteorder.deleteall',
         'action_type' => 'deleteall',
         'guard_name'=>'api',
