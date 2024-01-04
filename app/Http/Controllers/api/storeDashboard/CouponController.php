@@ -26,7 +26,7 @@ class CouponController extends BaseController
     {
         if ($request->has('page')) {
 
-            $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(8));
+            $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(5));
             $success['page_count'] = $coupons->lastPage();
             $success['coupons'] = $coupons;
         } else {
