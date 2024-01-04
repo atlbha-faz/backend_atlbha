@@ -443,7 +443,9 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('selector/page-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'pagesCategory']);
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);
         Route::get('showShippingAddress', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'show']);
-
+        //couponall
+        Route::get('couponchangeSatusItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeSatusItems']);
+        Route::get('coupondeleteItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'deleteItems']);
         // Route::middleware([CheckStorePermission::class])->group(function () {
         //cart
         Route::get('cartShow/{id}', [App\Http\Controllers\api\storeDashboard\CartController::class, 'show'])->name('abandoned.carts.show');
