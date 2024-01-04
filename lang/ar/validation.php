@@ -409,6 +409,7 @@ return [
         "qty" => "كمية المنتج",
         "pageCategory" => "تصنيف الصفحة",
         "paymentype_id" => "طريقة الدفع",
+        "postcategory_id" => "تصنيف المقالات",
     ],
 
 ];
