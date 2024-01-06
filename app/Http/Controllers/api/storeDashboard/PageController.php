@@ -76,6 +76,9 @@ class PageController extends BaseController
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
+            'image' => Rule::requiredIf(function () {
+                return in_array('1', request('pageCategory'));
+            }),
 
         ]);
         if ($validator2->fails()) {
@@ -132,6 +135,9 @@ class PageController extends BaseController
         }
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
+                return in_array('1', request('pageCategory'));
+            }),
+            'image' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
 
@@ -235,6 +241,9 @@ class PageController extends BaseController
         }
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
+                return in_array('1', request('pageCategory'));
+            }),
+            'image' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
 
