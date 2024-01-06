@@ -92,6 +92,7 @@ class StockController extends BaseController
             // 'data.*.title' => 'required|string',
             // 'data.*.value' => 'required|array',
             'SEOdescription' => 'nullable',
+            'altImage' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
@@ -129,6 +130,7 @@ class StockController extends BaseController
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
             'cover' => $request->cover,
+            'altImage' => $request->altImage,
             'amount' => 1,
             'SEOdescription' => $request->SEOdescription,
             'snappixel' => $request->snappixel,
@@ -237,6 +239,7 @@ class StockController extends BaseController
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'altImage' => 'nullable',
             'images' => 'nullable|array',
             // 'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             // 'data' => 'nullable|array',
@@ -292,6 +295,7 @@ class StockController extends BaseController
             'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
+            'altImage' => $request->altImage,
 
         ]);
         $productid = $product->id;
