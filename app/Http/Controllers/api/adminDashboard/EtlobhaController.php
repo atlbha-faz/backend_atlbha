@@ -76,7 +76,7 @@ class EtlobhaController extends BaseController
             'robot_link' => 'nullable|string',
             'google_analytics' => 'nullable|url',
             'weight' => 'nullable',
-
+            'altImage' => 'nullable',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => ['nullable', 'array'],
             'subcategory_id.*' => ['nullable', 'numeric',
@@ -131,6 +131,7 @@ class EtlobhaController extends BaseController
             'cover' => $cover,
             'amount' => 1,
             'SEOdescription' => $request->SEOdescription,
+            'altImage' => $request->altImage,
             'snappixel' => $request->snappixel,
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
@@ -283,6 +284,7 @@ class EtlobhaController extends BaseController
 
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'images' => 'nullable|array',
+            'altImage' => 'nullable',
             // 'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             // 'data' => 'nullable|array',
             // 'data.*.type' => 'required|in:brand,color,wight,size',
@@ -327,6 +329,7 @@ class EtlobhaController extends BaseController
             'cover' => $request->cover,
             'amount' => 1,
             'SEOdescription' => $request->input('SEOdescription'),
+            'altImage' => $request->input('altImage'),
             'snappixel' => $request->snappixel,
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,

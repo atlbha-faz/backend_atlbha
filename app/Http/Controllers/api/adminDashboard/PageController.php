@@ -59,6 +59,7 @@ class PageController extends BaseController
             'seo_link' => 'nullable',
             'seo_desc' => 'nullable',
             'tags' => 'nullable',
+            'altImage' => 'nullable',
             //'name'=>'required|exists:page_categories,id'
             // 'user_id'=>'exists:users,id',
             'pageCategory' => ['required', 'array'],
@@ -96,6 +97,7 @@ class PageController extends BaseController
                 $page->update([
                     'image' => $request->image,
                     'postcategory_id' => $request->postCategory_id,
+                    'altImage' => $request->altImage,
                 ]);
             }
         }
@@ -116,6 +118,7 @@ class PageController extends BaseController
             'seo_link' => 'nullable',
             'seo_desc' => 'nullable',
             'tags' => 'nullable',
+            'altImage' => 'nullable',
             // 'user_id'=>'exists:users,id',
             'pageCategory' => ['required', 'array'],
             'pageCategory.*' => 'required',
@@ -153,6 +156,7 @@ class PageController extends BaseController
                 $page->update([
                     'image' => $request->image,
                     'postcategory_id' => $request->postCategory_id,
+                    'altImage' => $request->altImage,
                 ]);
             }
         }
@@ -214,6 +218,7 @@ class PageController extends BaseController
             'seo_link' => 'nullable',
             'seo_desc' => 'nullable',
             'tags' => 'nullable',
+            'altImage' => 'nullable',
             'pageCategory' => ['required', 'array'],
             'pageCategory.*' => 'required',
             // 'postcategory_id' => Rule::requiredIf(function () {
@@ -251,6 +256,7 @@ class PageController extends BaseController
                 $page->update([
                     'image' => $request->image,
                     'postcategory_id' => $request->postCategory_id,
+                    'altImage' => $request->altImage,
                 ]);
             } else {
 
