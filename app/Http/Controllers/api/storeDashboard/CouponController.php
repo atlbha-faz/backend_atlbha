@@ -28,6 +28,8 @@ class CouponController extends BaseController
 
             $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(5));
             $success['page_count'] = $coupons->lastPage();
+            $pageNumber = request()->query('page', 1);
+            $success['current_page'] = $coupons->currentPage();
             $success['coupons'] = $coupons;
         } else {
             $success['coupons'] = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
@@ -293,6 +295,17 @@ class CouponController extends BaseController
 
                 $coupon->update(['is_deleted' => $coupon->id]);
                 $success['coupons'] = new CouponResource($coupon);
+            }
+            if ($request->has('page')) {
+
+                $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(5));
+                $success['page_count'] = $coupons->lastPage();
+                $pageNumber = request()->query('page', 1);
+                $success['current_page'] = $coupons->currentPage();
+                $success['coupons'] = $coupons;
+            } else {
+                $success['coupons'] = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+
             }
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم حذف الكوبون بنجاح', 'coupon deleted successfully');
