@@ -28,6 +28,7 @@ class PageResource extends JsonResource
             'seo_desc' => $this->seo_desc === "null" ? "" : $this->seo_desc,
             'page_desc' => $this->page_desc === "null" ? "" : $this->page_desc,
             'image' => $this->image != null ? $this->image : "",
+            'altImage' => $this->altImage,
             'tags' =>$this->tags !== ""? explode(',', $this->tags):array(),
             'store' => new StoreResource($this->store),
             'postCategory' => new PostCategoryResource($this->postcategory),
