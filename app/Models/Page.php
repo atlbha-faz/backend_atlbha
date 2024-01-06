@@ -48,9 +48,9 @@ class Page extends Model implements Viewable
 
     public function getImageAttribute($image)
     {
-        if (is_null($image)) {
-            return   asset('assets/media/man.png');
-        }
+        // if (is_null($image)) {
+        //     return   asset('assets/media/man.png');
+        // }
         return asset('storage/images/posts') . '/' . $image;
     }
 
