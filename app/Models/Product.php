@@ -14,7 +14,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'for','altImage', 'special', 'description', 'stock', 'cover', 'purchasing_price','amount','weight','selling_price', 'quantity', 'less_qty', 'tags', 'discount_price', 'SEOdescription', 'snappixel', 'tiktokpixel', 'twitterpixel', 'instapixel','robot_link' ,'short_description','google_analytics','weight','category_id', 'subcategory_id', 'store_id', 'admin_special','status', 'is_deleted'];
+    protected $fillable = ['name', 'slug', 'for', 'special', 'description', 'stock', 'cover', 'purchasing_price','amount','weight','selling_price', 'quantity', 'less_qty', 'tags', 'discount_price', 'SEOdescription', 'snappixel', 'tiktokpixel', 'twitterpixel', 'instapixel','robot_link' ,'short_description','google_analytics','weight','category_id', 'subcategory_id', 'store_id', 'admin_special','status', 'is_deleted'];
     protected $casts = [
     'weight' => 'float',
     'amount'=>'integer'
