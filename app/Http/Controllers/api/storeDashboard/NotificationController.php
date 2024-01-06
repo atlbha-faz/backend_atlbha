@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\api\storeDashboard;
+
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\NotificationResource;
+use App\Models\NotificationModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\NotificationModel;
-use App\Http\Resources\NotificationResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class NotificationController extends BaseController
 {
@@ -13,54 +14,63 @@ class NotificationController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
-        $success['count_of_notifications']=auth()->user()->Notifications->where('read_at',null)->count();
-        $success['notifications']=NotificationResource::collection(auth()->user()->Notifications);
+        $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
+        if ($request->has('page')) {
 
-        $success['status']= 200;
+            $notifications = NotificationResource::collection(auth()->user()->Notifications->paginate(5));
+            $success['page_count'] = $notifications->lastPage();
+            $pageNumber = request()->query('page', 1);
+            $success['current_page'] = $notifications->currentPage();
+            $success['notifications'] = $notifications;
+        } else {
+            $success['notifications'] = NotificationResource::collection(auth()->user()->Notifications);
+        }
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع جميع الاشعارات بنجاح','Notifications return successfully');
+        return $this->sendResponse($success, 'تم ارجاع جميع الاشعارات بنجاح', 'Notifications return successfully');
     }
-    public function read(Request $request){
-        $userUnreadNotifications =  NotificationModel::query()->whereIn('id', $request->id)->get();
-        foreach($userUnreadNotifications  as $userUnreadNotification ){
-        $userUnreadNotification->update(['read_at' =>Carbon::now()]);
-           }
-        $success['notifications']=New NotificationResource($userUnreadNotification);
-        $success['status']= 200;
+    public function read(Request $request)
+    {
+        $userUnreadNotifications = NotificationModel::query()->whereIn('id', $request->id)->get();
+        foreach ($userUnreadNotifications as $userUnreadNotification) {
+            $userUnreadNotification->update(['read_at' => Carbon::now()]);
+        }
+        $success['notifications'] = new NotificationResource($userUnreadNotification);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع  الاشعار بنجاح','Notifications return successfully');
+        return $this->sendResponse($success, 'تم ارجاع  الاشعار بنجاح', 'Notifications return successfully');
     }
-    public function show($id){
-        $userNotification =  NotificationModel::query()->find($id);
+    public function show($id)
+    {
+        $userNotification = NotificationModel::query()->find($id);
 
-        $success['notifications']=New NotificationResource($userNotification);
-        $success['status']= 200;
+        $success['notifications'] = new NotificationResource($userNotification);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع  الاشعار بنجاح','Notifications return successfully');
+        return $this->sendResponse($success, 'تم ارجاع  الاشعار بنجاح', 'Notifications return successfully');
     }
     public function deleteNotification($id)
     {
         $notification = NotificationModel::query()->find($id);
-        if (is_null($notification)){
-            return $this->sendError("الاشعار غير موجود","notification is't exists");
-            }
-           $notification->delete();
+        if (is_null($notification)) {
+            return $this->sendError("الاشعار غير موجود", "notification is't exists");
+        }
+        $notification->delete();
 
-           $success['status']= 200;
-            return $this->sendResponse($success,'تم حذف الاشعار بنجاح','notification deleted successfully');
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم حذف الاشعار بنجاح', 'notification deleted successfully');
     }
 
     public function deleteNotificationAll()
     {
         $notifications = auth()->user()->Notifications;
-     foreach($notifications  as $notification ){
-           $notification->delete();
-     }
-           $success['status']= 200;
-            return $this->sendResponse($success,'تم حذف الاشعار بنجاح','notification deleted successfully');
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم حذف الاشعار بنجاح', 'notification deleted successfully');
     }
 
-    }
-
+}
