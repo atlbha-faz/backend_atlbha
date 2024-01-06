@@ -12,7 +12,7 @@ class CartDetail extends Model
     protected $fillable = ['cart_id','product_id','qty','price','option_id','is_deleted'];
 
     // protected $casts = [
-    //     'options' => 'array', 
+    //     'options' => 'array',
     // ];
     public function cart()
     {
@@ -27,6 +27,6 @@ class CartDetail extends Model
      $quantity = CartDetail::where('id',$cartDetail_id)->pluck('qty')->first();
      $price = CartDetail::where('id',$cartDetail_id)->pluck('price')->first();
      $cart_subtotal = $quantity * $price;
-     return  $cart_subtotal;
+     return  round($cart_subtotal, 2);
     }
 }
