@@ -23,7 +23,7 @@ return new class extends Migration
             $table->longText('page_desc')->nullable();
             $table->text('tags');
             $table->string('image')->nullable();
-            $table->string('altImage')->nullable();
+            $table->text('altImage')->nullable();
             $table->unsignedBigInteger('postcategory_id')->nullable();
             $table->foreign('postcategory_id')->references('id')->on('postcategories')->onDelete('cascade');
            $table->unsignedBigInteger('user_id')->nullable();
