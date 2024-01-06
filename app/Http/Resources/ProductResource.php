@@ -35,7 +35,6 @@ class ProductResource extends JsonResource
 
         return [
             'id' => $this->id,
-
             'name' => $this->name,
             //'sku' => $this->sku,
             'for' => $this->for,
@@ -49,7 +48,6 @@ class ProductResource extends JsonResource
             'stock' => $this->stock,
             'tags' => $this->tags,
             'cover' => $this->cover,
-            'altImage' => $this->altImage,
             'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
             'SEOdescription' => $this->SEOdescription !== ""? explode(',', $this->SEOdescription):array(),
             'snappixel' => $this->snappixel,

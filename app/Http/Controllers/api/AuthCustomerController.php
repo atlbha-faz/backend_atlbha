@@ -169,7 +169,10 @@ Mail::to($user->email)->send(new SendCode($data));
 
             return $this->sendError('الحساب غير موجود', 'User not found');
         }
-
+        if($user->verify_code_expires_at < now()){
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
+        }
         if ($request->code == $user->verify_code) {
 
             $user->resetVerifyCode();

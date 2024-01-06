@@ -292,6 +292,7 @@ class StockController extends BaseController
             'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
+   
 
         ]);
         $productid = $product->id;
