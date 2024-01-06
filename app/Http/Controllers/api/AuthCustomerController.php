@@ -171,7 +171,7 @@ Mail::to($user->email)->send(new SendCode($data));
         }
         if($user->verify_code_expires_at < now()){
             $success['status'] = 200;
-            return $this->sendResponse($success, 'لم يتم التحقق', 'not verified');
+            return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
         }
         if ($request->code == $user->verify_code) {
 
