@@ -18,8 +18,11 @@ class NotificationController extends BaseController
     {
         $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
         if ($request->has('page')) {
+            $userNotifications = auth()->user()->notifications()->paginate(5);
 
-            $notifications = NotificationResource::collection(auth()->user()->Notifications->paginate(5));
+            $notifications = NotificationResource::collection($userNotifications);
+
+            // $notifications = NotificationResource::collection(auth()->user()->Notifications->paginate(5));
             $success['page_count'] = $notifications->lastPage();
             $pageNumber = request()->query('page', 1);
             $success['current_page'] = $notifications->currentPage();
