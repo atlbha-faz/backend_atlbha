@@ -140,7 +140,7 @@ class User extends Authenticatable
     {
         $this->timestamps = false;
         $this->verify_code = rand(100000, 999999);
-        $this->verify_code_expires_at = now()->addMinutes(10);
+        $this->verify_code_expires_at = now()->addMinutes(1);
         $this->save();
     }
 
