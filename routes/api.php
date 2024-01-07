@@ -136,7 +136,7 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::get('callback', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'callback'])->name('callback');
         // Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
         // Route::get('list', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'list'])->name('list');
-       
+
         Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
@@ -160,9 +160,9 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
         Route::get('wallet', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'wallet']);
-    
+
         // Route::middleware([AdminCheckPermission::class])->group(function () {
-            
+
         // Route::get('changeCountryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'changeStatus']);
         // Route::get('changeCityStatus/{id}', [App\Http\Controllers\api\adminDashboard\CityController::class, 'changeStatus']);
         // Route::get('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class, 'changeStatus']);
@@ -597,6 +597,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('NotificationDelete/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'deleteNotification'])->name('store.notifications.NotificationDelete');
         Route::get('NotificationDeleteAll', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'deleteNotificationAll'])->name('store.notifications.NotificationDeleteAll');
         Route::get('NotificationShow/{id}', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'show'])->name('store.notifications.NotificationShow');
+        Route::get('countUnRead', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'countUnRead'])->name('store.notifications.countUnRead');
         //  Etlobha services
         Route::get('etlobhaservice/show', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'show'])->name('store.platformservices.show');
         Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'store'])->name('store.platformservices.add');
