@@ -59,7 +59,7 @@ class NotificationController extends BaseController
         $success['notifications'] = $notifications;
     } 
     else{
-        $userUnreadNotification=  $userNotifications = auth()->user()->notifications();
+        $userUnreadNotification= auth()->user()->Notifications;
         $success['notifications'] = NotificationResource::collection($userUnreadNotification);
     }
         $success['status'] = 200;
