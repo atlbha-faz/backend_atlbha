@@ -97,4 +97,11 @@ class NotificationController extends BaseController
         return $this->sendResponse($success, 'تم حذف الاشعار بنجاح', 'notification deleted successfully');
     }
 
+    public function countUnRead(Request $request)
+    {
+        $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
+     $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع جميع الاشعارات بنجاح', 'Notifications return successfully');
+    }
 }
