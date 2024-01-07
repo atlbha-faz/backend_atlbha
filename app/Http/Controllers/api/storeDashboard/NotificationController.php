@@ -35,34 +35,36 @@ class NotificationController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع جميع الاشعارات بنجاح', 'Notifications return successfully');
     }
     public function read(Request $request)
-    {     if ($request->has('id')) {
-        $userUnreadNotifications = NotificationModel::query()->whereIn('id', $request->id)->get();
-        foreach ($userUnreadNotifications as $userUnreadNotification) {
-            $userUnreadNotification->update(['read_at' => Carbon::now()]);
-        }
-    }
-    else{
-        $userUnreadNotifications = NotificationModel::query()->where('read_at', null)->get();
-        foreach ($userUnreadNotifications as $userUnreadNotification) {
-            $userUnreadNotification->update(['read_at' => Carbon::now()]);
-        }
-    }
-    if ($request->has('page')) {
-        $userNotifications = auth()->user()->notifications()->paginate(5);
+    {
+        if ($request->has('id')) {
+            $userUnreadNotifications = NotificationModel::query()->whereIn('id', $request->id)->get();
+            foreach ($userUnreadNotifications as $userUnreadNotification) {
+                $userUnreadNotification->update(['read_at' => Carbon::now()]);
+            }
+            $success['notifications'] = new NotificationResource($userUnreadNotification);
 
-        $notifications = NotificationResource::collection($userNotifications);
+        } else {
+            $userUnreadNotifications = NotificationModel::query()->where('read_at', null)->get();
+            foreach ($userUnreadNotifications as $userUnreadNotification) {
+                $userUnreadNotification->update(['read_at' => Carbon::now()]);
+            }
+        }
+        if ($request->has('data')) {
+            $userNotifications = auth()->user()->Notifications;
 
-        // $notifications = NotificationResource::collection(auth()->user()->Notifications->paginate(5));
-        $success['page_count'] = $notifications->lastPage();
-        $pageNumber = request()->query('page', 1);
-        $success['current_page'] = $notifications->currentPage();
-        $success['notifications'] = $notifications;
-    } 
-    else{
-        $userUnreadNotification= auth()->user()->Notifications;
-        $success['notifications'] = NotificationResource::collection($userUnreadNotification);
-    }
-        $success['status'] = 200;
+            $notifications = NotificationResource::collection($userNotifications);
+
+            $success['status'] = 200;
+
+            // $notifications = NotificationResource::collection(auth()->user()->Notifications->paginate(5));
+
+            $success['notifications'] = $notifications;
+        } else {
+
+            $success['status'] = 200;
+
+        }
+
 
         return $this->sendResponse($success, 'تم ارجاع  الاشعار بنجاح', 'Notifications return successfully');
     }
@@ -97,4 +99,11 @@ class NotificationController extends BaseController
         return $this->sendResponse($success, 'تم حذف الاشعار بنجاح', 'notification deleted successfully');
     }
 
+    public function countUnRead(Request $request)
+    {
+        $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع جميع الاشعارات بنجاح', 'Notifications return successfully');
+    }
 }
