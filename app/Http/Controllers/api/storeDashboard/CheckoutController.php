@@ -51,9 +51,9 @@ class CheckoutController extends BaseController
                 'postal_code' => 'nullable|string',
                 'default_address' => 'required',
                 'paymentype_id' => 'required|exists:paymenttypes,id',
-               
+
                 'cod' => 'nullable',
-                'description' => 'required|string',
+                'description' => 'nullable|string',
 
             ]);
             if ($validator->fails()) {
@@ -106,7 +106,7 @@ class CheckoutController extends BaseController
             } else {
                 $extra_shipping_price = 0;
             }
-            if ($cart->free_shipping == 1) 
+            if ($cart->free_shipping == 1)
              {
             $order->update([
                 'shipping_price' => $shipping_price,
@@ -120,7 +120,7 @@ class CheckoutController extends BaseController
             ]);
 
            }
-            
+
 
             // Loop through the cart items and associate them with the order
             foreach ($cart->cartDetails as $cartItem) {
@@ -128,7 +128,7 @@ class CheckoutController extends BaseController
                 if ($product != null) {
                     $product->update([
                         'stock' => $product->stock - $cartItem->qty,
-                    ]);                
+                    ]);
                 }
             }
             foreach ($cart->cartDetails as $cartItem) {
@@ -241,11 +241,11 @@ class CheckoutController extends BaseController
 
             return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
-        
+
     }
     public function paymentmethods()
     {
-      
+
         $success['payment_types'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->orderByDesc('created_at')->whereNot('id',4)->get());
         $success['status'] = 200;
 

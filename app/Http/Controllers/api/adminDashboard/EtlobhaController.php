@@ -275,7 +275,7 @@ class EtlobhaController extends BaseController
             // 'amount' => ['required', 'numeric'],
 
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
-            'less_qty' => ['required', 'numeric', 'gt:0'],
+            'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
