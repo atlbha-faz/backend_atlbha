@@ -136,7 +136,7 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::get('callback', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'callback'])->name('callback');
         // Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
         // Route::get('list', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'list'])->name('list');
-        Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId']);
+
         Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
@@ -162,7 +162,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('wallet', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'wallet']);
     
         // Route::middleware([AdminCheckPermission::class])->group(function () {
-            
+            Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
         // Route::get('changeCountryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'changeStatus']);
         // Route::get('changeCityStatus/{id}', [App\Http\Controllers\api\adminDashboard\CityController::class, 'changeStatus']);
         // Route::get('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class, 'changeStatus']);
