@@ -37,11 +37,11 @@ class NotificationController extends BaseController
     public function read(Request $request)
     {
         if ($request->has('id')) {
-            $userUnreadNotifications = NotificationModel::query()->whereIn('id', $request->id)->get();
-            foreach ($userUnreadNotifications as $userUnreadNotification) {
-                $userUnreadNotification->update(['read_at' => Carbon::now()]);
-            }
-            $success['notifications'] = new NotificationResource($userUnreadNotification);
+          $userUnreadNotifications =  NotificationModel::query()->whereIn('id', $request->id)->get();
+        foreach($userUnreadNotifications  as $userUnreadNotification ){
+        $userUnreadNotification->update(['read_at' =>Carbon::now()]);
+           }
+        $success['notifications']=New NotificationResource($userUnreadNotification);
         } else {
             $userUnreadNotifications = NotificationModel::query()->where('read_at', null)->get();
             foreach ($userUnreadNotifications as $userUnreadNotification) {
@@ -59,10 +59,11 @@ class NotificationController extends BaseController
 
             $success['notifications'] = $notifications;
         } else {
-            $success['count_of_notifications'] = 0;
+  $success['count_of_notifications'] =0;
             $success['status'] = 200;
 
         }
+
 
         return $this->sendResponse($success, 'تم ارجاع  الاشعار بنجاح', 'Notifications return successfully');
     }
