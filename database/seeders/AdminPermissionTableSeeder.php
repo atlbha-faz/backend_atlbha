@@ -271,6 +271,12 @@ Permission::create(['name' => 'admin.store.show',
 'name_ar'=>'عرض',
 'parent_id'=> 29,
 'type'=>'admin']);
+Permission::create(['name' => 'admin.store.loginStore',
+        'action_type' => 'loginStore',
+        'guard_name'=>'api',
+'name_ar'=>'دخول المتاجر',
+'parent_id'=> 29,
+'type'=>'admin']);
 
 
 
