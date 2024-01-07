@@ -42,12 +42,26 @@ class NotificationController extends BaseController
         }
     }
     else{
-        $userUnreadNotifications = NotificationModel::query()->get();
+        $userUnreadNotifications = NotificationModel::query()->where('read_at', null)->get();
         foreach ($userUnreadNotifications as $userUnreadNotification) {
             $userUnreadNotification->update(['read_at' => Carbon::now()]);
         }
     }
-        $success['notifications'] = new NotificationResource($userUnreadNotification);
+    if ($request->has('page')) {
+        $userNotifications = auth()->user()->notifications()->paginate(5);
+
+        $notifications = NotificationResource::collection($userNotifications);
+
+        // $notifications = NotificationResource::collection(auth()->user()->Notifications->paginate(5));
+        $success['page_count'] = $notifications->lastPage();
+        $pageNumber = request()->query('page', 1);
+        $success['current_page'] = $notifications->currentPage();
+        $success['notifications'] = $notifications;
+    } 
+    else{
+        $userUnreadNotification=  $userNotifications = auth()->user()->notifications();
+        $success['notifications'] = NotificationResource::collection($userUnreadNotification);
+    }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع  الاشعار بنجاح', 'Notifications return successfully');
