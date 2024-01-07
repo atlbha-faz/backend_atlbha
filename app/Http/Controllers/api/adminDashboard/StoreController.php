@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\NoteResource;
-use App\Http\Resources\StoreResource;
-use App\Http\Resources\UserResource;
-use App\Models\Comment;
-use App\Models\Homepage;
 use App\Models\Note;
-use App\Models\Product;
+use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
-use App\Models\User;
+use App\Models\Comment;
+use App\Models\Product;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
 {
@@ -24,7 +25,24 @@ class StoreController extends BaseController
     {
         $this->middleware('auth:api');
     }
+    public function loginId($id)
+    {
+    
+          $user=User::where('user_type','store')->where('is_deleted', 0)->where('store_id',$id)->first();
+        if (isset($user->id) && $user->id != 0) {
 
+        
+        $success['user'] = new UserResource($user);
+        $success['token'] = $user->createToken('authToken')->accessToken;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
+        }
+        else{
+            return $this->sendError("المتجر غير موجودة", "store is't exists");
+        }
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -604,5 +622,7 @@ class StoreController extends BaseController
         }
 
     }
+
+ 
 
 }

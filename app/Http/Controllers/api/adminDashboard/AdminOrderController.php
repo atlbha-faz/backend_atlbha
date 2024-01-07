@@ -108,6 +108,9 @@ class AdminOrderController extends BaseController
                 foreach ($order->items as $orderItem) {
 
                 $product = Product::where('id', $orderItem->product_id)->first();
+                if ($ $orderItem->quantity > $product->stock) {
+                    return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
+                } 
                 $importOrder = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $storeid->id)->first();
                 if($importOrder == null){
                     $importproduct = Importproduct::create([

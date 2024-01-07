@@ -492,7 +492,7 @@ class AuthController extends BaseController
             return $this->sendResponse($success, 'لم يتم التحقق', 'not verified');
         }
     }
-
+ 
     /////////////////////////////////////////////////// SMS
 
     public function sendSms($request)
