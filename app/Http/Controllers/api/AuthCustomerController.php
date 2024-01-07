@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers\api;
-
+use Carbon\Carbon;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\UserResource;
 use App\Mail\SendCode;
@@ -48,12 +48,12 @@ class AuthCustomerController extends BaseController
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            // $this->sendSms($request);
-            $data = array(
-    'code' => $request->code,
-);
+            $this->sendSms($request);
+//             $data = array(
+//     'code' => $request->code,
+// );
 
-Mail::to($user->email)->send(new SendCode($data));
+// Mail::to($user->email)->send(new SendCode($data));
 
 
         } else {
@@ -64,12 +64,12 @@ Mail::to($user->email)->send(new SendCode($data));
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            // $this->sendSms($request); // send and return its response
-            $data = array(
-                'code' => $request->code,
-            );
+            $this->sendSms($request); // send and return its response
+            // $data = array(
+            //     'code' => $request->code,
+            // );
 
-            Mail::to($user->email)->send(new SendCode($data));
+            // Mail::to($user->email)->send(new SendCode($data));
 
         }
 
@@ -169,9 +169,10 @@ Mail::to($user->email)->send(new SendCode($data));
 
             return $this->sendError('الحساب غير موجود', 'User not found');
         }
-        if($user->verify_code_expires_at < now()){
-            $success['status'] = 200;
-            return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
+        $a=now()->toDateTimeString();
+        if($user->verify_code_expires_at < $a){
+         $success['status'] = 200;
+        return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
         }
         if ($request->code == $user->verify_code) {
 
