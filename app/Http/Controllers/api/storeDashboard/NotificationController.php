@@ -35,11 +35,18 @@ class NotificationController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع جميع الاشعارات بنجاح', 'Notifications return successfully');
     }
     public function read(Request $request)
-    {
+    {     if ($request->has('id')) {
         $userUnreadNotifications = NotificationModel::query()->whereIn('id', $request->id)->get();
         foreach ($userUnreadNotifications as $userUnreadNotification) {
             $userUnreadNotification->update(['read_at' => Carbon::now()]);
         }
+    }
+    else{
+        $userUnreadNotifications = NotificationModel::query()->get();
+        foreach ($userUnreadNotifications as $userUnreadNotification) {
+            $userUnreadNotification->update(['read_at' => Carbon::now()]);
+        }
+    }
         $success['notifications'] = new NotificationResource($userUnreadNotification);
         $success['status'] = 200;
 
