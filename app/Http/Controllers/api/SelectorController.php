@@ -167,28 +167,35 @@ class SelectorController extends BaseController
   }
   public function try()
   {
-      $role = Role::create(['name'=>"productEntry" , 'type'=>'admin' ,'guard_name'=>'api']);
-      $arr=array();
-      for ($i = 3; $i <= 25; $i++) {
-          $arr[]=$i;
-      }
+    //   $role = Role::create(['name'=>"productEntry" , 'type'=>'admin' ,'guard_name'=>'api']);
+    //   $arr=array();
+    //   for ($i = 3; $i <= 25; $i++) {
+    //       $arr[]=$i;
+    //   }
      
-      $role->syncPermissions($arr);
-      $user = User::create([
-          'name' => "مدخل منتجات",
-          'user_name' => "Entery",
-          'user_type' => 'admin_employee',
-          'email' => "a@gmail.com",
-          'password' => "1234567",
-          'phonenumber' => "+966502356892",
-          // 'image' => $request->image,
-          'verified' => 1,
+    //   $role->syncPermissions($arr);
+    //   $user = User::create([
+    //       'name' => "مدخل منتجات",
+    //       'user_name' => "Entery",
+    //       'user_type' => 'admin_employee',
+    //       'email' => "a@gmail.com",
+    //       'password' => "1234567",
+    //       'phonenumber' => "+966502356892",
+    //       // 'image' => $request->image,
+    //       'verified' => 1,
 
-      ]);
+    //   ]);
    
-      $user->assignRole($role->name);
+    //   $user->assignRole($role->name);
+    // role_has_permissions::create([])
+//     $role = Role::where('id',1)->first();
+//     $permissions=array();
+// for($i=103 ;$i<221;$i++){
+//     $permissions[]=$i;
+// }
+//     $role->givePermissionTo($permissions);
       $success['status'] = 200;
-      $success['object'] =  $result;
+    //   $success['object'] =  $result;
       return $this->sendResponse($success, 'تم', 'user  successfully');
 
   }

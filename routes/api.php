@@ -136,7 +136,7 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::get('callback', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'callback'])->name('callback');
         // Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
         // Route::get('list', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'list'])->name('list');
-       
+        Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId']);
         Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
