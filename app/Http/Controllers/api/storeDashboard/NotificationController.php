@@ -18,7 +18,7 @@ class NotificationController extends BaseController
     {
         $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
         if ($request->has('page')) {
-            $userNotifications = auth()->user()->notifications()->paginate(5);
+            $userNotifications = auth()->user()->notifications()->paginate(10);
 
             $notifications = NotificationResource::collection($userNotifications);
 
