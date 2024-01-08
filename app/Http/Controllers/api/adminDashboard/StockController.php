@@ -77,7 +77,7 @@ class StockController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
-            'description' => 'required|string|max:100',
+            'description' => 'required|string',
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
@@ -228,7 +228,7 @@ class StockController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
-            'description' => 'required|string|max:100',
+            'description' => 'required|string',
             // 'amount' => ['required', 'numeric'],
 
             // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
@@ -292,7 +292,7 @@ class StockController extends BaseController
             'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
-   
+
 
         ]);
         $productid = $product->id;
