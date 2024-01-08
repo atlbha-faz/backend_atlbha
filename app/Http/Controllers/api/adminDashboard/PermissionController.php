@@ -18,7 +18,7 @@ class PermissionController extends BaseController
      public function index()
     {
 
-                $success['permissions']=PermissionResource::collection(Permission::where('type','admin')->where('parent_id',null)->get());
+        $success['permissions']=PermissionResource::collection(Permission::where('type','admin')->where('parent_id',null)->whereNotIn('id', [1,2])->get());
 
         $success['status']= 200;
 
