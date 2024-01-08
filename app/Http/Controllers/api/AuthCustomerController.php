@@ -163,7 +163,8 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        $user = User::where('user_type', 'customer')->where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->where('is_deleted', 0)->latest()->first();
+        $user = User::where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->latest()->first();
+
         if (is_null($user)) {
 
             return $this->sendError('الحساب غير موجود', 'User not found');
