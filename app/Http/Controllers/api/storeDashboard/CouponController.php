@@ -300,6 +300,7 @@ class CouponController extends BaseController
                 $coupons = Coupon::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(5);
                 if($coupons !=null){
                 $success['page_count'] = $coupons->lastPage();
+                $success['coupon_count'] = $coupons->count();
                 $success['current_page'] =  $coupons->currentPage();
                 $pageNumber = request()->query('page', 1);
                 $pageItem=$coupons->last();
@@ -307,7 +308,7 @@ class CouponController extends BaseController
               
            
                 $couponLists = Coupon::where('id','>=',$itemId)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get();
-                
+               
                 $success['coupons'] = CouponResource::collection( $couponLists);
                 }
                 else{
