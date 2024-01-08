@@ -57,7 +57,12 @@ class RoleController extends BaseController
             {
                 return $this->sendError(null,$validator->errors());
             }
-      
+            if (in_array(2, $request->permissions)) {
+                $request->permissions=$request->permissions;
+            }
+            else{
+                $request->permissions=array_merge($request->permissions,[2]);
+            }
       
     $role = Role::create(['name'=>$request->role_name , 'type'=>'admin' ,'guard_name'=>'api']);
       
@@ -90,7 +95,12 @@ class RoleController extends BaseController
                return $this->sendError(null,$validator->errors());
            }
         
-         
+           if (in_array(2, $request->permissions)) {
+            $request->permissions=$request->permissions;
+        }
+        else{
+            $request->permissions=array_merge($request->permissions,[2]);
+        }
     $role->update(['name'=>$request->role_name ]);
       
     $role->syncPermissions($request->permissions);

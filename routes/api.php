@@ -161,7 +161,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
         Route::get('wallet', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'wallet']);
 
-        // Route::middleware([AdminCheckPermission::class])->group(function () {
+         Route::middleware([AdminCheckPermission::class])->group(function () {
             Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
         // Route::get('changeCountryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'changeStatus']);
         // Route::get('changeCityStatus/{id}', [App\Http\Controllers\api\adminDashboard\CityController::class, 'changeStatus']);
@@ -249,8 +249,8 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::resource('category', App\Http\Controllers\api\adminDashboard\CategoryController::class, ['names' => 'admin.category']);
         Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class, ['names' => 'admin.storecategory']);
-        Route::post('addvideo', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'addvideo'])->name('admin.course.addvideo');
-        Route::get('deletevideo/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deletevideo'])->name('admin.course.deletevideo');
+        // Route::post('addvideo', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'addvideo'])->name('admin.course.addvideo');
+        // Route::get('deletevideo/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deletevideo'])->name('admin.course.deletevideo');
         Route::get('deleteunit/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deleteunit'])->name('admin.course.deleteunit');
 
         Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
@@ -389,7 +389,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::post('updateProfile/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'updateProfile'])->name('admin.store.updateProfile');
     });
     });
-// });
+});
 Auth::routes();
 
 // Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
