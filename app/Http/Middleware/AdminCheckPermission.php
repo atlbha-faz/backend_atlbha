@@ -34,7 +34,8 @@ class AdminCheckPermission
                 return $next($request);
             }
             // dd(  $request->route()->getName());
-            return response('You dont have access to the requested page', 403);
+            // return response('You dont have access to the requested page', 403);
+            return response()->json('You dont have access to the requested page', 403);
 
             // abort(Response::HTTP_FORBIDDEN, "You don't have access to the requested page. (" . $request->route()->getName() . ")");
         }
