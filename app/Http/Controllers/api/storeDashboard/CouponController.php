@@ -289,20 +289,30 @@ class CouponController extends BaseController
     public function deleteall(Request $request)
     {
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
-        $id=1;
+      
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
 
                 $coupon->update(['is_deleted' => $coupon->id]);
-                $id=$coupon->id;
                 $success['coupons'] = new CouponResource($coupon);
             }
             if ($request->has('page')) {
-                $coupons = Coupon::where('id','<=',$id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(5);
+                $coupons = Coupon::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(5);
+                if($coupons !=null){
                 $success['page_count'] = $coupons->lastPage();
+                $success['current_page'] =  $coupons->currentPage();
                 $pageNumber = request()->query('page', 1);
-                $success['current_page'] = $coupons->currentPage();
-                $success['coupons'] = CouponResource::collection($coupons);
+                $pageItem=$coupons->last();
+                $itemId=$pageItem->id;
+              
+           
+                $couponLists = Coupon::where('id','>=',$itemId)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get();
+                
+                $success['coupons'] = CouponResource::collection( $couponLists);
+                }
+                else{
+                    $success['coupons']=null;
+                }
             } else {
                 $success['coupons'] = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
 
