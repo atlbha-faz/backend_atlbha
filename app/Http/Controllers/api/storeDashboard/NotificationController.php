@@ -18,7 +18,7 @@ class NotificationController extends BaseController
     {
         $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
         if ($request->has('page')) {
-            $userNotifications = auth()->user()->notifications()->paginate(5);
+            $userNotifications = auth()->user()->notifications()->paginate(10);
 
             $notifications = NotificationResource::collection($userNotifications);
 
@@ -37,12 +37,11 @@ class NotificationController extends BaseController
     public function read(Request $request)
     {
         if ($request->has('id')) {
-            $userUnreadNotifications = NotificationModel::query()->whereIn('id', $request->id)->get();
-            foreach ($userUnreadNotifications as $userUnreadNotification) {
-                $userUnreadNotification->update(['read_at' => Carbon::now()]);
-            }
-            $success['notifications'] = new NotificationResource($userUnreadNotification);
-
+          $userUnreadNotifications =  NotificationModel::query()->whereIn('id', $request->id)->get();
+        foreach($userUnreadNotifications  as $userUnreadNotification ){
+        $userUnreadNotification->update(['read_at' =>Carbon::now()]);
+           }
+        $success['notifications']=New NotificationResource($userUnreadNotification);
         } else {
             $userUnreadNotifications = NotificationModel::query()->where('read_at', null)->get();
             foreach ($userUnreadNotifications as $userUnreadNotification) {
@@ -60,7 +59,7 @@ class NotificationController extends BaseController
 
             $success['notifications'] = $notifications;
         } else {
-
+  $success['count_of_notifications'] =0;
             $success['status'] = 200;
 
         }
