@@ -32,7 +32,7 @@ class Page extends Model implements Viewable
 
     public function postcategory()
     {
-        return $this->belongsTo(Postcategory::class);
+        return $this->belongsTo(Postcategory::class,'postcategory_id','id');
     }
     public function setImageAttribute($image)
     {

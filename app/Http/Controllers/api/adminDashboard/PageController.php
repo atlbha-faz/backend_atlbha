@@ -99,7 +99,7 @@ class PageController extends BaseController
             if (in_array(1, $request->pageCategory)) {
                 $page->update([
                     'image' => $request->image,
-                    'postcategory_id' => $request->postCategory_id,
+                    'postcategory_id' => $request->postcategory_id,
                     'altImage' => $request->altImage,
                 ]);
             }
@@ -161,7 +161,7 @@ class PageController extends BaseController
             if (in_array(1, $request->pageCategory)) {
                 $page->update([
                     'image' => $request->image,
-                    'postcategory_id' => $request->postCategory_id,
+                    'postcategory_id' => $request->postcategory_id,
                     'altImage' => $request->altImage,
                 ]);
             }
@@ -239,9 +239,9 @@ class PageController extends BaseController
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
-            'image' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+            // 'image' => Rule::requiredIf(function () {
+            //     return in_array('1', request('pageCategory'));
+            // }),
 
         ]);
         if ($validator2->fails()) {
@@ -262,11 +262,16 @@ class PageController extends BaseController
         if ($request->pageCategory) {
             $page->page_categories()->sync($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
+       
                 $page->update([
-                    'image' => $request->image,
-                    'postcategory_id' => $request->postCategory_id,
+                    'postcategory_id' => $request->postcategory_id,
                     'altImage' => $request->altImage,
                 ]);
+                if ($request->has('image')) {
+                    $page->update([
+                        'image' => $request->image
+                    ]);
+                }
             } else {
 
                 $page->update([
