@@ -79,7 +79,7 @@ class VerificationController extends BaseController
         if ($store->verification_status == "admin_waiting" || $store->verification_status == "accept") {
             return $this->sendError("الطلب قيد المراجعه", "request is in process");
         }
-        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->get();
+        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id',[1,2])->get();
 
         $data = [
             'message' => 'طلب توثيق',
