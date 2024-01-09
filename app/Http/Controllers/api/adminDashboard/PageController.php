@@ -247,7 +247,6 @@ class PageController extends BaseController
         if ($validator2->fails()) {
             return $this->sendError(null, $validator2->errors());
         }
-
         $page->update([
             'title' => $request->input('title'),
             'page_content' => $request->input('page_content'),
