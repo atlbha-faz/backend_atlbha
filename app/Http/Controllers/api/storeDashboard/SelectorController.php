@@ -179,7 +179,7 @@ class SelectorController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
     }
-    //  storeCategory
+    //  storeCategory with pagination
     public function storeCategory(Request $request)
     {
         if ($request->has('page')) {
