@@ -163,7 +163,7 @@ class SelectorController extends BaseController
                     where('is_deleted', 0)
                     ->where('status', 'active')
                     ->where('parent_id', null
-                    )->where('store_id', null)->paginate(8));
+                    )->where('store_id', null)->paginate(10));
             $pageNumber = request()->query('page', 1);
             $success['current_page'] = $etlobahCategory->currentPage();
             $success['page_count'] = $etlobahCategory->lastPage();
@@ -187,7 +187,7 @@ class SelectorController extends BaseController
                     where('is_deleted', 0)
                     ->where('status', 'active')
                     ->where('parent_id', null
-                    )->where('store_id', auth()->user()->store_id)->paginate(8));
+                    )->where('store_id', auth()->user()->store_id)->paginate(10));
             $pageNumber = request()->query('page', 1);
             $success['current_page'] = $storeCategory->currentPage();
             $success['page_count'] = $storeCategory->lastPage();
