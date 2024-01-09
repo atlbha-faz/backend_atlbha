@@ -188,12 +188,12 @@ class SelectorController extends BaseController
    
     //   $user->assignRole($role->name);
     // role_has_permissions::create([])
-//     $role = Role::where('id',1)->first();
-//     $permissions=array();
-// for($i=103 ;$i<221;$i++){
-//     $permissions[]=$i;
-// }
-//     $role->givePermissionTo($permissions);
+    $role = Role::where('id',2)->first();
+    $permissions=array();
+for($i=103 ;$i<221;$i++){
+    $permissions[]=$i;
+}
+    $role->givePermissionTo($permissions);
       $success['status'] = 200;
     //   $success['object'] =  $result;
       return $this->sendResponse($success, 'تم', 'user  successfully');

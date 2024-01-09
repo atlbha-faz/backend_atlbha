@@ -62,6 +62,10 @@ class ImportCartController extends BaseController
             $cartid = $cart->id;
             foreach ($request->data as $data) {
                 $product_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('stock')->first();
+                $less_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('less_qty')->first();
+                if ($data['qty']< $less_quantity) {
+                    return $this->sendResponse($success, ' اقل كمية للطلب هي '.$less_quantity, 'less quqntity');
+                }
                 if ($product_quantity >= $data['qty']) {
                     $cartDetail = CartDetail::updateOrCreate([
                         'cart_id' => $cartid,

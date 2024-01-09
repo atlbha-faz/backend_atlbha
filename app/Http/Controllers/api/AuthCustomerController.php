@@ -163,14 +163,14 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        $user = User::where('user_type', 'customer')->where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->where('is_deleted', 0)->latest()->first();
+        $user = User::where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->latest()->first();
         if (is_null($user)) {
-
             return $this->sendError('الحساب غير موجود', 'User not found');
         }
         $a = now()->toDateTimeString();
+  
         if ($user->verify_code_expires_at < $a) {
-            $success['status'] = 200;
+            $success['status'] = $a ;
             return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
         }
         if ($request->code == $user->verify_code) {
