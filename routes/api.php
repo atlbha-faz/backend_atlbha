@@ -527,6 +527,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::resource('category', App\Http\Controllers\api\storeDashboard\CategoryController::class, ['names' => 'store.categories']);
         Route::get('categoryStorechangeSatusall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeSatusall'])->name('store.categories.changestatusall');
         Route::get('categoryStoredeleteall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteall'])->name('store.categories.deleteall');
+        Route::get('categoryStoredeleteItems', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteItems'])->name('store.categories.deleteItems');
+
         Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeStatus'])->name('store.categories.activate');
         // coupon
         Route::get('changeCouponStatus/{id}', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeStatus'])->name('store.copons.activate');
