@@ -64,6 +64,7 @@ class ImportCartController extends BaseController
                 $product_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('stock')->first();
                 $less_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('less_qty')->first();
                 if ($data['qty']< $less_quantity) {
+                    $success['status'] = 200;
                     return $this->sendResponse($success, ' اقل كمية للطلب هي '.$less_quantity, 'less quqntity');
                 }
                 if ($product_quantity >= $data['qty']) {
