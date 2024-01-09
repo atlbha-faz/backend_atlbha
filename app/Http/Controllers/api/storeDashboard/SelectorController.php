@@ -161,7 +161,7 @@ class SelectorController extends BaseController
         if ($request->has('page')) {
             $etlobahCategory = CategoryResource::collection(Category::
                     where('is_deleted', 0)
-                    ->where('status', 'active')
+
                     ->where('parent_id', null
                     )->where('store_id', null)->orderBy('created_at', 'DESC')->paginate(10));
             $pageNumber = request()->query('page', 1);
@@ -171,7 +171,7 @@ class SelectorController extends BaseController
         } else {
             $success['categories'] = CategoryResource::collection(Category::
                     where('is_deleted', 0)
-                    ->where('status', 'active')
+
                     ->where('parent_id', null
                     )->where('store_id', null)->get());
         }
@@ -185,7 +185,7 @@ class SelectorController extends BaseController
         if ($request->has('page')) {
             $storeCategory = CategoryResource::collection(Category::
                     where('is_deleted', 0)
-                    ->where('status', 'active')
+
                     ->where('parent_id', null
                     )->where('store_id', auth()->user()->store_id)->orderBy('created_at', 'DESC')->paginate(10));
             $pageNumber = request()->query('page', 1);
@@ -195,7 +195,7 @@ class SelectorController extends BaseController
         } else {
             $success['categories'] = CategoryResource::collection(Category::
                     where('is_deleted', 0)
-                    ->where('status', 'active')
+                   
                     ->where('parent_id', null
                     )->where('store_id', auth()->user()->store_id)->get());
         }
