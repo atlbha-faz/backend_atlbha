@@ -22,7 +22,7 @@ class CategoryController extends BaseController
     public function index(Request $request)
     {
         $store = auth()->user()->store_id;
-// pagination
+
         if ($request->has('page')) {
             if (auth()->user()->store->verification_status == "accept") {
 
@@ -165,7 +165,6 @@ class CategoryController extends BaseController
 
             }
         }
-        \Artisan::call('cache:clear');
         $success['categories'] = new CategoryResource($category);
         $success['status'] = 200;
 
@@ -412,6 +411,23 @@ class CategoryController extends BaseController
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم تعديل حالة التصنيف بنجاح', 'category updated successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'التصنيف غير صحيح', 'category does not exit');
+        }
+    }
+
+    public function deleteItems()
+    {
+        $categorys = Category::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
+        if (count($categorys) > 0) {
+            foreach ($categorys as $category) {
+
+                $category->update(['is_deleted' => $category->id]);
+                $success['categorys'] = new CategoryResource($category);
+            }
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم حذف التصنيف بنجاح', 'category deleted successfully');
         } else {
             $success['status'] = 200;
             return $this->sendResponse($success, 'التصنيف غير صحيح', 'category does not exit');
