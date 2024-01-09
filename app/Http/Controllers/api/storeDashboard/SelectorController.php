@@ -142,7 +142,7 @@ class SelectorController extends BaseController
 
         return $this->sendResponse($success, 'تم عرض الاقسام الفرعية بنجاح', 'sub_Category showed successfully');
     }
-
+// admin category
     public function mainCategories_etlobha()
     {
         $success['categories'] = CategoryResource::collection(Category::
@@ -154,6 +154,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
     }
+// admin category
 
     public function etlobahCategory()
     {
@@ -162,6 +163,18 @@ class SelectorController extends BaseController
         ->where('status', 'active')
         ->where('parent_id', null
         )->where('store_id', null)->get());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
+    }
+    //  storeCategory
+        public function storeCategory()
+    {
+        $success['categories'] = CategoryResource::collection(Category::
+        where('is_deleted', 0)
+        ->where('status', 'active')
+        ->where('parent_id', null
+        )->where('store_id', auth()->user()->store_id)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');

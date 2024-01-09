@@ -435,6 +435,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('selector/productCategories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'productCategories']);
 
         Route::get('selector/etlobahCategory', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'etlobahCategory']);
+        Route::get('selector/storeCategory', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'storeCategory']);
         Route::get('selector/services', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'services']);
         Route::get('selector/children/{id}', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'children']);
         Route::get('selector/roles', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'roles']);
