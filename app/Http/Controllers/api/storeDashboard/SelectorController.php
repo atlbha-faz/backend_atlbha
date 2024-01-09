@@ -156,25 +156,49 @@ class SelectorController extends BaseController
     }
 // admin category
 
-    public function etlobahCategory()
+    public function etlobahCategory(Request $request)
     {
-        $success['categories'] = CategoryResource::collection(Category::
-        where('is_deleted', 0)
-        ->where('status', 'active')
-        ->where('parent_id', null
-        )->where('store_id', null)->get());
+        if ($request->has('page')) {
+            $etlobahCategory = CategoryResource::collection(Category::
+                    where('is_deleted', 0)
+                    ->where('status', 'active')
+                    ->where('parent_id', null
+                    )->where('store_id', null)->orderBy('created_at', 'DESC')->paginate(10));
+            $pageNumber = request()->query('page', 1);
+            $success['current_page'] = $etlobahCategory->currentPage();
+            $success['page_count'] = $etlobahCategory->lastPage();
+            $success['categories'] = $etlobahCategory;
+        } else {
+            $success['categories'] = CategoryResource::collection(Category::
+                    where('is_deleted', 0)
+                    ->where('status', 'active')
+                    ->where('parent_id', null
+                    )->where('store_id', null)->get());
+        }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
     }
-    //  storeCategory
-        public function storeCategory()
+    //  storeCategory with pagination
+    public function storeCategory(Request $request)
     {
-        $success['categories'] = CategoryResource::collection(Category::
-        where('is_deleted', 0)
-        ->where('status', 'active')
-        ->where('parent_id', null
-        )->where('store_id', auth()->user()->store_id)->get());
+        if ($request->has('page')) {
+            $storeCategory = CategoryResource::collection(Category::
+                    where('is_deleted', 0)
+                    ->where('status', 'active')
+                    ->where('parent_id', null
+                    )->where('store_id', auth()->user()->store_id)->orderBy('created_at', 'DESC')->paginate(10));
+            $pageNumber = request()->query('page', 1);
+            $success['current_page'] = $storeCategory->currentPage();
+            $success['page_count'] = $storeCategory->lastPage();
+            $success['categories'] = $storeCategory;
+        } else {
+            $success['categories'] = CategoryResource::collection(Category::
+                    where('is_deleted', 0)
+                    ->where('status', 'active')
+                    ->where('parent_id', null
+                    )->where('store_id', auth()->user()->store_id)->get());
+        }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
