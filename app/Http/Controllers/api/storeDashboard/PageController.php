@@ -73,9 +73,9 @@ class PageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+            // 'postcategory_id' => Rule::requiredIf(function () {
+            //     return in_array('1', request('pageCategory'));
+            // }),
             'image' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
@@ -105,7 +105,7 @@ class PageController extends BaseController
                 $page->update([
                     'image' => $request->image,
                     'altImage' => $request->altImage,
-                    'postcategory_id' => $request->postCategory_id,
+                    // 'postcategory_id' => $request->postCategory_id,
                 ]);
             }
         }
@@ -134,9 +134,9 @@ class PageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+            // 'postcategory_id' => Rule::requiredIf(function () {
+            //     return in_array('1', request('pageCategory'));
+            // }),
             'image' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
@@ -163,7 +163,7 @@ class PageController extends BaseController
             if (in_array(1, $request->pageCategory)) {
                 $page->update([
                     'image' => $request->image,
-                    'postcategory_id' => $request->postCategory_id,
+                    // 'postcategory_id' => $request->postCategory_id,
                     'altImage' => $request->altImage,
                 ]);
             }
@@ -240,9 +240,9 @@ class PageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+            // 'postcategory_id' => Rule::requiredIf(function () {
+            //     return in_array('1', request('pageCategory'));
+            // }),
             // 'image' => Rule::requiredIf(function () {
             //     return in_array('1', request('pageCategory'));
             // }),
@@ -268,7 +268,7 @@ class PageController extends BaseController
 
                 $page->update([
                     // 'image' => $request->image,
-                    'postcategory_id' => $request->postCategory_id,
+                    // 'postcategory_id' => $request->postCategory_id,
                     'altImage' => $request->altImage,
                 ]);
                 if ($request->has('image')) {
@@ -379,4 +379,4 @@ class PageController extends BaseController
     }
 
 }
-// 
+//

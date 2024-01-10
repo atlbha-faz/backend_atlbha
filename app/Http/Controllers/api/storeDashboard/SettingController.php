@@ -59,7 +59,7 @@ class SettingController extends BaseController
             'description' => 'required|string',
             'store_address' => 'nullable|string',
             'store_name' => 'nullable|string',
-            'domain' => ['required', 'alpha', Rule::unique('stores')->where(function ($query) {
+            'domain' => ['required', 'string', Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
             })],
             'country_id' => 'required|exists:countries,id',
@@ -172,7 +172,7 @@ class SettingController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'domain' => ['required', 'alpha', Rule::unique('stores')->where(function ($query) {
+            'domain' => ['required', 'string', Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
             })],
         ]);
