@@ -61,16 +61,16 @@ class PasswordResetController extends BaseController
                 'code' => $user->code,
             );
 
-            /*   try{
+              try{
             Mail::to($user->email)->send(new SendCode($data));
             }catch(\Exception $e){
             return $this->sendError('صيغة البريد الالكتروني غير صحيحة','The email format is incorrect.');
-            }*/
+            }
 
             $request->code = $user->code;
             $request->phonenumber = $user->phonenumber;
 
-            $this->sendSms($request); // send and return its response
+            // $this->sendSms($request); // send and return its response
 
         }
 
@@ -116,7 +116,7 @@ class PasswordResetController extends BaseController
             $data = array(
                 'code' => $user->code,
             );
-         
+
             try {
                 Mail::to($user->email)->send(new SendCode($data));
             } catch (\Exception $e) {
