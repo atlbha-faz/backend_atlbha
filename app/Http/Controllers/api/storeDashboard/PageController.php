@@ -73,9 +73,9 @@ class PageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+            // 'postcategory_id' => Rule::requiredIf(function () {
+            //     return in_array('1', request('pageCategory'));
+            // }),
             'image' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
@@ -134,9 +134,9 @@ class PageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+            // 'postcategory_id' => Rule::requiredIf(function () {
+            //     return in_array('1', request('pageCategory'));
+            // }),
             'image' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
@@ -240,9 +240,9 @@ class PageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+            // 'postcategory_id' => Rule::requiredIf(function () {
+            //     return in_array('1', request('pageCategory'));
+            // }),
             // 'image' => Rule::requiredIf(function () {
             //     return in_array('1', request('pageCategory'));
             // }),
@@ -379,4 +379,4 @@ class PageController extends BaseController
     }
 
 }
-// 
+//
