@@ -105,7 +105,7 @@ class PageController extends BaseController
                 $page->update([
                     'image' => $request->image,
                     'altImage' => $request->altImage,
-                    'postcategory_id' => $request->postCategory_id,
+                    // 'postcategory_id' => $request->postCategory_id,
                 ]);
             }
         }
@@ -163,7 +163,7 @@ class PageController extends BaseController
             if (in_array(1, $request->pageCategory)) {
                 $page->update([
                     'image' => $request->image,
-                    'postcategory_id' => $request->postCategory_id,
+                    // 'postcategory_id' => $request->postCategory_id,
                     'altImage' => $request->altImage,
                 ]);
             }
@@ -268,7 +268,7 @@ class PageController extends BaseController
 
                 $page->update([
                     // 'image' => $request->image,
-                    'postcategory_id' => $request->postCategory_id,
+                    // 'postcategory_id' => $request->postCategory_id,
                     'altImage' => $request->altImage,
                 ]);
                 if ($request->has('image')) {
