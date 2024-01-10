@@ -92,7 +92,9 @@ class PostStoreController extends BaseController
                 $success['tags'] = $tagarr;
                 $success['category'] = Category::where('is_deleted', 0)->where('store_id', $id)->with('products')->has('products')->get();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->where('postcategory_id', null)->get());
-                $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
+                $postIds = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
+
+                $success['posts'] = PageResource::collection(Page::whereIn('id',$postIds)->where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
                 $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
                 $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
                 // footer
