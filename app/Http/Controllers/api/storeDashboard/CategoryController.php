@@ -370,7 +370,7 @@ class CategoryController extends BaseController
 
             }
             if ($request->has('page')) {
-                $categorys = Category::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(5);
+                $categorys = Category::where('store_id', auth()->user()->store_id)->where('parent_id', null)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(5);
                 if($categorys !=null){
                 $success['page_count'] = $categorys->lastPage();
                 $success['coupon_count'] = $categorys->count();
@@ -380,7 +380,7 @@ class CategoryController extends BaseController
                 $itemId=$pageItem->id;
               
            
-                $categoryLists = Category::where('id','>=',$itemId)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get();
+                $categoryLists = Category::where('id','>=',$itemId)->where('parent_id', null)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get();
                
                 $success['categories'] = CategoryResource::collection( $categoryLists);
                 }
