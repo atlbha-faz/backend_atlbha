@@ -50,7 +50,7 @@ class CommentController extends BaseController
         } else {
             $success['comment_of_products'] = CommentResource::collection(Comment::with(['user' => function ($query) {
 
-                $query->select('id', 'name', 'user_type', 'image');
+                $query->select('id', 'name', 'user_type', 'image','email');
 
             }, 'product' => function ($query) {
 
