@@ -365,8 +365,30 @@ class CategoryController extends BaseController
                         $subcategory->update(['is_deleted' => $subcategory->id]);
                     }}
                 $category->update(['is_deleted' => $category->id]);
-                \Artisan::call('cache:clear');
+          
                 $success['categorys'] = new CategoryResource($category);
+
+            }
+            if ($request->has('page')) {
+                $categorys = Category::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(5);
+                if($categorys !=null){
+                $success['page_count'] = $categorys->lastPage();
+                $success['coupon_count'] = $categorys->count();
+                $success['current_page'] =  $categorys->currentPage();
+                $pageNumber = request()->query('page', 1);
+                $pageItem=$categorys->last();
+                $itemId=$pageItem->id;
+              
+           
+                $categoryLists = Category::where('id','>=',$itemId)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get();
+               
+                $success['categories'] = CategoryResource::collection( $categoryLists);
+                }
+                else{
+                    $success['categories']=null;
+                }
+            } else {
+                $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
 
             }
 
