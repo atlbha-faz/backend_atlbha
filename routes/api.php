@@ -384,7 +384,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('atlobhaContactChangeStatus/{id}', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'changeStatus'])->name('admin.atlobhaContact.changeStatus');
         // });
         // uodate seo
-        Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('admin.seo.updateGoogleAnalytics');
+        Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('admin.seo.update');
         // update passward for stores
         Route::post('updateProfile/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'updateProfile'])->name('admin.store.updateProfile');
     });
