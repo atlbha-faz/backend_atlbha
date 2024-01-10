@@ -101,7 +101,7 @@ class Homepage extends Model implements Viewable
             return asset('assets/media/slider.png');
         }
         if (filter_var($banar2, FILTER_VALIDATE_URL)) {
-            return $logbanar2o;} else {
+            return $banar2;} else {
             return asset('storage/images/homepage') . '/' . $banar2;
         }
     }
