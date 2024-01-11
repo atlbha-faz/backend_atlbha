@@ -127,7 +127,9 @@ class MarketerController extends BaseController
     public function show($marketer)
     {
         $marketer = Marketer::query()->find($marketer);
+        if($marketer != null){
         $user = User::query()->find($marketer->user_id);
+        }
         if (is_null($marketer) || is_null($user) ||$user->is_deleted != 0 ||   $user->user_type != "marketer") {
             return $this->sendError("المندوب غير موجودة", "marketer is't exists");
         }
