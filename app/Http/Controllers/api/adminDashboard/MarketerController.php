@@ -124,14 +124,14 @@ class MarketerController extends BaseController
      * @param  \App\Models\Marketer  $marketer
      * @return \Illuminate\Http\Response
      */
-    public function show(Marketer $marketer)
+    public function show($marketer)
     {
-        $marketer = Marketer::query()->find($marketer->id);
+        $marketer = Marketer::query()->find($marketer);
         $user = User::query()->find($marketer->user_id);
-        if (is_null($marketer) || $user->is_deleted != 0) {
+        if (is_null($marketer) || is_null($user) ||$user->is_deleted != 0 ||   $user->user_type != "marketer") {
             return $this->sendError("المندوب غير موجودة", "marketer is't exists");
         }
-        $success['$marketers'] = new MarketerResource($marketer);
+        $success['marketers'] = new MarketerResource($marketer);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'marketer showed successfully');
