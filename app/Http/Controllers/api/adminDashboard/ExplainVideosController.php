@@ -138,7 +138,7 @@ class ExplainVideosController extends BaseController
 
             if (isset($matches[1])) {
                 $videoId = $matches[1];
-            }
+
             $explainvideos = new ExplainVideos([
                 'title' => $request->title,
                 // 'duration' => 0,
@@ -160,7 +160,11 @@ class ExplainVideosController extends BaseController
             //     'user_id' => auth()->user()->id,
             // ]);
         }
+        else{
+         return $this->sendResponse($success, 'قم بنسخ الامبداد الخاص بالفيديو من اليوتيوب', 'copy embeded video from youtube');
 
+        }
+    }
         // return new CountryResource($country);
         $success['explainvideos'] = new ExplainVideoResource($explainvideos);
         $success['status'] = 200;
