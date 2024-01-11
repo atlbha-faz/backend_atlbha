@@ -80,72 +80,75 @@ class CourseController extends BaseController
             'image' => $request->image,
             'user_id' => auth()->user()->id,
         ]);
-     if(isset($request->data)){
-        foreach ($request->data as $data) {
-            $file = array();
-            if (isset($data['file'])) {
-                foreach ($data['file'] as $filedata) {
-                    if(is_file($filedata)){
-                    if ($filedata->getClientOriginalName() != null) {
-                        $fileName = Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
-                        $file[] = $fileName;
-                        $filePath = 'files/unitfile/' . str_replace(array('\'', '"', "", ' '), '', $fileName);
+        if (isset($request->data)) {
+            foreach ($request->data as $data) {
+                $file = array();
+                if (isset($data['file'])) {
+                    foreach ($data['file'] as $filedata) {
+                        if (is_file($filedata)) {
+                            if ($filedata->getClientOriginalName() != null) {
+                                $fileName = Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
+                                $file[] = $fileName;
+                                $filePath = 'files/unitfile/' . str_replace(array('\'', '"', "", ' '), '', $fileName);
 
-                        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
+                                $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
+                            }
+
+                        }
                     }
-
                 }
-            }
-            }
-            $unit = new Unit([
-                'title' => $data['title'],
-                'file' => count($file) > 0 ? implode(',', $file) : null,
-                'course_id' => $course->id,
-            ]);
+                $unit = new Unit([
+                    'title' => $data['title'],
+                    'file' => count($file) > 0 ? implode(',', $file) : null,
+                    'course_id' => $course->id,
+                ]);
 
-            $unit->save();
-            if (isset($data['video'])) {
-                if (!is_null($data['video']) && $data['video'] !="") {
-                foreach ($data['video'] as $videodata) {
+                $unit->save();
+                if (isset($data['video'])) {
+                    if (!is_null($data['video']) && $data['video'] != "") {
+                        foreach ($data['video'] as $videodata) {
 
-                    // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
-                    // $filePath = 'videos/' . $fileName;
+                            // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
+                            // $filePath = 'videos/' . $fileName;
 
-                    // $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
+                            // $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
 
-                    // // File URL to access the video in frontend
-                    // $url = Storage::disk('public')->url($filePath);
-                    // $getID3 = new \getID3();
-                    // $pathVideo = 'storage/videos/' . $fileName;
+                            // // File URL to access the video in frontend
+                            // $url = Storage::disk('public')->url($filePath);
+                            // $getID3 = new \getID3();
+                            // $pathVideo = 'storage/videos/' . $fileName;
 
-                    // $fileAnalyze = $getID3->analyze($pathVideo);
-                    // // dd($fileAnalyze);
-                    // $playtimes = $fileAnalyze['playtime_seconds'];
-                    // $playtime = gmdate("H:i:s", $playtimes);
+                            // $fileAnalyze = $getID3->analyze($pathVideo);
+                            // // dd($fileAnalyze);
+                            // $playtimes = $fileAnalyze['playtime_seconds'];
+                            // $playtime = gmdate("H:i:s", $playtimes);
 
-                    // if ($isFileUploaded) {
+                            // if ($isFileUploaded) {
 
-                    // fetch video id from vedio url
-                    preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $videodata, $matches);
+                            // fetch video id from vedio url
+                            preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $videodata, $matches);
 
-                    if (isset($matches[1])) {
-                        $videoId = $matches[1];
+                            if (isset($matches[1])) {
+                                $videoId = $matches[1];
 
-                    $video = new Video([
-                        'video' => $videodata,
-                        'unit_id' => $unit->id,
-                    ]);
+                                $video = new Video([
+                                    'video' => $videodata,
+                                    'unit_id' => $unit->id,
+                                ]);
 
-                    $videodata = $video->get_youtube_title($videoId);
-                    $video->name = $videodata[0]['title'];
-                    $video->duration = $videodata[0]['duration'];
-                    $video->save();
-                }
+                                $videodata = $video->get_youtube_title($videoId);
+                                $video->name = $videodata[0]['title'];
+                                $video->duration = $videodata[0]['duration'];
+                                $video->save();
+                            } else {
+                                return $this->sendResponse($success, 'قم بنسخ الامبداد الخاص بالفيديو من اليوتيوب', 'copy embeded video from youtube');
+
+                            }
+                        }
+                    }
                 }
             }
         }
-    }
-    }
         // return new CountryResource($country);
         $success['courses'] = new CourseResource($course);
         $success['status'] = 200;
@@ -299,77 +302,77 @@ class CourseController extends BaseController
         }
 
         }*/
-        if(isset($request->data)){
-        if (!is_null($request->data)) {
-            foreach ($request->data as $data) {
-                $file = array();
-                if (isset($data['file'])) {
-                    foreach ($data['file'] as $filedata) {
-                        if(is_file($filedata)){
-                        if ($filedata->getClientOriginalName() != null) {
-                            $fileName = Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
+        if (isset($request->data)) {
+            if (!is_null($request->data)) {
+                foreach ($request->data as $data) {
+                    $file = array();
+                    if (isset($data['file'])) {
+                        foreach ($data['file'] as $filedata) {
+                            if (is_file($filedata)) {
+                                if ($filedata->getClientOriginalName() != null) {
+                                    $fileName = Str::random(10) . time() . '.' . $filedata->getClientOriginalExtension();
 
-                            $file[] = $fileName;
+                                    $file[] = $fileName;
 
-                            $filePath = 'files/unitfile/' . str_replace(array('\'', '"', "", ' '), '', $fileName);
+                                    $filePath = 'files/unitfile/' . str_replace(array('\'', '"', "", ' '), '', $fileName);
 
-                            $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
+                                    $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($filedata));
+                                }
+                            }
                         }
                     }
-                }
-                }
 
-                $unit = new Unit([
-                    'title' => $data['title'],
-                    'file' => count($file) > 0 ? implode(',', $file) : null,
-                    'course_id' => $course->id,
-                ]);
+                    $unit = new Unit([
+                        'title' => $data['title'],
+                        'file' => count($file) > 0 ? implode(',', $file) : null,
+                        'course_id' => $course->id,
+                    ]);
 
-                $unit->save();
-                if (isset($data['video'])) {
-                    if (!is_null($data['video']) && $data['video'] !="") {
-                    foreach ($data['video'] as $videodata) {
+                    $unit->save();
+                    if (isset($data['video'])) {
+                        if (!is_null($data['video']) && $data['video'] != "") {
+                            foreach ($data['video'] as $videodata) {
 
-                        // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
-                        // $filePath = 'videos/' . $fileName;
+                                // $fileName = Str::random(10) . time() . '.' . $videodata->getClientOriginalExtension();
+                                // $filePath = 'videos/' . $fileName;
 
-                        // $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
+                                // $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($videodata));
 
-                        // File URL to access the video in frontend
-                        // $url = Storage::disk('public')->url($filePath);
-                        // $getID3 = new \getID3();
-                        // $pathVideo = 'storage/videos/' . $fileName;
+                                // File URL to access the video in frontend
+                                // $url = Storage::disk('public')->url($filePath);
+                                // $getID3 = new \getID3();
+                                // $pathVideo = 'storage/videos/' . $fileName;
 
-                        // $fileAnalyze = $getID3->analyze($pathVideo);
-                        // // dd($fileAnalyze);
-                        // $playtimes = $fileAnalyze['playtime_seconds'];
-                        // $playtime = gmdate("H:i:s", $playtimes);
+                                // $fileAnalyze = $getID3->analyze($pathVideo);
+                                // // dd($fileAnalyze);
+                                // $playtimes = $fileAnalyze['playtime_seconds'];
+                                // $playtime = gmdate("H:i:s", $playtimes);
 
-                        // dd($playtime);
-                        // if ($isFileUploaded) {
+                                // dd($playtime);
+                                // if ($isFileUploaded) {
 
-                        // fetch video id from vedio url
+                                // fetch video id from vedio url
 
-                        preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $videodata, $matches);
+                                preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $videodata, $matches);
 
-                        if (isset($matches[1])) {
-                            $videoId = $matches[1];
+                                if (isset($matches[1])) {
+                                    $videoId = $matches[1];
 
-                        $video = new Video([
-                            'video' => $videodata,
-                            'unit_id' => $unit->id,
-                        ]);
-                        $videodata = $video->get_youtube_title($videoId);
-                        $video->name = $videodata[0]['title'];
-                        $video->duration = $videodata[0]['duration'];
-                        $video->save();
-                    }
+                                    $video = new Video([
+                                        'video' => $videodata,
+                                        'unit_id' => $unit->id,
+                                    ]);
+                                    $videodata = $video->get_youtube_title($videoId);
+                                    $video->name = $videodata[0]['title'];
+                                    $video->duration = $videodata[0]['duration'];
+                                    $video->save();
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-        }
-    }
         //$country->fill($request->post())->update();
         $success['courses'] = new CourseResource($course);
         $success['status'] = 200;
