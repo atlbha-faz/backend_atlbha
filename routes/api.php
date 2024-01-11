@@ -288,7 +288,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('replaycontact', App\Http\Controllers\api\adminDashboard\ReplaycontactController::class);
       
         // Route::resource('seo', App\Http\Controllers\api\adminDashboard\SeoController::class,['names' => 'admin.seo']);
-        Route::get('seo', [App\Http\Controllers\api\adminDashboard\StoreReportController::class, 'index'])->name('admin.seo.index');
+        Route::get('seo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'index'])->name('admin.seo.index');
 
         Route::resource('setting', App\Http\Controllers\api\adminDashboard\SettingController::class, ['names' => 'admin.setting']);
         Route::resource('store', App\Http\Controllers\api\adminDashboard\StoreController::class, ['names' => 'admin.store']);

@@ -472,6 +472,13 @@ Permission::create(['name' => 'admin.service.index',
 'parent_id'=>61,
 'type'=>'admin']);
 
+Permission::create(['name' => 'admin.service.store',
+        'action_type' => 'store',
+        'guard_name'=>'api',
+'name_ar'=>' إضافة ' ,
+'parent_id'=>61,
+'type'=>'admin']);
+
 Permission::create(['name' => 'admin.service.update',
         'action_type' => 'update',
         'guard_name'=>'api',
