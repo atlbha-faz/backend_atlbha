@@ -158,9 +158,9 @@ class VerificationController extends BaseController
             'type' => $request->subject,
             'object_id' =>null,
         ];
-        $user = User::query()->find($store->user_id);
-        Notification::send($user, new verificationNotification($data));
-        event(new VerificationEvent($data));
+        $user = User::where('user_type', 'store')->where('store_id',$store->id)->first();
+        // Notification::send($user, new verificationNotification($data));
+        // event(new VerificationEvent($data));
         Mail::to($user->email)->send(new SendMail($data));
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
