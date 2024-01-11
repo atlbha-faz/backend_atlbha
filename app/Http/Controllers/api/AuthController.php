@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\UserResource;
-use App\Models\Homepage;
-use App\Models\Marketer;
-use App\Models\Setting;
+use Exception;
+use Notification;
+use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
-use App\Models\User;
-use App\Notifications\verificationNotification;
+use App\Mail\SendCode;
+use App\Models\Setting;
+use App\Models\Homepage;
+use App\Models\Marketer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Notification;
+use App\Events\VerificationEvent;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class AuthController extends BaseController
 {
@@ -254,7 +257,7 @@ class AuthController extends BaseController
 
                     try {
                         Mail::to($user->email)->send(new SendCode($data));
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
                     }
 
