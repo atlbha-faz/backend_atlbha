@@ -12,6 +12,8 @@ class Page extends Model implements Viewable
     use HasFactory;
      use InteractsWithViews;
     protected $fillable = ['title','page_content','altImage','default_page','page_desc','seo_title','seo_link','seo_desc','tags','user_id','status','image','postcategory_id','store_id','is_deleted'];
+    protected $casts = [
+        'default_page'=>'integer'];
     public function store()
     {
         return $this->belongsTo(Store::class);
