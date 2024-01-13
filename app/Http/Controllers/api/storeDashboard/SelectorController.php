@@ -111,7 +111,7 @@ class SelectorController extends BaseController
                     $query->where('store_id', auth()->user()->store_id)
                         ->OrWhere('store_id', null);
                 })
-                ->where('status', 'active')->get());
+                ->where('status', 'active')->orderByDesc('created_at')->get());
 
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
@@ -195,7 +195,7 @@ class SelectorController extends BaseController
         } else {
             $success['categories'] = CategoryResource::collection(Category::
                     where('is_deleted', 0)
-                   
+
                     ->where('parent_id', null
                     )->where('store_id', auth()->user()->store_id)->get());
         }
