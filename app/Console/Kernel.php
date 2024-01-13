@@ -13,9 +13,18 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+        protected $commands = [
+
+        Commands\AbandonedCart::class,
+            Commands\DeleteStore::class,
+
+    ];
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+          $schedule->command('cart:abandoned') 
+                ->everyMinute();
+                 $schedule->command('store:delete') 
+                ->daily();
     }
 
     /**
