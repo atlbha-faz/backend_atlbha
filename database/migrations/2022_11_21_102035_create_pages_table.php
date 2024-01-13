@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('tags');
             $table->string('image')->nullable();
             $table->text('altImage')->nullable();
+            $table->integer('default_page')->nullable()->default(0);
             $table->unsignedBigInteger('postcategory_id')->nullable();
             $table->foreign('postcategory_id')->references('id')->on('postcategories')->onDelete('cascade');
            $table->unsignedBigInteger('user_id')->nullable();
