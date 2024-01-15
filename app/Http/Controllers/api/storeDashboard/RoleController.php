@@ -20,7 +20,7 @@ class RoleController extends BaseController
     {
         if ($request->has('page')) {
 
-            $roles =RoleResource::collection(Role::where('type', 'store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(5));
+            $roles =RoleResource::collection(Role::where('type', 'store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
             $success['page_count'] = $roles->lastPage();
             $pageNumber = request()->query('page', 1);
             $success['current_page'] = $roles->currentPage();
