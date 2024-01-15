@@ -111,7 +111,7 @@ class SelectorController extends BaseController
                     $query->where('store_id', auth()->user()->store_id)
                         ->OrWhere('store_id', null);
                 })
-                ->where('status', 'active')->orderByDesc('created_at')->get());
+                ->where('status', 'active')->orderByDesc('created_at')->orderByRaw('store_id IS NULL, store_id DESC')->get());
 
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
