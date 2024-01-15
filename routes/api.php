@@ -591,6 +591,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('changeuserStatus/{id}', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeStatus'])->name('store.users.activate');
         Route::get('userchangeSatusall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeSatusall'])->name('store.users.changestatusall');
         Route::get('userdeleteall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'deleteall'])->name('store.users.deleteall');
+        Route::get('userdeleteItems', [App\Http\Controllers\api\storeDashboard\UserController::class, 'deleteItems'])->name('store.users.deleteItems');
+
         //
 
         //  setting

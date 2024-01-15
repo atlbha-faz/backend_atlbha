@@ -260,6 +260,47 @@ class UserController extends BaseController
                 $user->update(['is_deleted' => $user->id]);
                 $success['users'] = new UserResource($user);
             }
+            if ($request->has('page')) {
+                $users = User::where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(5);
+                if ($users != null) {
+                    $success['page_count'] = $users->lastPage();
+                    $success['coupon_count'] = $users->count();
+                    $success['current_page'] = $users->currentPage();
+                    $pageNumber = request()->query('page', 1);
+                    $pageItem = $users->last();
+                    $itemId = $pageItem->id;
+
+                    $usersLists = User::where('id', '>=', $itemId)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get();
+
+                    $success['users'] = CouponResource::collection($usersLists);
+                } else {
+                    $success['users'] = null;
+                }
+            }
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'user deleted successfully');
+            
+         }
+          else {
+                $success['status'] = 200;
+                return $this->sendError("المستخدم غير موجودة", "user is't exists");
+            }
+        
+    }
+    public function deleteItems(Request $request)
+    {
+        $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+        if ($storeAdmain != null) {
+            $users = User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->get();
+        } else {
+            $users = User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->get();
+        }
+        if (count($users) > 0) {
+            foreach ($users as $user) {
+                $user->update(['is_deleted' => $user->id]);
+                $success['users'] = new UserResource($user);
+            }
 
             $success['status'] = 200;
 
