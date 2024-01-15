@@ -261,7 +261,7 @@ class UserController extends BaseController
                 $success['users'] = new UserResource($user);
             }
             if ($request->has('page')) {
-                $users = User::where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(5);
+                $users = User::where('store_id', auth()->user()->store_id)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(10);
                 if ($users != null) {
                     $success['page_count'] = $users->lastPage();
                     $success['coupon_count'] = $users->count();
