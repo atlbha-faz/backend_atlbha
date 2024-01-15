@@ -80,13 +80,13 @@ class VerificationController extends BaseController
             return $this->sendError("الطلب قيد المراجعه", "request is in process");
         }
         $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id',[1,2])->get();
-
+                      
         $data = [
-            'message' => 'طلب توثيق',
-            'store_id' => auth()->user()->store_id,
+            'message' => $store->categories.'تصنيف'.$store->store_name.'طلب توثيق من ',
+            'store_id' => 'https://admin.atlbha.com/verification',
             'user_id' => auth()->user()->id,
-            'type' => "verified",
-            'object_id' => auth()->user()->store_id,
+            'type' => "طلب توثيق",
+            'object_id' => $store->created_at,
         ];
         foreach ($users as $user) {
             Notification::send($user, new verificationNotification($data));

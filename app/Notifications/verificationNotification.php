@@ -46,6 +46,8 @@ class verificationNotification extends Notification
         return (new MailMessage)
         ->subject($this->data['type'])
         ->line($this->data['message'])
+        ->line($this->data['store_id'])
+        ->line($this->data['object_id'])
         ->line('شكرا');
     }
 
