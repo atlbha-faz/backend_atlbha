@@ -9,6 +9,7 @@ use App\Models\Store;
 use App\Mail\SendMail;
 use App\Models\Comment;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\Category;
 use Illuminate\Console\Command;
 use App\Events\VerificationEvent;
@@ -49,7 +50,8 @@ class DeleteStore extends Command
      */
     public function handle()
     {
-        
+        $setting = Setting::orderBy('id', 'desc')->first();
+        if ($setting->registration_status == "registration_without_admin") {
          $threeDaysAgo = Carbon::now()->subDays(3)->toDateString();
         $stores =\App\Models\Store::where('is_deleted', 0)->where('verification_status', 'pending')->whereDate('created_at', '<', $threeDaysAgo)->get();
         
@@ -76,6 +78,7 @@ class DeleteStore extends Command
             $store->delete();
               
         }
+    }
         return 0;
     }
 }
