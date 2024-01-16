@@ -651,7 +651,7 @@ class StoreController extends BaseController
         }
 
     }
-
+// 
   public function unVerificationStore()
     {
         $stores = Store::with(['categories' => function ($query) {
@@ -660,8 +660,7 @@ class StoreController extends BaseController
             $query->select('id');
         }, 'country' => function ($query) {
             $query->select('id');
-        }, 'user' => function ($query) {
-            $query->select('id', 'name', 'email');
+
         }])->where('is_deleted', 0)->where('verification_status', 'pending')->orderByDesc('updated_at')->get();
         $success['stores'] = VerificationResource::collection($stores);
         $success['status'] = 200;
