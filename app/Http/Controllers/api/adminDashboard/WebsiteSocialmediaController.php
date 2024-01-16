@@ -151,7 +151,7 @@ class WebsiteSocialmediaController extends BaseController
 
         ]);
         if ($request->has('logo')) {
-            $user->update([
+            $website_socialmedia->update([
                 'logo' => $request->logo,
             ]);
         }
