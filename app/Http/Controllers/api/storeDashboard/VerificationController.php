@@ -106,7 +106,7 @@ class VerificationController extends BaseController
         $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id',[1,2])->get();
                       
         $data = [
-            'message' => 'https://admin.atlbha.com/verification'.$store->categories->name->first().'تصنيف'.$store->owner_name.'طلب توثيق من ',
+            'message' => 'https://admin.atlbha.com/verification'.$store->owner_name.'طلب توثيق من ',
             'store_id' =>  $store->id,
             'user_id' => auth()->user()->id,
             'type' => "طلب توثيق",
