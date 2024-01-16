@@ -264,20 +264,5 @@ class VerificationController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
     }
-    public function unVerificationStore()
-    {
-        $stores = Store::with(['categories' => function ($query) {
-            $query->select('name', 'icon');
-        }, 'city' => function ($query) {
-            $query->select('id');
-        }, 'country' => function ($query) {
-            $query->select('id');
-        }, 'user' => function ($query) {
-            $query->select('id', 'name', 'email');
-        }])->where('is_deleted', 0)->where('verification_status', 'pending')->orderByDesc('updated_at')->get();
-        $success['stores'] = VerificationResource::collection($stores);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
-    }
+   
 }

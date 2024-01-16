@@ -198,6 +198,8 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::get('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'changeStatus']);
         // Route::get('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class, 'changeStatus']);
         Route::get('changeStoreStatus', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'changeSatusall'])->name('admin.store.changeSatusall');
+        Route::get('unVerificationStore', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'unVerificationStore'])->name('admin.store.unVerificationStore');
+
         // Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class, 'changeStatus']);
         // Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'changeStatus']);
         // Route::get('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class, 'changeStatus']);
@@ -372,7 +374,6 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('rejectVerification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'rejectVerification'])->name('admin.verification.rejectVerification');
         Route::post('verification_update', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_update'])->name('admin.verification.verification_update');
         Route::get('verification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_show'])->name('admin.verification.verification_show');
-        Route::get('unVerificationStore', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'unVerificationStore'])->name('admin.verification.unVerificationStore');
 
         //Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
         //
