@@ -286,7 +286,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('section', App\Http\Controllers\api\adminDashboard\SectionController::class, ['names' => 'admin.section']);
         Route::resource('contact', App\Http\Controllers\api\adminDashboard\ContactController::class);
         Route::resource('replaycontact', App\Http\Controllers\api\adminDashboard\ReplaycontactController::class);
-      
+
         // Route::resource('seo', App\Http\Controllers\api\adminDashboard\SeoController::class,['names' => 'admin.seo']);
         Route::get('seo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'index'])->name('admin.seo.index');
 
@@ -372,6 +372,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('rejectVerification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'rejectVerification'])->name('admin.verification.rejectVerification');
         Route::post('verification_update', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_update'])->name('admin.verification.verification_update');
         Route::get('verification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_show'])->name('admin.verification.verification_show');
+        Route::get('unVerificationStore', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'unVerificationStore'])->name('admin.verification.unVerificationStore');
 
         //Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
         //
