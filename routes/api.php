@@ -198,6 +198,8 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::get('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'changeStatus']);
         // Route::get('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class, 'changeStatus']);
         Route::get('changeStoreStatus', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'changeSatusall'])->name('admin.store.changeSatusall');
+        Route::get('unVerificationStore', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'unVerificationStore'])->name('admin.store.unVerificationStore');
+
         // Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class, 'changeStatus']);
         // Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'changeStatus']);
         // Route::get('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class, 'changeStatus']);
@@ -286,7 +288,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('section', App\Http\Controllers\api\adminDashboard\SectionController::class, ['names' => 'admin.section']);
         Route::resource('contact', App\Http\Controllers\api\adminDashboard\ContactController::class);
         Route::resource('replaycontact', App\Http\Controllers\api\adminDashboard\ReplaycontactController::class);
-      
+
         // Route::resource('seo', App\Http\Controllers\api\adminDashboard\SeoController::class,['names' => 'admin.seo']);
         Route::get('seo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'index'])->name('admin.seo.index');
 

@@ -138,7 +138,7 @@ return [
     'string' => 'يجب أن يكون الحقل :attribute نصآ.',
     'timezone' => 'يجب أن يكون :attribute نطاقًا زمنيًا صحيحًا',
     'unique' => 'قيمة الحقل :attribute مُستخدمة من قبل',
-    'uploaded' => 'فشل في تحميل  :attribute',
+    'uploaded' => ' فشل في تحميل  :attribute ',
     'uppercase' => 'The :attribute must be uppercase.',
     'url' => 'صيغة الرابط :attribute غير صحيحة',
     'uuid' => 'الحقل :attribute يجب ان ايكون رقم UUID صحيح.',
