@@ -17,6 +17,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\VerificationResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
@@ -28,11 +29,11 @@ class StoreController extends BaseController
     }
     public function loginId($id)
     {
-    
+
           $user=User::where('user_type','store')->where('is_deleted', 0)->where('store_id',$id)->first();
         if (isset($user->id) && $user->id != 0) {
 
-        
+
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
         $success['status'] = 200;
@@ -651,6 +652,21 @@ class StoreController extends BaseController
 
     }
 
- 
+  public function unVerificationStore()
+    {
+        $stores = Store::with(['categories' => function ($query) {
+            $query->select('name', 'icon');
+        }, 'city' => function ($query) {
+            $query->select('id');
+        }, 'country' => function ($query) {
+            $query->select('id');
+        }, 'user' => function ($query) {
+            $query->select('id', 'name', 'email');
+        }])->where('is_deleted', 0)->where('verification_status', 'pending')->orderByDesc('updated_at')->get();
+        $success['stores'] = VerificationResource::collection($stores);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
+    }
 
 }

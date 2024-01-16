@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
-
 class VerificationController extends BaseController
 {
     public function __construct()
@@ -156,9 +155,9 @@ class VerificationController extends BaseController
             'store_id' => $store->id,
             'user_id' => $store->user_id,
             'type' => $request->subject,
-            'object_id' =>null,
+            'object_id' => null,
         ];
-        $user = User::where('user_type', 'store')->where('store_id',$store->id)->first();
+        $user = User::where('user_type', 'store')->where('store_id', $store->id)->first();
         // Notification::send($user, new verificationNotification($data));
         // event(new VerificationEvent($data));
         Mail::to($user->email)->send(new SendMail($data));
@@ -213,10 +212,10 @@ class VerificationController extends BaseController
             // 'phonenumber' => $request->input('phonenumber'),
 
         ]);
-        if(is_null($store->phonenumber)){
+        if (is_null($store->phonenumber)) {
             $store->update([
                 'phonenumber' => $request->input('phonenumber'),
-                ]);
+            ]);
         }
         if ($request->subcategory_id != null) {
             $subcategory = implode(',', $request->subcategory_id);
@@ -265,4 +264,5 @@ class VerificationController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
     }
+   
 }
