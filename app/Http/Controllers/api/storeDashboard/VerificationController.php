@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\StoreResource;
-use App\Models\Store;
-use App\Models\User;
-use App\Notifications\verificationNotification;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Notification;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Store;
+use App\Mail\SendMail;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Events\VerificationEvent;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class VerificationController extends BaseController
 {
@@ -82,14 +84,15 @@ class VerificationController extends BaseController
         $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id',[1,2])->get();
                       
         $data = [
-            'message' => $store->categories.'تصنيف'.$store->store_name.'طلب توثيق من ',
-            'store_id' => 'https://admin.atlbha.com/verification',
+            'message' => 'https://admin.atlbha.com/verification'.$store->categories.'تصنيف'.$store->store_name.'طلب توثيق من ',
+            'store_id' =>  $store->id,
             'user_id' => auth()->user()->id,
             'type' => "طلب توثيق",
             'object_id' => $store->created_at,
         ];
         foreach ($users as $user) {
             Notification::send($user, new verificationNotification($data));
+            Mail::to($user->email)->send(new SendMail($data));
         }
         event(new VerificationEvent($data));
         $date = Carbon::now()->toDateTimeString();
