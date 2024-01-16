@@ -16,11 +16,18 @@ class RoleController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->has('page')) {
 
-        $success['roles'] = RoleResource::collection(Role::where('type', 'store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->get());
-
+            $roles =RoleResource::collection(Role::where('type', 'store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
+            $success['page_count'] = $roles->lastPage();
+            $pageNumber = request()->query('page', 1);
+            $success['current_page'] = $roles->currentPage();
+            $success['roles'] = $roles;
+        } else {
+        $success['roles'] = RoleResource::collection(Role::where('type', 'store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الأدوار بنجاح', 'Roles shown successfully');
