@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('admin_special', ['special', 'not_special'])->default('not_special');
             $table->longText('description');
             $table->boolean('amount')->default(0);
+            $table->boolean('product_has_options')->default(0);
             $table->double('purchasing_price')->nullable();
             $table->double('selling_price');
             $table->integer('quantity')->nullable();

@@ -107,7 +107,7 @@ class VerificationController extends BaseController
                       
         $data = [
             'message' => ' https://admin.atlbha.com/verification  '
-            . $store->owner_name .'طلب توثيق من ',
+            . $store->owner_name .' طلب توثيق من ',
             'store_id' =>  $store->id,
             'user_id' => auth()->user()->id,
             'type' => "طلب توثيق",
