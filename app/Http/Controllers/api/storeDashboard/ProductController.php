@@ -223,7 +223,7 @@ class ProductController extends BaseController
 
                 $option = new Attribute([
                     'name' => $attribute['title'],
-                    // 'type'=>$attribute['type']
+                     'type'=>$attribute['type']
                 ]);
                 $option->save();
 
@@ -495,7 +495,7 @@ class ProductController extends BaseController
 
                     $option = new Attribute([
                         'name' => $attribute['title'],
-                        // 'type'=>$attribute['type']
+                         'type'=>$attribute['type']
                     ]);
                     $option->save();
 
