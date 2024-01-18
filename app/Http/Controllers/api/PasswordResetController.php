@@ -57,20 +57,20 @@ class PasswordResetController extends BaseController
 
         if ($user && $passwordReset) {
             $user->generateCode();
-            $data = array(
-                'code' => $user->code,
-            );
+            // $data = array(
+            //     'code' => $user->code,
+            // );
 
-              try{
-            Mail::to($user->email)->send(new SendCode($data));
-            }catch(\Exception $e){
-            return $this->sendError('صيغة البريد الالكتروني غير صحيحة','The email format is incorrect.');
-            }
+            //   try{
+            // Mail::to($user->email)->send(new SendCode($data));
+            // }catch(\Exception $e){
+            // return $this->sendError('صيغة البريد الالكتروني غير صحيحة','The email format is incorrect.');
+            // }
 
             $request->code = $user->code;
             $request->phonenumber = $user->phonenumber;
 
-            // $this->sendSms($request); // send and return its response
+            $this->sendSms($request); // send and return its response
 
         }
 
