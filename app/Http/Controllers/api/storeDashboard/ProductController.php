@@ -149,8 +149,11 @@ class ProductController extends BaseController
 
             ],
             'amount' => 'nullable|in:0,1',
+            'product_has_options' => 'nullable|in:0,1',
+            'attribute' => 'array|required_if:product_has_options,1',
             'data.*.price' => 'numeric|required_if:amount,1',
             'data.*.quantity' => 'numeric|required_if:amount,1',
+          
             // 'store_id'=>'required|exists:stores,id',
         ]);
         if ($validator->fails()) {
@@ -182,6 +185,7 @@ class ProductController extends BaseController
             'category_id' => $request->category_id,
             'store_id' => auth()->user()->store_id,
             'amount' => $request->amount,
+            'product_has_options' => $request->product_has_options,
         ]);
         $productid = $product->id;
         if ($request->hasFile("images")) {
@@ -227,7 +231,7 @@ class ProductController extends BaseController
 
                     $value = new Value([
                         'attribute_id' => $option->id,
-                        'value' => $attributeValue,
+                        'value' => implode(',',$attributeValue),
                     ]);
                     $value->save();
 
@@ -235,23 +239,6 @@ class ProductController extends BaseController
                     $valuesid[] = $value->id;
                 }
 
-                $option = new Attribute([
-                    'name' => $attribute['title'],
-                    // 'type'=>$attribute['type']
-                ]);
-                $option->save();
-
-                foreach ($attribute['value'] as $attributeValue) {
-
-                    $value = new Value([
-                        'attribute_id' => $option->id,
-                        'value' => $attributeValue,
-                    ]);
-                    $value->save();
-
-                    $values[] = $value;
-                    $valuesid[] = $value->id;
-                }
 
                 $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
                 $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
@@ -401,6 +388,8 @@ class ProductController extends BaseController
                 'amount' => 'nullable|in:0,1',
                 'data.*.price' => 'numeric|required_if:amount,1',
                 'data.*.quantity' => 'numeric|required_if:amount,1',
+                'product_has_options' => 'nullable|in:0,1',
+                'attribute' => 'array|required_if:product_has_options,1',
             ]);
 
             if ($validator->fails()) {
@@ -415,7 +404,6 @@ class ProductController extends BaseController
 
             $product->update([
                 'name' => $request->input('name'),
-
                 'description' => $request->input('description'),
                 'selling_price' => $request->input('selling_price'),
                 'stock' => $request->input('stock'),
@@ -433,6 +421,7 @@ class ProductController extends BaseController
                 'category_id' => $request->input('category_id'),
                 'subcategory_id' => $subcategory,
                 'amount' => $request->amount,
+                'product_has_options' => $request->product_has_options,
                 // 'store_id' => $request->input('store_id'),
 
             ]);
@@ -510,19 +499,12 @@ class ProductController extends BaseController
                     ]);
                     $option->save();
 
-                    foreach ($attribute['value'] as $attributeValue) {
-
-                        $value = new Value([
-                            'attribute_id' => $option->id,
-                            'value' => $attributeValue,
-                        ]);
-                        $option->save();
 
                         foreach ($attribute['value'] as $attributeValue) {
 
                             $value = new Value([
                                 'attribute_id' => $option->id,
-                                'value' => $attributeValue,
+                                'value' => implode(',',$attributeValue),
                             ]);
                             $value->save();
 
@@ -562,7 +544,7 @@ class ProductController extends BaseController
 
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
         }
-    }
+    
     public function updateCategory(Request $request)
     {
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();

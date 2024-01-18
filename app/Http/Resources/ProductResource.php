@@ -66,6 +66,7 @@ class ProductResource extends JsonResource
             'admin_special' => $admin_special,
             'url' => 'https://template.atlbha.sa/' . $domain . '/shop/product/' . $this->id,
             'amount' => $this->amount,
+            'product_has_options'=>$this->product_has_options,
             'productRating' => $this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
             'productRatingCount' => $this->productratecount($this->id) !== null ? $this->productratecount($this->id) : 0,
             'getOrderTotal' => $this->getOrderTotal($this->id) !== null ? $this->getOrderTotal($this->id) : 0,
