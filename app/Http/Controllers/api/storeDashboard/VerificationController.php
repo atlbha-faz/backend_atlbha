@@ -81,20 +81,7 @@ class VerificationController extends BaseController
         if ($store->verification_status == "admin_waiting" || $store->verification_status == "accept") {
             return $this->sendError("الطلب قيد المراجعه", "request is in process");
         }
-        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id',[1,2])->get();
 
-        $data = [
-            'message' => 'https://admin.atlbha.com/verification'.$store->categories.'تصنيف'.$store->store_name.'طلب توثيق من ',
-            'store_id' =>  $store->id,
-            'user_id' => auth()->user()->id,
-            'type' => "طلب توثيق",
-            'object_id' => $store->created_at,
-        ];
-        foreach ($users as $user) {
-            Notification::send($user, new verificationNotification($data));
-            Mail::to($user->email)->send(new SendMail($data));
-        }
-        event(new VerificationEvent($data));
         $date = Carbon::now()->toDateTimeString();
         $store->update([
             'verification_type' => $request->input('verification_type'),
@@ -116,8 +103,22 @@ class VerificationController extends BaseController
             $subcategory = null;
         }
         $store->categories()->attach($request->activity_id, ['subcategory_id' => $subcategory]);
+        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id',[1,2])->get();
 
-        $user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
+        $data = [
+            'message' => ' https://admin.atlbha.com/verification  '
+            . $store->owner_name .' طلب توثيق من ',
+            'store_id' =>  $store->id,
+            'user_id' => auth()->user()->id,
+            'type' => "طلب توثيق",
+            'object_id' => $store->created_at,
+        ];
+        foreach ($users as $user) {
+            Notification::send($user, new verificationNotification($data));
+            Mail::to($user->email)->send(new SendMail($data));
+        }
+        event(new VerificationEvent($data));
+        // $user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         // $user->update([
         //     'name' => $request->input('name'),
         // ]);

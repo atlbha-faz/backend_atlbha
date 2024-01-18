@@ -83,6 +83,8 @@ class EtlobhaController extends BaseController
                     return $query->join('categories', 'id', 'parent_id');
                 }),
             ],
+            'product_has_options' => 'nullable|in:0,1',
+            'attribute' => 'array|required_if:product_has_options,1',
         ]);
         if ($validator->fails()) {
             # code...
@@ -142,6 +144,7 @@ class EtlobhaController extends BaseController
             'subcategory_id' => $subcategory,
             'store_id' => null,
             'amount' => $request->amount,
+            'product_has_options' => $request->product_has_options,
 
         ]);
         $productid = $product->id;
@@ -221,7 +224,7 @@ class EtlobhaController extends BaseController
 
                         $value = new Value([
                             'attribute_id' => $option->id,
-                            'value' => $attributeValue,
+                            'value' =>implode(',', $attributeValue),
                         ]);
                         $value->save();
 
@@ -303,6 +306,8 @@ class EtlobhaController extends BaseController
                     return $query->join('categories', 'id', 'parent_id');
                 }),
             ],
+            'product_has_options' => 'nullable|in:0,1',
+            'attribute' => 'array|required_if:product_has_options,1',
         ]);
 
         if ($validator->fails()) {
@@ -337,6 +342,7 @@ class EtlobhaController extends BaseController
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
             'amount' => $request->amount,
+            'product_has_options' => $request->product_has_options,
 
         ]);
         $productid = $product->id;
@@ -454,7 +460,7 @@ class EtlobhaController extends BaseController
 
                     $value = new Value([
                         'attribute_id' => $option->id,
-                        'value' => $attributeValue,
+                        'value' => implode(',',$attributeValue),
                     ]);
                     $value->save();
 
