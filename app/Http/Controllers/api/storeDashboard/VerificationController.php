@@ -62,7 +62,7 @@ class VerificationController extends BaseController
             'city_id' => 'required',
             'link' => 'nullable',
             'file' => 'required|mimes:pdf',
-            'owner_name' => 'nullable|string|max:255',
+            'owner_name' => 'required|string|max:255',
             'commercial_name' => 'required_if:verification_type,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
             // 'name' => 'required|string|max:255',
             // 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
@@ -82,7 +82,7 @@ class VerificationController extends BaseController
             return $this->sendError("الطلب قيد المراجعه", "request is in process");
         }
         $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id',[1,2])->get();
-                      
+
         $data = [
             'message' => 'https://admin.atlbha.com/verification'.$store->categories.'تصنيف'.$store->store_name.'طلب توثيق من ',
             'store_id' =>  $store->id,

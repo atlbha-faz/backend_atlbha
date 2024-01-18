@@ -234,16 +234,16 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                // $this->sendSms($request);
-                $data = array(
-                    'code' => $user->verify_code,
-                );
+                $this->sendSms($request);
+                // $data = array(
+                //     'code' => $user->verify_code,
+                // );
 
-                try {
-                    Mail::to($user->email)->send(new SendCode($data));
-                } catch (\Exception $e) {
-                    return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
-                }
+                // try {
+                //     Mail::to($user->email)->send(new SendCode($data));
+                // } catch (\Exception $e) {
+                //     return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                // }
 
                 $success['user'] = new UserResource($user);
                 $success['token'] = $user->createToken('authToken')->accessToken;
@@ -278,16 +278,16 @@ class AuthController extends BaseController
                     $user->generateVerifyCode();
                     $request->code = $user->verify_code;
                     $request->phonenumber = $user->phonenumber;
-                    // $this->sendSms($request);
-                    $data = array(
-                        'code' => $user->verify_code,
-                    );
+                    $this->sendSms($request);
+                    // $data = array(
+                    //     'code' => $user->verify_code,
+                    // );
 
-                    try {
-                        Mail::to($user->email)->send(new SendCode($data));
-                    } catch (Exception $e) {
-                        return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
-                    }
+                    // try {
+                    //     Mail::to($user->email)->send(new SendCode($data));
+                    // } catch (Exception $e) {
+                    //     return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                    // }
 
                     $success['user'] = new UserResource($user);
                     $success['status'] = 200;
@@ -408,16 +408,16 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                // $this->sendSms($request); // send and return its response
-                $data = array(
-                    'code' => $user->verify_code,
-                );
+                $this->sendSms($request); // send and return its response
+                // $data = array(
+                //     'code' => $user->verify_code,
+                // );
 
-                try {
-                    Mail::to($user->email)->send(new SendCode($data));
-                } catch (\Exception $e) {
-                    return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
-                }
+                // try {
+                //     Mail::to($user->email)->send(new SendCode($data));
+                // } catch (\Exception $e) {
+                //     return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                // }
 
             }
 
@@ -476,16 +476,16 @@ class AuthController extends BaseController
 
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            // $this->sendSms($request); // send and return its response
-            $data = array(
-                'code' => $user->verify_code,
-            );
+            $this->sendSms($request); // send and return its response
+            // $data = array(
+            //     'code' => $user->verify_code,
+            // );
 
-            try {
-                Mail::to($user->email)->send(new SendCode($data));
-            } catch (\Exception $e) {
-                return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
-            }
+            // try {
+            //     Mail::to($user->email)->send(new SendCode($data));
+            // } catch (\Exception $e) {
+            //     return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+            // }
 
         }
 
