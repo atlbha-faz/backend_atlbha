@@ -1,0 +1,17 @@
+"{\"multicast_id\":4297234166580377919,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
+"{\"multicast_id\":6981105303190925543,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
+"{\"multicast_id\":5454318374301074112,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
+"{\"multicast_id\":4202519471838813317,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
+"{\"multicast_id\":6458063464947210971,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: "12345678"
+"{\"multicast_id\":5442846319097075705,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
+"{\"multicast_id\":583923460016983116,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
+"{\"multicast_id\":1419680485838727753,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
+

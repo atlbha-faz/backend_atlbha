@@ -203,7 +203,7 @@ class WebsiteorderController extends BaseController
            
                $websiteorder->update(['status' => 'accept']);
 
-               $users = User::where('store_id', $websiteorder->store_id)->get();
+               $users = User::where('user_type', 'store')->where('store_id', $websiteorder->store_id)->get();
                $data = [
                  'message' =>' تم قبول خدمة'. implode(',',$serviceName),
 
@@ -215,8 +215,13 @@ class WebsiteorderController extends BaseController
 
                foreach($users as $user)
                {
+  
                Notification::send($user, new verificationNotification($data));
+               if($user->device_token != null){
+               $fcm = $this->sendFCM($user->device_token,
+               $user->id,'service' , ' تم قبول خدمة'. implode(',',$serviceName),$user->notifications()->count());
                }
+            }
 
                event(new VerificationEvent($data));
                $success['websiteorder']= New WebsiteorderResource($websiteorder);
