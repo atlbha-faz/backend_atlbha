@@ -32,4 +32,8 @@
 Token: 12345678
 "{\"multicast_id\":752479893031873148,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
 Token: 12345678
+"{\"multicast_id\":7373252555543940535,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
+"{\"multicast_id\":4278552117534377661,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}"
+Token: 12345678
 

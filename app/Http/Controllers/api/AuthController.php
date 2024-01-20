@@ -240,11 +240,11 @@ class AuthController extends BaseController
                 //     'code' => $user->verify_code,
                 // );
 
-                try {
-                    Mail::to($user->email)->send(new SendCode($data));
-                } catch (\Exception $e) {
-                    return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
-                }
+                // try {
+                //     Mail::to($user->email)->send(new SendCode($data));
+                // } catch (\Exception $e) {
+                //     return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                // }
                 $user->update(['device_token' => $request->device_token]);
 
                 $success['user'] = new UserResource($user);
