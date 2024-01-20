@@ -88,6 +88,7 @@ class EtlobhaserviceController extends BaseController
             Notification::send($user, new verificationNotification($data));
         }
         event(new VerificationEvent($data));
+
         $success['Websiteorders'] = new WebsiteorderResource($websiteorder);
         $success['status'] = 200;
 

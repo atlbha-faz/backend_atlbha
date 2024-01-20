@@ -41,6 +41,7 @@ class AuthController extends BaseController
                 $input = $request->all();
                 $validator = Validator::make($input, [
                     'checkbox_field' => 'required|in:1',
+                    'device_token'=>'nullable|string',
                     'user_type' => 'required|in:store,marketer',
                     // 'name'=>'required|string|max:255',
                     'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
@@ -239,11 +240,12 @@ class AuthController extends BaseController
                 //     'code' => $user->verify_code,
                 // );
 
-                // try {
-                //     Mail::to($user->email)->send(new SendCode($data));
-                // } catch (\Exception $e) {
-                //     return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
-                // }
+                try {
+                    Mail::to($user->email)->send(new SendCode($data));
+                } catch (\Exception $e) {
+                    return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+                }
+                $user->update(['device_token' => $request->device_token]);
 
                 $success['user'] = new UserResource($user);
                 $success['token'] = $user->createToken('authToken')->accessToken;
@@ -303,7 +305,7 @@ class AuthController extends BaseController
         $validator = Validator::make($input, [
             'user_name' => 'string|required',
             'password' => 'string|required',
-            //'device_token' => 'string|required',
+            'device_token' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -353,9 +355,10 @@ class AuthController extends BaseController
             $query->whereIn('user_type', ['admin', 'admin_employee']);
         } /*'verified' => 1 */])) {
             $user = auth()->user();
+             $user->update(['device_token' => $request->device_token]);
         }
 
-        // $user->update(['device_token' => $request->device_token]);
+        
 
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
@@ -372,7 +375,7 @@ class AuthController extends BaseController
         $validator = Validator::make($input, [
             'user_name' => 'string|required',
             'password' => 'string|required',
-            //'device_token' => 'string|required',
+            'device_token' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -432,10 +435,10 @@ class AuthController extends BaseController
             $query->whereIn('user_type', ['store', 'store_employee']);
         }, 'verified' => 1])) {
             $user = auth()->user();
-
+            $user->update(['device_token' => $request->device_token]);
         }
 
-        //$user->update(['device_token' => $request->device_token]);
+        
 
         $success['user'] = new UserResource($user);
         $success['token'] = $user->createToken('authToken')->accessToken;
@@ -447,7 +450,11 @@ class AuthController extends BaseController
 
     public function logout()
     {
+        if (is_null(auth("api")->user())) {
+            return response()->json(['error' => 'Unauthenticated.'], 401);
+        }
         $user = auth("api")->user()->token();
+        auth("api")->user()->update(['device_token' => ""]);
         $user->revoke();
 
         $success['status'] = 200;
