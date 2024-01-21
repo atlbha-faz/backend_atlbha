@@ -334,7 +334,7 @@ class IndexStoreController extends BaseController
             $category = array();
             foreach ($prodtcts as $prodtct) {
                 $categoryOne = Category::with(['subcategory' => function ($query) use ($prodtct) {
-                    $query->where('id', $prodtct->subcategory_id);
+                    $query->whereIn('id', $prodtct->subcategory()->pluck('id')->toArray());
                 }])->where('is_deleted', 0)->where('id', $prodtct->category_id
                 )->where('status', 'active')->first();
                  if ( $categoryOne !== null) {
@@ -347,7 +347,7 @@ class IndexStoreController extends BaseController
             $originalProdutcts = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->get();
             foreach ($originalProdutcts as $originalProdutct) {
                 $mainCategory = Category::with(['subcategory' => function ($query) use ($originalProdutct) {
-                    $query->where('id', $originalProdutct->subcategory_id);
+                    $query->whereIn('id', $originalProdutct->subcategory()->pluck('id')->toArray());
                 }])->where('is_deleted', 0)->where('id', $originalProdutct->category_id
                 )->where('store_id', null)->where('parent_id', null)->where('status', 'active')->first();
                 if ($mainCategory !== null) {
@@ -356,7 +356,7 @@ class IndexStoreController extends BaseController
             }
 
                 $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
-                    ->where('store_id', $store_id)->get()->merge($originalcategory)->merge($category);
+                    ->where('store_id', $store_id)->get()->merge($category)->merge($originalcategory);
 
             if ($categories != null) {
                 $success['category'] = CategoryResource::collection($categories);
