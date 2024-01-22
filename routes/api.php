@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
 Route::get('sendMessage', 'App\Http\Controllers\api\AuthController@store_verify_message');
 //Route::post('sendMessagePost', 'App\Http\Controllers\api\AuthController@sendMessagePost');
+Route::get('unifonicTest', 'App\Http\Controllers\api\AuthController@unifonicTest');
 
 Route::get('selector/cities', [App\Http\Controllers\api\SelectorController::class, 'cities']);
 Route::get('selector/countries', [App\Http\Controllers\api\SelectorController::class, 'countries']);
