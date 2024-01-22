@@ -936,13 +936,22 @@ class IndexStoreController extends BaseController
                     $query->where('importproducts.price', '<=', $price_to);
                 })->select('products.*', 'importproducts.qty', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
         }
+         if ($request->has('filter_category') && $filter_category != null){
+        $parent=Category::where('is_deleted', 0)->where('status', 'active')
+                ->where('store_id', $store_id)->whereNot('parent_id',null)->when($filter_category, function ($query, $filter_category) {
+                    $query->where('id', $filter_category);
+                })->pluck('parent_id')->first();
+            }
+            else{
+                $parent= null;
+            }
         $storeproducts = ProductResource::collection(Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('status', 'active')
-                ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) {
-                $query->where('category_id', $filter_category)->orWhere('subcategory_id', $filter_category);
+                ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) use ($parent){
+                $query->where('category_id', $filter_category)->orWhere('category_id',$parent);
             })->when($price_from, function ($query, $price_from) {
                 $query->where('selling_price', '>=', $price_from);
             })->when($price_to, function ($query, $price_to) {
