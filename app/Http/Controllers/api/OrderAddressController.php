@@ -31,6 +31,7 @@ class OrderAddressController extends BaseController
             $store = Store::where('domain', $request->domain)->first();
             $activeShippings = $store->shippingtypes()->get();
             $ids = array();
+            $ids[]=null;
             if (count($activeShippings) > 0) {
                 foreach ($activeShippings as $activeShipping) {
                     $ids[] = $activeShipping->id;
