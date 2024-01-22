@@ -713,4 +713,23 @@ class AuthController extends BaseController
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
     }
+    public function unifonicTest(){
+    $curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=7Az0wQqjGDcVyJ3LvGjMRU6iNJIxoY&SenderID=Atlbha&Body=hello&Recipient=96650295508',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+));
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+return $response;
+}
 }
