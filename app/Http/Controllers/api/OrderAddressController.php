@@ -31,13 +31,16 @@ class OrderAddressController extends BaseController
             $store = Store::where('domain', $request->domain)->first();
             $activeShippings = $store->shippingtypes()->get();
             $ids = array();
+
             $ids[]=null;
+
             if (count($activeShippings) > 0) {
                 foreach ($activeShippings as $activeShipping) {
                     $ids[] = $activeShipping->id;
                 }
             }
-            $success['orderAddress'] = OrderAddressResource::collection(OrderAddress::whereIn('shippingtype_id', $ids)->where('user_id', auth()->user()->id)->get());
+
+            $success['orderAddress'] = OrderAddressResource::collection(OrderAddress::where('user_id', auth()->user()->id)->get());
 
             $success['status'] = 200;
 
