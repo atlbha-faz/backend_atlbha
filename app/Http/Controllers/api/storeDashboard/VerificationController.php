@@ -113,8 +113,15 @@ class VerificationController extends BaseController
             'type' => "طلب توثيق",
             'object_id' => $store->created_at,
         ];
+        $data2 = [
+            'message' => ' طلب توثيق  ',
+            'store_id' =>  $store->id,
+            'user_id' => auth()->user()->id,
+            'type' => "طلب توثيق",
+            'object_id' => $store->created_at,
+        ];
         foreach ($users as $user) {
-            Notification::send($user, new verificationNotification($data));
+            Notification::send($user, new verificationNotification($data2));
             Mail::to($user->email)->send(new SendMail($data));
         }
         event(new VerificationEvent($data));
