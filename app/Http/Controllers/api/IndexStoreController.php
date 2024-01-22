@@ -938,7 +938,7 @@ class IndexStoreController extends BaseController
         }
          if ($request->has('filter_category') && $filter_category != null){
         $parent=Category::where('is_deleted', 0)->where('status', 'active')
-                ->where('store_id', $store_id)->whereNot('parent_id',null)->when($filter_category, function ($query, $filter_category) {
+                 ->whereNot('parent_id',null)->when($filter_category, function ($query, $filter_category) {
                     $query->where('id', $filter_category);
                 })->pluck('parent_id')->first();
             }
