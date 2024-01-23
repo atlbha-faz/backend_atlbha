@@ -118,26 +118,27 @@ class ImportproductController extends BaseController
             $validator = Validator::make($input, [
                 'price' => ['required', 'numeric',
                     'gte:' . $purchasing_price],
-                'qty' => ['required', 'numeric'],
+                'discount_price_import' => ['nullable', 'numeric']
             ]);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
-            $qty = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->value('qty');
+            // $qty = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->value('qty');
             $product = Product::where('id', $id)->first();
-            if ($request->qty > $product->stock + $qty) {
+            if ($request->qty > $product->stock ) {
 
                 return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
             } else {
                 $importproduct->update([
                     'price' => $request->price,
-                    'qty' => $request->qty,
+                    'discount_price_import'=> $request->discount_price_import,
+                    // 'qty' => $request->qty,
 
                 ]);
-                $newStock = ($product->stock + $qty) - $importproduct->qty;
-                $product->update([
-                    'stock' => $newStock,
-                ]);
+                // $newStock = ($product->stock + $qty) - $importproduct->qty;
+                // $product->update([
+                //     'stock' => $newStock,
+                // ]);
             }
 
             $success['importproducts'] = new ImportproductResource($importproduct);
