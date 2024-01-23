@@ -69,8 +69,11 @@ class PasswordResetController extends BaseController
 
             $request->code = $user->code;
             $request->phonenumber = $user->phonenumber;
-
-            $this->sendSms($request); // send and return its response
+            $status = $this->unifonicTest($request);
+            if ($status === false) {
+                $this->sendSms($request);
+            }
+            // send and return its response
 
         }
 
@@ -332,6 +335,34 @@ class PasswordResetController extends BaseController
             return $this->sendError($e->getMessage());
         }
 
+    }
+    public function unifonicTest(Request $request)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=7Az0wQqjGDcVyJ3LvGjMRU6iNJIxoY&Body='. $request->code .' &Recipient='. $request->phonenumber,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $responseData = json_decode( $response);
+
+        if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
+            return true;
+        }
+      else{
+        return false;
+      }
+       
     }
 
 }

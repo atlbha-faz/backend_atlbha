@@ -233,7 +233,11 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                $this->sendSms($request);
+                $status = $this->unifonicTest($request);
+                if ($status === false) {
+                    $this->sendSms($request);
+                }
+               
                 // $data = array(
                 //     'code' => $user->verify_code,
                 // );
@@ -278,7 +282,11 @@ class AuthController extends BaseController
                     $user->generateVerifyCode();
                     $request->code = $user->verify_code;
                     $request->phonenumber = $user->phonenumber;
-                    $this->sendSms($request);
+                    $status = $this->unifonicTest($request);
+                    if ($status === false) {
+                        $this->sendSms($request);
+                    }
+                   
                     // $data = array(
                     //     'code' => $user->verify_code,
                     // );
@@ -407,7 +415,11 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                $this->sendSms($request); // send and return its response
+                $status = $this->unifonicTest($request);
+                if ($status === false) {
+                    $this->sendSms($request);
+                }
+                 // send and return its response
                 // $data = array(
                 //     'code' => $user->verify_code,
                 // );
@@ -477,7 +489,11 @@ class AuthController extends BaseController
 
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            $this->sendSms($request); // send and return its response
+            $status = $this->unifonicTest($request);
+            if ($status === false) {
+                $this->sendSms($request);
+            }
+            // send and return its response
             // $data = array(
             //     'code' => $user->verify_code,
             // );
@@ -691,8 +707,11 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-
-                $this->sendSms($request); // send and return its response
+                $status = $this->unifonicTest($request);
+                if ($status === false) {
+                    $this->sendSms($request);
+                }
+                 // send and return its response
             }
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
