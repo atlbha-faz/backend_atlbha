@@ -725,11 +725,13 @@ class AuthController extends BaseController
         $response = curl_exec($curl);
 
         curl_close($curl);
-        if ($response) {
-            return "true";
+        $responseData = json_decode( $response);
+
+        if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
+            return true;
         }
       else{
-        return "false";
+        return false;
       }
        
     }
