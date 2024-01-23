@@ -160,7 +160,12 @@ class VerificationController extends BaseController
         $user = User::where('user_type', 'store')->where('store_id', $store->id)->first();
         // Notification::send($user, new verificationNotification($data));
         // event(new VerificationEvent($data));
+        try{
         Mail::to($user->email)->send(new SendMail($data));
+        
+           } catch (\Exception $e) {
+           return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
+         }
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
 
