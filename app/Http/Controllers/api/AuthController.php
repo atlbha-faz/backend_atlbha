@@ -707,7 +707,7 @@ class AuthController extends BaseController
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
     }
-    public function unifonicTest($request)
+    public function unifonicTest(Request $request)
     {
         $curl = curl_init();
 
@@ -725,12 +725,12 @@ class AuthController extends BaseController
         $response = curl_exec($curl);
 
         curl_close($curl);
-        if ( $response ->success == true) {
-            return true;
+        if ($response) {
+            return "true";
         }
-          else{
-            return false;
-          }
+      else{
+        return "false";
+      }
        
     }
 
