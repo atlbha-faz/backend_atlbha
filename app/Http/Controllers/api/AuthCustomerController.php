@@ -49,7 +49,7 @@ class AuthCustomerController extends BaseController
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
             $status = $this->unifonicTest($request);
-            if ($status == false) {
+            if ($status == "false") {
                 $this->sendSms($request);
             }
             // $data = array(
@@ -67,7 +67,7 @@ class AuthCustomerController extends BaseController
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
             $status = $this->unifonicTest($request);
-            if ($status == false) {
+            if ($status == "false") {
                 $this->sendSms($request);
             }// send and return its response
             // $data = array(
@@ -339,6 +339,7 @@ class AuthCustomerController extends BaseController
     }
     public function unifonicTest($request)
     {
+        
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -355,12 +356,13 @@ class AuthCustomerController extends BaseController
         $response = curl_exec($curl);
 
         curl_close($curl);
-        if ( $response->success == true) {
-            return true;
+       
+        if ($response) {
+            return "true";
         }
-          else{
-            return false;
-          }
+      else{
+        return "false";
+      }
        
     }
 }
