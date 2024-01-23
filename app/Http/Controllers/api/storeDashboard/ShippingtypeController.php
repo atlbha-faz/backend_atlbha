@@ -136,6 +136,14 @@ class ShippingtypeController extends BaseController
             return $this->sendError("شركة الشحن غير موجودة", "shippingtype is't exists");
         }
         $shippingtype = shippingtype_store::where('shippingtype_id', $id)->where('store_id', auth()->user()->store_id)->first();
+//         $activeShippingCompaniesCount = shippingtype_store::where('store_id', auth()->user()->store_id)->count();
+// // Check if there's at least one active shipping company
+
+//         if ($activeShippingCompaniesCount <= 1) {
+//             // If there's only one active company, prevent deactivation
+//             return $this->sendError( 'يجب على الاقل تفعيل شركة شحن واحدة', 'At least one shipping company must remain active');
+
+//         } else {
 
         if ($shippingtype != null) {
             $shippingtype->delete();
@@ -149,15 +157,19 @@ class ShippingtypeController extends BaseController
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
+            // Check if there's at least one active shipping company
+
             $shippingtype = shippingtype_store::create([
                 'shippingtype_id' => $id,
                 'store_id' => auth()->user()->store_id,
                 'price' => $request->price !== null ? $request->price : 35,
                 'time' => $request->time !== null ? $request->time : 1,
             ]);
-
             $success['shippingtypes'] = $shippingtype;
+
         }
+
+        // }
         $success['shippingtypess'] = ShippingtypeResource::collection(Shippingtype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم تعديل حالة طريقةالشحن بنجاح', 'shipping type updated successfully');
