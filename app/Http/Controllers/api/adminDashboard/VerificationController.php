@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Log;
 class VerificationController extends BaseController
 {
     public function __construct()
@@ -163,9 +163,11 @@ class VerificationController extends BaseController
         try{
         Mail::to($user->email)->send(new SendMail($data));
         
-           } catch (\Exception $e) {
-           return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
-         }
+    } catch (\Exception $e) {
+        // Exception handling
+        $errorMessage = 'Failed to send email. Please try again later.';
+        Log::error('Email delivery failure: ' . $e->getMessage());
+    }
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
 
