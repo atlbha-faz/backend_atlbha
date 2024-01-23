@@ -9,6 +9,7 @@ use App\Models\Homepage;
 use App\Models\Marketer;
 use App\Models\Page;
 use App\Models\Setting;
+use App\Models\shippingtype_store;
 use App\Models\Store;
 use App\Models\Theme;
 use App\Models\User;
@@ -191,6 +192,14 @@ class AuthController extends BaseController
                     'store_id' => $store->id,
                 ]);
                 $page3->page_categories()->attach(3);
+                // add shipping type as defulte
+                $shipping_type = shippingtype_store::create([
+                    'store_id' => $store->id,
+                    'shippingtype_id' => 5,
+                    'price' => 20,
+                    'time' => 2,
+                ]);
+
                 if ($request->periodtype == "6months") {
                     $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
                     $store->update([
@@ -712,7 +721,7 @@ class AuthController extends BaseController
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=7Az0wQqjGDcVyJ3LvGjMRU6iNJIxoY&Body='. $request->code .' &Recipient='. $request->phonenumber,
+            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=7Az0wQqjGDcVyJ3LvGjMRU6iNJIxoY&Body=' . $request->code . ' &Recipient=' . $request->phonenumber,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -727,11 +736,10 @@ class AuthController extends BaseController
         curl_close($curl);
         if ($response) {
             return "true";
+        } else {
+            return "false";
         }
-      else{
-        return "false";
-      }
-       
+
     }
 
 }
