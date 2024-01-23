@@ -48,7 +48,10 @@ class AuthCustomerController extends BaseController
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            $this->sendSms($request);
+            $status = $this->unifonicTest($request);
+            if ($status == false) {
+                $this->sendSms($request);
+            }
             // $data = array(
             //     'code' => $request->code,
             // );
@@ -63,7 +66,10 @@ class AuthCustomerController extends BaseController
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            $this->sendSms($request); // send and return its response
+            $status = $this->unifonicTest($request);
+            if ($status == false) {
+                $this->sendSms($request);
+            }// send and return its response
             // $data = array(
             //     'code' => $request->code,
             // );
@@ -170,7 +176,7 @@ class AuthCustomerController extends BaseController
         $a = now()->toDateTimeString();
 
         if ($user->verify_code_expires_at < $a) {
-            $success['status'] = $a ;
+            $success['status'] = $a;
             return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
         }
         if ($request->code == $user->verify_code) {
@@ -330,5 +336,31 @@ class AuthCustomerController extends BaseController
         } catch (Exception $e) {
             return $this->sendError($e->getMessage());
         }
+    }
+    public function unifonicTest($request)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=7Az0wQqjGDcVyJ3LvGjMRU6iNJIxoY&Body='. $request->code .' &Recipient='. $request->phonenumber,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        if ( $response->success == true) {
+            return true;
+        }
+          else{
+            return false;
+          }
+       
     }
 }

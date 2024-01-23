@@ -707,12 +707,12 @@ class AuthController extends BaseController
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
     }
-    public function unifonicTest()
+    public function unifonicTest($request)
     {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=7Az0wQqjGDcVyJ3LvGjMRU6iNJIxoY&Body=hello&Recipient=00966550295508',
+            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=7Az0wQqjGDcVyJ3LvGjMRU6iNJIxoY&Body='. $request->code .' &Recipient='. $request->phonenumber,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -725,7 +725,13 @@ class AuthController extends BaseController
         $response = curl_exec($curl);
 
         curl_close($curl);
-        return $response;
+        if ( $response ->success == true) {
+            return true;
+        }
+          else{
+            return false;
+          }
+       
     }
 
 }
