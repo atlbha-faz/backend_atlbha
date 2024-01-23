@@ -17,7 +17,8 @@ class ImportproductResource extends JsonResource
          return [
             'id' =>$this->id,
             'price' => $this->price,
-            'qty' => $this->qty,
+            // 'qty' => $this->qty,
+            'discount_price_import' => $this->discount_price_import,
             'store' =>New StoreResource($this->store),
             'product' =>New ProductResource($this->product)
         ];

@@ -37,6 +37,7 @@ class importsResource extends JsonResource
              'short_description' => $this->short_description,
             'purchasing_price' => $this->purchasing_price,
             'selling_price' => $this->price,
+            'discount_price_import'=> $this->discount_price_import,
             'quantity' => $this->quantity,
               'weight'=> $this->weight !== null ? $this->weight * 1000 : 500,
             'less_qty' => $this->less_qty,

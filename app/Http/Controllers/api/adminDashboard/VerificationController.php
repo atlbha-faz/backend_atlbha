@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Log;
 class VerificationController extends BaseController
 {
     public function __construct()
@@ -160,7 +160,14 @@ class VerificationController extends BaseController
         $user = User::where('user_type', 'store')->where('store_id', $store->id)->first();
         // Notification::send($user, new verificationNotification($data));
         // event(new VerificationEvent($data));
+        try{
         Mail::to($user->email)->send(new SendMail($data));
+        
+    } catch (\Exception $e) {
+        // Exception handling
+        $errorMessage = 'Failed to send email. Please try again later.';
+        Log::error('Email delivery failure: ' . $e->getMessage());
+    }
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
 
