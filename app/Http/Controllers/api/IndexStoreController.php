@@ -298,7 +298,7 @@ class IndexStoreController extends BaseController
             $oneWeekAgo = Carbon::now()->subWeek();
 
             $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')->where('importproducts.store_id', $store_id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
-                ->get(['products.*', 'importproducts.price','','importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+                ->get(['products.*', 'importproducts.price','importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
             $resentimports = importsResource::collection($resentimport);
             $resentproduct = ProductResource::collection(Product::with([
                 'category' => function ($query) {
