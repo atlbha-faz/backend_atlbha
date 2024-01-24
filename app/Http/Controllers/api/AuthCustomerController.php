@@ -343,7 +343,7 @@ class AuthCustomerController extends BaseController
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=7Az0wQqjGDcVyJ3LvGjMRU6iNJIxoY&Body='. $request->code .' &Recipient='. $request->phonenumber,
+            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz&Body='. $request->code .' &Recipient='. $request->phonenumber,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
