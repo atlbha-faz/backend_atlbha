@@ -201,21 +201,6 @@ class ProductController extends BaseController
                 Image::create($request->all());
                 $mimeType = $file->getClientMimeType();
 
-                // if (strpos($mimeType, 'video/') === 0) {
-                //     $thumbnail = VideoThumbnail::createThumbnail(
-                //         storage_path('app/public/images/product/'.$imageName),
-
-                //         storage_path('app/public/images/product/thumb'),
-                //         'thumbnail.jpg',
-                //         2,
-                //         1920,
-                //         1080
-                //     );
-                //     // dd($filePath);
-
-                //     dd($thumbnail);
-                // }
-
             }
         }
         if ($request->has('attribute') && !is_null($request->attribute)) {
@@ -228,7 +213,15 @@ class ProductController extends BaseController
                 $option->save();
 
                 foreach ($attribute['value'] as $attributeValue) {
+                    if (isset($attributeValue['image'])) {
+                        $imageName = Str::random(10) . time() . '.' . $attributeValue['image']->getClientOriginalExtension();
+                        $filePath = 'images/product/' . $imageName;
+                        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
+                        if ($isFileUploaded) {
+                            $attributeValue['image'] = Storage::disk('public')->url($filePath);
+                        }
 
+                    }
                     $value = new Value([
                         'attribute_id' => $option->id,
                         'value' => implode(',', $attributeValue),
@@ -499,7 +492,15 @@ class ProductController extends BaseController
                     $option->save();
 
                     foreach ($attribute['value'] as $attributeValue) {
+                        if (isset($attributeValue['image'])) {
+                            $imageName = Str::random(10) . time() . '.' . $attributeValue['image']->getClientOriginalExtension();
+                            $filePath = 'images/product/' . $imageName;
+                            $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
+                            if ($isFileUploaded) {
+                                $attributeValue['image'] = Storage::disk('public')->url($filePath);
+                            }
 
+                        }
                         $value = new Value([
                             'attribute_id' => $option->id,
                             'value' => implode(',', $attributeValue),
@@ -807,14 +808,13 @@ class ProductController extends BaseController
         if (is_null($product)) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
         }
-        if ($product->store_id  == auth()->user()->store_id) {
+        if ($product->store_id == auth()->user()->store_id) {
             if ($product->special === 'not_special') {
                 $product->update(['special' => 'special']);
             } else {
                 $product->update(['special' => 'not_special']);
             }
-        }
-        else{
+        } else {
             $importproduct = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
             if ($importproduct->special === 'not_special') {
                 $importproduct->update(['special' => 'special']);
