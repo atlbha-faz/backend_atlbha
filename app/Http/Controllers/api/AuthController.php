@@ -740,7 +740,6 @@ class AuthController extends BaseController
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
         ));
-
         $response = curl_exec($curl);
 
         curl_close($curl);
