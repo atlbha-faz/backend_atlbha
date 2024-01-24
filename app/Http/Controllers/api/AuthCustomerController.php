@@ -341,9 +341,13 @@ class AuthCustomerController extends BaseController
     {
         
         $curl = curl_init();
+        $data = array(
+            'AppSid'=>'3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz',
+            'Body' => $request->code,
+            'Recipient' => $request->phonenumber);
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz&Body='. $request->code .' &Recipient='. $request->phonenumber,
+          CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -351,12 +355,12 @@ class AuthCustomerController extends BaseController
           CURLOPT_FOLLOWLOCATION => true,
           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
           CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>  $data
         ));
-        
-        $response = curl_exec($curl);
+         $response = curl_exec($curl);
         
         curl_close($curl);
-       
+        
         $responseData = json_decode( $response);
 
         if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
