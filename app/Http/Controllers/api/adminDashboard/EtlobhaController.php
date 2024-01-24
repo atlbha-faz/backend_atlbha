@@ -226,7 +226,7 @@ class EtlobhaController extends BaseController
                             $filePath = 'images/product/' . $imageName;
                             $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
                             if ($isFileUploaded) {
-                                $attributeValue['image'] = Storage::disk('public')->url($filePath);
+                                $attributeValue['image'] =asset('storage/images/product') . '/' .$imageName;
                             }
 
                         }
@@ -469,7 +469,7 @@ class EtlobhaController extends BaseController
                             $filePath = 'images/product/' . $imageName;
                             $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
                             if ($isFileUploaded) {
-                                $attributeValue['image'] = Storage::disk('public')->url($filePath);
+                                $attributeValue['image'] = asset('storage/images/product') . '/' .$imageName;
                             }
 
                         }
