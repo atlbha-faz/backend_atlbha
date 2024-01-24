@@ -9,6 +9,7 @@ use App\Models\Homepage;
 use App\Models\Marketer;
 use App\Models\Page;
 use App\Models\Setting;
+use App\Models\shippingtype_store;
 use App\Models\Store;
 use App\Models\Theme;
 use App\Models\User;
@@ -191,6 +192,14 @@ class AuthController extends BaseController
                     'store_id' => $store->id,
                 ]);
                 $page3->page_categories()->attach(3);
+                // add shipping type as defulte
+                $shipping_type = shippingtype_store::create([
+                    'store_id' => $store->id,
+                    'shippingtype_id' => 5,
+                    'price' => 20,
+                    'time' => 2,
+                ]);
+
                 if ($request->periodtype == "6months") {
                     $end_at = date('Y-m-d', strtotime("+ 6 months", strtotime($store->created_at)));
                     $store->update([
@@ -237,7 +246,7 @@ class AuthController extends BaseController
                 if ($status === false) {
                     $this->sendSms($request);
                 }
-               
+
                 // $data = array(
                 //     'code' => $user->verify_code,
                 // );
@@ -286,7 +295,7 @@ class AuthController extends BaseController
                     if ($status === false) {
                         $this->sendSms($request);
                     }
-                   
+
                     // $data = array(
                     //     'code' => $user->verify_code,
                     // );
@@ -731,7 +740,9 @@ class AuthController extends BaseController
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
+
             CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz&Body='. $request->code .' &Recipient='. $request->phonenumber,
+
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -751,7 +762,7 @@ class AuthController extends BaseController
       else{
         return false;
       }
-       
+
     }
 
 }
