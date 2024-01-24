@@ -153,7 +153,7 @@ class ProductController extends BaseController
             'attribute' => 'array|required_if:product_has_options,1',
             'data.*.price' => 'numeric|required_if:amount,1',
             'data.*.quantity' => 'numeric|required_if:amount,1',
-          
+
             // 'store_id'=>'required|exists:stores,id',
         ]);
         if ($validator->fails()) {
@@ -223,7 +223,7 @@ class ProductController extends BaseController
 
                 $option = new Attribute([
                     'name' => $attribute['title'],
-                     'type'=>$attribute['type']
+                    'type' => $attribute['type'],
                 ]);
                 $option->save();
 
@@ -231,14 +231,13 @@ class ProductController extends BaseController
 
                     $value = new Value([
                         'attribute_id' => $option->id,
-                        'value' => implode(',',$attributeValue),
+                        'value' => implode(',', $attributeValue),
                     ]);
                     $value->save();
 
                     $values[] = $value;
                     $valuesid[] = $value->id;
                 }
-
 
                 $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
                 $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
@@ -495,56 +494,55 @@ class ProductController extends BaseController
 
                     $option = new Attribute([
                         'name' => $attribute['title'],
-                         'type'=>$attribute['type']
+                        'type' => $attribute['type'],
                     ]);
                     $option->save();
 
+                    foreach ($attribute['value'] as $attributeValue) {
 
-                        foreach ($attribute['value'] as $attributeValue) {
+                        $value = new Value([
+                            'attribute_id' => $option->id,
+                            'value' => implode(',', $attributeValue),
+                        ]);
+                        $value->save();
 
-                            $value = new Value([
-                                'attribute_id' => $option->id,
-                                'value' => implode(',',$attributeValue),
-                            ]);
-                            $value->save();
-
-                            $values[] = $value;
-                            $valuesid[] = $value->id;
-                        }
-
-                        $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
-                        $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
+                        $values[] = $value;
+                        $valuesid[] = $value->id;
                     }
+
+                    $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                    $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
                 }
             }
-
-            if ($request->has('data') && !is_null($request->data)) {
-
-                foreach ($request->data as $data) {
-                    $data['name'] = [
-                        "ar" => implode(',', $data['name']),
-                    ];
-
-                    $option = new Option([
-                        'price' => $data['price'],
-                        'quantity' => $data['quantity'],
-                        'name' => $data['name'],
-                        'product_id' => $productid,
-
-                    ]);
-
-                    $option->save();
-                    $options[] = $option;
-
-                }
-
-            }
-            $success['products'] = new ProductResource($product);
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
         }
-    
+
+        if ($request->has('data') && !is_null($request->data)) {
+
+            foreach ($request->data as $data) {
+                $data['name'] = [
+                    "ar" => implode(',', $data['name']),
+                ];
+
+                $option = new Option([
+                    'price' => $data['price'],
+                    'quantity' => $data['quantity'],
+                    'name' => $data['name'],
+                    'product_id' => $productid,
+
+                ]);
+
+                $option->save();
+                $options[] = $option;
+
+            }
+
+        }
+        $success['products'] = new ProductResource($product);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'product updated successfully');
+    }
+
     public function updateCategory(Request $request)
     {
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
@@ -804,16 +802,28 @@ class ProductController extends BaseController
     }
     public function specialStatus($id)
     {
-        $product = Product::query()->where('store_id', auth()->user()->store_id)->find($id);
-        if (is_null($product) || $product->is_deleted != 0) {
+        $product = Product::query()->where('is_deleted', 0)->find($id);
+
+        if (is_null($product)) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
         }
-
-        if ($product->special === 'not_special') {
-            $product->update(['special' => 'special']);
-        } else {
-            $product->update(['special' => 'not_special']);
+        if ($product->store_id  == auth()->user()->store_id) {
+            if ($product->special === 'not_special') {
+                $product->update(['special' => 'special']);
+            } else {
+                $product->update(['special' => 'not_special']);
+            }
         }
+        else{
+            $importproduct = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
+            if ($importproduct->special === 'not_special') {
+                $importproduct->update(['special' => 'special']);
+            } else {
+                $importproduct->update(['special' => 'not_special']);
+            }
+
+        }
+
         $success['product'] = new productResource($product);
         $success['status'] = 200;
 
