@@ -36,7 +36,7 @@ class VerificationController extends BaseController
         foreach ($updatestores as $updatestore) {
             if($updatestore->phonenumber == null){
                 $user=User::where('user_type', 'store')->where('store_id',$updatestore->id)->where('is_deleted', 0)->first();
-                $updatestore->phonenumber=$user->phonenumber;
+                $updatestore->update(['phonenumber'=>$user->phonenumber]);
             }
         }
         $stores = Store::with(['categories' => function ($query) {
