@@ -32,13 +32,7 @@ class VerificationController extends BaseController
      */
     public function index()
     {
-        $updatestores=Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')->get();
-        foreach ($updatestores as $updatestore) {
-            if($updatestore->phonenumber == null){
-                $user=User::where('user_type', 'store')->where('store_id',$updatestore->id)->where('is_deleted', 0)->first();
-                $updatestore->update(['phonenumber'=>$user->phonenumber]);
-            }
-        }
+
         $stores = Store::with(['categories' => function ($query) {
             $query->select('name', 'icon');
         }, 'city' => function ($query) {
