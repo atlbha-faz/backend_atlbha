@@ -39,7 +39,7 @@ class VerificationController extends BaseController
         }, 'country' => function ($query) {
             $query->select('id');
         }, 'user' => function ($query) {
-            $query->select('id', 'name', 'email');
+            $query->select('id', 'name', 'email','phonenumber');
         }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('updated_at')->get();
         $success['stores'] = VerificationResource::collection($stores);
         $success['status'] = 200;
