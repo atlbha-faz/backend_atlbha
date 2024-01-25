@@ -32,6 +32,13 @@ class VerificationController extends BaseController
      */
     public function index()
     {
+        $updatestores=Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')->get();
+        foreach ($updatestores as $updatestore) {
+            if($updatestore->phonenumber == null){
+                $user=User::where('user_type', 'store')->where('store_id',$updatestore->id)->where('is_deleted', 0)->first();
+                $updatestore->phonenumber=$user->phonenumber;
+            }
+        }
         $stores = Store::with(['categories' => function ($query) {
             $query->select('name', 'icon');
         }, 'city' => function ($query) {
@@ -216,7 +223,7 @@ class VerificationController extends BaseController
             // 'link' => $request->input('link'),
             'file' => $request->file,
             'store_email' => $request->input('email'),
-            // 'phonenumber' => $request->input('phonenumber'),
+            'phonenumber' => $request->input('phonenumber'),
 
         ]);
         if (is_null($store->phonenumber)) {

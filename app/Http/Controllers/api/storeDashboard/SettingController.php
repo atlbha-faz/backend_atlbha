@@ -34,7 +34,7 @@ class SettingController extends BaseController
 
     public function setting_store_update(Request $request)
     {
-
+        $store=Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $input = $request->all();
 //         if (request()->hasFile($key)) {
 //             $validator2 = Validator::make($input, [
@@ -65,7 +65,9 @@ class SettingController extends BaseController
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             //'store_email' => 'required|email|unique:users,email,' . auth()->user()->id,
-            // 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber,' . auth()->user()->id],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
+               return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
+            })],
             'working_status' => 'required|in:active,not_active',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
@@ -88,7 +90,7 @@ class SettingController extends BaseController
             'store_email' => $request->input('store_email'),
             'store_name' => $request->input('store_name'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
-            //'phonenumber' => $request->input('phonenumber'),
+            'phonenumber' => $request->input('phonenumber'),
             'working_status' => $request->input('working_status'),
         ]);
         $store_user = User::where('is_deleted', 0)->where('id', auth()->user()->id)->where('user_type', 'store')->first();
