@@ -191,9 +191,17 @@ class VerificationController extends BaseController
             'file' => 'nullable',
             'name' => 'nullable|string|max:255',
             'store_id' => 'required',
-            'email' => 'nullable|email|unique:users,email,' . $user->id . '|unique:stores,store_email,' . $store->id,
-            'phonenumber' => ['nullable', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:users,phonenumber,' . $user->id, 'unique:stores,phonenumber,' . $store->id],
-        ]);
+            'email' => ['nullable', 'email', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store'])->where('is_deleted', 0)
+                    ->where('id', '!=', $user->id);
+            }),
+            ],
+            'phonenumber' => ['nullable', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store'])->where('is_deleted', 0)
+                    ->where('id', '!=', $user->id);
+            }),
+            ],
+                ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
