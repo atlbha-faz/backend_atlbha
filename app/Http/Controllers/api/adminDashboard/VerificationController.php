@@ -11,6 +11,7 @@ use App\Models\categories_stores;
 use App\Models\Note;
 use App\Models\Store;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use App\Notifications\verificationNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
