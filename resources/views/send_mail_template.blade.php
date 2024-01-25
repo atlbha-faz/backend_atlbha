@@ -5,7 +5,7 @@
 </head>
 <body dir="rtl">
 @isset($data['type'])
-<h2>الموضوع:	{{$data['type']}}</h2>
+<h2>عنوان الرسالة:	{{$data['type']}}</h2>
 @endisset
 <h2>الرسالة:	{{$data['message']}}</h2>
 </body>
