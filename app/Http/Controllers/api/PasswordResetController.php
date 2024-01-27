@@ -26,7 +26,7 @@ class PasswordResetController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-       'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/']
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
 
         ]);
 
@@ -41,8 +41,8 @@ class PasswordResetController extends BaseController
                 return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
             })->where(
             function ($query) use ($phonenumber) {
-                    return $query->where('phonenumber', $phonenumber);
-            })->where('is_deleted',0)->first();
+                return $query->where('phonenumber', $phonenumber);
+            })->where('is_deleted', 0)->first();
         if (!$user) {
             return $this->sendError('المستخدم غير موجود', 'We cant find a user with that username.');
         }
@@ -101,7 +101,7 @@ class PasswordResetController extends BaseController
             function ($query) use ($user_name) {
                 return $query->where('user_name', $user_name)->orWhere('email', $user_name);
             })
-            ->where('is_deleted',0)->first();
+            ->where('is_deleted', 0)->first();
         if (!$user) {
             return $this->sendError('المستخدم غير موجود', 'We cant find a user with that username.');
         }
@@ -186,16 +186,16 @@ class PasswordResetController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-   $phonenumber = $request->phonenumber;
+        $phonenumber = $request->phonenumber;
         $user = User::where(
             function ($query) {
                 return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
             })->where(
             function ($query) use ($phonenumber) {
-                    return $query->where('phonenumber', $phonenumber)->orWhere('email', $phonenumber);
-            })->where('is_deleted',0)->first();
-        if (!$user){
-            return $this->sendError('المستخدم غير موجود','We cant find a user with that username.');
+                return $query->where('phonenumber', $phonenumber)->orWhere('email', $phonenumber);
+            })->where('is_deleted', 0)->first();
+        if (!$user) {
+            return $this->sendError('المستخدم غير موجود', 'We cant find a user with that username.');
         }
 
         $passwordReset = PasswordReset::where([
@@ -227,7 +227,7 @@ class PasswordResetController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-           'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'code' => 'required|numeric',
         ]);
 
@@ -236,15 +236,19 @@ class PasswordResetController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-   $phonenumber = $request->phonenumber;
-        $user =  User::where(
+        $phonenumber = $request->phonenumber;
+        $user = User::where(
             function ($query) {
                 return $query->where('user_type', 'store')->orWhere('user_type', 'store_employee');
             })->where(
             function ($query) use ($phonenumber) {
-                    return $query->where('phonenumber', $phonenumber);
-            })->where('is_deleted',0)->first();
-
+                return $query->where('phonenumber', $phonenumber);
+            })->where('is_deleted', 0)->first();
+        $a = now()->toDateTimeString();
+        if ($user->code_expires_at < $a) {
+            $success['status'] = $a;
+            return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
+        }
         if ($request->code == $user->code) {
             $passwordReset = PasswordReset::where('email', $user->email)->first();
             $user->resetCode();
@@ -285,27 +289,27 @@ class PasswordResetController extends BaseController
         "phonenumber": "' . $request->phonenumber . '",
         "textmessage":"' . $request->code . '",
 
-  	"templateid": "1868",
-  	"V1": "' . $request->code . '",
-  	"V2": null,
-  	"V3": null,
-  	"V4": null,
-  	"V5": null,
-"ValidityPeriodInSeconds": 60,
-"uid":"xyz",
-"callback_url":"https://xyz.com/",
-"pe_id":"xyz",
-"template_id":"1868"
+                    "templateid": "1868",
+                    "V1": "' . $request->code . '",
+                    "V2": null,
+                    "V3": null,
+                    "V4": null,
+                    "V5": null,
+                "ValidityPeriodInSeconds": 60,
+                "uid":"xyz",
+                "callback_url":"https://xyz.com/",
+                "pe_id":"xyz",
+                "template_id":"1868"
 
 
-        }
-        ',
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json',
-                ),
-            ));
+                        }
+                        ',
+                                CURLOPT_HTTPHEADER => array(
+                                    'Content-Type: application/json',
+                                ),
+                            ));
 
-            $response = curl_exec($curl);
+                            $response = curl_exec($curl);
 
             /*  curl_close($curl);
             echo $response;
@@ -338,37 +342,36 @@ class PasswordResetController extends BaseController
     }
     public function unifonicTest($request)
     {
-        
+
         $curl = curl_init();
         $data = array(
-            'AppSid'=>'3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz',
+            'AppSid' => '3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz',
             'Body' => $request->code,
             'Recipient' => $request->phonenumber);
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>  $data
+            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $data,
         ));
-         $response = curl_exec($curl);
-        
+        $response = curl_exec($curl);
+
         curl_close($curl);
-        
-        $responseData = json_decode( $response);
+
+        $responseData = json_decode($response);
 
         if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
             return true;
+        } else {
+            return false;
         }
-      else{
-        return false;
-      }
-       
+
     }
 
 }

@@ -18,20 +18,20 @@ class CartDetailResource extends JsonResource
      */
     public function toArray($request)
     {  if( $this->option_id !== null)
-        {
-        $q = Option::where('id',$this->option_id)->where('product_id',$this->product->id)->first();
-        $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
-        $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
-        $array = explode(',', $q->name['ar']);
-        $options = array_combine($array,$attribute);
-        }
+        // {
+         $q = Option::where('id',$this->option_id)->where('product_id',$this->product->id)->first();
+        // $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
+        // $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
+         $array = explode(',', $q->name['ar']);
+        // $options = array_combine($array,$attribute);
+        // }
         return [
             'id' => $this->id,
            'product' => New ProductResource($this->product),
             'qty' => $this->qty,
             'price' => $this->price,
             'sum' => $this->subtotal($this->id),
-             'options' => $this->option_id !== null ? $options :null,
+             'options' => $this->option_id !== null ?  $array :null,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
     
