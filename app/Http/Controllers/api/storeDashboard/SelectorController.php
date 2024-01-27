@@ -114,7 +114,7 @@ class SelectorController extends BaseController
             ->where('parent_id', null)
             ->Where('store_id', auth()->user()->store_id)
             ->where('status', 'active')->orderByDesc('created_at')->get();
-        $success['categories'] = CategoryResource::collection(  $storeCategory->merge( $atlbhaCategory) );
+        $success['categories'] = CategoryResource::collection($storeCategory->merge($atlbhaCategory));
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
@@ -312,5 +312,6 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع  المدن بنجاح', 'city return successfully');
 
     }
+   
 
 }

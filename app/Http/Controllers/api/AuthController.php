@@ -535,7 +535,12 @@ class AuthController extends BaseController
         }
 
         $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->latest()->first();
+        $a = now()->toDateTimeString();
 
+        if ($user->verify_code_expires_at < $a) {
+            $success['status'] = $a;
+            return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
+        }
         if ($request->code == $user->verify_code) {
             $user->resetVerifyCode();
             $user->verified = 1;
