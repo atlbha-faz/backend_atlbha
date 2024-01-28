@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
           $schedule->command('cart:abandoned') 
                 ->everyMinute();
                  $schedule->command('store:delete') 
-                ->daily();
+                ->everyMinute();
     }
 
     /**
