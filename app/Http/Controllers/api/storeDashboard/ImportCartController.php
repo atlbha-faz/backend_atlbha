@@ -43,6 +43,7 @@ class ImportCartController extends BaseController
             ],
             'data.*.price' => 'required|numeric',
             'data.*.qty' => 'required|numeric',
+            'data.*.option_id' => 'nullable|exists:options,id',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -61,6 +62,9 @@ class ImportCartController extends BaseController
             ]);
             $cartid = $cart->id;
             foreach ($request->data as $data) {
+                if (!isset($data['option_id'])) {
+                    $data['option_id']=null; 
+                }
                 $product_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('stock')->first();
                 $less_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('less_qty')->first();
                 if ($data['qty']< $less_quantity) {
@@ -71,6 +75,7 @@ class ImportCartController extends BaseController
                     $cartDetail = CartDetail::updateOrCreate([
                         'cart_id' => $cartid,
                         'product_id' => $data['id'],
+                        'option_id' =>  $data['option_id']
                     ], [
                         'qty' =>$data['qty'],
                         'price' => $data['price'],
