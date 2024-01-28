@@ -107,7 +107,7 @@ class PageController extends BaseController
         $success['Pages'] = new PageResource($page);
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم إضافة تصنيف الصفحة بنجاح', 'page_category Added successfully');
+        return $this->sendResponse($success, 'تم إضافة  الصفحة بنجاح', 'page_category Added successfully');
     }
 
     public function publish(Request $request)
@@ -169,7 +169,7 @@ class PageController extends BaseController
         $success['Pages'] = new PageResource($page);
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم إضافة تصنيف الصفحة بنجاح', 'page_category Added successfully');
+        return $this->sendResponse($success, 'تم إضافة  الصفحة بنجاح', 'page_category Added successfully');
     }
     /**
      * Display the specified resource.
