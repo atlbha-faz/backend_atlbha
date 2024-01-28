@@ -62,7 +62,7 @@ class PageController extends BaseController
             'page_desc' => 'required|string|max:100',
             'page_content' => 'required|string',
             'seo_title' => 'nullable|string',
-            'seo_link' => 'nullable|url',
+            'seo_link' => 'nullable',
             'seo_desc' => 'nullable|string',
             'tags' => 'nullable',
             //'name'=>'required|exists:page_categories,id'
@@ -123,7 +123,7 @@ class PageController extends BaseController
             'page_content' => 'required|string',
             'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
-            'seo_link' => 'nullable|url',
+            'seo_link' => 'nullable',
             'seo_desc' => 'nullable|string',
             'tags' => 'nullable',
             // 'name'=>'required|exists:page_categories,id'
@@ -226,7 +226,7 @@ class PageController extends BaseController
             'page_content' => 'required|string',
             'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
-            'seo_link' => 'nullable|url',
+            'seo_link' => 'nullable',
             'seo_desc' => 'nullable|string',
             'tags' => 'nullable',
             // 'name'=>'required|exists:page_categories,id'
