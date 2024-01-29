@@ -302,7 +302,7 @@ class IndexStoreController extends BaseController
                 'category' => function ($query) {
                     $query->select('id', 'name');
                 },
-            ])->where('is_deleted', 0)->select('id', 'name', 'status', 'stock', 'cover', 'special', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->where('status', 'active')
+            ])->where('is_deleted', 0)->select('id', 'name', 'status', 'stock', 'cover', 'special', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock','discount_price')->where('status', 'active')
                     ->where('store_id', $store_id)->orderByDesc('created_at')->get());
             $success['resentArrivede'] = $resentproduct->merge($resentimports);
             ////////////////////////////////////////
