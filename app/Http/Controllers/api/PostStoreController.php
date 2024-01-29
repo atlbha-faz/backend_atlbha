@@ -358,7 +358,7 @@ class PostStoreController extends BaseController
                 $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
                 $cats = Page_page_category::where('page_category_id',1)->pluck('page_id')->toArray();
                 $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('id',$cats)->orderBy('created_at', 'desc')->take(3)->get());
-                $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', '!=', null)->where('postcategory_id', '==', Page::find($pageId)->postcategory_id)->orderBy('created_at', 'desc')->take(2)->get());
+                $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('id',$cats)->orderBy('created_at', 'desc')->take(2)->get());
                 // $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
                 // footer
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
