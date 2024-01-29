@@ -86,7 +86,7 @@ class PostStoreController extends BaseController
                 $success['icon'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('icon')->first();
 
                 $tagarr = array();
-                $tags = Page::where('is_deleted', 0)->where('store_id', $id)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
+                $tags = Page::where('is_deleted', 0)->where('store_id', $id)->pluck('tags')->toArray();
                 //    dd($tags);
                 foreach ($tags as $tag) {
                     $tagarr[] = $tag;
