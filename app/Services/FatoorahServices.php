@@ -1,9 +1,9 @@
 <?php
 namespace App\Services;
-use App\ModelTax;
-use GuzzleHttp\Client;
+// use App\ModelTax;
+// use GuzzleHttp\Client;
 use Illuminate\Database\Eloguent\Model;
-use GuzzleHttp\Psr7\Request;
+// use GuzzleHttp\Psr7\Request;
 class FatoorahServices{
     private $base_url;
     private $token;
@@ -20,25 +20,25 @@ class FatoorahServices{
        ];
     }
 
-    public function buildRequest($url,$mothod, $data =[]){
-        $request = new Request($mothod , $this->base_url.$url, $this->headers);
-        if (!$data)
-            return false;
-        $response = $this->request_client->send($request, ['json'=>$data]);
-        if ($response->getStatusCode() != 200)
-            return false;
-        $response = json_decode ($response->getBody (),true);
-        return $response;
-    }
+    // public function buildRequest($url,$mothod, $data =[]){
+    //     $request = new Request($mothod , $this->base_url.$url, $this->headers);
+    //     if (!$data)
+    //         return false;
+    //     $response = $this->request_client->send($request, ['json'=>$data]);
+    //     if ($response->getStatusCode() != 200)
+    //         return false;
+    //     $response = json_decode ($response->getBody (),true);
+    //     return $response;
+    // }
 
-    public function sendPayment($data){
-        $response  = $this->buildRequest('v2/SendPayment','POST', $data);
-        return $response;
-    }
-    public function getPaymentStatus($data){
-        $response  = $this->buildRequest('v2/getPaymentStatus','POST', $data);
-        return $response;
-    }
+    // public function sendPayment($data){
+    //     $response  = $this->buildRequest('v2/SendPayment','POST', $data);
+    //     return $response;
+    // }
+    // public function getPaymentStatus($data){
+    //     $response  = $this->buildRequest('v2/getPaymentStatus','POST', $data);
+    //     return $response;
+    // }
 
      public function callAPI($endpointURL, $apiKey, $postFields = []) {
         $curl = curl_init($endpointURL);
@@ -132,14 +132,6 @@ class FatoorahServices{
         
     }
     
-
-
-
-
-
-
-
-
 
 
 }

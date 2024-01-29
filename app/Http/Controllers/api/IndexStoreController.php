@@ -322,11 +322,13 @@ class IndexStoreController extends BaseController
                 $query->select('id');
             }])
                     ->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
+                    $posts = Page_page_category::where('page_category_id',1)->pluck('page_id')->toArray();
+
             $success['lastPosts'] = PageResource::collection(Page::with(['store' => function ($query) {
                 $query->select('id');
             }, 'user' => function ($query) {
                 $query->select('id');
-            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(6)->get());
+            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id',$posts)->orderBy('created_at', 'desc')->take(6)->get());
             $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
             $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
             $category = array();
