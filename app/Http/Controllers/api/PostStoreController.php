@@ -345,7 +345,7 @@ class PostStoreController extends BaseController
                 $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
 
                 $tagarr = array();
-                $tags = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
+                $tags = Page::where('is_deleted', 0)->where('store_id', $store_id)->pluck('tags')->toArray();
                 //    dd($tags);
                 foreach ($tags as $tag) {
                     $tagarr[] = $tag;
@@ -357,8 +357,8 @@ class PostStoreController extends BaseController
                 // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
                 $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
                 $cats = Page_page_category::where('page_category_id',1)->pluck('page_id')->toArray();
-                $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id',$cats)->orderBy('created_at', 'desc')->take(3)->get());
-                $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id',$cats)->orderBy('created_at', 'desc')->take(2)->get());
+                $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id',$cats)->whereNot('id', $pageId)->orderBy('created_at', 'desc')->take(3)->get());
+                $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id',$cats)->whereNot('id', $pageId)->orderBy('created_at', 'desc')->take(2)->get());
                 // $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
                 // footer
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
