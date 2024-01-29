@@ -338,7 +338,7 @@ class PostStoreController extends BaseController
             }
 
             $store_id = $store->id;
-            $post = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('postcategory_id', '!=', null)->where('id', $pageId)->first();
+            $post = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $pageId)->first();
             if ($post != null) {
                 $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
                 $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
