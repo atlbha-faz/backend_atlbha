@@ -52,7 +52,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:75',
+            'title' => 'required|string|max:26',
             'page_desc' => 'required',
             'page_content' => 'required',
             'seo_title' => 'nullable',
@@ -114,7 +114,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:75',
+            'title' => 'required|string|max:26',
             'page_content' => 'required',
             'page_desc' => 'required',
             'seo_title' => 'nullable',
@@ -217,7 +217,7 @@ class PageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:75',
+            'title' => 'required|string|max:26',
             'page_desc' => 'required',
             'page_content' => 'required',
             'seo_title' => 'nullable',
