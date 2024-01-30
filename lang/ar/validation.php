@@ -120,7 +120,7 @@ return [
     'regex' => 'صيغة الحقل :attribute غير صحيحة',
     'required' => 'حقل :attribute مطلوب.',
     'required_array_keys' => 'الحقل :attribute يجب ان يحتوي علي مدخلات للقيم التالية :values.',
-    'required_if' => 'الحقل :attribute مطلوب في حال ما إذا كان :other يساوي :value.',
+    'required_if' => 'حقل :attribute مطلوب.',
     'required_if_accepted' => 'The :attribute field is required when :other is accepted.',
     'required_unless' => 'الحقل :attribute مطلوب في حال ما لم يكن :other يساوي :values.',
     'required_with' => 'الحقل :attribute إذا توفّر :values.',
