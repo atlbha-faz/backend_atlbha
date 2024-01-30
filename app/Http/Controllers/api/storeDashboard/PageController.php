@@ -25,7 +25,7 @@ class PageController extends BaseController
         if ($request->has('page')) {
             $pages = PageResource::collection(Page::with(['user' => function ($query) {
                 $query->select('id', 'name');
-            }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status','default_page', 'user_id', 'created_at')->paginate(15));
+            }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status','default_page', 'user_id', 'created_at')->paginate(75));
             $success['page_count'] = $pages->lastPage();
             $success['pages'] = $pages;
         } else {
@@ -58,7 +58,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:15',
+            'title' => 'required|string|max:75',
             'page_desc' => 'required|string|max:100',
             'page_content' => 'required|string',
             'seo_title' => 'nullable|string',
@@ -119,7 +119,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:15',
+            'title' => 'required|string|max:75',
             'page_content' => 'required|string',
             'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
@@ -222,7 +222,7 @@ class PageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:15',
+            'title' => 'required|string|max:75',
             'page_content' => 'required|string',
             'page_desc' => 'required|string|max:100',
             'seo_title' => 'nullable|string',
