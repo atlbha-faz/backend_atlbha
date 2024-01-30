@@ -200,7 +200,8 @@ class Store extends Model
             return null;
         } else {
             if (filter_var($logo, FILTER_VALIDATE_URL)) {
-                return $logo;} else {
+                return $logo;
+            } else {
                 return asset('storage/images/storelogo') . '/' . $logo;}
 
         }

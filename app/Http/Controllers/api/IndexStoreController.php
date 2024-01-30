@@ -215,7 +215,7 @@ class IndexStoreController extends BaseController
 
         // $store = Store::where('is_deleted', 0)->where('id', $id)->first();
         if ($store != null) {
-            $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->pluck('logo')->first();
+            $success['logo'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('logo')->first();
             $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
             $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
             $theme = Theme::where('store_id', $store_id)->first();
