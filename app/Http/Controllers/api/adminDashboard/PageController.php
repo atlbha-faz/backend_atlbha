@@ -52,7 +52,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:15',
+            'title' => 'required|string|max:75',
             'page_desc' => 'required',
             'page_content' => 'required',
             'seo_title' => 'nullable',
@@ -114,7 +114,7 @@ class PageController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:15',
+            'title' => 'required|string|max:75',
             'page_content' => 'required',
             'page_desc' => 'required',
             'seo_title' => 'nullable',
@@ -217,7 +217,7 @@ class PageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'title' => 'required|string|max:15',
+            'title' => 'required|string|max:75',
             'page_desc' => 'required',
             'page_content' => 'required',
             'seo_title' => 'nullable',
@@ -261,7 +261,7 @@ class PageController extends BaseController
         if ($request->pageCategory) {
             $page->page_categories()->sync($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
-       
+
                 $page->update([
                     'postcategory_id' => $request->postcategory_id,
                     'altImage' => $request->altImage,
