@@ -17,6 +17,8 @@ return new class extends Migration
            $table->id();
             $table->string('name');
             $table->string('image');
+            $table->integer('paymentMethodId');
+            $table->string('description');
             $table->enum('status',['active','not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();

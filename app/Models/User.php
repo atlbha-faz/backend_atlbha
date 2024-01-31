@@ -31,6 +31,11 @@ class User extends Authenticatable
         'user_type',
         'phonenumber',
         'city_id',
+        'bankId',
+        'bankAccountHolderName',
+        'bankAccount',
+        'iban',
+        'supplierCode',
         'device_token',
         'country_id',
         'code',
@@ -59,6 +64,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'supplierCode'=>'integer'
     ];
 
     public function coupons()

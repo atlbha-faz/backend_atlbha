@@ -637,6 +637,11 @@ Route::middleware([StoreUser::class])->group(function () {
         // website seo
         Route::resource('seo', App\Http\Controllers\api\storeDashboard\SeoController::class, ['names' => 'store.seo']);
         Route::post('updateSeo', [App\Http\Controllers\api\storeDashboard\SeoController::class, 'updateSeo'])->name('store.seo.updateGoogleAnalytics');
+        //Supplier
+        Route::post('createSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'store'])->name('store.supplier.create');
+        Route::get('showSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'show'])->name('store.supplier.show');
+        Route::post('updateSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'store'])->name('store.supplier.update');
+        Route::get('showSupplierDashboard', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'showSupplierDashboard'])->name('store.supplier.showSupplierDashboard');
 
         // });
     });

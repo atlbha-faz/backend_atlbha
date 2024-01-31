@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet\Calculation\Financial\Coupons;
 class Paymenttype extends Model
 {
     use HasFactory;
-     protected $fillable = ['name','image','status','is_deleted'];
+     protected $fillable = ['name','image','status','description','paymentMethodId','is_deleted'];
 
     public function stores()
     {
