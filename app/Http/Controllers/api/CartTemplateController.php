@@ -326,7 +326,7 @@ class CartTemplateController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
-    public function updateCartItem($domain, $id)
+    public function updateCartItem(Request $request,$domain, $id)
     {
 
         $store = Store::where('domain', $domain)->first();
