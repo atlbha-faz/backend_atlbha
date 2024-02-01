@@ -156,7 +156,12 @@ class CartTemplateController extends BaseController
                         if (!isset($data['item'])){
                             $data['item']=null;
                         }
+                        if( $data['item'] !==null){
                         $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('id',$data['item'])->first();
+                        }
+                        else{
+                            $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->first();
+                        }
                          if( $cartDetail){
                             $cartDetail->update([
                                 'qty' => $data['qty'],
