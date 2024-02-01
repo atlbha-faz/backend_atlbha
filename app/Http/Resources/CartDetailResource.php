@@ -24,9 +24,11 @@ class CartDetailResource extends JsonResource
         // $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
         if($q !== null){
          $array = explode(',', $q->name['ar']);
+         $qty= $q->quantity;
         }
         else{
             $array=null;
+            $qty=null;
         }
         // $options = array_combine($array,$attribute);
         }
@@ -36,7 +38,7 @@ class CartDetailResource extends JsonResource
             'qty' => $this->qty,
             'price' => $this->price,
             'sum' => $this->subtotal($this->id),
-            'stock'=> $this->option_id !== null ?  $q->quantity :$this->product->stock,
+            'stock'=> $this->option_id !== null ?  $qty :$this->product->stock,
             'options' => $this->option_id !== null ?  $array :null, 
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
