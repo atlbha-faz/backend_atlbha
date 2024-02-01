@@ -328,7 +328,17 @@ class CartTemplateController extends BaseController
     }
     public function updateCartItem(Request $request,$domain, $id)
     {
-
+        $input = $request->all();
+        $validator = Validator::make($input, [
+     
+            'price' => 'required|numeric',
+            'qty' => 'required|numeric',
+            'option_id' => 'nullable|exists:options,id',
+        
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
         $store = Store::where('domain', $domain)->first();
         $cart_id = Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->pluck('id')->first();
         $cart = CartDetail::where('id', $id)->first();
@@ -339,7 +349,7 @@ class CartTemplateController extends BaseController
         $cart->update([
             'qty' =>  $request->input('qty'),
             'price' => $request->input('price'),
-               'option_id' =>$request->input('option_id'),
+            'option_id' =>$request->input('option_id'),
         ]);
         $newCart = Cart::where('id', $cart_id)->first();
         $newCart->update([

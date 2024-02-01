@@ -32,8 +32,7 @@ class CartDetailResource extends JsonResource
             'price' => $this->price,
             'sum' => $this->subtotal($this->id),
             'stock'=> $this->option_id !== null ?  $q->quantity :$this->product->stock,
-            'options' => $this->option_id !== null ?  $array :null,
-           
+            'options' => $this->option_id !== null ?  $array :null, 
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
     
