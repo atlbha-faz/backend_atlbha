@@ -93,67 +93,7 @@ class CartTemplateController extends BaseController
     }
     public function addToCart(Request $request, $domain)
     {
-        // if ($domain == 'atlbha') {
-
-        //     $input = $request->all();
-        //     $validator = Validator::make($input, [
-        //         'data' => 'nullable|array',
-        //         'data.*.id' => [
-        //             'required',
-        //             //  Rule::exists('products')->where(function($query){
-
-        //             //             $query->where('store_id', auth()->user()->store_id)
-        //             //                   ->where('id', request()->id);
-        //             //  })
-        //         ],
-
-        //         'data.*.price' => 'required|numeric',
-        //         'data.*.qty' => 'required|numeric',
-        //     ]);
-        //     if ($validator->fails()) {
-        //         return $this->sendError(null, $validator->errors());
-        //     }
-        //     $product_quantity = Product::where('id', $request->id)->pluck('stock')->first();
-
-        //     if ($product_quantity >= $request->qty) {
-        //         $cart = Cart::updateOrCreate([
-        //             'user_id' => auth()->user()->id,
-        //             'store_id' => null,
-        //         ], [
-        //             'total' => 0,
-        //             'count' => 0,
-        //             'shipping_price' => 35,
-        //         ]);
-        //         $cartid = $cart->id;
-        //         if (!is_null($request->data)) {
-        //             foreach ($request->data as $data) {
-        //                 $cartDetail = CartDetail::updateOrCreate([
-        //                     'cart_id' => $cartid,
-        //                     'product_id' => $data['id'],
-        //                 ], [
-        //                     'qty' => $data['qty'],
-        //                     'price' => $data['price'],
-        //                     //  'option'=>$data['option'],
-        //                 ]);
-        //             }
-        //         }
-        //         $cart->update([
-        //             'total' => CartDetail::where('cart_id', $cartid)->get()->reduce(function ($total, $item) {
-        //                 return $total + ($item->qty * $item->price);
-        //             }),
-        //             'count' => CartDetail::where('cart_id', $cartid)->count(),
-        //         ]);
-
-        //         $success = new CartResource($cart);
-        //         $success['status'] = 200;
-        //         return $this->sendResponse($success, 'تم إضافة  السلة بنجاح', 'Cart Added successfully');
-        //     } else {
-        //         $success['status'] = 200;
-
-        //         return $this->sendResponse($success, ' الطلب اكبر من الكمية المتوفرة ', 'quanity more than avaliable');
-        //     }
-
-        // } else {
+       
         $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
         if ($store_domain == null) {
             $success['status'] = 200;
@@ -165,12 +105,8 @@ class CartTemplateController extends BaseController
                 'data' => 'nullable|array',
                 'data.*.id' => [
                     'required',
-                    //  Rule::exists('products')->where(function($query){
-
-                    //             $query->where('store_id', auth()->user()->store_id)
-                    //                   ->where('id', request()->id);
-                    //  })
                 ],
+                'data.*.item' => 'nullable|numeric',
                 'data.*.price' => 'required|numeric',
                 'data.*.qty' => 'required|numeric',
                 'data.*.option_id' => 'nullable|exists:options,id',
@@ -217,8 +153,7 @@ class CartTemplateController extends BaseController
                         $product_quantity = Importproduct::where('product_id', $data['id'])->where('store_id', $store_id)->pluck('qty')->first();
                     }
                     if ($product_quantity >= $data['qty']) {
-                        $cartDetail=CartDetail::where( 'cart_id', $cartid)->where(
-                        'product_id',$data['id'])->where('option_id',$data['option_id'])->first();
+                        $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('id',$data['item'])->first();
                          if( $cartDetail){
                             $cartDetail->update([
                                 'qty' => $data['qty'],
