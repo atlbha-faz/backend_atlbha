@@ -22,7 +22,12 @@ class CartDetailResource extends JsonResource
          $q = Option::where('id',$this->option_id)->where('product_id',$this->product->id)->first();
         // $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
         // $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
+        if($q !== null){
          $array = explode(',', $q->name['ar']);
+        }
+        else{
+            $array=null;
+        }
         // $options = array_combine($array,$attribute);
         }
         return [
