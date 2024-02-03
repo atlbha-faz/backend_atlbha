@@ -240,7 +240,8 @@ class CheckoutController extends BaseController
 
             $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
+            return $this->sendResponse($success, 'تم ارسال طلب الاستيرد 
+            بعد الموافقة تجدها في قسم المنتجات وخلال ثلاث ايام توصلك المنتجات', 'order send successfully');
 
 
     }
@@ -255,142 +256,73 @@ class CheckoutController extends BaseController
 
 
 
-    // public function applyCoupon(Request $request, $domain, $cart_id)
-    // {
-    //     $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
-    //     if ($store_domain == null) {
-    //         $success['status'] = 200;
+    public function applyCoupon(Request $request, $cart_id)
+    {
 
-    //         return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'code' => 'required',
 
-    //     }
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+        $coupon = Coupon::where('code', $request->code)->where('is_deleted', 0)->first();
 
-    //     $input = $request->all();
-    //     $validator = Validator::make($input, [
-    //         'code' => 'required',
+        if ($coupon != null && $coupon->status == 'active') {
 
-    //     ]);
-    //     if ($validator->fails()) {
-    //         return $this->sendError(null, $validator->errors());
-    //     }
-    //     $coupon = Coupon::where('code', $request->code)->where('is_deleted', 0)->first();
+            $cart = Cart::where('id', $cart_id)->where('store_id', null)->first();  
+                $coupon->users()->attach(auth()->user()->id);
+                $user = User::where('id', auth()->user()->id)->first();
+                 $useCouponUser = coupons_users::where('user_id', auth()->user()->id)->where('coupon_id', $coupon->id)->get();
+                $useCouponAll = coupons_users::where('coupon_id', $coupon->id)->get();
+                if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
+                        if ($coupon->discount_type == 'fixed') {
+                            $cartAfterdiscount = $cart->total - $coupon->discount;
+                            $cart->update([
+                                'total' => $cartAfterdiscount,
+                                'discount_type' => 'fixed',
+                                'discount_value' => $coupon->discount,
+                                'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + $coupon->discount,
 
-    //     if ($coupon != null && $coupon->status == 'active') {
+                            ]);
 
-    //         $cart = Cart::where('id', $cart_id)->where('store_id', $store_domain)->first();
-    //         $total = $cart->total - $cart->shipping_price;
-    //         if ($total > $coupon->total_price) {
-    //             $coupon->users()->attach(auth()->user()->id);
-    //             $user = User::where('id', auth()->user()->id)->first();
+                        } else {
+                            $couponDiscountPercent = $coupon->discount / 100;
+                            $discountAmount = $cart->total * $couponDiscountPercent;
+                            $cartAfterdiscount = $cart->total - $discountAmount;
+                            $cartCopun = $cart->total - $cartAfterdiscount;
+                            $cart->update([
+                                'total' => $cartAfterdiscount,
+                                'discount_type' => 'percent',
+                                'discount_value' => $coupon->discount . '%',
+                                'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
+                            ]);
 
-    //             $useCouponUser = coupons_users::where('user_id', auth()->user()->id)->where('coupon_id', $coupon->id)->get();
-    //             $useCouponAll = coupons_users::where('coupon_id', $coupon->id)->get();
-    //             if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
-    //                 if ($coupon->coupon_apply == 'all') {
-    //                     if ($coupon->free_shipping == 1) {
-    //                         $cart->update([
-    //                             'free_shipping' => 1,
-    //                             'shipping_price' => 0,
-    //                             'total' => $cart->total - $cart->shipping_price,
-    //                         ]);
+                        }
 
-    //                     }
+                    } 
+                    else {
+                        $success['status'] = 200;
+            
+                        return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
+            
+                    }
+              
+          
+            $success['cart'] = new CartResource($cart);
+            $success['status'] = 200;
 
-    //                     if ($coupon->discount_type == 'fixed') {
-    //                         $cartAfterdiscount = $cart->total - $coupon->discount;
-    //                         $cart->update([
-    //                             'total' => $cartAfterdiscount,
-    //                             'discount_type' => 'fixed',
-    //                             'discount_value' => $coupon->discount,
-    //                             'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + $coupon->discount,
+            return $this->sendResponse($success, 'تم تفعيل الكوبون بنجاح', 'coupon updated successfully');
 
-    //                         ]);
+        } else {
+            $success['status'] = 200;
 
-    //                     } else {
-    //                         $couponDiscountPercent = $coupon->discount / 100;
-    //                         $discountAmount = $cart->total * $couponDiscountPercent;
-    //                         $cartAfterdiscount = $cart->total - $discountAmount;
-    //                         $cartCopun = $cart->total - $cartAfterdiscount;
-    //                         $cart->update([
-    //                             'total' => $cartAfterdiscount,
-    //                             'discount_type' => 'percent',
-    //                             'discount_value' => $coupon->discount . '%',
-    //                             'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
-    //                         ]);
+            return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
 
-    //                     }
+        }
 
-    //                 } else {
-    //                     if ($coupon->coupon_apply == 'selected_product') {
-    //                         $product_ids = array();
-    //                         foreach ($cart->cartDetails as $cartDetail) {
-    //                             $product_ids[] = $cartDetail->product_id;
-    //                         }
-
-    //                         $couponProducts = coupons_products::where('coupon_id', $coupon->id)->whereIn('product_id', $product_ids)->get();
-    //                         if ($couponProducts != null) {
-    //                             $products = array();
-    //                             foreach ($couponProducts as $couponProduct) {
-    //                                 $products[] = $couponProduct->product_id;
-    //                             }
-
-    //                             if ($coupon->discount_type == 'fixed') {
-    //                                 $cartAfterdiscount = $cart->total - $coupon->discount;
-
-    //                                 $cart->update([
-    //                                     'total' => $cartAfterdiscount,
-    //                                     'discount_type' => 'fixed',
-    //                                     'discount_value' => $coupon->discount,
-    //                                     'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + $coupon->discount,
-    //                                 ]);
-
-    //                             } else {
-    //                                 $sum = 0;
-    //                                 $cartDetails = CartDetail::where('cart_id', $cart->id)->whereIn('product_id', $products)->get();
-    //                                 foreach ($cartDetails as $cartDetail) {
-    //                                     $sum = $sum + ($cartDetail->price * $cartDetail->qty);
-    //                                 }
-    //                                 $couponDiscountPercent = $coupon->discount / 100;
-    //                                 $discountAmount = $sum * $couponDiscountPercent;
-    //                                 $cartAfterdiscount = $cart->total - $discountAmount;
-    //                                 $cartCopun = $cart->total - $cartAfterdiscount;
-    //                                 $cart->update([
-    //                                     'total' => $cartAfterdiscount,
-    //                                     'discount_type' => 'percent',
-    //                                     'discount_value' => $coupon->discount . '%',
-    //                                     'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
-    //                                 ]);
-
-    //                             }
-    //                         }
-
-    //                     }
-    //                 }
-    //             } else {
-    //                 $success['status'] = 200;
-
-    //                 return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
-
-    //             }
-    //         } else {
-    //             $success['status'] = 200;
-
-    //             return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
-
-    //         }
-    //         $success['cart'] = new CartResource($cart);
-    //         $success['status'] = 200;
-
-    //         return $this->sendResponse($success, 'تم تفعيل الكوبون بنجاح', 'coupon updated successfully');
-
-    //     } else {
-    //         $success['status'] = 200;
-
-    //         return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
-
-    //     }
-
-    // }
+    }
 
 
 }

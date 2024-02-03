@@ -166,7 +166,7 @@ class CartTemplateController extends BaseController
                             $cartDetail->update([
                                 'qty' => $data['qty'],
                                 'price' => $data['price'],
-                                   'option_id' =>  $data['option_id']
+                                'option_id' =>  $data['option_id']
                             ]);
                          }
                          else{
@@ -177,7 +177,7 @@ class CartTemplateController extends BaseController
                             'price' => $data['price'],
                            'option_id' =>  $data['option_id']
                         ]);
-                    }
+                         }
 
                     } else {
                         $success['status'] = 200;
@@ -269,69 +269,69 @@ class CartTemplateController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
-    public function updateCartItem(Request $request,$domain, $id)
-    {
-        $input = $request->all();
-        $validator = Validator::make($input, [
+    // public function updateCartItem(Request $request,$domain, $id)
+    // {
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
      
-            'price' => 'required|numeric',
-            'qty' => 'required|numeric',
-            'option_id' => 'nullable|exists:options,id',
+    //         'price' => 'required|numeric',
+    //         'qty' => 'required|numeric',
+    //         'option_id' => 'nullable|exists:options,id',
         
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-        $store = Store::where('domain', $domain)->first();
-        $cart_id = Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->pluck('id')->first();
-        $cart = CartDetail::where('id', $id)->first();
+    //     ]);
+    //     if ($validator->fails()) {
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $store = Store::where('domain', $domain)->first();
+    //     $cart_id = Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->pluck('id')->first();
+    //     $cart = CartDetail::where('id', $id)->first();
 
-        if (is_null($cart)) {
-            return $this->sendError("المنتج غير موجودة", " product is't exists");
-        }
-        $cart->update([
-            'qty' =>  $request->input('qty'),
-            'price' => $request->input('price'),
-            'option_id' =>$request->input('option_id'),
-        ]);
-        $newCart = Cart::where('id', $cart_id)->first();
-        $newCart->update([
-            'total' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
-                return $total + ($item->qty * $item->price);
-            }),
-            'count' => CartDetail::where('cart_id', $cart_id)->count(),
-            'weight' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
-                return $total + ($item->qty * $item->product->weight);
-            }),
-            'totalCount' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
-                return $total + ($item->qty);
-            }),
+    //     if (is_null($cart)) {
+    //         return $this->sendError("المنتج غير موجودة", " product is't exists");
+    //     }
+    //     $cart->update([
+    //         'qty' =>  $request->input('qty'),
+    //         'price' => $request->input('price'),
+    //         'option_id' =>$request->input('option_id'),
+    //     ]);
+    //     $newCart = Cart::where('id', $cart_id)->first();
+    //     $newCart->update([
+    //         'total' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
+    //             return $total + ($item->qty * $item->price);
+    //         }),
+    //         'count' => CartDetail::where('cart_id', $cart_id)->count(),
+    //         'weight' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
+    //             return $total + ($item->qty * $item->product->weight);
+    //         }),
+    //         'totalCount' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
+    //             return $total + ($item->qty);
+    //         }),
 
-        ]);
-        if ($newCart->weight > 15) {
-            $extra_shipping_price = ($newCart->weight - 15) * 3;
-        } else {
-            $extra_shipping_price = 0;
-        }
-        $newCart->update([
+    //     ]);
+    //     if ($newCart->weight > 15) {
+    //         $extra_shipping_price = ($newCart->weight - 15) * 3;
+    //     } else {
+    //         $extra_shipping_price = 0;
+    //     }
+    //     $newCart->update([
 
-            'tax' => $newCart->total * 0.15,
-            'shipping_price' => $newCart->shipping_price,
-        ]);
+    //         'tax' => $newCart->total * 0.15,
+    //         'shipping_price' => $newCart->shipping_price,
+    //     ]);
 
-        $newCart->update([
-            'subtotal' => $newCart->total - $newCart->tax,
-            'total' => $newCart->total + $newCart->shipping_price + $extra_shipping_price,
-        ]);
+    //     $newCart->update([
+    //         'subtotal' => $newCart->total - $newCart->tax,
+    //         'total' => $newCart->total + $newCart->shipping_price + $extra_shipping_price,
+    //     ]);
 
-        if ($newCart->count == 0) {
-            $newCart->delete();
-        } else {
-            $success = new CartResource(Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->first());
-        }
-        $success['status'] = 200;
-        return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
-    }
+    //     if ($newCart->count == 0) {
+    //         $newCart->delete();
+    //     } else {
+    //         $success = new CartResource(Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->first());
+    //     }
+    //     $success['status'] = 200;
+    //     return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+    // }
 
     /**
      * Show the form for creating a new resource.
