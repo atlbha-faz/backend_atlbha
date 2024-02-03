@@ -451,22 +451,22 @@ class IndexStoreController extends BaseController
 
             if ($store->working_status == 'not_active') {
                 foreach (\App\Models\Day::get() as $day) {
-                    if ($day->name == "Friday") {
-                        $daystore[] = (object) [
-                            'day' => new DayResource($day),
-                            'from' => null,
-                            'to' => null,
-                            'status' => 'not_active',
-                        ];
-                    } else {
+                    // if ($day->name == "Friday") {
+                    //     $daystore[] = (object) [
+                    //         'day' => new DayResource($day),
+                    //         'from' => null,
+                    //         'to' => null,
+                    //         'status' => 'not_active',
+                    //     ];
+                    // } else {
 
                         $daystore[] = (object) [
                             'day' => new DayResource($day),
-                            'from' => '08:00:00',
-                            'to' => '22:00:00',
+                            'from' => '00:00:00',
+                            'to' => '12:00:00',
                             'status' => 'active',
                         ];
-                    }
+                    // }
                 }
             } else {
                 $daystore = $store->daystore;
