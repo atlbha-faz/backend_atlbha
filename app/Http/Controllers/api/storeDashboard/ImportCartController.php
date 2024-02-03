@@ -42,6 +42,7 @@ class ImportCartController extends BaseController
                 'required',
             ],
             'data.*.price' => 'required|numeric',
+            'data.*.item' => 'nullable|numeric',
             'data.*.qty' => 'required|numeric',
             'data.*.option_id' => 'nullable|exists:options,id',
         ]);
@@ -62,25 +63,60 @@ class ImportCartController extends BaseController
             ]);
             $cartid = $cart->id;
             foreach ($request->data as $data) {
-                if (!isset($data['option_id'])) {
-                    $data['option_id']=null; 
-                }
-                $product_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('stock')->first();
+                if (isset($data['option_id']) && !is_null($data['option_id'])) {
+                    $q = Option::where('id',$data['option_id'])->where('product_id', $data['id'])->first();
+                    if (is_null($q)) {
+                        $product_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('stock')->first();
+                    } else {
+                        $q = Option::where('id',$data['option_id'])->where('product_id', $data['id'])->first();
+                        $array = explode(',', $q->name['ar']);
+                         $product_quantity = $q->quantity;
+                        }
+                   }
+                   else{
+                    $data['option_id']=null;
+                    $product_quantity = Product::where('id', $data['id'])->where('store_id', null)->pluck('stock')->first();
+                   }
                 $less_quantity = Product::where('id', $data['id'])->where('store_id',null)->pluck('less_qty')->first();
                 if ($data['qty']< $less_quantity) {
                     $success['status'] = 200;
                     return $this->sendResponse($success, ' اقل كمية للطلب هي '.$less_quantity, 'less quqntity');
                 }
                 if ($product_quantity >= $data['qty']) {
-                    $cartDetail = CartDetail::updateOrCreate([
+                    if (!isset($data['item'])){
+                        $data['item']=null;
+                    }
+                    if( $data['item'] !==null){
+                    $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('id',$data['item'])->first();
+                    }
+                    else{
+                        $cartDetail=CartDetail::where('cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->first();
+                    }
+                     if( $cartDetail){
+                        $cartDetail->update([
+                            'qty' => $data['qty'],
+                            'price' => $data['price'],
+                            'option_id' =>  $data['option_id']
+                        ]);
+                     }
+                     else{
+                    $cartDetail = CartDetail::create([
                         'cart_id' => $cartid,
                         'product_id' => $data['id'],
-                        'option_id' =>  $data['option_id']
-                    ], [
-                        'qty' =>$data['qty'],
+                        'qty' => $data['qty'],
                         'price' => $data['price'],
-                        //  'option'=>$data['option'],
+                       'option_id' =>  $data['option_id']
                     ]);
+                     }
+                    // $cartDetail = CartDetail::updateOrCreate([
+                    //     'cart_id' => $cartid,
+                    //     'product_id' => $data['id'],
+                    //     'option_id' =>  $data['option_id']
+                    // ], [
+                    //     'qty' =>$data['qty'],
+                    //     'price' => $data['price'],
+                    //     //  'option'=>$data['option'],
+                    // ]);
                 } else {
                     $success['status'] = 200;
 
@@ -169,4 +205,5 @@ class ImportCartController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
+    
 }

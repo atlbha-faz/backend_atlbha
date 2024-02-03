@@ -59,6 +59,7 @@ class CouponController extends BaseController
             'start_at' => ['required', 'date'],
             'expire_date' => ['required', 'date'],
             'total_redemptions' => ['required', 'numeric'],
+            'user_redemptions' => ['nullable', 'numeric'],
 
         ]);
         if ($validator->fails()) {
@@ -71,6 +72,7 @@ class CouponController extends BaseController
             'start_at' => $request->start_at,
             'expire_date' => $request->expire_date,
             'total_redemptions' => $request->total_redemptions,
+            'user_redemptions' => $request->user_redemptions,
             'store_id' => null,
         ]);
 
@@ -154,6 +156,7 @@ class CouponController extends BaseController
             'expire_date' => ['required', 'date'],
             'start_at' => ['required', 'date'],
             'total_redemptions' => ['required', 'numeric'],
+            'user_redemptions' => ['nullable', 'numeric'],
 
         ]);
         if ($validator->fails()) {
@@ -166,6 +169,7 @@ class CouponController extends BaseController
             'start_at' => $request->input('start_at'),
             'expire_date' => $request->input('expire_date'),
             'total_redemptions' => $request->input('total_redemptions'),
+            'user_redemptions' => $request->input('user_redemptions'),
             'store_id' => null,
         ]);
 

@@ -75,7 +75,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
 Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
 Route::post('addCart/{domain}', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
 Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'delete']);
-Route::post('updateCartItem/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'updateCartItem']);
+// Route::post('updateCartItem/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'updateCartItem']);
 Route::post('showDetailOption', [App\Http\Controllers\api\CartTemplateController::class, 'showDetailOption']);
 
 Route::post('cheackout/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'cheackout']);
@@ -468,6 +468,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('deleteImportCart/{id}', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'delete']);
         // cheackout import
         Route::post('checkoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'checkOut']);
+        Route::post('applyCoupon/{cart_id}', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'applyCoupon']);
+
         //  paymenttype import
         Route::get('paymentmethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'paymentmethods']);
         // page
