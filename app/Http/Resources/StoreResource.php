@@ -40,15 +40,15 @@ class StoreResource extends JsonResource
 
         if ($this->working_status == 'not_active') {
             foreach (\App\Models\Day::get() as $day) {
-                if ($day->name == "Friday") {
-                    $daystore[] = (object) [
-                        'day' => new DayResource($day),
-                        'from' => null,
-                        'to' => null,
-                        'status' => 'not_active',
-                    ];
+                // if ($day->name == "Friday") {
+                //     $daystore[] = (object) [
+                //         'day' => new DayResource($day),
+                //         'from' => null,
+                //         'to' => null,
+                //         'status' => 'not_active',
+                //     ];
 
-                } else {
+                // } else {
 
                     $daystore[] = (object) [
                         'day' => new DayResource($day),
@@ -57,7 +57,7 @@ class StoreResource extends JsonResource
                         'status' => 'active',
                     ];
 
-                }
+                // }
 
             }
 
