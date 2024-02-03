@@ -153,7 +153,7 @@ class ImportCartController extends BaseController
 
             $success = new CartResource($cart);
             $success['status'] = 200;
-            return $this->sendResponse($success, 'تم إضافة  السلة بنجاح', 'Cart Added successfully');
+            return $this->sendResponse($success, 'تم اضافة الطلب في السلة', 'Cart Added successfully');
 
         }
 
@@ -205,5 +205,5 @@ class ImportCartController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
-    
+
 }

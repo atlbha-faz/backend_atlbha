@@ -21,6 +21,8 @@ class storeInformationController extends BaseController
         $success['twiter'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('twiter')->first();
         $success['youtube'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('youtube')->first();
         $success['instegram'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('instegram')->first();
+        $success['tiktok'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('tiktok')->first();
+        $success['jaco'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('jaco')->first();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض صفحات التواصل بنجاح', 'social Media shown successfully');
@@ -34,7 +36,7 @@ class storeInformationController extends BaseController
             'facebook' => 'required_without_all:snapchat,twiter,youtube,instegram|url',
             'twiter' => 'required_without_all:facebook,snapchat,youtube,instegram|url',
             'youtube' => 'required_without_all:facebook,twiter,snapchat,instegram|url',
-            'instegram' => 'required_without_all:facebook,twiter,youtube,snapchat|url',
+            'instegram' => 'required_without_all:facebook,twiter,youtube,snapchat|url'
         ]);
         if ($validator->fails()) {
             # code...
@@ -47,12 +49,16 @@ class storeInformationController extends BaseController
             'twiter' => $request->input('twiter'),
             'youtube' => $request->input('youtube'),
             'instegram' => $request->input('instegram'),
+            'tiktok' => $request->input('tiktok'),
+            'jaco' => $request->input('jaco'),
         ]);
         $success['snapchat'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('snapchat')->first();
         $success['facebook'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('facebook')->first();
         $success['twiter'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('twiter')->first();
         $success['youtube'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('youtube')->first();
         $success['instegram'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('instegram')->first();
+        $success['tiktok'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('tiktok')->first();
+        $success['jaco'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('jaco')->first();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل صفحات التواصل بنجاح', 'social Media update successfully');
