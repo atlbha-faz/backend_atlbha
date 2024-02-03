@@ -52,8 +52,8 @@ class StoreResource extends JsonResource
 
                     $daystore[] = (object) [
                         'day' => new DayResource($day),
-                        'from' => '08:00:00',
-                        'to' => '22:00:00',
+                        'from' => '12:00:00',
+                        'to' => '24:00:00',
                         'status' => 'active',
                     ];
 
