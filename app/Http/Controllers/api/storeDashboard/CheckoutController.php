@@ -177,6 +177,7 @@ class CheckoutController extends BaseController
                     'street_address' => $request->street_address,
                     'district' => $request->district,
                     'postal_code' => $request->postal_code,
+                    'default_address' => $request->default_address,
                     'shippingtype_id' =>null,
                 ]);
                 $order->order_addresses()->attach($orderAddress->id, ["type" => "shipping"]);
