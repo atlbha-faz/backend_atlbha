@@ -431,6 +431,8 @@ class IndexStoreController extends BaseController
             $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
             $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
             $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+            $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
+            $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
@@ -598,6 +600,8 @@ class IndexStoreController extends BaseController
             $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
             $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
             $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+            $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
+            $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             //  if(($store->paymenttypes ==null)
 
@@ -766,6 +770,8 @@ class IndexStoreController extends BaseController
             $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
             $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
             $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+            $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
+            $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $arr = array();
             if ($store->verification_status == 'accept') {

@@ -111,6 +111,8 @@ class PostStoreController extends BaseController
                 $success['twiter'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('twiter')->first();
                 $success['youtube'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('youtube')->first();
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('instegram')->first();
+                $success['tiktok'] = Store::where('is_deleted', 0)->where('id',  $id)->pluck('tiktok')->first();
+                $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $id)->pluck('jaco')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
 
@@ -176,7 +178,7 @@ class PostStoreController extends BaseController
                 $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
                 // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
                 $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
-
+            
                 $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
                 return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
@@ -242,6 +244,8 @@ class PostStoreController extends BaseController
                 $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
                 $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+                $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
+                $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('jaco')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
@@ -372,6 +376,8 @@ class PostStoreController extends BaseController
                 $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
                 $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+                $success['tiktok'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('tiktok')->first();
+                $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('jaco')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
