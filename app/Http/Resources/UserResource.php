@@ -27,6 +27,7 @@ class UserResource extends JsonResource
        'lastname' =>$this->lastname !== null? $this->lastname:"",
         'user_name' => $this->user_name,
         'user_type' => $this->user_type,
+        'owner_name' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->owner_name:"",
         'email' => $this->email,
         //'password' => $this->password,
         'phonenumber' => $this->phonenumber,
