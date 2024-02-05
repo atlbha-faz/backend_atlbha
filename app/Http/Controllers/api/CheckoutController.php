@@ -139,7 +139,7 @@ class CheckoutController extends BaseController
                     $product->update([
                         'stock' => $product->stock - $cartItem->qty,
                     ]);
-                    if ( $cartItem->option_id !== null){
+                    if ( $cartItem->option_id != null){
                         $optionQty=Option::where('id',$cartItem->option_id)->first();
                         $optionQty->update([
                             'quantity' => $optionQty->quantity - $cartItem->qty,
