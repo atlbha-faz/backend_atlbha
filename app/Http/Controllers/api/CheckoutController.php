@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Store;
 use App\Models\Coupon;
+use App\Models\Option;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\OrderItem;
@@ -138,6 +139,12 @@ class CheckoutController extends BaseController
                     $product->update([
                         'stock' => $product->stock - $cartItem->qty,
                     ]);
+                    if ( $cartItem->option_id !== null){
+                        $optionQty=Option::where('id',$cartItem->option_id)->first();
+                        $optionQty->update([
+                            'quantity' => $optionQty->quantity - $cartItem->qty,
+                        ]);
+                    }
                     //   $product-> quantity=  $product-> quantity-$cartItem->qty;
                 } else {
                     $importProduct = Importproduct::where('product_id', $cartItem->product_id)->where('store_id', $store_domain)->first();
