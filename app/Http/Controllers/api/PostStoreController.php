@@ -141,6 +141,7 @@ class PostStoreController extends BaseController
 
             }
         // }
+        
     }
     public function show($postCategory_id, Request $request)
     {
