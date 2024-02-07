@@ -645,6 +645,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('showSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'show'])->name('store.supplier.show');
         Route::post('updateSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'store'])->name('store.supplier.update');
         Route::get('showSupplierDashboard', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'showSupplierDashboard'])->name('store.supplier.showSupplierDashboard');
+        Route::post('uploadSupplierDocument', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'uploadSupplierDocument'])->name('store.supplier.uploadSupplierDocument');
+
 
         // });
     });
