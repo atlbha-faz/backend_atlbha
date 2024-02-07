@@ -24,41 +24,41 @@ class PostStoreController extends BaseController
 {
     public function index($id)
     {
-        if ($id == 'atlbha') {
+        // if ($id == 'atlbha') {
 
-            $success['domain'] = $id;
-            $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
-            $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
+        //     $success['domain'] = $id;
+        //     $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+        //     $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
 
-            $tagarr = array();
-            $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
-            //    dd($tags);
-            foreach ($tags as $tag) {
-                $tagarr[] = $tag;
-            }
-            $success['tags'] = $tagarr;
-            $success['category'] = Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get();
-            $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
-            $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
-            $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
-            $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
-            // footer
-            $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
-            $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
-            $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
-            $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
-            $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
-            $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-            $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
-            $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
-            // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-            $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
+        //     $tagarr = array();
+        //     $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
+        //     //    dd($tags);
+        //     foreach ($tags as $tag) {
+        //         $tagarr[] = $tag;
+        //     }
+        //     $success['tags'] = $tagarr;
+        //     $success['category'] = Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get();
+        //     $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
+        //     $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
+        //     $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
+        //     $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
+        //     // footer
+        //     $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
+        //     $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
+        //     $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
+        //     $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
+        //     $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
+        //     $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+        //     $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
+        //     $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
+        //     // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+        //     $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
 
-            $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
+        //     $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
-            return $this->sendResponse($success, 'تم ارجاع المدونة بنجاح', 'posts return successfully');
+        //     return $this->sendResponse($success, 'تم ارجاع المدونة بنجاح', 'posts return successfully');
 
-        } else {
+        // } else {
             $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
@@ -140,57 +140,57 @@ class PostStoreController extends BaseController
                 return $this->sendResponse($success, ' المتجر غير موجود', 'Store is not exists');
 
             }
-        }
+        // }
     }
     public function show($postCategory_id, Request $request)
     {
-        if ($request->domain == 'atlbha') {
+        // if ($request->domain == 'atlbha') {
 
-            $postcategory = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', $postCategory_id)->first();
-            if ($postcategory != null) {
-                $success['domain'] = $request->domain;
+        //     $postcategory = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', $postCategory_id)->first();
+        //     if ($postcategory != null) {
+        //         $success['domain'] = $request->domain;
 
-                $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->toArray();
-                $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
+        //         $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->toArray();
+        //         $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
 
-                $tagarr = array();
-                $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
-                //    dd($tags);
-                foreach ($tags as $tag) {
-                    $tagarr[] = $tag;
-                }
-                $success['tags'] = $tagarr;
+        //         $tagarr = array();
+        //         $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
+        //         //    dd($tags);
+        //         foreach ($tags as $tag) {
+        //             $tagarr[] = $tag;
+        //         }
+        //         $success['tags'] = $tagarr;
 
-                $success['category'] = Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get();
-                $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
-                $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->get());
-                // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
-                $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
-                $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
-                // footer
-                $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
-                $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
-                $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
-                $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
-                $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
-                $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-                $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
-                $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
-                // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-                $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
+        //         $success['category'] = Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get();
+        //         $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
+        //         $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->get());
+        //         // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
+        //         $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
+        //         $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
+        //         // footer
+        //         $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
+        //         $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
+        //         $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
+        //         $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
+        //         $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
+        //         $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+        //         $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
+        //         $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
+        //         // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+        //         $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
             
-                $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
+        //         $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
-                return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
-            } else {
+        //         return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
+        //     } else {
 
-                $success['status'] = 200;
+        //         $success['status'] = 200;
 
-                return $this->sendResponse($success, ' نصنيف الصفحة غير موجود', 'postcategory is not exists');
+        //         return $this->sendResponse($success, ' نصنيف الصفحة غير موجود', 'postcategory is not exists');
 
-            }
+        //     }
 
-        } else {
+        // } else {
             $store = Store::where('domain', $request->domain)->whereNot('package_id', null)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
@@ -271,56 +271,56 @@ class PostStoreController extends BaseController
                 return $this->sendResponse($success, ' نصنيف الصفحة غير موجود', 'postcategory is not exists');
 
             }
-        }
+        // }
     }
     public function show_post($pageId, Request $request)
     {
-        if ($request->domain == 'atlbha') {
+        // if ($request->domain == 'atlbha') {
 
-            $post = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $pageId)->first();
-            if ($post != null) {
-                $success['domain'] = $request->domain;
-                $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
-                $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
-                $tagarr = array();
-                $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
-                //    dd($tags);
-                foreach ($tags as $tag) {
-                    $tagarr[] = $tag;
-                }
-                $success['tags'] = $tagarr;
-                $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get());
-                $success['post'] = new PageResource(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('id', $pageId)->first());
-                $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
-                // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
-                $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
-                $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
-                $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->where('postcategory_id', '==', Page::find($pageId)->postcategory_id)->orderBy('created_at', 'desc')->take(2)->get());
-                // $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
-                // footer
-                $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
-                $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
-                $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
-                $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
-                $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
-                $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-                $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
-                $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
-                // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-                $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
+        //     $post = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $pageId)->first();
+        //     if ($post != null) {
+        //         $success['domain'] = $request->domain;
+        //         $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
+        //         $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
+        //         $tagarr = array();
+        //         $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
+        //         //    dd($tags);
+        //         foreach ($tags as $tag) {
+        //             $tagarr[] = $tag;
+        //         }
+        //         $success['tags'] = $tagarr;
+        //         $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get());
+        //         $success['post'] = new PageResource(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('id', $pageId)->first());
+        //         $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
+        //         // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
+        //         $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
+        //         $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
+        //         $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->where('postcategory_id', '==', Page::find($pageId)->postcategory_id)->orderBy('created_at', 'desc')->take(2)->get());
+        //         // $success['footer']=PageResource::collection(Page::where('is_deleted',0)->whereIn('id',$pages)->get());
+        //         // footer
+        //         $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
+        //         $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
+        //         $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
+        //         $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
+        //         $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
+        //         $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+        //         $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
+        //         $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
+        //         // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
+        //         $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
 
-                $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
+        //         $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
-                return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
-            } else {
+        //         return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
+        //     } else {
 
-                $success['status'] = 200;
+        //         $success['status'] = 200;
 
-                return $this->sendResponse($success, '  المدونه غير موجود', 'post is not exists');
+        //         return $this->sendResponse($success, '  المدونه غير موجود', 'post is not exists');
 
-            }
+        //     }
 
-        } else {
+        // } else {
 
             $store = Store::where('domain', $request->domain)->whereNot('package_id', null)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
             if (!is_null($store)) {
@@ -403,6 +403,6 @@ class PostStoreController extends BaseController
                 return $this->sendResponse($success, '  المدونه غير موجود', 'post is not exists');
 
             }
-        }
+        // }
     }
 }
