@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ProductResource;
-use App\Imports\AdminProductImport;
-use App\Models\Image;
-use App\Models\Importproduct;
-use App\Models\Product;
-use App\Models\Store;
 use Carbon\Carbon;
+use App\Models\Image;
+use App\Models\Store;
+use App\Models\Value;
+use App\Models\Option;
+use App\Models\Product;
+use App\Models\Attribute;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use Illuminate\Validation\Rule;
+use App\Models\Attribute_product;
 use Illuminate\Support\Facades\DB;
+use App\Imports\AdminProductImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class StockController extends BaseController
 {
@@ -107,6 +111,8 @@ class StockController extends BaseController
                     return $query->join('categories', 'id', 'parent_id');
                 }),
             ],
+            'product_has_options' => 'nullable|in:0,1',
+            'attribute' => 'array|required_if:product_has_options,1',
         ]);
 
         if ($validator->fails()) {
@@ -142,6 +148,7 @@ class StockController extends BaseController
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
+            'product_has_options' => $request->product_has_options,
 
         ]);
         $productid = $product->id;
@@ -173,6 +180,62 @@ class StockController extends BaseController
         //         $options[] = $option;
         //     }
         // }
+        if ($request->has('attribute')) {
+            if (!is_null($request->attribute)) {
+                foreach ($request->attribute as $attribute) {
+
+                    $option = new Attribute([
+                        'name' => $attribute['title'],
+                        'type' => $attribute['type'],
+                    ]);
+                    $option->save();
+
+                    foreach ($attribute['value'] as $attributeValue) {
+                        if (isset($attributeValue['image'])) {
+                            $imageName = Str::random(10) . time() . '.' . $attributeValue['image']->getClientOriginalExtension();
+                            $filePath = 'images/product/' . $imageName;
+                            $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
+                            if ($isFileUploaded) {
+                                $attributeValue['image'] =asset('storage/images/product') . '/' .$imageName;
+                            }
+
+                        }
+                        $value = new Value([
+                            'attribute_id' => $option->id,
+                            'value' => implode(',', $attributeValue),
+                        ]);
+                        $value->save();
+
+                        $values[] = $value;
+                        $valuesid[] = $value->id;
+                    }
+
+                    $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                    $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
+                }
+            }
+        }
+        if ($request->has('data')) {
+            if (!is_null($request->data)) {
+
+                foreach ($request->data as $data) {
+                    $data['name'] = [
+                        "ar" => implode(',', $data['name']),
+                    ];
+
+                    $option = new Option([
+                        'price' => $data['price'],
+                        'quantity' => $data['quantity'],
+                        'name' => $data['name'],
+                        'product_id' => $productid,
+
+                    ]);
+
+                    $option->save();
+                    $options[] = $option;
+                }
+            }
+        }
 
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
@@ -259,6 +322,8 @@ class StockController extends BaseController
                     return $query->join('categories', 'id', 'parent_id');
                 }),
             ],
+            'product_has_options' => 'nullable|in:0,1',
+            'attribute' => 'array|required_if:product_has_options,1',
         ]);
 
         if ($validator->fails()) {
@@ -292,7 +357,7 @@ class StockController extends BaseController
             'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
-
+            'product_has_options' => $request->product_has_options,
 
         ]);
         $productid = $product->id;
@@ -375,7 +440,75 @@ class StockController extends BaseController
         //         ]);
         //     }
         // }
+        $preAttributes = Attribute_product::where('product_id', $productid)->get();
+        if ($preAttributes != null) {
+            foreach ($preAttributes as $preAttribute) {
+                $preAttribute->delete();
+            }
+        }
+        $preOptions = Option::where('product_id', $productid)->get();
+        if ($preOptions != null) {
+            foreach ($preOptions as $preOption) {
+                $preOption->delete();
+            }
+        }
+        if ($request->has('attribute')) {
+            if (!is_null($request->attribute)) {
+                foreach ($request->attribute as $attribute) {
 
+                    $option = new Attribute([
+                        'name' => $attribute['title'],
+                        'type' => $attribute['type'],
+                    ]);
+                    $option->save();
+
+                    foreach ($attribute['value'] as $attributeValue) {
+                        if (isset($attributeValue['image'])) {
+                            $imageName = Str::random(10) . time() . '.' . $attributeValue['image']->getClientOriginalExtension();
+                            $filePath = 'images/product/' . $imageName;
+                            $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
+                            if ($isFileUploaded) {
+                                $attributeValue['image'] = asset('storage/images/product') . '/' .$imageName;
+                            }
+
+                        }
+                        $value = new Value([
+                            'attribute_id' => $option->id,
+                            'value' => implode(',', $attributeValue),
+                        ]);
+                        $value->save();
+
+                        $values[] = $value;
+                        $valuesid[] = $value->id;
+                    }
+
+                    $attruibtevalues = Value::where('attribute_id', $option->id)->whereIn('id', $valuesid)->get();
+                    $product->attributes()->attach($option->id, ['value' => json_encode($attruibtevalues)]);
+                }
+            }
+        }
+        if ($request->has('data')) {
+            if (!is_null($request->data)) {
+
+                foreach ($request->data as $data) {
+                    $data['name'] = [
+                        "ar" => implode(',', $data['name']),
+                    ];
+
+                    $option = new Option([
+                        'price' => $data['price'],
+                        'quantity' => $data['quantity'],
+                        'name' => $data['name'],
+                        'product_id' => $productid,
+
+                    ]);
+
+                    $option->save();
+                    $options[] = $option;
+
+                }
+            }
+        }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
