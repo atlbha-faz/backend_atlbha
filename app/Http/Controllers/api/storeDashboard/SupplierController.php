@@ -104,9 +104,9 @@ class SupplierController extends BaseController
                 [
                     'supplierCode' => $account->supplierCode,
                     'store_id' => auth()->user()->store_id,
-                ],
-                ['file' => $url,
                     'type' => $file[1],
+                ],
+                ['file' => $url   
                 ]
             );
         }
