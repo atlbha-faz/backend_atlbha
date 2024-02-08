@@ -27,7 +27,7 @@ class SupplierController extends BaseController
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $account=Account::where('store_id', auth()->user()->store_id)->first();
         $supplier=new FatoorahServices();
-        $supplierCode  =$supplier->getSupplierDashboard('/v2/GetSupplierDetails?suppplierCode='.$storeAdmain->supplierCode);
+        $supplierCode=$supplier->getSupplierDashboard('/v2/GetSupplierDetails?suppplierCode='.$storeAdmain->supplierCode);
     
         $success['supplierUser'] = new SupplierResource($account);
         $success['SupplierDetails'] =  $supplierCode ;
