@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\api\storeDashboard;
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Account;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\Supplierdocument;
-use App\Services\FatoorahServices;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\SupplierResource;
+
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\SupplierResource;
+use App\Models\Account;
+use App\Models\Store;
+use App\Models\Supplierdocument;
+use App\Models\User;
+use App\Services\FatoorahServices;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class SupplierController extends BaseController
 {
@@ -25,12 +26,12 @@ class SupplierController extends BaseController
     public function show()
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        $account=Account::where('store_id', auth()->user()->store_id)->first();
-        $supplier=new FatoorahServices();
-        $supplierCode=$supplier->getSupplierDashboard('/v2/GetSupplierDetails?suppplierCode='.$storeAdmain->supplierCode);
-    
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
+        $supplier = new FatoorahServices();
+        $supplierCode = $supplier->getSupplierDashboard('/v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
+
         $success['supplierUser'] = new SupplierResource($account);
-        $success['SupplierDetails'] =  $supplierCode ;
+        $success['SupplierDetails'] = $supplierCode;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
@@ -38,77 +39,80 @@ class SupplierController extends BaseController
     public function store(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        $store= Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $data = [
-         'SupplierName' =>$store->owner_name,
-         'Mobile' =>$storeAdmain->phonenumber,
-         'Email' =>$storeAdmain->email,
-         'CommissionPercentage'=>0.1,
-         'CommissionValue'=>0,
-         'DepositTerms'=>'Daily',
-         'BankId' => $request->bankId,
-         'BankAccountHolderName' => $request->bankAccountHolderName,
-         'BankAccount' => $request->bankAccount,
-          'Iban' => $request->iban,
-     ];
+            'SupplierName' => $store->owner_name,
+            'Mobile' => $storeAdmain->phonenumber,
+            'Email' => $storeAdmain->email,
+            'CommissionPercentage' => 0.1,
+            'CommissionValue' => 0,
+            'DepositTerms' => 'Daily',
+            'BankId' => $request->bankId,
+            'BankAccountHolderName' => $request->bankAccountHolderName,
+            'BankAccount' => $request->bankAccount,
+            'Iban' => $request->iban,
+        ];
 
-     $supplier=new FatoorahServices();
-     $supplierCode  =$supplier->createSupplier('v2/CreateSupplier', $data);
-     if ( $supplierCode->IsSuccess == false){
-        return $this->sendError("خطأ في البيانات",$supplierCode->FieldsErrors[0]->Error);
-     }
-     $account=Account::updateOrCreate(
-        [
-        'store_id'=>auth()->user()->store_id
-          ],[
-            'bankId' => $request->input('bankId'),
-            'bankAccountHolderName' => $request->input('bankAccountHolderName'),
-            'bankAccount' => $request->input('bankAccount'),
-            'iban' => $request->input('iban'),
-            'supplierCode' =>  $supplierCode->Data->SupplierCode,
-            'status'=>'active'
-        ]);
+        $supplier = new FatoorahServices();
+        $supplierCode = $supplier->createSupplier('v2/CreateSupplier', $data);
+        if ($supplierCode->IsSuccess == false) {
+            return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
+        }
+        $account = Account::updateOrCreate(
+            [
+                'store_id' => auth()->user()->store_id,
+            ], [
+                'bankId' => $request->input('bankId'),
+                'bankAccountHolderName' => $request->input('bankAccountHolderName'),
+                'bankAccount' => $request->input('bankAccount'),
+                'iban' => $request->input('iban'),
+                'supplierCode' => $supplierCode->Data->SupplierCode,
+                'status' => 'active',
+            ]);
         $storeAdmain->update([
-            'supplierCode' =>  $supplierCode->Data->SupplierCode]);
+            'supplierCode' => $supplierCode->Data->SupplierCode]);
         // $success['supplier'] = $supplierCode;
 
-          $arrays= array();
-          if($store->verification_type =="maeruf"){
-            $file=$store->file;
-            $type=2;
-          }
-          else{
-            $file=$store->file; 
-            $type=20;
-          }
-          $arrays=[[$request->civil_id,1] ,[$file,20],[$request->bankAccountLetter,21] ,[$request->website_image,25]];
-         foreach($arrays as $file){
-        $supplier=new FatoorahServices();
-        $imageName = Str::random(10) . time() . '.' . $file[0]->getClientOriginalExtension();
-        $filePath = 'images/storelogo/' . $imageName;
-        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file[0]));
-        if ($isFileUploaded) {
-            $url = asset('storage/images/storelogo') . '/' .$imageName;
+        $arrays = array();
+        if ($store->verification_type == "maeruf") {
+            $file = $store->file;
+            $type = 2;
+        } else {
+            $file = $store->file;
+            $type = 20;
         }
-        $data = [
-            'FileUpload'=>  $url,
-            'FileType' => $file[1],
-            'SupplierCode' =>$account->supplierCode
-        ];
-        $supplierDocument  =$supplier->uploadSupplierDocument('v2/UploadSupplierDocument',$data);
-        $supplierdocument=Supplierdocument::updateOrCreate(
-        [
-        'supplierCode'=>$account->supplierCode,
-        'store_id'=>auth()->user()->store_id
-          ],
-        ['file'=> $url,
-         'type'=> $file[1],
-         ]
-         );
+        $arrays = [[$request->civil_id, 1], [$file, 20], [$request->bankAccountLetter, 21], [$request->website_image, 25]];
+        foreach ($arrays as $file) {
+            if (is_uploaded_file($file[0])) {
+                $supplier = new FatoorahServices();
+                $imageName = Str::random(10) . time() . '.' . $file[0]->getClientOriginalExtension();
+                $filePath = 'images/storelogo/' . $imageName;
+                $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file[0]));
+                if ($isFileUploaded) {
+                    $url = asset('storage/images/storelogo') . '/' . $imageName;
+                }
+            } else {
+                $url = $file[0];
+            }
+            $data = [
+                'FileUpload' => $url,
+                'FileType' => $file[1],
+                'SupplierCode' => $account->supplierCode,
+            ];
+            $supplierDocument = $supplier->uploadSupplierDocument('v2/UploadSupplierDocument', $data);
+            $supplierdocument = Supplierdocument::updateOrCreate(
+                [
+                    'supplierCode' => $account->supplierCode,
+                    'store_id' => auth()->user()->store_id,
+                ],
+                ['file' => $url,
+                    'type' => $file[1],
+                ]
+            );
         }
 
         $success['supplierUser'] = new SupplierResource($account);
-        $success['supplierUser'] = Supplierdocument::where('store_id',auth()->user()->store_id)->get();
+        $success['supplierUser'] = Supplierdocument::where('store_id', auth()->user()->store_id)->get();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم الإضافة بنجاح', 'insert successfully');
@@ -116,36 +120,35 @@ class SupplierController extends BaseController
     public function update(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        $store= Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $data = [
-         'SupplierName' =>$store->owner_name,
-         'SupplierCode'=>$storeAdmain->supplierCode,
-         'Mobile' =>$storeAdmain->phonenumber,
-         'Email' =>$storeAdmain->email,
-         'BankId' => $request->bankId,
-         'BankAccountHolderName' => $request->bankAccountHolderName,
-         'BankAccount' => $request->bankAccount,
-          'Iban' => $request->iban,
-     ];
-     $account=Account::where('store_id', auth()->user()->store_id)->where('status', 'active')->first();
-     $account->update([
+            'SupplierName' => $store->owner_name,
+            'SupplierCode' => $storeAdmain->supplierCode,
+            'Mobile' => $storeAdmain->phonenumber,
+            'Email' => $storeAdmain->email,
+            'BankId' => $request->bankId,
+            'BankAccountHolderName' => $request->bankAccountHolderName,
+            'BankAccount' => $request->bankAccount,
+            'Iban' => $request->iban,
+        ];
+        $account = Account::where('store_id', auth()->user()->store_id)->where('status', 'active')->first();
+        $account->update([
             'bankId' => $request->input('bankId'),
             'bankAccountHolderName' => $request->input('bankAccountHolderName'),
             'bankAccount' => $request->input('bankAccount'),
             'iban' => $request->input('iban'),
-            'supplierCode' =>  $supplierCode->Data->SupplierCode
+            'supplierCode' => $supplierCode->Data->SupplierCode,
         ]);
-        $storeAdmain->update(['supplierCode' =>$supplierCode->Data->SupplierCode]);
+        $storeAdmain->update(['supplierCode' => $supplierCode->Data->SupplierCode]);
 
-     $supplier=new FatoorahServices();
-     $supplierCode  =$supplier->createSupplier('v2/EditSupplier', $data);
-     if ( $supplierCode->IsSuccess == false){
-        return $this->sendError("خطأ في البيانات",$supplierCode->FieldsErrors[0]->Error);
-     }
-     
+        $supplier = new FatoorahServices();
+        $supplierCode = $supplier->createSupplier('v2/EditSupplier', $data);
+        if ($supplierCode->IsSuccess == false) {
+            return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
+        }
 
         // $success['supplier'] = $supplierCode;
-        $success['supplierUser'] = new SupplierResource( $account);
+        $success['supplierUser'] = new SupplierResource($account);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'update successfully');
@@ -153,45 +156,46 @@ class SupplierController extends BaseController
     public function showSupplierDashboard()
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        $supplier=new FatoorahServices();
-        $supplierCode  =$supplier->getSupplierDashboard('v2/GetSupplierDashboard?SupplierCode='.$storeAdmain->supplierCode);
+        $supplier = new FatoorahServices();
+        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDashboard?SupplierCode=' . $storeAdmain->supplierCode);
         // if ( $supplierCode->IsSuccess == false){
         //    return $this->sendError("خطأ في البيانات",$supplierCode->FieldsErrors[0]->Error);
         // }
-        $success['SupplierDashboard'] =  $supplierCode ;
+        $success['SupplierDashboard'] = $supplierCode;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
     }
 
-    public function uploadSupplierDocument(Request $request){
+    public function uploadSupplierDocument(Request $request)
+    {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        $account=Account::where('store_id', auth()->user()->store_id)->where('status', 'active')->first();
-        $supplier=new FatoorahServices();
+        $account = Account::where('store_id', auth()->user()->store_id)->where('status', 'active')->first();
+        $supplier = new FatoorahServices();
         $imageName = Str::random(10) . time() . '.' . $request->FileUpload->getClientOriginalExtension();
         $filePath = 'images/storelogo/' . $imageName;
         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->FileUpload));
         if ($isFileUploaded) {
-            $request->FileUpload = asset('storage/images/storelogo') . '/' .$imageName;
+            $request->FileUpload = asset('storage/images/storelogo') . '/' . $imageName;
         }
- 
+
         $data = [
-            'FileUpload'=> $request->FileUpload,
+            'FileUpload' => $request->FileUpload,
             'FileType' => $request->type,
-            'SupplierCode' =>$account->supplierCode
+            'SupplierCode' => $account->supplierCode,
         ];
-  
-        $supplierDocument  =$supplier->uploadSupplierDocument('v2/UploadSupplierDocument',$data);
-        $supplierdocument=Supplierdocument::updateOrCreate(
-        [
-        'supplierCode'=>$account->supplierCode,
-        'store_id'=>auth()->user()->store_id
-          ],
-        ['file'=>$request->FileUpload,
-         'type'=>$request->type,]
-         );
-   
-        $success['SupplierDocument'] =  $supplierDocument;
+
+        $supplierDocument = $supplier->uploadSupplierDocument('v2/UploadSupplierDocument', $data);
+        $supplierdocument = Supplierdocument::updateOrCreate(
+            [
+                'supplierCode' => $account->supplierCode,
+                'store_id' => auth()->user()->store_id,
+            ],
+            ['file' => $request->FileUpload,
+                'type' => $request->type]
+        );
+
+        $success['SupplierDocument'] = $supplierDocument;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
