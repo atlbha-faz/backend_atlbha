@@ -111,6 +111,8 @@ class StockController extends BaseController
                     return $query->join('categories', 'id', 'parent_id');
                 }),
             ],
+            'product_has_options' => 'nullable|in:0,1',
+            'attribute' => 'array|required_if:product_has_options,1',
         ]);
 
         if ($validator->fails()) {
@@ -146,6 +148,7 @@ class StockController extends BaseController
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
+            'product_has_options' => $request->product_has_options,
 
         ]);
         $productid = $product->id;
@@ -319,6 +322,8 @@ class StockController extends BaseController
                     return $query->join('categories', 'id', 'parent_id');
                 }),
             ],
+            'product_has_options' => 'nullable|in:0,1',
+            'attribute' => 'array|required_if:product_has_options,1',
         ]);
 
         if ($validator->fails()) {
@@ -352,7 +357,7 @@ class StockController extends BaseController
             'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
-
+            'product_has_options' => $request->product_has_options,
 
         ]);
         $productid = $product->id;
