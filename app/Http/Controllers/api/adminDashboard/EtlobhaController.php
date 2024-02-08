@@ -143,7 +143,6 @@ class EtlobhaController extends BaseController
             'category_id' => $request->category_id,
             'subcategory_id' => $subcategory,
             'store_id' => null,
-            'amount' => $request->amount,
             'product_has_options' => $request->product_has_options,
 
         ]);
@@ -349,7 +348,7 @@ class EtlobhaController extends BaseController
             'weight' => (!is_null($request->weight) ? $request->weight / 1000 : 0.5),
             'category_id' => $request->input('category_id'),
             'subcategory_id' => $subcategory,
-            'amount' => $request->amount,
+            // 'amount' => $request->amount,
             'product_has_options' => $request->product_has_options,
 
         ]);
