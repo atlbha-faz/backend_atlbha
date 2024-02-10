@@ -643,7 +643,7 @@ Route::middleware([StoreUser::class])->group(function () {
         //Supplier
         Route::post('createSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'store'])->name('store.supplier.create');
         Route::get('showSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'show'])->name('store.supplier.show');
-        Route::post('updateSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'store'])->name('store.supplier.update');
+        Route::post('updateSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'update'])->name('store.supplier.update');
         Route::get('showSupplierDashboard', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'showSupplierDashboard'])->name('store.supplier.showSupplierDashboard');
         Route::post('uploadSupplierDocument', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'uploadSupplierDocument'])->name('store.supplier.uploadSupplierDocument');
 
