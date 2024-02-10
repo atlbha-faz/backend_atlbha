@@ -63,7 +63,7 @@ class VerificationController extends BaseController
             'file' => 'required|mimes:pdf',
             'owner_name' => 'required|string|max:255',
             'commercial_name' => 'required_if:verification_type,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
-            'verification_code' => 'required',
+            'verification_code' => 'nullable',
             // 'name' => 'required|string|max:255',
             // 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
             //     return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
