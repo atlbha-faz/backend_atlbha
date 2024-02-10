@@ -196,7 +196,7 @@ class Store extends Model
 
     public function getLogoAttribute($logo)
     {
-        if (is_null($logo)) {
+        if (is_null($logo) || $logo =="") {
             return null;
         } else {
             if (filter_var($logo, FILTER_VALIDATE_URL)) {
@@ -224,7 +224,7 @@ class Store extends Model
 
     public function getIconAttribute($icon)
     {
-        if (is_null($icon)) {
+        if (is_null($icon) || $icon =="") {
             return null;
         } else {
             if (filter_var($icon, FILTER_VALIDATE_URL)) {
