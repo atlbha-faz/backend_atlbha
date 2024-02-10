@@ -57,19 +57,66 @@ class SupplierController extends BaseController
      if ( $supplierCode->IsSuccess == false){
         return $this->sendError("خطأ في البيانات",$supplierCode->FieldsErrors[0]->Error);
      }
-     $account=Account::create([
+     $account=Account::updateOrCreate(
+        [
+        'store_id'=>auth()->user()->store_id
+          ],[
             'bankId' => $request->input('bankId'),
             'bankAccountHolderName' => $request->input('bankAccountHolderName'),
             'bankAccount' => $request->input('bankAccount'),
             'iban' => $request->input('iban'),
             'supplierCode' =>  $supplierCode->Data->SupplierCode,
-            'store_id'=>auth()->user()->store_id,
             'status'=>'active'
         ]);
         $storeAdmain->update([
             'supplierCode' =>  $supplierCode->Data->SupplierCode]);
         // $success['supplier'] = $supplierCode;
+
+          $arrays= array();
+          if($store->verification_type =="maeruf"){
+            $file=$store->file;
+            $type=2;
+          }
+          else{
+            $file=$store->file; 
+            $type=20;
+          }
+          $arrays=[[$request->civil_id,1] ,[$file,20],[$request->bankAccountLetter,21] ,[$request->website_image,25]];
+         foreach($arrays as $file){
+             if (is_uploaded_file($file[0]) )
+             {
+        $supplier=new FatoorahServices();
+        $imageName = Str::random(10) . time() . '.' . $file[0]->getClientOriginalExtension();
+        $filePath = 'images/storelogo/' . $imageName;
+        $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file[0]));
+        if ($isFileUploaded) {
+            $url = asset('storage/images/storelogo') . '/' .$imageName;
+        }    
+    }
+    else{
+        $url=$file[0];
+    }
+        $data = [
+            'FileUpload'=>  $url,
+            'FileType' => $file[1],
+            'SupplierCode' =>$account->supplierCode
+        ];
+        if($data['FileUpload'] != null){
+        $supplierDocument  =$supplier->uploadSupplierDocument('v2/UploadSupplierDocument',$data);
+        $supplierdocument=Supplierdocument::updateOrCreate(
+        [
+        'supplierCode'=>$account->supplierCode,
+        'store_id'=>auth()->user()->store_id,
+        'type'=> $file[1],
+          ],
+        ['file'=> $url,
+         ]
+         );
+        }
+        }
+
         $success['supplierUser'] = new SupplierResource($account);
+        $success['supplierUser'] = Supplierdocument::where('store_id',auth()->user()->store_id)->get();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم الإضافة بنجاح', 'insert successfully');
