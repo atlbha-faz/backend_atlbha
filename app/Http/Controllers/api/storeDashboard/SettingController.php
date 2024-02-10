@@ -64,7 +64,9 @@ class SettingController extends BaseController
             })],
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
-            //'store_email' => 'required|email|unique:users,email,' . auth()->user()->id,
+            'store_email' => ['required', 'email', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
+            })],
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
                return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
             })],
@@ -78,6 +80,23 @@ class SettingController extends BaseController
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
+        }
+        $user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('user_type', 'store')->first();
+        $validator2 = Validator::make($input, [
+            'store_email' => ['required', 'email', Rule::unique('users','email')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store','store_employee'])->where('is_deleted', 0)
+                    ->where('id', '!=', $user->id);
+            }),
+            ],
+            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store','store_employee'])->where('is_deleted', 0)
+                    ->where('id', '!=', $user->id);
+            })
+            ]
+        ]);
+        if ($validator2->fails()) {
+            # code...
+            return $this->sendError(null, $validator2->errors());
         }
         $settingStore = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $settingStore->update([
@@ -98,15 +117,13 @@ class SettingController extends BaseController
             'icon' => $request->icon,
             'logo' => $request->logo]);
     }
-        $store_user = User::where('is_deleted', 0)->where('id', auth()->user()->id)->where('user_type', 'store')->first();
-        /* $store_user->update([
-
+        $store_user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('user_type', 'store')->first();
+         $store_user->update([
         'email' => $request->input('store_email'),
-
         'phonenumber' => $request->input('phonenumber'),
 
         ]);
-         */
+         
 
         $logohomepage = Homepage::updateOrCreate([
             'store_id' => auth()->user()->store_id,
