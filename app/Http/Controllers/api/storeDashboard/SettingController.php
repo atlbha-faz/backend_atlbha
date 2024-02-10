@@ -81,8 +81,6 @@ class SettingController extends BaseController
         }
         $settingStore = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $settingStore->update([
-            'icon' => $request->icon,
-            'logo' => $request->logo,
             'description' => $request->input('description'),
             'domain' => $request->input('domain'),
             'country_id' => $request->input('country_id'),
@@ -93,6 +91,13 @@ class SettingController extends BaseController
             'phonenumber' => $request->input('phonenumber'),
             'working_status' => $request->input('working_status'),
         ]);
+        $parameters = ['icon', 'logo'];
+
+    if ($request->has($parameters)) {
+        $settingStore->update([
+            'icon' => $request->icon,
+            'logo' => $request->logo]);
+    }
         $store_user = User::where('is_deleted', 0)->where('id', auth()->user()->id)->where('user_type', 'store')->first();
         /* $store_user->update([
 
