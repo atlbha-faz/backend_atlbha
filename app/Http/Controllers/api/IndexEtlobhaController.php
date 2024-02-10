@@ -10,12 +10,11 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ProductResource;
-use App\Http\Resources\SettingResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\website_socialmediaResource;
 use App\Models\AtlobhaContact;
-use App\Models\Category;
 use App\Models\categories_stores;
+use App\Models\Category;
 use App\Models\City;
 use App\Models\Comment;
 use App\Models\Homepage;
@@ -48,13 +47,12 @@ class IndexEtlobhaController extends BaseController
         $success['banar1'] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus1', 'active')->pluck('banar1')->first();
         $success['banar2'] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus2', 'active')->pluck('banar2')->first();
         $success['banar3'] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus3', 'active')->pluck('banar3')->first();
-        $categoriesStore=categories_stores::whereNot('store_id', null)->pluck('category_id')->toArray();
-     
+        $categoriesStore = categories_stores::whereNot('store_id', null)->pluck('category_id')->toArray();
         $success['store_activities'] = CategoryResource::collection(Category::with(['subcategory' => function ($query) {
-         $query->select('id');}])->where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->whereIn('id',$categoriesStore)->where('status', 'active')->orderByDesc('created_at')->get());
+            $query->select('id');}])->where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->whereIn('id', $categoriesStore)->where('status', 'active')->orderByDesc('created_at')->get());
 
-         $citiesStore=Store::where('is_deleted', 0)->where('verification_status', 'accept')->pluck('city_id')->toArray();
-        $success['cities'] = CityResource::collection(City::where('is_deleted', 0)->where('status', 'active')->whereIn('id',$citiesStore)->get());
+        $citiesStore = Store::where('is_deleted', 0)->where('verification_status', 'accept')->pluck('city_id')->toArray();
+        $success['cities'] = CityResource::collection(City::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $citiesStore)->get());
 
         $success['section1'] = Section::where('id', 1)->pluck('name')->first();
         if (!is_null(Section::where('id', 1)->where('is_deleted', 0)->where('status', 'active')->first())) {
@@ -97,7 +95,7 @@ class IndexEtlobhaController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع الرئيسية بنجاح', 'etlobha index return successfully');
     }
- 
+
     public function store(Request $request)
     {
 
