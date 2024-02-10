@@ -87,7 +87,7 @@ class StoreResource extends JsonResource
             'store_address' => $this->store_address,
             'business_license' => $this->business_license,
             'ID_file' => $this->ID_file,
-            'link' => 'https: //eauthenticate.saudibusiness.gov.sa/inquiry',
+            'link' => 'https: //eauthenticate.saudibusiness.gov.sa/inquiry', // link for verification
             'snapchat' => $this->snapchat,
             'facebook' => $this->facebook,
             'twiter' => $this->twiter,
