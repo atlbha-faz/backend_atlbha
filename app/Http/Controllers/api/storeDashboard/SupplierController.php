@@ -129,7 +129,7 @@ class SupplierController extends BaseController
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
 
-        if ($account == null) {
+        if (!$account) {
             return $this->sendError(" لا يوجد حساب بنكي", "account is't exists");
         }
         $data = [
