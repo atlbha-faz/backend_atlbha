@@ -227,7 +227,7 @@ class IndexStoreController extends BaseController
             $s1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
             if (!is_null($s1)) {
                 $sliders[] = $s1;
-            } 
+            }
             $s2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus2', 'active')->pluck('slider2')->first();
             if (!is_null($s2)) {
                 $sliders[] = $s2;
@@ -256,8 +256,8 @@ class IndexStoreController extends BaseController
             // special products
             $specialproducts = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store_id)->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'created_at')->get());
 
-            $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('importproducts.special','special')->orderBy('products.created_at', 'desc')
-                ->get(['products.*', 'importproducts.special','importproducts.discount_price_import','importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+            $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('importproducts.special', 'special')->orderBy('products.created_at', 'desc')
+                ->get(['products.*', 'importproducts.special', 'importproducts.discount_price_import', 'importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
             $imports = importsResource::collection($import);
 
             $success['specialProducts'] = $specialproducts->merge($imports);
@@ -279,7 +279,7 @@ class IndexStoreController extends BaseController
                 $import = Importproduct::where('product_id', $order->id)->where('store_id', $store_id)->first();
                 if (!is_null($import)) {
                     $arr2[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $order->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
-                        ->first(['products.*', 'importproducts.price','importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+                        ->first(['products.*', 'importproducts.price', 'importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
                     $moreSalesImports = importsResource::collection($arr2);
                 } else {
                     $arr1[] = Product::with(['store' => function ($query) {
@@ -296,13 +296,13 @@ class IndexStoreController extends BaseController
             $oneWeekAgo = Carbon::now()->subWeek();
 
             $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')->where('importproducts.store_id', $store_id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
-                ->get(['products.*', 'importproducts.price','importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+                ->get(['products.*', 'importproducts.price', 'importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
             $resentimports = importsResource::collection($resentimport);
             $resentproduct = ProductResource::collection(Product::with([
                 'category' => function ($query) {
                     $query->select('id', 'name');
                 },
-            ])->where('is_deleted', 0)->select('id', 'name', 'status', 'stock', 'cover', 'special', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock','discount_price')->where('status', 'active')
+            ])->where('is_deleted', 0)->select('id', 'name', 'status', 'stock', 'cover', 'special', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock', 'discount_price')->where('status', 'active')
                     ->where('store_id', $store_id)->orderByDesc('created_at')->get());
             $success['resentArrivede'] = $resentproduct->merge($resentimports);
             ////////////////////////////////////////
@@ -322,13 +322,13 @@ class IndexStoreController extends BaseController
                 $query->select('id');
             }])
                     ->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
-                    $posts = Page_page_category::where('page_category_id',1)->pluck('page_id')->toArray();
+            $posts = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
 
             $success['lastPosts'] = PageResource::collection(Page::with(['store' => function ($query) {
                 $query->select('id');
             }, 'user' => function ($query) {
                 $query->select('id');
-            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id',$posts)->orderBy('created_at', 'desc')->take(6)->get());
+            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id', $posts)->orderBy('created_at', 'desc')->take(6)->get());
             $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
             $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
             $category = array();
@@ -337,11 +337,11 @@ class IndexStoreController extends BaseController
                     $query->whereIn('id', $prodtct->subcategory()->pluck('id')->toArray());
                 }])->where('is_deleted', 0)->where('id', $prodtct->category_id
                 )->where('status', 'active')->first();
-                 if ( $categoryOne !== null) {
-                    $category[]= $categoryOne;
-                 }
+                if ($categoryOne !== null) {
+                    $category[] = $categoryOne;
+                }
             }
-           
+
             // $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->with('products')->has('products')->get()->merge($category));
             $originalcategory = array();
             $originalProdutcts = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->get();
@@ -355,8 +355,8 @@ class IndexStoreController extends BaseController
                 }
             }
 
-                $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
-                    ->where('store_id', $store_id)->get()->merge($category)->merge($originalcategory);
+            $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
+                ->where('store_id', $store_id)->get()->merge($category)->merge($originalcategory);
 
             if ($categories != null) {
                 $success['category'] = CategoryResource::collection($categories);
@@ -387,7 +387,7 @@ class IndexStoreController extends BaseController
                 $importing = Importproduct::where('product_id', $rating->id)->where('store_id', $store_id)->first();
                 if (!is_null($importing)) {
                     $ratingsimport[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $rating->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
-                        ->first(['products.*', 'importproducts.qty', 'importproducts.price','importproducts.discount_price_import', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
+                        ->first(['products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.discount_price_import', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
                     $ratingsImports = importsResource::collection($ratingsimport);
                 } else {
                     $arr[] = Product::where('id', $rating->id)->select('id', 'name', 'status', 'cover', 'stock', 'special', 'selling_price', 'purchasing_price', 'discount_price', 'status', 'created_at')->first();
@@ -433,6 +433,8 @@ class IndexStoreController extends BaseController
             $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
             $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
             $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
+            $success['verification_code'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('verification_code')->first();
+
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
@@ -462,12 +464,12 @@ class IndexStoreController extends BaseController
                     //     ];
                     // } else {
 
-                        $daystore[] = (object) [
-                            'day' => new DayResource($day),
-                            'from' => '00:00:00',
-                            'to' => '12:00:00',
-                            'status' => 'active',
-                        ];
+                    $daystore[] = (object) [
+                        'day' => new DayResource($day),
+                        'from' => '00:00:00',
+                        'to' => '12:00:00',
+                        'status' => 'active',
+                    ];
                     // }
                 }
             } else {
@@ -566,7 +568,7 @@ class IndexStoreController extends BaseController
             $product = Product::where('is_deleted', 0)->where('status', 'active')->where('id', $id)->first();
             $import = Importproduct::where('product_id', $id)->where('store_id', $store_id)->first();
             if ($import != null) {
-                $success['product'] = new importsResource(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('products.status', 'active')->where('products.id', $id)->first(['products.*', 'importproducts.qty','importproducts.discount_price_import', 'importproducts.price']));
+                $success['product'] = new importsResource(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('products.status', 'active')->where('products.id', $id)->first(['products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price']));
             } else {
                 $product = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('id', $id)->first();
                 if ($product != null) {
@@ -602,6 +604,7 @@ class IndexStoreController extends BaseController
             $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
             $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
             $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
+            $success['verification_code'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('verification_code')->first();
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             //  if(($store->paymenttypes ==null)
 
@@ -772,6 +775,7 @@ class IndexStoreController extends BaseController
             $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
             $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
             $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
+            $success['verification_code'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('verification_code')->first();
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $arr = array();
             if ($store->verification_status == 'accept') {
@@ -929,7 +933,7 @@ class IndexStoreController extends BaseController
                         $query->where('importproducts.price', '>=', $price_from);
                     })->when($price_to, function ($query, $price_to) {
                     $query->where('importproducts.price', '<=', $price_to);
-                })->select('products.*', 'importproducts.qty', 'importproducts.price','importproducts.discount_price_import')->orderBy($s, $sort)->paginate($limit));
+                })->select('products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.discount_price_import')->orderBy($s, $sort)->paginate($limit));
         } else {
             $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
                     ->where('importproducts.store_id', $store_id)
@@ -940,24 +944,23 @@ class IndexStoreController extends BaseController
                     $query->where('importproducts.price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
                     $query->where('importproducts.price', '<=', $price_to);
-                })->select('products.*', 'importproducts.qty','importproducts.discount_price_import', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
+                })->select('products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price')->orderBy($s, $sort)->paginate($limit));
         }
-         if ($request->has('filter_category') && $filter_category != null){
-        $parent=Category::where('is_deleted', 0)->where('status', 'active')
-                 ->whereNot('parent_id',null)->when($filter_category, function ($query, $filter_category) {
-                    $query->where('id', $filter_category);
-                })->pluck('parent_id')->first();
-            }
-            else{
-                $parent= null;
-            }
+        if ($request->has('filter_category') && $filter_category != null) {
+            $parent = Category::where('is_deleted', 0)->where('status', 'active')
+                ->whereNot('parent_id', null)->when($filter_category, function ($query, $filter_category) {
+                $query->where('id', $filter_category);
+            })->pluck('parent_id')->first();
+        } else {
+            $parent = null;
+        }
         $storeproducts = ProductResource::collection(Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('status', 'active')
-                ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) use ($parent){
-                $query->where('category_id', $filter_category)->orWhere('category_id',$parent);
+                ->where('store_id', $store_id)->when($filter_category, function ($query, $filter_category) use ($parent) {
+                $query->where('category_id', $filter_category)->orWhere('category_id', $parent);
             })->when($price_from, function ($query, $price_from) {
                 $query->where('selling_price', '>=', $price_from);
             })->when($price_to, function ($query, $price_to) {
@@ -1044,7 +1047,7 @@ class IndexStoreController extends BaseController
          */
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
         $product_ids = Importproduct::where('store_id', $store_id)->orderBy('created_at', 'desc')->pluck('product_id')->toArray();
-        $importprodtcts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')->whereIn('products.id', $product_ids)->select('products.*', 'importproducts.qty','importproducts.discount_price_import', 'importproducts.price')->orderBy('importproducts.created_at', 'desc')->take(5)->get();
+        $importprodtcts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')->whereIn('products.id', $product_ids)->select('products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price')->orderBy('importproducts.created_at', 'desc')->take(5)->get();
         $products = Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }])->where('is_deleted', 0)->where('store_id', $store_id)->orderBy('created_at', 'desc')->take(5)->get();
@@ -1134,7 +1137,7 @@ class IndexStoreController extends BaseController
                 ->when($category, function ($query, $category) {
                     $query->where('products.category_id', $category)->orWhere('products.subcategory_id', $category);
                 })
-                ->get(['products.*', 'importproducts.qty','importproducts.discount_price_import', 'importproducts.price']));
+                ->get(['products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price']));
 
         $products = ProductResource::collection(Product::where('is_deleted', 0)
                 ->where('store_id', $store_id)

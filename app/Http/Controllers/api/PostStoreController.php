@@ -10,14 +10,10 @@ use App\Models\Category;
 use App\Models\Homepage;
 use App\Models\Package_store;
 use App\Models\Page;
-use App\Models\Paymenttype;
-use App\Models\Postcategory;
-use App\Models\Setting;
-use App\Models\Store;
-use App\Models\website_socialmedia;
-use Carbon\Carbon;
 use App\Models\Page_page_category;
-
+use App\Models\Postcategory;
+use App\Models\Store;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PostStoreController extends BaseController
@@ -64,20 +60,15 @@ class PostStoreController extends BaseController
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
 
-            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-                return $this->sendError("المتجر غير موجودة", "Store is't exists");
-            }
-            if ($store->maintenance != null) {
-                if ($store->maintenance->status == 'active') {
-                    $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+            $success['status'] = 200;
 
-                    $success['status'] = 200;
+            return $this->sendResponse($success, ' المتجر غير موجود', 'Store is not exists');
 
                     return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
 
-                }
+            //     }
 
-            }
+            // }
 
             $id = $store->id;
             if ($store != null) {
@@ -113,6 +104,7 @@ class PostStoreController extends BaseController
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('instegram')->first();
                 $success['tiktok'] = Store::where('is_deleted', 0)->where('id',  $id)->pluck('tiktok')->first();
                 $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $id)->pluck('jaco')->first();
+                $success['verification_code'] = Store::where('is_deleted', 0)->where('id',  $id)->pluck('verification_code')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
 
@@ -141,7 +133,7 @@ class PostStoreController extends BaseController
 
             }
         // }
-        
+
     }
     public function show($postCategory_id, Request $request)
     {
@@ -179,7 +171,7 @@ class PostStoreController extends BaseController
         //         $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
         //         // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
         //         $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
-            
+
         //         $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
 
         //         return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
@@ -247,6 +239,7 @@ class PostStoreController extends BaseController
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
                 $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
                 $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('jaco')->first();
+                $success['verification_code'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('verification_code')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
@@ -323,24 +316,15 @@ class PostStoreController extends BaseController
 
         // } else {
 
-            $store = Store::where('domain', $request->domain)->whereNot('package_id', null)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
-            if (!is_null($store)) {
-                $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-            }
-            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-                return $this->sendError("المتجر غير موجودة", "Store is't exists");
-            }
-            if ($store->maintenance != null) {
-                if ($store->maintenance->status == 'active') {
-                    $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+            // $success['status'] = 200;
 
-                    $success['status'] = 200;
+            // return $this->sendResponse($success, '  المدونه غير موجود', 'post is not exists');
 
-                    return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+            //         return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
 
-                }
+            //     }
 
-            }
+            // }
 
             $store_id = $store->id;
             $post = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $pageId)->first();
@@ -379,6 +363,7 @@ class PostStoreController extends BaseController
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
                 $success['tiktok'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('tiktok')->first();
                 $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('jaco')->first();
+                $success['verification_code'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('verification_code')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
