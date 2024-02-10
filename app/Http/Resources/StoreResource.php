@@ -50,12 +50,12 @@ class StoreResource extends JsonResource
 
                 // } else {
 
-                    $daystore[] = (object) [
-                        'day' => new DayResource($day),
-                        'from' => '00:00:00',
-                        'to' => '12:00:00',
-                        'status' => 'active',
-                    ];
+                $daystore[] = (object) [
+                    'day' => new DayResource($day),
+                    'from' => '00:00:00',
+                    'to' => '12:00:00',
+                    'status' => 'active',
+                ];
 
                 // }
 
@@ -87,7 +87,7 @@ class StoreResource extends JsonResource
             'store_address' => $this->store_address,
             'business_license' => $this->business_license,
             'ID_file' => $this->ID_file,
-            // 'link' => $this->link,
+            'link' => 'https: //eauthenticate.saudibusiness.gov.sa/inquiry',
             'snapchat' => $this->snapchat,
             'facebook' => $this->facebook,
             'twiter' => $this->twiter,
@@ -104,6 +104,7 @@ class StoreResource extends JsonResource
             'rate' => $this->rate($this->id) !== null ? $this->rate($this->id) : 0,
             'verification_status' => $verification_status,
             'verification_date' => $this->verification_date,
+            'verification_code' => $this->verification_code,
             'status' => $status,
             'special' => $special,
             'verification_type' => $this->verification_type,

@@ -104,6 +104,7 @@ class PostStoreController extends BaseController
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('instegram')->first();
                 $success['tiktok'] = Store::where('is_deleted', 0)->where('id',  $id)->pluck('tiktok')->first();
                 $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $id)->pluck('jaco')->first();
+                $success['verification_code'] = Store::where('is_deleted', 0)->where('id',  $id)->pluck('verification_code')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
 
@@ -238,6 +239,7 @@ class PostStoreController extends BaseController
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
                 $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
                 $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('jaco')->first();
+                $success['verification_code'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('verification_code')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
@@ -361,6 +363,7 @@ class PostStoreController extends BaseController
                 $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
                 $success['tiktok'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('tiktok')->first();
                 $success['jaco'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('jaco')->first();
+                $success['verification_code'] = Store::where('is_deleted', 0)->where('id',  $store_id)->pluck('verification_code')->first();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
                 $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
                 $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();

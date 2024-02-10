@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use Notification;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Store;
-use App\Mail\SendMail;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use App\Events\VerificationEvent;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Resources\StoreResource;
-use Illuminate\Support\Facades\Validator;
-use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\StoreResource;
+use App\Mail\SendMail;
+use App\Models\Store;
+use App\Models\User;
+use App\Notifications\verificationNotification;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use Notification;
 
 class VerificationController extends BaseController
 {
@@ -64,6 +63,7 @@ class VerificationController extends BaseController
             'file' => 'required|mimes:pdf',
             'owner_name' => 'required|string|max:255',
             'commercial_name' => 'required_if:verification_type,commercialregister|unique:stores,store_name,' . auth()->user()->store_id,
+            'verification_code' => 'nullable',
             // 'name' => 'required|string|max:255',
             // 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
             //     return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
@@ -93,7 +93,7 @@ class VerificationController extends BaseController
             'verification_date' => $date,
             'commercial_name' => $request->input('commercial_name'),
             'owner_name' => $request->input('owner_name'),
-
+            'verification_code' => $request->input('verification_code'),
         ]);
 
         // $store->activities()->sync($request->activity_id);
@@ -103,19 +103,19 @@ class VerificationController extends BaseController
             $subcategory = null;
         }
         $store->categories()->attach($request->activity_id, ['subcategory_id' => $subcategory]);
-        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id',[1,2])->get();
+        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id', [1, 2])->get();
 
         $data = [
             'message' => ' https://admin.atlbha.com/verification  '
-            . $store->owner_name .' طلب توثيق من ',
-            'store_id' =>  $store->id,
+            . $store->owner_name . ' طلب توثيق من ',
+            'store_id' => $store->id,
             'user_id' => auth()->user()->id,
             'type' => "طلب توثيق",
             'object_id' => $store->created_at,
         ];
         $data2 = [
             'message' => ' طلب توثيق  ',
-            'store_id' =>  $store->id,
+            'store_id' => $store->id,
             'user_id' => auth()->user()->id,
             'type' => "طلب توثيق",
             'object_id' => $store->created_at,
