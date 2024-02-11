@@ -441,11 +441,11 @@ class IndexStoreController extends BaseController
             $verificayion_arr = array();
             if ($store->verification_status == 'accept') {
                 if ($store->verification_type == 'maeruf') {
-                    $verificayion_arr['link'] = 'https: //eauthenticate.saudibusiness.gov.sa/inquiry';
+                    $verificayion_arr['link'] = 'https://eauthenticate.saudibusiness.gov.sa/inquiry';
                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.jpeg';
                     $verificayion_arr['type'] = 'maeruf';
                 } else {
-                    $verificayion_arr['link'] = 'https: //eauthenticate.saudibusiness.gov.sa/inquiry';
+                    $verificayion_arr['link'] = 'https://eauthenticate.saudibusiness.gov.sa/inquiry';
                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
                     $verificayion_arr['type'] = 'commerce';
                 }
