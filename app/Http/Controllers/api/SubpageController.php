@@ -19,7 +19,9 @@ class SubpageController extends BaseController
   
     public function show($page_id)
     {
-        $page= Page::query()->find($page_id);
+        $page= Page::with(['user' => function ($query) {
+            $query->select('id','name');
+        }])->where('id',$page_id)->select('id','title','page_content','altImage','default_page','page_desc','seo_title','seo_link','seo_desc','tags','status','image')->first();
         if (is_null($page) || $page->is_deleted !=0){
                return $this->sendError("الصفحة غير موجودة","Page is't exists");
                }
@@ -36,7 +38,9 @@ class SubpageController extends BaseController
             
           
               $pages_id =Page_page_category::whereIn('page_category_id',$categories_id)->pluck('page_id')->toArray();
-                  $pages=Page::whereIn('id',$pages_id)->where('id','!=',$page_id)->get();
+                  $pages=Page::with(['user' => function ($query) {
+                    $query->select('id','name');
+                }])->whereIn('id',$pages_id)->where('id','!=',$page_id)->select('id','title','page_content','altImage','default_page','page_desc','seo_title','seo_link','seo_desc','tags','status','image')->get();
              $success['Relatedpages']=  PageResource::collection($pages);
               $success['status']= 200;
 
