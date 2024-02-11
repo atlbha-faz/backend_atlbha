@@ -55,7 +55,7 @@ class VerificationResource extends JsonResource
             'description' => $this->description,
             'business_license' => $this->business_license,
             'file' => $this->file,
-             'link' => 'https: //eauthenticate.saudibusiness.gov.sa/inquiry',
+             'link' => 'https://eauthenticate.saudibusiness.gov.sa/inquiry',
             'owner_name' => $this->owner_name,
             'verification_type' => $this->verification_type,
             'commercial_name' => $this->commercial_name,
