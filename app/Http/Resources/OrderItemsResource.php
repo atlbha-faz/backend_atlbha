@@ -21,7 +21,14 @@ class OrderItemsResource extends JsonResource
         $q = Option::where('id',$this->option_id)->where('product_id',$this->product->id)->first();
         // $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
         // $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
-        $array = explode(',', $q->name['ar']);
+        if($q !== null){
+            $array = explode(',', $q->name['ar']);
+            $qty= $q->quantity;
+           }
+           else{
+               $array=null;
+               $qty=null;
+           }
         // $options = array_combine($array,$attribute);
         }
         return [
@@ -30,6 +37,7 @@ class OrderItemsResource extends JsonResource
             'quantity' => $this->quantity,
             'price' => $this->price,
             'sum' => $this->subtotal($this->id),
+            'stock'=> $this->option_id !== null ?  $qty :$this->product->stock,
             'options' => $this->option_id !== null ?  $array :null,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

@@ -30,7 +30,7 @@ class CartResource extends JsonResource
             'message' => $this->message,
             'shipping_price' => $this->shipping_price,
             'tax' => round($this->tax, 2),
-            'weight' => $this->weight,
+            'weight' => round($this->weight,2),
             'subtotal' => round($subtotal, 2),
             'overweight' => $this->weight > 15 ? ($this->weight - 15) : 0,
             'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,

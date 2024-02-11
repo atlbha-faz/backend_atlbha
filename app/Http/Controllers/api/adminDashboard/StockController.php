@@ -224,10 +224,11 @@ class StockController extends BaseController
                     ];
 
                     $option = new Option([
-                        'price' => $data['price'],
-                        'quantity' => $data['quantity'],
+                        'price' => (isset($data['price']) && $data['price'] !== null) ? $data['price'] : null,
+                        'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                         'name' => $data['name'],
                         'product_id' => $productid,
+                        'default_option' =>  (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0
 
                     ]);
 
@@ -496,11 +497,11 @@ class StockController extends BaseController
                     ];
 
                     $option = new Option([
-                        'price' => $data['price'],
-                        'quantity' => $data['quantity'],
+                        'price' => (isset($data['price']) && $data['price'] !== null) ? $data['price'] : null,
+                        'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                         'name' => $data['name'],
                         'product_id' => $productid,
-
+                        'default_option' =>  (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0
                     ]);
 
                     $option->save();

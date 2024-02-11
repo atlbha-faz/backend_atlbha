@@ -15,8 +15,11 @@ class Option extends Model
         'price',
         'product_id',
         'status',
-        'is_deleted'
-    
+        'is_deleted',
+        'default_option'
+    ];
+    protected $casts = [
+      'default_option'=>'integer'
     ];
      public function product(){
         return $this->belongsTo(Product::class);
