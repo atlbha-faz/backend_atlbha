@@ -56,10 +56,7 @@ class PostController extends BaseController
     {
         $post = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $id)->first();
         if ($post != null) {
-            $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
-                $query->select('name');
-            }])->
-            where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $id)->get());
+            $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->where('id', $id)->get());
             $pages = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
             $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $pages)->get());
