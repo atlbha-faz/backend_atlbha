@@ -20,6 +20,7 @@ class OptionResource extends JsonResource
             'name' => $this->name,
             'price' => $this->price,
             'quantity' => $this->quantity,
+            'default_option'=> $this->default_option,
          
         ];
     }
