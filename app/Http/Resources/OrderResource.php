@@ -22,15 +22,15 @@ class OrderResource extends JsonResource
         if ($this->order_status == null || $this->order_status == 'new') {
             $status = 'جديد';
         } elseif ($this->order_status == 'completed') {
-            $status = 'مكتمل';
+            $status = 'تم الشحن';
         } elseif ($this->order_status == 'not_completed') {
             $status = 'غير مكتمل';
         } elseif ($this->order_status == 'delivery_in_progress') {
-            $status = 'جاهز للشحن';
+            $status = 'قيد التجهيز';
         } elseif ($this->order_status == 'ready') {
-            $status = 'جاهز للشحن';
+            $status = 'قيد التجهيز';
         } elseif ($this->order_status == 'canceled') {
-            $status = 'ملغي';
+            $status = 'الغاء الشحنة';
         }
         if ($this->shippingtype == null) {
             $track = null;
