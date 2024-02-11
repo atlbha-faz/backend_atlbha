@@ -434,17 +434,17 @@ class IndexStoreController extends BaseController
             $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
             $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
             $success['verification_code'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('verification_code')->first();
-
+         
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
             $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
             $verificayion_arr = array();
             if ($store->verification_status == 'accept') {
                 if ($store->verification_type == 'maeruf') {
-                    // $verificayion_arr['link'] = $store->link;
+                    $verificayion_arr['link'] = 'https: //eauthenticate.saudibusiness.gov.sa/inquiry';
                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.jpeg';
                 } else {
-                    $verificayion_arr['link'] = null;
+                    $verificayion_arr['link'] ='https: //eauthenticate.saudibusiness.gov.sa/inquiry';
                     $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
                 }
                 $verificayionMethod = $verificayion_arr;
