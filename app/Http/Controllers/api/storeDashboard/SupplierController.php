@@ -21,6 +21,14 @@ class SupplierController extends BaseController
     }
     public function index()
     {
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
+        if (is_null($account)) {
+            return $this->sendError("لا يوجد حساب بنكي", "Account is't exists");
+        }
+        $success['supplierUser'] = new SupplierResource($account);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
 
     }
     public function show()
