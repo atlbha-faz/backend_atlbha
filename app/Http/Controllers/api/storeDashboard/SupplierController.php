@@ -43,8 +43,8 @@ class SupplierController extends BaseController
         $account = Account::where('store_id', auth()->user()->store_id)->first();
         $supplierdocument = Supplierdocument::where('store_id', auth()->user()->store_id)->get();
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->getSupplierDashboard('/v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
-        $supplierDocument = $supplier->getSupplierDashboard('/v2/GetSupplierDocuments?suppplierCode=' . $storeAdmain->supplierCode);
+        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?SupplierCode=' . $storeAdmain->supplierCode);
+        $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?SupplierCode=' . $storeAdmain->supplierCode);
         $success['supplierUser'] = new SupplierResource($account);
         $success['SupplierDetails'] = $supplierCode;
         $success['SupplierDocumentUser'] = $supplierdocument;
