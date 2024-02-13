@@ -21,11 +21,15 @@ class SupplierController extends BaseController
     }
     public function index()
     {
+        $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
+        $supplierCode = $supplier->getSupplierDashboard('/v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
+
         if (is_null($account)) {
             return $this->sendError("لا يوجد حساب بنكي", "Account is't exists");
         }
         $success['supplierUser'] = new SupplierResource($account);
+        $success['SupplierDetails'] = $supplierCode;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
