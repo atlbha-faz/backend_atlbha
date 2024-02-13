@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\coupons_users;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\coupons_users;
+
 class Coupon extends Model
 {
     use HasFactory;
@@ -30,7 +31,7 @@ class Coupon extends Model
     {
         $expire = Coupon::query()->find($id);
         // $expire=Coupon::select('expire_date')->where('id',$coupon);
- $useCouponAll = coupons_users::where('coupon_id', $expire->id)->get();
+        $useCouponAll = coupons_users::where('coupon_id', $expire->id)->get();
         $my_time = Carbon::now();
         $status = "غير نشط";
         if ($expire->status == 'active') {
