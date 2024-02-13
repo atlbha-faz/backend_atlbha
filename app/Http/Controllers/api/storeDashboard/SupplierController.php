@@ -214,6 +214,9 @@ class SupplierController extends BaseController
                 );
             }
         }
+        $supplierDocument = $supplier->getSupplierDashboard('/v2/GetSupplierDocuments?suppplierCode=' . $storeAdmain->supplierCode);
+
+        $success['supplierUserDocument'] = $supplierDocument;
 
         $success['supplierUser'] = new SupplierResource($account);
         $success['supplierDocument'] = Supplierdocument::where('store_id', auth()->user()->store_id)->get();
