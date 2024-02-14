@@ -21,17 +21,35 @@ class SupplierController extends BaseController
     }
     public function index()
     {
+        $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
+        $supplier = new FatoorahServices();
+        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?SupplierCode=' . $storeAdmain->supplierCode);
+
+        if (is_null($account)){
+            return $this->sendError("لا يوجد حساب بنكي", "Account is't exists");
+               }
+               $success['supplierUser'] = new SupplierResource($account);
+               $success['SupplierDetails'] = $supplierCode;
+               $success['status'] = 200;
+
+               return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
 
     }
     public function show()
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
+        $supplierdocument = Supplierdocument::where('store_id', auth()->user()->store_id)->whereNot('type' , 20)->get();
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->getSupplierDashboard('/v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
-
+        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?SupplierCode=' . $storeAdmain->supplierCode);
+        $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?SupplierCode=' .$storeAdmain->supplierCode);
         $success['supplierUser'] = new SupplierResource($account);
         $success['SupplierDetails'] = $supplierCode;
+         $success['SupplierDocumentUser'] = $supplierdocument;
+        $success['SupplierDocument'] =   $supplierDocument ;
+       
+        
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
@@ -85,7 +103,7 @@ class SupplierController extends BaseController
             $file = $store->file;
             $type = 20;
         }
-        $arrays = [[$request->civil_id, 1], [$file, 20], [$request->bankAccountLetter, 21], [$request->website_image, 25]];
+        $arrays = [[$request->civil_id, 1],[$request->bankAccountLetter, 21], [$request->website_image, 25], [$file, 20]];
         foreach ($arrays as $file) {
             if (is_uploaded_file($file[0])) {
                 $supplier = new FatoorahServices();
@@ -197,7 +215,9 @@ class SupplierController extends BaseController
                 );
             }
         }
+        $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?suppplierCode=' .$storeAdmain->supplierCode);
 
+        $success['supplierUserDocument'] =$supplierDocument;
         $success['supplierUser'] = new SupplierResource($account);
         $success['supplierDocument'] = Supplierdocument::where('store_id', auth()->user()->store_id)->get();
         $success['status'] = 200;

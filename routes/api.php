@@ -79,6 +79,7 @@ Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateCon
 Route::post('showDetailOption', [App\Http\Controllers\api\CartTemplateController::class, 'showDetailOption']);
 
 Route::post('cheackout/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'cheackout']);
+Route::get('callback', [App\Http\Controllers\api\CheckoutController::class, 'callback']);
 Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'paymentmethods']);
 Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'shippingcompany']);
 Route::post('applyCoupon/{domain}/{cart_id}', [App\Http\Controllers\api\CheckoutController::class, 'applyCoupon']);

@@ -130,8 +130,8 @@ class SettingController extends BaseController
         ], [
             'logo' => $request->logo,
         ]);
-
-        if ($request->input('working_status') == 'active') {
+        $request->working_status='active';
+        if ($request->working_status == 'active') {
             /*  $days=Day::all();
             foreach($days as $day){
             if($day->name =="Friday"){
