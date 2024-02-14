@@ -234,7 +234,7 @@ class CheckoutController extends BaseController
                 ]);
             } else {
                 $InvoiceId=null;
-                if ($order->paymentype_id == 3    &&  $order->shippingtype_id == 5) {
+                if ($order->paymentype_id == 1    &&  $order->shippingtype_id == 5) {
                     // $account = Account::where('store_id', $store_domain)->first();
                     // $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     // $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
