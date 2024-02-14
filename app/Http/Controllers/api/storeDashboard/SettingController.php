@@ -70,7 +70,7 @@ class SettingController extends BaseController
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
                return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
             })],
-            'working_status' => 'required|in:active,not_active',
+            // 'working_status' => 'required|in:active,not_active',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
             'data.*.id' => 'required',
@@ -108,7 +108,7 @@ class SettingController extends BaseController
             'store_name' => $request->input('store_name'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
-            'working_status' => $request->input('working_status'),
+            // 'working_status' => $request->input('working_status'),
         ]);
         $parameters = ['icon', 'logo'];
 
@@ -123,7 +123,7 @@ class SettingController extends BaseController
         'phonenumber' => $request->input('phonenumber'),
 
         ]);
-         
+
 
         $logohomepage = Homepage::updateOrCreate([
             'store_id' => auth()->user()->store_id,
