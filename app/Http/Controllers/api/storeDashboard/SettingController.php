@@ -34,7 +34,7 @@ class SettingController extends BaseController
 
     public function setting_store_update(Request $request)
     {
-        $store=Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $input = $request->all();
 //         if (request()->hasFile($key)) {
 //             $validator2 = Validator::make($input, [
@@ -68,9 +68,9 @@ class SettingController extends BaseController
                 return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
             })],
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
-               return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
+                return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
             })],
-            'working_status' => 'required|in:active,not_active',
+            // 'working_status' => 'required|in:active,not_active',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
             'data.*.id' => 'required',
@@ -83,16 +83,16 @@ class SettingController extends BaseController
         }
         $user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('user_type', 'store')->first();
         $validator2 = Validator::make($input, [
-            'store_email' => ['required', 'email', Rule::unique('users','email')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store','store_employee'])->where('is_deleted', 0)
+            'store_email' => ['required', 'email', Rule::unique('users', 'email')->where(function ($query) use ($user) {
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $user->id);
             }),
             ],
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store','store_employee'])->where('is_deleted', 0)
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $user->id);
-            })
-            ]
+            }),
+            ],
         ]);
         if ($validator2->fails()) {
             # code...
@@ -108,22 +108,21 @@ class SettingController extends BaseController
             'store_name' => $request->input('store_name'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
-            'working_status' => $request->input('working_status'),
+            // 'working_status' => $request->input('working_status'),
         ]);
         $parameters = ['icon', 'logo'];
 
-    if ($request->has($parameters)) {
-        $settingStore->update([
-            'icon' => $request->icon,
-            'logo' => $request->logo]);
-    }
+        if ($request->has($parameters)) {
+            $settingStore->update([
+                'icon' => $request->icon,
+                'logo' => $request->logo]);
+        }
         $store_user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('user_type', 'store')->first();
-         $store_user->update([
-        'email' => $request->input('store_email'),
-        'phonenumber' => $request->input('phonenumber'),
+        $store_user->update([
+            'email' => $request->input('store_email'),
+            'phonenumber' => $request->input('phonenumber'),
 
         ]);
-         
 
         $logohomepage = Homepage::updateOrCreate([
             'store_id' => auth()->user()->store_id,

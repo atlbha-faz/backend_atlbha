@@ -14,14 +14,14 @@ class OptionResource extends JsonResource
      */
     public function toArray($request)
     {
-   
+
              return [
                 'id'=>$this->id,
             'name' => $this->name,
             'price' => $this->price,
             'quantity' => $this->quantity,
-            'default_option'=> $this->default_option,
-         
+            // 'default_option'=> $this->default_option,
+
         ];
     }
 }
