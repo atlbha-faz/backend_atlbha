@@ -160,7 +160,10 @@ class CartTemplateController extends BaseController
                         $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('id',$data['item'])->first();
                         }
                         else{
+                            // $cartDetails=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->get();
+                            //  if($cartDetails)
                             $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->first();
+                            
                         }
                          if( $cartDetail){
                             $cartDetail->update([
