@@ -41,7 +41,7 @@ class SupplierController extends BaseController
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
-        $supplierdocument = Supplierdocument::where('store_id', auth()->user()->store_id)->get();
+        $supplierdocument = Supplierdocument::where('store_id', auth()->user()->store_id)->whereNot('type' , 20)->get();
         $supplier = new FatoorahServices();
         $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?SupplierCode=' . $storeAdmain->supplierCode);
         $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?SupplierCode=' . $storeAdmain->supplierCode);
