@@ -29,8 +29,6 @@ Route::get('selector/countries', [App\Http\Controllers\api\SelectorController::c
 Route::get('selector/activities', [App\Http\Controllers\api\SelectorController::class, 'activities']);
 Route::get('selector/packages', [App\Http\Controllers\api\SelectorController::class, 'packages']);
 Route::get('selector/addToCart', [App\Http\Controllers\api\SelectorController::class, 'addToCart']);
-Route::get('selector/getAllCity', [App\Http\Controllers\api\SelectorController::class, 'getAllCity']);
-Route::get('selector/testgetAllCity', [App\Http\Controllers\api\SelectorController::class, 'testgetAllCity']);
 Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorController::class, 'shippingcities']);
 Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
@@ -79,6 +77,7 @@ Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateCon
 Route::post('showDetailOption', [App\Http\Controllers\api\CartTemplateController::class, 'showDetailOption']);
 
 Route::post('cheackout/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'cheackout']);
+Route::get('callback', [App\Http\Controllers\api\CheckoutController::class, 'callback']);
 Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'paymentmethods']);
 Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'shippingcompany']);
 Route::post('applyCoupon/{domain}/{cart_id}', [App\Http\Controllers\api\CheckoutController::class, 'applyCoupon']);
@@ -162,7 +161,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('pagecategory', App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
-        Route::get('wallet', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'wallet']);
+        // Route::get('wallet', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'wallet']);
 
          Route::middleware([AdminCheckPermission::class])->group(function () {
          Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
@@ -410,11 +409,11 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
         Route::get('getAllCity', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'getAllCity']);
-        Route::get('PrintImileSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintImileSticker']);
-        Route::get('PrintSmsaSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSmsaSticker']);
-        Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
-        Route::get('PrintJTSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintJTSticker']);
-        Route::get('PrintSticker/{order}/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSticker']);
+        // Route::get('PrintImileSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintImileSticker']);
+        // Route::get('PrintSmsaSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSmsaSticker']);
+        // Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
+        // Route::get('PrintJTSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintJTSticker']);
+        // Route::get('PrintSticker/{order}/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSticker']);
 
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);

@@ -25,7 +25,7 @@ class SupplierController extends BaseController
         $account = Account::where('store_id', auth()->user()->store_id)->first();
         $supplier = new FatoorahServices();
 
-        $supplierCode = $supplier->getSupplierDashboard('/v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
+        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
 
         if (is_null($account)) {
             return $this->sendError("لا يوجد حساب بنكي", "Account is't exists");
@@ -103,7 +103,7 @@ class SupplierController extends BaseController
             $file = $store->file;
             $type = 20;
         }
-        $arrays = [[$request->civil_id, 1], [$file, 20], [$request->bankAccountLetter, 21], [$request->website_image, 25]];
+        $arrays = [[$request->civil_id, 1],[$request->bankAccountLetter, 21], [$request->website_image, 25], [$file, 20]];
         foreach ($arrays as $file) {
             if (is_uploaded_file($file[0])) {
                 $supplier = new FatoorahServices();
@@ -214,10 +214,9 @@ class SupplierController extends BaseController
                 );
             }
         }
-        $supplierDocument = $supplier->getSupplierDashboard('/v2/GetSupplierDocuments?suppplierCode=' . $storeAdmain->supplierCode);
+        $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?suppplierCode=' .$storeAdmain->supplierCode);
 
-        $success['supplierUserDocument'] = $supplierDocument;
-
+        $success['supplierUserDocument'] =$supplierDocument;
         $success['supplierUser'] = new SupplierResource($account);
         $success['supplierDocument'] = Supplierdocument::where('store_id', auth()->user()->store_id)->get();
         $success['status'] = 200;

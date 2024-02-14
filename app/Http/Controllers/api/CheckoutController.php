@@ -2,30 +2,33 @@
 
 namespace App\Http\Controllers\api;
 
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Coupon;
-use App\Models\Option;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\OrderItem;
-use App\Models\CartDetail;
-use App\Models\OrderAddress;
-use Illuminate\Http\Request;
-use App\Models\coupons_users;
-use App\Models\Importproduct;
-use App\Models\coupons_products;
-use App\Models\shippingtype_store;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\ShippingtypeTemplateResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\Account;
+use App\Models\Cart;
+use App\Models\CartDetail;
+use App\Models\Coupon;
+use App\Models\coupons_products;
+use App\Models\coupons_users;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderItem;
+use App\Models\Payment;
+use App\Models\Paymenttype;
+use App\Models\Product;
+use App\Models\shippingtype_store;
+use App\Models\Store;
+use App\Models\User;
+use App\Services\FatoorahServices;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends BaseController
 {
@@ -115,21 +118,18 @@ class CheckoutController extends BaseController
             } else {
                 $extra_shipping_price = 0;
             }
-            if ($cart->free_shipping == 1)
-             {
-            $order->update([
-                'shipping_price' => $shipping_price,
-                'total_price' => $order->total_price+ $extra_shipping_price,
-            ]);
-           }
-           else{
-            $order->update([
-                'shipping_price' => $shipping_price,
-                'total_price' => ($order->total_price-35)+$shipping_price+ $extra_shipping_price,
-            ]);
+            if ($cart->free_shipping == 1) {
+                $order->update([
+                    'shipping_price' => $shipping_price,
+                    'total_price' => $order->total_price + $extra_shipping_price,
+                ]);
+            } else {
+                $order->update([
+                    'shipping_price' => $shipping_price,
+                    'total_price' => ($order->total_price - 35) + $shipping_price + $extra_shipping_price,
+                ]);
 
-           }
-
+            }
 
             // Loop through the cart items and associate them with the order
             foreach ($cart->cartDetails as $cartItem) {
@@ -139,8 +139,8 @@ class CheckoutController extends BaseController
                     $product->update([
                         'stock' => $product->stock - $cartItem->qty,
                     ]);
-                    if ( $cartItem->option_id != null){
-                        $optionQty=Option::where('id',$cartItem->option_id)->first();
+                    if ($cartItem->option_id != null) {
+                        $optionQty = Option::where('id', $cartItem->option_id)->first();
                         $optionQty->update([
                             'quantity' => $optionQty->quantity - $cartItem->qty,
                         ]);
@@ -228,40 +228,54 @@ class CheckoutController extends BaseController
 
                 $cart->delete();
                 $payment = Payment::create([
-                    'paymenDate'=>Carbon::now(),
-                    'paymentType' =>$order->paymentype->name,
-                    'orderID'=> $order->id
-                  ]);
+                    'paymenDate' => Carbon::now(),
+                    'paymentType' => $order->paymentype->name,
+                    'orderID' => $order->id,
+                ]);
             } else {
-                if ($order->paymentype_id == 1) {
-          
-                    // $customer_details=array(
-                    //     "name"=>$order->user->user_name,
-                    //     "email"=>$order->user->email,
-                    //     "phone"=>$order->user->phonenumber,
+                $InvoiceId=null;
+                if ($order->paymentype_id == 3    &&  $order->shippingtype_id == 5) {
+                    // $account = Account::where('store_id', $store_domain)->first();
+                    // $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
+                    // $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
+                    // $supplierdata = [
+                    //     "SupplierCode" => $account->supplierCode,
+                    //     "ProposedShare" => null,
+                    //     "InvoiceShare" => $order->total_price,
+                    // ];
+                    // $supplierobject = (object) ($supplierdata);
+                    // $data = [
+                    //     "PaymentMethodId" => $paymenttype->paymentMethodId,
+                    //     "CustomerName" => $customer->name,
+                    //     "InvoiceValue" => $order->total_price, // total_price
+                    //     "CustomerEmail" => $customer->email,
+                    //     "CallBackUrl" => 'https://backend.atlbha.com/api/callback?order=' . $order->id,
+                    //     "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/products',
+                    //     "Language" => 'ar',
+                    //     "DisplayCurrencyIso" => 'SAR',
+                    //     "Suppliers" => [
+                    //         $supplierobject,
+                    //     ],
+                    // ];
 
-                    //     "city"=>,
-                    //     "state"=>,
-                    //     "country"=>,
-                    //     "zip"=>
-                    // );
-                    $data = array(
-                        'profile_id' => '104143',
-                        'tran_type' => 'sale',
-                        'tran_class' => 'ecom',
-                        'cart_id' => $order->id,
-                        'cart_currency' => 'SAR',
-                        'cart_amounts' => $order->total_price,
-                        'cart_description' => 'Description of the item',
-                        'paypage_lang' => 'ar',
+                    // $supplier = new FatoorahServices();
+                    // $response = $supplier->executePayment('v2/ExecutePayment', $data);
 
-                    );
+                    // if (isset($response['IsSuccess'])) {
+                    //     if ($response['IsSuccess'] == true) {
+
+                    //         $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
+                    //         $success['payment'] = $response;
+
+                    //     }
+                    // }
+
                 }
                 $payment = Payment::create([
-                    'paymenDate'=>Carbon::now(),
-                    'paymentType' =>$order->paymentype->name,
-                    'orderID'=> $order->id
-                  ]);
+                    'paymenDate' => Carbon::now(),
+                    'paymentType' => $order->paymentype->name,
+                    'orderID' => $order->id,
+                ]);
                 $order->update([
                     'payment_status' => "pending",
                     'order_status' => "new",
@@ -279,6 +293,44 @@ class CheckoutController extends BaseController
 
         }
     }
+    public function callback(Request $request)
+    {
+        $order = order::where('id', $request->order)->first();
+        $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
+        $payment = Payment::where('orderID', $order->id)->first();
+    
+        $apiKey = env("fatoora_token", "rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL");
+        $postFields = [
+            'Key' => $request->paymentId,
+            'KeyType' => 'paymentId',
+        ];
+        $supplier = new FatoorahServices();
+        $response = $supplier->callAPI("https://apitest.myfatoorah.com/v2/getPaymentStatus", $apiKey, $postFields);
+        $response = json_decode($response);
+        if (!isset($response->Data->InvoiceId)) {
+            return response()->json(["error" => 'error', 'status' => false], 404);
+        }
+
+        $InvoiceId = $response->Data->InvoiceId; // get your order by payment_id
+        if ($response->IsSuccess == true) {
+            if ($response->Data->InvoiceStatus == "Paid") //||$response->Data->InvoiceStatus=='Pending'
+            {
+                $order->update([
+                    'payment_status' => "paid"
+                ]);
+                $payment->update([
+                    'paymentTransectionID' =>  $InvoiceId ,
+
+                ]);
+            }
+
+        }
+        $success['order'] = new OrderResource($order);
+
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم عرض الطلب بنجاح', 'order show successfully');
+    }
     public function paymentmethods($domain)
     {
         $store = Store::where('is_deleted', 0)->where('domain', $domain)->first();
@@ -295,7 +347,7 @@ class CheckoutController extends BaseController
 
         $shippingcompanys = DB::table('shippingtypes_stores')
             ->join('shippingtypes', 'shippingtypes.id', '=', 'shippingtypes_stores.shippingtype_id')->where('shippingtypes_stores.store_id', $store->id) // joining the contacts table , where user_id and contact_user_id are same
-            ->select('shippingtypes.*', 'shippingtypes_stores.price','shippingtypes_stores.time')
+            ->select('shippingtypes.*', 'shippingtypes_stores.price', 'shippingtypes_stores.time')
             ->get();
 
         $success['shipping_company'] = ShippingtypeTemplateResource::collection($shippingcompanys);
