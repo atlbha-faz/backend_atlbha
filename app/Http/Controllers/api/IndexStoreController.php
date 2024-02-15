@@ -351,7 +351,6 @@ class IndexStoreController extends BaseController
                 }])->where('is_deleted', 0)->where('id', $originalProdutct->category_id
                 )->where('store_id', null)->where('status', 'active')->first();
                 if ($mainCategory !== null) {
-                if($mainCategory)
                     $originalcategory[] = $mainCategory;
                     
                 }
