@@ -351,10 +351,14 @@ class IndexStoreController extends BaseController
                 }])->where('is_deleted', 0)->where('id', $originalProdutct->category_id
                 )->where('store_id', null)->where('parent_id', null)->where('status', 'active')->first();
                 if ($mainCategory !== null) {
+                    if(in_array($mainCategory, $originalcategory)){
+                        $originalcategory[] = $mainCategory->subcategory;
+                    }
+                    else{
                     $originalcategory[] = $mainCategory;
+                    }
                 }
             }
-
 
             $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
                 ->where('store_id', $store_id)->get()->merge($category)->concat($originalcategory);
