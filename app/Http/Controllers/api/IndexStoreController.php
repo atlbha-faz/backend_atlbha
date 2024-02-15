@@ -355,9 +355,10 @@ class IndexStoreController extends BaseController
                 }
             }
 
-            $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
-                ->where('store_id', $store_id)->get()->merge($category)->merge($originalcategory);
 
+            $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
+                ->where('store_id', $store_id)->get()->merge($category)->concat($originalcategory);
+             dd(  $categories );
             if ($categories != null) {
                 $success['category'] = CategoryResource::collection($categories);
             } else {
