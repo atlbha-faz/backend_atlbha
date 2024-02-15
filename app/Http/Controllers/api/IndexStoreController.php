@@ -344,6 +344,7 @@ class IndexStoreController extends BaseController
 
             // $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store_id)->with('products')->has('products')->get()->merge($category));
             $originalcategory = array();
+            $originalcategory1 = array();
             $originalProdutcts = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->get();
             foreach ($originalProdutcts as $originalProdutct) {
                 $mainCategory = Category::with(['subcategory' => function ($query) use ($originalProdutct) {
@@ -351,14 +352,26 @@ class IndexStoreController extends BaseController
                 }])->where('is_deleted', 0)->where('id', $originalProdutct->category_id
                 )->where('store_id', null)->where('status', 'active')->first();
                 if ($mainCategory !== null) {
-                    $originalcategory[] = $mainCategory;
+                    if( !empty($originalProdutct->subcategory()->pluck('id')->toArray())){
+                    $originalcategory1=array_merge($originalcategory1,$originalProdutct->subcategory()->pluck('id')->toArray());
+                    }
+    
+                    $originalcategory2[] = $mainCategory->id;
                     
                 }
             }
+            
+            $originalcategory1=array_unique($originalcategory1);
+            $originalcategory2=array_unique($originalcategory2);
 
+            $lastCategory = Category::with(['subcategory' => function ($query) use ($originalcategory1) {
+                $query->whereIn('id', $originalcategory1);
+            }])->where('is_deleted', 0)->where('id', $originalcategory2
+            )->where('store_id', null)->where('status', 'active')->get();
+      
             $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
-                ->where('store_id', $store_id)->get()->merge($category)->concat($originalcategory);
-
+                ->where('store_id', $store_id)->get()->merge($category)->concat( $lastCategory);
+           
             if ($categories != null) {
                 $success['category'] = CategoryResource::collection($categories);
             } else {
