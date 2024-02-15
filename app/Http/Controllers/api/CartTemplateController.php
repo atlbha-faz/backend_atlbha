@@ -161,7 +161,7 @@ class CartTemplateController extends BaseController
                         }
                         else{
                             $cartDetails=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->count();
-                             if($cartDetails==1){
+                             if($cartDetails>=1){
                                 $data['qty']=$data['qty']+1;
                 
                              }
