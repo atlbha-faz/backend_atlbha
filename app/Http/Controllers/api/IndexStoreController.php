@@ -349,14 +349,11 @@ class IndexStoreController extends BaseController
                 $mainCategory = Category::with(['subcategory' => function ($query) use ($originalProdutct) {
                     $query->whereIn('id', $originalProdutct->subcategory()->pluck('id')->toArray());
                 }])->where('is_deleted', 0)->where('id', $originalProdutct->category_id
-                )->where('store_id', null)->where('parent_id', null)->where('status', 'active')->first();
+                )->where('store_id', null)->where('status', 'active')->first();
                 if ($mainCategory !== null) {
-                    if(in_array($mainCategory, $originalcategory)){
-                        $originalcategory[] = $mainCategory->subcategory;
-                    }
-                    else{
+                if($mainCategory)
                     $originalcategory[] = $mainCategory;
-                    }
+                    
                 }
             }
 
