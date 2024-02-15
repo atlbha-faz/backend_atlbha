@@ -112,10 +112,14 @@ class SettingController extends BaseController
         ]);
         $parameters = ['icon', 'logo'];
 
-        if ($request->has($parameters)) {
+        if ($request->has('logo')) {
             $settingStore->update([
-                'icon' => $request->icon,
                 'logo' => $request->logo]);
+        }
+        if ($request->has('icon')) {
+            $settingStore->update([
+                'icon' => $request->icon
+             ]);
         }
         $store_user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('user_type', 'store')->first();
         $store_user->update([
