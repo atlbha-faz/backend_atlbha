@@ -160,12 +160,11 @@ class CartTemplateController extends BaseController
                         $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('id',$data['item'])->first();
                         }
                         else{
-                            // $cartDetails=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->count();
-                            //  if($cartDetails==1){
-                            //     $success['status'] = 200;
-                            //     return $this->sendResponse($success, 'تمت اضافته الى السلة مسبقا', 'Cart Added successfully');
+                            $cartDetails=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->count();
+                             if($cartDetails==1){
+                                $data['qty']=$data['qty']+1;
                 
-                            //  }
+                             }
                             $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->first();
                             
                         }
