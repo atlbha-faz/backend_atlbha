@@ -410,7 +410,7 @@ return [
         "pageCategory" => "تصنيف الصفحة",
         "paymentype_id" => "طريقة الدفع",
         "postcategory_id" => "تصنيف المقالات",
-        "owner_name" => "اسم المالك",
+        "owner_name" => "اسم مالك الوثيقة",
         "verification_code" => "رقم الوثيقة ",
     ],
 
