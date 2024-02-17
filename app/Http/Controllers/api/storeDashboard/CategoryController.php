@@ -336,6 +336,7 @@ class CategoryController extends BaseController
         if (is_null($category) || $category->is_deleted != 0 || $category->store_id != auth()->user()->store_id) {
             return $this->sendError("القسم غير موجودة", "category is't exists");
         }
+        // check
         $productsCount = Product::where('category_id', $category->id)->where('is_deleted', 0)->count();
 
         if ($productsCount > 0) {
