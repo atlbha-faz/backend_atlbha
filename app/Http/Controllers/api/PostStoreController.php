@@ -60,15 +60,20 @@ class PostStoreController extends BaseController
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
             }
 
-            $success['status'] = 200;
+            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
+                return $this->sendError("المتجر غير موجودة", "Store is't exists");
+            }
+            if ($store->maintenance != null) {
+                if ($store->maintenance->status == 'active') {
+                    $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
 
-            return $this->sendResponse($success, ' المتجر غير موجود', 'Store is not exists');
+                    $success['status'] = 200;
 
                     return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
 
-            //     }
+                }
 
-            // }
+            }
 
             $id = $store->id;
             if ($store != null) {
