@@ -13,6 +13,7 @@ class Option extends Model
         'name',
         'quantity',
         'price',
+        'discount_price',
         'product_id',
         'status',
         'is_deleted',
