@@ -330,6 +330,25 @@ class PostStoreController extends BaseController
             //     }
 
             // }
+            $store = Store::where('domain', $request->domain)->whereNot('package_id', null)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
+            if (!is_null($store)) {
+                $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+            }
+
+            if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
+                return $this->sendError("المتجر غير موجودة", "Store is't exists");
+            }
+            if ($store->maintenance != null) {
+                if ($store->maintenance->status == 'active') {
+                    $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                    $success['status'] = 200;
+
+                    return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+                }
+
+            }
 
             $store_id = $store->id;
             $post = Page::where('is_deleted', 0)->where('store_id', $store_id)->where('id', $pageId)->first();
