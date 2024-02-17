@@ -16,11 +16,11 @@ class OptionResource extends JsonResource
     {
 
              return [
-                'id'=>$this->id,
+            'id'=>$this->id,
             'name' => $this->name,
             'price' => $this->price,
             'quantity' => $this->quantity,
-            // 'default_option'=> $this->default_option,
+            'discount_price'=> $this->discount_price,
 
         ];
     }

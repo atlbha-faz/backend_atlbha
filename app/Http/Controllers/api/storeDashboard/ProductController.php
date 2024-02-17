@@ -245,6 +245,7 @@ class ProductController extends BaseController
 
                 $option = new Option([
                     'price' => (isset($data['price']) && $data['price'] !== null) ? $data['price'] : null,
+                    'discount_price' => (isset($data['discount_price']) && $data['discount_price'] !== null) ? $data['discount_price'] : null,
                     'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                     'name' => $data['name'],
                     'product_id' => $productid,
@@ -527,6 +528,7 @@ class ProductController extends BaseController
 
                 $option = new Option([
                     'price' => (isset($data['price']) && $data['price'] !== null) ? $data['price'] : null,
+                    'discount_price' => (isset($data['discount_price']) && $data['discount_price'] !== null) ? $data['discount_price'] : null,
                     'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                     'name' => $data['name'],
                     'product_id' => $productid,
