@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Homepage;
 use App\Models\Marketer;
 use App\Models\Page;
+use App\Models\paymenttype_store;
 use App\Models\Setting;
 use App\Models\shippingtype_store;
 use App\Models\Store;
@@ -198,6 +199,11 @@ class AuthController extends BaseController
                     'shippingtype_id' => 5,
                     'price' => 20,
                     'time' => 2,
+                ]);
+                $payment_type = paymenttype_store::create([
+                    'store_id' => $store->id,
+                    'paymentype_id' => 5,
+
                 ]);
 
                 if ($request->periodtype == "6months") {
@@ -428,7 +434,7 @@ class AuthController extends BaseController
                 if ($status === false) {
                     $this->sendSms($request);
                 }
-                 // send and return its response
+                // send and return its response
                 // $data = array(
                 //     'code' => $user->verify_code,
                 // );
@@ -584,17 +590,17 @@ class AuthController extends BaseController
         "phonenumber": "' . $request->phonenumber . '",
         "textmessage":"' . $request->code . '",
 
-  	"templateid": "1868",
-  	"V1": "' . $request->code . '",
-  	"V2": null,
-  	"V3": null,
-  	"V4": null,
-  	"V5": null,
-"ValidityPeriodInSeconds": 60,
-"uid":"xyz",
-"callback_url":"https://xyz.com/",
-"pe_id":"xyz",
-"template_id":"1868"
+            "templateid": "1868",
+            "V1": "' . $request->code . '",
+            "V2": null,
+            "V3": null,
+            "V4": null,
+            "V5": null,
+        "ValidityPeriodInSeconds": 60,
+        "uid":"xyz",
+        "callback_url":"https://xyz.com/",
+        "pe_id":"xyz",
+        "template_id":"1868"
 
 
         }
@@ -623,7 +629,7 @@ class AuthController extends BaseController
             $result = curl_exec($ch);*/
             $decoded = json_decode($response);
 
-//dd($decoded);
+            //dd($decoded);
             if ($decoded->status == "S") {
                 return true;
             }
@@ -725,7 +731,7 @@ class AuthController extends BaseController
                 if ($status === false) {
                     $this->sendSms($request);
                 }
-                 // send and return its response
+                // send and return its response
             }
 
             return $this->sendError('الحساب غير محقق', 'User not verified');
@@ -744,33 +750,32 @@ class AuthController extends BaseController
     {
         $curl = curl_init();
         $data = array(
-            'AppSid'=>'3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz',
+            'AppSid' => '3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz',
             'Body' => $request->code,
             'Recipient' => $request->phonenumber);
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>  $data
+            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $data,
         ));
-         $response = curl_exec($curl);
-        
+        $response = curl_exec($curl);
+
         curl_close($curl);
-        
-        $responseData = json_decode( $response);
+
+        $responseData = json_decode($response);
 
         if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
             return true;
+        } else {
+            return false;
         }
-      else{
-        return false;
-      }
 
     }
 
