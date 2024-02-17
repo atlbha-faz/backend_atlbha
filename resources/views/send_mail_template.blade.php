@@ -7,6 +7,6 @@
 @isset($data['type'])
 <h2>عنوان الرسالة:	{{$data['type']}}</h2>
 @endisset
-<h2>الرسالة:	{{$data['message']}}</h2>
+<h2>الرسالة:	{{strip_tags($data['message'])}}</h2>
 </body>
 </html>
