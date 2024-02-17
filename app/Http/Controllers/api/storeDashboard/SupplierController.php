@@ -139,7 +139,7 @@ class SupplierController extends BaseController
         $success['supplierDocument'] = Supplierdocument::where('store_id', auth()->user()->store_id)->get();
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم الإضافة بنجاح', 'insert successfully');
+        return $this->sendResponse($success, 'سيتم مراجعه البيانات المدخلة وعند الموافقة تصلك رسالة على الايميل', 'insert successfully');
     }
     public function update(Request $request)
     {
