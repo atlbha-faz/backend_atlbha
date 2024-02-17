@@ -228,7 +228,7 @@ class StoreController extends BaseController
         ]);
         $payment_type = paymenttype_store::create([
             'store_id' => $store->id,
-            'paymentype_id' => 5,
+            'paymentype_id' => 4,
 
         ]);
 
