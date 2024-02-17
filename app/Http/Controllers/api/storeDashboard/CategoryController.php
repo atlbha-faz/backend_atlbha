@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -335,6 +336,12 @@ class CategoryController extends BaseController
         if (is_null($category) || $category->is_deleted != 0 || $category->store_id != auth()->user()->store_id) {
             return $this->sendError("القسم غير موجودة", "category is't exists");
         }
+        $productsCount = Product::where('category_id', $category->id)->where('is_deleted', 0)->count();
+
+        if ($productsCount > 0) {
+            return $this->sendError("لايمكن حذف التصنيف  لأنه يحتوي على منتجات مرتبطة به", "Cannot delete category because it has associated products");
+        }
+
         if ($category->parent_id == null) {
             $categories = Category::where('parent_id', $category->id)->get();
 
@@ -357,6 +364,12 @@ class CategoryController extends BaseController
         if (count($categorys) > 0) {
             foreach ($categorys as $category) {
 
+                $productsCount = Product::where('category_id', $category->id)->where('is_deleted', 0)->count();
+
+                if ($productsCount > 0) {
+                    return $this->sendError("لايمكن حذف التصنيف  لأنه يحتوي على منتجات مرتبطة به", "Cannot delete category because it has associated products");
+                }
+
                 if ($category->parent_id == null) {
                     $categories = Category::where('parent_id', $category->id)->get();
 
@@ -365,27 +378,25 @@ class CategoryController extends BaseController
                         $subcategory->update(['is_deleted' => $subcategory->id]);
                     }}
                 $category->update(['is_deleted' => $category->id]);
-          
+
                 $success['categorys'] = new CategoryResource($category);
 
             }
             if ($request->has('page')) {
                 $categorys = Category::where('store_id', auth()->user()->store_id)->where('parent_id', null)->where('is_deleted', 0)->orderByDesc('created_at')->paginate(5);
-                if($categorys !=null){
-                $success['page_count'] = $categorys->lastPage();
-                $success['coupon_count'] = $categorys->count();
-                $success['current_page'] =  $categorys->currentPage();
-                $pageNumber = request()->query('page', 1);
-                $pageItem=$categorys->last();
-                $itemId=$pageItem->id;
-              
-           
-                $categoryLists = Category::where('id','>=',$itemId)->where('parent_id', null)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get();
-               
-                $success['categories'] = CategoryResource::collection( $categoryLists);
-                }
-                else{
-                    $success['categories']=null;
+                if ($categorys != null) {
+                    $success['page_count'] = $categorys->lastPage();
+                    $success['coupon_count'] = $categorys->count();
+                    $success['current_page'] = $categorys->currentPage();
+                    $pageNumber = request()->query('page', 1);
+                    $pageItem = $categorys->last();
+                    $itemId = $pageItem->id;
+
+                    $categoryLists = Category::where('id', '>=', $itemId)->where('parent_id', null)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get();
+
+                    $success['categories'] = CategoryResource::collection($categoryLists);
+                } else {
+                    $success['categories'] = null;
                 }
             } else {
                 $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
@@ -444,6 +455,11 @@ class CategoryController extends BaseController
         $categorys = Category::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
         if (count($categorys) > 0) {
             foreach ($categorys as $category) {
+                $productsCount = Product::where('category_id', $category->id)->where('is_deleted', 0)->count();
+
+                if ($productsCount > 0) {
+                    return $this->sendError("لايمكن حذف التصنيف  لأنه يحتوي على منتجات مرتبطة به", "Cannot delete category because it has associated products");
+                }
 
                 $category->update(['is_deleted' => $category->id]);
                 $success['categorys'] = new CategoryResource($category);
