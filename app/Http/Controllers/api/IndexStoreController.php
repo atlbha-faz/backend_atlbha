@@ -971,6 +971,28 @@ class IndexStoreController extends BaseController
         } else {
             $parent = null;
         }
+        $productssStoreid=array();
+        if(  $parent !== null){
+            $subProducts=Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('category_id', $parent)->get();
+            foreach( $subProducts as  $subProduct){
+                if(strpos($subProduct->subcategory_id,$filter_category) !== false){
+
+                    $productssStoreid[]= $subProduct->id;
+                }
+            }
+            $storeproducts = ProductResource::collection(Product::with(['store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }, 'category' => function ($query) {
+                $query->select('id', 'name');
+            }])->where('is_deleted', 0)->where('status', 'active')
+                    ->where('store_id', $store_id)->whereIn('id',$productssStoreid)->when($price_from, function ($query, $price_from) {
+                    $query->where('selling_price', '>=', $price_from);
+                })->when($price_to, function ($query, $price_to) {
+                    $query->where('selling_price', '<=', $price_to);
+                })->where('store_id', $store_id)->where('is_deleted', 0)->orderBy($s, $sort)->paginate($limit));
+        
+        }
+        else{
         $storeproducts = ProductResource::collection(Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
@@ -983,7 +1005,7 @@ class IndexStoreController extends BaseController
             })->when($price_to, function ($query, $price_to) {
                 $query->where('selling_price', '<=', $price_to);
             })->where('store_id', $store_id)->where('is_deleted', 0)->orderBy($s, $sort)->paginate($limit));
-
+        }
         $products = $storeproducts->merge($importsproducts);
         $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
         $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
