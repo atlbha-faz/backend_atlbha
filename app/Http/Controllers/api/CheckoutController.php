@@ -7,7 +7,6 @@ use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\ShippingtypeTemplateResource;
-use App\Models\Account;
 use App\Models\Cart;
 use App\Models\CartDetail;
 use App\Models\Coupon;
@@ -67,7 +66,9 @@ class CheckoutController extends BaseController
                 'cod' => 'nullable',
                 'description' => 'required|string',
 
-            ]);
+            ], [
+                'paymentype_id.required' => 'اختر طرق الدفع اولاً',
+                'shippingtype_id.required' => 'اختر طرق التوصيل اولاً']);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
@@ -233,8 +234,8 @@ class CheckoutController extends BaseController
                     'orderID' => $order->id,
                 ]);
             } else {
-                $InvoiceId=null;
-                if ($order->paymentype_id == 1    &&  $order->shippingtype_id == 5) {
+                $InvoiceId = null;
+                if ($order->paymentype_id == 1 && $order->shippingtype_id == 5) {
                     // $account = Account::where('store_id', $store_domain)->first();
                     // $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     // $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
@@ -298,7 +299,7 @@ class CheckoutController extends BaseController
         $order = order::where('id', $request->order)->first();
         $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
         $payment = Payment::where('orderID', $order->id)->first();
-    
+
         $apiKey = env("fatoora_token", "rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL");
         $postFields = [
             'Key' => $request->paymentId,
@@ -316,10 +317,10 @@ class CheckoutController extends BaseController
             if ($response->Data->InvoiceStatus == "Paid") //||$response->Data->InvoiceStatus=='Pending'
             {
                 $order->update([
-                    'payment_status' => "paid"
+                    'payment_status' => "paid",
                 ]);
                 $payment->update([
-                    'paymentTransectionID' =>  $InvoiceId ,
+                    'paymentTransectionID' => $InvoiceId,
 
                 ]);
             }
