@@ -14,26 +14,27 @@ class CategoryResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
+        if ($this->status == null || $this->status == 'active') {
             $status = 'نشط';
-        }else{
+        } else {
             $status = 'غير نشط';
         }
-        
+
         return [
-            'id' =>$this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'number' => $this->number,
             'icon' => $this->icon,
             'for' => $this->for,
             'status' => $status,
-            'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
+            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-             'store' => New StoreResource($this->store),
+            'store' => new StoreResource($this->store),
             // 'parent_id' => New CategoryResource($this->category),
-            'subcategory' =>$this->subcategory,
-            'countsubcategory' =>$this->subcategory->count(),
-          ];
+            'subcategory' => $this->subcategory,
+            'countsubcategory' => $this->subcategory->count(),
+            'possibility_of_delete' => $this->Possibility_of_delete($this->id),
+        ];
     }
 }

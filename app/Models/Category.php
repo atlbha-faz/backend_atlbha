@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Coupon;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -75,5 +76,16 @@ class Category extends Model
             'coupon_id'
         );
     }
+    public function Possibility_of_delete($id)
+    {
+        $productsCount = Product::where('category_id', $id)->where('is_deleted', 0)->count();
 
+        if ($productsCount > 0) {
+            return false;
+        } else {
+            return true;
+
+        }
+
+    }
 }
