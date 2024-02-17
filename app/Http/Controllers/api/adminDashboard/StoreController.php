@@ -7,6 +7,8 @@ use App\Http\Resources\NoteResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\VerificationResource;
+use App\Mocdels\paymenttype_store;
+use App\Mocdels\shippingtype_store;
 use App\Models\Comment;
 use App\Models\Homepage;
 use App\Models\Note;
@@ -15,7 +17,6 @@ use App\Models\Product;
 use App\Models\Store;
 use App\Models\Theme;
 use App\Models\User;
-use App\Models\shippingtype_store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -224,6 +225,11 @@ class StoreController extends BaseController
             'shippingtype_id' => 5,
             'price' => 20,
             'time' => 2,
+        ]);
+        $payment_type = paymenttype_store::create([
+            'store_id' => $store->id,
+            'paymentype_id' => 5,
+
         ]);
 
         if ($request->periodtype == "6months") {
