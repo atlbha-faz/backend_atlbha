@@ -340,7 +340,7 @@ class CategoryController extends BaseController
         $productsCount = Product::where('category_id', $category->id)->where('is_deleted', 0)->count();
 
         if ($productsCount > 0) {
-            return $this->sendError("لايمكن حذف التصنيف  لأنه يحتوي على منتجات مرتبطة به يجب حذف او تعديل المنتجات اولاً", "Cannot delete category because it has associated products first delete or update products");
+            return $this->sendError("لا يمكن حذف الانشطة لانها تحتوى على منتجات", "Cannot delete category because it has associated products");
         }
 
         if ($category->parent_id == null) {
@@ -368,7 +368,7 @@ class CategoryController extends BaseController
                 $productsCount = Product::where('category_id', $category->id)->where('is_deleted', 0)->count();
 
                 if ($productsCount > 0) {
-                    return $this->sendError("لايمكن حذف التصنيف  لأنه يحتوي على منتجات مرتبطة به يجب حذف او تعديل المنتجات اولاً", "Cannot delete category because it has associated products first delete or update products");
+                    return $this->sendError("لا يمكن حذف الانشطة لانها تحتوى على منتجات", "Cannot delete category because it has associated products");
                 }
 
                 if ($category->parent_id == null) {
@@ -459,7 +459,7 @@ class CategoryController extends BaseController
                 $productsCount = Product::where('category_id', $category->id)->where('is_deleted', 0)->count();
 
                 if ($productsCount > 0) {
-                    return $this->sendError("لايمكن حذف التصنيف  لأنه يحتوي على منتجات مرتبطة به يجب حذف او تعديل المنتجات اولاً", "Cannot delete category because it has associated products first delete or update products");
+                    return $this->sendError("لا يمكن حذف الانشطة لانها تحتوى على منتجات", "Cannot delete category because it has associated products");
                 }
 
                 $category->update(['is_deleted' => $category->id]);
