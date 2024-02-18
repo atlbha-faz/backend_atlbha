@@ -41,6 +41,9 @@ class SupplierController extends BaseController
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
+        if (is_null($account)) {
+            return $this->sendError("لا يوجد حساب بنكي", "Account is't exists");
+        }
         $supplierdocument = Supplierdocument::where('store_id', auth()->user()->store_id)->whereNot('type' , 20)->get();
         $supplier = new FatoorahServices();
         $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
