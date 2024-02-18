@@ -566,6 +566,18 @@ class EtlobhaController extends BaseController
                 }
 
                 $product->update(['is_deleted' => $product->id]);
+                $preAttributes = Attribute_product::where('product_id', $product->id)->get();
+                if ($preAttributes !== null) {
+                    foreach ($preAttributes as $preAttribute) {
+                        $preAttribute->delete();
+                    }
+                }
+                $preOptions = Option::where('product_id', $product->id)->get();
+                if ($preOptions !== null) {
+                    foreach ($preOptions as $preOption) {
+                        $preOption->delete();
+                    }
+                }
             }
             $success['products'] = ProductResource::collection($products);
             $success['status'] = 200;
