@@ -16,15 +16,14 @@ class OptionResource extends JsonResource
 
     public function toArray($request)
     {
-        // $q = Option::where('id',$this->id)->first();
-        // $array = explode(',', $q->name['ar']);
-        // $p=$q->product_id;
+
              return [
             'id'=>$this->id,
             'name' => $this->name,
             'price' => $this->price,
             'quantity' => $this->quantity,
             'discount_price'=> $this->discount_price,
+            'default_option'=> $this->default_option,
 
         ];
     }
