@@ -13,8 +13,9 @@ use App\Models\Importproduct;
 use App\Models\Option;
 use App\Models\Product;
 use App\Models\Value;
-use Illuminate\Http\Request;
+use Google\Service\Resource;
 // use Illuminate\Pagination\Paginator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -218,7 +219,7 @@ class ProductController extends BaseController
                         $filePath = 'images/product/' . $imageName;
                         $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
                         if ($isFileUploaded) {
-                            $attributeValue['image'] = asset('storage/images/product') . '/' .$imageName;
+                            $attributeValue['image'] = asset('storage/images/product') . '/' . $imageName;
                         }
 
                     }
@@ -249,7 +250,7 @@ class ProductController extends BaseController
                     'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                     'name' => $data['name'],
                     'product_id' => $productid,
-                    'default_option' =>  (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0
+                    'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
 
                 ]);
 
@@ -532,7 +533,7 @@ class ProductController extends BaseController
                     'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                     'name' => $data['name'],
                     'product_id' => $productid,
-                    'default_option' =>  (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0
+                    'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
                 ]);
 
                 $option->save();
@@ -665,6 +666,18 @@ class ProductController extends BaseController
                 }
                 // $success['products'] = new ProductResource($product);
 
+                $preAttributes = Attribute_product::where('product_id', $product->id)->get();
+                if ($preAttributes !== null) {
+                    foreach ($preAttributes as $preAttribute) {
+                        $preAttribute->delete();
+                    }
+                }
+                $preOptions = Option::where('product_id', $product->id)->get();
+                if ($preOptions !== null) {
+                    foreach ($preOptions as $preOption) {
+                        $preOption->delete();
+                    }
+                }
             }
 
         }
@@ -724,6 +737,19 @@ class ProductController extends BaseController
                     }
                 }
                 $success['products'] = new ProductResource($product);
+
+                $preAttributes = Attribute_product::where('product_id', $product->id)->get();
+                if ($preAttributes !== null) {
+                    foreach ($preAttributes as $preAttribute) {
+                        $preAttribute->delete();
+                    }
+                }
+                $preOptions = Option::where('product_id', $product->id)->get();
+                if ($preOptions !== null) {
+                    foreach ($preOptions as $preOption) {
+                        $preOption->delete();
+                    }
+                }
 
             }
 

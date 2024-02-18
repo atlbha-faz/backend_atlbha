@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Carbon\Carbon;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ProductResource;
+use App\Imports\AdminProductImport;
+use App\Models\Attribute;
+use App\Models\Attribute_product;
 use App\Models\Image;
-use App\Models\Store;
-use App\Models\Value;
+use App\Models\Importproduct;
 use App\Models\Option;
 use App\Models\Product;
-use App\Models\Attribute;
-use Illuminate\Support\Str;
+use App\Models\Store;
+use App\Models\Value;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use Illuminate\Validation\Rule;
-use App\Models\Attribute_product;
 use Illuminate\Support\Facades\DB;
-use App\Imports\AdminProductImport;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StockController extends BaseController
 {
@@ -196,7 +196,7 @@ class StockController extends BaseController
                             $filePath = 'images/product/' . $imageName;
                             $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
                             if ($isFileUploaded) {
-                                $attributeValue['image'] =asset('storage/images/product') . '/' .$imageName;
+                                $attributeValue['image'] = asset('storage/images/product') . '/' . $imageName;
                             }
 
                         }
@@ -229,7 +229,7 @@ class StockController extends BaseController
                         'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                         'name' => $data['name'],
                         'product_id' => $productid,
-                        'default_option' =>  (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0
+                        'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
 
                     ]);
 
@@ -470,7 +470,7 @@ class StockController extends BaseController
                             $filePath = 'images/product/' . $imageName;
                             $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
                             if ($isFileUploaded) {
-                                $attributeValue['image'] = asset('storage/images/product') . '/' .$imageName;
+                                $attributeValue['image'] = asset('storage/images/product') . '/' . $imageName;
                             }
 
                         }
@@ -503,7 +503,7 @@ class StockController extends BaseController
                         'quantity' => (isset($data['quantity']) && $data['quantity'] !== null) ? $data['quantity'] : null,
                         'name' => $data['name'],
                         'product_id' => $productid,
-                        'default_option' =>  (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0
+                        'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
                     ]);
 
                     $option->save();
@@ -534,6 +534,18 @@ class StockController extends BaseController
 
                 $product->update(['is_deleted' => $product->id]);
                 $success['products'] = new ProductResource($product);
+                $preAttributes = Attribute_product::where('product_id', $product->id)->get();
+                if ($preAttributes !== null) {
+                    foreach ($preAttributes as $preAttribute) {
+                        $preAttribute->delete();
+                    }
+                }
+                $preOptions = Option::where('product_id', $product->id)->get();
+                if ($preOptions !== null) {
+                    foreach ($preOptions as $preOption) {
+                        $preOption->delete();
+                    }
+                }
 
             }
             $success['status'] = 200;
