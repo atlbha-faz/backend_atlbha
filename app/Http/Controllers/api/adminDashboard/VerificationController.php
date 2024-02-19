@@ -11,14 +11,15 @@ use App\Models\categories_stores;
 use App\Models\Note;
 use App\Models\Store;
 use App\Models\User;
-use Illuminate\Validation\Rule;
 use App\Notifications\verificationNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+
 class VerificationController extends BaseController
 {
     public function __construct()
@@ -41,7 +42,7 @@ class VerificationController extends BaseController
         }, 'country' => function ($query) {
             $query->select('id');
         }, 'user' => function ($query) {
-            $query->select('id', 'name', 'email','phonenumber');
+            $query->select('id', 'name', 'email', 'phonenumber');
         }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->get();
         $success['stores'] = VerificationResource::collection($stores);
         $success['status'] = 200;
@@ -162,14 +163,14 @@ class VerificationController extends BaseController
         $user = User::where('user_type', 'store')->where('store_id', $store->id)->first();
         // Notification::send($user, new verificationNotification($data));
         // event(new VerificationEvent($data));
-        try{
-        Mail::to($user->email)->send(new SendMail($data));
-        
-    } catch (\Exception $e) {
-        // Exception handling
-        $errorMessage = 'Failed to send email. Please try again later.';
-        Log::error('Email delivery failure: ' . $e->getMessage());
-    }
+        try {
+            Mail::to($user->email)->send(new SendMail($data));
+
+        } catch (\Exception $e) {
+            // Exception handling
+            $errorMessage = 'Failed to send email. Please try again later.';
+            Log::error('Email delivery failure: ' . $e->getMessage());
+        }
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
 
@@ -193,16 +194,19 @@ class VerificationController extends BaseController
             'name' => 'nullable|string|max:255',
             'store_id' => 'required',
             'email' => ['nullable', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store','store_employee'])->where('is_deleted', 0)
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $user->id);
             }),
             ],
             'phonenumber' => ['nullable', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['store','store_employee'])->where('is_deleted', 0)
+                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
                     ->where('id', '!=', $user->id);
             }),
             ],
-                ]);
+            'owner_name' => 'nullable|string|max:255',
+            'commercial_name' => 'nullable',
+            'verification_code' => 'required',
+        ]);
         if ($validator->fails()) {
             # code...
             return $this->sendError(null, $validator->errors());
@@ -227,8 +231,19 @@ class VerificationController extends BaseController
             'file' => $request->file,
             'store_email' => $request->input('email'),
             'phonenumber' => $request->input('phonenumber'),
+            'verification_code' => $request->input('verification_code'),
 
         ]);
+        if( $store->verification_type == 'commercialregister'){
+            $store->update([
+                'commercial_name' => $request->input('commercial_name'),
+            ]);  
+        }
+        if( $store->verification_type == 'maeruf'){
+            $store->update([
+                'owner_name' => $request->input('owner_name'),    
+            ]);
+        }
         if (is_null($store->phonenumber)) {
             $store->update([
                 'phonenumber' => $request->input('phonenumber'),
@@ -281,5 +296,5 @@ class VerificationController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
     }
-   
+
 }
