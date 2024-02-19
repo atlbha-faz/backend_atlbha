@@ -7,6 +7,6 @@
 @isset($data['type'])
 <h2>عنوان الرسالة:	{{$data['type']}}</h2>
 @endisset
-<h2>الرسالة:	{{preg_replace('/(?:<|&lt;).*?(?:>|&gt;)/', '',$data['message'])}}</h2>
+<h2>	{{preg_replace('/(?:<|&lt;).*?(?:>|&gt;)/', '',$data['message'])}}</h2>
 </body>
 </html>
