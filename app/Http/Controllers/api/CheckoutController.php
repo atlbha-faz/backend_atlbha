@@ -471,24 +471,24 @@ class CheckoutController extends BaseController
                 } else {
                     $success['status'] = 200;
 
-                    return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
+                    return $this->sendResponse($success, 'الكود غير صالح', 'The coupon is invalid');
 
                 }
             } else {
                 $success['status'] = 200;
 
-                return $this->sendResponse($success, 'المشتريات اقل من الحد الادنى للكوبون', 'The coupon is invalid');
+                return $this->sendResponse($success, 'المشتريات اقل من الحد الادنى لكود الخصم', 'The coupon is invalid');
 
             }
             $success['cart'] = new CartResource($cart);
             $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم تفعيل الكوبون بنجاح', 'coupon updated successfully');
+            return $this->sendResponse($success, 'تم تفعيل الكود بنجاح', 'coupon updated successfully');
 
         } else {
             $success['status'] = 200;
 
-            return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
+            return $this->sendResponse($success, 'كود الخصم غير صالح', 'The coupon is invalid');
 
         }
 
