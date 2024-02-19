@@ -203,7 +203,7 @@ class VerificationController extends BaseController
                     ->where('id', '!=', $user->id);
             }),
             ],
-            'owner_name' => 'required|string|max:255',
+            'owner_name' => 'nullable|string|max:255',
             'commercial_name' => 'nullable',
             'verification_code' => 'required',
         ]);
@@ -231,13 +231,17 @@ class VerificationController extends BaseController
             'file' => $request->file,
             'store_email' => $request->input('email'),
             'phonenumber' => $request->input('phonenumber'),
-            'owner_name' => $request->input('owner_name'),   
             'verification_code' => $request->input('verification_code'),
 
         ]);
         if( $store->verification_type == 'commercialregister'){
             $store->update([
                 'commercial_name' => $request->input('commercial_name'),
+            ]);  
+        }
+        if( $store->verification_type == 'maeruf'){
+            $store->update([
+                'owner_name' => $request->input('owner_name'),   
             ]);  
         }
   
