@@ -306,7 +306,7 @@ class CheckoutController extends BaseController
             'KeyType' => 'paymentId',
         ];
         $supplier = new FatoorahServices();
-        $response = $supplier->callAPI("https://sa.myfatoorah.com/v2/getPaymentStatus", $apiKey, $postFields);
+        $response = $supplier->callAPI("https://apitest.myfatoorah.com/v2/getPaymentStatus", $apiKey, $postFields);
         $response = json_decode($response);
         if (!isset($response->Data->InvoiceId)) {
             return response()->json(["error" => 'error', 'status' => false], 404);

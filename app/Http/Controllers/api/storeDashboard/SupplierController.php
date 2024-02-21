@@ -80,6 +80,7 @@ class SupplierController extends BaseController
 
         $supplier = new FatoorahServices();
         $supplierCode = $supplier->createSupplier('v2/CreateSupplier', $data);
+        
         if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
