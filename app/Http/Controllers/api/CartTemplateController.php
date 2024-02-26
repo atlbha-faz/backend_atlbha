@@ -93,7 +93,7 @@ class CartTemplateController extends BaseController
     }
     public function addToCart(Request $request, $domain)
     {
-       
+
         $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
         if ($store_domain == null) {
             $success['status'] = 200;
@@ -110,7 +110,7 @@ class CartTemplateController extends BaseController
                 'data.*.price' => 'required|numeric',
                 'data.*.qty' => 'required|numeric',
                 'data.*.option_id' => 'nullable|exists:options,id',
-            
+
             ]);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
@@ -135,56 +135,52 @@ class CartTemplateController extends BaseController
 
                 foreach ($request->data as $data) {
                     if (isset($data['option_id']) && !is_null($data['option_id'])) {
-                    $q = Option::where('id',$data['option_id'])->where('product_id', $data['id'])->first();
-                    if (is_null($q)) {
-                        $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
-                    } else {
-                        $q = Option::where('id',$data['option_id'])->where('product_id', $data['id'])->first();
-                        $array = explode(',', $q->name['ar']);
+                        $q = Option::where('id', $data['option_id'])->where('product_id', $data['id'])->first();
+                        if (is_null($q)) {
+                            $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
+                        } else {
+                            $q = Option::where('id', $data['option_id'])->where('product_id', $data['id'])->first();
+                            $array = explode(',', $q->name['ar']);
                             $product_quantity = $q->quantity;
-                        
+
                         }
-                   }
-                   else{
-                    $data['option_id']=null;
-                    $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
-                   }
+                    } else {
+                        $data['option_id'] = null;
+                        $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
+                    }
                     if ($product_quantity == null) {
                         $product_quantity = Importproduct::where('product_id', $data['id'])->where('store_id', $store_id)->pluck('qty')->first();
                     }
                     if ($product_quantity >= $data['qty']) {
-                        if (!isset($data['item'])){
-                            $data['item']=null;
+                        if (!isset($data['item'])) {
+                            $data['item'] = null;
                         }
-                        if( $data['item'] !==null){
-                        $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('id',$data['item'])->first();
-                        }
-                        else{
+                        if ($data['item'] !== null) {
+                            $cartDetail = CartDetail::where('cart_id', $cartid)->where('id', $data['item'])->first();
+                        } else {
 
-                            $cartDetail=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->first();
-                            $cartDetails=CartDetail::where( 'cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->count();
-                             if($cartDetails>=1){
-                                $data['qty']=$cartDetail->qty+  $data['qty'];
-                             }
-                          
-                            
+                            $cartDetail = CartDetail::where('cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->first();
+                            $cartDetails = CartDetail::where('cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->count();
+                            if ($cartDetails >= 1) {
+                                $data['qty'] = $cartDetail->qty + $data['qty'];
+                            }
+
                         }
-                         if( $cartDetail){
+                        if ($cartDetail) {
                             $cartDetail->update([
                                 'qty' => $data['qty'],
                                 'price' => $data['price'],
-                                'option_id' =>  $data['option_id']
+                                'option_id' => $data['option_id'],
                             ]);
-                         }
-                         else{
-                        $cartDetail = CartDetail::create([
-                            'cart_id' => $cartid,
-                            'product_id' => $data['id'],
-                            'qty' => $data['qty'],
-                            'price' => $data['price'],
-                           'option_id' =>  $data['option_id']
-                        ]);
-                         }
+                        } else {
+                            $cartDetail = CartDetail::create([
+                                'cart_id' => $cartid,
+                                'product_id' => $data['id'],
+                                'qty' => $data['qty'],
+                                'price' => $data['price'],
+                                'option_id' => $data['option_id'],
+                            ]);
+                        }
 
                     } else {
                         $success['status'] = 200;
@@ -218,6 +214,11 @@ class CartTemplateController extends BaseController
                     'totalCount' => $totalCount,
                     'tax' => $tax,
                     'weight' => $weight,
+                    'discount_type' => null,
+                    'discount_value' => null,
+                    'discount_total' => null,
+                    'discount_expire_date' => null,
+                    'free_shipping' => 0,
                 ]);
 
                 $success = new CartResource($cart);
@@ -266,6 +267,11 @@ class CartTemplateController extends BaseController
         $newCart->update([
             'subtotal' => $newCart->total - $newCart->tax,
             'total' => $newCart->total + $newCart->shipping_price + $extra_shipping_price,
+            'discount_type' => null,
+            'discount_value' => null,
+            'discount_total' => null,
+            'discount_expire_date' => null,
+            'free_shipping' => 0,
         ]);
 
         if ($newCart->count == 0) {
@@ -280,11 +286,11 @@ class CartTemplateController extends BaseController
     // {
     //     $input = $request->all();
     //     $validator = Validator::make($input, [
-     
+
     //         'price' => 'required|numeric',
     //         'qty' => 'required|numeric',
     //         'option_id' => 'nullable|exists:options,id',
-        
+
     //     ]);
     //     if ($validator->fails()) {
     //         return $this->sendError(null, $validator->errors());
