@@ -45,7 +45,7 @@ class OrderResource extends JsonResource
         } else {
             $track = null;
         }
-        $subtotal = $this->subtotal - $this->tax;
+        // $subtotal = $this->subtotal - $this->tax;
         if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee') {
             $storeAdmain = User::whereIn('user_type', ['store', 'store_employee'])->where('id', $this->user->id)->first();
             if ($storeAdmain != null) {
@@ -69,7 +69,7 @@ class OrderResource extends JsonResource
             'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,
             'tax' => round($this->tax, 2),
             'shipping_price' => $this->shipping_price,
-            'subtotal' => round($subtotal, 2),
+            'subtotal' => round($this->subtotal, 2),
             'total_price' => round($this->total_price, 2),
             'discount' => $this->discount != null ? $this->discount : 0,
             'status' => $status,
