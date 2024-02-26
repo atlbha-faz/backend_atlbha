@@ -63,6 +63,10 @@ class AbandonedCart extends Command
                       $cart->discount_expire_date=null;
                      $cart->timestamps = false;
                    $cart->save();
+                   $cart->tax= $cart->total * 0.15;
+                   $cart->subtotal= $cart->total -  $cart->tax;
+                   $cart->timestamps = false;
+                   $cart->save();
                 
             }
      
