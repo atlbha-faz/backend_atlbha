@@ -19,6 +19,7 @@ return new class extends Migration
             $table->double('price')->nullable();
             $table->double('discount_price')->nullable();
             $table->integer('quantity')->nullable();
+            $table->integer('less_qty')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->integer('default_option')->nullable()->default(0);
