@@ -259,6 +259,7 @@ class EtlobhaController extends BaseController
                         'name' => $data['name'],
                         'product_id' => $productid,
                         'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
+                        'less_qty' => (isset($data['less_qty']) && $data['less_qty'] !== null) ? $data['less_qty'] : 0,
                     ]);
 
                     $option->save();
@@ -503,6 +504,8 @@ class EtlobhaController extends BaseController
                         'name' => $data['name'],
                         'product_id' => $productid,
                         'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
+                        'less_qty' => (isset($data['less_qty']) && $data['less_qty'] !== null) ? $data['less_qty'] : 0
+
                     ]);
 
                     $option->save();
