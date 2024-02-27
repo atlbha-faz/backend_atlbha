@@ -24,7 +24,7 @@ class CartResource extends JsonResource
             'totalCount' => $this->totalCount,
             'discount_type' => $this->discount_type,
             'discount_value' => $this->discount_value !== null ? $this->discount_value : 0,
-            'discount_total' => $this->discount_total !== null ? $this->discount_total : 0,
+            'discount_total' => $this->discount_total !== null ? -($this->discount_total) : 0,
             'free_shipping' => $this->free_shipping,
             'discount_expire_date' => $this->discount_expire_date,
             'message' => $this->message,
