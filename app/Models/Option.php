@@ -16,6 +16,7 @@ class Option extends Model
         'discount_price',
         'product_id',
         'status',
+        'less_qty',
         'is_deleted',
         'default_option'
     ];
