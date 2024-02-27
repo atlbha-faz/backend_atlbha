@@ -174,7 +174,7 @@ class CartController extends BaseController
             if ($request->discount_type == "percent") {
                 $discount_total = $cart->total * ($request->discount_value / 100);
             }
-            if ($cart->discount_total) {
+            if ($cart->discount_total == null) {
                 $cart->discount_total = 0;
             }
             $discount_total1 = $cart->discount_total + $discount_total;
