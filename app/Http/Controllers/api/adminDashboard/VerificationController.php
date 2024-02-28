@@ -65,7 +65,7 @@ class VerificationController extends BaseController
             'message' => 'تم قبول توثيق المتجر الخاص بك في منصة اطلبها',
             'store_id' => $store->id,
             'user_id' => auth()->user()->id,
-            'type' => "منصة اطلبها",
+            'type' => "توثيق متجرك",
             'object_id' => $store->id,
         ];
 
@@ -95,7 +95,7 @@ class VerificationController extends BaseController
             'message' => 'تم رفض المتجر الخاص بك في منصة اطلبها',
             'store_id' => $store->id,
             'user_id' => auth()->user()->id,
-            'type' => "منصة اطلبها",
+            'type' => "توثيق متجرك",
             'object_id' => $store->id,
         ];
 
