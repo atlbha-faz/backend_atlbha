@@ -152,7 +152,7 @@ class ImportCartController extends BaseController
             $cart->update([
                 'total' => $total + $extra_shipping_price,
                 'count' => CartDetail::where('cart_id', $cartid)->count(),
-                'subtotal' => $subtotal,
+                'subtotal' => $subtotal- $tax,
                 'totalCount' => $totalCount,
                 'tax' => $tax,
                 'weight' => $weight,
