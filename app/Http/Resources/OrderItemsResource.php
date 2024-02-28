@@ -24,6 +24,7 @@ class OrderItemsResource extends JsonResource
         if($q !== null){
             $array = explode(',', $q->name['ar']);
             $qty= $q->quantity;
+            $less_qty= $q->less_qty;
            }
            else{
                $array=null;
@@ -38,6 +39,7 @@ class OrderItemsResource extends JsonResource
             'price' => $this->price,
             'sum' => $this->subtotal($this->id),
             'stock'=> $this->option_id !== null ?  $qty :$this->product->stock,
+            'less_qty'=> $this->option_id !== null ?  $less_qty :$this->product->less_qty,
             'options' => $this->option_id !== null ?  $array :null,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
