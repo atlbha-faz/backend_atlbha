@@ -146,8 +146,15 @@ class ImportproductController extends BaseController
 
             return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
         } else {
+            $orginalProduct = Product::where('id',  $id)->first();
+            $orginalProduct->update([
+                'price' => $request->price,
+                'discount_price'=> $request->discount_price_import,
+                // 'qty' => $request->qty,
+
+            ]);
             $success['status'] = 200;
-            return $this->sendResponse($success, 'الاستيراد غير صحيح', 'id does not exit');
+            return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
         }
     }
 
