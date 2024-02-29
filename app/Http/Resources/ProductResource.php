@@ -83,7 +83,7 @@ class ProductResource extends JsonResource
             'store' => new StoreResource($this->store),
             'images' => $import == true ?ImageResource::collection(\App\Models\Product::where('id',$this->original_id)->first()->image->where('is_deleted', 0)):ImageResource::collection($this->image->where('is_deleted', 0)),
             'options' => OptionResource::collection($this->option),
-                'attributes' =>AttributeResource::collection($this->attributes),
+                'attributes' =>$import == true ?AttributeResource::collection(\App\Models\Product::where('id',$this->original_id)->first()->attributes):AttributeResource::collection($this->attributes),
                 'type'=>$type,
             'is_import' => $import,
 
