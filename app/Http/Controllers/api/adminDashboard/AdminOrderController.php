@@ -140,7 +140,7 @@ class AdminOrderController extends BaseController
                             if ($option == null) {
                                 if($orginalOption){
                                 $newOption = $orginalOption->replicate();
-                                $newOption->product_id = $orderItem->product_id;
+                                $newOption->product_id = $importOrder->id;
                                 $newOption->price = $orderItem->price;
                                 $newOption->original_id = $orderItem->option_id;
                                 $newOption->quantity = $orderItem->quantity;
