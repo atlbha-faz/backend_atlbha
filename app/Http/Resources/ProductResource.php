@@ -34,8 +34,10 @@ class ProductResource extends JsonResource
 
         if ($this->is_import == 1) {
             $import  = true; 
+            $type="importProduct";
         } else {
             $import = false;
+            $type=null;
         }
         return [
             'id' => $this->id,
@@ -79,10 +81,10 @@ class ProductResource extends JsonResource
             'updated_at' => (string) $this->updated_at,
             'category' => new CategoryResource($this->category),
             'store' => new StoreResource($this->store),
-            'images' => ImageResource::collection($this->image->where('is_deleted', 0)),
+            'images' => $import == true ?ImageResource::collection(\App\Models\Product::where('id',$this->original_id)->first()->image->where('is_deleted', 0)):ImageResource::collection($this->image->where('is_deleted', 0)),
             'options' => OptionResource::collection($this->option),
                 'attributes' =>AttributeResource::collection($this->attributes),
-                'value'=>$this->is_import,
+                'type'=>$type,
             'is_import' => $import,
 
         ];
