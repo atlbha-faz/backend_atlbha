@@ -30,6 +30,7 @@ class CartDetailResource extends JsonResource
         else{
             $array=null;
             $qty=null;
+            $less_qty= null;
         }
         // $options = array_combine($array,$attribute);
         }
