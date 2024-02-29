@@ -18,7 +18,8 @@ class Option extends Model
         'status',
         'less_qty',
         'is_deleted',
-        'default_option'
+        'default_option',
+        'original_id'
     ];
     protected $casts = [
       'default_option'=>'integer'

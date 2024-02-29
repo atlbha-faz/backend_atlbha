@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Store;
+use App\Models\Option;
 use App\Models\Product;
 use App\Models\Shipping;
 use Illuminate\Http\Request;
@@ -106,27 +107,54 @@ class AdminOrderController extends BaseController
                
               }
                 foreach ($order->items as $orderItem) {
+                    $product = Product::where('id', $orderItem->product_id)->where('store_id', null)->first();
+                    // if ($orderItem->quantity > $product->stock) {
+                    //     return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
+                    // }
+                    $importOrder = Product::where('original_id', $orderItem->product_id)->where('store_id', $storeid->id)->where('is_import', 1)->where('is_deleted', 0)->first();
+                    // $importOrder = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $storeid->id)->first();
+                    if ($importOrder == null) {
+                        $newRecord = $product->replicate();
+                        $newRecord->store_id = $storeid->id;
+                        $newRecord->for = "store";
+                        $newRecord->selling_price = $orderItem->price;
+                        $newRecord->stock = $orderItem->quantity;
+                        $newRecord->original_id = $orderItem->product_id;
+                        $newRecord->is_import =1;
+                        $newRecord->save();
+                        if($orderItem->option_id !== null){
+                        $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->first();
+                        $newOption = $option->replicate();
+                        $newOption->product_id = $newRecord->id;
+                        $newOption->original_id = $option->id;
+                        $newOption->quantity = $orderItem->quantity;
+                        $newOption->price = $orderItem->price;
+                        $newOption->save();
+                        }
+                    } else {
+                        $qty = $importOrder->stock;
+                        $importOrder->update([
+                            'selling_price' => $orderItem->price,
+                            'stock' => $qty + $orderItem->quantity,
+                        ]);
+                        $option = Option::where('product_id', $importOrder->id)->where('original_id', $orderItem->option_id)->first();
 
-                $product = Product::where('id', $orderItem->product_id)->first();
-                if ($orderItem->quantity > $product->stock) {
-                    return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
-                } 
-                $importOrder = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $storeid->id)->first();
-                if($importOrder == null){
-                    $importproduct = Importproduct::create([
-                        'product_id' => $orderItem->product_id,
-                        'store_id' => $storeid->id,
-                        'price' => $orderItem->price,
-                        'qty' => $orderItem->quantity,
-                    ]);
-                   }
-                   else{
-                    $qty=$importOrder->qty;
-                    $importOrder->update([
-                        'price' => $orderItem->price,
-                        'qty' => $qty+$orderItem->quantity,
-                    ]);
-                   }
+                       if($option == null){
+                        $newOption = $option->replicate();
+                        $newOption->product_id = $orderItem->product_id;
+                        $newOption->price = $orderItem->price;
+                        $newOption->original_id = $orderItem->option_id;
+                        $newOption->quantity = $orderItem->quantity;
+                        $newOption->save();
+                       }
+                       else{
+                        $qty = $option->quantity;
+                        $option->update([
+                            'price' => $orderItem->price,
+                            'quantity' => $qty + $orderItem->quantity,
+                        ]);
+                       }
+                    }
 
                     $newStock = $product->stock - $orderItem->quantity;
                     $product->update([

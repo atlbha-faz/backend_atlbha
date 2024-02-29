@@ -32,7 +32,11 @@ class ProductResource extends JsonResource
         }
         $domain = $this->store_id  !== null ? $this->store->domain : 'atlbha';
 
-
+        if ($this->is_import == null || $this->is_import ==0) {
+            $import = false;
+        } else {
+            $import  = true;
+        }
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -78,7 +82,7 @@ class ProductResource extends JsonResource
             'images' => ImageResource::collection($this->image->where('is_deleted', 0)),
             'options' => OptionResource::collection($this->option),
                 'attributes' =>AttributeResource::collection($this->attributes),
-            'is_import' => false,
+            'is_import' => $import,
 
         ];
     }

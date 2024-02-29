@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->integer('default_option')->nullable()->default(0);
+            $table->integer('original_id')->nullable();
            $table->enum('status',['active','not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();

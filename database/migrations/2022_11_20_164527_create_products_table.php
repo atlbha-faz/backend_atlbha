@@ -47,6 +47,8 @@ return new class extends Migration
             // $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('cascade');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->integer('original_id')->nullable();
+            $table->boolean('is_import')->default(0);
             $table->enum('status', ['active', 'not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
