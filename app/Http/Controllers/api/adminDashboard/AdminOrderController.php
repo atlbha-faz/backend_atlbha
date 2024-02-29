@@ -138,9 +138,9 @@ class AdminOrderController extends BaseController
                             'stock' => $qty + $orderItem->quantity,
                         ]);
                         $option = Option::where('product_id', $importOrder->id)->where('original_id', $orderItem->option_id)->first();
-
+                   $orginalOption=Option::where('id', $orderItem->option_id)->first();
                        if($option == null){
-                        $newOption = $option->replicate();
+                        $newOption = $orginalOption->replicate();
                         $newOption->product_id = $orderItem->product_id;
                         $newOption->price = $orderItem->price;
                         $newOption->original_id = $orderItem->option_id;
