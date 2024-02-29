@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Option;
-use App\Models\Product;
-use App\Models\Shipping;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Models\OrderOrderAddress;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\shippingResource;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Shipping;
+use App\Models\Store;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class AdminOrderController extends BaseController
 {
@@ -25,22 +24,20 @@ class AdminOrderController extends BaseController
     public function index()
     {
         $success['new'] = Order::where('store_id', null)->where('order_status', 'new')->count();
-        $success['completed'] = Order::where('store_id',null)->where('order_status', 'completed')->count();
+        $success['completed'] = Order::where('store_id', null)->where('order_status', 'completed')->count();
 
-        $success['not_completed'] = Order::where('store_id',null)->where('order_status', 'not_completed')->count();
+        $success['not_completed'] = Order::where('store_id', null)->where('order_status', 'not_completed')->count();
         $success['canceled'] = Order::whereHas('items', function ($q) {
-            $q->where('store_id',null)->where('order_status', 'canceled');
+            $q->where('store_id', null)->where('order_status', 'canceled');
         })->count();
 
         $success['all'] = Order::whereHas('items', function ($q) {
-            $q->where('store_id',null);
+            $q->where('store_id', null);
         })->count();
-
-   
 
         $data = OrderResource::collection(Order::with(['user', 'shipping', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id',null)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'order_status']));
+        }])->where('store_id', null)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'order_status']));
 
         $success['orders'] = $data;
         $success['status'] = 200;
@@ -93,19 +90,19 @@ class AdminOrderController extends BaseController
                     'order_status' => $request->input('status'),
                 ]);
             }
-        
+
             $success['orders'] = new OrderResource($order);
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
-        }else{
+        } else {
             if ($request->status === "completed") {
-                $storeAdmain = User::whereIn('user_type', ['store','store_employee'])->where('id', $order->user_id)->first();
-                  
-              if($storeAdmain != null)  {
-                $storeid = Store::where('id',$storeAdmain->store_id)->first();
-               
-              }
+                $storeAdmain = User::whereIn('user_type', ['store', 'store_employee'])->where('id', $order->user_id)->first();
+
+                if ($storeAdmain != null) {
+                    $storeid = Store::where('id', $storeAdmain->store_id)->first();
+
+                }
                 foreach ($order->items as $orderItem) {
                     $product = Product::where('id', $orderItem->product_id)->where('store_id', null)->first();
                     // if ($orderItem->quantity > $product->stock) {
@@ -120,16 +117,16 @@ class AdminOrderController extends BaseController
                         $newRecord->selling_price = $orderItem->price;
                         $newRecord->stock = $orderItem->quantity;
                         $newRecord->original_id = $orderItem->product_id;
-                        $newRecord->is_import =1;
+                        $newRecord->is_import = 1;
                         $newRecord->save();
-                        if($orderItem->option_id !== null){
-                        $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->first();
-                        $newOption = $option->replicate();
-                        $newOption->product_id = $newRecord->id;
-                        $newOption->original_id = $option->id;
-                        $newOption->quantity = $orderItem->quantity;
-                        $newOption->price = $orderItem->price;
-                        $newOption->save();
+                        if ($orderItem->option_id !== null) {
+                            $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->first();
+                            $newOption = $option->replicate();
+                            $newOption->product_id = $newRecord->id;
+                            $newOption->original_id = $option->id;
+                            $newOption->quantity = $orderItem->quantity;
+                            $newOption->price = $orderItem->price;
+                            $newOption->save();
                         }
                     } else {
                         $qty = $importOrder->stock;
@@ -137,23 +134,24 @@ class AdminOrderController extends BaseController
                             'selling_price' => $orderItem->price,
                             'stock' => $qty + $orderItem->quantity,
                         ]);
-                        $option = Option::where('product_id', $importOrder->id)->where('original_id', $orderItem->option_id)->first();
-                   $orginalOption=Option::where('id', $orderItem->option_id)->first();
-                       if($option == null){
-                        $newOption = $orginalOption->replicate();
-                        $newOption->product_id = $orderItem->product_id;
-                        $newOption->price = $orderItem->price;
-                        $newOption->original_id = $orderItem->option_id;
-                        $newOption->quantity = $orderItem->quantity;
-                        $newOption->save();
-                       }
-                       else{
-                        $qty = $option->quantity;
-                        $option->update([
-                            'price' => $orderItem->price,
-                            'quantity' => $qty + $orderItem->quantity,
-                        ]);
-                       }
+                        if ($orderItem->option_id !== null) {
+                            $option = Option::where('product_id', $importOrder->id)->where('original_id', $orderItem->option_id)->first();
+                            $orginalOption = Option::where('id', $orderItem->option_id)->first();
+                            if ($option == null) {
+                                $newOption = $orginalOption->replicate();
+                                $newOption->product_id = $orderItem->product_id;
+                                $newOption->price = $orderItem->price;
+                                $newOption->original_id = $orderItem->option_id;
+                                $newOption->quantity = $orderItem->quantity;
+                                $newOption->save();
+                            } else {
+                                $qty = $option->quantity;
+                                $option->update([
+                                    'price' => $orderItem->price,
+                                    'quantity' => $qty + $orderItem->quantity,
+                                ]);
+                            }
+                        }
                     }
 
                     $newStock = $product->stock - $orderItem->quantity;
@@ -163,22 +161,20 @@ class AdminOrderController extends BaseController
                     //إستيراد الى متجر اطلبها
                     $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
                     $importAtlbha = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $atlbha_id)->first();
-                    if($importAtlbha == null){
+                    if ($importAtlbha == null) {
                         $importAtlbha = Importproduct::create([
                             'product_id' => $orderItem->product_id,
                             'store_id' => $atlbha_id,
                             'price' => $product->selling_price,
                             'qty' => $product->stock,
-                        ]); 
+                        ]);
+                    } else {
+                        $importAtlbha->update([
+                            'product_id' => $product->id,
+                            'store_id' => $atlbha_id,
+                            'qty' => $product->stock,
+                        ]);
                     }
-                    else{
-                    $importAtlbha->update([
-                        'product_id' => $product->id,
-                        'store_id' => $atlbha_id,
-                        'qty' => $product->stock,
-                    ]);
-                    }
-
 
                 }
 
@@ -191,36 +187,30 @@ class AdminOrderController extends BaseController
                     ]);
                 }
 
-
-
-
-
-
-                    $shipping = Shipping::create([
-                        'shipping_id' => $order->order_number,
-                        'track_id' => null,
-                        'description' => $order->description,
-                        'quantity' => $order->quantity,
-                        'price' => $order->total_price,
-                        'weight' => $order->weight,
-                        'district' => $request->district,
-                        'city' => $request->city,
-                        'streetaddress' => $request->street_address,
-                        'customer_id' => $order->user_id,
-                        'shippingtype_id' => null,
-                        'order_id' => $order->id,
-                        'shipping_status' => $order->order_status,
-                        'store_id' => null,
-                        'cashondelivery' => $order->cashondelivery,
-                    ]);
-                    $success['shipping'] = new shippingResource($shipping);
-                }
-                $success['orders'] = new OrderResource($order);
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+                $shipping = Shipping::create([
+                    'shipping_id' => $order->order_number,
+                    'track_id' => null,
+                    'description' => $order->description,
+                    'quantity' => $order->quantity,
+                    'price' => $order->total_price,
+                    'weight' => $order->weight,
+                    'district' => $request->district,
+                    'city' => $request->city,
+                    'streetaddress' => $request->street_address,
+                    'customer_id' => $order->user_id,
+                    'shippingtype_id' => null,
+                    'order_id' => $order->id,
+                    'shipping_status' => $order->order_status,
+                    'store_id' => null,
+                    'cashondelivery' => $order->cashondelivery,
+                ]);
+                $success['shipping'] = new shippingResource($shipping);
             }
+            $success['orders'] = new OrderResource($order);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
         }
-        
-    
+    }
+
 }
