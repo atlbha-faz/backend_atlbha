@@ -381,7 +381,7 @@ class CheckoutController extends BaseController
 
             $cart = Cart::where('id', $cart_id)->where('store_id', $store_domain)->first();
             $total = $cart->total - $cart->shipping_price;
-            if ($total > $coupon->total_price) {
+            if ($total >= $coupon->total_price) {
                 $coupon->users()->attach(auth()->user()->id);
                 $user = User::where('id', auth()->user()->id)->first();
 
