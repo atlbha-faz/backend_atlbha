@@ -39,27 +39,7 @@ class ProductResource extends JsonResource
             $import = false;
             $type = null;
         }
-        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee') {
-
-            return [
-                'id' => $this->id,
-                'name' => $this->name,
-                'for' => $this->for,
-                'status' => $status,
-                'special' => $special,
-                'admin_special' => $admin_special,
-                'status' => $status,
-                'special' => $special,
-                'cover' => $this->cover,
-                'created_at' => (string) $this->created_at,
-                'admin_special' => $admin_special,
-                'category' => new CategoryResource($this->category),
-                'subcategory' => CategoryResource::collection(\App\Models\Category::with(['store' => function ($query) {
-                    $query->select('id');
-                }])->whereIn('id', explode(',', $this->subcategory_id))->get()),
-                'store' => new StoreResource($this->store),
-            ];
-        } else {
+      
             return [
                 'id' => $this->id,
                 'name' => $this->name,
@@ -111,6 +91,6 @@ class ProductResource extends JsonResource
                 'is_import' => $import,
 
             ];
-        }
+        
     }
 }
