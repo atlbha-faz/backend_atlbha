@@ -114,20 +114,20 @@ class CheckoutController extends BaseController
                     $shipping_price = $shipping_price->price;
                 }
             }
-            if ($order->weight > 15) {
-                $extra_shipping_price = ($order->weight - 15) * 3;
-            } else {
-                $extra_shipping_price = 0;
-            }
+            // if ($order->weight > 15) {
+            //     $extra_shipping_price = ($order->weight - 15) * 3;
+            // } else {
+            //     $extra_shipping_price = 0;
+            // }
             if ($cart->free_shipping == 1) {
                 $order->update([
                     'shipping_price' => $shipping_price,
-                    'total_price' => $order->total_price + $extra_shipping_price,
+                    'total_price' => $order->total_price 
                 ]);
             } else {
                 $order->update([
                     'shipping_price' => $shipping_price,
-                    'total_price' => ($order->total_price - 35) + $shipping_price + $extra_shipping_price,
+                    'total_price' => ($order->total_price - 35) + $shipping_price
                 ]);
 
             }
