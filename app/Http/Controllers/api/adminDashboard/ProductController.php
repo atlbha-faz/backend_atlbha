@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
+use App\Http\Resources\ProductAdaminResource;
 use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -33,9 +34,9 @@ class ProductController extends BaseController
     public function index()
     {
         {
-            $success['products'] = ProductResource::collection(Product::with(['store' => function ($query) {
+            $success['products'] = ProductAdaminResource::collection(Product::with(['store' => function ($query) {
                 $query->select('id', 'domain', 'store_name', 'store_email','logo','icon');
-            }, 'category'])->where('is_deleted', 0)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'admin_special')->get());
+            }, 'category'])->where('is_deleted', 0)->where('for', 'store')->where('original_id',null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'admin_special')->get());
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
