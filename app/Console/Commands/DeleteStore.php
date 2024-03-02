@@ -52,7 +52,7 @@ class DeleteStore extends Command
     {
         $setting = Setting::orderBy('id', 'desc')->first();
         if ($setting->registration_status == "registration_without_admin") {
-         $threeDaysAgo = Carbon::now()->subDays(3)->toDateString();
+         $threeDaysAgo = Carbon::now()->subDays(7)->toDateString();
         $stores =\App\Models\Store::where('is_deleted', 0)->where('verification_status', 'pending')->whereDate('created_at', '<', $threeDaysAgo)->get();
         
         foreach($stores as $store){

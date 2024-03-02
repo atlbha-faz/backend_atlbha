@@ -71,7 +71,7 @@ class OrderResource extends JsonResource
             'shipping_price' => $this->shipping_price,
             'subtotal' => round($this->subtotal, 2),
             'total_price' => round($this->total_price, 2),
-            'discount' => $this->discount != null ? $this->discount : 0,
+            'discount' => $this->discount != null ?-($this->discount) : 0,
             'status' => $status,
             'created_at' => $this->created_at,
             'orderItem' => OrderItemsResource::collection($this->items),
