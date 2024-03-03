@@ -135,31 +135,31 @@ class AdminOrderController extends BaseController
                             $newOption->price = $orderItem->price;
                             $newOption->save();
                           
-                            $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
+                            // $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
                            
-                            $optionNames = array();
-                            $values = array();
-                            $optionNames = explode(',', $newOption->name['ar']);
-                            foreach ($attrs as $attr) {
+                            // $optionNames = array();
+                            // $values = array();
+                            // $optionNames = explode(',', $newOption->name['ar']);
+                            // foreach ($attrs as $attr) {
                                 
-                                $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
+                            //     $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
                                 
-                                foreach ($attruibtevalues as $attruibtevalue) {
-                                    foreach ($optionNames as $optionName) {
-                                        if (in_array($optionName, explode(',', $attruibtevalue->value))) {
+                            //     foreach ($attruibtevalues as $attruibtevalue) {
+                            //         foreach ($optionNames as $optionName) {
+                            //             if (in_array($optionName, explode(',', $attruibtevalue->value))) {
                                             
-                                            $values[] = $attruibtevalue;
-                                            $valuesid[] = $attruibtevalue->id;
+                            //                 $values[] = $attruibtevalue;
+                            //                 $valuesid[] = $attruibtevalue->id;
                                            
-                                        }
-                                    }
-                                }
+                            //             }
+                            //         }
+                            //     }
 
-                                $lastValues = Value::where('attribute_id', $attr->id)->whereIn('id', $valuesid)->get();
+                            //     $lastValues = Value::where('attribute_id', $attr->id)->whereIn('id', $valuesid)->get();
 
-                                $newRecord->attributes()->attach($attr->id, ['value' => json_encode($lastValues)]);
+                            //     $newRecord->attributes()->attach($attr->id, ['value' => json_encode($lastValues)]);
 
-                            }
+                            // }
 
                         }
 
@@ -175,27 +175,27 @@ class AdminOrderController extends BaseController
                                     $newOption->original_id = $orderItem->option_id;
                                     $newOption->quantity = $orderItem->quantity;
                                     $newOption->save();
-                                    $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
-                                    $optionNames = array();
-                                    $values = array();
-                                    $optionNames = explode(',', $newOption->name['ar']);
-                                    foreach ($attrs as $attr) {
-                                        $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
-                                        foreach ($attruibtevalues as $attruibtevalue) {
-                                            foreach ($optionNames as $optionName) {
-                                                if (in_array($optionName, explode(',', $attruibtevalue->value))) {
+                                    // $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
+                                    // $optionNames = array();
+                                    // $values = array();
+                                    // $optionNames = explode(',', $newOption->name['ar']);
+                                    // foreach ($attrs as $attr) {
+                                    //     $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
+                                    //     foreach ($attruibtevalues as $attruibtevalue) {
+                                    //         foreach ($optionNames as $optionName) {
+                                    //             if (in_array($optionName, explode(',', $attruibtevalue->value))) {
                                                    
-                                                    $values[] = $attruibtevalue;
-                                                    $valuesid[] = $attruibtevalue->id;
-                                                }
-                                            }
-                                        }
+                                    //                 $values[] = $attruibtevalue;
+                                    //                 $valuesid[] = $attruibtevalue->id;
+                                    //             }
+                                    //         }
+                                    //     }
 
-                                        $lastValues = Value::where('attribute_id', $attr->id)->whereIn('id', $valuesid)->get();
+                                    //     $lastValues = Value::where('attribute_id', $attr->id)->whereIn('id', $valuesid)->get();
 
-                                        $newRecord->attributes()->attach($attr->id, ['value' => json_encode($lastValues)]);
+                                    //     $newRecord->attributes()->attach($attr->id, ['value' => json_encode($lastValues)]);
 
-                                    }
+                                    // }
                                 }
                             } else {
                                 $qty = $option->quantity;
