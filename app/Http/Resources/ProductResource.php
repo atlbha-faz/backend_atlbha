@@ -39,7 +39,7 @@ class ProductResource extends JsonResource
             $import = false;
             $type = null;
         }
-      
+
             return [
                 'id' => $this->id,
                 'name' => $this->name,
@@ -52,7 +52,7 @@ class ProductResource extends JsonResource
                 'quantity' => $this->quantity,
                 'weight' => $this->weight !== null ? $this->weight * 1000 : 500,
                 'less_qty' => $this->less_qty,
-                'mainstock' => $import == true ? (\App\Models\Product::where('id', $this->original_id)->first()->stock) : $this->stock,
+                 'mainstock' => $import == true ? (\App\Models\Product::where('id', $this->original_id)->first()->stock) : $this->stock,
                 'stock' => $this->stock,
                 'tags' => $this->tags,
                 'cover' => $this->cover,
@@ -86,7 +86,7 @@ class ProductResource extends JsonResource
                 'store' => new StoreResource($this->store),
                 'images' => $import == true ? ImageResource::collection(\App\Models\Product::where('id', $this->original_id)->first()->image->where('is_deleted', 0)) : ImageResource::collection($this->image->where('is_deleted', 0)),
                 'options' => OptionResource::collection($this->option),
-                'attributes' => $import == true ? AttributeResource::collection(\App\Models\Product::where('id', $this->original_id)->first()->attributes) : AttributeResource::collection($this->attributes),
+                'attributes' => AttributeResource::collection($this->attributes),
                 'type' => $type,
                 'is_import' => $import,
 
