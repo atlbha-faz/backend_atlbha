@@ -115,6 +115,8 @@ class AdminOrderController extends BaseController
                     $importOrder = Product::where('original_id', $orderItem->product_id)->where('store_id', $storeid->id)->where('is_import', 1)->where('is_deleted', 0)->first();
                     // $importOrder = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $storeid->id)->first();
                     if ($importOrder == null) {
+                        
+                      
                         $newRecord = $product->replicate();
                         $newRecord->store_id = $storeid->id;
                         $newRecord->for = "store";
@@ -124,6 +126,7 @@ class AdminOrderController extends BaseController
                         $newRecord->is_import = 1;
                         $newRecord->save();
                         if ($orderItem->option_id !== null) {
+                            
                             $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->first();
                             $newOption = $option->replicate();
                             $newOption->product_id = $newRecord->id;
@@ -131,17 +134,23 @@ class AdminOrderController extends BaseController
                             $newOption->quantity = $orderItem->quantity;
                             $newOption->price = $orderItem->price;
                             $newOption->save();
+                          
                             $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
+                           
                             $optionNames = array();
                             $values = array();
                             $optionNames = explode(',', $newOption->name['ar']);
                             foreach ($attrs as $attr) {
+                                
                                 $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
+                                
                                 foreach ($attruibtevalues as $attruibtevalue) {
                                     foreach ($optionNames as $optionName) {
                                         if (in_array($optionName, explode(',', $attruibtevalue->value))) {
+                                            
                                             $values[] = $attruibtevalue;
                                             $valuesid[] = $attruibtevalue->id;
+                                           
                                         }
                                     }
                                 }
@@ -175,6 +184,7 @@ class AdminOrderController extends BaseController
                                         foreach ($attruibtevalues as $attruibtevalue) {
                                             foreach ($optionNames as $optionName) {
                                                 if (in_array($optionName, explode(',', $attruibtevalue->value))) {
+                                                   
                                                     $values[] = $attruibtevalue;
                                                     $valuesid[] = $attruibtevalue->id;
                                                 }
