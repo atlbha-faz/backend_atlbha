@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\shippingResource;
-use App\Models\Importproduct;
-use App\Models\Option;
+use App\Models\User;
 use App\Models\Order;
+use App\Models\Store;
+use App\Models\Value;
+use App\Models\Option;
 use App\Models\Product;
 use App\Models\Shipping;
-use App\Models\Store;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use App\Models\Attribute_product;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\shippingResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class AdminOrderController extends BaseController
 {
@@ -127,6 +129,26 @@ class AdminOrderController extends BaseController
                             $newOption->quantity = $orderItem->quantity;
                             $newOption->price = $orderItem->price;
                             $newOption->save();
+                            $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
+                            $optionNames = array();
+                            $values = array();
+                            $optionNames = explode(',', $newOption->name['ar']);
+                            foreach ($attrs as $attr) {
+                                $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
+                                foreach ($attruibtevalues as $attruibtevalue) {
+                                    foreach ($optionNames as $optionName) {
+                                        if (in_array($optionName, explode(',', $attruibtevalue->value))) {
+                                            $values[] = $attruibtevalue;
+                                            $valuesid[] = $attruibtevalue->id;
+                                        }
+                                    }
+                                }
+
+                                $lastValues = Value::where('attribute_id', $attr->id)->whereIn('id', $valuesid)->get();
+                                $newRecord->attributes()->attach($attr->id, ['value' => json_encode( $lastValues)]);
+
+                            }
+
                         }
                     } else {
                         $qty = $importOrder->stock;
@@ -138,13 +160,13 @@ class AdminOrderController extends BaseController
                             $option = Option::where('product_id', $importOrder->id)->where('original_id', $orderItem->option_id)->first();
                             $orginalOption = Option::where('id', $orderItem->option_id)->first();
                             if ($option == null) {
-                                if($orginalOption){
-                                $newOption = $orginalOption->replicate();
-                                $newOption->product_id = $importOrder->id;
-                                $newOption->price = $orderItem->price;
-                                $newOption->original_id = $orderItem->option_id;
-                                $newOption->quantity = $orderItem->quantity;
-                                $newOption->save();
+                                if ($orginalOption) {
+                                    $newOption = $orginalOption->replicate();
+                                    $newOption->product_id = $importOrder->id;
+                                    $newOption->price = $orderItem->price;
+                                    $newOption->original_id = $orderItem->option_id;
+                                    $newOption->quantity = $orderItem->quantity;
+                                    $newOption->save();
                                 }
                             } else {
                                 $qty = $option->quantity;
