@@ -10,7 +10,10 @@ class Paymenttype extends Model
 {
     use HasFactory;
      protected $fillable = ['name','image','status','description','paymentMethodId','is_deleted'];
-
+     protected $casts = [
+       
+        'paymentMethodId'=>'integer'
+    ];
     public function stores()
     {
      return $this->belongsToMany(
