@@ -167,7 +167,7 @@ class ImportproductController extends BaseController
                 }
             }
             $success['status'] = 200;
-            return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
+            return $this->sendResponse($success, 'تم تعديل  بنجاح', 'importproduct updated successfully');
         }
     }
 
