@@ -16,7 +16,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class SubpageController extends BaseController
 {
-  
+
     public function show($page_id)
     {
         $page= Page::with(['user' => function ($query) {
@@ -32,15 +32,15 @@ class SubpageController extends BaseController
               $categories_id=array();
               foreach($categories as $category)
               {
-               
+
                   $categories_id[]=$category->page_category_id;
               }
-            
-          
+
+
               $pages_id =Page_page_category::whereIn('page_category_id',$categories_id)->pluck('page_id')->toArray();
                   $pages=Page::with(['user' => function ($query) {
                     $query->select('id','name');
-                }])->whereIn('id',$pages_id)->where('id','!=',$page_id)->select('id','title','page_content','altImage','default_page','page_desc','seo_title','seo_link','seo_desc','tags','status','image')->get();
+                }])->whereIn('id',$pages_id)->where('id','!=',$page_id)->select('id','title','page_content','altImage','default_page','page_desc','tags','status','image')->get();
              $success['Relatedpages']=  PageResource::collection($pages);
               $success['status']= 200;
 
