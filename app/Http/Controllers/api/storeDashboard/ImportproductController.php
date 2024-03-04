@@ -8,6 +8,7 @@ use App\Http\Resources\ImportproductResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Importproduct;
+use App\Models\Option;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -25,11 +26,11 @@ class ImportproductController extends BaseController
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
         // $imports = Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
         if ($request->has('page')) {
-            $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty','created_at', 'category_id', 'subcategory_id')->paginate(15));
+            $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id')->paginate(15));
             $success['page_count'] = $products->lastPage();
             $success['products'] = $products;
         } else {
-            $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock','less_qty', 'created_at', 'category_id', 'subcategory_id')->get());
+            $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id')->get());
         }
         $success['status'] = 200;
 
@@ -118,20 +119,20 @@ class ImportproductController extends BaseController
             $validator = Validator::make($input, [
                 'price' => ['required', 'numeric',
                     'gte:' . $purchasing_price],
-                'discount_price_import' => ['nullable', 'numeric']
+                'discount_price_import' => ['nullable', 'numeric'],
             ]);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
             // $qty = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->value('qty');
             $product = Product::where('id', $id)->first();
-            if ($request->qty > $product->stock ) {
+            if ($request->qty > $product->stock) {
 
                 return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
             } else {
                 $importproduct->update([
                     'price' => $request->price,
-                    'discount_price_import'=> $request->discount_price_import,
+                    'discount_price_import' => $request->discount_price_import,
                     // 'qty' => $request->qty,
 
                 ]);
@@ -146,13 +147,19 @@ class ImportproductController extends BaseController
 
             return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
         } else {
-            $orginalProduct = Product::where('id',  $id)->first();
+            $orginalProduct = Product::where('id', $id)->first();
             $orginalProduct->update([
                 'price' => $request->price,
-                'discount_price'=> $request->discount_price_import,
+                'discount_price' => $request->discount_price_import,
                 // 'qty' => $request->qty,
 
             ]);
+            if ($request->option_id != null) {
+                $option = Option::where('id', $request->option_id)->first();
+                $option->update([
+                    'default_option' => 1,
+                ]);
+            }
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
         }
