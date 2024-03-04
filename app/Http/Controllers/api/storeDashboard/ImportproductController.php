@@ -161,7 +161,7 @@ class ImportproductController extends BaseController
                         $option->update([
                             'price' =>  $data['price'] ,
                             'discount_price' => $data['discount_price'] ,
-                            'default_option' =>  $data['default_option'] 
+                            'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0 
                         ]);
                     
                 }
