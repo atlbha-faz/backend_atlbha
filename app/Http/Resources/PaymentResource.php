@@ -21,8 +21,10 @@ class PaymentResource extends JsonResource
             'paymenDate' => $this->paymenDate,
             'paymentType' => $this->paymentType,
             'paymentTransectionID' => $this->paymentTransectionID,
-            'paymentCardID' => $this->paymentCardID,
+            // 'paymentCardID' => $this->paymentCardID,
             'orderID' => $this->orderID,
+            'deduction' => $this->paymentCardID,
+            'price_after_deduction' => $this->price_after_deduction,
             'created_at' => (string) $this->created_at,
              'updated_at' => (string) $this->updated_at,
           ];

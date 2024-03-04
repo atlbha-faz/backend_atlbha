@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\SupplierResource;
-use App\Models\Account;
-use App\Models\Store;
-use App\Models\Supplierdocument;
 use App\Models\User;
-use App\Services\FatoorahServices;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Store;
+use App\Models\Account;
+use App\Models\Payment;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\Supplierdocument;
+use App\Services\FatoorahServices;
+use App\Http\Resources\PaymentResource;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\SupplierResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SupplierController extends BaseController
 {
@@ -23,6 +25,7 @@ class SupplierController extends BaseController
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
+        $payments =PaymentResource::collection(Payment::where('store_id', auth()->user()->store_id)->get());
         $supplier = new FatoorahServices();
 
       
