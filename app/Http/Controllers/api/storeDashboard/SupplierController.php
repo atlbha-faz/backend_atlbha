@@ -25,13 +25,15 @@ class SupplierController extends BaseController
         $account = Account::where('store_id', auth()->user()->store_id)->first();
         $supplier = new FatoorahServices();
 
-        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
-
+      
         if (is_null($account)) {
             return $this->sendError("لا يوجد حساب بنكي", "Account is't exists");
         }
+        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
+        $supplierDeposits = $supplier->getSupplierDashboard('v2/GetSupplierDeposits?SupplierCode' . $storeAdmain->supplierCode);
         $success['supplierUser'] = new SupplierResource($account);
         $success['SupplierDetails'] = $supplierCode;
+        $success['SupplierDeposits'] =  $supplierDeposits;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
