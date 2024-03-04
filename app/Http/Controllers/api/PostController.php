@@ -17,9 +17,7 @@ class PostController extends BaseController
         // views($postVisit)->record();
         // $success['countVisitPost'] = views($postVisit)->count();
         //
-        $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
-            $query->select('id', 'name');
-        }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->select('id', 'title', 'page_desc', 'image', 'altImage', 'default_page')->get());
+        $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
         $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
         $pages = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
         $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $pages)->get());
