@@ -150,15 +150,21 @@ class ImportproductController extends BaseController
             $orginalProduct = Product::where('id', $id)->first();
             $orginalProduct->update([
                 'price' => $request->price,
-                'discount_price' => $request->discount_price_import,
+                'discount_price' => $request->discount_price,
                 // 'qty' => $request->qty,
 
             ]);
-            if ($request->option_id != null) {
-                $option = Option::where('id', $request->option_id)->first();
-                $option->update([
-                    'default_option' => 1,
-                ]);
+            if ($request->has('data') && !is_null($request->data)) {
+                foreach ($request->data as $data) {
+                 
+                        $option = Option::where('id', $data['option_id'])->first();
+                        $option->update([
+                            'price' =>  $data['price'] ,
+                            'discount_price' => $data['discount_price'] ,
+                            'default_option' =>  $data['default_option'] 
+                        ]);
+                    
+                }
             }
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
