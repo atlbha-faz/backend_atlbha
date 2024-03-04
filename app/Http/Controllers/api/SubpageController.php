@@ -41,7 +41,7 @@ class SubpageController extends BaseController
                   $pages=Page::with(['user' => function ($query) {
                     $query->select('id','name');
                 }])->whereIn('id',$pages_id)->where('id','!=',$page_id)->select('id','title','page_content','altImage','default_page','page_desc','tags','status','image')->get();
-             $success['Relatedpages']=  PageResource::collection($pages);
+            //  $success['Relatedpages']=  PageResource::collection($pages);
               $success['status']= 200;
 
                return $this->sendResponse($success,'تم عرض الصفحة بنجاح','Page showed successfully');
