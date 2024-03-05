@@ -20,6 +20,8 @@ return new class extends Migration
         $table->bigInteger('store_id')->unsigned();
         $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
         $table->double('price')->nullable();
+        $table->integer('time')->nullable();
+        $table->double('overprice')->nullable();
         $table->timestamps();
         });
     }
