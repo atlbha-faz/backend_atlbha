@@ -33,8 +33,8 @@ Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorCon
 Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
 Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class, 'getBank']);
-Route::get('callback', [App\Http\Controllers\api\IndexStoreController::class, 'callback'])->name('callback');
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
+Route::get('callback', [App\Http\Controllers\api\IndexStoreController::class, 'callback'])->name('callback');
 
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi', 'App\Http\Controllers\api\AuthController@login_admin');
@@ -78,7 +78,6 @@ Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateCon
 Route::post('showDetailOption', [App\Http\Controllers\api\CartTemplateController::class, 'showDetailOption']);
 
 Route::post('cheackout/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'cheackout']);
-Route::get('callback', [App\Http\Controllers\api\CheckoutController::class, 'callback']);
 Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'paymentmethods']);
 Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'shippingcompany']);
 Route::post('applyCoupon/{domain}/{cart_id}', [App\Http\Controllers\api\CheckoutController::class, 'applyCoupon']);
