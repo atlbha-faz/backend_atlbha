@@ -60,6 +60,7 @@ class WebhookController extends BaseController
         public function handleWebhook(Request $request)
         {
             $data=$request->get('Data');
+            dd($request);
             if($data  != null){
             $secret="snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
             $signature = $request->header('MyFatoorah-Signature');
@@ -70,9 +71,11 @@ class WebhookController extends BaseController
              if( $event == 1){
                 $payment = Payment::where('paymentTransectionID',  $data->InvoiceId)->first();
                 $order = Order::where('id', $payment->orderID)->first();
+                if($data->TransactionStatus){
                 $order->update([
                     'payment_status'=>"Paid"
                 ]);
+            }
 
                 }
             }
