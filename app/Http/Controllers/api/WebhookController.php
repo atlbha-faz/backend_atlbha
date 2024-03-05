@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Models\Order;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\api\BaseController as BaseController;
+
 class WebhookController extends BaseController
 {
    
@@ -57,16 +60,20 @@ class WebhookController extends BaseController
         public function handleWebhook(Request $request)
         {
             $data=$request->get('Data');
-            dd($data);
-            $secret="WVjz6cCoT9N7ZlqmZBMPANjkh30UvH9uwB20g-xGJi8tOjADM9NWiKaasfQCwkGLBy0ZNzoRXYCwMoLzaNwNgvY9H_3pO0bfTfwcEBCHe4s7FDQ0oGYFdMj8UwECAoiV4_3buuymrCmvdzc6QmZZuPsNfFCPg0vtwanErRHxM975FhaReP5QZsp6cU5bE8zupH5qOL7y8Hb9kSTW4u4ffx5V0WqUTrL2GmBWmAhx4eZBqoppO-jxG93E_FU7drhRA8SxiH__pNDDj3RJXBFqbLjzLjQ0iLtvR4s-c7X_dcLWXCj0X5lCBxVPFquo7Fsosbv5-NHJ-8nygVqy-HhwqnN3CV5HRD005E34zf32K8Y0eC526P2wZer5U-jr275rPEtfotn2wFFuDcWWnuT5f37p7oLDOgb2BclrmSj5crn5BxtkbG7awbxR7yVXoW-q19oE6-mcQWoNX8vdSbbdJ8arugLsR6qKW15juYZ8LztWfwnq65rRPZdh_JuE3KO96_rQR72a90FXy0mxjuXWmQU94Nek-2X_9DyecBqPxANjFwotZRNybG353CZchyvyJ60WjhVlfmxLMCdTD6wsBB5Ew5xKNru_jdG5TsshtNUgiogmf4FvJ0M8R3Xlxv98z5VXkqYytzBEtk2rbCwFopar9Ejj2Dwun5YaT5xyllcXrJltQ4UwofJ9j-bislP57_wQZCSachFOs2BaXqnRJEMb8sf6QeRm06TV-F4x7-iGJ-z7";
+            $secret="snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
             $signature = $request->header('MyFatoorah-Signature');
             if(!$this->validateSignature($data,$secret,$signature )){
                 return;
             }
             $event= $request->input('EventType');
-            // if( $event == 1){
+             if( $event == 1){
+                $payment = Payment::where('paymentTransectionID',  $data->InvoiceId)->first();
+                $order = Order::where('id', $payment->orderID)->first();
+                $order->update([
+                    'payment_status'=>"Paid"
+                ]);
 
-            // }
+                }
             
         }
     
