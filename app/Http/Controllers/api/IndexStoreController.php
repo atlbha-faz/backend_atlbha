@@ -2,37 +2,41 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\DayResource;
-use App\Http\Resources\DaystoreResource;
-use App\Http\Resources\importsResource;
-use App\Http\Resources\MaintenanceResource;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\SeoResource;
-use App\Http\Resources\SubscriptionEmailResource;
-use App\Http\Resources\TechnicalsupportResource;
-use App\Http\Resources\ThemeResource;
-use App\Models\Category;
+use DB;
+use Carbon\Carbon;
+use App\Models\Seo;
+use App\Models\Page;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Store;
+use App\Models\Theme;
 use App\Models\Comment;
+use App\Models\Payment;
+use App\Models\Product;
+use App\Models\Category;
 use App\Models\Homepage;
+use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Models\Package_store;
-use App\Models\Page;
-use App\Models\Page_page_category;
-use App\Models\Product;
-use App\Models\Seo;
-use App\Models\Store;
-use App\Models\SubscriptionEmail;
 use App\Models\TechnicalSupport;
-use App\Models\Theme;
-use App\Models\User;
-use Carbon\Carbon;
-use DB;
-use Illuminate\Http\Request;
+use App\Models\SubscriptionEmail;
+use App\Models\Page_page_category;
+use App\Services\FatoorahServices;
+use App\Http\Resources\DayResource;
+use App\Http\Resources\SeoResource;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\ThemeResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\DaystoreResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\MaintenanceResource;
+use App\Http\Resources\TechnicalsupportResource;
+use App\Http\Resources\SubscriptionEmailResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController extends BaseController
 {
@@ -1274,7 +1278,7 @@ class IndexStoreController extends BaseController
             if ($response->Data->InvoiceStatus == "Paid") //||$response->Data->InvoiceStatus=='Pending'
             {
                 $payment = Payment::where('paymentTransectionID',  $InvoiceId)->first();
-                $order = order::where('id', $payment->orderID)->first();
+                $order = Order::where('id', $payment->orderID)->first();
                 $order->update([
                     'payment_status'=>"Paid"
                 ]);
