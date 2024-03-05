@@ -1288,10 +1288,10 @@ class IndexStoreController extends BaseController
 
         }
         if($order != null){
-        $success['order'] = new OrderResource($order);
+        $success['order'] = $order;
         }
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم عرض الطلب بنجاح', 'order show successfully');
+        return $this->sendResponse($success, 'تم إرسال الطلب بنجاح', 'order show successfully');
     }
 }
