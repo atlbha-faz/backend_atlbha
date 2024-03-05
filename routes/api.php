@@ -33,7 +33,7 @@ Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorCon
 Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
 Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class, 'getBank']);
-
+Route::get('callback', [App\Http\Controllers\api\IndexStoreController::class, 'callback'])->name('callback');
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
@@ -64,7 +64,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
     Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
     Route::get('deactivateAccount', [App\Http\Controllers\api\ProfileCustomerController::class, 'deactivateAccount']);
     Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\IndexStoreController::class, 'addSubsicription']);
-    Route::get('callback', [App\Http\Controllers\api\IndexStoreController::class, 'callback'])->name('callback');
+  
 });
 
 Route::middleware([SetActiveStore::class])->group(function () {
