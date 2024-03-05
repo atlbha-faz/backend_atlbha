@@ -58,6 +58,7 @@ class ShippingtypeResource extends JsonResource
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'price' => $price,
             'time' => $time,
+            // 'overprice' => $overprice,
 
         ];
 

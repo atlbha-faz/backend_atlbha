@@ -1287,11 +1287,11 @@ class IndexStoreController extends BaseController
             }
 
         }
-        if($order != null){
-        $success['order'] = $order;
-        }
-        $success['status'] = 200;
+        // if($order != null){
+        // $success['order'] = $order;
+        // }
+        // $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم إرسال الطلب بنجاح', 'order show successfully');
+        // return 'https://template.atlbha.com/' . $domain . '/shop/checkout/success';
     }
 }
