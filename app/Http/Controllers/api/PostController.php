@@ -20,9 +20,9 @@ class PostController extends BaseController
         $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
         $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
         $pages = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
-        $success['footer'] = PageResource::collection(Page::with(['user' => function ($query) {
-                    $query->select('id','name');
-                }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->whereIn('id', $pages)->get());
+        // $success['footer'] = PageResource::collection(Page::with(['user' => function ($query) {
+        //             $query->select('id','name');
+        //         }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->whereIn('id', $pages)->get());
         return $this->sendResponse($success, 'تم ارجاع المدونة بنجاح', 'posts return successfully');
     }
     public function start()
