@@ -153,6 +153,7 @@ class ShippingtypeController extends BaseController
 
                 'price' => ['nullable', 'numeric'],
                 'time' => ['nullable', 'numeric'],
+                'overprice' => ['nullable', 'numeric']
             ]);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
@@ -164,6 +165,7 @@ class ShippingtypeController extends BaseController
                 'store_id' => auth()->user()->store_id,
                 'price' => $request->price !== null ? $request->price : 35,
                 'time' => $request->time !== null ? $request->time : 1,
+                'overprice' => $request->overprice !== null ? $request->overprice : 1,
             ]);
             $success['shippingtypes'] = $shippingtype;
 
@@ -186,6 +188,7 @@ class ShippingtypeController extends BaseController
 
             'price' => ['nullable', 'numeric'],
             'time' => ['nullable', 'numeric'],
+            'overprice' => ['nullable', 'numeric']
         ]);
 
         if ($validator->fails()) {
@@ -194,6 +197,7 @@ class ShippingtypeController extends BaseController
         $shippingtype->update([
             'price' => $request->price,
             'time' => $request->time,
+            'overprice'=>$request->overprice,
         ]);
         $success['shippingtypes'] = new ShippingtypeResource($shippingtypeCompany);
         $success['status'] = 200;
