@@ -267,7 +267,7 @@ class CheckoutController extends BaseController
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
                         "CallBackUrl" => 'https://backend.atlbha.com/api/callback?order=' . $order->id,
-                        "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/success',
+                        "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/products',
                         "Language" => 'ar',
                         "DisplayCurrencyIso" => 'SAR',
                         "Suppliers" => [
