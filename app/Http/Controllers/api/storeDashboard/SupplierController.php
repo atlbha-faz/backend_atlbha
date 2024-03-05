@@ -280,4 +280,8 @@ class SupplierController extends BaseController
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
     }
 
+    public function handleWebhook(Request $request)
+    {
+    }
+
 }

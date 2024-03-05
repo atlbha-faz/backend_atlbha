@@ -260,6 +260,11 @@ class CheckoutController extends BaseController
                         "ProposedShare" => $price_after_deduction,
                         "InvoiceShare" => $order->total_price,
                     ];
+                    $processingDetails = [
+                        "AutoCapture" => true,
+                        "Bypass3DS" => false,
+                    ];
+                     $processingDetailsobject = (object) ($processingDetails);
                     $supplierobject = (object) ($supplierdata);
                     $data = [
                         "PaymentMethodId" => $paymenttype->paymentMethodId,
@@ -270,6 +275,7 @@ class CheckoutController extends BaseController
                         "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/products?message=paymentFailed',
                         "Language" => 'ar',
                         "DisplayCurrencyIso" => 'SAR',
+                        "ProcessingDetails"=>$processingDetailsobject,
                         "Suppliers" => [
                             $supplierobject,
                         ],
