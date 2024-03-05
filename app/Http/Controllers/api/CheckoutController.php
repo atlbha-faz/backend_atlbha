@@ -266,7 +266,7 @@ class CheckoutController extends BaseController
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
-                        "CallBackUrl" => 'https://backend.atlbha.com/api/callback?order=' . $order->id,
+                        "CallBackUrl" => 'https://backend.atlbha.com/api/callback',
                         "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/products',
                         "Language" => 'ar',
                         "DisplayCurrencyIso" => 'SAR',
@@ -283,6 +283,10 @@ class CheckoutController extends BaseController
                           
                             $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
                             $success['payment'] = $response;
+                            $payment->update([
+                                'paymentTransectionID'=>  $InvoiceId 
+
+                            ]);
 
                         }
                         else{
