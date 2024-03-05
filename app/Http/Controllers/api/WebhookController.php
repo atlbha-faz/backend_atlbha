@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebhookController extends BaseController
@@ -59,22 +60,24 @@ class WebhookController extends BaseController
         }
         public function handleWebhook(Request $request)
         {
-            $data=$request->get('Data');
+            $data=$request->input('Data');
             if($data  != null){
-            $secret="snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
-            $signature = $request->header('MyFatoorah-Signature');
+            // $secret="snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
+            // $signature = $request->header('MyFatoorah-Signature');
             // if(!$this->validateSignature($data,$secret,$signature )){
             //     return;
             // }
             $event= $request->input('EventType');
              if( $event == 1){
-                $payment = Payment::where('paymentTransectionID',  $data->InvoiceId)->first();
+                $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                 $order = Order::where('id', $payment->orderID)->first();
-                if($data->TransactionStatus){
+                if($request->input('Data.TransactionStatus') =="SUCCESS"){
                 $order->update([
                     'payment_status'=>"Paid"
                 ]);
-            }
+
+                Log::debug('Webhook payload:', $event);
+                }   
 
                 }
             }
