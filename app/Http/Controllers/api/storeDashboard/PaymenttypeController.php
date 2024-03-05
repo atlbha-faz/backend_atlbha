@@ -61,6 +61,13 @@ class PaymenttypeController extends BaseController
         if (is_null($paymenttype) || $paymenttype->is_deleted != 0 || $paymenttype->status == "not_active") {
             return $this->sendError("شركة الدفع غير موجودة", "paymenttype is't exists");
         }
+         if ($id != 4 ){
+            $account = Account::where('store_id', auth()->user()->store_id)->first();
+            if($account == null){
+                return $this->sendError("ليس لديك حساب بنكي", "account is't exists"); 
+            }
+
+         }
         $paymenttype = paymenttype_store::where('paymentype_id', $id)->where('store_id', auth()->user()->store_id)->first();
 
         if ($paymenttype != null) {

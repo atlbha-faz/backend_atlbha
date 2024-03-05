@@ -43,8 +43,8 @@ class PostController extends BaseController
             $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->get());
             $pages = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
-            $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $pages)->get());
-            return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
+            // $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $pages)->get());
+            // return $this->sendResponse($success, 'تم ارجاع الصفحة بنجاح', ' post return successfully');
         } else {
 
             $success['status'] = 200;
