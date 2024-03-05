@@ -238,63 +238,64 @@ class CheckoutController extends BaseController
                 $InvoiceId = null;
                 if ($order->paymentype_id == 1 && $order->shippingtype_id == 5) {
                     
-                    // $payment = Payment::create([
-                    //     'paymenDate' => Carbon::now(),
-                    //     'paymentType' => $order->paymentype->name,
-                    //     'orderID' => $order->id,
-                    //     'store_id'=>$store_domain
-                    // ]);
+                    $payment = Payment::create([
+                        'paymenDate' => Carbon::now(),
+                        'paymentType' => $order->paymentype->name,
+                        'orderID' => $order->id,
+                        'store_id'=>$store_domain
+                    ]);
              
-                    // $account = Account::where('store_id',$store_domain)->first();
-                    // $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
-                    // $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    // $deduction = $order->total_pric * 0.01 + 1;
-                    // $price_after_deduction = $order->total_price - $deduction;
-                    // $payment->update([
-                    //     'deduction'=>$deduction,
-                    //     'price_after_deduction'=> $price_after_deduction 
-                    // ]);
+                    $account = Account::where('store_id',$store_domain)->first();
+                    $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
+                    $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
+                    $deduction = $order->total_pric * 0.01 + 1;
+                    $price_after_deduction = $order->total_price - $deduction;
+                    $payment->update([
+                        'deduction'=>$deduction,
+                        'price_after_deduction'=> $price_after_deduction 
+                    ]);
                     
-                    // $supplierdata = [
-                    //     "SupplierCode" => $account->supplierCode,
-                    //     "ProposedShare" => $price_after_deduction,
-                    //     "InvoiceShare" => $order->total_price,
-                    // ];
-                    // $supplierobject = (object) ($supplierdata);
-                    // $data = [
-                    //     "PaymentMethodId" => $paymenttype->paymentMethodId,
-                    //     "CustomerName" => $customer->name,
-                    //     "InvoiceValue" => $order->total_price, // total_price
-                    //     "CustomerEmail" => $customer->email,
-                    //     "CallBackUrl" => 'https://backend.atlbha.com/api/callback?order=' . $order->id,
-                    //     "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/products',
-                    //     "Language" => 'ar',
-                    //     "DisplayCurrencyIso" => 'SAR',
-                    //     "Suppliers" => [
-                    //         $supplierobject,
-                    //     ],
-                    // ];
+                    $supplierdata = [
+                        "SupplierCode" => $account->supplierCode,
+                        "ProposedShare" => $price_after_deduction,
+                        "InvoiceShare" => $order->total_price,
+                    ];
+                    $supplierobject = (object) ($supplierdata);
+                    $data = [
+                        "PaymentMethodId" => $paymenttype->paymentMethodId,
+                        "CustomerName" => $customer->name,
+                        "InvoiceValue" => $order->total_price, // total_price
+                        "CustomerEmail" => $customer->email,
+                        "CallBackUrl" => 'https://backend.atlbha.com/api/callback?order=' . $order->id,
+                        "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/products',
+                        "Language" => 'ar',
+                        "DisplayCurrencyIso" => 'SAR',
+                        "Suppliers" => [
+                            $supplierobject,
+                        ],
+                    ];
 
-                    // $supplier = new FatoorahServices();
-                    // $response = $supplier->executePayment('v2/ExecutePayment', $data);
+                    $supplier = new FatoorahServices();
+                    $response = $supplier->executePayment('v2/ExecutePayment', $data);
 
-                    // if (isset($response['IsSuccess'])) {
-                    //     if ($response['IsSuccess'] == true) {
-                    //         $cart->delete();
-                    //         $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
-                    //         $success['payment'] = $response;
+                    if (isset($response['IsSuccess'])) {
+                        if ($response['IsSuccess'] == true) {
+                          
+                            $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
+                            $success['payment'] = $response;
 
-                    //     }
-                    //     else{
-                    //         $success['payment'] = $response;  
-                    //     }
-                    // }
-                    // else{
-                    // $success['payment'] = $response;
-                    // }
-                    // $success['status'] = 200;
+                        }
+                        else{
+                            $success['payment'] = $response;  
+                        }
+                    }
+                    else{
+                    $success['payment'] = $response;
+                    }
+                    $cart->delete();
+                    $success['status'] = 200;
 
-                    // return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
+                    return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
                    
                 }
                 $payment = Payment::create([
