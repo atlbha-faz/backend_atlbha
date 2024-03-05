@@ -13,6 +13,7 @@ use App\Http\Controllers\GotexController;
 | contains the "web" middleware group. Now create something great!
 |
  */
+Route::post('webhook', [App\Http\Controllers\api\WebhookController::class, 'handleWebhook']);
 
 Route::get('/', function () {
     return view('welcome');
