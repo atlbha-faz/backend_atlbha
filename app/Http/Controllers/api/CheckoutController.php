@@ -315,44 +315,7 @@ class CheckoutController extends BaseController
 
         }
     }
-    public function callback(Request $request)
-    {
-        $order = order::where('id', $request->order)->first();
-        $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-        $payment = Payment::where('orderID', $order->id)->first();
 
-        $apiKey = env("fatoora_token", "WVjz6cCoT9N7ZlqmZBMPANjkh30UvH9uwB20g-xGJi8tOjADM9NWiKaasfQCwkGLBy0ZNzoRXYCwMoLzaNwNgvY9H_3pO0bfTfwcEBCHe4s7FDQ0oGYFdMj8UwECAoiV4_3buuymrCmvdzc6QmZZuPsNfFCPg0vtwanErRHxM975FhaReP5QZsp6cU5bE8zupH5qOL7y8Hb9kSTW4u4ffx5V0WqUTrL2GmBWmAhx4eZBqoppO-jxG93E_FU7drhRA8SxiH__pNDDj3RJXBFqbLjzLjQ0iLtvR4s-c7X_dcLWXCj0X5lCBxVPFquo7Fsosbv5-NHJ-8nygVqy-HhwqnN3CV5HRD005E34zf32K8Y0eC526P2wZer5U-jr275rPEtfotn2wFFuDcWWnuT5f37p7oLDOgb2BclrmSj5crn5BxtkbG7awbxR7yVXoW-q19oE6-mcQWoNX8vdSbbdJ8arugLsR6qKW15juYZ8LztWfwnq65rRPZdh_JuE3KO96_rQR72a90FXy0mxjuXWmQU94Nek-2X_9DyecBqPxANjFwotZRNybG353CZchyvyJ60WjhVlfmxLMCdTD6wsBB5Ew5xKNru_jdG5TsshtNUgiogmf4FvJ0M8R3Xlxv98z5VXkqYytzBEtk2rbCwFopar9Ejj2Dwun5YaT5xyllcXrJltQ4UwofJ9j-bislP57_wQZCSachFOs2BaXqnRJEMb8sf6QeRm06TV-F4x7-iGJ-z7");
-        $postFields = [
-            'Key' => $request->paymentId,
-            'KeyType' => 'paymentId',
-        ];
-        $supplier = new FatoorahServices();
-        $response = $supplier->callAPI("https://apitest.myfatoorah.com/v2/getPaymentStatus", $apiKey, $postFields);
-        $response = json_decode($response);
-        if (!isset($response->Data->InvoiceId)) {
-            return response()->json(["error" => 'error', 'status' => false], 404);
-        }
-
-        $InvoiceId = $response->Data->InvoiceId; // get your order by payment_id
-        if ($response->IsSuccess == true) {
-            if ($response->Data->InvoiceStatus == "Paid") //||$response->Data->InvoiceStatus=='Pending'
-            {
-                $order->update([
-                    'payment_status' => "paid",
-                ]);
-                $payment->update([
-                    'paymentTransectionID' => $InvoiceId,
-
-                ]);
-            }
-
-        }
-        $success['order'] = new OrderResource($order);
-
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم عرض الطلب بنجاح', 'order show successfully');
-    }
     public function paymentmethods($domain)
     {
         $store = Store::where('is_deleted', 0)->where('domain', $domain)->first();
