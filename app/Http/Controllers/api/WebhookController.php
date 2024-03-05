@@ -60,7 +60,6 @@ class WebhookController extends BaseController
         public function handleWebhook(Request $request)
         {
             $data=$request->get('Data');
-            dd($request);
             if($data  != null){
             $secret="snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
             $signature = $request->header('MyFatoorah-Signature');
