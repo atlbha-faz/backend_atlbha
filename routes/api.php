@@ -64,6 +64,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
     Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
     Route::get('deactivateAccount', [App\Http\Controllers\api\ProfileCustomerController::class, 'deactivateAccount']);
     Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\IndexStoreController::class, 'addSubsicription']);
+    Route::get('callback', [App\Http\Controllers\api\IndexStoreController::class, 'callback'])->name('callback');
 });
 
 Route::middleware([SetActiveStore::class])->group(function () {
@@ -619,7 +620,7 @@ Route::middleware([StoreUser::class])->group(function () {
 
         //  payment
         Route::post('payment', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'payment']);
-        Route::get('callback', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'callback'])->name('callback');
+
         Route::post('updateCharge/{id}', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'updateCharge']);
         Route::get('list', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'list'])->name('list');
         // order
