@@ -32,6 +32,16 @@ class OrderResource extends JsonResource
         } elseif ($this->order_status == 'canceled') {
             $status = 'الغاء الشحنة';
         }
+
+
+        if ($this->payment_status == null || $this->payment_status == 'pending') {
+            $paymentstatus = 'لم يتم الدفع';
+        }
+        elseif ($this->payment_status == 'paid') {
+            $paymentstatus = 'تم الدفع';
+        } elseif ($this->payment_status == 'failed') {
+            $paymentstatus= 'فشل الدفع';
+        }
         if ($this->shippingtype == null) {
             $track = null;
         } elseif ($this->shippingtype->id == 1) {
@@ -73,6 +83,7 @@ class OrderResource extends JsonResource
             'total_price' => round($this->total_price, 2),
             'discount' => $this->discount != null ?-($this->discount) : 0,
             'status' => $status,
+            'payment_status' => $paymentstatus,
             'created_at' => $this->created_at,
             'orderItem' => OrderItemsResource::collection($this->items),
             // 'OrderAddress' => $this->shippingAddress != null ? new OrderAddressResource($this->shippingAddress) : null,
