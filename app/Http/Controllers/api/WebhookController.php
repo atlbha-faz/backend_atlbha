@@ -72,7 +72,7 @@ class WebhookController extends BaseController
             $signature = $request->header('MyFatoorah-Signature');
             $body = (file_get_contents("php://input"));
             $data = json_decode($body, true);
-            if (!$this->validateSignature($data, $secret, $signature)) {
+            if (!($this->validateSignature($data, $secret,  $MyFatoorah_Signature))) {
                 Log::debug('Webhook payload:', $MyFatoorah_Signature);
                 return;
             }
