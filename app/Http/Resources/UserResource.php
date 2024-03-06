@@ -36,6 +36,7 @@ class UserResource extends JsonResource
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'created_at' => (string) $this->created_at,
         'updated_at' => (string) $this->updated_at,
+        'last_login' => $this->last_login,
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
          'role' => New RoleResource($this->roles->first()),

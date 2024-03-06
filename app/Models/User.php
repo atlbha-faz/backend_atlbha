@@ -40,6 +40,7 @@ class User extends Authenticatable
         'verify_code_expires_at',
         'store_id',
         'status',
+        'last_login',
         'is_deleted',
     ];
 
