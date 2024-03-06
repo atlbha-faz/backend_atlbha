@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,13 @@ class StoreResource extends JsonResource
 
     public function toArray($request)
     {
+        $storeuser = User::whereIn('user_type', ['store', 'store_employee'])->where('store_id', $this->id)->pluck('last_login')->toArray();
+        if( !empty($storeuser) ){
+        $lastLogin= max($storeuser);
+        }
+        else{
+            $lastLogin=null; 
+        }
         if ($this->categories->first() == !null) {
             $a = $this->categories->first()->pivot->subcategory_id;
             $subcategory = explode(',', $a);
@@ -116,6 +124,7 @@ class StoreResource extends JsonResource
             'activity' => CategoryResource::collection($this->categories),
             'subcategory' => $this->categories->first() == !null ? CategoryResource::collection(\App\Models\Category::whereIn('id', $subcategory)->get()) : array(),
             'created_at' => (string) $this->created_at,
+            'last_login' =>$lastLogin,
             // 'updated_at' => (string) $this->updated_at,
         ];
     }
