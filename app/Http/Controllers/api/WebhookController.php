@@ -69,12 +69,15 @@ class WebhookController extends BaseController
             $request_headers = apache_request_headers();
             $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
             $secret = "snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
-            $signature = $request->header('MyFatoorah-Signature');
+        
             $body = (file_get_contents("php://input"));
             $data = json_decode($body, true);
             if (!($this->validateSignature($data, $secret,  $MyFatoorah_Signature))) {
-                Log::debug('Webhook payload:', $MyFatoorah_Signature);
-                return;
+                Log::debug('Webhook payload:', $data);
+       
+            }
+            else{
+                Log::debug('Webhook payload true :', $data);
             }
             $event = $request->input('EventType');
             Log::debug('Webhook payload:', $event);
