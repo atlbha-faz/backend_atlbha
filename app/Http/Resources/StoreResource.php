@@ -17,7 +17,7 @@ class StoreResource extends JsonResource
 
     public function toArray($request)
     {
-        $storeuser = User::whereIn('user_type', ['store', 'store_employee'])->where('store_id', $this->id)->pluck('last_login')->toArray();
+        $storeuser = User::whereIn('user_type', ['store', 'store_employee'])->where('store_id', $this->id)->pluck('updated_at')->toArray();
         if( !empty($storeuser) ){
         $lastLogin= max($storeuser);
         }
