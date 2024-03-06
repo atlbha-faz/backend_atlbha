@@ -114,7 +114,7 @@ class CheckoutController extends BaseController
                     $extraprice=2;
                 } else {
                     $shipping_price = $shipping_price->price;
-                    $extraprice = $shipping_price->overprice;
+                    $extraprice = (int) $shipping_price->overprice;
                 }
             }
             if ($order->weight > 15) {

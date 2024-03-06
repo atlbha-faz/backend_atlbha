@@ -20,6 +20,8 @@ class SupplierResource extends JsonResource
             'bankAccount'=>$this->bankAccount,
             'iban'=>$this->iban,
             'supplierCode'=>$this->supplierCode,
+            'status'=>$this->status,
+            'comment'=>$this->comment
         ];
     }
 }
