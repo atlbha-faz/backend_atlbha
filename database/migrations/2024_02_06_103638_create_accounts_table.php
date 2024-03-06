@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('supplierCode')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-            $table->enum('status', ['active', 'not_active'])->default('active');
+            $table->enum('status', ['APPROVED', 'REJECTED','Pending'])->default('Pending');
+            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }

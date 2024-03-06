@@ -29,10 +29,6 @@ return new class extends Migration
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
-            $table->integer('bankId')->nullable();
-            $table->integer('bankAccountHolderName')->nullable();
-            $table->text('bankAccount')->nullable();
-            $table->text('iban')->nullable();
             $table->integer('supplierCode')->nullable();
             $table->enum('status', ['active', 'not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);

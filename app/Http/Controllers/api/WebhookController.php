@@ -6,7 +6,6 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class WebhookController extends BaseController
 {
@@ -67,7 +66,7 @@ class WebhookController extends BaseController
             // $request_headers = apache_request_headers();
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
             // $secret = "snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
-        
+
             // $body = (file_get_contents("php://input"));
             // $data = json_decode($body, true);
             // if (!($this->validateSignature($data, $secret,  $MyFatoorah_Signature))) {
@@ -75,7 +74,7 @@ class WebhookController extends BaseController
             // }
             $event = $request->input('EventType');
             // Log::debug('Webhook payload:', $event);
-            
+
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                 $order = Order::where('id', $payment->orderID)->first();
@@ -84,24 +83,43 @@ class WebhookController extends BaseController
                         $order->update([
                             'payment_status' => "Paid",
                         ]);
-                      break;
+                        break;
                     case "FAILED":
                         $order->update([
                             'payment_status' => "failed",
                         ]);
-                      break;
+                        break;
                     case "CANCELED":
                         $order->update([
                             'payment_status' => "failed",
                         ]);
-                      break;
+                        break;
                     default:
-                    $order->update([
-                        'payment_status' => "pending",
-                    ]);
-                  }
+                        $order->update([
+                            'payment_status' => "pending",
+                        ]);
+                }
 
+            } elseif ($event == 4) {
+                $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
 
+                switch ($request->input('Data.SupplierStatus')) {
+                    case "APPROVED":
+                        $account->update([
+                            'status' => "APPROVED",
+                        ]);
+                        break;
+                    case "REJECTED":
+                        $account->update([
+                            'status' => "REJECTED",
+                            'comment' => $request->input('Data.KycFeedback.Comments'),
+                        ]);
+                        break;
+                    default:
+                        $account->update([
+                            'status' => "Pending",
+                        ]);
+                }
             }
         }
 
