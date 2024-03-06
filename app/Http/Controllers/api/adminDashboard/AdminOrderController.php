@@ -39,7 +39,7 @@ class AdminOrderController extends BaseController
 
         $data = OrderResource::collection(Order::with(['user', 'shipping', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', null)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'order_status']));
+        }])->where('store_id', null)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity','created_at', 'order_status']));
 
         $success['orders'] = $data;
         $success['status'] = 200;
