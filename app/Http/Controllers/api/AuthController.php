@@ -262,7 +262,8 @@ class AuthController extends BaseController
                 // } catch (\Exception $e) {
                 //     return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
                 // }
-                $user->update(['device_token' => $request->device_token]);
+                $user->update(['device_token' => $request->device_token,
+                'last_login'=>now()]);
 
                 $success['user'] = new UserResource($user);
                 $success['token'] = $user->createToken('authToken')->accessToken;
@@ -458,7 +459,9 @@ class AuthController extends BaseController
             $query->whereIn('user_type', ['store', 'store_employee']);
         }, 'verified' => 1])) {
             $user = auth()->user();
-            $user->update(['device_token' => $request->device_token]);
+            $user->update([
+                'device_token' => $request->device_token,
+                'last_login' => now()]);
         }
 
         $success['user'] = new UserResource($user);
