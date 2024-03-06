@@ -62,12 +62,13 @@ class WebhookController extends BaseController
         {
             $data=$request->input('Data');
             if($data  != null){
-            // $secret="snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
-            // $signature = $request->header('MyFatoorah-Signature');
-            // if(!$this->validateSignature($data,$secret,$signature )){
-            //     return;
-            // }
+            $secret="snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
+            $signature = $request->header('MyFatoorah-Signature');
+            if(!$this->validateSignature($data,$secret,$signature )){
+                return;
+            }
             $event= $request->input('EventType');
+            // Log::debug('Webhook payload:', $data);
              if( $event == 1){
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                 $order = Order::where('id', $payment->orderID)->first();
@@ -76,7 +77,7 @@ class WebhookController extends BaseController
                     'payment_status'=>"Paid"
                 ]);
 
-                Log::debug('Webhook payload:', $event);
+                // Log::debug('Webhook payload:', $event);
                 }   
 
                 }
