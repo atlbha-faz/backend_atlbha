@@ -200,7 +200,7 @@ class CartTemplateController extends BaseController
                 });
                 $tax = $subtotal * 0.15;
                 if ($weight > 15) {
-                    $extra_shipping_price = ($weight - 15) * 3;
+                    $extra_shipping_price = ($weight - 15) * 2;
                 } else {
                     $extra_shipping_price = 0;
                 }
