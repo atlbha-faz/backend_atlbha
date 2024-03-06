@@ -496,7 +496,7 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
 
         } else {
-            $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->get();
+            $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->orderByDesc('created_at')->get();
             $success['order'] = OrderResource::collection($orders);
             $success['status'] = 200;
 
