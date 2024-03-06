@@ -262,8 +262,7 @@ class AuthController extends BaseController
                 // } catch (\Exception $e) {
                 //     return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
                 // }
-                $user->update(['device_token' => $request->device_token,
-                'last_login'=>now()]);
+                $user->update(['device_token' => $request->device_token]);
 
                 $success['user'] = new UserResource($user);
                 $success['token'] = $user->createToken('authToken')->accessToken;
@@ -460,8 +459,7 @@ class AuthController extends BaseController
         }, 'verified' => 1])) {
             $user = auth()->user();
             $user->update([
-                'device_token' => $request->device_token,
-                'last_login' => now()]);
+                'device_token' => $request->device_token]);
         }
 
         $success['user'] = new UserResource($user);

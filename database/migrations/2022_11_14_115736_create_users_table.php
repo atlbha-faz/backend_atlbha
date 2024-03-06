@@ -38,7 +38,6 @@ return new class extends Migration
             $table->timestamp('code_expires_at')->nullable();
             $table->integer('verify_code')->nullable();
             $table->timestamp('verify_code_expires_at')->nullable();
-            $table->timestamp('last_login')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->unique(['user_name','user_type','is_deleted']);
