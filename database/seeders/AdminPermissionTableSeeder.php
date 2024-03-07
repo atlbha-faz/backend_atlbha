@@ -277,6 +277,19 @@ class AdminPermissionTableSeeder extends Seeder
             'name_ar' => 'دخول المتاجر',
             'parent_id' => 29,
             'type' => 'admin']);
+            Permission::create(['name' => 'admin.store.addNote',
+            'action_type' => 'addNote',
+            'guard_name' => 'api',
+            'name_ar' => '  إضافة ملاحظة ',
+            'parent_id' => 29,
+            'type' => 'admin']);
+            
+            Permission::create(['name' => 'admin.store.export',
+            'action_type' => 'export',
+            'guard_name' => 'api',
+            'name_ar' => 'تصدير ملف',
+            'parent_id' => 29,
+            'type' => 'admin']);
 
 //////////////////////////////////////////////////////////////// 36
         Permission::create(['name' => 'admin.product',

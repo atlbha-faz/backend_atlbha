@@ -134,7 +134,7 @@ Route::group([
 // change status routers
 Route::middleware([AdminUser::class])->group(function () {
     Route::prefix('/Admin')->group(function () {
-
+        
         // Route::post('payment', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'payment']);
         // Route::get('callback', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'callback'])->name('callback');
         // Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
@@ -303,7 +303,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('option', App\Http\Controllers\api\adminDashboard\OptionController::class);
         Route::resource('user', App\Http\Controllers\api\adminDashboard\UserController::class, ['names' => 'admin.user']);
         Route::resource('etlobha', App\Http\Controllers\api\adminDashboard\EtlobhaController::class, ['names' => 'admin.etlobha']);
-
+        
 
         Route::get('statistics/{id}', [App\Http\Controllers\api\adminDashboard\EtlobhaController::class, 'statistics'])->name('admin.etlobha.statistics');
 
@@ -373,6 +373,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('verification', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'index'])->name('admin.verification.index');
         Route::get('verificationdeleteall', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'deleteall'])->name('admin.verification.deleteall');
         Route::post('addStoreNote', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'addNote'])->name('admin.verification.addNote');
+        Route::post('addToStoreNote', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'addNote'])->name('admin.store.addNote');
         Route::get('acceptVerification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'acceptVerification'])->name('admin.verification.acceptVerification');
         Route::get('specialStatus/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'specialStatus'])->name('admin.store.specialStatus');
         Route::get('rejectVerification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'rejectVerification'])->name('admin.verification.rejectVerification');
