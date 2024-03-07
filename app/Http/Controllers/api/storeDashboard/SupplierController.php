@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Store;
 use App\Models\Account;
 use App\Models\Payment;
@@ -25,7 +26,6 @@ class SupplierController extends BaseController
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
-        $payments =PaymentResource::collection(Payment::where('store_id', auth()->user()->store_id)->get());
         $supplier = new FatoorahServices();
 
       
@@ -280,8 +280,14 @@ class SupplierController extends BaseController
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
     }
 
-    public function handleWebhook(Request $request)
+    public function billing(Request $request)
     {
+        $ids=Orders::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->orwhere('paymentype_id',4)->pluck('id')->toArray();
+        $payments =PaymentResource::collection(Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->get());
+        $success['billing'] = $payments;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم عرض الفواتير', ' show successfully');
     }
 
 }

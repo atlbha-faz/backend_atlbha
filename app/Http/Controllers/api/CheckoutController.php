@@ -238,28 +238,18 @@ class CheckoutController extends BaseController
                     'paymenDate' => Carbon::now(),
                     'paymentType' => $order->paymentype->name,
                     'orderID' => $order->id,
+                    'deduction'=>0,
+                    'price_after_deduction'=> $order->total_price,
                 ]);
             } else {
                 $InvoiceId = null;
                 if ($order->paymentype_id == 1 && $order->shippingtype_id == 5) {
                     
-                    $payment = Payment::create([
-                        'paymenDate' => Carbon::now(),
-                        'paymentType' => $order->paymentype->name,
-                        'orderID' => $order->id,
-                        'store_id'=>$store_domain
-                    ]);
-             
                     $account = Account::where('store_id',$store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
                     $deduction = $order->total_pric * 0.01 + 1;
                     $price_after_deduction = $order->total_price - $deduction;
-                    $payment->update([
-                        'deduction'=>$deduction,
-                        'price_after_deduction'=> $price_after_deduction 
-                    ]);
-                    
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
                         "ProposedShare" => $price_after_deduction,
@@ -294,7 +284,13 @@ class CheckoutController extends BaseController
                           
                             $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
                             $success['payment'] = $response;
-                            $payment->update([
+                            $payment = Payment::create([
+                                'paymenDate' => Carbon::now(),
+                                'paymentType' => $order->paymentype->name,
+                                'orderID' => $order->id,
+                                'store_id'=>$store_domain,
+                                'deduction'=>$deduction,
+                                'price_after_deduction'=> $price_after_deduction,
                                 'paymentTransectionID'=>  $InvoiceId 
 
                             ]);
@@ -313,12 +309,7 @@ class CheckoutController extends BaseController
                     return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
                    
                 }
-                $payment = Payment::create([
-                    'paymenDate' => Carbon::now(),
-                    'paymentType' => $order->paymentype->name,
-                    'orderID' => $order->id,
-                ]);
-
+  
                 $cart->delete();
             }
 
