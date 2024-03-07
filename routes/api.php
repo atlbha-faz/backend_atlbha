@@ -648,7 +648,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('showSupplierDashboard', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'showSupplierDashboard'])->name('store.supplier.showSupplierDashboard');
         Route::post('uploadSupplierDocument', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'uploadSupplierDocument'])->name('store.supplier.uploadSupplierDocument');
         Route::get('indexSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'index'])->name('store.supplier.indexSupplier');
-
+        Route::get('billing', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'billing'])->name('store.supplier.billing');
 
         // });
     });
