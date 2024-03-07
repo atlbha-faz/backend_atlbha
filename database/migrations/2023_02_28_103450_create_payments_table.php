@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('paymentType')->nullable();
             $table->string('paymentTransectionID')->nullable();
             $table->string('paymentCardID')->nullable();
-            $table->integer('deduction')->nullable();
-            $table->integer('price_after_deduction')->nullable();
+            $table->double('deduction')->nullable();
+            $table->double('price_after_deduction')->nullable();
             $table->integer('default_option')->nullable();
             $table->unsignedBigInteger('orderID')->nullable();
             $table->foreign('orderID')->references('id')->on('orders')->onDelete('cascade');
