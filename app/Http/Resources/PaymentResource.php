@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\PaymentOrderResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentResource extends JsonResource
@@ -22,8 +23,8 @@ class PaymentResource extends JsonResource
             'paymentType' => $this->paymentType,
             'paymentTransectionID' => $this->paymentTransectionID,
             // 'paymentCardID' => $this->paymentCardID,
-            'order' =>$this->order,
-            'deduction' => $this->deduction,
+            'orderID' =>new PaymentOrderResource( $this->order),
+            'deduction' => $this->paymentCardID,
             'price_after_deduction' => $this->price_after_deduction,
             'created_at' => (string) $this->created_at,
              'updated_at' => (string) $this->updated_at,
