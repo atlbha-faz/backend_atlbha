@@ -2,24 +2,29 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\NoteResource;
-use App\Http\Resources\StoreResource;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\VerificationResource;
-use App\Mocdels\paymenttype_store;
-use App\Mocdels\shippingtype_store;
-use App\Models\Comment;
-use App\Models\Homepage;
+use Exception;
+use Carbon\Carbon;
 use App\Models\Note;
 use App\Models\Page;
-use App\Models\Product;
+use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
-use App\Models\User;
+use App\Mail\SendMail;
+use App\Models\Comment;
+use App\Models\Product;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Mocdels\paymenttype_store;
+use App\Mocdels\shippingtype_store;
+use Illuminate\Support\Facades\Log;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\VerificationResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
 {
