@@ -248,7 +248,7 @@ class CheckoutController extends BaseController
                     $account = Account::where('store_id',$store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $deduction = $order->total_pric * 0.01 + 1;
+                    $deduction = ($order->total_price * 0.01) + 1;
                     $price_after_deduction = $order->total_price - $deduction;
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
