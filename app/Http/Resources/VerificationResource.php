@@ -76,6 +76,7 @@ class VerificationResource extends JsonResource
             'verification_status' => $verification_status,
             'verification_date' => $this->verification_date,
             'verification_code' => $this->verification_code,
+            'created_at' => $this->created_at,
             'activity' => CategoryResource::collection($this->categories),
             'status' => $status,
             'special' => $special,
