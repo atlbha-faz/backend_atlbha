@@ -60,11 +60,13 @@ class StoreController extends BaseController
         $success['stores'] =
         StoreResource::collection(Store::with(['categories' => function ($query) {
             $query->select('name', 'icon');
+        }, 'city' => function ($query) {
+            $query->select('id','name');
         }, 'country' => function ($query) {
             $query->select('id');
         }, 'user' => function ($query) {
             $query->select('id');
-        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain','phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special','store_email','verification_status', 'verification_date', 'created_at')->get());
+        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain','phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special','store_email','verification_status', 'city_id','verification_date', 'created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
