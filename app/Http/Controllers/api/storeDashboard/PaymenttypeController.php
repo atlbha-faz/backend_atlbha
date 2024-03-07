@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\PaymenttypeResource;
+use App\Models\Account;
 use App\Models\Paymenttype;
-use App\Models\paymenttype_store;
 use Illuminate\Http\Request;
+use App\Models\paymenttype_store;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class PaymenttypeController extends BaseController
 {
