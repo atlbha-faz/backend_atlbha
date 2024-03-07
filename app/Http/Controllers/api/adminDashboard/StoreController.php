@@ -567,29 +567,29 @@ class StoreController extends BaseController
         return $this->sendResponse($success, 'تم حذف المتجر بنجاح', 'store deleted successfully');
     }
 
-    public function addNote(Request $request)
-    {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'subject' => 'required|string|max:255',
-            'details' => 'required|string',
-            'store_id' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-        $note = Note::create([
-            'subject' => $request->subject,
-            'details' => $request->details,
-            'store_id' => $request->store_id,
-            'product_id' => null,
-        ]);
+    // public function addNote(Request $request)
+    // {
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+    //         'subject' => 'required|string|max:255',
+    //         'details' => 'required|string',
+    //         'store_id' => 'required',
+    //     ]);
+    //     if ($validator->fails()) {
+    //         return $this->sendError(null, $validator->errors());
+    //     }
+    //     $note = Note::create([
+    //         'subject' => $request->subject,
+    //         'details' => $request->details,
+    //         'store_id' => $request->store_id,
+    //         'product_id' => null,
+    //     ]);
 
-        $success['notes'] = new NoteResource($note);
-        $success['status'] = 200;
+    //     $success['notes'] = new NoteResource($note);
+    //     $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم إضافة ملاحظة بنجاح', 'note Added successfully');
-    }
+    //     return $this->sendResponse($success, 'تم إضافة ملاحظة بنجاح', 'note Added successfully');
+    // }
 
     // public function verification_update(Request $request)
     // {
@@ -677,6 +677,48 @@ class StoreController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
+    }
+
+    public function addNote(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'subject' => 'required|string|max:255',
+            'details' => 'required|string',
+            'store_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+        $note = Note::create([
+            'subject' => $request->subject,
+            'details' => $request->details,
+            'store_id' => $request->store_id,
+            'product_id' => null,
+        ]);
+        $store = Store::query()->find($request->store_id);
+        $data = [
+            'message' => $request->details,
+            'store_id' => $store->id,
+            'user_id' => $store->user_id,
+            'type' => $request->subject,
+            'object_id' => null,
+        ];
+        $user = User::where('user_type', 'store')->where('store_id', $store->id)->first();
+        // Notification::send($user, new verificationNotification($data));
+        // event(new VerificationEvent($data));
+        try {
+            Mail::to($user->email)->send(new SendMail($data));
+
+        } catch (\Exception $e) {
+            // Exception handling
+            $errorMessage = 'Failed to send email. Please try again later.';
+            Log::error('Email delivery failure: ' . $e->getMessage());
+        }
+        $success['notes'] = new NoteResource($note);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم إضافة ملاحظة بنجاح', 'note Added successfully');
     }
 
 }
