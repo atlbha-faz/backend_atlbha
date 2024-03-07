@@ -60,9 +60,7 @@ class StoreController extends BaseController
         $success['stores'] =
         StoreResource::collection(Store::with(['categories' => function ($query) {
             $query->select('name', 'icon');
-        }, 'city' => function ($query) {
-            $query->select('id','name');
-        }, 'country' => function ($query) {
+        }, 'city', 'country' => function ($query) {
             $query->select('id');
         }, 'user' => function ($query) {
             $query->select('id');
