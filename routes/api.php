@@ -229,6 +229,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index'])->name('admin.adminOrder.index');
         Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show'])->name('admin.adminOrder.show');
         Route::PUT('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update'])->name('admin.adminOrder.update');
+        Route::get('importordersdeleteall', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'deleteall'])->name('admin.adminOrder.deleteall');
 
 
         Route::resource('platform', App\Http\Controllers\api\adminDashboard\PlatformController::class, ['names' => 'admin.platform']);
