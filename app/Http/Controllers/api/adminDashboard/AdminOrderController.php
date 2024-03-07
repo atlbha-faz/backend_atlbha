@@ -25,21 +25,21 @@ class AdminOrderController extends BaseController
     }
     public function index()
     {
-        $success['new'] = Order::where('store_id', null)->where('order_status', 'new')->count();
-        $success['completed'] = Order::where('store_id', null)->where('order_status', 'completed')->count();
+        $success['new'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'new')->count();
+        $success['completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'completed')->count();
 
-        $success['not_completed'] = Order::where('store_id', null)->where('order_status', 'not_completed')->count();
+        $success['not_completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'not_completed')->count();
         $success['canceled'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null)->where('order_status', 'canceled');
         })->count();
 
         $success['all'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null);
-        })->count();
+        })->where('is_deleted', 0)->count();
 
         $data = OrderResource::collection(Order::with(['user', 'shipping', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', null)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity','created_at', 'order_status']));
+        }])->where('store_id', null)->where('is_deleted', 0)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity','created_at', 'order_status']));
 
         $success['orders'] = $data;
         $success['status'] = 200;
@@ -48,7 +48,7 @@ class AdminOrderController extends BaseController
     }
     public function show($order)
     {
-        $order = Order::where('id', $order)->whereHas('items', function ($q) {
+        $order = Order::where('id', $order)->where('is_deleted', 0)->whereHas('items', function ($q) {
             $q->where('store_id', null);
         })->first();
         if (is_null($order)) {
@@ -269,6 +269,26 @@ class AdminOrderController extends BaseController
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+        }
+    }
+    public function deleteall(Request $request)
+    {
+
+            $orders =Order::whereIn('id',$request->id)->where('store_id', null)->where('is_deleted',0)->get();
+            if(count($orders)>0){
+           foreach($orders as $order)
+           {
+             $order->update(['is_deleted' => $order->id]);
+            $success['orders']=New OrderResource($order);
+    
+            }
+
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم حذف الطلب بنجاح', 'order deleted successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
         }
     }
 

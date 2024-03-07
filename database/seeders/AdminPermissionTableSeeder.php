@@ -210,6 +210,13 @@ class AdminPermissionTableSeeder extends Seeder
         Permission::create(['name' => 'admin.adminOrder.show',
             'action_type' => 'show',
             'guard_name' => 'api',
+            'name_ar' => 'عرض ',
+            'parent_id' => 25,
+            'type' => 'admin']);
+
+            Permission::create(['name' => 'admin.adminOrder.deleteall',
+            'action_type' => 'deleteall',
+            'guard_name' => 'api',
             'name_ar' => 'حذف ',
             'parent_id' => 25,
             'type' => 'admin']);
