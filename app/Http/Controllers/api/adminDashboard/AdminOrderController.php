@@ -196,12 +196,20 @@ class AdminOrderController extends BaseController
                                     //     $newRecord->attributes()->attach($attr->id, ['value' => json_encode($lastValues)]);
 
                                     // }
+                                    $qty = $importOrder->stock;
+                                    $importOrder->update([
+                                        'stock' => $qty + $orderItem->quantity,
+                                    ]);
                                 }
                             } else {
                                 $qty = $option->quantity;
                                 $option->update([
                                     'price' => $orderItem->price,
                                     'quantity' => $qty + $orderItem->quantity,
+                                ]);
+                                $qty_product = $importOrder->stock;
+                                $importOrder->update([
+                                    'stock' =>$qty_product+ $orderItem->quantity,
                                 ]);
                             }
                         } else {
