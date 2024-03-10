@@ -9,4 +9,7 @@ class Bank extends Model
 {
     use HasFactory;
     protected $fillable = ['bankId','name','name_ar'];
+    protected $casts = [
+         'bankId'=>'integer',
+    ];
 }
