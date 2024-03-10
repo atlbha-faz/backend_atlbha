@@ -38,7 +38,7 @@ class OrderItemsResource extends JsonResource
             'product' => new ProductResource($this->product),
             'quantity' => $this->quantity,
             'price' => $this->price,
-            'sum' => $this->subtotal($this->id),
+            'sum' =>round( $this->subtotal($this->id),2),
             'stock'=> $this->option_id !== null ?  $qty :$this->product->stock,
             'less_qty'=> $this->option_id !== null ?  $less_qty :$this->product->less_qty,
             'options' => $this->option_id !== null ?  $array :null,
