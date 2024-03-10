@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use DB;
+use App\Models\Bank;
 use App\Models\City;
 use App\Models\User;
 use App\Models\Country;
@@ -12,6 +13,7 @@ use App\Models\Activity;
 use App\Models\Shippingtype;
 use App\Services\FatoorahServices;
 use Spatie\Permission\Models\Role;
+use App\Http\Resources\BankResource;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\UserResource;
@@ -104,8 +106,9 @@ class SelectorController extends BaseController
   }
   public function getBank()
   {
-      $banks = new FatoorahServices();
-      $success['Banks'] =  $banks->getBank('v2/GetBanks');
+    //   $banks = new FatoorahServices();
+
+      $success['Banks'] = BankResource::collection(Bank::get());
 
       $success['status'] = 200;
 
