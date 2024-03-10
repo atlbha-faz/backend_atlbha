@@ -365,7 +365,7 @@ class CheckoutController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-        $coupon = Coupon::where('code', $request->code)->where('is_deleted', 0)->first();
+        $coupon = Coupon::where('code', $request->code)->where('is_deleted', 0)->where('store_id', $store_domain)->first();
 
         if ($coupon != null && $coupon->status == 'active') {
 
