@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\CommentResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class CommentController extends BaseController
 {
-
 
     public function __construct()
     {
@@ -25,14 +24,14 @@ class CommentController extends BaseController
     public function index()
     {
 
-        $success['comment']=CommentResource::collection(Comment::with(['user'=>function ($query) {
-    $query->with(['store'=>function ($query) {
-    $query->select('id','domain','store_name','logo');
-    }]);
-}])->where('is_deleted',0)->where('store_id',null)->where('product_id',null)->where('comment_for','store')->orderByDesc('created_at')->get());
-        $success['status']= 200;
+        $success['comment'] = CommentResource::collection(Comment::with(['user' => function ($query) {
+            $query->with(['store' => function ($query) {
+                $query->select('id', 'domain', 'store_name', 'logo');
+            }]);
+        }])->where('is_deleted', 0)->where('store_id', null)->where('product_id', null)->where('comment_for', 'store')->orderByDesc('created_at')->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع التعليقات بنجاح','comments return successfully');
+        return $this->sendResponse($success, 'تم ارجاع التعليقات بنجاح', 'comments return successfully');
     }
 
     /**
@@ -55,33 +54,29 @@ class CommentController extends BaseController
     {
 
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'comment_text'=>'required|string|max:255',
-            'rateing'=>'required|numeric',
-            'comment_for'=>'required|in:product,store',
-            'product_id'=>'required|exists:products,id',
-
-
+        $validator = Validator::make($input, [
+            'comment_text' => 'required|string|max:255',
+            'rateing' => 'required|numeric',
+            'comment_for' => 'required|in:product,store',
+            'product_id' => 'required|exists:products,id',
 
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
         $comment = Comment::create([
             'comment_text' => $request->comment_text,
             'rateing' => $request->rateing,
             'comment_for' => $request->comment_for,
             'product_id' => $request->product_id,
-           'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()->id,
 
-          ]);
+        ]);
 
+        $success['comments'] = new CommentResource($comment);
+        $success['status'] = 200;
 
-         $success['comments']=New CommentResource($comment);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة تعليق بنجاح','comment Added successfully');
+        return $this->sendResponse($success, 'تم إضافة تعليق بنجاح', 'comment Added successfully');
 
     }
 
@@ -92,19 +87,18 @@ class CommentController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function show($comment)
-   {
-        $comment = Comment::query()->where('store_id',null)->where('product_id',null)->where('comment_for','store')->find($comment);
+    {
+        $comment = Comment::query()->where('store_id', null)->where('product_id', null)->where('comment_for', 'store')->find($comment);
 
-        if (is_null($comment) ||$comment->is_deleted !=0){
-        return $this->sendError("'التعليق غير موجودة","comment type is't exists");
+        if (is_null($comment) || $comment->is_deleted != 0) {
+            return $this->sendError("'التعليق غير موجودة", "comment type is't exists");
         }
 
+        $success['comments'] = new CommentResource($comment);
+        $success['status'] = 200;
 
-       $success['comments']=New CommentResource($comment);
-       $success['status']= 200;
-
-        return $this->sendResponse($success,'تم عرض التعليق بنجاح','comment showed successfully');
-     }
+        return $this->sendResponse($success, 'تم عرض التعليق بنجاح', 'comment showed successfully');
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -125,60 +119,58 @@ class CommentController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $comment)
-      {
-        $comment =  Comment::where('id', $comment)->first();
-         if (is_null($comment) ||$comment->is_deleted !=0){
-         return $this->sendError(" التعليق غير موجود","comment is't exists");
-          }
-         $input = $request->all();
-         $validator =  Validator::make($input ,[
-           'comment_text'=>'required|string|max:255',
-            'rateing'=>'required|numeric',
-            'comment_for'=>'required|in:product,store',
-            'product_id'=>'required|exists:products,id',
-            'user_id'=>'required|exists:users,id'
-         ]);
-         if ($validator->fails())
-         {
+    {
+        $comment = Comment::where('id', $comment)->first();
+        if (is_null($comment) || $comment->is_deleted != 0) {
+            return $this->sendError(" التعليق غير موجود", "comment is't exists");
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'comment_text' => 'required|string|max:255',
+            'rateing' => 'required|numeric',
+            'comment_for' => 'required|in:product,store',
+            'product_id' => 'required|exists:products,id',
+            'user_id' => 'required|exists:users,id',
+        ]);
+        if ($validator->fails()) {
             # code...
-            return $this->sendError(null,$validator->errors());
-         }
-         $comment->update([
+            return $this->sendError(null, $validator->errors());
+        }
+        $comment->update([
             'comment_text' => $request->input('comment_text'),
             'rateing' => $request->input('rateing'),
             'comment_for' => $request->comment_for,
             'product_id' => $request->input('product_id'),
-           'user_id' => $request->input('user_id'),
-         ]);
-         //$country->fill($request->post())->update();
-            $success['comments']=New commentResource($comment);
-            $success['status']= 200;
+            'user_id' => $request->input('user_id'),
+        ]);
+        //$country->fill($request->post())->update();
+        $success['comments'] = new commentResource($comment);
+        $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','comment updated successfully');
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'comment updated successfully');
     }
 
     public function changeSatusall(Request $request)
     {
-        $comments =Comment::whereIn('id',$request->id)->where('store_id',null)->where('product_id',null)->where('comment_for','store')->where('is_deleted',0)->get();
+        $comments = Comment::whereIn('id', $request->id)->where('store_id', null)->where('product_id', null)->where('comment_for', 'store')->where('is_deleted', 0)->get();
 
-        if(count($comments)>0){
-            foreach($comments as $comment)
-            {
+        if (count($comments) > 0) {
+            foreach ($comments as $comment) {
 
-     /*   if($comment->status === 'active'){
-        $comment->update(['status' => 'not_active']);
+                /*   if($comment->status === 'active'){
+                $comment->update(['status' => 'not_active']);
+                }
+                else{
+                 */
+                $comment->update(['status' => 'active']);
+
+                //}
+            }
         }
-        else{
-        */
-        $comment->update(['status' => 'active']);
-      
-            //}
-         }
-         }  
-        $success['comments']=CommentResource::collection($comments);
-        $success['status']= 200;
+        $success['comments'] = CommentResource::collection($comments);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم نشر التقييم بنجاح','comment has been published successfully');
+        return $this->sendResponse($success, 'تم نشر التقييم بنجاح', 'comment has been published successfully');
 
     }
 
@@ -204,19 +196,18 @@ class CommentController extends BaseController
 
     public function deleteall(Request $request)
     {
-        $comments =Comment::whereIn('id',$request->id)->where('store_id',null)->where('product_id',null)->where('comment_for','store')->where('is_deleted',0)->get();
+        $comments = Comment::whereIn('id', $request->id)->where('store_id', null)->where('product_id', null)->where('comment_for', 'store')->where('is_deleted', 0)->get();
 
-        if(count($comments)>0){
-            foreach($comments as $comment)
-            {
+        if (count($comments) > 0) {
+            foreach ($comments as $comment) {
 
                 $comment->update(['is_deleted' => $comment->id]);
-         }
-         }  
-        $success['comments']=CommentResource::collection($comments);
-        $success['status']= 200;
+            }
+        }
+        $success['comments'] = CommentResource::collection($comments);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم حذف التعليق بنجاح','comment deleted successfully');
+        return $this->sendResponse($success, 'تم حذف التعليق بنجاح', 'comment deleted successfully');
 
     }
 }

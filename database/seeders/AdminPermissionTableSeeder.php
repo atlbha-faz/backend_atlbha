@@ -214,7 +214,7 @@ class AdminPermissionTableSeeder extends Seeder
             'parent_id' => 25,
             'type' => 'admin']);
 
-            Permission::create(['name' => 'admin.adminOrder.deleteall',
+        Permission::create(['name' => 'admin.adminOrder.deleteall',
             'action_type' => 'deleteall',
             'guard_name' => 'api',
             'name_ar' => 'حذف ',
@@ -277,14 +277,14 @@ class AdminPermissionTableSeeder extends Seeder
             'name_ar' => 'دخول المتاجر',
             'parent_id' => 29,
             'type' => 'admin']);
-            Permission::create(['name' => 'admin.store.addNote',
+        Permission::create(['name' => 'admin.store.addNote',
             'action_type' => 'addNote',
             'guard_name' => 'api',
             'name_ar' => '  إضافة ملاحظة ',
             'parent_id' => 29,
             'type' => 'admin']);
-            
-            Permission::create(['name' => 'admin.store.export',
+
+        Permission::create(['name' => 'admin.store.export',
             'action_type' => 'export',
             'guard_name' => 'api',
             'name_ar' => 'تصدير ملف',
@@ -700,6 +700,45 @@ class AdminPermissionTableSeeder extends Seeder
             'name_ar' => 'تفعيل / تعطيل',
             'parent_id' => 87,
             'type' => 'admin']);
+
+        ///////////////////////////////////////////////////////////////
+        Permission::create(['name' => 'admin.commonquestion',
+            'action_type' => 'page',
+            'guard_name' => 'api',
+            'name_ar' => 'الصفحات',
+            'parent_id' => null,
+            'type' => 'admin']);
+        Permission::create(['name' => 'admin.commonquestion.index',
+            'action_type' => 'show',
+            'guard_name' => 'api',
+            'name_ar' => ' عرض الكل ',
+            'parent_id' => 87,
+            'type' => 'admin']);
+        Permission::create(['name' => 'admin.commonquestion.show',
+            'action_type' => 'show',
+            'guard_name' => 'api',
+            'name_ar' => 'عرض',
+            'parent_id' => 87,
+            'type' => 'admin']);
+        Permission::create(['name' => 'admin.commonquestion.store',
+            'action_type' => 'store',
+            'guard_name' => 'api',
+            'name_ar' => 'إضافة',
+            'parent_id' => 87,
+            'type' => 'admin']);
+        Permission::create(['name' => 'admin.commonquestion.update',
+            'action_type' => 'update',
+            'guard_name' => 'api',
+            'name_ar' => 'تعديل',
+            'parent_id' => 87,
+            'type' => 'admin']);
+        Permission::create(['name' => 'admin.commonquestion.deleteall',
+            'action_type' => 'deleteall',
+            'guard_name' => 'api',
+            'name_ar' => 'حذف',
+            'parent_id' => 87,
+            'type' => 'admin']);
+  
 //////////////////////////////////////////////////////////////// 93
 
         Permission::create(['name' => 'admin.user',
