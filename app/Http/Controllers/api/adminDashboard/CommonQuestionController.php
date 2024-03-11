@@ -98,7 +98,7 @@ class CommonQuestionController extends BaseController
         if (count($questions) > 0) {
             foreach ($questions as $question) {
 
-                $question->update(['is_deleted' => $question->id]);
+                $question->delete();
             }
         }
         $success['commonQuestions']=CommonQuestionResource::collection($questions);

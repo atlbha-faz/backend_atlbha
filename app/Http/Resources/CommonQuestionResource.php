@@ -18,7 +18,7 @@ class CommonQuestionResource extends JsonResource
             'id' => $this->id,
             'question' => $this->question,
             'answer' => $this->answer,
-            'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
+            // 'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
         ];
