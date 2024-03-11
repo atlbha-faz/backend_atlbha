@@ -700,15 +700,15 @@ class AdminPermissionTableSeeder extends Seeder
             'name_ar' => 'تفعيل / تعطيل',
             'parent_id' => 87,
             'type' => 'admin']);
-
-        ///////////////////////////////////////////////////////////////
-        Permission::create(['name' => 'admin.commonquestion',
-            'action_type' => 'page',
+            /////////////////////////////////////////////
+            Permission::create(['name' => 'admin.commonquestion',
+            'action_type' => 'commonquestion',
             'guard_name' => 'api',
-            'name_ar' => 'الصفحات',
+            'name_ar' => 'الاسئلة الشائعة',
             'parent_id' => null,
             'type' => 'admin']);
-        Permission::create(['name' => 'admin.commonquestion.index',
+
+            Permission::create(['name' => 'admin.commonquestion.index',
             'action_type' => 'show',
             'guard_name' => 'api',
             'name_ar' => ' عرض الكل ',
@@ -738,7 +738,8 @@ class AdminPermissionTableSeeder extends Seeder
             'name_ar' => 'حذف',
             'parent_id' => 87,
             'type' => 'admin']);
-  
+       
+            
 //////////////////////////////////////////////////////////////// 93
 
         Permission::create(['name' => 'admin.user',
