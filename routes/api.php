@@ -225,6 +225,11 @@ Route::middleware([AdminUser::class])->group(function () {
         // Route::resource('unit', App\Http\Controllers\api\adminDashboard\UnitController::class);
         // Route::resource('video', App\Http\Controllers\api\adminDashboard\VideoController::class);
         Route::resource('activity', App\Http\Controllers\api\adminDashboard\ActivityController::class, ['names' => 'admin.activity']);
+        
+        Route::resource('commonquestion', App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, ['names' => 'admin.commonquestion']);
+        Route::get('commonDeleteall', [App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, 'deleteall'])->name('admin.commonquestion.deleteall');
+
+
 
         Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index'])->name('admin.adminOrder.index');
         Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show'])->name('admin.adminOrder.show');
