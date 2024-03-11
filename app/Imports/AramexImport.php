@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
 use Throwable;
 
-class SaeeImport implements ToModel,
+class AramexImport implements ToModel,
 WithHeadingRow,
 SkipsOnError,
 WithValidation,

@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CityResource;
-use App\Imports\ImileImport;
-use App\Imports\JTImport;
-use App\Imports\SaeeImport;
-use App\Imports\SmsaImport;
 use App\Models\City;
-use App\Models\shippingcities_shippingtypes;
+use App\Imports\JTImport;
+use App\Imports\SmsaImport;
+use App\Imports\ImileImport;
 use App\Models\ShippingCity;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Imports\AramexImport;
+use App\Http\Resources\CityResource;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
+use App\Models\shippingcities_shippingtypes;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CityController extends BaseController
 {
@@ -49,7 +49,7 @@ class CityController extends BaseController
         try {
 
             // Excel::import(new SaeeImport, $request->file);
-            Excel::import(new SaeeImport, request()->file('file'));
+            Excel::import(new AramexImport, request()->file('file'));
 
             $success['status'] = 200;
 
