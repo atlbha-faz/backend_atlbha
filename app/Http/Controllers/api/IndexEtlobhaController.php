@@ -2,32 +2,34 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\atlobhaContactResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\CityResource;
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\PartnerResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\StoreResource;
-use App\Http\Resources\website_socialmediaResource;
-use App\Models\AtlobhaContact;
-use App\Models\categories_stores;
-use App\Models\Category;
 use App\Models\City;
-use App\Models\Comment;
-use App\Models\Homepage;
 use App\Models\Page;
-use App\Models\Page_page_category;
+use App\Models\Store;
+use App\Models\Comment;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Setting;
-use App\Models\Store;
-use App\Models\website_socialmedia;
+use App\Models\Category;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
+use App\Models\AtlobhaContact;
+use App\Models\CommonQuestion;
+use App\Models\categories_stores;
+use App\Models\Page_page_category;
+use App\Models\website_socialmedia;
+use App\Http\Resources\CityResource;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\PartnerResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\atlobhaContactResource;
+use App\Http\Resources\CommonQuestionResource;
+use App\Http\Resources\website_socialmediaResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexEtlobhaController extends BaseController
 {
@@ -119,6 +121,14 @@ class IndexEtlobhaController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم إضافة الرسالة  بنجاح', 'message Added successfully');
+    }
+    public function commonquestion()
+    {
+
+        $success['commonQuestions']=CommonQuestionResource::collection(CommonQuestion::where('is_deleted',0)->get());
+        $success['status']= 200;
+
+         return $this->sendResponse($success,'تم ارجاع الاسئلة بنجاح','Questions return successfully');
     }
 }
 //
