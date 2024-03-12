@@ -74,8 +74,6 @@ class SupplierController extends BaseController
             'SupplierName' => $store->owner_name,
             'Mobile' => $storeAdmain->phonenumber,
             'Email' => $storeAdmain->email,
-            'CommissionPercentage' => 0.1,
-            'CommissionValue' => 0,
             'DepositTerms' => 'Daily',
             'BankId' => $request->bankId,
             'BankAccountHolderName' => $request->bankAccountHolderName,
