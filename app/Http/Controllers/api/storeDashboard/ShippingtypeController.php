@@ -159,7 +159,11 @@ class ShippingtypeController extends BaseController
                 return $this->sendError(null, $validator->errors());
             }
             // Check if there's at least one active shipping company
-
+                if($id == 1){
+                    $request->price=20;
+                    $request->time=3;
+                    $request->overprice=1;
+                }
             $shippingtype = shippingtype_store::create([
                 'shippingtype_id' => $id,
                 'store_id' => auth()->user()->store_id,
