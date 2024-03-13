@@ -68,9 +68,9 @@ class SelectorController extends BaseController
     }
 
 
-  
+
     public function shippingcities($id)
-    {  
+    {
         //if shipping is another
         // if($id == 5){
         //     $id=4;
@@ -122,7 +122,7 @@ class SelectorController extends BaseController
     //   for ($i = 3; $i <= 25; $i++) {
     //       $arr[]=$i;
     //   }
-     
+
     //   $role->syncPermissions($arr);
     //   $user = User::create([
     //       'name' => "مدخل منتجات",
@@ -135,7 +135,7 @@ class SelectorController extends BaseController
     //       'verified' => 1,
 
     //   ]);
-   
+
     //   $user->assignRole($role->name);
     // role_has_permissions::create([])
     $role = Role::where('id',2)->first();

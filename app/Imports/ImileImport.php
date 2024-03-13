@@ -36,7 +36,7 @@ SkipsOnFailure
             'country_id' => 1,
 
         ]);
-        $saeeCity->shippingtypes()->attach(3);
+        $saeeCity->shippingtypes()->attach(5);
 
         return $saeeCity;
     }
@@ -55,7 +55,7 @@ SkipsOnFailure
         return "validation er";
     }
 
-    public function onFailure(Failure...$failure)
+    public function onFailure(Failure ...$failure)
     {
     }
 
