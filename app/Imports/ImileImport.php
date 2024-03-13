@@ -29,16 +29,14 @@ SkipsOnFailure
     {
         $name_en = ShippingCity::where('name_en', $row['name_en'])->pluck('name_en')->first();
         $region_id = Region::where('name_en', $row['province'])->pluck('id')->first();
-        $saeeCity = ShippingCity::updateOrCreate([
-            'name_en' => $name_en,
-        ], [
-
+        $saeeCity = ShippingCity::create([
+            'name' => $row['name'],
+            'name_en' => $row['name_en'],
             'region_id' => $region_id,
-
+            'country_id' => 1,
 
         ]);
-
-        // $saeeCity->shippingtypes()->attach(3);
+        $saeeCity->shippingtypes()->attach(5);
 
         return $saeeCity;
     }
