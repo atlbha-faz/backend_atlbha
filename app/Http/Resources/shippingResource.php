@@ -32,6 +32,7 @@ class shippingResource extends JsonResource
             'id' =>$this->id,
             'shipping_id' => $this->shipping_id,
              'track_id' => $this->track_id,
+             'sticker'=> $this->sticker,
              'district'=>$this->district,
             'city'=>$this->city,
             'street_address'=>$this->streetaddress,
