@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('shipping_id');
             $table->string('track_id')->nullable();
+            $table->longText('sticker')->nullable();
             $table->longText('description')->nullable();
             $table->string('city')->nullable();
             $table->string('streetaddress')->nullable();
