@@ -72,9 +72,9 @@ class SelectorController extends BaseController
     public function shippingcities($id)
     {  
         //if shipping is another
-        if($id == 5){
-            $id=4;
-        }
+        // if($id == 5){
+        //     $id=4;
+        // }
         $shippingCompany = Shippingtype::query()->find($id);
         $success['cities'] =  $shippingCompany !== null ? ShippingCitiesResource::collection($shippingCompany->shippingcities()->where('status', 'active')->get()) : array();
         $success['status'] = 200;
