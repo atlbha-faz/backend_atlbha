@@ -27,7 +27,7 @@ class ReportController extends BaseController
         $startDate = $request->startDate;
         $endDate = $request->endDate;
 
-        if (!isset($startDate) || $startDate == "" || isset($endDate) || $endDate == "") {
+        if (!$request->has('startDate')) {
 
             $success['total_sales'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->sum('total_price');
             $success['products_costs'] = Product::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->sum('purchasing_price');
@@ -35,7 +35,7 @@ class ReportController extends BaseController
             $success['shipping_price'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->sum('shipping_price');
             $success['taxs'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->sum('tax');
             $success['payment'] = 0;
-            $success['sales'] = $success['total_sales'] + $success['products_costs'] + $success['discount_coupons'] + $success['taxs'] + $success['payment'] + $success['shipping_price'];
+            $success['sales'] =  round($success['total_sales'] + $success['products_costs'] + $success['discount_coupons'] + $success['taxs'] + $success['payment'] + $success['shipping_price'], 2);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع التقارير بنجاح', 'Reports all return successfully');
 
@@ -46,7 +46,7 @@ class ReportController extends BaseController
             $success['shipping_price'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->sum('shipping_price');
             $success['taxs'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->sum('tax');
             $success['payment'] = 0;
-            $success['sales'] = $success['total_sales'] + $success['products_costs'] + $success['discount_coupons'] + $success['taxs'] + $success['payment'] + $success['shipping_price'];
+            $success['sales'] =  round($success['total_sales'] + $success['products_costs'] + $success['discount_coupons'] + $success['taxs'] + $success['payment'] + $success['shipping_price'], 2);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع التقارير بنجاح', 'Reports return successfully');
 
