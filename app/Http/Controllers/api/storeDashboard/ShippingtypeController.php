@@ -178,7 +178,7 @@ class ShippingtypeController extends BaseController
         // }
         $success['shippingtypess'] = ShippingtypeResource::collection(Shippingtype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status'] = 200;
-        return $this->sendResponse($success, 'تم تعديل حالة طريقةالشحن بنجاح', 'shipping type updated successfully');
+        return $this->sendResponse($success, 'تم تعديل حالة طريقة الشحن بنجاح', 'shipping type updated successfully');
     }
     public function updatePrice(Request $request, $id)
     {
