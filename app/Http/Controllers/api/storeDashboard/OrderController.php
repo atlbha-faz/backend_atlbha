@@ -874,6 +874,7 @@ class OrderController extends BaseController
                                 "CurrencyIso" => "SA",
 
                             ];
+                            $data=json_encode($data );
                             $supplier = new FatoorahServices();
                             $supplierCode = $supplier->createSupplier('v2/MakeRefund', $data);
                             if ($supplierCode->IsSuccess == false) {
