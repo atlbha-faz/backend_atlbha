@@ -887,7 +887,7 @@ class OrderController extends BaseController
 
                         //             $ship_id = null;
                         //             $track_id = null;
-                        //             $success['shippingCompany'] = $ship->msg->message;
+                        $success['shippingCompany'] = $arData;
                         return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
                 }
