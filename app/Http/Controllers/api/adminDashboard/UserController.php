@@ -72,7 +72,7 @@ class UserController extends BaseController
                 return $query->whereIn('user_type', ['admin_employee', 'admin'])
                     ->where('is_deleted', 0);
             })],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             //'country_id'=>'required|exists:countries,id',
             //'city_id'=>'required|exists:cities,id',
             'role' => 'required|string|max:255|exists:roles,name',
@@ -165,7 +165,7 @@ class UserController extends BaseController
                     ->where('id', '!=', $user->id);
             }),
             ],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
 

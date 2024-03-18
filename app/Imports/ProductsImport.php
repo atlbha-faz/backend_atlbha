@@ -120,7 +120,7 @@ SkipsOnFailure
             '*.selling_price' => ['required', 'numeric', 'gt:0'],
             '*.short_description' => 'required|string|max:100',
             '*.stock' => ['required', 'numeric', 'gt:0'],
-            // 'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            // 'cover'=>['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
             '*.discount_price' => ['nullable', 'numeric'],
             // '*.discount_percent'=>['required','numeric'],
             '*.seo' => 'nullable',

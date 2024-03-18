@@ -45,7 +45,7 @@ class OrderResource extends JsonResource
         if ($this->shippingtype == null) {
             $track = null;
         } elseif ($this->shippingtype->id == 1) {
-            $track = 'https://www.saee.sa/ar/track-your-shipment/';
+            $track = 'https://www.aramex.com/sa/ar/home#';
         } elseif ($this->shippingtype->id == 2) {
             $track = 'https://sdm.smsaexpress.com/';
         } elseif ($this->shippingtype->id == 3) {

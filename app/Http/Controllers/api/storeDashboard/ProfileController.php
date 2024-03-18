@@ -49,7 +49,7 @@ class ProfileController extends BaseController
             //         ->where('id', '!=', $user->id);
             // }),
             // ],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
         ]);
         if ($validator->fails()) {
             # code...

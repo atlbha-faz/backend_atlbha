@@ -93,15 +93,15 @@ class EtlobhaController extends BaseController
 
         if (($request->hasFile("cover"))) {
             $validator = Validator::make($input, [
-                'cover' => 'required |image| mimes:jpeg,png,jpg,gif,svg| max:2048',
-                // 'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+                'cover' => 'required |image| mimes:jpeg,png,jpg,gif,svg| max:1048',
+                // 'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
 
             ]);
             $cover = $request->cover;
 
         } else {
             $validator = Validator::make($input, [
-                'cover' => 'required |string| max:2048',
+                'cover' => 'required |string| max:1048',
                 // 'images.*' => ['required', 'string'],
             ]);
             if ($validator->fails()) {
@@ -292,7 +292,7 @@ class EtlobhaController extends BaseController
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
 
-            'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'images' => 'nullable|array',
             // 'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             // 'data' => 'nullable|array',

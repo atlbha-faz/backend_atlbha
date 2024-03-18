@@ -48,7 +48,7 @@ class ProfileCustomerController extends BaseController
                 return $query->whereIn('user_type', ['customer'])->where('id', '!=', $user->id)->where('is_deleted',0);
             }),
             ],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
         ]);
         if ($validator->fails()) {
             # code...

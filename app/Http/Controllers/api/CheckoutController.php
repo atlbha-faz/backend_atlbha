@@ -2,33 +2,33 @@
 
 namespace App\Http\Controllers\api;
 
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Coupon;
-use App\Models\Option;
-use App\Models\Account;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\OrderItem;
-use App\Models\CartDetail;
-use App\Models\Paymenttype;
-use App\Models\OrderAddress;
-use Illuminate\Http\Request;
-use App\Models\coupons_users;
-use App\Models\Importproduct;
-use App\Models\coupons_products;
-use App\Models\shippingtype_store;
-use App\Services\FatoorahServices;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\ShippingtypeTemplateResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\Account;
+use App\Models\Cart;
+use App\Models\CartDetail;
+use App\Models\Coupon;
+use App\Models\coupons_products;
+use App\Models\coupons_users;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderItem;
+use App\Models\Payment;
+use App\Models\Paymenttype;
+use App\Models\Product;
+use App\Models\shippingtype_store;
+use App\Models\Store;
+use App\Models\User;
+use App\Services\FatoorahServices;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends BaseController
 {
@@ -111,19 +111,19 @@ class CheckoutController extends BaseController
                 $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
                 if ($shipping_price == null) {
                     $shipping_price = 35;
-                    $extraprice=2;
+                    $extraprice = 2;
                 } else {
-                    $overprice=$shipping_price->overprice;
+                    $overprice = $shipping_price->overprice;
                     $shipping_price = $shipping_price->price;
-                    $extraprice=$overprice;
+                    $extraprice = $overprice;
                 }
             }
             if ($order->weight > 15) {
-                $default_extra_price=($order->weight - 15) * 2;
-                $extra_shipping_price = ($order->weight - 15) *  $extraprice;
+                $default_extra_price = ($order->weight - 15) * 2;
+                $extra_shipping_price = ($order->weight - 15) * $extraprice;
             } else {
                 $extra_shipping_price = 0;
-                $default_extra_price=0;
+                $default_extra_price = 0;
             }
             if ($cart->free_shipping == 1) {
                 $order->update([
@@ -133,7 +133,7 @@ class CheckoutController extends BaseController
             } else {
                 $order->update([
                     'shipping_price' => $shipping_price,
-                    'total_price' => (($order->total_price - 35)-$default_extra_price)+$shipping_price+  $extra_shipping_price,
+                    'total_price' => (($order->total_price - 35) - $default_extra_price) + $shipping_price + $extra_shipping_price,
                 ]);
 
             }
@@ -223,7 +223,7 @@ class CheckoutController extends BaseController
 
             }
 
-            if ($order->paymentype_id == 4) {
+            if ($order->paymentype_id == 4 && $order->shippingtype_id == 5) {
 
                 //الدفع عند الاستلام
                 $order->update([
@@ -238,14 +238,14 @@ class CheckoutController extends BaseController
                     'paymenDate' => Carbon::now(),
                     'paymentType' => $order->paymentype->name,
                     'orderID' => $order->id,
-                    'deduction'=>0,
-                    'price_after_deduction'=> $order->total_price,
+                    'deduction' => 0,
+                    'price_after_deduction' => $order->total_price,
                 ]);
             } else {
                 $InvoiceId = null;
                 if ($order->paymentype_id == 1 && $order->shippingtype_id == 5) {
-                    
-                    $account = Account::where('store_id',$store_domain)->first();
+
+                    $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
                     $deduction = ($order->total_price * 0.01) + 1;
@@ -259,7 +259,7 @@ class CheckoutController extends BaseController
                         "AutoCapture" => true,
                         "Bypass3DS" => false,
                     ];
-                     $processingDetailsobject = (object) ($processingDetails);
+                    $processingDetailsobject = (object) ($processingDetails);
                     $supplierobject = (object) ($supplierdata);
                     $data = [
                         "PaymentMethodId" => $paymenttype->paymentMethodId,
@@ -270,7 +270,7 @@ class CheckoutController extends BaseController
                         "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/failed',
                         "Language" => 'ar',
                         "DisplayCurrencyIso" => 'SAR',
-                        "ProcessingDetails"=>$processingDetailsobject,
+                        "ProcessingDetails" => $processingDetailsobject,
                         "Suppliers" => [
                             $supplierobject,
                         ],
@@ -281,35 +281,112 @@ class CheckoutController extends BaseController
 
                     if (isset($response['IsSuccess'])) {
                         if ($response['IsSuccess'] == true) {
-                          
+
                             $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
                             $success['payment'] = $response;
                             $payment = Payment::create([
                                 'paymenDate' => Carbon::now(),
                                 'paymentType' => $order->paymentype->name,
                                 'orderID' => $order->id,
-                                'store_id'=>$store_domain,
-                                'deduction'=>$deduction,
-                                'price_after_deduction'=> $price_after_deduction,
-                                'paymentTransectionID'=>  $InvoiceId 
+                                'store_id' => $store_domain,
+                                'deduction' => $deduction,
+                                'price_after_deduction' => $price_after_deduction,
+                                'paymentTransectionID' => $InvoiceId,
 
                             ]);
 
+                        } else {
+                            $success['payment'] = $response;
                         }
-                        else{
-                            $success['payment'] = $response;  
-                        }
-                    }
-                    else{
-                    $success['payment'] = $response;
+                    } else {
+                        $success['payment'] = $response;
                     }
                     $cart->delete();
                     $success['status'] = 200;
 
                     return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
-                   
+
+                } elseif ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
+
+                    $account = Account::where('store_id', $store_domain)->first();
+                    $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
+                    $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
+                    $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
+                    if ($shipping_price == null) {
+                        $shipping_price = 35;
+                        $extraprice = 2;
+                    } else {
+                        $overprice = $shipping_price->overprice;
+                        $shipping_price = $shipping_price->price;
+                        $extraprice = $overprice;
+                    }if ($order->weight > 15) {
+                        $default_extra_price = ($order->weight - 15) * 2;
+                        $extra_shipping_price = ($order->weight - 15) * $extraprice;
+                    } else {
+                        $extra_shipping_price = 0;
+                        $default_extra_price = 0;
+                    }
+                    $order->total_price = ($order->total_price)-($shipping_price)-($extra_shipping_price);
+                    $deduction = ($order->total_price * 0.01) + 1;
+                    $price_after_deduction = $order->total_price - $deduction;
+                    $supplierdata = [
+                        "SupplierCode" => $account->supplierCode,
+                        "ProposedShare" => $price_after_deduction,
+                        "InvoiceShare" => $order->total_price,
+                    ];
+                    $processingDetails = [
+                        "AutoCapture" => true,
+                        "Bypass3DS" => false,
+                    ];
+                    $processingDetailsobject = (object) ($processingDetails);
+                    $supplierobject = (object) ($supplierdata);
+                    $data = [
+                        "PaymentMethodId" => $paymenttype->paymentMethodId,
+                        "CustomerName" => $customer->name,
+                        "InvoiceValue" => $order->total_price, // total_price
+                        "CustomerEmail" => $customer->email,
+                        "CallBackUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/success',
+                        "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/failed',
+                        "Language" => 'ar',
+                        "DisplayCurrencyIso" => 'SAR',
+                        "ProcessingDetails" => $processingDetailsobject,
+                        "Suppliers" => [
+                            $supplierobject,
+                        ],
+                    ];
+
+                    $supplier = new FatoorahServices();
+                    $response = $supplier->executePayment('v2/ExecutePayment', $data);
+
+                    if (isset($response['IsSuccess'])) {
+                        if ($response['IsSuccess'] == true) {
+
+                            $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
+                            $success['payment'] = $response;
+                            $payment = Payment::create([
+                                'paymenDate' => Carbon::now(),
+                                'paymentType' => $order->paymentype->name,
+                                'orderID' => $order->id,
+                                'store_id' => $store_domain,
+                                'deduction' => $deduction,
+                                'price_after_deduction' => $price_after_deduction,
+                                'paymentTransectionID' => $InvoiceId,
+
+                            ]);
+
+                        } else {
+                            $success['payment'] = $response;
+                        }
+                    } else {
+                        $success['payment'] = $response;
+                    }
+                    $cart->delete();
+                    $success['status'] = 200;
+
+                    return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
+
                 }
-  
+
                 $cart->delete();
             }
 

@@ -86,7 +86,7 @@ class UserController extends BaseController
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0);
             })],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
         if ($validator->fails()) {
@@ -187,7 +187,7 @@ class UserController extends BaseController
                     ->where('id', '!=', $user->id);
             }),
             ],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'role' => 'required|string|max:255|exists:roles,name',
 
         ]);
