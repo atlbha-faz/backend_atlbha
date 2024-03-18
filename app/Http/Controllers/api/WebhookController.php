@@ -83,6 +83,9 @@ class WebhookController extends BaseController
                         $order->update([
                             'payment_status' => "Paid",
                         ]);
+                        $payment->update([
+                            'paymentCardID' => $request->input('Data.PaymentId'),
+                        ]);
                         break;
                     case "FAILED":
                         $order->update([

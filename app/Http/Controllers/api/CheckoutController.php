@@ -326,9 +326,10 @@ class CheckoutController extends BaseController
                         $extra_shipping_price = 0;
                         $default_extra_price = 0;
                     }
-                    $order->total_price = ($order->total_price)-($shipping_price)-($extra_shipping_price);
-                    $deduction = ($order->total_price * 0.01) + 1;
-                    $price_after_deduction = $order->total_price - $deduction;
+                    $order->total_price = $order->total_price;
+                    $total_price_without_shipping = ($order->total_price)-($shipping_price)-($extra_shipping_price);
+                    $deduction = ($total_price_without_shipping * 0.01) + 1;
+                    $price_after_deduction = $total_price_without_shipping - $deduction;
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
                         "ProposedShare" => $price_after_deduction,
