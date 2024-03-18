@@ -51,7 +51,7 @@ class StoreCategoryController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'icon' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'icon' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             // 'store_id' =>'required|exists:stores,id',
             'data.*.name' => 'nullable|string|max:255',
             'data.*.id' => 'nullable|numeric',
@@ -183,7 +183,7 @@ class StoreCategoryController extends BaseController
             'name' => 'required|string|max:255',
             'data.*.name' => 'nullable|string|max:255',
             'data.*.id' => 'nullable|numeric',
-            // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+            // 'icon'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
         ]);
         if ($validator->fails()) {
             # code...

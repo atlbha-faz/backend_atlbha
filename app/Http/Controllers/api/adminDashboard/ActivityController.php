@@ -55,7 +55,7 @@ class ActivityController extends BaseController
             'name'=>['required','string','max:255',Rule::unique('activities')->where(function ($query) {
                 return $query->where('is_deleted', 0);
             })],
-                'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+                'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
         ]);
         if ($validator->fails())
         {
@@ -113,7 +113,7 @@ class ActivityController extends BaseController
                 'name'=>['required','string','max:255',Rule::unique('activities')->where(function ($query) use ($activity) {
                     return $query->where('is_deleted', 0)->where('id', '!=', $activity->id);
                 })],
-                'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+                'icon'=>['image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
 
            ]);
            if ($validator->fails())

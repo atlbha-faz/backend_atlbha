@@ -127,7 +127,7 @@ class StoreController extends BaseController
             //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
             'periodtype' => 'required|in:6months,year',
             'status' => 'required|in:active,inactive',
-            'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
 
         ]);
 

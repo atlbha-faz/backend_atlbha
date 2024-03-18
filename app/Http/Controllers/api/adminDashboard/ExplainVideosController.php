@@ -55,7 +55,7 @@ class ExplainVideosController extends BaseController
     //     $validator =  Validator::make($input ,[
     //         'title'=>'required|string|max:255',
     //         'video'=>'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
-    //         'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'thumbnail' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
     //        // 'link'=>'required|url',
 
     //     ]);
@@ -109,7 +109,7 @@ class ExplainVideosController extends BaseController
         $validator = Validator::make($input, [
             'title' => 'required|string|max:255',
             'video' => 'required|string',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
             // 'link'=>'required|url',
 
         ]);
@@ -220,7 +220,7 @@ class ExplainVideosController extends BaseController
         $validator = Validator::make($input, [
             'title' => 'required|string|max:255',
             'video' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
             //'link'=>'required|url',
         ]);
         if ($validator->fails()) {

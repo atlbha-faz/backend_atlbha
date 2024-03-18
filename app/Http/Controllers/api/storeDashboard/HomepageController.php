@@ -59,20 +59,20 @@ class HomepageController extends BaseController
     // {
     //     $input = $request->all();
     //     $validator =  Validator::make($input ,[
-    //         'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
-    //         'banar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'logo'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
+    //         'banar1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
     //         'banarstatus1'=>'required|in:active,not_active',
-    //         'banar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'banar2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
     //         'banarstatus2'=>'required|in:active,not_active',
-    //         'banar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'banar3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
     //         'banarstatus3'=>'required|in:active,not_active',
     //         'clientstatus'=>'required|in:active,not_active',
     //         'commentstatus'=>'required|in:active,not_active',
-    //         'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
     //         'sliderstatus1'=>'required|in:active,not_active',
-    //         'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
     //         'sliderstatus2'=>'required|in:active,not_active',
-    //         'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+    //         'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
     //         'sliderstatus3'=>'required|in:active,not_active',
     //         // 'store_id'=>'required|exists:stores,id',
     //     ]);
@@ -188,7 +188,7 @@ class HomepageController extends BaseController
 
     //     $input = $request->all();
     //     $validator = Validator::make($input, [
-    //         'logo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+    //         'logo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
     //     ]);
     //     if ($validator->fails()) {
     //         return $this->sendError(null, $validator->errors());
@@ -725,11 +725,11 @@ class HomepageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'banar1' => ['nullable','required_without_all:banar2,banar3' , 'max:2048'],
+            'banar1' => ['nullable','required_without_all:banar2,banar3' , 'max:1048'],
             'banarstatus1' => 'required|in:active,not_active',
-            'banar2' => ['nullable', 'required_without_all:banar1,banar3' ,'max:2048'],
+            'banar2' => ['nullable', 'required_without_all:banar1,banar3' ,'max:1048'],
             'banarstatus2' => 'required|in:active,not_active',
-            'banar3' => ['nullable','required_without_all:banar1,banar2' ,  'max:2048'],
+            'banar3' => ['nullable','required_without_all:banar1,banar2' ,  'max:1048'],
             'banarstatus3' => 'required|in:active,not_active',
         ]);
         if ($validator->fails()) {
@@ -759,11 +759,11 @@ class HomepageController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'slider1' => ['nullable', 'required_without_all:slider2,slider3', 'max:2048'],
+            'slider1' => ['nullable', 'required_without_all:slider2,slider3', 'max:1048'],
             'sliderstatus1' => 'required|in:active,not_active',
-            'slider2' => ['nullable','required_without_all:slider1,slider3' , 'max:2048'],
+            'slider2' => ['nullable','required_without_all:slider1,slider3' , 'max:1048'],
             'sliderstatus2' => 'required|in:active,not_active',
-            'slider3' => ['nullable', 'required_without_all:slider1,slider2','max:2048'],
+            'slider3' => ['nullable', 'required_without_all:slider1,slider2','max:1048'],
             'sliderstatus3' => 'required|in:active,not_active',
         ]);
         if ($validator->fails()) {
@@ -796,11 +796,11 @@ class HomepageController extends BaseController
 //    }
 //         $input = $request->all();
 //        $validator =  Validator::make($input ,[
-//         'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+//         'slider1'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
 //         'sliderstatus1'=>'required|in:active,not_active',
-//         'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+//         'slider2'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
 //         'sliderstatus2'=>'required|in:active,not_active',
-//         'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
+//         'slider3'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
 //         'sliderstatus3'=>'required|in:active,not_active',
 //           ]);
 //        if ($validator->fails())
