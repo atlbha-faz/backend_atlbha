@@ -93,7 +93,7 @@ class OrderController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
+            'status' => 'required|in:new,completed,delivery_in_progress,ready,refund,canceled',
 
             'city' => 'required_if:status,==,ready',
             'street_address' => 'required_if:status,==,ready',
