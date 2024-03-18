@@ -626,6 +626,7 @@ class OrderController extends BaseController
                 $orderAddress = OrderOrderAddress::where('order_id', $order->id)->where('type', 'shipping')->value('order_address_id');
                 $address = OrderAddress::where('id', $orderAddress)->first();
                 $shipping = Shipping::where('order_id', $order->id)->first();
+   
                 $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
              
                 if ($order->shippingtype->id == 1) {
@@ -691,8 +692,8 @@ class OrderController extends BaseController
                                     "Reference2": "",
                                     "AccountNumber": "",
                                     "PartyAddress": {
-                                        "Line1": "' .$shipping->street_address . '",
-                                        "Line2": "' . $shipping ->street_address . '",
+                                        "Line1": "' .$shipping->streetaddress . '",
+                                        "Line2": "' . $shipping->streetaddress . '",
                                         "Line3": "",
                                         "City": "' . $shipping ->city . '",
                                         "StateOrProvinceCode": "",
