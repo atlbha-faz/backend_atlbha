@@ -843,9 +843,10 @@ class OrderController extends BaseController
                             'store_id' => $order->store_id,
                             'cashondelivery' => $order->cashondelivery,
                         ]);
-                        $payment = Payment::where('order_id', $order->id)->first();
+                        
+                        $payment = Payment::where('orderID', $order->id)->first();
                         if ($payment != null) {
-                            $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
+                            $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', auth()->user()->store_id)->first();
                             if ($shipping_price == null) {
                                 $shipping_price = 35;
                                 $extraprice = 2;
