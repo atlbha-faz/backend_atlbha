@@ -626,9 +626,11 @@ class OrderController extends BaseController
                 $orderAddress = OrderOrderAddress::where('order_id', $order->id)->where('type', 'shipping')->value('order_address_id');
                 $address = OrderAddress::where('id', $orderAddress)->first();
                 $shipping = Shipping::where('order_id', $order->id)->first();
-   
+                 
                 $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
-             
+                if($shipping == null){
+                    return $this->sendError("لايمكن استرجاع الطلب", "shipping is't exists");
+                }
                 if ($order->shippingtype->id == 1) {
 
                     $json = '{
@@ -872,17 +874,19 @@ class OrderController extends BaseController
                                 "Comment" => "refund to the customer",
                                 "AmountDeductedFromSupplier" => 0,
                                 "CurrencyIso" => "SA",
-
                             ];
-                            $data=json_encode($data );
+                            
+                         
                             $supplier = new FatoorahServices();
                             $supplierCode = $supplier->createSupplier('v2/MakeRefund', $data);
+                        
                             if ($supplierCode->IsSuccess == false) {
-                                return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
+                                return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
                             }
                             else{
-
+                                $success['test'] = $supplierCode;
                             }
+
                         }
                         $success['shipping'] = new shippingResource($shipping);
 
