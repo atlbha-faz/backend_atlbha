@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Route;
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
 Route::get('sendMessage', 'App\Http\Controllers\api\AuthController@store_verify_message');
-//Route::post('sendMessagePost', 'App\Http\Controllers\api\AuthController@sendMessagePost');
 Route::post('webhook', [App\Http\Controllers\api\WebhookController::class, 'handleWebhook']);
 
 Route::get('unifonicTest', 'App\Http\Controllers\api\AuthController@unifonicTest');
@@ -76,9 +75,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
 Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
 Route::post('addCart/{domain}', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
 Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'delete']);
-// Route::post('updateCartItem/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'updateCartItem']);
 Route::post('showDetailOption', [App\Http\Controllers\api\CartTemplateController::class, 'showDetailOption']);
-
 Route::post('cheackout/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'cheackout']);
 Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'paymentmethods']);
 Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'shippingcompany']);
@@ -89,8 +86,7 @@ Route::resource('OrderAddress', App\Http\Controllers\api\OrderAddressController:
 Route::get('show_default_address', [App\Http\Controllers\api\OrderAddressController::class, 'show_default_address']);
 Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\OrderAddressController::class, 'setDefaultAddress']);
 
-// Route::get('productPage/{slug}',[App\Http\Controllers\api\IndexStoreController::class,'productPage']);
-// المدونه
+
 Route::get('postStore/{id}', [App\Http\Controllers\api\PostStoreController::class, 'index']);
 Route::get('postByCategory/{id}', [App\Http\Controllers\api\PostStoreController::class, 'show']);
 Route::get('postdetail/{id}', [App\Http\Controllers\api\PostStoreController::class, 'show_post']);
@@ -136,11 +132,6 @@ Route::group([
 Route::middleware([AdminUser::class])->group(function () {
     Route::prefix('/Admin')->group(function () {
         
-        // Route::post('payment', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'payment']);
-        // Route::get('callback', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'callback'])->name('callback');
-        // Route::post('updateCharge/{id}', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'updateCharge']);
-        // Route::get('list', [App\Http\Controllers\api\adminDashboard\PaymentController::class, 'list'])->name('list');
-
         Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
@@ -159,60 +150,24 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('selector/roles', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'roles']);
         Route::get('selector/subcategories', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'subcategories']);
 
-        //Route::get('profile',[App\Http\Controllers\api\adminDashboard\ProfileController::class,'index']);
         Route::resource('pagecategory', App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
-        // Route::get('wallet', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'wallet']);
 
          Route::middleware([AdminCheckPermission::class])->group(function () {
          Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
-        // Route::get('changeCountryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'changeStatus']);
-        // Route::get('changeCityStatus/{id}', [App\Http\Controllers\api\adminDashboard\CityController::class, 'changeStatus']);
-        // Route::get('changeMarketerStatus/{id}', [App\Http\Controllers\api\adminDashboard\MarketerController::class, 'changeStatus']);
-        // Route::get('changeExplainVideosStatus/{id}', [App\Http\Controllers\api\adminDashboard\ExplainVideosController::class, 'changeStatus']);
-        //Route::get('changeCourseStatus/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class,'changeStatus']);
-        // Route::get('changeUnitStatus/{id}', [App\Http\Controllers\api\adminDashboard\UnitController::class, 'changeStatus']);
-        // Route::get('changeVideoStatus/{id}', [App\Http\Controllers\api\adminDashboard\VideoController::class, 'changeStatus']);
-        // Route::get('changeActivityStatus/{id}', [App\Http\Controllers\api\adminDashboard\ActivityController::class, 'changeStatus']);
+    
         Route::get('changePlatformStatus/{id}', [App\Http\Controllers\api\adminDashboard\PlatformController::class, 'changeStatus'])->name('admin.platform.changePlatformStatus');
-        //Route::get('changeServiceStatus/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class,'changeStatus']);
-        // Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class, 'changeStatus']);
-        // Route::get('changeStoreCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\CategoryController::class, 'changeStatus']);
+
         Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'changeStatus'])->name('admin.shippingtype.changeStatus');
         Route::get('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\adminDashboard\PaymenttypeController::class, 'changeStatus'])->name('admin.paymenttype.changeStatus');
-        // Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\CommentController::class, 'changeStatus']);
-        // Route::get('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycommentController::class, 'changeStatus']);
-        // Route::get('changeMaintenanceStatus/{id}', [App\Http\Controllers\api\adminDashboard\MaintenanceController::class, 'changeStatus']);
-        // Route::get('changePageStatus/{id}', [App\Http\Controllers\api\adminDashboard\PageController::class, 'changeStatus']);
-        // Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\adminDashboard\PageCategoryController::class, 'changeStatus']);
-        // Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class, 'changeStatus']);
-        // Route::get('changeCurrencyStatus/{id}', [App\Http\Controllers\api\adminDashboard\CurrencyController::class, 'changeStatus']);
         Route::get('changewebsite_socialmediaStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteSocialmediaController::class, 'changeStatus'])->name('admin.websitesocialmedia.changeStatus');
-        // Route::get('changeHomepageStatus/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class, 'changeStatus']);
-        // Route::get('changePlaneStatus/{id}', [App\Http\Controllers\api\adminDashboard\PlanController::class, 'changeStatus']);
-        // Route::get('changePackageStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackageController::class, 'changeStatus']);
-        // Route::get('changeTemplateStatus/{id}', [App\Http\Controllers\api\adminDashboard\TemplateController::class, 'changeStatus']);
-        // Route::get('changeCouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\CouponController::class, 'changeStatus']);
-        // Route::get('changePackagecouponStatus/{id}', [App\Http\Controllers\api\adminDashboard\PackagecouponController::class, 'changeStatus']);
+
         Route::get('changeSectionStatus/{id}', [App\Http\Controllers\api\adminDashboard\SectionController::class, 'changeStatus'])->name('admin.section.changestatus');
-        // Route::get('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class, 'changeStatus']);
-        // Route::get('changeReplaycontactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ReplaycontactController::class, 'changeStatus']);
-        // Route::get('changeContactStatus/{id}', [App\Http\Controllers\api\adminDashboard\ContactController::class, 'changeStatus']);
-        // Route::get('changeSeoStatus/{id}', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'changeStatus']);
-        // Route::get('changeSettingStatus/{id}', [App\Http\Controllers\api\adminDashboard\SettingController::class, 'changeStatus']);
+        
         Route::get('changeStoreStatus', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'changeSatusall'])->name('admin.store.changeSatusall');
         Route::get('unVerificationStore', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'unVerificationStore'])->name('admin.store.unVerificationStore');
 
-        // Route::get('changeOfferStatus/{id}', [App\Http\Controllers\api\adminDashboard\OfferController::class, 'changeStatus']);
-        // Route::get('changeProductStatus/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'changeStatus']);
-        // Route::get('changeOptionStatus/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class, 'changeStatus']);
-        // Route::get('changeHomeStatus/{name}/{id}', [App\Http\Controllers\api\adminDashboard\HomepageController::class, 'changeHomeStatus']);
-        // Route::get('changeWebsiteorderStatus/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'changeStatus']);
-        // Route::get('changeclientStatus/{id}', [App\Http\Controllers\api\adminDashboard\ClientController::class, 'changeStatus']);
-        // Route::get('changeuserStatus/{id}', [App\Http\Controllers\api\adminDashboard\UserController::class, 'changeStatus']);
-
-        // home page
         Route::post('logoUpdate', [App\Http\Controllers\api\adminDashboard\HomepageController::class, 'logoUpdate'])->name('admin.homepage.logoUpdate');
         Route::post('banarUpdate', [App\Http\Controllers\api\adminDashboard\HomepageController::class, 'banarUpdate'])->name('admin.homepage.banarUpdate');
         Route::post('sliderUpdate', [App\Http\Controllers\api\adminDashboard\HomepageController::class, 'sliderUpdate'])->name('admin.homepage.sliderUpdate');
@@ -220,18 +175,12 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('country', App\Http\Controllers\api\adminDashboard\CountryController::class, ['names' => 'admin.country']);
         Route::resource('city', App\Http\Controllers\api\adminDashboard\CityController::class, ['names' => 'admin.city']);
         Route::resource('marketer', App\Http\Controllers\api\adminDashboard\MarketerController::class, ['names' => 'admin.marketer']);
-        // Route::resource('client', App\Http\Controllers\api\adminDashboard\ClientController::class);
         Route::resource('explainVideos', App\Http\Controllers\api\adminDashboard\ExplainVideosController::class, ['names' => 'admin.explainvideo']);
         Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
-        // Route::resource('unit', App\Http\Controllers\api\adminDashboard\UnitController::class);
-        // Route::resource('video', App\Http\Controllers\api\adminDashboard\VideoController::class);
         Route::resource('activity', App\Http\Controllers\api\adminDashboard\ActivityController::class, ['names' => 'admin.activity']);
         
         Route::resource('commonquestion', App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, ['names' => 'admin.commonquestion']);
         Route::get('commonDeleteall', [App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, 'deleteall'])->name('admin.commonquestion.deleteall');
-
-
-
         Route::get('importOrders', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'index'])->name('admin.adminOrder.index');
         Route::get('showImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'show'])->name('admin.adminOrder.show');
         Route::PUT('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update'])->name('admin.adminOrder.update');
@@ -251,28 +200,19 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('NotificationDeleteAll', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'deleteNotificationAll'])->name('admin.notification.deleteall');
         Route::get('NotificationShow/{id}', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'show'])->name('admin.notification.show');
         Route::post('addEmail', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'addEmail'])->name('admin.email.store');
-        // Route::post('addAlert', [App\Http\Controllers\api\adminDashboard\NotificationController::class, 'addAlert']);
 
         Route::get('EmailIndex', [App\Http\Controllers\api\adminDashboard\EmailController::class, 'index'])->name('admin.email.index');
-        // Route::get('EmailDelete/{id}', [App\Http\Controllers\api\adminDashboard\EmailController::class, 'deleteEmail']);
         Route::get('EmailDeleteAll', [App\Http\Controllers\api\adminDashboard\EmailController::class, 'deleteEmailAll'])->name('admin.email.deleteEmailAll');
         Route::get('EmailShow/{id}', [App\Http\Controllers\api\adminDashboard\EmailController::class, 'show'])->name('admin.email.show');
-        // Route::post('addEmail', [App\Http\Controllers\api\adminDashboard\EmailController::class, 'addEmail']);
 
         Route::resource('category', App\Http\Controllers\api\adminDashboard\CategoryController::class, ['names' => 'admin.category']);
         Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class, ['names' => 'admin.storecategory']);
-        // Route::post('addvideo', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'addvideo'])->name('admin.course.addvideo');
-        // Route::get('deletevideo/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deletevideo'])->name('admin.course.deletevideo');
+    
         Route::get('deleteunit/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deleteunit'])->name('admin.course.deleteunit');
 
         Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
 
-        // Route::resource('category', App\Http\Controllers\api\adminDashboard\CategoryController::class,['names' => 'admin.category']);
-        // Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
-        // Route::post('addvideo', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'addvideo']);
-        // Route::get('deletevideo/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deletevideo']);
-
-        // Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class);
+        
 
         Route::resource('shippingtype', App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, ['names' => 'admin.shippingtype']);
 
@@ -283,23 +223,18 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('commentdeleteall', [App\Http\Controllers\api\adminDashboard\CommentController::class, 'deleteall'])->name('admin.comment.deleteall');
 
         Route::resource('page', App\Http\Controllers\api\adminDashboard\PageController::class, ['names' => 'admin.page']);
-        //Route::get('relatedPage/{id}',[App\Http\Controllers\api\adminDashboard\PageController::class,"relatedPage"]);
         Route::post('page-publish', [App\Http\Controllers\api\adminDashboard\PageController::class, 'publish'])->name('admin.page.publish');
 
         Route::resource('technicalSupport', App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class, ['names' => 'admin.technicalsupport']);
         Route::resource('currency', App\Http\Controllers\api\adminDashboard\CurrencyController::class, ['names' => 'admin.currency']);
         Route::resource('website_socialmedia', App\Http\Controllers\api\adminDashboard\WebsiteSocialmediaController::class, ['names' => 'admin.websitesocialmedia']);
         Route::resource('homepage', App\Http\Controllers\api\adminDashboard\HomepageController::class, ['names' => 'admin.homepage']);
-        // Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class);
-        // Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class);
-        // Route::resource('template', App\Http\Controllers\api\adminDashboard\TemplateController::class);
         Route::resource('coupons', App\Http\Controllers\api\adminDashboard\CouponController::class, ['names' => 'admin.coupon']);
 
         Route::resource('section', App\Http\Controllers\api\adminDashboard\SectionController::class, ['names' => 'admin.section']);
         Route::resource('contact', App\Http\Controllers\api\adminDashboard\ContactController::class);
         Route::resource('replaycontact', App\Http\Controllers\api\adminDashboard\ReplaycontactController::class);
 
-        // Route::resource('seo', App\Http\Controllers\api\adminDashboard\SeoController::class,['names' => 'admin.seo']);
         Route::get('seo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'index'])->name('admin.seo.index');
 
         Route::resource('setting', App\Http\Controllers\api\adminDashboard\SettingController::class, ['names' => 'admin.setting']);
@@ -326,8 +261,6 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('websiteorder', App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, ['names' => 'admin.websiteorder']);
         Route::get('websiteorderdeleteall', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'deleteall'])->name('admin.websiteorder.deleteall');
 
-        // Route::post('acceptStore/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'acceptStore']);
-        // Route::post('rejectStore/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'rejectStore']);
         Route::post('acceptService/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'acceptService'])->name('admin.websiteorder.acceptService');
         Route::post('rejectService/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'rejectService'])->name('admin.websiteorder.rejectService');
 
@@ -343,7 +276,6 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('etlobhachangeSpecial/{id}', [App\Http\Controllers\api\adminDashboard\EtlobhaController::class, 'specialStatus'])->name('admin.etlobha.specialStatus');
         Route::get('productdeleteall', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'deleteall'])->name('admin.product.deleteall');
         Route::post('addToStore/{id}', [App\Http\Controllers\api\adminDashboard\StockController::class, 'addToStore'])->name('admin.stock.addToStore');
-        // Route::get('technicalSupportchangeStatusall', [App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class, 'changeStatusall']);
 
         Route::get('pagechangeSatusall', [App\Http\Controllers\api\adminDashboard\PageController::class, 'changeSatusall'])->name('admin.page.changesatusall');
         Route::get('pagedeleteall', [App\Http\Controllers\api\adminDashboard\PageController::class, 'deleteall'])->name('admin.page.deleteall');
@@ -360,22 +292,16 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('countryedeleteall', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'deleteall'])->name('admin.country.deleteall');
         Route::get('currencychangeSatusall', [App\Http\Controllers\api\adminDashboard\CurrencyController::class, 'changeSatusall'])->name('admin.currency.changeSatusall');
         Route::get('packagechangeSatusall', [App\Http\Controllers\api\adminDashboard\PackageController::class, 'changeSatusall'])->name('admin.package.changeSatusall');
-        // Route::get('packagedeleteall', [App\Http\Controllers\api\adminDashboard\PackageController::class, 'deleteall']);
         Route::get('registration_marketer_show', [App\Http\Controllers\api\adminDashboard\SettingController::class, 'registration_marketer_show'])->name('admin.marketer.registration_marketer_show');
-
-        // Route::resource('note', App\Http\Controllers\api\adminDashboard\NoteController::class);
-
         Route::resource('roles', App\Http\Controllers\api\adminDashboard\RoleController::class, ['names' => 'admin.role']);
         Route::post('addProductNote', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'addNote'])->name('admin.product.addNote');
         Route::get('productchangeSpecial/{id}', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'specialStatus']);
         Route::get('productchangeSpecial', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'specialStatusall']);
         Route::get('activitydeleteall', [App\Http\Controllers\api\adminDashboard\ActivityController::class, 'deleteall'])->name('admin.activity.deleteall');
 
-        // Route::post('statusMarketer/{id}',[App\Http\Controllers\api\adminDashboard\SettingController::class,'statusMarketer']);
         Route::post('registrationMarketer', [App\Http\Controllers\api\adminDashboard\SettingController::class, 'registrationMarketer'])->name('admin.marketer.registrationMarketer');
         Route::get('contactdeleteall', [App\Http\Controllers\api\adminDashboard\ContactController::class, 'deleteall']);
-        // Route::post('shippOrder', [App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, 'shippOrder']);
-        //
+
         Route::get('verification', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'index'])->name('admin.verification.index');
         Route::get('verificationdeleteall', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'deleteall'])->name('admin.verification.deleteall');
         Route::post('addStoreNote', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'addNote'])->name('admin.verification.addNote');
@@ -385,9 +311,6 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('rejectVerification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'rejectVerification'])->name('admin.verification.rejectVerification');
         Route::post('verification_update', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_update'])->name('admin.verification.verification_update');
         Route::get('verification/{id}', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'verification_show'])->name('admin.verification.verification_show');
-
-        //Route::delete('verification_delete/{id}',[App\Http\Controllers\api\adminDashboard\VerificationController::class,'destroy']);
-        //
         Route::get('subscriptions', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'index'])->name('admin.subscriptions.index');
         Route::post('addAlert', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'addAlert'])->name('admin.subscriptions.addAlert');
         Route::get('subscriptionsdeleteall', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'deleteall'])->name('admin.subscriptions.deleteall');
@@ -398,31 +321,20 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('atlobhaContact/{id}', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'show'])->name('admin.atlobhaContact.show');
         Route::get('atlobhaContactdeleteall', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'deleteall'])->name('admin.atlobhaContact.deleteall');
         Route::get('atlobhaContactChangeStatus/{id}', [App\Http\Controllers\api\adminDashboard\AtlobhaContactController::class, 'changeStatus'])->name('admin.atlobhaContact.changeStatus');
-        // });
-        // uodate seo
+
         Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('admin.seo.update');
-        // update passward for stores
         Route::post('updateProfile/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'updateProfile'])->name('admin.store.updateProfile');
     });
     });
 });
 Auth::routes();
 
-// Route::group(['prefix' => '/Store', 'middleware' => ['storeUsers']], function(){
 Route::middleware([StoreUser::class])->group(function () {
     Route::prefix('/Store')->group(function () {
-        // import file
-        // Route::post('importFile', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'importProducts']);
-
-        // country
+      
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
         Route::get('getAllCity', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'getAllCity']);
-        // Route::get('PrintImileSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintImileSticker']);
-        // Route::get('PrintSmsaSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSmsaSticker']);
-        // Route::get('PrintSaeeSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSaeeSticker']);
-        // Route::get('PrintJTSticker/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintJTSticker']);
-        // Route::get('PrintSticker/{order}/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'PrintSticker']);
 
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);
@@ -561,7 +473,6 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('socialMedia_store_update', [App\Http\Controllers\api\storeDashboard\storeInformationController::class, 'socialMedia_store_update'])->name('store.socialmedia.update');
 
         // technical Support
-        // Route::post('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class,'changeStatus']);
         Route::resource('technicalSupport', App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, ['names' => 'store.technicalsupport']);
         Route::get('technicalSupportStoredeleteall', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'deleteall'])->name('store.technicalsupport.deleteall');
         Route::get('changeTechnicalSupportStatus/{id}', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'changeStatus'])->name('store.technicalsupport.cahngestatus');
@@ -587,7 +498,7 @@ Route::middleware([StoreUser::class])->group(function () {
         // Route::resource('client',App\Http\Controllers\api\storeDashboard\ClientController::class);
         // Route::get('changeClientStatus/{id}', [App\Http\Controllers\api\storeDashboard\ClientController::class, 'changeStatus']);
         // Route::get('clientdeleteall', [App\Http\Controllers\api\storeDashboard\ClientController::class, 'deleteall']);
-        // //
+        // 
         Route::resource('homepage', App\Http\Controllers\api\storeDashboard\HomepageController::class, ['names' => 'store.template']);
         // comments
         Route::resource('comment', App\Http\Controllers\api\storeDashboard\CommentController::class, ['names' => 'store.comments']);
@@ -595,10 +506,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('replaycomment', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'replayComment'])->name('store.comments.replaycomment');
         Route::get('changeCommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'changeStatus'])->name('store.comments.activate');
         Route::get('commentActivation', [App\Http\Controllers\api\storeDashboard\CommentController::class, 'commentActivation'])->name('store.comments.activateall');
-        // Route::post('changeReplaycommentStatus/{id}', [App\Http\Controllers\api\storeDashboard\ReplaycommentController::class,'changeStatus']);
-
-        // Route::resource('replaycomment',App\Http\Controllers\api\storeDashboard\ReplaycommentController::class);
-        // etlobha comment
+   
         Route::post('etlobhaComment', [App\Http\Controllers\api\storeDashboard\EtlobhaController::class, 'etlobhaComment'])->name('store.etlbhacomment.add');
 
         // users
@@ -607,8 +515,6 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('userchangeSatusall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'changeSatusall'])->name('store.users.changestatusall');
         Route::get('userdeleteall', [App\Http\Controllers\api\storeDashboard\UserController::class, 'deleteall'])->name('store.users.deleteall');
         Route::get('userdeleteItems', [App\Http\Controllers\api\storeDashboard\UserController::class, 'deleteItems'])->name('store.users.deleteItems');
-
-        //
 
         //  setting
         Route::get('setting_store_show', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'setting_store_show'])->name('store.basicdata.show');
