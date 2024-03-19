@@ -71,10 +71,7 @@ class SelectorController extends BaseController
 
     public function shippingcities($id)
     {
-        //if shipping is another
-        // if($id == 5){
-        //     $id=4;
-        // }
+
         $shippingCompany = Shippingtype::query()->find($id);
         $success['cities'] =  $shippingCompany !== null ? ShippingCitiesResource::collection($shippingCompany->shippingcities()->where('status', 'active')->get()) : array();
         $success['status'] = 200;
@@ -106,7 +103,7 @@ class SelectorController extends BaseController
   }
   public function getBank()
   {
-    //   $banks = new FatoorahServices();
+    
 
       $success['Banks'] = BankResource::collection(Bank::get());
 
@@ -115,38 +112,5 @@ class SelectorController extends BaseController
       return $this->sendResponse($success, 'تم ارجاع  البنوك بنجاح', 'bank return successfully');
 
   }
-  public function try()
-  {
-    //   $role = Role::create(['name'=>"productEntry" , 'type'=>'admin' ,'guard_name'=>'api']);
-    //   $arr=array();
-    //   for ($i = 3; $i <= 25; $i++) {
-    //       $arr[]=$i;
-    //   }
 
-    //   $role->syncPermissions($arr);
-    //   $user = User::create([
-    //       'name' => "مدخل منتجات",
-    //       'user_name' => "Entery",
-    //       'user_type' => 'admin_employee',
-    //       'email' => "a@gmail.com",
-    //       'password' => "1234567",
-    //       'phonenumber' => "+966502356892",
-    //       // 'image' => $request->image,
-    //       'verified' => 1,
-
-    //   ]);
-
-    //   $user->assignRole($role->name);
-    // role_has_permissions::create([])
-    $role = Role::where('id',2)->first();
-    $permissions=array();
-for($i=103 ;$i<221;$i++){
-    $permissions[]=$i;
-}
-    $role->givePermissionTo($permissions);
-      $success['status'] = 200;
-    //   $success['object'] =  $result;
-      return $this->sendResponse($success, 'تم', 'user  successfully');
-
-  }
 }
