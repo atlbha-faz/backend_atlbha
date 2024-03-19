@@ -266,7 +266,7 @@ class AuthCustomerController extends BaseController
 
         $curl = curl_init();
         $data = array(
-            'AppSid' => '3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz',
+            'AppSid' => env('AppSid','3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
             'Body' => $request->code,
             'Recipient' => $request->phonenumber);
 
