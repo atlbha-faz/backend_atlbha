@@ -22,8 +22,7 @@ class EtlobhaController extends BaseController
         $validator = Validator::make($input, [
             'comment_text' => 'required|string|max:255',
             'rateing' => 'nullable',
-            // 'store_id' => 'required_if:comment_for,store',
-            // 'product_id' => 'required_if:comment_for,product',
+
 
         ]);
         if ($validator->fails()) {

@@ -37,18 +37,10 @@ class ProfileController extends BaseController
                     ->where('id', '!=', $user->id)->where('is_deleted', 0);
             }),
             ],
-            // 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-            //     return $query->whereIn('user_type', ['store_employee', 'store'])
-            //         ->where('id', '!=', $user->id);
-            // }),
-            // ],
+
             'password' => 'nullable|min:8|string',
             'confirm_password' => 'required_if:password,required|same:password',
-            // 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-            //     return $query->whereIn('user_type', ['store_employee', 'store'])
-            //         ->where('id', '!=', $user->id);
-            // }),
-            // ],
+
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
         ]);
         if ($validator->fails()) {
@@ -58,8 +50,6 @@ class ProfileController extends BaseController
         $user->update([
             'name' => $request->input('name'),
             'user_name' => $request->input('user_name'),
-            // 'email' => $request->input('email'),
-            // 'phonenumber' => $request->input('phonenumber'),
             'image' => $request->image,
         ]);
         if ($request->has('password')) {

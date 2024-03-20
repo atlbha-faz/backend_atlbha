@@ -45,27 +45,7 @@ class ShippingtypeController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request)
-    // {
-    //     $input = $request->all();
-    //     $validator =  Validator::make($input ,[
-    //         'name'=>'required|string|max:255',
-
-    //     ]);
-    //     if ($validator->fails())
-    //     {
-    //         return $this->sendError(null,$validator->errors());
-    //     }
-    //     $shippingtype = Shippingtype::create([
-    //         'name' => $request->name,
-
-    //       ]);
-
-    //      $success['shippingtypes']=New ShippingtypeResource( $shippingtype);
-    //     $success['status']= 200;
-
-    //      return $this->sendResponse($success,'تم إضافة شركة شحن بنجاح',' Shippingtype Added successfully');
-    // }
+   
 
     /**
      * Display the specified resource.
@@ -104,30 +84,7 @@ class ShippingtypeController extends BaseController
      * @param  \App\Models\Shippingtype  $shippingtype
      * @return \Illuminate\Http\Response
      */
-    // public function update(Request $request, Shippingtype $shippingtype)
-    //     {
-    //      if (is_null($shippingtype) || $shippingtype->is_deleted !=0){
-    //      return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
-    //       }
-    //      $input = $request->all();
-    //      $validator =  Validator::make($input ,[
-    //       'name'=>'required|string|max:255',
-    //      ]);
-    //      if ($validator->fails())
-    //      {
-    //         # code...
-    //         return $this->sendError(null,$validator->errors());
-    //      }
-    //      $shippingtype->update([
-    //         'name' => $request->input('name'),
-
-    //      ]);
-    //      //$country->fill($request->post())->update();
-    //         $success['shippingtypes']=New ShippingtypeResource($shippingtype);
-    //         $success['status']= 200;
-
-    //         return $this->sendResponse($success,'تم التعديل بنجاح','shippingtype updated successfully');
-    // }
+   
 
     public function changeStatus($id, Request $request)
     {
@@ -136,14 +93,6 @@ class ShippingtypeController extends BaseController
             return $this->sendError("شركة الشحن غير موجودة", "shippingtype is't exists");
         }
         $shippingtype = shippingtype_store::where('shippingtype_id', $id)->where('store_id', auth()->user()->store_id)->first();
-//         $activeShippingCompaniesCount = shippingtype_store::where('store_id', auth()->user()->store_id)->count();
-// // Check if there's at least one active shipping company
-
-//         if ($activeShippingCompaniesCount <= 1) {
-//             // If there's only one active company, prevent deactivation
-//             return $this->sendError( 'يجب على الاقل تفعيل شركة شحن واحدة', 'At least one shipping company must remain active');
-
-//         } else {
 
         if ($shippingtype != null) {
             $shippingtype->delete();
@@ -214,17 +163,5 @@ class ShippingtypeController extends BaseController
      * @param  \App\Models\Shippingtype  $shippingtype
      * @return \Illuminate\Http\Response
      */
-    // public function destroy($shippingtype)
-    //  {
-    //    $shippingtype = Shippingtype::query()->find($shippingtype);
-    //      if (is_null($shippingtype) || $shippingtype->is_deleted !=0){
-    //      return $this->sendError("شركة الشحن غير موجودة","shippingtype is't exists");
-    //      }
-    //     $shippingtype->update(['is_deleted' => 1]);
 
-    //     $success['shippingtypes']=New ShippingtypeResource($shippingtype);
-    //     $success['status']= 200;
-
-    //      return $this->sendResponse($success,'تم حذف شركة الشحن بنجاح','shippingtype deleted successfully');
-    // }
 }

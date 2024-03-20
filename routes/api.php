@@ -331,7 +331,7 @@ Route::middleware([StoreUser::class])->group(function () {
       
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
-        Route::get('getAllCity', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'getAllCity']);
+
 
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);
@@ -437,12 +437,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('duplicateProduct/{product}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'duplicateProduct'])->name('store.products.duplicateproduct');
         Route::get('specialStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'specialStatus'])->name('store.products.specialStatus');
         Route::post('importcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importcities']);
-        Route::post('importsmsacities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importsmsacities']);
-        Route::post('importimilecities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importimilecities']);
-        Route::post('importjtcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importjtcities']);
-        Route::get('fiximport', [App\Http\Controllers\api\storeDashboard\CityController::class, 'fiximport']);
-        Route::get('fixCity', [App\Http\Controllers\api\storeDashboard\CityController::class, 'fixCity']);
-        Route::get('fixActive', [App\Http\Controllers\api\storeDashboard\CityController::class, 'fixActive']);
+       
 
         // importProduct
         Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
@@ -531,9 +526,6 @@ Route::middleware([StoreUser::class])->group(function () {
 
         //  payment
         Route::post('payment', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'payment']);
-
-        Route::post('updateCharge/{id}', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'updateCharge']);
-        Route::get('list', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'list'])->name('list');
         // order
         Route::resource('orders', App\Http\Controllers\api\storeDashboard\OrderController::class, ['names' => 'store.orders']);
         Route::get('index', [App\Http\Controllers\api\storeDashboard\IndexController::class, 'index'])->name('store.homepage.show');

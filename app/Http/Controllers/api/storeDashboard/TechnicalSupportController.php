@@ -54,39 +54,7 @@ class TechnicalSupportController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request)
-    // {
-    //   $input = $request->all();
-    //     $validator =  Validator::make($input ,[
-    //         'title'=>'required|string|max:255',
-    //         'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-    //         'content'=>'required|max:1000',
-    //         'type'=>'required|in:complaint,enquiry,suggestion',
-    //         'supportstatus'=>'required|in:finished,not_finished,pending',
-    //         'user_id' =>'required|exists:users,id'
-
-    //     ]);
-    //     if ($validator->fails())
-    //     {
-    //         return $this->sendError(null,$validator->errors());
-    //     }
-    //     $technicalsupport = TechnicalSupport::create([
-    //         'title' => $request->title,
-    //         'phonenumber'=>$request->phonenumber,
-    //         'content'=>$request->content,
-    //          'type' => $request->type,
-    //         'supportstatus'=>$request->supportstatus,
-    //         // 'store_id'=>$request->store_id,
-
-    //       ]);
-
-    //      // return new CountryResource($country);
-    //      $success['Technicalsupports']=New TechnicalsupportResource($technicalsupport);
-    //     $success['status']= 200;
-
-    //      return $this->sendResponse($success,'تم إضافة طلب دعم فني بنجاح','Technical Support Added successfully');
-
-    // }
+   
 
     /**
      * Display the specified resource.
@@ -125,38 +93,7 @@ class TechnicalSupportController extends BaseController
      * @param  \App\Models\TechnicalSupport  $technicalSupport
      * @return \Illuminate\Http\Response
      */
-    // public function update(Request $request, TechnicalSupport $technicalSupport)
-    // {
-    //      if (is_null($technicalSupport) || $technicalSupport->is_deleted !=0){
-    //      return $this->sendError("طلب الدعم غير موجود","technicalSupport is't exists");
-    //       }
-    //      $input = $request->all();
-    //      $validator =  Validator::make($input ,[
-    //       'title'=>'required|string|max:255',
-    //         'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-    //         'content'=>'required|max:1000',
-    //         'type'=>'required|in:complaint,enquiry,suggestion',
-    //         'supportstatus'=>'required|in:finished,not_finished,pending',
-    //         'user_id' =>'required|exists:users,id'
-    //      ]);
-    //      if ($validator->fails())
-    //      {
-    //         # code...
-    //         return $this->sendError(null,$validator->errors());
-    //      }
-    //      $technicalSupport->update([
-    //         'title' => $request->input('title'),
-    //         'phonenumber' => $request->input('phonenumber'),
-    //         'content' => $request->input('content'),
-    //         'type' => $request->input('type'),
-    //         'supportstatus' => $request->input('supportstatus'),
-    //         'uder_id' => $request->input('uder_id'),
-    //      ]);
-    //         $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
-    //         $success['status']= 200;
-
-    //         return $this->sendResponse($success,'تم التعديل بنجاح','technical Support updated successfully');
-    //     }
+   
 
     public function changeStatus($id)
     {
@@ -233,11 +170,7 @@ class TechnicalSupportController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        /* $replay = Replaycomment::create([
-        'comment_text' => $request->comment_text,
-        'comment_id' => $request->comment_id,
-        'user_id' => auth()->user()->id,
-        ]);*/
+        
         $store = Store::where('id', auth()->user()->store_id)->value('store_name');
         //dd(Store::where('id', auth()->user()->store_id)->get());
         $data = [

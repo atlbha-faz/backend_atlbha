@@ -36,22 +36,7 @@ class SettingController extends BaseController
     {
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $input = $request->all();
-//         if (request()->hasFile($key)) {
-//             $validator2 = Validator::make($input, [
-//                 'icon' => ['required|image'],
-//                 'logo' => ['required|image'],
-//             ]);
-//         } else {
-//             $validator2 = Validator::make($input, [
-//                 'icon' => ['required|string'],
-//                 'logo' => ['required|string'],
-//             ]);
 
-//         }
-// if ($validator2->fails()) {
-//     # code...
-//     return $this->sendError(null, $validator2->errors());
-// }
 
         $validator = Validator::make($input, [
             'icon' => ['nullable'],
@@ -135,31 +120,7 @@ class SettingController extends BaseController
         ]);
         $request->working_status='active';
         if ($request->working_status == 'active') {
-            /*  $days=Day::all();
-            foreach($days as $day){
-            if($day->name =="Friday"){
-            $workdays= Day_Store::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-            'day_id'=> $day->id
-            ], [
-            'from'=>null,
-            'to'=>null,
-            'status'=>'not_active'
-            ]);
-
-            }else{
-            $workdays= Day_Store::updateOrCreate([
-            'store_id' => auth()->user()->store_id,
-            'day_id'=> $day->id
-            ], [
-            'from'=>Carbon::createFromTime(8, 0, 0),
-            'to'=>Carbon::createFromTime(10, 0, 0),
-            'status'=>'active'
-            ]);
-            }
-            }
-            }
-            else{*/
+            
             if (!is_null($request->data)) {
                 foreach ($request->data as $data) {
                     if ($data['status'] == "not_active") {
