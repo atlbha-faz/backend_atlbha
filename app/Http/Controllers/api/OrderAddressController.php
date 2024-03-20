@@ -29,16 +29,16 @@ class OrderAddressController extends BaseController
             return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
         } else {
             $store = Store::where('domain', $request->domain)->first();
-            $activeShippings = $store->shippingtypes()->get();
-            $ids = array();
+            // $activeShippings = $store->shippingtypes()->get();
+            // $ids = array();
 
-            $ids[]=null;
+            // $ids[]=null;
 
-            if (count($activeShippings) > 0) {
-                foreach ($activeShippings as $activeShipping) {
-                    $ids[] = $activeShipping->id;
-                }
-            }
+            // if (count($activeShippings) > 0) {
+            //     foreach ($activeShippings as $activeShipping) {
+            //         $ids[] = $activeShipping->id;
+            //     }
+            // }
 
             $success['orderAddress'] = OrderAddressResource::collection(OrderAddress::where('user_id', auth()->user()->id)->get());
 
@@ -74,9 +74,6 @@ class OrderAddressController extends BaseController
             'district' => 'required|string',
             'postal_code' => 'nullable|string',
 
-            // 'type' => 'required|in:billing,shipping',
-            // 'default_address' => 'required',
-
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -86,7 +83,6 @@ class OrderAddressController extends BaseController
             'street_address' => $request->street_address,
             'district' => $request->district,
             'postal_code' => $request->postal_code,
-            // 'shippingtype_id' => $request->shippingtype_id,
             'default_address' => $request->default_address,
             'user_id' => auth()->user()->id,
 
@@ -169,7 +165,7 @@ class OrderAddressController extends BaseController
             'street_address' => 'required|string',
             'district' => 'required|string',
             'postal_code' => 'nullable|string',
-            // 'type' => 'required|in:billing,shipping',
+           
         ]);
         if ($validator->fails()) {
             # code...
@@ -241,9 +237,7 @@ class OrderAddressController extends BaseController
                 ]);
             }
         }
-        //  else {
-        //     $product->update(['status' => 'active']);
-        // }
+
         $success['orderAddresss'] = new OrderAddressResource($orderAddres);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'orderAddress updated successfully');

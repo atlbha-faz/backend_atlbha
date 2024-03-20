@@ -32,11 +32,7 @@ class ProfileCustomerController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            // 'user_name' => ['required', 'string', Rule::unique('users')->where(function ($query) use ($user) {
-            //     return $query->whereIn('user_type', ['customer'])
-            //         ->where('id', '!=', $user->id)->where('is_deleted',0);
-            // }),
-            // ],
+     
             'user_name' =>'nullable',
            'lastname' => 'nullable|string',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
@@ -56,7 +52,6 @@ class ProfileCustomerController extends BaseController
         }
         $user->update([
             'name' => $request->input('name'),
-            // 'user_name' => $request->input('user_name'),
             'lastname' => $request->lastname,
             'email' => $request->input('email'),
             'phonenumber' => $request->input('phonenumber'),

@@ -57,15 +57,6 @@ class PasswordResetController extends BaseController
 
         if ($user && $passwordReset) {
             $user->generateCode();
-            // $data = array(
-            //     'code' => $user->code,
-            // );
-
-            //   try{
-            // Mail::to($user->email)->send(new SendCode($data));
-            // }catch(\Exception $e){
-            // return $this->sendError('صيغة البريد الالكتروني غير صحيحة','The email format is incorrect.');
-            // }
 
             $request->code = $user->code;
             $request->phonenumber = $user->phonenumber;
@@ -73,7 +64,6 @@ class PasswordResetController extends BaseController
             if ($status === false) {
                 $this->sendSms($request);
             }
-            // send and return its response
 
         }
 
@@ -125,12 +115,6 @@ class PasswordResetController extends BaseController
             } catch (\Exception $e) {
                 return $this->sendError('صيغة البريد الالكتروني غير صحيحة', 'The email format is incorrect.');
             }
-
-            /* $request->code = $user->code;
-        $request->phonenumber =$user->phonenumber;
-
-        $this->sendSms($request); // send and return its response
-         */
 
         }
 
@@ -304,31 +288,15 @@ class PasswordResetController extends BaseController
 
                         }
                         ',
-                                CURLOPT_HTTPHEADER => array(
-                                    'Content-Type: application/json',
-                                ),
-                            ));
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                ),
+            ));
 
-                            $response = curl_exec($curl);
+            $response = curl_exec($curl);
 
-            /*  curl_close($curl);
-            echo $response;
-
-            $ch = curl_init('http://REST.GATEWAY.SA/api/SendSMS?api_id=API71257826714&api_password=FAZ@102030@123&sms_type=P&encoding=T&sender_id=MASHAHER&phonenumber='.$request->phonenumber.'&textmessage='.$request->code.'&uid=xyz&callback_url=null');
-
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Accept: application/json',
-            'Content-Type: application/x-www-form-urlencoded',
-            'Content-Length: ' . strlen($data_string))
-            );
-            $result = curl_exec($ch);*/
             $decoded = json_decode($response);
 
-//dd($decoded);
             if ($decoded->status == "S") {
                 return true;
             }

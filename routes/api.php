@@ -34,7 +34,6 @@ Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorCo
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
 Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class, 'getBank']);
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
-Route::get('callback', [App\Http\Controllers\api\IndexStoreController::class, 'callback'])->name('callback');
 
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi', 'App\Http\Controllers\api\AuthController@login_admin');
@@ -75,7 +74,6 @@ Route::middleware([SetActiveStore::class])->group(function () {
 Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
 Route::post('addCart/{domain}', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
 Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'delete']);
-Route::post('showDetailOption', [App\Http\Controllers\api\CartTemplateController::class, 'showDetailOption']);
 Route::post('cheackout/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'cheackout']);
 Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'paymentmethods']);
 Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'shippingcompany']);
@@ -112,7 +110,6 @@ Route::post('verify-user', 'App\Http\Controllers\api\AuthController@verifyUser')
 
 Route::get('page/{id}', [App\Http\Controllers\api\SubpageController::class, "show"]);
 Route::get('packages', [App\Http\Controllers\api\SubpageController::class, "packages"]);
-Route::post('showVideoDuration', [App\Http\Controllers\api\VideoController::class, "showVideo"]);
 
 Route::get('profile', [App\Http\Controllers\api\ProfileController::class, 'index']);
 Route::post('profile', [App\Http\Controllers\api\ProfileController::class, 'update']);

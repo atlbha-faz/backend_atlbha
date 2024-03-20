@@ -606,6 +606,68 @@ class AuthController extends BaseController
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
     }
+    public function sendSms($request)
+    {
+
+        try
+        {
+            $data_string = json_encode($request);
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://rest.gateway.sa/api/SendSMS',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
+        "api_id":"' . env("GETWAY_API", null) . '",
+        "api_password":"' . env("GETWAY_PASSWORD", null) . '",
+        "sms_type": "T",
+        "encoding":"T",
+        "sender_id": "ATLBHA",
+        "phonenumber": "' . $request->phonenumber . '",
+        "textmessage":"' . $request->code . '",
+
+                    "templateid": "1868",
+                    "V1": "' . $request->code . '",
+                    "V2": null,
+                    "V3": null,
+                    "V4": null,
+                    "V5": null,
+                "ValidityPeriodInSeconds": 60,
+                "uid":"xyz",
+                "callback_url":"https://xyz.com/",
+                "pe_id":"xyz",
+                "template_id":"1868"
+
+
+                        }
+                        ',
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                ),
+            ));
+
+            $response = curl_exec($curl);
+
+            $decoded = json_decode($response);
+
+            if ($decoded->status == "S") {
+                return true;
+            }
+
+            return $this->sendError("فشل ارسال الرسالة", "Failed Send Message");
+
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+
+    }
     public function unifonicTest(Request $request)
     {
         $curl = curl_init();
