@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Region;
 use Illuminate\Http\Request;
 
@@ -15,10 +14,10 @@ class RegionController extends Controller
      */
     public function index()
     {
-       $success['regions']=RegionResource::collection(Region::where('is_deleted',0)->orderByDesc('created_at')->get());
-        $success['status']= 200;
+        $success['regions'] = RegionResource::collection(Region::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع المناطق بنجاح','regions return successfully');
+        return $this->sendResponse($success, 'تم ارجاع المناطق بنجاح', 'regions return successfully');
 
     }
 
@@ -40,28 +39,27 @@ class RegionController extends Controller
      */
     public function store(Request $request)
     {
-         {
-
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'country_id'=>'required|exists:countries,id'
-        ]);
-        if ($validator->fails())
         {
-            return $this->sendError(null,$validator->errors());
+
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'name' => 'required|string|max:255',
+                'country_id' => 'required|exists:countries,id',
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
+            }
+            $region = Region::create([
+                'name' => $request->name,
+
+                'country_id' => $request->country_id,
+            ]);
+
+            $success['regions'] = new RegionResource($region);
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم إضافة منطقة بنجاح', 'Region Added successfully');
         }
-        $region = Region::create([
-            'name' => $request->name,
-
-            'country_id' => $request->country_id,
-          ]);
-
-         $success['regions']=New RegionResource($region);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة منطقة بنجاح','Region Added successfully');
-    }
     }
 
     /**
@@ -93,50 +91,48 @@ class RegionController extends Controller
      * @param  \App\Models\c  $c
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,  $region)
-   {
-         $region = Region::query()->find($region);
-        if (is_null($region) || $region->is_deleted !=0){
-         return $this->sendError("المنطقه غير موجودة","region is't exists");
-    }
-         $input = $request->all();
-        $validator =  Validator::make($input ,[
-             'name'=>'required|string|max:255',
-             'country_id'=>'required|exists:countries,id'
+    public function update(Request $request, $region)
+    {
+        $region = Region::query()->find($region);
+        if (is_null($region) || $region->is_deleted != 0) {
+            return $this->sendError("المنطقه غير موجودة", "region is't exists");
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
+            'country_id' => 'required|exists:countries,id',
         ]);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             # code...
-            return $this->sendError(null,$validator->errors());
+            return $this->sendError(null, $validator->errors());
         }
         $region->update([
             'name' => $request->input('name'),
 
-            'country_id' => $request->input('country_id')
+            'country_id' => $request->input('country_id'),
         ]);
 
-        $success['regions']=New RegionResource($region);
-        $success['status']= 200;
+        $success['regions'] = new RegionResource($region);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم التعديل بنجاح','region updated successfully');
-}
- public function changeStatus($id)
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'region updated successfully');
+    }
+    public function changeStatus($id)
     {
         $region = Region::query()->find($id);
-         if (is_null($region) ||$region->is_deleted !=0){
-         return $this->sendError("المنطقه غير موجودة","city is't exists");
-         }
-
-        if($region->status === 'active'){
-        $region->update(['status' => 'not_active']);
+        if (is_null($region) || $region->is_deleted != 0) {
+            return $this->sendError("المنطقه غير موجودة", "city is't exists");
         }
-        else{
-        $region->update(['status' => 'active']);
-        }
-        $success['regions']=New RegionResource($region);
-        $success['status']= 200;
 
-         return $this->sendResponse($success,'تم تعديل حالة المنطقة بنجاح','region updated successfully');
+        if ($region->status === 'active') {
+            $region->update(['status' => 'not_active']);
+        } else {
+            $region->update(['status' => 'active']);
+        }
+        $success['regions'] = new RegionResource($region);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تعديل حالة المنطقة بنجاح', 'region updated successfully');
 
     }
     /**
@@ -147,14 +143,14 @@ class RegionController extends Controller
      */
     public function destroy(Region $region)
     {
-         if (is_null($region) ||$region->is_deleted !=0){
-         return $this->sendError("المنطقه غير موجودة","region is't exists");
-         }
+        if (is_null($region) || $region->is_deleted != 0) {
+            return $this->sendError("المنطقه غير موجودة", "region is't exists");
+        }
         $region->update(['is_deleted' => $region->id]);
 
-        $success['regions']=New CityResource($region);
-        $success['status']= 200;
+        $success['regions'] = new CityResource($region);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم حذف المنطقه بنجاح','region deleted successfully');
+        return $this->sendResponse($success, 'تم حذف المنطقه بنجاح', 'region deleted successfully');
     }
 }

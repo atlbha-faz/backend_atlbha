@@ -53,13 +53,11 @@ class UserController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            //'user_id'=>'required|max:255|unique:users',
             'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['admin_employee', 'admin'])
                     ->where('is_deleted', 0);
             }),
             ],
-            //'user_type'=>'required|in:admin,admin_employee,store,store_employee,customer',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['admin_employee', 'admin'])
                     ->where('is_deleted', 0);
@@ -67,14 +65,13 @@ class UserController extends BaseController
             ],
             'password' => 'required|min:8|string',
             'password_confirm' => 'required|same:password',
-            //'gender'=>'required|in:male,female',
+         
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['admin_employee', 'admin'])
                     ->where('is_deleted', 0);
             })],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            //'country_id'=>'required|exists:countries,id',
-            //'city_id'=>'required|exists:cities,id',
+      
             'role' => 'required|string|max:255|exists:roles,name',
         ]);
         if ($validator->fails()) {

@@ -35,12 +35,10 @@ class CategoryController extends BaseController
                         ->where(function ($query) {
                             $query->where('store_id', auth()->user()->store_id)
                                 ->OrWhere('store_id', null);
-                            //     ->has('products')->whereHas('products', function ($query) {
-                            //     $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
-                            // });
+              
                         })->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->paginate(8));
 
-                // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
+              
 
                 $success['page_count'] = $categories->lastPage();
                 $success['categories'] = $categories;
@@ -76,12 +74,9 @@ class CategoryController extends BaseController
                         ->where(function ($query) {
                             $query->where('store_id', auth()->user()->store_id)
                                 ->OrWhere('store_id', null);
-                            //     ->has('products')->whereHas('products', function ($query) {
-                            //     $query->where('is_deleted', 0)->where('store_id', auth()->user()->store_id);
-                            // });
+             
                         })->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->get());
 
-                // ->whereIn('store_id', ['', auth()->user()->store_id])->get());
                 $success['status'] = 200;
 
                 return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
@@ -261,7 +256,7 @@ class CategoryController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'icon' => ['nullable'],
-            // 'for'=>'required',
+   
             'data.*.name' => 'nullable|string|max:255',
             'data.*.id' => 'nullable|numeric',
 

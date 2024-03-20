@@ -79,38 +79,7 @@ class ServiceController extends BaseController
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    /* public function show($service)
-    {
-    $service = Service::query()->find($service);
-    if (is_null($service) || $service->is_deleted !=0){
-    return $this->sendError("الخدمة غير موجودة","service is't exists");
-    }
-
-    $success['services']=New ServiceResource($service);
-    $success['status']= 200;
-
-    return $this->sendResponse($success,'تم عرض الخدمة  بنجاح','service showed successfully');
-    }
-    public function changeStatus($id)
-    {
-    $service = Service::query()->find($id);
-    if (is_null($service) || $service->is_deleted !=0){
-    return $this->sendError(" الخدمة غير موجودة","service is't exists");
-    }
-
-    if($service->status === 'active'){
-    $service->update(['status' => 'not_active']);
-    }
-    else{
-    $service->update(['status' => 'active']);
-    }
-    $success['services']=New ServiceResource($service);
-    $success['status']= 200;
-
-    return $this->sendResponse($success,'تم تعديل حالة الخدمة بنجاح','service updated successfully');
-
-    }
-     */
+   
     /**
      * Show the form for editing the specified resource.
      *
@@ -166,20 +135,7 @@ class ServiceController extends BaseController
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-/*    public function destroy($service)
-{
-$service = Service::query()->find($service);
-if (is_null($service) || $service->is_deleted !=0){
-return $this->sendError("االخدمة غير موجودة","service is't exists");
-}
-$service->update(['is_deleted' => 1]);
 
-$success['cities']=New ServiceResource($service);
-$success['status']= 200;
-
-return $this->sendResponse($success,'تم حذف الخدمة بنجاح','service deleted successfully');
-}
- */
     public function deleteall(Request $request)
     {
 

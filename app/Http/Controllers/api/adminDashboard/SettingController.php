@@ -91,10 +91,8 @@ class SettingController extends BaseController
             'email' => 'required|email|unique:settings,email,' . $setting->id,
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            // 'icon'=>['required','image','mimes:ico','max:1048'],
             'address' => 'required|string',
-            //'country_id'=>'required|exists:countries,id',
-            //'city_id'=>'required|exists:cities,id',
+           
 
         ]);
         if ($validator->fails()) {
@@ -108,10 +106,9 @@ class SettingController extends BaseController
             'email' => $request->input('email'),
             'phonenumber' => $request->input('phonenumber'),
             'logo' => $request->input('logo'),
-            // 'icon' => $request->input('icon'),
+       
             'address' => $request->input('address'),
-            // 'country_id' => $request->input('country_id'),
-            // 'city_id' => $request->input('city_id'),
+   
 
         ]);
 

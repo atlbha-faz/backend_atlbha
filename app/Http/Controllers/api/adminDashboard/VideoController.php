@@ -61,21 +61,7 @@ class VideoController extends BaseController
             return $this->sendError(null,$validator->errors());
         }
 
-        //    $fileName = $request->video->getClientOriginalName();
-        // $getID3 = new \getID3();
-        // $pathVideo = 'storage/videos/'. $fileName;
-
-        // $fileAnalyze = $getID3->analyze($pathVideo);
-        // // dd($fileAnalyze);
-        // $playtime = $fileAnalyze['playtime_string'];
-
-    //    $duration=getVideoDuration($video);
-        // $video = Video::create([
-        //     'video' => $request->video,
-        //     'duration' => $playtime,
-        //     // 'unit_id'=>$request->unit_id,
-
-        //   ]);
+    
         $fileName = $request->video->getClientOriginalName();
         $filePath = 'videos/' . $fileName;
 
@@ -184,7 +170,6 @@ class VideoController extends BaseController
 
          ]);
         }
-         //$country->fill($request->post())->update();
             $success['videos']=New VideoResource($video);
             $success['status']= 200;
 

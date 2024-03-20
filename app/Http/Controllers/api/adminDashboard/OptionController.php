@@ -75,7 +75,7 @@ class OptionController extends BaseController
         }
          foreach($request->data as $data)
     {
-//$request->input('name', []);
+
         $option= new Option([
             'type' => $data['type'],
             'title' => $data['title'],

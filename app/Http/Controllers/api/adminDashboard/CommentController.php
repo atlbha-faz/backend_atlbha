@@ -157,14 +157,10 @@ class CommentController extends BaseController
         if (count($comments) > 0) {
             foreach ($comments as $comment) {
 
-                /*   if($comment->status === 'active'){
-                $comment->update(['status' => 'not_active']);
-                }
-                else{
-                 */
+
                 $comment->update(['status' => 'active']);
 
-                //}
+           
             }
         }
         $success['comments'] = CommentResource::collection($comments);
@@ -180,19 +176,7 @@ class CommentController extends BaseController
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    // public function destroy($comment)
-    //   {
-    //    $comment = Comment::query()->find($comment);
-    //      if (is_null($comment) ||$comment->is_deleted !=0){
-    //      return $this->sendError("التعليق غير موجود","comment is't exists");
-    //      }
-    //     $comment->update(['is_deleted' => 1]);
-
-    //     $success['comments']=New CommentResource($comment);
-    //     $success['status']= 200;
-
-    //      return $this->sendResponse($success,'تم حذف التعليق بنجاح',' comment deleted successfully');
-    // }
+ 
 
     public function deleteall(Request $request)
     {

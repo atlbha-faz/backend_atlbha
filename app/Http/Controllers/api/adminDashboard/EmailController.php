@@ -94,7 +94,6 @@ class EmailController extends BaseController
         foreach($users as  $user)
        {
       
-        // Notification::send($user , new emailNotification($data1));
       
         try {
             Mail::to($user->email)->send(new SendMail($data1));

@@ -97,11 +97,7 @@ class CheckoutController extends BaseController
                 $shipping_price = 35;
           
             }
-            // if ($order->weight > 15) {
-            //     $extra_shipping_price = ($order->weight - 15) * 3;
-            // } else {
-            //     $extra_shipping_price = 0;
-            // }
+
             if ($cart->free_shipping == 1)
              {
             $order->update([
@@ -202,27 +198,7 @@ class CheckoutController extends BaseController
                 $cart->delete();
             } else {
                 if ($order->paymentype_id == 1) {
-                    // $customer_details=array(
-                    //     "name"=>$order->user->user_name,
-                    //     "email"=>$order->user->email,
-                    //     "phone"=>$order->user->phonenumber,
-
-                    //     "city"=>,
-                    //     "state"=>,
-                    //     "country"=>,
-                    //     "zip"=>
-                    // );
-                    $data = array(
-                        'profile_id' => '104143',
-                        'tran_type' => 'sale',
-                        'tran_class' => 'ecom',
-                        'cart_id' => $order->id,
-                        'cart_currency' => 'SAR',
-                        'cart_amounts' => $order->total_price,
-                        'cart_description' => 'Description of the item',
-                        'paypage_lang' => 'ar',
-
-                    );
+                   
                 }
                 $order->update([
                     'payment_status' => "pending",
