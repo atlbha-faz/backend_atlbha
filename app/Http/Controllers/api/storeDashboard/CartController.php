@@ -42,7 +42,6 @@ class CartController extends BaseController
 
         $success['cart'] = $cart;
 
-
     } else {
         $success['cart'] = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
             $query->select('id');

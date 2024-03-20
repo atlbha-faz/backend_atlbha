@@ -59,11 +59,7 @@ class MarketerController extends BaseController
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                 return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
             })],
-            // 'password' => 'required|min:8|string',
-            // 'password_confirm' => 'required|same:password',
-            // 'user_name' =>  ['required','string','max:255',Rule::unique('users')->where(function ($query) {
-            //     return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
-            // })],
+
             'password' => 'nullable',
             'password_confirm' => 'nullable',
             'user_name' => ' nullable',
@@ -81,7 +77,6 @@ class MarketerController extends BaseController
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'status' => 'required|in:active,not_active',
-            // 'socialmediatext' =>'string'
 
         ]);
         if ($validator->fails()) {
@@ -89,9 +84,7 @@ class MarketerController extends BaseController
         }
         $user = User::create([
             'name' => $request->name,
-            // 'user_name' => $request->user_name,
             'email' => $request->email,
-            // 'password' => $request->password,
             'phonenumber' => $request->phonenumber,
             'gender' => $request->gender,
             'image' => $request->image,
@@ -108,10 +101,9 @@ class MarketerController extends BaseController
             'whatsapp' => $request->whatsapp,
             'youtube' => $request->youtube,
             'instegram' => $request->instegram,
-            // 'socialmediatext'=>$request->socialmediatext
+          
         ]);
 
-        // return new CountryResource($country);
         $success['marketers'] = new MarketerResource($marketer);
         $success['status'] = 200;
 
@@ -172,12 +164,7 @@ class MarketerController extends BaseController
                 return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
             }),
             ],
-            // 'password' => 'nullable|min:8|string',
-            // 'password_confirm' => 'nullable|same:password',
-            // 'user_name' => ['required','string','max:255',Rule::unique('users')->where(function ($query)use($marketer) {
-            //     return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
-            // }),
-            // ],
+
             'password' => 'nullable',
             'password_confirm' => 'nullable',
             'user_name' => ' nullable',
@@ -195,7 +182,7 @@ class MarketerController extends BaseController
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'status' => 'required|in:active,not_active',
-            // 'socialmediatext' =>'string'
+    
 
         ]);
         if ($validator->fails()) {
@@ -205,9 +192,7 @@ class MarketerController extends BaseController
         $user = User::query()->find($marketer->user_id);
         $user->update([
             'name' => $request->name,
-            // 'user_name' => $request->user_name,
             'email' => $request->email,
-            // 'password' => $request->password,
             'phonenumber' => $request->phonenumber,
             'gender' => $request->gender,
             'image' => $request->image,
@@ -222,7 +207,6 @@ class MarketerController extends BaseController
             'whatsapp' => $request->input('whatsapp'),
             'youtube' => $request->input('youtube'),
             'instegram' => $request->input('instegram'),
-            // 'socialmediatext' =>$request->input('socialmediatext')
         ]);
 
         if (!is_null($request->password)) {

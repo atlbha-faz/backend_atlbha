@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Illuminate\Http\Request;
-use App\Models\Replaycontact;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\ReplaycontactResource;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ReplaycontactResource;
+use App\Models\Replaycontact;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReplaycontactController extends BaseController
 {
 
-     
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -24,10 +23,10 @@ class ReplaycontactController extends BaseController
      */
     public function index()
     {
-        $success['Replaycontacts']=ReplaycontactResource::collection(Replaycontact::where('is_deleted',0)->orderByDesc('created_at')->get());
-        $success['status']= 200;
+        $success['Replaycontacts'] = ReplaycontactResource::collection(Replaycontact::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع جميع ردود التواصل بنجاح','Replaycontacts return successfully');
+        return $this->sendResponse($success, 'تم ارجاع جميع ردود التواصل بنجاح', 'Replaycontacts return successfully');
     }
 
     /**
@@ -49,26 +48,24 @@ class ReplaycontactController extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'subject'=>'required|string|max:255',
-            'message'=>'required|string',
-            'contact_id'=>'required|exists:contacts,id'
+        $validator = Validator::make($input, [
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+            'contact_id' => 'required|exists:contacts,id',
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
         $replaycontact = Replaycontact::create([
             'subject' => $request->subject,
             'message' => $request->message,
             'contact_id' => $request->contact_id,
-          ]);
+        ]);
 
+        $success['Replaycontacts'] = new ReplaycontactResource($replaycontact);
+        $success['status'] = 200;
 
-         $success['Replaycontacts']=New ReplaycontactResource($replaycontact );
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة رد بنجاح','Contact Added successfully');
+        return $this->sendResponse($success, 'تم إضافة رد بنجاح', 'Contact Added successfully');
     }
 
     /**
@@ -79,30 +76,29 @@ class ReplaycontactController extends BaseController
      */
     public function show($replaycontact)
     {
-        $replaycontact= Replaycontact::query()->find($replaycontact);
-        if (is_null($replaycontact) || $replaycontact->is_deleted !=0){
-               return $this->sendError("الرد غير موجودة","contact is't exists");
-               }
-              $success['Replaycontacts']=New ReplaycontactResource($replaycontact);
-              $success['status']= 200;
+        $replaycontact = Replaycontact::query()->find($replaycontact);
+        if (is_null($replaycontact) || $replaycontact->is_deleted != 0) {
+            return $this->sendError("الرد غير موجودة", "contact is't exists");
+        }
+        $success['Replaycontacts'] = new ReplaycontactResource($replaycontact);
+        $success['status'] = 200;
 
-               return $this->sendResponse($success,'تم عرض الرد بنجاح','replaycontact showed successfully');
+        return $this->sendResponse($success, 'تم عرض الرد بنجاح', 'replaycontact showed successfully');
     }
     public function changeStatus($id)
     {
         $replaycontact = Replaycontact::query()->find($id);
-        if (is_null($replaycontact) || $replaycontact->is_deleted !=0){
-         return $this->sendError(" الرد غير موجودة","replaycontact is't exists");
-         }
-        if($replaycontact->status === 'active'){
+        if (is_null($replaycontact) || $replaycontact->is_deleted != 0) {
+            return $this->sendError(" الرد غير موجودة", "replaycontact is't exists");
+        }
+        if ($replaycontact->status === 'active') {
             $replaycontact->update(['status' => 'not_active']);
-     }
-    else{
-        $replaycontact->update(['status' => 'active']);
-    }
-        $success['replaycontacts']=New ReplaycontactResource($replaycontact);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة الرد بنجاح',' replaycontact status updared successfully');
+        } else {
+            $replaycontact->update(['status' => 'active']);
+        }
+        $success['replaycontacts'] = new ReplaycontactResource($replaycontact);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم تعدبل حالة الرد بنجاح', ' replaycontact status updared successfully');
 
     }
 
@@ -124,35 +120,34 @@ class ReplaycontactController extends BaseController
      * @param  \App\Models\Replaycontact  $replaycontact
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,  $replaycontact)
+    public function update(Request $request, $replaycontact)
     {
-        $replaycontact =Replaycontact::query()->find($replaycontact);
-        if ( is_null($replaycontact) || $replaycontact->is_deleted !=0){
-            return $this->sendError("الرد غير موجودة"," replaycontact is't exists");
-       }
-            $input = $request->all();
-           $validator =  Validator::make($input ,[
-            'subject'=>'required|string|max:255',
-            'message'=>'required|string',
-            'contact_id'=>'required|exists:contacts,id'
+        $replaycontact = Replaycontact::query()->find($replaycontact);
+        if (is_null($replaycontact) || $replaycontact->is_deleted != 0) {
+            return $this->sendError("الرد غير موجودة", " replaycontact is't exists");
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+            'contact_id' => 'required|exists:contacts,id',
 
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $replaycontact->update([
-               'subject' => $request->input('subject'),
-               'message' => $request->input('message'),
-               'contact_id' => $request->input('contact_id'),
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+        $replaycontact->update([
+            'subject' => $request->input('subject'),
+            'message' => $request->input('message'),
+            'contact_id' => $request->input('contact_id'),
 
-           ]);
+        ]);
 
-           $success['replaycontacts']=New replaycontactResource($replaycontact);
-           $success['status']= 200;
+        $success['replaycontacts'] = new replaycontactResource($replaycontact);
+        $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','replaycontact updated successfully');
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'replaycontact updated successfully');
     }
 
     /**
@@ -163,15 +158,15 @@ class ReplaycontactController extends BaseController
      */
     public function destroy($replaycontact)
     {
-        $replaycontact =Replaycontact::query()->find($replaycontact);
-        if (is_null($replaycontact) || $replaycontact->is_deleted !=0){
-            return $this->sendError(" الرد غير موجودة","replaycontact is't exists");
-            }
-           $replaycontact->update(['is_deleted' => $replaycontact->id]);
+        $replaycontact = Replaycontact::query()->find($replaycontact);
+        if (is_null($replaycontact) || $replaycontact->is_deleted != 0) {
+            return $this->sendError(" الرد غير موجودة", "replaycontact is't exists");
+        }
+        $replaycontact->update(['is_deleted' => $replaycontact->id]);
 
-           $success['replaycontacts']=New replaycontactResource($replaycontact);
-           $success['status']= 200;
+        $success['replaycontacts'] = new replaycontactResource($replaycontact);
+        $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم حذف الرد بنجاح','replaycontact deleted successfully');
+        return $this->sendResponse($success, 'تم حذف الرد بنجاح', 'replaycontact deleted successfully');
     }
 }

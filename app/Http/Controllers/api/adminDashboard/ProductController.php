@@ -59,68 +59,7 @@ class ProductController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-//     public function store(Request $request)
-//     {
-//         $input = $request->all();
-//         $validator =  Validator::make($input ,[
-//             'name'=>'required|string|max:255',
-//             'for'=>'required|in:store,etlobha',
-//             'description'=>'required|string',
-//             'purchasing_price'=>['required','numeric','gt:0'],
-//             'selling_price'=>['required','numeric','gt:0'],
-//             'quantity'=>['required','numeric','gt:0'],
-//             'less_qty'=>['required','numeric','gt:0'],
-//             'stock'=>['required','numeric','gt:0'],
-//             'tags'=>'required',
-//             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
-//             'category_id'=>'required|exists:categories,id',
-//             'store_id'=>'required|exists:stores,id',
-//             'subcategory_id'=>['required','array'],
-//             'subcategory_id.*'=>['required','numeric',
-//             Rule::exists('categories', 'id')->where(function ($query) {
-//             return $query->join('categories', 'id', 'parent_id');
-//         }),
-//             ]
-//         ]);
-//         if ($validator->fails())
-//         {
-//             return $this->sendError(null,$validator->errors());
-//         }
-//         $product = Product::create([
-//             'name' => $request->name,
-//             'for' => $request->for,
-//             'description' => $request->description,
-//             'quantity' => $request->quantity,
-//             'purchasing_price' => $request->purchasing_price,
-//             'selling_price' => $request->selling_price,
-//             'less_qty' => $request->less_qty,
-//             'stock' => $request->stock,
-//             'cover' => $request->cover,
-//             'tags' => implode(',', $request->tags),
-//             'category_id' => $request->category_id,
-//             'subcategory_id' => implode(',', $request->subcategory_id),
-//             'store_id' => $request->store_id,
 
-//           ]);
-//  $productid =$product->id;
-//               if($request->hasFile("images")){
-//                 $files=$request->file("images");
-//                 foreach($files as $file){
-//                     $imageName=time().'_'.$file->getClientOriginalName();
-//                     $request['product_id']= $productid ;
-//                     $request['image']=$imageName;
-//                     // $file->move(\public_path("/images"),$imageName);
-//                      $file->store('images/product', 'public');
-//                     Image::create($request->all());
-
-//                 }
-//             }
-
-//          $success['products']=New ProductResource($product);
-//         $success['status']= 200;
-
-//          return $this->sendResponse($success,'تم إضافة منتج بنجاح','product Added successfully');
-//     }
 
     /**
      * Display the specified resource.
@@ -234,71 +173,7 @@ class ProductController extends BaseController
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    // public function update(Request $request, $id)
-//   {
-//          $product =Product::query()->find($id);
-//          if (is_null($product) || $product->is_deleted !=0){
-//          return $this->sendError(" المنتج غير موجود","product is't exists");
-//           }
-//          $input = $request->all();
-//          $validator =  Validator::make($input ,[
-//              'name'=>'required|string|max:255',
-//              'for'=>'required|in:store,etlobha',
-//             'description'=>'required|string',
-//             'purchasing_price'=>['required','numeric','gt:0'],
-//             'selling_price'=>['required','numeric','gt:0'],
-//             'quantity'=>['required','numeric','gt:0'],
-//             'less_qty'=>['required','numeric','gt:0'],
-//             'stock'=>['required','numeric','gt:0'],
-//             'tags'=>'required',
-//             'cover'=>['required','image','mimes:jpeg,png,jpg,gif,svg','max:1048'],
-//             'category_id'=>'required|exists:categories,id',
-//             'store_id'=>'required|exists:stores,id',
-//             'subcategory_id'=>['required','array'],
-//             'subcategory_id.*'=>['required','numeric',
-//             Rule::exists('categories', 'id')->where(function ($query) {
-//             return $query->join('categories', 'id', 'parent_id');
-//         }),
-//             ]
-//          ]);
 
-//          if ($validator->fails())
-//          {
-//             # code...
-//             return $this->sendError(null,$validator->errors());
-//          }
-//          $product->update([
-//             'name' => $request->input('name'),
-//             'for' => $request->input('for'),
-//             'description' => $request->input('description'),
-//             'purchasing_price' => $request->input('purchasing_price'),
-//             'quantity' => $request->input('quantity'),
-//             'less_qty' => $request->input('less_qty'),
-//             'stock' => $request->input('stock'),
-//             'tags' =>implode(',',$request->input('tags')),
-//             'cover' => $request->input('cover'),
-//             'category_id' => $request->input('category_id'),
-//             'subcategory_id' => $request->input('subcategory_id'),
-//             'store_id' => $request->input('store_id'),
-
-//          ]);
-//          if($request->hasFile("images")){
-//             $files=$request->file("images");
-//             foreach($files as $file){
-//                 $imageName=time().'_'.$file->getClientOriginalName();
-//                 $request["product_id"]=$id;
-//                 $request["image"]=$imageName;
-//                 $file->store('images/product', 'public');
-//                 Image::create($request->all());
-
-//             }
-//         }
-
-//             $success['products']=New ProductResource($product);
-//             $success['status']= 200;
-
-//             return $this->sendResponse($success,'تم التعديل بنجاح','product updated successfully');
-//         }
 
     /**
      * Remove the specified resource from storage.
@@ -355,8 +230,6 @@ class ProductController extends BaseController
         Mail::to($user->email)->send(new SendMail($data));
 
 
-        // Notification::send($user, new verificationNotification($data));
-        // event(new VerificationEvent(c));
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;
 

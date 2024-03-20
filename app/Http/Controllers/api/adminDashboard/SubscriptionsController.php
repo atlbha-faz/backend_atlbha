@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\User;
-use App\Models\Alert;
-use App\Models\Store;
-use App\Mail\SendMail;
-use Illuminate\Http\Request;
-use App\Models\Package_store;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Resources\AlertResource;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\SubscriptionsResource;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\AlertResource;
+use App\Http\Resources\SubscriptionsResource;
+use App\Mail\SendMail;
+use App\Models\Alert;
+use App\Models\Package_store;
+use App\Models\Store;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class SubscriptionsController extends BaseController
 {
@@ -24,14 +24,14 @@ class SubscriptionsController extends BaseController
     {
 
         $success['stores'] = SubscriptionsResource::collection(Store::with(['categories' => function ($query) {
-    $query->select('name');
-},'city' => function ($query) {
-    $query->select('id');
-},'country' => function ($query) {
-    $query->select('id');
-},'user' => function ($query) {
-    $query->select('id');
-}])->where('is_deleted', 0)->where('package_id', '!=', null)->orderByDesc('created_at')->select('id','store_name','verification_status','logo','package_id','created_at')->get());
+            $query->select('name');
+        }, 'city' => function ($query) {
+            $query->select('id');
+        }, 'country' => function ($query) {
+            $query->select('id');
+        }, 'user' => function ($query) {
+            $query->select('id');
+        }])->where('is_deleted', 0)->where('package_id', '!=', null)->orderByDesc('created_at')->select('id', 'store_name', 'verification_status', 'logo', 'package_id', 'created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Subscriptions return successfully');

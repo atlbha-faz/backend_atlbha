@@ -110,19 +110,7 @@ class VerificationController extends BaseController
         return $this->sendResponse($success, 'تم تعديل حالة المتجر بنجاح', 'store updated successfully');
 
     }
-    /* public function destroy($store)
-    {
-    $store = Store::query()->find($store);
-    if (is_null($store) || $store->is_deleted !=0){
-    return $this->sendError("المتجر غير موجود","store is't exists");
-    }
-    $store->update(['is_deleted' => 1]);
 
-    $success['store']=New VerificationResource($store);
-    $success['status']= 200;
-
-    return $this->sendResponse($success,'تم حذف المتجر بنجاح','store deleted successfully');
-    }*/
     public function verification_show($id)
     {
         $store = Store::query()->find($id);
@@ -234,17 +222,17 @@ class VerificationController extends BaseController
             'verification_code' => $request->input('verification_code'),
 
         ]);
-        if( $store->verification_type == 'commercialregister'){
+        if ($store->verification_type == 'commercialregister') {
             $store->update([
                 'commercial_name' => $request->input('commercial_name'),
-            ]);  
+            ]);
         }
-        if( $store->verification_type == 'maeruf'){
+        if ($store->verification_type == 'maeruf') {
             $store->update([
-                'owner_name' => $request->input('owner_name'),   
-            ]);  
+                'owner_name' => $request->input('owner_name'),
+            ]);
         }
-  
+
         if (is_null($store->phonenumber)) {
             $store->update([
                 'phonenumber' => $request->input('phonenumber'),

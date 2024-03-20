@@ -59,14 +59,8 @@ class EtlobhaController extends BaseController
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
-            // 'amount' => ['required', 'numeric'],
-            // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'images' => 'nullable|array',
-            // 'data' => 'nullable|array',
-            // 'data.*.type' => 'required|in:brand,color,wight,size',
-            // 'data.*.title' => 'required|string',
-            // 'data.*.value' => 'required|array',
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -94,7 +88,6 @@ class EtlobhaController extends BaseController
         if (($request->hasFile("cover"))) {
             $validator = Validator::make($input, [
                 'cover' => 'required |image| mimes:jpeg,png,jpg,gif,svg| max:1048',
-                // 'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
 
             ]);
             $cover = $request->cover;
@@ -102,7 +95,7 @@ class EtlobhaController extends BaseController
         } else {
             $validator = Validator::make($input, [
                 'cover' => 'required |string| max:1048',
-                // 'images.*' => ['required', 'string'],
+            
             ]);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
@@ -123,7 +116,6 @@ class EtlobhaController extends BaseController
         $product = Product::create([
             'name' => $request->name,
             'for' => 'etlobha',
-            // 'quantity' => $request->quantity,
             'less_qty' => $request->less_qty,
             'description' => $request->description,
             'purchasing_price' => $request->purchasing_price,
@@ -193,22 +185,7 @@ class EtlobhaController extends BaseController
             }
         }
 
-        // if (!is_null($request->data)) {
-        //     foreach ($request->data as $data) {
-        //         // dd($data['value']);
-        //         //$request->input('name', []);
-        //         $option = new Option([
-        //             'type' => $data['type'],
-        //             'title' => $data['title'],
-        //             'value' => implode(',', $data['value']),
-        //             'product_id' => $productid,
-
-        //         ]);
-
-        //         $option->save();
-        //         $options[] = $option;
-        //     }
-        // }
+   
         if ($request->has('attribute')) {
             if (!is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
@@ -284,9 +261,7 @@ class EtlobhaController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
             'description' => 'required|string',
-            // 'amount' => ['required', 'numeric'],
-
-            // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
+       
             'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
@@ -294,11 +269,7 @@ class EtlobhaController extends BaseController
 
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'images' => 'nullable|array',
-            // 'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
-            // 'data' => 'nullable|array',
-            // 'data.*.type' => 'required|in:brand,color,wight,size',
-            // 'data.*.title' => 'required|string',
-            // 'data.*.value' => 'required|array',
+     
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -334,7 +305,6 @@ class EtlobhaController extends BaseController
             'description' => $request->input('description'),
             'purchasing_price' => $request->input('purchasing_price'),
             'selling_price' => $request->input('selling_price'),
-            // 'quantity' => $request->input('quantity'),
             'less_qty' => $request->input('less_qty'),
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
@@ -367,12 +337,7 @@ class EtlobhaController extends BaseController
             }
 
             foreach ($files as $file) {
-                // $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
-                // $request['product_id'] = $productid;
-                // $request['image'] = $imageName;
-                // $filePath = 'images/product/' . $imageName;
-                // $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($file));
-                // Image::create($request->all());
+
                 if (is_uploaded_file($file)) {
                     $imageName = Str::random(10) . time() . '.' . $file->getClientOriginalExtension();
                     $request['product_id'] = $productid;
@@ -393,34 +358,7 @@ class EtlobhaController extends BaseController
             }
         }
 
-        // $option = Option::where('product_id', $id);
-
-        // if (!is_null($request->data)) {
-        //     $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
-        //     foreach ($options_id as $oid) {
-        //         if (!(in_array($oid, array_column($request->data, 'id')))) {
-        //             $option = Option::query()->find($oid);
-        //             $option->update(['is_deleted' => 1]);
-        //         }
-        //     }
-
-        //     foreach ($request->data as $data) {
-        //         if (!isset($data['id'])) {
-        //             $data['id'] = null;
-        //         }
-
-        //         $options[] = Option::updateOrCreate([
-        //             'id' => $data['id'],
-        //             'product_id' => $id,
-        //             'is_deleted' => 0,
-        //         ], [
-        //             'type' => $data['type'],
-        //             'title' => $data['title'],
-        //             'value' => $data['value'],
-        //             'product_id' => $id,
-        //         ]);
-        //     }
-        // }
+        
         else {
             if ($request->has('images')) {
                 $files = $request->images;

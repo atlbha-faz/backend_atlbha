@@ -110,12 +110,9 @@ class AdminOrderController extends BaseController
                 }
                 foreach ($order->items as $orderItem) {
                     $product = Product::where('id', $orderItem->product_id)->where('store_id', null)->first();
-                    // if ($orderItem->quantity > $product->stock) {
-                    //     return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
-                    // }
+ 
 
                     $importOrder = Product::where('original_id', $orderItem->product_id)->where('store_id', $storeid->id)->where('is_import', 1)->where('is_deleted', 0)->first();
-                    // $importOrder = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $storeid->id)->first();
                     if ($importOrder == null) {
                         
                       
@@ -177,27 +174,6 @@ class AdminOrderController extends BaseController
                                     $newOption->original_id = $orderItem->option_id;
                                     $newOption->quantity = $orderItem->quantity;
                                     $newOption->save();
-                                    // $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
-                                    // $optionNames = array();
-                                    // $values = array();
-                                    // $optionNames = explode(',', $newOption->name['ar']);
-                                    // foreach ($attrs as $attr) {
-                                    //     $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
-                                    //     foreach ($attruibtevalues as $attruibtevalue) {
-                                    //         foreach ($optionNames as $optionName) {
-                                    //             if (in_array($optionName, explode(',', $attruibtevalue->value))) {
-                                                   
-                                    //                 $values[] = $attruibtevalue;
-                                    //                 $valuesid[] = $attruibtevalue->id;
-                                    //             }
-                                    //         }
-                                    //     }
-
-                                    //     $lastValues = Value::where('attribute_id', $attr->id)->whereIn('id', $valuesid)->get();
-
-                                    //     $newRecord->attributes()->attach($attr->id, ['value' => json_encode($lastValues)]);
-
-                                    // }
                                     $qty = $importOrder->stock;
                                     $importOrder->update([
                                         'stock' => $qty + $orderItem->quantity,

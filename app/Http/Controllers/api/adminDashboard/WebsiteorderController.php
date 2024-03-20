@@ -199,13 +199,13 @@ class WebsiteorderController extends BaseController
 
         foreach ($users as $user) {
             Notification::send($user, new verificationNotification($data));
-             if ($user->device_token !== null) {
-           
+            if ($user->device_token !== null) {
+
                 $fcm = $this->sendFCM($user->device_token,
                     $user->id, 'منصة اطلبها', ' تم قبول خدمة' . implode(',', $serviceName), $user->notifications()->count());
-              
-                 }
-            
+
+            }
+
         }
         event(new VerificationEvent($data));
         $success['websiteorder'] = new WebsiteorderResource($websiteorder);

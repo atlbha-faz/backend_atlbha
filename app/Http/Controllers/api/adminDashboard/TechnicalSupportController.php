@@ -66,37 +66,7 @@ class TechnicalSupportController extends BaseController
      */
     public function store(Request $request)
     {
-     /* $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'title'=>'required|string|max:255',
-            'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'content'=>'required|max:1000',
-            'type'=>'required|in:complaint,enquiry,suggestion',
-            'supportstatus'=>'required|in:finished,not_finished,pending',
-            'store_id' =>'required|exists:stores,id'
-
-
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
-        $technicalsupport = TechnicalSupport::create([
-            'title' => $request->title,
-            'phonenumber'=>$request->phonenumber,
-            'content'=>$request->content,
-             'type' => $request->type,
-            'supportstatus'=>$request->supportstatus,
-            'store_id'=>$request->store_id,
-
-          ]);
-
-         // return new CountryResource($country);
-         $success['Technicalsupports']=New TechnicalsupportResource($technicalsupport);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة طلب دعم فني بنجاح','Technical Support Added successfully');
-*/
+     
     }
 
     /**
@@ -139,37 +109,7 @@ class TechnicalSupportController extends BaseController
      */
     public function update(Request $request, TechnicalSupport $technicalSupport)
     {
-      /*   if (is_null($technicalSupport) || $technicalSupport->is_deleted !=0){
-         return $this->sendError("طلب الدعم غير موجود","technicalSupport is't exists");
-          }
-         $input = $request->all();
-         $validator =  Validator::make($input ,[
-          'title'=>'required|string|max:255',
-           'phonenumber' =>['required','numeric','regex:/^(009665|9665|\+9665)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'content'=>'required|max:1000',
-            'type'=>'required|in:complaint,enquiry,suggestion',
-            'supportstatus'=>'required|in:finished,not_finished,pending',
-            'store_id' =>'required|exists:stores,id'
-         ]);
-         if ($validator->fails())
-         {
-            # code...
-            return $this->sendError(null,$validator->errors());
-         }
-         $technicalSupport->update([
-            'title' => $request->input('title'),
-            'phonenumber' => $request->input('phonencoumber'),
-            'content' => $request->input('content'),
-            'type' => $request->input('type'),
-            'supportstatus' => $request->input('supportstatus'),
-            'store_id' => $request->input('store_id'),
-         ]);
-         //$country->fill($request->post())->update();
-            $success['technicalSupports']=New TechnicalSupportResource($technicalSupport);
-            $success['status']= 200;
-
-            return $this->sendResponse($success,'تم التعديل بنجاح','technical Support updated successfully');
-            */
+      
         }
 
          public function changeStatus($id , Request $request)

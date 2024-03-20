@@ -85,16 +85,12 @@ class StockController extends BaseController
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
-            // 'amount' => ['required', 'numeric'],
-            // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
+          
             'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'images' => 'nullable|array',
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            // 'data' => 'nullable|array',
-            // 'data.*.type' => 'required|in:brand,color,wight,size',
-            // 'data.*.title' => 'required|string',
-            // 'data.*.value' => 'required|array',
+           
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -164,22 +160,7 @@ class StockController extends BaseController
 
             }
         }
-        // if (!is_null($request->data)) {
-        //     foreach ($request->data as $data) {
-        //         // dd($data['value']);
-        //         //$request->input('name', []);
-        //         $option = new Option([
-        //             'type' => $data['type'],
-        //             'title' => $data['title'],
-        //             'value' => implode(',', $data['value']),
-        //             'product_id' => $productid,
-
-        //         ]);
-
-        //         $option->save();
-        //         $options[] = $option;
-        //     }
-        // }
+     
         if ($request->has('attribute')) {
             if (!is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
@@ -294,20 +275,13 @@ class StockController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
             'description' => 'required|string',
-            // 'amount' => ['required', 'numeric'],
-
-            // 'quantity' => ['required_if:amount,0', 'numeric', 'gt:0'],
             'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'images' => 'nullable|array',
-            // 'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
-            // 'data' => 'nullable|array',
-            // 'data.*.type' => 'required|in:brand,color,wight,size',
-            // 'data.*.title' => 'required|string',
-            // 'data.*.value' => 'required|array',
+       
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -343,7 +317,6 @@ class StockController extends BaseController
             'description' => $request->input('description'),
             'purchasing_price' => $request->input('purchasing_price'),
             'selling_price' => $request->input('selling_price'),
-            // 'quantity' => $request->input('quantity'),
             'less_qty' => $request->input('less_qty'),
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
@@ -415,33 +388,9 @@ class StockController extends BaseController
             }
         }
 
-        // $option = Option::where('product_id', $id);
+ 
 
-        // if (!is_null($request->data)) {
-        //     $options_id = Option::where('product_id', $id)->pluck('id')->toArray();
-        //     foreach ($options_id as $oid) {
-        //         if (!(in_array($oid, array_column($request->data, 'id')))) {
-        //             $option = Option::query()->find($oid);
-        //             $option->update(['is_deleted' => 1]);
-        //         }
-        //     }
-
-        //     foreach ($request->data as $data) {
-        //         if (!isset($data['id'])) {
-        //             $data['id'] = null;
-        //         }
-        //         $options[] = Option::updateOrCreate([
-        //             'id' => $data['id'],
-        //             'product_id' => $id,
-        //             'is_deleted' => 0,
-        //         ], [
-        //             'type' => $data['type'],
-        //             'title' => $data['title'],
-        //             'value' => $data['value'],
-        //             'product_id' => $id,
-        //         ]);
-        //     }
-        // }
+        
         $preAttributes = Attribute_product::where('product_id', $productid)->get();
         if ($preAttributes != null) {
             foreach ($preAttributes as $preAttribute) {
@@ -598,8 +547,7 @@ class StockController extends BaseController
         try {
 
             Excel::import(new AdminProductImport, $request->file);
-            // Log::alert($row['cover']);
-            // Log::info($row['cover']);
+        
 
             $success['status'] = 200;
 
