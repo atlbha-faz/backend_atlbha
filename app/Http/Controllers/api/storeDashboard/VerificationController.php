@@ -64,10 +64,7 @@ class VerificationController extends BaseController
             'owner_name' => 'required|string|max:255',
             'commercial_name' => 'required_if:verification_type,commercialregister',
             'verification_code' => 'required',
-            // 'name' => 'required|string|max:255',
-            // 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
-            //     return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
-            // })],
+     
         ]);
         if ($validator->fails()) {
             # code...
@@ -125,12 +122,7 @@ class VerificationController extends BaseController
             Mail::to($user->email)->send(new SendMail($data));
         }
         event(new VerificationEvent($data));
-        // $user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        // $user->update([
-        //     'name' => $request->input('name'),
-        // ]);
-
-        // $success['store'] = store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل الاعدادات بنجاح', 'registration_status update successfully');

@@ -51,7 +51,6 @@ class ReplaycommentController extends BaseController
         $validator =  Validator::make($input ,[
             'comment_text'=>'required|string|max:255',
             'comment_id'=>'required|exists:comments,id',
-            // 'user_id'=>'required|exists:users,id'
 
 
         ]);
@@ -135,7 +134,7 @@ class ReplaycommentController extends BaseController
             'comment_id' => $request->input('comment_id'),
            'user_id' => $request->input('user_id'),
          ]);
-         //$country->fill($request->post())->update();
+
             $success['replaycomments']=New ReplaycommentResource($replaycomment);
             $success['status']= 200;
 

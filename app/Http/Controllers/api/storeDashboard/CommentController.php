@@ -162,7 +162,7 @@ class CommentController extends BaseController
             'comment_for' => 'required|in:product,store',
             'store_id' => 'required_if:comment_for,store',
             'product_id' => 'required_if:comment_for,product',
-            // 'user_id'=>'required|exists:users,id'
+          
         ]);
         if ($validator->fails()) {
             # code...
@@ -173,9 +173,9 @@ class CommentController extends BaseController
             'rateing' => $request->input('rateing'),
             'product_id' => $request->input('product_id'),
             'store_id' => $request->input('store_id'),
-            //    'user_id' => $request->input('user_id'),
+          
         ]);
-        //$country->fill($request->post())->update();
+       
         $success['comments'] = new commentResource($comment);
         $success['status'] = 200;
 

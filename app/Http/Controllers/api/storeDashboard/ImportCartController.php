@@ -115,15 +115,7 @@ class ImportCartController extends BaseController
                        'option_id' =>  $data['option_id']
                     ]);
                      }
-                    // $cartDetail = CartDetail::updateOrCreate([
-                    //     'cart_id' => $cartid,
-                    //     'product_id' => $data['id'],
-                    //     'option_id' =>  $data['option_id']
-                    // ], [
-                    //     'qty' =>$data['qty'],
-                    //     'price' => $data['price'],
-                    //     //  'option'=>$data['option'],
-                    // ]);
+ 
                 } else {
                     $success['status'] = 200;
 

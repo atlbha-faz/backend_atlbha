@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use DB;
-use App\Models\User;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\ProductResource;
+use App\Models\Importproduct;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Setting;
-use App\Models\Importproduct;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\importsResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\User;
+use DB;
 
 class IndexController extends BaseController
 {

@@ -45,7 +45,7 @@ class AtlobhaContactController extends BaseController
     public function deleteall(Request $request)
     {
 
-
+        
             $atlobhaContacts =AtlobhaContact::whereIn('id',$request->id)->where('is_deleted',0)->get();
             if(count($atlobhaContacts)>0){
            foreach($atlobhaContacts as $atlobhaContact)

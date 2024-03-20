@@ -128,41 +128,8 @@ class OrderController extends BaseController
             //         } elseif ($order->shippingtype->id == 4) {
             //             $url = 'https://dashboard.go-tex.net/gotex-co-test/jt/cancel-order';
             //         }
-            //         if (in_array($order->shippingtype->id, [1, 3, 4])) {
-            //             $curl = curl_init();
-            //             $data = array(
-            //                 'userId' => env('GOTEX_UserId_KEY'),
-            //                 'apiKey' => env('GOTEX_API_KEY'),
-            //                 'orderId' => $shippings->shipping_id,
-            //             );
-            //             $new_data = json_encode($data);
-            //             curl_setopt_array($curl, array(
-            //                 CURLOPT_URL => $url,
-            //                 CURLOPT_RETURNTRANSFER => true,
-            //                 CURLOPT_ENCODING => '',
-            //                 CURLOPT_MAXREDIRS => 10,
-            //                 CURLOPT_TIMEOUT => 0,
-            //                 CURLOPT_FOLLOWLOCATION => true,
-            //                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            //                 CURLOPT_CUSTOMREQUEST => 'POST',
-            //                 CURLOPT_POSTFIELDS => $new_data,
-            //                 CURLOPT_HTTPHEADER => array(
-            //                     'Content-Type: application/json',
-            //                 ),
-            //             ));
-
-            //             $response = curl_exec($curl);
-            //             curl_close($curl);
-
-            //             $success['shippingCompany'] = json_decode($response);
-            //         }
-
-            //         $success['shipping'] = new shippingResource($shippings);
-            //         $success['orders'] = new OrderResource($order);
-            //         return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
-
-            //     }
-            // }
+        
+        
             $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
@@ -892,8 +859,7 @@ class OrderController extends BaseController
 
                     } else {
 
-                        //             $ship_id = null;
-                        //             $track_id = null;
+                        
                         $success['shippingCompany'] = $arData;
                         return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
@@ -901,202 +867,8 @@ class OrderController extends BaseController
             }
         }
     }
-    public function getAllCity()
-    {
-        $key = array(
-            'userId' => env('GOTEX_UserId_KEY'),
-            'apiKey' => env('GOTEX_API_KEY'),
-        );
-        $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/saee/get-cities',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($key),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-            ),
-        ));
 
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        $response;
-        $success['cities'] = json_decode($response);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم إرجاع المدن', ' cities successfully');
-    }
-    public function PrintSticker($order, $id)
-    {
-        $order = Order::where('id', $order)->first();
-        if ($order->order_status == "canceled" || $order->order_status == "new") {
-            return $this->sendError("لا يمكن طباعة الاستيكر", "cant not print Sticker");
-        }
-        if ($order->shippingtype->id == 1) {
-            $url = 'https://dashboard.go-tex.net/gotex-co-test/saee/print-sticker/' . $id;
-        } elseif ($order->shippingtype->id == 2) {
-            $url = 'https://dashboard.go-tex.net/gotex-co-test/smsa/print-sticker/' . $id;
-        } elseif ($order->shippingtype->id == 3) {
-            $url = 'https://dashboard.go-tex.net/gotex-co-test/imile/print-sticker/' . $id;
-        } elseif ($order->shippingtype->id == 4) {
-            $url = 'https://dashboard.go-tex.net/gotex-co-test/jt/print-sticker/' . $id;
-        }
-        $key = array(
-            'userId' => env('GOTEX_UserId_KEY'),
-            'apiKey' => env('GOTEX_API_KEY'),
-        );
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($key),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-            ),
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $success['Sticker'] = json_decode($response);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم الإرجاع بنجاح', ' print Sticker successfully');
-    }
-    public function PrintImileSticker($id)
-    {
-        $key = array(
-            'userId' => env('GOTEX_UserId_KEY'),
-            'apiKey' => env('GOTEX_API_KEY'),
-        );
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/imile/print-sticker/' . $id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($key),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-            ),
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $success['Sticker'] = json_decode($response);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم الإرجاع بنجاح', ' print Sticker successfully');
-    }
-    public function PrintSaeeSticker($id)
-    {
-        $key = array(
-            'userId' => env('GOTEX_UserId_KEY'),
-            'apiKey' => env('GOTEX_API_KEY'),
-        );
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/saee/print-sticker/' . $id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($key),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        if (curl_errno($curl)) {
-            echo 'Request Error:' . curl_error($curl);
-        }
-        curl_close($curl);
-        $success['Sticker'] = json_decode($response);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم الإرجاع بنجاح', ' print Sticker successfully');
-    }
-    public function PrintSmsaSticker($id)
-    {
-        $key = array(
-            'userId' => env('GOTEX_UserId_KEY'),
-            'apiKey' => env('GOTEX_API_KEY'),
-        );
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/smsa/print-sticker/' . $id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($key),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-            ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        $success['Sticker'] = json_decode($response);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم الإرجاع بنجاح', ' print Sticker successfully');
-    }
-    public function PrintJTSticker($id)
-    {
-        $key = array(
-            'userId' => env('GOTEX_UserId_KEY'),
-            'apiKey' => env('GOTEX_API_KEY'),
-        );
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://dashboard.go-tex.net/gotex-co-test/jt/print-sticker/' . $id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($key),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-            ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        $success['Sticker'] = json_decode($response);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم الإرجاع بنجاح', ' print Sticker successfully');
-    }
     public function deleteall(Request $request)
     {
 

@@ -24,7 +24,6 @@ class ImportproductController extends BaseController
     {
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
-        // $imports = Importproduct::where('store_id', auth()->user()->store_id)->get()->pluck('product_id')->toArray();
         if ($request->has('page')) {
             $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id')->paginate(15));
             $success['page_count'] = $products->lastPage();
@@ -42,9 +41,7 @@ class ImportproductController extends BaseController
     {
 
         $importedproduct = Importproduct::where('product_id', $request->product_id)->where('store_id', auth()->user()->store_id)->first();
-        // if ($importedproduct) {
-        //     return $this->sendError(" تم استيراده مسبقا ", "imported");
-        // }
+ 
         $purchasing_price = Product::where('id', $request->product_id)->value('purchasing_price');
 
         $input = $request->all();
@@ -124,7 +121,6 @@ class ImportproductController extends BaseController
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
-            // $qty = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->value('qty');
             $product = Product::where('id', $id)->first();
             if ($request->qty > $product->stock) {
 
@@ -136,10 +132,7 @@ class ImportproductController extends BaseController
                     // 'qty' => $request->qty,
 
                 ]);
-                // $newStock = ($product->stock + $qty) - $importproduct->qty;
-                // $product->update([
-                //     'stock' => $newStock,
-                // ]);
+
             }
 
             $success['importproducts'] = new ImportproductResource($importproduct);
