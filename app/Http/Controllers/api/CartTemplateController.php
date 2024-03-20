@@ -37,21 +37,6 @@ class CartTemplateController extends BaseController
 
     public function show($id)
     {
-        // if ($id == 'atlbha') {
-        //     $success['domain'] = $id;
-
-        //     $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', null)->first();
-
-        //     if (is_null($cart)) {
-        //         return $this->sendError("السلة غير موجودة", "cart is't exists");
-        //     }
-
-        //     $success['cart'] = new CartResource($cart);
-        //     $success['status'] = 200;
-
-        //     return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
-
-        // } else {
 
         $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
 
@@ -282,70 +267,7 @@ class CartTemplateController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
-    // public function updateCartItem(Request $request,$domain, $id)
-    // {
-    //     $input = $request->all();
-    //     $validator = Validator::make($input, [
-
-    //         'price' => 'required|numeric',
-    //         'qty' => 'required|numeric',
-    //         'option_id' => 'nullable|exists:options,id',
-
-    //     ]);
-    //     if ($validator->fails()) {
-    //         return $this->sendError(null, $validator->errors());
-    //     }
-    //     $store = Store::where('domain', $domain)->first();
-    //     $cart_id = Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->pluck('id')->first();
-    //     $cart = CartDetail::where('id', $id)->first();
-
-    //     if (is_null($cart)) {
-    //         return $this->sendError("المنتج غير موجودة", " product is't exists");
-    //     }
-    //     $cart->update([
-    //         'qty' =>  $request->input('qty'),
-    //         'price' => $request->input('price'),
-    //         'option_id' =>$request->input('option_id'),
-    //     ]);
-    //     $newCart = Cart::where('id', $cart_id)->first();
-    //     $newCart->update([
-    //         'total' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
-    //             return $total + ($item->qty * $item->price);
-    //         }),
-    //         'count' => CartDetail::where('cart_id', $cart_id)->count(),
-    //         'weight' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
-    //             return $total + ($item->qty * $item->product->weight);
-    //         }),
-    //         'totalCount' => CartDetail::where('cart_id', $cart_id)->get()->reduce(function ($total, $item) {
-    //             return $total + ($item->qty);
-    //         }),
-
-    //     ]);
-    //     if ($newCart->weight > 15) {
-    //         $extra_shipping_price = ($newCart->weight - 15) * 3;
-    //     } else {
-    //         $extra_shipping_price = 0;
-    //     }
-    //     $newCart->update([
-
-    //         'tax' => $newCart->total * 0.15,
-    //         'shipping_price' => $newCart->shipping_price,
-    //     ]);
-
-    //     $newCart->update([
-    //         'subtotal' => $newCart->total - $newCart->tax,
-    //         'total' => $newCart->total + $newCart->shipping_price + $extra_shipping_price,
-    //     ]);
-
-    //     if ($newCart->count == 0) {
-    //         $newCart->delete();
-    //     } else {
-    //         $success = new CartResource(Cart::where('user_id', auth()->user()->id)->where('store_id', $store->id)->first());
-    //     }
-    //     $success['status'] = 200;
-    //     return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
-    // }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -403,35 +325,5 @@ class CartTemplateController extends BaseController
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function showDetailOption(Request $request)
-    {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'id' => 'required',
-            'name' => 'nullable|array',
-        ]);
 
-        if (!is_null($request->name)) {
-
-            $options = $request->name;
-            $optionsDB = Option::where('product_id', $request->id)->get();
-            foreach ($optionsDB as $optionDB) {
-                $array = explode(',', $optionDB->name['ar']);
-
-                $d = array_diff($options, $array);
-                if (empty($d)) {
-                    $restult = new OptionResource($optionDB);
-                    $success = $restult;
-                    $success['status'] = 200;
-                    return $this->sendResponse($success, 'تم العرض بنجاح', 'Showed successfully');
-                }
-            }
-            $restult = "No option available";
-            $success = $restult;
-            $success['status'] = 200;
-            return $this->sendResponse($success, 'تم العرض بنجاح', 'Showed successfully');
-
-        }
-
-    }
 }
