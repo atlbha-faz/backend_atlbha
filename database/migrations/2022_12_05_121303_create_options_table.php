@@ -16,15 +16,15 @@ return new class extends Migration
         Schema::create('options', function (Blueprint $table) {
             $table->id();
             $table->json('name');
-            $table->double('price')->nullable();
-            $table->double('discount_price')->nullable();
+            $table->decimal('price', 10, 2)->nullable();
+            $table->decimal('discount_price', 10, 2)->nullable();
             $table->integer('quantity')->nullable();
             $table->integer('less_qty')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->integer('default_option')->nullable()->default(0);
             $table->integer('original_id')->nullable();
-           $table->enum('status',['active','not_active'])->default('active');
+            $table->enum('status', ['active', 'not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
         });

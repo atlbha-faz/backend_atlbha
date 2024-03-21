@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('streetaddress')->nullable();
             $table->string('district')->nullable();
-            $table->double('price')->nullable();
+            $table->decimal('price', 10, 2)->nullable();
             $table->integer('quantity')->nullable();
-            $table->double('weight')->nullable();
+            $table->decimal('weight', 10, 2)->nullable();
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
             $table->bigInteger('shippingtype_id')->unsigned();

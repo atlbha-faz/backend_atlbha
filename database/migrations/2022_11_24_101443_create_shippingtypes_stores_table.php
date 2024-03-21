@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('shippingtypes_stores', function (Blueprint $table) {
             $table->id();
-             $table->bigInteger('shippingtype_id')->unsigned();
-         $table->foreign('shippingtype_id')->references('id')->on('shippingtypes')->onDelete('cascade');
-        $table->bigInteger('store_id')->unsigned();
-        $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-        $table->double('price')->nullable();
-        $table->integer('time')->nullable();
-        $table->double('overprice')->nullable();
-        $table->timestamps();
+            $table->bigInteger('shippingtype_id')->unsigned();
+            $table->foreign('shippingtype_id')->references('id')->on('shippingtypes')->onDelete('cascade');
+            $table->bigInteger('store_id')->unsigned();
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->decimal('price', 10, 2)->nullable();
+            $table->integer('time')->nullable();
+            $table->decimal('overprice', 10, 2)->nullable();
+            $table->timestamps();
         });
     }
 
