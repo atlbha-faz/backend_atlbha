@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->integer('qty')->nullable();
-            $table->double('price')->nullable();
+            $table->decimal('price', 10, 2)->nullable();
             $table->longText('options')->nullable();
             $table->timestamps();
         });

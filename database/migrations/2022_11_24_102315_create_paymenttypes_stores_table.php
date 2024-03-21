@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('paymenttypes_stores', function (Blueprint $table) {
             $table->id();
-            $table->double('price');
+            $table->decimal('price', 10, 2);
             $table->integer('time')->nullable();
             $table->bigInteger('paymentype_id')->unsigned();
             $table->foreign('paymentype_id')->references('id')->on('paymenttypes')->onDelete('cascade');

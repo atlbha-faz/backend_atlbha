@@ -23,10 +23,10 @@ return new class extends Migration
            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
            $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-           $table->double('price');
-           $table->double('discount');
+           $table->decimal('price', 10, 2);
+           $table->decimal('discount', 10, 2);
            $table->integer('quantity');
-           $table->double('total_price');
+           $table->decimal('total_price', 10, 2);
            $table->longText('options')->nullable();
            $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled'])->default('new');
            $table->enum('payment_status', ['pending', 'paid', 'failed'])
