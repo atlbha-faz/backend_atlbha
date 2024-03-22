@@ -223,7 +223,7 @@ class CheckoutController extends BaseController
 
             }
 
-            if ($order->paymentype_id == 4 && $order->shippingtype_id == 5) {
+            if ($order->paymentype_id == 4 ) {
 
                 //الدفع عند الاستلام
                 $order->update([
