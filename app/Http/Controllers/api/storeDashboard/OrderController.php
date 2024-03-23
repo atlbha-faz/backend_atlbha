@@ -103,7 +103,7 @@ class OrderController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        // if ($request->input('status') !== "ready") {
+        if ($order->order_status == "canceled") {
 
         $order->update([
             'order_status' => $request->input('status'),
@@ -113,22 +113,7 @@ class OrderController extends BaseController
                 'order_status' => $request->input('status'),
             ]);
         }
-        if ($order->order_status == "canceled") {
-
-            //     $shippings = Shipping::where('order_id', $order->id)->first();
-            //     if ($shippings != null) {
-            //         $shippings->update([
-            //             'shipping_status' => "canceled",
-            //         ]);
-            //         $shippings->shipping_id;
-            //         if ($order->shippingtype->id == 1) {
-            //             $url = 'https://dashboard.go-tex.net/gotex-co-test/saee/cancel-order';
-            //         } elseif ($order->shippingtype->id == 3) {
-            //             $url = 'https://dashboard.go-tex.net/gotex-co-test/imile/cancel-order';
-            //         } elseif ($order->shippingtype->id == 4) {
-            //             $url = 'https://dashboard.go-tex.net/gotex-co-test/jt/cancel-order';
-            //         }
-        
+          
         
             $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
@@ -557,32 +542,32 @@ class OrderController extends BaseController
                     //             return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     //         }
                 } else {
-                    //         $order->update([
-                    //             'order_status' => $request->input('status'),
-                    //         ]);
-                    //         foreach ($order->items as $orderItem) {
-                    //             $orderItem->update([
-                    //                 'order_status' => $request->input('status'),
-                    //             ]);
-                    //         }
-                    //         $shipping = Shipping::create([
-                    //             'shipping_id' => $order->order_number,
-                    //             'track_id' => null,
-                    //             'description' => $order->description,
-                    //             'quantity' => $order->quantity,
-                    //             'price' => $order->total_price,
-                    //             'weight' => $order->weight,
-                    //             'district' => $request->district,
-                    //             'city' => $request->city,
-                    //             'streetaddress' => $request->street_address,
-                    //             'customer_id' => $order->user_id,
-                    //             'shippingtype_id' => $order->shippingtype_id,
-                    //             'order_id' => $order->id,
-                    //             'shipping_status' => $order->order_status,
-                    //             'store_id' => $order->store_id,
-                    //             'cashondelivery' => $order->cashondelivery,
-                    //         ]);
-                    //         $success['shipping'] = new shippingResource($shipping);
+                            $order->update([
+                                'order_status' => $request->input('status'),
+                            ]);
+                            foreach ($order->items as $orderItem) {
+                                $orderItem->update([
+                                    'order_status' => $request->input('status'),
+                                ]);
+                            }
+                            $shipping = Shipping::create([
+                                'shipping_id' => $order->order_number,
+                                'track_id' => null,
+                                'description' => $order->description,
+                                'quantity' => $order->quantity,
+                                'price' => $order->total_price,
+                                'weight' => $order->weight,
+                                'district' => $request->district,
+                                'city' => $request->city,
+                                'streetaddress' => $request->street_address,
+                                'customer_id' => $order->user_id,
+                                'shippingtype_id' => $order->shippingtype_id,
+                                'order_id' => $order->id,
+                                'shipping_status' => $order->order_status,
+                                'store_id' => $order->store_id,
+                                'cashondelivery' => $order->cashondelivery,
+                            ]);
+                            $success['shipping'] = new shippingResource($shipping);
                 }
                 $success['orders'] = new OrderResource($order);
                 $success['status'] = 200;

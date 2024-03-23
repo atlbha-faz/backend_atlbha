@@ -129,6 +129,7 @@ class CheckoutController extends BaseController
                 $orderItem->product_id = $cartItem->product_id;
                 $orderItem->quantity = $cartItem->qty;
                 $orderItem->price = $cartItem->price;
+                $orderItem->total_price = ($cartItem->price * $cartItem->qty);
                 $orderItem->option_id = $cartItem->option_id;
                 $orderItem->store_id = null;
                 $orderItem->user_id = auth()->user()->id;
