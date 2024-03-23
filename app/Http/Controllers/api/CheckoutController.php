@@ -596,5 +596,25 @@ class CheckoutController extends BaseController
 
         }
     }
+    public function cancelOrder($id)
+    {
+        $order = Order::where('user_id', auth()->user()->id)->where('id', $id)->first();
+        if (is_null($order)) {
+            return $this->sendError("الطلب غير موجودة", "order is't exists");
+        }
+        $order->update([
+            'order_status' => 'canceled',
+        ]);
+        foreach ($order->items as $orderItem) {
+            $orderItem->update([
+                'order_status' => 'canceled',
+            ]);
+        }
+          
+            $success['orders'] = new OrderResource($order);
+            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+
+
+    }
 
 }
