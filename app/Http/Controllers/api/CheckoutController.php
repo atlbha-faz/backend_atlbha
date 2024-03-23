@@ -598,7 +598,7 @@ class CheckoutController extends BaseController
     }
     public function cancelOrder($id)
     {
-        $order = Order::where('user_id', auth()->user()->id)->where('id', $id)->first();
+        $order = Order::where('user_id', auth()->user()->id)->where('id', $id)->where('is_deleted', 0)->first();
         if (is_null($order)) {
             return $this->sendError("الطلب غير موجودة", "order is't exists");
         }
