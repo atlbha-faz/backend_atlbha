@@ -84,7 +84,7 @@ Route::resource('OrderAddress', App\Http\Controllers\api\OrderAddressController:
 Route::get('show_default_address', [App\Http\Controllers\api\OrderAddressController::class, 'show_default_address']);
 Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\OrderAddressController::class, 'setDefaultAddress']);
 Route::get('cancelOrder/{id}', [App\Http\Controllers\api\CheckoutController::class, 'cancelOrder']);
-Route::get('index/{id}', [App\Http\Controllers\api\ReturnOrderController::class, 'index']);
+Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\ReturnOrderController::class, 'index']);
 Route::post('returnOrder', [App\Http\Controllers\api\ReturnOrderController::class, 'store']);
 
 Route::get('postStore/{id}', [App\Http\Controllers\api\PostStoreController::class, 'index']);
