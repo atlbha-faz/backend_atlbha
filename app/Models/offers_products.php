@@ -10,7 +10,5 @@ class offers_products extends Model
     use HasFactory;
      protected $table="offers_products";
     protected $fillable = ['offer_id','product_id','type'];
-    protected $casts = [
-        'product_id' => 'array',
-    ];
+
 }

@@ -10,9 +10,7 @@ class Package_Template extends Model
     use HasFactory;
     protected $table="packages_templates";
     protected $fillable = ['package_id','template_id'];
-    protected $casts = [
-        'template_id' => 'array',
-    ];
+
     public $timestamps = false;
 
 }

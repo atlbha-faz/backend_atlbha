@@ -11,8 +11,4 @@ class Service_Websiteorder extends Model
     protected $table="services_websiteorders";
     protected $fillable = ['service_id','websiteorder_id','status'];
 
-
-        protected $casts = [
-    'service_id' => 'array',
-];
 }

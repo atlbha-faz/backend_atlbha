@@ -10,7 +10,5 @@ class coupons_paymenttypes extends Model
     use HasFactory;
     protected $table = "coupons_paymenttypes";
     protected $fillable = ['coupon_id', 'paymenttype_id', 'type'];
-    protected $casts = [
-        'paymenttype_id' => 'array',
-    ];
+
 }
