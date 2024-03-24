@@ -10,9 +10,7 @@ class Video extends Model
 {
     use HasFactory;
     protected $fillable = ['video', 'name', 'duration', 'unit_id', 'status', 'is_deleted'];
-    protected $casts = [
-        'video' => 'array',
-    ];
+
     public function unit()
     {
         return $this->belongsTo(Unit::class);
