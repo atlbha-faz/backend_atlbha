@@ -371,11 +371,11 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('searchProduct', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'searchProductName']);
         Route::get('searchImportProduct', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'searchImportProductName']);
         Route::get('searchOrder', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchOrder']);
-        Route::get('searchCouponName', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchCouponName']);
-        Route::get('searchCartName', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchCartName']);
-        Route::get('searchPageName', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchPageName']);
-        Route::get('searchCourseName', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchPageName']);
-        Route::get('searchTechnicalSupport', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchTechnicalSupport']);
+        Route::get('searchCouponName', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'searchCouponName']);
+        Route::get('searchCartName', [App\Http\Controllers\api\storeDashboard\CartController::class, 'searchCartName']);
+        Route::get('searchPageName', [App\Http\Controllers\api\storeDashboard\PageController::class, 'searchPageName']);
+        Route::get('searchCourseName', [App\Http\Controllers\api\storeDashboard\CourseController::class, 'searchCourseName']);
+        Route::get('searchTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'searchTechnicalSupport']);
 
         //couponall
         Route::get('couponchangeSatusItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeSatusItems']);
