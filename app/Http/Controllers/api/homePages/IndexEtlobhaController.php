@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\homePages;
 
 use App\Models\City;
 use App\Models\Page;

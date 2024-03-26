@@ -15,13 +15,11 @@ class SubscriptionEmailController extends BaseController
     }
     public function index(Request $request)
     {
-        if ($request->has('page')) {
+     
             $subsicriptions = SubscriptionEmailResource::collection(SubscriptionEmail::where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
             $success['page_count'] = $subsicriptions->lastPage();
             $success['subsicriptions'] = $subsicriptions;
-        } else {
-            $success['subsicriptions'] = SubscriptionEmailResource::collection(SubscriptionEmail::where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-        }
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع اشتراكات الايميل بنجاح', 'Subscription Emails return successfully');

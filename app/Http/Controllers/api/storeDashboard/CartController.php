@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CartResource;
-use App\Mail\SendOfferCart;
-use App\Models\Cart;
-use App\Models\CartDetail;
-use App\Models\Product;
-use App\Models\User;
 use Carbon\Carbon;
+use App\Models\Cart;
+use App\Models\User;
+use App\Models\Product;
+use App\Models\CartDetail;
+use App\Mail\SendOfferCart;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\CartResource;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CartController extends BaseController
 {
@@ -34,20 +35,13 @@ class CartController extends BaseController
     }
 
     public function admin(Request $request)
-    {if ($request->has('page')) {
-        $cart = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
+    {
+        $carts = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
             $query->select('id');
         }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate(8));
-        $success['page_count'] = $cart->lastPage();
-
-        $success['cart'] = $cart;
-
-    } else {
-        $success['cart'] = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
-            $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->get(['id', 'user_id', 'total', 'count', 'created_at']));
-
-    }
+        $success['page_count'] = $carts->lastPage();
+        $success['current_page'] = $carts->currentPage();
+        $success['cart'] = $carts;
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
 
@@ -127,7 +121,7 @@ class CartController extends BaseController
     public function delete(Request $request)
     {
 
-        $carts = Cart::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
+        $carts = DB::table('carts')->whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
 
         foreach ($carts as $cart) {
 

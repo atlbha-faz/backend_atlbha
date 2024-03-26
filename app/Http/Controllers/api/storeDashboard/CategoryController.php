@@ -23,8 +23,6 @@ class CategoryController extends BaseController
     public function index(Request $request)
     {
         $store = auth()->user()->store_id;
-
-        if ($request->has('page')) {
             if (auth()->user()->store->verification_status == "accept") {
 
                 $categories = CategoryResource::collection(Category::with(['store' => function ($query) {
@@ -63,37 +61,7 @@ class CategoryController extends BaseController
 
             }
 
-        } else {
-            if (auth()->user()->store->verification_status == "accept") {
-
-                $success['categories'] = CategoryResource::collection(Category::with(['store' => function ($query) {
-                    $query->select('id');
-                }])->
-                        where('is_deleted', 0)
-                        ->where('parent_id', null)
-                        ->where(function ($query) {
-                            $query->where('store_id', auth()->user()->store_id)
-                                ->OrWhere('store_id', null);
-             
-                        })->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->get());
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
-            } else {
-                $success['categories'] = CategoryResource::collection(Category::with(['store' => function ($query) {
-                    $query->select('id');
-                }])->
-                        where('is_deleted', 0)
-                        ->where('parent_id', null)
-                        ->where('store_id', auth()->user()->store_id)
-                        ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->get());
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
-
-            }
-        }
+        
     }
 
     /**
@@ -136,7 +104,7 @@ class CategoryController extends BaseController
         }
 
         $category = Category::create([
-            'name' => $request->name,
+            'name' => $request->input('name'),
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
             'for' => 'store',
@@ -178,7 +146,7 @@ class CategoryController extends BaseController
         if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("القسم غير موجودة", "Category is't exists");
         }
-        \Artisan::call('cache:clear');
+   
         $success['categories'] = new CategoryResource($category);
         $success['status'] = 200;
 
@@ -353,7 +321,7 @@ class CategoryController extends BaseController
         return $this->sendResponse($success, 'تم حذف القسم بنجاح', 'category deleted successfully');
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $categorys = Category::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
@@ -407,7 +375,7 @@ class CategoryController extends BaseController
             return $this->sendResponse($success, 'التصنيف غير صحيح', 'category does not exit');
         }
     }
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $categorys = Category::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();

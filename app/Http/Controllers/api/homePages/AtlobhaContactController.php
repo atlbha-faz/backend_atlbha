@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\homePages;
 
 use Illuminate\Http\Request;
 use App\Models\AtlobhaContact;
@@ -42,11 +42,12 @@ class AtlobhaContactController extends BaseController
 
          return $this->sendResponse($success,'تم إضافة الرسالة  بنجاح','message Added successfully');
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         
-            $atlobhaContacts =AtlobhaContact::whereIn('id',$request->id)->where('is_deleted',0)->get();
+            $atlobhaContacts =AtlobhaContact::whereIn('id',$request->id)
+            -> where('is_deleted',0)->get();
             if(count($atlobhaContacts)>0){
            foreach($atlobhaContacts as $atlobhaContact)
            {

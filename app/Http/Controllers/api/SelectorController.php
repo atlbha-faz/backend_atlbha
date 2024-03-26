@@ -17,6 +17,7 @@ use App\Http\Resources\BankResource;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\UserResource;
+use App\Services\AramexServiceGuzzle;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\PackageResource;
 use App\Http\Resources\ActivityResource;
@@ -113,4 +114,6 @@ class SelectorController extends BaseController
 
   }
 
+
+  
 }

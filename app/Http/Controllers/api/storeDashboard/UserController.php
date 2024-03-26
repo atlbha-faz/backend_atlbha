@@ -25,26 +25,13 @@ class UserController extends BaseController
     public function index(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if ($request->has('page')) {
-            if ($storeAdmain != null) {
-                $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
-                $success['page_count'] = $users->lastPage();
-                $success['users'] = $users;
-            } else {
-                $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
-                $success['page_count'] = $users->lastPage();
-                $success['users'] = $users;
 
-            }
+        if ($storeAdmain != null) {
+            $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
+            $success['users'] = $users;
+            $success['page_count'] = $users->lastPage();
+            $success['current_page'] =$users->currentPage();
 
-        } else {
-
-            if ($storeAdmain != null) {
-                $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-            } else {
-                $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-
-            }
         }
         $success['status'] = 200;
 
@@ -277,16 +264,15 @@ class UserController extends BaseController
                     $success['users'] = null;
                 }
             }
-                $success['status'] = 200;
+            $success['status'] = 200;
 
-                return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'user deleted successfully');
-            
-         }
-          else {
-                $success['status'] = 200;
-                return $this->sendError("المستخدم غير موجودة", "user is't exists");
-            }
-        
+            return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'user deleted successfully');
+
+        } else {
+            $success['status'] = 200;
+            return $this->sendError("المستخدم غير موجودة", "user is't exists");
+        }
+
     }
     public function deleteItems(Request $request)
     {

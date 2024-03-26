@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\storeTemplate;
 
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
@@ -224,7 +224,7 @@ class CheckoutController extends BaseController
 
             }
 
-            if ($order->paymentype_id == 4 ) {
+            if ($order->paymentype_id == 4) {
 
                 //الدفع عند الاستلام
                 $order->update([
@@ -278,7 +278,7 @@ class CheckoutController extends BaseController
                     ];
 
                     $supplier = new FatoorahServices();
-                    $response = $supplier->executePayment('v2/ExecutePayment', $data);
+                    $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
 
                     if (isset($response['IsSuccess'])) {
                         if ($response['IsSuccess'] == true) {
@@ -328,7 +328,7 @@ class CheckoutController extends BaseController
                         $default_extra_price = 0;
                     }
                     $order->total_price = $order->total_price;
-                    $total_price_without_shipping = ($order->total_price)-($shipping_price)-($extra_shipping_price);
+                    $total_price_without_shipping = ($order->total_price) - ($shipping_price) - ($extra_shipping_price);
                     $deduction = ($total_price_without_shipping * 0.01) + 1;
                     $price_after_deduction = $total_price_without_shipping - $deduction;
                     $supplierdata = [
@@ -358,7 +358,7 @@ class CheckoutController extends BaseController
                     ];
 
                     $supplier = new FatoorahServices();
-                    $response = $supplier->executePayment('v2/ExecutePayment', $data);
+                    $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
 
                     if (isset($response['IsSuccess'])) {
                         if ($response['IsSuccess'] == true) {
@@ -610,10 +610,9 @@ class CheckoutController extends BaseController
                 'order_status' => 'canceled',
             ]);
         }
-          
-            $success['orders'] = new OrderResource($order);
-            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
+        $success['orders'] = new OrderResource($order);
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
     }
 

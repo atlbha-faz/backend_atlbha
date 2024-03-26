@@ -23,8 +23,10 @@ class HomepageController extends BaseController
      */
     public function index()
     {
-
-        $success['Homepages'] = HomepageResource::collection(Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
+        $home_pages=Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->paginate(8);
+        $success['Homepages'] = HomepageResource::collection();
+        $success['page_count'] = $home_pages->lastPage();
+        $success['current_page'] =$home_pages->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الصفحة الرئبسبة  بنجاح', 'Homepages return successfully');

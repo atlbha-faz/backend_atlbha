@@ -30,15 +30,14 @@ class CommentController extends BaseController
     public function index(Request $request)
     {
 
-        $success['comment_of_store'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'store')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        $success['comment_of_store'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'store')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
         $product_id = array();
         $products = Product::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->get();
         foreach ($products as $product) {
             $product_id[] = $product->id;
         }
-        if ($request->has('page')) {
             $comment_of_products = CommentResource::collection(Comment::with(['user' => function ($query) {
-                $query->select('id', 'name', 'user_type', 'image');
+                $query->select('id', 'name', 'user_type', 'image','email');
             }, 'product' => function ($query) {
                 $query->select('id', 'name');
             }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
@@ -47,17 +46,7 @@ class CommentController extends BaseController
 
             $success['page_count'] = $comment_of_products->lastPage();
             $success['comment_of_products'] = $comment_of_products;
-        } else {
-            $success['comment_of_products'] = CommentResource::collection(Comment::with(['user' => function ($query) {
-
-                $query->select('id', 'name', 'user_type', 'image','email');
-
-            }, 'product' => function ($query) {
-
-                $query->select('id', 'name');
-
-            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-        }
+      
         $success['commentActivation'] = Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->pluck('commentstatus')->first();
 
         $success['status'] = 200;
