@@ -43,7 +43,7 @@ class CartController extends BaseController
         }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate($count));
         $success['page_count'] = $carts->lastPage();
         $success['current_page'] = $carts->currentPage();
-        $success['cart'] = $carts;
+        $success['carts'] = $carts;
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
 
@@ -263,7 +263,7 @@ class CartController extends BaseController
         $success['total_result'] = $carts->total();
         $success['page_count'] = $carts->lastPage();
 
-        $success['coupons'] = CartResource::collection($carts);
+        $success['carts'] = CartResource::collection($carts);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع السلات المتروكة بنجاح', 'carts Information returned successfully');

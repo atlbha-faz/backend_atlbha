@@ -276,7 +276,7 @@ class CheckoutController extends BaseController
                             $supplierobject,
                         ],
                     ];
-
+                    $data=json_decode ($data);
                     $supplier = new FatoorahServices();
                     $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
 
@@ -356,7 +356,7 @@ class CheckoutController extends BaseController
                             $supplierobject,
                         ],
                     ];
-
+                    $data=json_decode ($data);
                     $supplier = new FatoorahServices();
                     $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
 
