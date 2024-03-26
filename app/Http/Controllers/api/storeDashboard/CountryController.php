@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api\storeDashboard;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CountryResource;
 use App\Models\Country;
-
+use Illuminate\Http\Request;
 class CountryController extends BaseController
 {
 
@@ -18,7 +18,7 @@ class CountryController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $countries = Country::where('is_deleted', 0)->orderByDesc('created_at')->paginate($count);

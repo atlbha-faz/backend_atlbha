@@ -32,7 +32,7 @@ class ProductController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $products = ProductResource::collection(Product::with(['store' => function ($query) {
