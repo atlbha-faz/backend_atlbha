@@ -821,5 +821,44 @@ class IndexStoreController extends BaseController
 
         return $this->sendResponse($success, 'تم الاشتراك', 'subscription successfully');
     }
+//     public function specialProducts($id)
+//     {
+
+//         $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+
+//         if (!is_null($store)) {
+//             $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+//         }
+//         if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
+//             return $this->sendError("المتجر غير موجود", "Store is't exists");
+//         }
+//         if ($store->maintenance != null) {
+//             if ($store->maintenance->status == 'active') {
+//                 $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+//                 $success['status'] = 200;
+
+//                 return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+//             }
+//         }
+
+//         if ($store != null) {
+//             if($id =="")
+//         $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+
+//         $specialproducts = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store_id)->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'created_at')->paginate($count));
+
+//         $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('importproducts.special', 'special')->orderBy('products.created_at', 'desc')
+//             ->get(['products.*', 'importproducts.special', 'importproducts.discount_price_import', 'importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+//         $imports = importsResource::collection($import);
+
+//         $success['specialProducts'] = $specialproducts;
+//         $success['page_count'] = $specialproducts->lastPage();
+//         $success['current_page'] = $specialproducts->currentPage();
+//         $success['status'] = 200;
+
+//         return $this->sendResponse($success, 'تم ارجاع المنتجات المميزه بنجاح', 'specialProducts show successfully');
+//     } 
+// }
 
 }
