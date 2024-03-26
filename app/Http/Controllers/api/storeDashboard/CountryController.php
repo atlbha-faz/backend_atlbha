@@ -22,7 +22,10 @@ class CountryController extends  BaseController
      */
     public function index()
     {
-        $success['countries']=CountryResource::collection(Country::where('is_deleted',0)->orderByDesc('created_at')->get());
+        $countries=Country::where('is_deleted',0)->orderByDesc('created_at')->paginate(10);
+        $success['countries']=CountryResource::collection($countries);
+        $success['page_count'] = $countries->lastPage();
+        $success['current_page'] =  $countries->currentPage();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الدول بنجاح','countries return successfully');

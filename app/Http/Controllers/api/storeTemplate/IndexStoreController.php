@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\storeTemplate;
 
 use DB;
 use Carbon\Carbon;

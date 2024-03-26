@@ -35,83 +35,79 @@ Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorCo
 Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class, 'getBank']);
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
+
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi', 'App\Http\Controllers\api\AuthController@login_admin');
 // Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
 Route::post('/registerapi', 'App\Http\Controllers\api\AuthController@register');
 Route::get('/logout', 'App\Http\Controllers\api\AuthController@logout');
 // login template
-Route::post('/logincustomerphoneapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer');
-Route::post('/logincustomeremailapi', 'App\Http\Controllers\api\AuthCustomerController@login_customer_email');
-Route::post('/registerUser/{id}', 'App\Http\Controllers\api\AuthCustomerController@registerUser');
-Route::post('/verifyUser', 'App\Http\Controllers\api\AuthCustomerController@verifyUser');
-Route::get('/logoutcustomer', 'App\Http\Controllers\api\AuthCustomerController@logout');
+Route::post('/logincustomerphoneapi', 'App\Http\Controllers\api\storeTemplate\AuthCustomerController@login_customer');
+Route::post('/logincustomeremailapi', 'App\Http\Controllers\api\storeTemplate\AuthCustomerController@login_customer_email');
+Route::post('/registerUser/{id}', 'App\Http\Controllers\api\storeTemplate\AuthCustomerController@registerUser');
+Route::post('/verifyUser', 'App\Http\Controllers\api\storeTemplate\AuthCustomerController@verifyUser');
+Route::get('/logoutcustomer', 'App\Http\Controllers\api\storeTemplate\AuthCustomerController@logout');
 //  index Ettlobha page
 
-Route::get('index', [App\Http\Controllers\api\IndexEtlobhaController::class, 'index']);
-Route::get('commonquestion', [App\Http\Controllers\api\IndexEtlobhaController::class, 'commonquestion']);
+Route::get('index', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'index']);
+Route::get('commonquestion', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'commonquestion']);
 
-Route::post('atlobhaContactAdd', [App\Http\Controllers\api\IndexEtlobhaController::class, 'store']);
+Route::post('atlobhaContactAdd', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'store']);
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
-    Route::get('indexStore/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'index']);
-    Route::get('productPage/{domain}/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'productPage']);
-    Route::get('storPage/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'storPage']);
-    Route::get('category/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'category']);
-    Route::get('storeProductCategory', [App\Http\Controllers\api\IndexStoreController::class, 'storeProductCategory']);
-    Route::get('productSearch', [App\Http\Controllers\api\IndexStoreController::class, 'productSearch']);
-    Route::get('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'index']);
-    Route::post('profileCustomer', [App\Http\Controllers\api\ProfileCustomerController::class, 'update']);
-    Route::get('deactivateAccount', [App\Http\Controllers\api\ProfileCustomerController::class, 'deactivateAccount']);
-    Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\IndexStoreController::class, 'addSubsicription']);
+    Route::get('indexStore/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'index']);
+    Route::get('productPage/{domain}/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'productPage']);
+    Route::get('storPage/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'storPage']);
+    Route::get('category/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'category']);
+    Route::get('storeProductCategory', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'storeProductCategory']);
+    Route::get('productSearch', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'productSearch']);
+    Route::get('profileCustomer', [App\Http\Controllers\api\storeTemplate\ProfileCustomerController::class, 'index']);
+    Route::post('profileCustomer', [App\Http\Controllers\api\storeTemplate\ProfileCustomerController::class, 'update']);
+    Route::get('deactivateAccount', [App\Http\Controllers\api\storeTemplate\ProfileCustomerController::class, 'deactivateAccount']);
+    Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addSubsicription']);
   
 });
+Route::get('cartShow/{id}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'show']);
+Route::post('addCart/{domain}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'addToCart']);
+Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'delete']);
+Route::post('cheackout/{domain}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'cheackout']);
+Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'paymentmethods']);
+Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'shippingcompany']);
+Route::post('applyCoupon/{domain}/{cart_id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'applyCoupon']);
+Route::get('ordersUser/{domain}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'ordersUser']);
+Route::get('orderUser/{domain}/{order_id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'orderUser']);
+Route::resource('OrderAddress', App\Http\Controllers\api\storeTemplate\OrderAddressController::class);
+Route::get('show_default_address', [App\Http\Controllers\api\storeTemplate\OrderAddressController::class, 'show_default_address']);
+Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\storeTemplate\OrderAddressController::class, 'setDefaultAddress']);
+Route::get('cancelOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'cancelOrder']);
+Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'index']);
+Route::post('returnOrder', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'store']);
 
-Route::middleware([SetActiveStore::class])->group(function () {
-    Route::get('indexStore', [App\Http\Controllers\api\IndexStoreController2::class, 'index']);
-});
-
-Route::get('cartShow/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'show']);
-Route::post('addCart/{domain}', [App\Http\Controllers\api\CartTemplateController::class, 'addToCart']);
-Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\CartTemplateController::class, 'delete']);
-Route::post('cheackout/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'cheackout']);
-Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'paymentmethods']);
-Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'shippingcompany']);
-Route::post('applyCoupon/{domain}/{cart_id}', [App\Http\Controllers\api\CheckoutController::class, 'applyCoupon']);
-Route::get('ordersUser/{domain}', [App\Http\Controllers\api\CheckoutController::class, 'ordersUser']);
-Route::get('orderUser/{domain}/{order_id}', [App\Http\Controllers\api\CheckoutController::class, 'orderUser']);
-Route::resource('OrderAddress', App\Http\Controllers\api\OrderAddressController::class);
-Route::get('show_default_address', [App\Http\Controllers\api\OrderAddressController::class, 'show_default_address']);
-Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\OrderAddressController::class, 'setDefaultAddress']);
-Route::get('cancelOrder/{id}', [App\Http\Controllers\api\CheckoutController::class, 'cancelOrder']);
-Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\ReturnOrderController::class, 'index']);
-Route::post('returnOrder', [App\Http\Controllers\api\ReturnOrderController::class, 'store']);
-
-Route::get('postStore/{id}', [App\Http\Controllers\api\PostStoreController::class, 'index']);
-Route::get('postByCategory/{id}', [App\Http\Controllers\api\PostStoreController::class, 'show']);
-Route::get('postdetail/{id}', [App\Http\Controllers\api\PostStoreController::class, 'show_post']);
+Route::get('postStore/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'index']);
+Route::get('postByCategory/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'show']);
+Route::get('postdetail/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'show_post']);
 
 Route::group([
     'middleware' => 'auth:api',
 ], function () {
-    Route::post('addComment/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'addComment']);
-    Route::post('addContact', [App\Http\Controllers\api\IndexStoreController::class, 'addContact']);
+    Route::post('addComment/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addComment']);
+    Route::post('addContact', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addContact']);
 });
 // visit count
 Route::post('storeClientVisit', [App\Http\Controllers\api\VisitCountController::class, 'storeClientVisit']);
 //
 Route::get('visit', [App\Http\Controllers\api\VisitCountController::class, 'visit']);
 
-Route::get('posts', [App\Http\Controllers\api\PostController::class, 'index']);
-Route::get('start', [App\Http\Controllers\api\PostController::class, 'start']);
-Route::get('show/{id}', [App\Http\Controllers\api\PostController::class, 'show']);
-Route::get('show_post/{id}', [App\Http\Controllers\api\PostController::class, 'show_post']);
+Route::get('posts', [App\Http\Controllers\api\homePages\PostController::class, 'index']);
+Route::get('start', [App\Http\Controllers\api\homePages\PostController::class, 'start']);
+Route::get('show/{id}', [App\Http\Controllers\api\homePages\PostController::class, 'show']);
+Route::get('show_post/{id}', [App\Http\Controllers\api\homePages\PostController::class, 'show_post']);
 
 Route::post('send-verify-message', 'App\Http\Controllers\api\AuthController@store_verify_message');
 Route::post('verify-user', 'App\Http\Controllers\api\AuthController@verifyUser');
 
-Route::get('page/{id}', [App\Http\Controllers\api\SubpageController::class, "show"]);
-Route::get('packages', [App\Http\Controllers\api\SubpageController::class, "packages"]);
+Route::get('page/{id}', [App\Http\Controllers\api\homePages\SubpageController::class, "show"]);
+Route::get('packages', [App\Http\Controllers\api\homePages\SubpageController::class, "packages"]);
 
 Route::get('profile', [App\Http\Controllers\api\ProfileController::class, 'index']);
 Route::post('profile', [App\Http\Controllers\api\ProfileController::class, 'update']);
@@ -152,6 +148,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('pagecategory', App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
+        Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
 
          Route::middleware([AdminCheckPermission::class])->group(function () {
          Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
@@ -205,7 +202,6 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('EmailShow/{id}', [App\Http\Controllers\api\adminDashboard\EmailController::class, 'show'])->name('admin.email.show');
 
         Route::resource('category', App\Http\Controllers\api\adminDashboard\CategoryController::class, ['names' => 'admin.category']);
-        Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class, ['names' => 'admin.storecategory']);
     
         Route::get('deleteunit/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deleteunit'])->name('admin.course.deleteunit');
 
@@ -449,8 +445,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('updateimportproduct/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'updateimportproduct'])->name('store.products.updateimport');
         // category
         Route::resource('category', App\Http\Controllers\api\storeDashboard\CategoryController::class, ['names' => 'store.categories']);
-        Route::get('categoryStorechangeSatusall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeSatusall'])->name('store.categories.changestatusall');
-        Route::get('categoryStoredeleteall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteall'])->name('store.categories.deleteall');
+        Route::get('categoryStorechangeSatusall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeSatusAll'])->name('store.categories.changestatusall');
+        Route::get('categoryStoredeleteall', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteAll'])->name('store.categories.deleteall');
         Route::get('categoryStoredeleteItems', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'deleteItems'])->name('store.categories.deleteItems');
 
         Route::get('changeCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'changeStatus'])->name('store.categories.activate');

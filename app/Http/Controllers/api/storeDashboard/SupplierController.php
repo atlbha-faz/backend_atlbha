@@ -32,11 +32,11 @@ class SupplierController extends BaseController
         if (is_null($account)) {
             return $this->sendError("لا يوجد حساب بنكي", "Account is't exists");
         }
-        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
-        $supplierDeposits = $supplier->getSupplierDashboard('v2/GetSupplierDeposits?SupplierCode' . $storeAdmain->supplierCode);
+        $supplierCode = $supplier->buildRequest('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode,'GET');
+        // $supplierDeposits = $supplier->buildRequest('v2/GetSupplierDeposits?SupplierCode=' . $storeAdmain->supplierCode,'GET');
         $success['supplierUser'] = new SupplierResource($account);
         $success['SupplierDetails'] = $supplierCode;
-        $success['SupplierDeposits'] =  $supplierDeposits;
+        // $success['SupplierDeposits'] =  $supplierDeposits;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
@@ -51,12 +51,12 @@ class SupplierController extends BaseController
         }
         $supplierdocument = Supplierdocument::where('store_id', auth()->user()->store_id)->whereNot('type' , 20)->get();
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
-        $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?SupplierCode=' . $storeAdmain->supplierCode);
+        $supplierCode = $supplier->buildRequest('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode,'GET');
+        // $supplierDocument = $supplier->buildRequest('v2/GetSupplierDocuments?SupplierCode=' . $storeAdmain->supplierCode,'GET');
         $success['supplierUser'] = new SupplierResource($account);
         $success['SupplierDetails'] = $supplierCode;
-        $success['SupplierDocumentUser'] = $supplierdocument;
-        $success['SupplierDocument'] = $supplierDocument;
+         $success['SupplierDocumentUser'] = $supplierdocument;
+        // $success['SupplierDocument'] = $supplierDocument;
 
         $success['status'] = 200;
 
@@ -82,7 +82,7 @@ class SupplierController extends BaseController
         ];
 
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->createSupplier('v2/CreateSupplier', $data);
+        $supplierCode = $supplier->buildRequest('v2/CreateSupplier','POST', $data);
         
         if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
@@ -100,7 +100,7 @@ class SupplierController extends BaseController
             ]);
         $storeAdmain->update([
             'supplierCode' => $supplierCode->Data->SupplierCode]);
-        // $success['supplier'] = $supplierCode;
+      
 
         $arrays = array();
         if ($store->verification_type == "maeruf") {
@@ -168,7 +168,7 @@ class SupplierController extends BaseController
             'Iban' => $request->iban,
         ];
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->createSupplier('v2/EditSupplier', $data);
+        $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',$data);
         if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
@@ -234,7 +234,7 @@ class SupplierController extends BaseController
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDashboard?SupplierCode=' . $storeAdmain->supplierCode);
+        $supplierCode = $supplier->buildRequest('v2/GetSupplierDashboard?SupplierCode=' . $storeAdmain->supplierCode,'GET');
         // if ( $supplierCode->IsSuccess == false){
         //    return $this->sendError("خطأ في البيانات",$supplierCode->FieldsErrors[0]->Error);
         // }
@@ -247,7 +247,7 @@ class SupplierController extends BaseController
     public function uploadSupplierDocument(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        $account = Account::where('store_id', auth()->user()->store_id)->where('status', 'active')->first();
+        $account = Account::where('store_id', auth()->user()->store_id)->where('status', 'APPROVED')->first();
         $supplier = new FatoorahServices();
         $imageName = Str::random(10) . time() . '.' . $request->FileUpload->getClientOriginalExtension();
         $filePath = 'images/storelogo/' . $imageName;

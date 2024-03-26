@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\storeTemplate;
 
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
@@ -244,7 +244,6 @@ class CartTemplateController extends BaseController
             $extra_shipping_price = 0;
         }
         $newCart->update([
-
             'tax' => $newCart->total * 0.15,
             'shipping_price' => $newCart->shipping_price,
         ]);

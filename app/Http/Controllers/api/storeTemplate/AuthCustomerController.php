@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\storeTemplate;
 
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\UserResource;

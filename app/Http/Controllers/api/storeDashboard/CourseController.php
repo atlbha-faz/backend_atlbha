@@ -20,13 +20,12 @@ class CourseController extends BaseController
      */
     public function index(Request $request)
     {
-        if ($request->has('page')) {
+       
             $courses = CourseResource::collection(Course::where('is_deleted', 0)->orderByDesc('created_at')->paginate(8));
             $success['page_count'] = $courses->lastPage();
+            $success['current_page'] = $courses->currentPage();
             $success['courses'] = $courses;
-        } else {
-            $success['courses'] = CourseResource::collection(Course::where('is_deleted', 0)->orderByDesc('created_at')->get());
-        }
+    
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الكورسات المشروحة بنجاح', 'courses return successfully');

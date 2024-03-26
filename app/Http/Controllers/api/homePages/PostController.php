@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\homePages;
 
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\PageResource;

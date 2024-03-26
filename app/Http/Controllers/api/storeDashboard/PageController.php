@@ -22,17 +22,13 @@ class PageController extends BaseController
      */
     public function index(Request $request)
     {
-        if ($request->has('page')) {
+     
             $pages = PageResource::collection(Page::with(['user' => function ($query) {
                 $query->select('id', 'name');
             }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status','default_page', 'user_id', 'created_at')->paginate(15));
             $success['page_count'] = $pages->lastPage();
             $success['pages'] = $pages;
-        } else {
-            $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
-                $query->select('id', 'name');
-            }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status', 'user_id','default_page', 'created_at')->get());
-        }
+        
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع  الصفحة بنجاح', 'Pages return successfully');

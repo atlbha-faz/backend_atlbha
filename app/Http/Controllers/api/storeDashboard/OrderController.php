@@ -47,20 +47,12 @@ class OrderController extends BaseController
         $success['all'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id);
         })->count();
-
-        if ($request->has('page')) {
             $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
                 $query->select('id');
             }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'created_at'])->paginate(8));
             $success['page_count'] = $data->lastPage();
 
-        } else {
-
-            $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
-                $query->select('id');
-            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->get(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status']));
-
-        }
+        
         $success['orders'] = $data;
         $success['status'] = 200;
 
@@ -305,11 +297,7 @@ class OrderController extends BaseController
 
                     $ar = new AramexService();
 
-                    $arData = $ar->createOrder($json);
-                    if ($arData->HasErrors == false) {
-                        $success['shippingCompany'] = $arData;
-                    }
-
+                    $arData = $ar->buildRequest('POST',$json);
                     if ($arData->HasErrors == false) {
                         $ship_id = $arData->Shipments[0]->ID;
                         $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
@@ -761,12 +749,9 @@ class OrderController extends BaseController
                         }
                     }';
 
-                    $ar = new AramexService();
+                    $aramex = new AramexService();
 
-                    $arData = $ar->createOrder($json);
-                    if ($arData->HasErrors == false) {
-                        $success['shippingCompany'] = $arData;
-                    }
+                    $arData = $amex->buildRequest('POST',$json);
 
                     if ($arData->HasErrors == false) {
                         $ship_id = $arData->Shipments[0]->ID;
@@ -830,7 +815,7 @@ class OrderController extends BaseController
                             
                          
                             $supplier = new FatoorahServices();
-                            $supplierCode = $supplier->createSupplier('v2/MakeRefund', $data);
+                            $supplierCode = $supplier->buildRequest('v2/MakeRefund','POST', $data);
                         
                             if ($supplierCode->IsSuccess == false) {
                                 return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);

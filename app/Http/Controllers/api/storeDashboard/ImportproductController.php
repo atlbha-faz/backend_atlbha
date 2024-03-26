@@ -24,13 +24,10 @@ class ImportproductController extends BaseController
     {
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
-        if ($request->has('page')) {
-            $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id')->paginate(15));
-            $success['page_count'] = $products->lastPage();
-            $success['products'] = $products;
-        } else {
-            $success['products'] = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id')->get());
-        }
+        $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id')->paginate(15));
+        $success['page_count'] = $products->lastPage();
+        $success['products'] = $products;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -41,7 +38,7 @@ class ImportproductController extends BaseController
     {
 
         $importedproduct = Importproduct::where('product_id', $request->product_id)->where('store_id', auth()->user()->store_id)->first();
- 
+
         $purchasing_price = Product::where('id', $request->product_id)->value('purchasing_price');
 
         $input = $request->all();
@@ -149,14 +146,14 @@ class ImportproductController extends BaseController
             ]);
             if ($request->has('data') && !is_null($request->data)) {
                 foreach ($request->data as $data) {
-                 
-                        $option = Option::where('id', $data['option_id'])->first();
-                        $option->update([
-                            'price' =>  $data['price'] ,
-                            'discount_price' => $data['discount_price'] ,
-                            'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0 
-                        ]);
-                    
+
+                    $option = Option::where('id', $data['option_id'])->first();
+                    $option->update([
+                        'price' => $data['price'],
+                        'discount_price' => $data['discount_price'],
+                        'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
+                    ]);
+
                 }
             }
             $success['status'] = 200;

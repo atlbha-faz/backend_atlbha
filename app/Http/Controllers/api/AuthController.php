@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\UserResource;
-use App\Models\Homepage;
-use App\Models\Marketer;
+use Exception;
+use Notification;
 use App\Models\Page;
-use App\Models\paymenttype_store;
-use App\Models\Setting;
-use App\Models\shippingtype_store;
+use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
-use App\Models\User;
-use App\Notifications\verificationNotification;
-use Exception;
+use App\Models\Setting;
+use App\Models\Homepage;
+use App\Models\Marketer;
 use Illuminate\Http\Request;
+use App\Services\UnifonicSms;
+use Illuminate\Validation\Rule;
+use App\Events\VerificationEvent;
+use App\Models\paymenttype_store;
+use App\Models\shippingtype_store;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Notification;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class AuthController extends BaseController
 {
@@ -53,10 +54,6 @@ class AuthController extends BaseController
                     'password' => 'required|min:8|string',
                     //'domain'=>'required_if:user_type,store|unique:stores',
 
-                    //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-                    //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
-                    //'package_id' => 'required_if:user_type,store|exists:packages,id',
-                    //'country_id'=>'required_if:user_type,store|exists:countries,id',
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
                     //'periodtype' => 'required_if:user_type,store|in:6months,year',
                     //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
@@ -670,28 +667,13 @@ class AuthController extends BaseController
     }
     public function unifonicTest(Request $request)
     {
-        $curl = curl_init();
         $data = array(
             'AppSid' => env('AppSid','3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
             'Body' => $request->code,
             'Recipient' => $request->phonenumber);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $data,
-        ));
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        $responseData = json_decode($response);
+        $unifonic_sms=new UnifonicSms();
+        $responseData =$unifonic_sms->buildRequest('POST',$data);
 
         if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
             return true;
