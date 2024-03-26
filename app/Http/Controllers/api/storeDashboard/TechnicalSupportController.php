@@ -25,8 +25,9 @@ class TechnicalSupportController extends BaseController
      */
     public function index(Request $request)
     {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $Technicalsupports = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
+        $Technicalsupports = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
         $success['page_count'] = $Technicalsupports->lastPage();
         $success['Technicalsupports'] = $Technicalsupports;
 
@@ -186,5 +187,23 @@ class TechnicalSupportController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم اضافة رد بنجاح', ' Added successfully');
+    }
+    public function searchTechnicalSupport(Request $request)
+    {
+        $query = $request->input('query');
+
+        $technical_supports = technicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        $success['query'] = $query;
+        $success['total_result'] = $technical_supports->total();
+        $success['page_count'] = $technical_supports->lastPage();
+
+        $success['technical_supports'] = TechnicalSupportResource::collection($technical_supports);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'technical_supports Information returned successfully');
+
     }
 }

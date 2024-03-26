@@ -15,10 +15,11 @@ class SubscriptionEmailController extends BaseController
     }
     public function index(Request $request)
     {
-     
-            $subsicriptions = SubscriptionEmailResource::collection(SubscriptionEmail::where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
-            $success['page_count'] = $subsicriptions->lastPage();
-            $success['subsicriptions'] = $subsicriptions;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $subsicriptions = SubscriptionEmailResource::collection(SubscriptionEmail::where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
+        $success['page_count'] = $subsicriptions->lastPage();
+        $success['subsicriptions'] = $subsicriptions;
 
         $success['status'] = 200;
 

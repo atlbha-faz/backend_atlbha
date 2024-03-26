@@ -23,7 +23,8 @@ class HomepageController extends BaseController
      */
     public function index()
     {
-        $home_pages=Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->paginate(8);
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $home_pages=Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->paginate($count);
         $success['Homepages'] = HomepageResource::collection();
         $success['page_count'] = $home_pages->lastPage();
         $success['current_page'] =$home_pages->currentPage();

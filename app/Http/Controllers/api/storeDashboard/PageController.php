@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\PageResource;
 use App\Models\Page;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Resources\PageResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class PageController extends BaseController
 {
@@ -22,13 +22,13 @@ class PageController extends BaseController
      */
     public function index(Request $request)
     {
-     
-            $pages = PageResource::collection(Page::with(['user' => function ($query) {
-                $query->select('id', 'name');
-            }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status','default_page', 'user_id', 'created_at')->paginate(15));
-            $success['page_count'] = $pages->lastPage();
-            $success['pages'] = $pages;
-        
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $pages = PageResource::collection(Page::with(['user' => function ($query) {
+            $query->select('id', 'name');
+        }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status', 'default_page', 'user_id', 'created_at')->paginate($count));
+        $success['page_count'] = $pages->lastPage();
+        $success['pages'] = $pages;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع  الصفحة بنجاح', 'Pages return successfully');
@@ -129,7 +129,7 @@ class PageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $validator2 = Validator::make($input, [
-     
+
             'image' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
@@ -229,7 +229,6 @@ class PageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $validator2 = Validator::make($input, [
- 
 
         ]);
         if ($validator2->fails()) {
@@ -255,7 +254,7 @@ class PageController extends BaseController
                 ]);
                 if ($request->has('image')) {
                     $page->update([
-                        'image' => $request->image
+                        'image' => $request->image,
                     ]);
                 }
             } else {
@@ -358,6 +357,24 @@ class PageController extends BaseController
             return $this->sendResponse($success, '  المدخلات غير موجوده', 'id  is not exit');
 
         }
+    }
+    public function searchPageName(Request $request)
+    {
+        $query = $request->input('query');
+
+        $pages = Page::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        $success['query'] = $query;
+        $success['total_result'] = $pages->total();
+        $success['page_count'] = $pages->lastPage();
+
+        $success['pages'] = PageResource::collection($pages);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الصفحات بنجاح', 'pages Information returned successfully');
+
     }
 
 }

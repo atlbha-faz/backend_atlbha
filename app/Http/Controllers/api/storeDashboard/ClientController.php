@@ -21,7 +21,8 @@ class ClientController extends BaseController
      */
     public function index()
     {
-        $clients=Client::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(8);
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $clients=Client::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count);
         $success['clients'] = ClientResource::collection( $clients);
         $success['page_count'] = $clients->lastPage();
         $success['current_page'] = $clients->currentPage();

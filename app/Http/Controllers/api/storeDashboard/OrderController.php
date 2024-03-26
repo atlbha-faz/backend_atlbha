@@ -34,6 +34,7 @@ class OrderController extends BaseController
      */
     public function index(Request $request)
     {
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $success['new'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'new')->count();
         $success['completed'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('order_status', 'completed');
@@ -49,7 +50,7 @@ class OrderController extends BaseController
         })->count();
             $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
                 $query->select('id');
-            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'created_at'])->paginate(8));
+            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'created_at'])->paginate($count));
             $success['page_count'] = $data->lastPage();
 
         
@@ -858,4 +859,28 @@ class OrderController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف الطلبات بنجاح', 'Order deleted successfully');
     }
+    public function searchOrder(Request $request)
+    {
+        $query = $request->input('query');
+
+       $orders = Order::with(['user' => function ($userQuery) use($query) {
+        $userQuery->where('name', 'like', "%$query%");
+    },'shippingtype' => function ($shippingtypeQuery) use($query) {
+        $shippingtypeQuery->where('name', 'like', "%$query%");
+    },'shipping' => function ($shippingQuery) use($query){
+        $shippingQuery->where('track_id', 'like', "%$query%");
+    }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+         ->orderBy('created_at', 'desc')->paginate(10);
+        
+        $success['query'] =$query;
+         $success['total_result'] =$orders->total();
+        $success['page_count'] =$orders->lastPage();
+
+        $success['orders'] = OrderResource::collection($orders);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
+
+    }
+
 }

@@ -27,7 +27,9 @@ class UserController extends BaseController
         $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
 
         if ($storeAdmain != null) {
-            $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
+            $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+
+            $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
             $success['users'] = $users;
             $success['page_count'] = $users->lastPage();
             $success['current_page'] =$users->currentPage();

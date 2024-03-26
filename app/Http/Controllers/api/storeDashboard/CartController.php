@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Product;
-use App\Models\CartDetail;
-use App\Mail\SendOfferCart;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
+use App\Mail\SendOfferCart;
+use App\Models\Cart;
+use App\Models\CartDetail;
+use App\Models\Product;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class CartController extends BaseController
 {
@@ -35,10 +35,12 @@ class CartController extends BaseController
     }
 
     public function admin(Request $request)
-    {
+    { 
+       
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $carts = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
             $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate(8));
+        }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate($count));
         $success['page_count'] = $carts->lastPage();
         $success['current_page'] = $carts->currentPage();
         $success['cart'] = $carts;
@@ -246,6 +248,26 @@ class CartController extends BaseController
     public function update(Request $request, Cart $cart)
     {
         //
+    }
+    public function searchCartName(Request $request)
+    {
+        $query = $request->input('query');
+
+        $carts = Cart::with(['user' => function ($userQuery) use ($query) {
+            $userQuery->where('name', 'like', "%$query%");
+        }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        $success['query'] = $query;
+        $success['total_result'] = $carts->total();
+        $success['page_count'] = $carts->lastPage();
+
+        $success['coupons'] = CartResource::collection($carts);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع السلات المتروكة بنجاح', 'carts Information returned successfully');
+
     }
 
     /**

@@ -20,13 +20,13 @@ class ExplainVideosController extends BaseController
      */
     public function index(Request $request)
     {
-      
 
-            $explainvideos = ExplainVideoResource::collection(ExplainVideos::where('is_deleted', 0)->orderByDesc('created_at')->paginate(8));
-            $success['page_count'] = $explainvideos->lastPage();
-            $success['current_page'] = $explainvideos->currentPage();
-            $success['explainvideos'] = $explainvideos;
-       
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $explainvideos = ExplainVideoResource::collection(ExplainVideos::where('is_deleted', 0)->orderByDesc('created_at')->paginate($count));
+        $success['page_count'] = $explainvideos->lastPage();
+        $success['current_page'] = $explainvideos->currentPage();
+        $success['explainvideos'] = $explainvideos;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الفيديوهات المشروحة بنجاح', 'ExplainVideos return successfully');
