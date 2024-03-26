@@ -21,7 +21,7 @@ class HomepageController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $home_pages=Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->paginate($count);
