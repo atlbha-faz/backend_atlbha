@@ -16,9 +16,10 @@ class NotificationController extends BaseController
     }
     public function index(Request $request)
     {
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
 
-        $userNotifications = auth()->user()->notifications()->paginate(10);
+        $userNotifications = auth()->user()->notifications()->paginate($count);
 
         $notifications = NotificationResource::collection($userNotifications);
 

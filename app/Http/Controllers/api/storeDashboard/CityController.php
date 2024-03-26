@@ -28,7 +28,8 @@ class CityController extends BaseController
      */
     public function index()
     {
-        $cities=City::where('is_deleted', 0)->orderByDesc('created_at')->paginate(10);
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $cities=City::where('is_deleted', 0)->orderByDesc('created_at')->paginate($count);
         $success['cities'] = CityResource::collection($cities);
         $success['page_count'] = $cities->lastPage();
         $success['current_page'] =  $cities->currentPage();

@@ -24,13 +24,13 @@ class CouponController extends BaseController
      */
     public function index(Request $request)
     {
-      
-            $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
-            $success['page_count'] = $coupons->lastPage();
-            $pageNumber = request()->query('page', 1);
-            $success['current_page'] = $coupons->currentPage();
-            $success['coupons'] = $coupons;
- 
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
+        $success['page_count'] = $coupons->lastPage();
+        $pageNumber = request()->query('page', 1);
+        $success['current_page'] = $coupons->currentPage();
+        $success['coupons'] = $coupons;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الكوبونات بنجاح', 'coupons return successfully');
@@ -380,6 +380,24 @@ class CouponController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'الكوبون غير صحيح', 'coupon does not exit');
         }
+    }
+    public function searchCouponName(Request $request)
+    {
+        $query = $request->input('query');
+
+        $coupons = Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->where('code', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        $success['query'] = $query;
+        $success['total_result'] = $coupons->total();
+        $success['page_count'] = $coupons->lastPage();
+
+        $success['coupons'] = CouponResource::collection($coupons);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الكوبونات بنجاح', 'coupons Information returned successfully');
+
     }
 
 }

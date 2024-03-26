@@ -18,8 +18,8 @@ class RoleController extends BaseController
     }
     public function index(Request $request)
     {
-
-        $roles = RoleResource::collection(Role::where('type', 'store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $roles = RoleResource::collection(Role::where('type', 'store')->whereNot('name', 'المالك')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
         $success['page_count'] = $roles->lastPage();
         $pageNumber = request()->query('page', 1);
         $success['current_page'] = $roles->currentPage();

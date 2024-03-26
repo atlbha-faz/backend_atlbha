@@ -29,8 +29,8 @@ class CommentController extends BaseController
      */
     public function index(Request $request)
     {
-
-        $success['comment_of_store'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'store')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $success['comment_of_store'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'store')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
         $product_id = array();
         $products = Product::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->get();
         foreach ($products as $product) {
@@ -40,7 +40,7 @@ class CommentController extends BaseController
                 $query->select('id', 'name', 'user_type', 'image','email');
             }, 'product' => function ($query) {
                 $query->select('id', 'name');
-            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
+            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
             $pageNumber = request()->query('page', 1);
             $success['current_page'] = $comment_of_products->currentPage();
 

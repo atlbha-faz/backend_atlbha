@@ -20,12 +20,12 @@ class CourseController extends BaseController
      */
     public function index(Request $request)
     {
-       
-            $courses = CourseResource::collection(Course::where('is_deleted', 0)->orderByDesc('created_at')->paginate(8));
-            $success['page_count'] = $courses->lastPage();
-            $success['current_page'] = $courses->currentPage();
-            $success['courses'] = $courses;
-    
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $courses = CourseResource::collection(Course::where('is_deleted', 0)->orderByDesc('created_at')->paginate($count));
+        $success['page_count'] = $courses->lastPage();
+        $success['current_page'] = $courses->currentPage();
+        $success['courses'] = $courses;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الكورسات المشروحة بنجاح', 'courses return successfully');
@@ -73,5 +73,23 @@ class CourseController extends BaseController
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
+    public function searchCourseName(Request $request)
+    {
+        $query = $request->input('query');
+
+        $pages = Course::where('is_deleted', 0)
+            ->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        $success['query'] = $query;
+        $success['total_result'] = $pages->total();
+        $success['page_count'] = $pages->lastPage();
+
+        $success['pages'] = CourseResource::collection($pages);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الكورسات بنجاح', 'courses Information returned successfully');
+
+    }
 
 }

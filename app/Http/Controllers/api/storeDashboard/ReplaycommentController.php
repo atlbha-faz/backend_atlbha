@@ -21,7 +21,8 @@ class ReplaycommentController extends BaseController
      */
     public function index()
     {
-        $replay_comments = Replaycomment::where('is_deleted', 0)->orderByDesc('created_at')->paginate(15);
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $replay_comments = Replaycomment::where('is_deleted', 0)->orderByDesc('created_at')->paginate($count);
         $success['replaycomment'] = ReplaycommentResource::collection($replay_comments);
         $success['page_count'] = $replay_comments->lastPage();
         $success['current_page'] = $replay_comments->currentPage();

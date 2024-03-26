@@ -366,7 +366,17 @@ Route::middleware([StoreUser::class])->group(function () {
 
         Route::get('selector/page-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'pagesCategory']);
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);
-        Route::get('showShippingAddress', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'show']);
+        //search
+        Route::get('searchCategory', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'searchCategoryName']);
+        Route::get('searchProduct', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'searchProductName']);
+        Route::get('searchImportProduct', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'searchImportProductName']);
+        Route::get('searchOrder', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchOrder']);
+        Route::get('searchCouponName', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchCouponName']);
+        Route::get('searchCartName', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchCartName']);
+        Route::get('searchPageName', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchPageName']);
+        Route::get('searchCourseName', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchPageName']);
+        Route::get('searchTechnicalSupport', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchTechnicalSupport']);
+
         //couponall
         Route::get('couponchangeSatusItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeSatusItems']);
         Route::get('coupondeleteItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'deleteItems']);

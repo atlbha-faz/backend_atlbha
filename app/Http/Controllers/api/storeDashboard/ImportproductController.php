@@ -22,9 +22,10 @@ class ImportproductController extends BaseController
     }
     public function etlobhaShow(Request $request)
     {
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
-        $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id')->paginate(15));
+        $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id')->paginate($count));
         $success['page_count'] = $products->lastPage();
         $success['products'] = $products;
 

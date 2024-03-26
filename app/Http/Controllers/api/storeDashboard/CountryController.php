@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\Country;
-use Illuminate\Http\Request;
-use App\Http\Resources\CountryResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CountryResource;
+use App\Models\Country;
 
-class CountryController extends  BaseController
+class CountryController extends BaseController
 {
 
-  public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
     }
@@ -22,15 +20,15 @@ class CountryController extends  BaseController
      */
     public function index()
     {
-        $countries=Country::where('is_deleted',0)->orderByDesc('created_at')->paginate(10);
-        $success['countries']=CountryResource::collection($countries);
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $countries = Country::where('is_deleted', 0)->orderByDesc('created_at')->paginate($count);
+        $success['countries'] = CountryResource::collection($countries);
         $success['page_count'] = $countries->lastPage();
-        $success['current_page'] =  $countries->currentPage();
-        $success['status']= 200;
+        $success['current_page'] = $countries->currentPage();
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع الدول بنجاح','countries return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الدول بنجاح', 'countries return successfully');
 
     }
-
 
 }
