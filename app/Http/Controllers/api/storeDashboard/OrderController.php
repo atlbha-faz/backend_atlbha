@@ -52,7 +52,7 @@ class OrderController extends BaseController
                 $query->select('id');
             }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'created_at'])->paginate($count));
             $success['page_count'] = $data->lastPage();
-
+            $success['current_page'] =$data->currentPage();
         
         $success['orders'] = $data;
         $success['status'] = 200;
@@ -875,7 +875,7 @@ class OrderController extends BaseController
         $success['query'] =$query;
          $success['total_result'] =$orders->total();
         $success['page_count'] =$orders->lastPage();
-
+        $success['current_page'] = $orders->currentPage();
         $success['orders'] = OrderResource::collection($orders);
         $success['status'] = 200;
 

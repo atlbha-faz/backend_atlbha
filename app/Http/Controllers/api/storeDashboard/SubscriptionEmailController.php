@@ -19,8 +19,9 @@ class SubscriptionEmailController extends BaseController
 
         $subsicriptions = SubscriptionEmailResource::collection(SubscriptionEmail::where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
         $success['page_count'] = $subsicriptions->lastPage();
+        $success['current_page'] =$subsicriptions->currentPage();
         $success['subsicriptions'] = $subsicriptions;
-
+      
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع اشتراكات الايميل بنجاح', 'Subscription Emails return successfully');

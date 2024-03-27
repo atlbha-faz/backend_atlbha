@@ -77,15 +77,15 @@ class CourseController extends BaseController
     {
         $query = $request->input('query');
 
-        $pages = Course::where('is_deleted', 0)
+        $courses = Course::where('is_deleted', 0)
             ->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
             ->paginate(10);
 
         $success['query'] = $query;
-        $success['total_result'] = $pages->total();
-        $success['page_count'] = $pages->lastPage();
-
-        $success['pages'] = CourseResource::collection($pages);
+        $success['total_result'] = $courses->total();
+        $success['page_count'] = $courses->lastPage();
+        $success['current_page'] =$courses->currentPage();
+        $success['pages'] = CourseResource::collection($courses);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الكورسات بنجاح', 'courses Information returned successfully');

@@ -27,10 +27,10 @@ class TechnicalSupportController extends BaseController
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $Technicalsupports = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
-        $success['page_count'] = $Technicalsupports->lastPage();
-        $success['Technicalsupports'] = $Technicalsupports;
-
+        $technical_supports = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
+        $success['page_count'] = $technical_supports->lastPage();
+        $success['current_page'] =$technical_supports->currentPage();
+        $success['Technicalsupports'] =$technical_supports;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'Technical Support return successfully');
@@ -199,7 +199,7 @@ class TechnicalSupportController extends BaseController
         $success['query'] = $query;
         $success['total_result'] = $technical_supports->total();
         $success['page_count'] = $technical_supports->lastPage();
-
+        $success['current_page'] = $technical_supports->currentPage();
         $success['technical_supports'] = TechnicalSupportResource::collection($technical_supports);
         $success['status'] = 200;
 
