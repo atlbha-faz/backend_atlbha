@@ -35,7 +35,7 @@ class PageResource extends JsonResource
             'postCategory' => new PostCategoryResource($this->postcategory),
             'user' => new UserResource($this->user),
             'pageCategory' => Page_categoryResource::collection($this->page_categories),
-            'page_url' => $this->store_id == null ? 'https://atlbha.sa/post/' . preg_replace('/[^a-zA-Z0-9\u0621-\u064A]+/g', '-', $this->title) : 'https: //template.atlbha.com/' . $this->store->domain . '/site/SitePages/' . $this->id,
+            'page_url' => $this->store_id == null ? 'https://atlbha.com/post/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title) : 'https: //template.atlbha.com/' . $this->store->domain . '/site/SitePages/' . $this->id,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'status' => $status,
