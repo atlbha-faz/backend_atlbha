@@ -22,12 +22,12 @@ class PageController extends BaseController
      */
     public function index(Request $request)
     {
-        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $pages = PageResource::collection(Page::with(['user' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status', 'default_page', 'user_id', 'created_at')->paginate($count));
         $success['page_count'] = $pages->lastPage();
-        $success['current_page'] =$pages->currentPage();
+        $success['current_page'] = $pages->currentPage();
 
         $success['pages'] = $pages;
 
@@ -363,10 +363,11 @@ class PageController extends BaseController
     public function searchPageName(Request $request)
     {
         $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $pages = Page::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
             ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $pages->total();

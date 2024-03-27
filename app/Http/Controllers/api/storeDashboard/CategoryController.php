@@ -452,13 +452,14 @@ class CategoryController extends BaseController
     public function searchCategoryName(Request $request)
     {
         $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $categories = Category::where('is_deleted', 0)->where('parent_id', null)->where(function ($query) {
             $query->where('store_id', auth()->user()->store_id)
                 ->OrWhere('store_id', null);
 
         })->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')
-            ->paginate(10);
+            ->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $categories->total();

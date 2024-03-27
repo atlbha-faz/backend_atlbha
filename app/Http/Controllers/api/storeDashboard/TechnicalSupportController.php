@@ -191,10 +191,11 @@ class TechnicalSupportController extends BaseController
     public function searchTechnicalSupport(Request $request)
     {
         $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $technical_supports = technicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
             ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $technical_supports->total();
