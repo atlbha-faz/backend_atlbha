@@ -40,6 +40,7 @@ class CategoryController extends BaseController
               
 
                 $success['page_count'] = $categories->lastPage();
+                $success['current_page'] =$categories->currentPage();
                 $success['categories'] = $categories;
 
                 $success['status'] = 200;
@@ -55,6 +56,7 @@ class CategoryController extends BaseController
                         ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->paginate($count));
 
                 $success['page_count'] = $categories->lastPage();
+                $success['current_page'] =$categories->currentPage();
                 $success['categories'] = $categories;
                 $success['status'] = 200;
 
@@ -450,7 +452,7 @@ class CategoryController extends BaseController
         $success['query'] =$query;
          $success['total_result'] =$categories->total();
         $success['page_count'] =$categories->lastPage();
-
+        $success['current_page'] =$categories->currentPage();
         $success['categories'] = CategoryResource::collection($categories);
         $success['status'] = 200;
 

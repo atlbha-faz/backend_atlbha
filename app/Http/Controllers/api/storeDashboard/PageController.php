@@ -27,6 +27,8 @@ class PageController extends BaseController
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status', 'default_page', 'user_id', 'created_at')->paginate($count));
         $success['page_count'] = $pages->lastPage();
+        $success['current_page'] =$pages->currentPage();
+
         $success['pages'] = $pages;
 
         $success['status'] = 200;
@@ -369,7 +371,7 @@ class PageController extends BaseController
         $success['query'] = $query;
         $success['total_result'] = $pages->total();
         $success['page_count'] = $pages->lastPage();
-
+        $success['current_page'] = $pages->currentPage();
         $success['pages'] = PageResource::collection($pages);
         $success['status'] = 200;
 

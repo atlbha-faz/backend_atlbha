@@ -34,7 +34,7 @@ class ProductController extends BaseController
      */
     public function index(Request $request)
     {
-        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $products = ProductResource::collection(Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
@@ -85,7 +85,7 @@ class ProductController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');}
     public function importedProducts()
     {
-        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
             ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->paginate($count)->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $forpage = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
@@ -859,7 +859,7 @@ class ProductController extends BaseController
         $success['query'] = $query;
         $success['total_result'] = $products->total();
         $success['page_count'] = $products->lastPage();
-
+        $success['current_page'] = $products->currentPage();
         $success['products'] = ProductResource::collection($products);
         $success['status'] = 200;
 
@@ -878,7 +878,7 @@ class ProductController extends BaseController
         $success['query'] = $query;
         $success['total_result'] = $import_page->total();
         $success['page_count'] = $import_page->lastPage();
-
+        $success['current_page'] = $import_page->currentPage();
         $success['products'] = importsResource::collection($import);
         $success['status'] = 200;
 

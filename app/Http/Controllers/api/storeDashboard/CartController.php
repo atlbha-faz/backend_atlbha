@@ -262,7 +262,7 @@ class CartController extends BaseController
         $success['query'] = $query;
         $success['total_result'] = $carts->total();
         $success['page_count'] = $carts->lastPage();
-
+        $success['current_page'] =$carts->currentPage();
         $success['carts'] = CartResource::collection($carts);
         $success['status'] = 200;
 

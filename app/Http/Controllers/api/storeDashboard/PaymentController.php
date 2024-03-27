@@ -22,6 +22,7 @@ class PaymentController extends BaseController
         $payments =PaymentResource::collection(Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->orderByDesc('created_at')->paginate($count));
         $success['billing'] = $payments;
         $success['page_count'] = $payments->lastPage();
+        $success['current_page'] =$payments->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الفواتير', ' show successfully');

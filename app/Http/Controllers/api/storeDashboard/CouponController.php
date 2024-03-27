@@ -392,7 +392,7 @@ class CouponController extends BaseController
         $success['query'] = $query;
         $success['total_result'] = $coupons->total();
         $success['page_count'] = $coupons->lastPage();
-
+        $success['current_page'] = $coupons->currentPage();
         $success['coupons'] = CouponResource::collection($coupons);
         $success['status'] = 200;
 
