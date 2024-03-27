@@ -856,6 +856,7 @@ class OrderController extends BaseController
     public function searchOrder(Request $request)
     {
         $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $orders = Order::whereHas('user' ,function ($userQuery) use ($query) {
             $userQuery->where('name', 'like', "%$query%");
@@ -864,7 +865,7 @@ class OrderController extends BaseController
         })->orWhereHas('shipping',function ($shippingQuery) use ($query) {
             $shippingQuery->where('track_id', 'like', "%$query%");
         })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
-            ->orderBy('created_at', 'desc')->paginate(10);
+            ->orderBy('created_at', 'desc')->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $orders->total();

@@ -35,9 +35,9 @@ class CartController extends BaseController
     }
 
     public function admin(Request $request)
-    { 
-       
-        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+    {
+
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $carts = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
             $query->select('id');
         }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate($count));
@@ -252,17 +252,18 @@ class CartController extends BaseController
     public function searchCartName(Request $request)
     {
         $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $carts = Cart::with(['user' => function ($userQuery) use ($query) {
+        $carts = Cart::whereHas('user', function ($userQuery) use ($query) {
             $userQuery->where('name', 'like', "%$query%");
-        }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+        })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $carts->total();
         $success['page_count'] = $carts->lastPage();
-        $success['current_page'] =$carts->currentPage();
+        $success['current_page'] = $carts->currentPage();
         $success['carts'] = CartResource::collection($carts);
         $success['status'] = 200;
 
