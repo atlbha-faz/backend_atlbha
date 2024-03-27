@@ -9,13 +9,12 @@ use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderItem;
 use App\Models\OrderOrderAddress;
+use App\Models\Payment;
 use App\Models\Shipping;
+use App\Models\shippingtype_store;
 use App\Services\AramexService;
 use App\Services\FatoorahServices;
 use Carbon\Carbon;
-use App\Models\Payment;
-use App\Models\Paymenttype;
-use App\Models\shippingtype_store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +33,7 @@ class OrderController extends BaseController
      */
     public function index(Request $request)
     {
-        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $success['new'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'new')->count();
         $success['completed'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('order_status', 'completed');
@@ -48,12 +47,12 @@ class OrderController extends BaseController
         $success['all'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id);
         })->count();
-            $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
-                $query->select('id');
-            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'created_at'])->paginate($count));
-            $success['page_count'] = $data->lastPage();
-            $success['current_page'] =$data->currentPage();
-        
+        $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
+            $query->select('id');
+        }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'created_at'])->paginate($count));
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
+
         $success['orders'] = $data;
         $success['status'] = 200;
 
@@ -98,16 +97,15 @@ class OrderController extends BaseController
 
         if ($order->order_status == "canceled") {
 
-        $order->update([
-            'order_status' => $request->input('status'),
-        ]);
-        foreach ($order->items as $orderItem) {
-            $orderItem->update([
+            $order->update([
                 'order_status' => $request->input('status'),
             ]);
-        }
-          
-        
+            foreach ($order->items as $orderItem) {
+                $orderItem->update([
+                    'order_status' => $request->input('status'),
+                ]);
+            }
+
             $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
@@ -298,7 +296,7 @@ class OrderController extends BaseController
 
                     $ar = new AramexService();
 
-                    $arData = $ar->buildRequest('POST',$json);
+                    $arData = $ar->buildRequest('POST', $json);
                     if ($arData->HasErrors == false) {
                         $ship_id = $arData->Shipments[0]->ID;
                         $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
@@ -531,32 +529,32 @@ class OrderController extends BaseController
                     //             return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     //         }
                 } else {
-                            $order->update([
-                                'order_status' => $request->input('status'),
-                            ]);
-                            foreach ($order->items as $orderItem) {
-                                $orderItem->update([
-                                    'order_status' => $request->input('status'),
-                                ]);
-                            }
-                            $shipping = Shipping::create([
-                                'shipping_id' => $order->order_number,
-                                'track_id' => null,
-                                'description' => $order->description,
-                                'quantity' => $order->quantity,
-                                'price' => $order->total_price,
-                                'weight' => $order->weight,
-                                'district' => $request->district,
-                                'city' => $request->city,
-                                'streetaddress' => $request->street_address,
-                                'customer_id' => $order->user_id,
-                                'shippingtype_id' => $order->shippingtype_id,
-                                'order_id' => $order->id,
-                                'shipping_status' => $order->order_status,
-                                'store_id' => $order->store_id,
-                                'cashondelivery' => $order->cashondelivery,
-                            ]);
-                            $success['shipping'] = new shippingResource($shipping);
+                    $order->update([
+                        'order_status' => $request->input('status'),
+                    ]);
+                    foreach ($order->items as $orderItem) {
+                        $orderItem->update([
+                            'order_status' => $request->input('status'),
+                        ]);
+                    }
+                    $shipping = Shipping::create([
+                        'shipping_id' => $order->order_number,
+                        'track_id' => null,
+                        'description' => $order->description,
+                        'quantity' => $order->quantity,
+                        'price' => $order->total_price,
+                        'weight' => $order->weight,
+                        'district' => $request->district,
+                        'city' => $request->city,
+                        'streetaddress' => $request->street_address,
+                        'customer_id' => $order->user_id,
+                        'shippingtype_id' => $order->shippingtype_id,
+                        'order_id' => $order->id,
+                        'shipping_status' => $order->order_status,
+                        'store_id' => $order->store_id,
+                        'cashondelivery' => $order->cashondelivery,
+                    ]);
+                    $success['shipping'] = new shippingResource($shipping);
                 }
                 $success['orders'] = new OrderResource($order);
                 $success['status'] = 200;
@@ -567,9 +565,9 @@ class OrderController extends BaseController
                 $orderAddress = OrderOrderAddress::where('order_id', $order->id)->where('type', 'shipping')->value('order_address_id');
                 $address = OrderAddress::where('id', $orderAddress)->first();
                 $shipping = Shipping::where('order_id', $order->id)->first();
-                 
+
                 $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
-                if($shipping == null){
+                if ($shipping == null) {
                     return $this->sendError("لايمكن استرجاع الطلب", "shipping is't exists");
                 }
                 if ($order->shippingtype->id == 1) {
@@ -599,7 +597,7 @@ class OrderController extends BaseController
                                     "Reference2": "",
                                     "AccountNumber": "117620",
                                     "PartyAddress": {
-                                        "Line1": "' .$address->street_address. '",
+                                        "Line1": "' . $address->street_address . '",
                                         "Line2": "' . $address->street_address . '",
                                         "Line3": "",
                                         "City": "' . $address->city . '",
@@ -617,7 +615,7 @@ class OrderController extends BaseController
                                     },
                                     "Contact": {
                                         "Department": "",
-                                        "PersonName": "' . $order->user->name. '",
+                                        "PersonName": "' . $order->user->name . '",
                                         "Title": "",
                                         "CompanyName": "' . $order->user->name . '",
                                         "PhoneNumber1": "' . $order->user->phonenumber . '",
@@ -626,7 +624,7 @@ class OrderController extends BaseController
                                         "PhoneNumber2Ext": "",
                                         "FaxNumber": "",
                                         "CellPhone": "' . $order->user->phonenumber . '",
-                                        "EmailAddress": "' . $order->user->email  . '",
+                                        "EmailAddress": "' . $order->user->email . '",
                                         "Type": ""
                                     }
                                 },
@@ -635,10 +633,10 @@ class OrderController extends BaseController
                                     "Reference2": "",
                                     "AccountNumber": "",
                                     "PartyAddress": {
-                                        "Line1": "' .$shipping->streetaddress . '",
+                                        "Line1": "' . $shipping->streetaddress . '",
                                         "Line2": "' . $shipping->streetaddress . '",
                                         "Line3": "",
-                                        "City": "' . $shipping ->city . '",
+                                        "City": "' . $shipping->city . '",
                                         "StateOrProvinceCode": "",
                                         "PostCode": "",
                                         "CountryCode": "SA",
@@ -752,7 +750,7 @@ class OrderController extends BaseController
 
                     $aramex = new AramexService();
 
-                    $arData = $amex->buildRequest('POST',$json);
+                    $arData = $amex->buildRequest('POST', $json);
 
                     if ($arData->HasErrors == false) {
                         $ship_id = $arData->Shipments[0]->ID;
@@ -783,7 +781,7 @@ class OrderController extends BaseController
                             'store_id' => $order->store_id,
                             'cashondelivery' => $order->cashondelivery,
                         ]);
-                        
+
                         $payment = Payment::where('orderID', $order->id)->first();
                         if ($payment != null) {
                             $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', auth()->user()->store_id)->first();
@@ -801,27 +799,25 @@ class OrderController extends BaseController
                                 $extra_shipping_price = 0;
                                 $default_extra_price = 0;
                             }
-                            $total_price_without_shipping = ($order->total_price)-($shipping_price)-($extra_shipping_price);
+                            $total_price_without_shipping = ($order->total_price) - ($shipping_price) - ($extra_shipping_price);
                             $data = [
 
                                 "Key" => $payment->paymentTransectionID,
                                 "KeyType" => "invoiceid",
                                 "RefundChargeOnCustomer" => false,
                                 "ServiceChargeOnCustomer" => false,
-                                "Amount" =>  $total_price_without_shipping,
+                                "Amount" => $total_price_without_shipping,
                                 "Comment" => "refund to the customer",
                                 "AmountDeductedFromSupplier" => 0,
                                 "CurrencyIso" => "SA",
                             ];
-                            
-                         
+
                             $supplier = new FatoorahServices();
-                            $supplierCode = $supplier->buildRequest('v2/MakeRefund','POST', $data);
-                        
+                            $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+
                             if ($supplierCode->IsSuccess == false) {
                                 return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                            }
-                            else{
+                            } else {
                                 $success['test'] = $supplierCode;
                             }
 
@@ -830,7 +826,6 @@ class OrderController extends BaseController
 
                     } else {
 
-                        
                         $success['shippingCompany'] = $arData;
                         return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
                     }
@@ -838,7 +833,6 @@ class OrderController extends BaseController
             }
         }
     }
-
 
     public function deleteall(Request $request)
     {
@@ -863,18 +857,18 @@ class OrderController extends BaseController
     {
         $query = $request->input('query');
 
-       $orders = Order::with(['user' => function ($userQuery) use($query) {
-        $userQuery->where('name', 'like', "%$query%");
-    },'shippingtype' => function ($shippingtypeQuery) use($query) {
-        $shippingtypeQuery->where('name', 'like', "%$query%");
-    },'shipping' => function ($shippingQuery) use($query){
-        $shippingQuery->where('track_id', 'like', "%$query%");
-    }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
-         ->orderBy('created_at', 'desc')->paginate(10);
-        
-        $success['query'] =$query;
-         $success['total_result'] =$orders->total();
-        $success['page_count'] =$orders->lastPage();
+        $orders = Order::whereHas('user' ,function ($userQuery) use ($query) {
+            $userQuery->where('name', 'like', "%$query%");
+        })->orWhereHas( 'shippingtype' , function ($shippingtypeQuery) use ($query) {
+            $shippingtypeQuery->where('name', 'like', "%$query%");
+        })->orWhereHas('shipping',function ($shippingQuery) use ($query) {
+            $shippingQuery->where('track_id', 'like', "%$query%");
+        })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->orderBy('created_at', 'desc')->paginate(10);
+
+        $success['query'] = $query;
+        $success['total_result'] = $orders->total();
+        $success['page_count'] = $orders->lastPage();
         $success['current_page'] = $orders->currentPage();
         $success['orders'] = OrderResource::collection($orders);
         $success['status'] = 200;

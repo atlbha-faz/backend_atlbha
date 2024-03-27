@@ -825,30 +825,86 @@ class IndexStoreController extends BaseController
             if ($id == "atlbha") {
                 $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-                $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('importproducts.special', 'special')->orderBy('products.created_at', 'desc')
-                ->get(['products.*', 'importproducts.special', 'importproducts.discount_price_import', 'importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
-
-                $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('importproducts.special', 'special')->orderBy('products.created_at', 'desc')
+                $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store->id)->where('importproducts.special', 'special')->orderBy('products.created_at', 'desc')
                     ->get(['products.*', 'importproducts.special', 'importproducts.discount_price_import', 'importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+
+                $forpage = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store->id)->where('importproducts.special', 'special')
+                    ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->paginate($count);
+
                 $imports = importsResource::collection($import);
 
-                $success['specialProducts'] = $specialproducts;
-                $success['page_count'] = $specialproducts->lastPage();
-                $success['current_page'] = $specialproducts->currentPage();
+                $success['specialProducts'] = $imports;
+                $success['page_count'] = $forpage->lastPage();
+                $success['current_page'] = $forpage->currentPage();
                 $success['status'] = 200;
             } else {
 
                 $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-                $specialproducts = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store_id)->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'created_at')->paginate($count));
-
-                $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('importproducts.special', 'special')->orderBy('products.created_at', 'desc')
-                    ->get(['products.*', 'importproducts.special', 'importproducts.discount_price_import', 'importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
-                $imports = importsResource::collection($import);
+                $specialproducts = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')->where('special', 'special')->orderBy('created_at', 'desc')->where('store_id', $store->id)->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'created_at')->paginate($count));
 
                 $success['specialProducts'] = $specialproducts;
                 $success['page_count'] = $specialproducts->lastPage();
                 $success['current_page'] = $specialproducts->currentPage();
+                $success['status'] = 200;
+            }
+
+            return $this->sendResponse($success, 'تم ارجاع المنتجات المميزه بنجاح', 'specialProducts show successfully');
+        }
+    }
+    public function recentProducts($id)
+    {
+
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+
+        if (!is_null($store)) {
+            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+        }
+        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
+            return $this->sendError("المتجر غير موجود", "Store is't exists");
+        }
+        if ($store->maintenance != null) {
+            if ($store->maintenance->status == 'active') {
+                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+            }
+        }
+        $store_id = $store->id;
+        if ($store != null) {
+            if ($id == "atlbha") {
+                $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+                $oneWeekAgo = Carbon::now()->subWeek();
+
+            $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')->where('importproducts.store_id', $store_id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
+                ->get(['products.*', 'importproducts.price', 'importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
+        
+                $forpage = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store->id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
+                    ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->paginate($count);
+
+                $imports = importsResource::collection($resentimportst);
+
+                $success['resent_arrive'] = $imports;
+                $success['page_count'] = $forpage->lastPage();
+                $success['current_page'] = $forpage->currentPage();
+                $success['status'] = 200;
+            } else {
+
+                $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+                $resentproduct = ProductResource::collection(Product::with([
+                    'category' => function ($query) {
+                        $query->select('id', 'name');
+                    },
+                ])->where('is_deleted', 0)->select('id', 'name', 'status', 'stock', 'cover', 'special', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock', 'discount_price')->where('status', 'active')
+                        ->where('store_id', $store_id)->orderByDesc('created_at')->paginate($count));
+
+                $success['resent_arrive'] = $resentproduct;
+                $success['page_count'] =$resentproduct->lastPage();
+                $success['current_page'] =$resentproduct->currentPage();
                 $success['status'] = 200;
             }
 
