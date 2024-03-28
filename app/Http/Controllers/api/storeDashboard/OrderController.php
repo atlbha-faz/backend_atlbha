@@ -121,6 +121,7 @@ class OrderController extends BaseController
                         "shipper_line1"=>$request->street_address,
                         "shipper_line2"=>$request->street_address,
                         "shipper_city"=>$request->city,
+                        "shipper_district"=>$request->district,
                         "shipper_name"=>auth()->user()->name,
                         "shipper_comany"=>auth()->user()->store->store_name,
                         "shipper_name"=>auth()->user()->name,
@@ -130,7 +131,7 @@ class OrderController extends BaseController
         
                     ];
                     $aramex = new AramexService();
-                    $aramex.createOrder($data);
+                    $aramex->createOrder($data);
                 }
             }
             if ($request->status === "refund") {
