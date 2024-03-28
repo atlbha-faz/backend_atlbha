@@ -131,7 +131,7 @@ class OrderController extends BaseController
         
                     ];
                     $aramex = new AramexService();
-                    $aramex->createOrder($data);
+                    return $aramex->createOrder($data);
                 }
             }
             if ($request->status === "refund") {

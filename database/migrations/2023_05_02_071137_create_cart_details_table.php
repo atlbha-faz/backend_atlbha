@@ -21,7 +21,8 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->integer('qty')->nullable();
             $table->decimal('price', 10, 2)->nullable();
-            $table->longText('options')->nullable();
+            $table->bigInteger('option_id')->unsigned();
+            $table->foreign('option_id')->references('id')->on('options')->onDelete('cascade');
             $table->timestamps();
         });
     }
