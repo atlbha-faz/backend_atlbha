@@ -34,7 +34,7 @@ class AramexService
       return $response;
   }
   public function createOrder($data ){
-    $orderAddress = OrderOrderAddress::where('order_id', $order->id)->where('type', 'shipping')->value('order_address_id');
+    $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
     $address = OrderAddress::where('id', $orderAddress)->first();
     $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
     //  if( $order->payment_status=='paid'|| $order->cod ==1)
@@ -236,9 +236,9 @@ class AramexService
                 'sticker' => $url,
                 'description' => $order->description,
                 'price' => $order->total_price,
-                'district' => $request->district,
-                'city' => $request->city,
-                'streetaddress' => $request->street_address,
+                'district' => $data["shipper_district"],
+                'city' => $data["shipper_city"] ,
+                'streetaddress' => $data["shipper_line1"],
                 'customer_id' => $order->user_id,
                 'order_id' => $order->id,
                 'store_id' => $order->store_id,
