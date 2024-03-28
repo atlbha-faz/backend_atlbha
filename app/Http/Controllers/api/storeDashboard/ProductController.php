@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\importsResource;
-use App\Http\Resources\ProductResource;
-use App\Imports\ProductsImport;
-use App\Models\Attribute;
-use App\Models\Attribute_product;
 use App\Models\Image;
-use App\Models\Importproduct;
+use App\Models\Store;
+use App\Models\Value;
 use App\Models\Option;
 use App\Models\Product;
-use App\Models\Value;
+use App\Models\Attribute;
+use Illuminate\Support\Str;
 use Google\Service\Resource;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use App\Imports\ProductsImport;
+use Illuminate\Validation\Rule;
+use App\Models\Attribute_product;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProductController extends BaseController
 {
