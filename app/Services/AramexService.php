@@ -39,6 +39,7 @@ class AramexService
       return $response;
   }
   public function createOrder($data ){
+    $order = Order::where('id',  $data["order_id"])->first();
     $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
     $address = OrderAddress::where('id', $orderAddress)->first();
     $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
