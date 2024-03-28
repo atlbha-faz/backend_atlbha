@@ -25,13 +25,14 @@ class AramexService
       $this->base_url = env('aramex_base_url', 'https://ws.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreateShipments');
       $this->headers = [
         "Content-Type" => 'application/json',
+        'Accept' => 'application/json'
     ];
   }
 
   public function buildRequest($mothod, $data ){
 
     $client = new Client(); 
-      $request = new Request($mothod , $this->base_url,$headers,$data);
+      $request = new Request($mothod , $this->base_url,  $this->headers,$data);
       $response = $client->sendAsync($request)->wait();
       if ($response->getStatusCode() != 200)
           return false;
