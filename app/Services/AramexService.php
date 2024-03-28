@@ -11,6 +11,7 @@ use App\Models\OrderAddress;
 
 use GuzzleHttp\Psr7\Request;
 use App\Models\OrderOrderAddress;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\shippingResource;
 
 class AramexService
@@ -36,7 +37,8 @@ class AramexService
       $response = $client->sendAsync($request)->wait();
       if ($response->getStatusCode() != 200)
           return false;
-      $response = json_decode ($response->getBody (),true);
+        
+      $response = json_decode ((string)$response->getBody());
       return $response;
   }
   public function createOrder($data ){
@@ -224,17 +226,34 @@ class AramexService
             }
         }';
 
-  
+
         $arData = $this->buildRequest('POST',$json);
-        if ($arData->HasErrors == false) {
+        if ($arData->HasErrors == true) {
+            $errorsMessages = "";
+
+            foreach ($arData->Notifications as  $error) {
+                $errorsMessages .= $error->Message .",";
+                // array_push($errorsMessages, $error->Message);
+            }
+            foreach ($arData->Shipments as $key => $Shipment) {
+                foreach ($Shipment->Notifications as $key => $error) {
+                    $errorsMessages .= $error->Message;
+                }
+            }
+            return [
+                'success'           => false,
+                'message'           => $errorsMessages,
+            ];
+        }
+      else{
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
             $order->update([
-                'order_status' => $request->input('status'),
+                'order_status' =>"ready" ,
             ]);
             foreach ($order->items as $orderItem) {
                 $orderItem->update([
-                    'order_status' => $request->input('status'),
+                    'order_status' => "ready",
                 ]);
             }
             $shipping = Shipping::create([
@@ -251,14 +270,13 @@ class AramexService
                 'store_id' => $order->store_id,
                 
             ]);
-            $success['shipping'] = new shippingResource($shipping);
-        } else {
 
-            //             $ship_id = null;
-            //             $track_id = null;
-            $success['shippingCompany'] = $arData;
-            return $this->sendResponse($success, "خطأ في البيانات المدخلة", "message");
-        }
+            return [
+                'success'           => false,
+                'message'           => new OrderResource($order),
+            ];
+         
+        } 
   }
  
 }

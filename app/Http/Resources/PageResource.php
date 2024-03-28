@@ -24,7 +24,7 @@ class PageResource extends JsonResource
             'title' => $this->title === "null" ? "" : $this->title,
             'page_content' => $this->page_content === null ? "" : $this->page_content,
             'seo_title' => $this->seo_title === "null" ? "" : $this->seo_title,
-            'seo_link' => $this->seo_link === "null" ? "" : $this->seo_link,
+            'seo_link' => $this->store_id == null ? 'https://atlbha.sa/post/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title) : 'https: //template.atlbha.sa/' . $this->store->domain . '/site/SitePages/' . $this->id,
             'seo_desc' => $this->seo_desc === "null" ? "" : $this->seo_desc,
             'page_desc' => $this->page_desc === "null" ? "" : $this->page_desc,
             'image' => $this->image != null ? $this->image : "",
@@ -35,7 +35,7 @@ class PageResource extends JsonResource
             'postCategory' => new PostCategoryResource($this->postcategory),
             'user' => new UserResource($this->user),
             'pageCategory' => Page_categoryResource::collection($this->page_categories),
-            'page_url' => $this->store_id == null ? 'https://atlbha.sa/post/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title) : 'https: //template.atlbha.sa/' . $this->store->domain . '/site/SitePages/' . $this->id,
+            // 'page_url' => $this->store_id == null ? 'https://atlbha.sa/post/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title) : 'https: //template.atlbha.sa/' . $this->store->domain . '/site/SitePages/' . $this->id,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'status' => $status,
@@ -43,3 +43,4 @@ class PageResource extends JsonResource
         ];
     }
 }
+
