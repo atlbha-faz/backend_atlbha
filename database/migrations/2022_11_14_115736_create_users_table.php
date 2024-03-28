@@ -31,6 +31,7 @@ return new class extends Migration
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
             $table->integer('supplierCode')->nullable();
             $table->enum('status', ['active', 'not_active'])->default('active');
+            // $table->boolean('status')->default(true);
             $table->bigInteger('is_deleted')->default(0);
             $table->string('device_token')->nullable();
             $table->boolean('verified')->default(0);
