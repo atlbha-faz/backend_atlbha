@@ -33,7 +33,7 @@ class AramexService
       $response = json_decode ($response->getBody (),true);
       return $response;
   }
-  public function createOrder($mothod, $data ){
+  public function createOrder($data ){
     $orderAddress = OrderOrderAddress::where('order_id', $order->id)->where('type', 'shipping')->value('order_address_id');
     $address = OrderAddress::where('id', $orderAddress)->first();
     $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
@@ -58,7 +58,7 @@ class AramexService
             },
             "Shipments": [
                 {
-                    "Reference1": "' . $order->id . '",
+                    "Reference1": "' . $data["order_id"] . '",
                     "Reference2": "",
                     "Reference3": "",
                     "Shipper": {
@@ -66,10 +66,10 @@ class AramexService
                         "Reference2": "",
                         "AccountNumber": "117620",
                         "PartyAddress": {
-                            "Line1": "' . $request->street_address . '",
-                            "Line2": "' . $request->street_address . '",
+                            "Line1": "' . $data["shipper_line1"] . '",
+                            "Line2": "' . $data["shipper_line2"] . '",
                             "Line3": "",
-                            "City": "' . $request->city . '",
+                            "City": "' . $data["shipper_city"] . '",
                             "StateOrProvinceCode": "",
                             "PostCode": "",
                             "CountryCode": "SA",
@@ -84,16 +84,16 @@ class AramexService
                         },
                         "Contact": {
                             "Department": "",
-                            "PersonName": "' . auth()->user()->name . '",
+                            "PersonName": "' . $data["shipper_name"] . '",
                             "Title": "",
-                            "CompanyName": "' . auth()->user()->store->store_name . '",
-                            "PhoneNumber1": "' . auth()->user()->phonenumber . '",
+                            "CompanyName": "' . $data["shipper_comany"] . '",
+                            "PhoneNumber1": "' . $data["shipper_phonenumber"] . '",
                             "PhoneNumber1Ext": "",
                             "PhoneNumber2": "",
                             "PhoneNumber2Ext": "",
                             "FaxNumber": "",
-                            "CellPhone": "' . auth()->user()->phonenumber . '",
-                            "EmailAddress": "' . auth()->user()->email . '",
+                            "CellPhone": "' . $data["shipper_phonenumber"] . '",
+                            "EmailAddress": "' . $data["shipper_email"] . '",
                             "Type": ""
                         }
                     },
@@ -235,18 +235,14 @@ class AramexService
                 // 'track_id' => $track_id,
                 'sticker' => $url,
                 'description' => $order->description,
-                'quantity' => $order->quantity,
                 'price' => $order->total_price,
-                'weight' => $order->weight,
                 'district' => $request->district,
                 'city' => $request->city,
                 'streetaddress' => $request->street_address,
                 'customer_id' => $order->user_id,
-                'shippingtype_id' => $order->shippingtype_id,
                 'order_id' => $order->id,
-                'shipping_status' => $order->order_status,
                 'store_id' => $order->store_id,
-                'cashondelivery' => $order->cashondelivery,
+                
             ]);
             $success['shipping'] = new shippingResource($shipping);
         } else {

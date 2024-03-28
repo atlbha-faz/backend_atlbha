@@ -64,6 +64,11 @@ Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('profileCustomer', [App\Http\Controllers\api\storeTemplate\ProfileCustomerController::class, 'index']);
     Route::post('profileCustomer', [App\Http\Controllers\api\storeTemplate\ProfileCustomerController::class, 'update']);
     Route::get('deactivateAccount', [App\Http\Controllers\api\storeTemplate\ProfileCustomerController::class, 'deactivateAccount']);
+    Route::get('specialProducts/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'specialProducts']);
+    Route::get('recentProducts/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'recentProducts']);
+    Route::get('moreSalesProducts/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'moreSalesProducts']);
+    Route::get('productsRatings/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'productsRatings']);
+
     Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addSubsicription']);
   
 });
@@ -368,6 +373,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('selector/post-categories', [App\Http\Controllers\api\storeDashboard\SelectorController::class, 'post_categories']);
         //search
         Route::get('searchCategory', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'searchCategoryName']);
+        Route::get('searchCategoryEtlobha', [App\Http\Controllers\api\storeDashboard\CategoryController::class, 'searchCategoryEtlobha']);
         Route::get('searchProduct', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'searchProductName']);
         Route::get('searchImportProduct', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'searchImportProductName']);
         Route::get('searchOrder', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'searchOrder']);
