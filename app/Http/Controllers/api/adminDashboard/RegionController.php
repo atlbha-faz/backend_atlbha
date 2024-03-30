@@ -39,27 +39,25 @@ class RegionController extends Controller
      */
     public function store(Request $request)
     {
-        {
 
-            $input = $request->all();
-            $validator = Validator::make($input, [
-                'name' => 'required|string|max:255',
-                'country_id' => 'required|exists:countries,id',
-            ]);
-            if ($validator->fails()) {
-                return $this->sendError(null, $validator->errors());
-            }
-            $region = Region::create([
-                'name' => $request->name,
-
-                'country_id' => $request->country_id,
-            ]);
-
-            $success['regions'] = new RegionResource($region);
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'تم إضافة منطقة بنجاح', 'Region Added successfully');
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
+            'country_id' => 'required|exists:countries,id',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
+        $region = Region::create([
+            'name' => $request->name,
+
+            'country_id' => $request->country_id,
+        ]);
+
+        $success['regions'] = new RegionResource($region);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم إضافة منطقة بنجاح', 'Region Added successfully');
     }
 
     /**

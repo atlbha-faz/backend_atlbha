@@ -92,7 +92,7 @@ class SettingController extends BaseController
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'address' => 'required|string',
-           
+
 
         ]);
         if ($validator->fails()) {
@@ -106,9 +106,9 @@ class SettingController extends BaseController
             'email' => $request->input('email'),
             'phonenumber' => $request->input('phonenumber'),
             'logo' => $request->input('logo'),
-       
+
             'address' => $request->input('address'),
-   
+
 
         ]);
 
@@ -144,7 +144,7 @@ class SettingController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function registration_status_show()
+    public function registrationStatusShow()
     {
         $success['registration_status'] = Setting::where('is_deleted', 0)->pluck('registration_status')->first();
         $success['status'] = 200;
@@ -152,7 +152,7 @@ class SettingController extends BaseController
         return $this->sendResponse($success, 'تم عرض الاعدادات بنجاح', 'registration_status shown successfully');
     }
 
-    public function registration_status_update(Request $request)
+    public function registrationStatusUpdate(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -198,7 +198,7 @@ class SettingController extends BaseController
 
     }
 
-    public function registration_marketer_show()
+    public function registrationMarketerShow()
     {
         $success['registration_marketer'] = Setting::where('is_deleted', 0)->pluck('registration_marketer')->first();
         $success['status_marketer'] = Setting::where('is_deleted', 0)->pluck('status_marketer')->first();

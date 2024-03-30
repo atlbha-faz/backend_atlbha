@@ -74,7 +74,7 @@ class StoreCategoryController extends BaseController
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
             'parent_id' => null,
-            
+
             'store_id' => null,
         ]);
 
@@ -89,7 +89,7 @@ class StoreCategoryController extends BaseController
                     'name' => $data['name'],
                     'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
                     'parent_id' => $category->id,
-                    
+
                     'store_id' => null,
                 ]);
 
@@ -191,7 +191,7 @@ class StoreCategoryController extends BaseController
         $category->update([
             'name' => $request->input('name'),
             'icon' => $request->icon,
-           
+
             'store_id' => null,
         ]);
 
@@ -226,7 +226,7 @@ class StoreCategoryController extends BaseController
                     'name' => $data['name'],
                     'number' => $number,
                     'parent_id' => $category_id,
-                    
+
                     'is_deleted' => 0,
 
                 ]);
@@ -260,7 +260,7 @@ class StoreCategoryController extends BaseController
         return $this->sendResponse($success, 'تم حذف القسم بنجاح', 'category deleted successfully');
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $categorys = Category::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', null)->get();
@@ -288,7 +288,7 @@ class StoreCategoryController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
     }
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $categorys = Category::whereIn('id', $request->id)->where('store_id', null)->where('is_deleted', 0)->get();

@@ -36,7 +36,7 @@ class SubscriptionsController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Subscriptions return successfully');
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $stores = Store::whereIn('id', $request->id)->where('is_deleted', 0)->get();
@@ -66,7 +66,7 @@ class SubscriptionsController extends BaseController
             return $this->sendResponse($success, 'المدخلات غيرموجودة', 'id is not exit');
         }
     }
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $stores = Store::whereIn('id', $request->id)->where('is_deleted', 0)->get();

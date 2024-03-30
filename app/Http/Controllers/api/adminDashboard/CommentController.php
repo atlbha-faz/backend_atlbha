@@ -150,7 +150,7 @@ class CommentController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'comment updated successfully');
     }
 
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
         $comments = Comment::whereIn('id', $request->id)->where('store_id', null)->where('product_id', null)->where('comment_for', 'store')->where('is_deleted', 0)->get();
 
@@ -160,7 +160,7 @@ class CommentController extends BaseController
 
                 $comment->update(['status' => 'active']);
 
-           
+
             }
         }
         $success['comments'] = CommentResource::collection($comments);
@@ -176,9 +176,9 @@ class CommentController extends BaseController
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
- 
 
-    public function deleteall(Request $request)
+
+    public function deleteAll(Request $request)
     {
         $comments = Comment::whereIn('id', $request->id)->where('store_id', null)->where('product_id', null)->where('comment_for', 'store')->where('is_deleted', 0)->get();
 

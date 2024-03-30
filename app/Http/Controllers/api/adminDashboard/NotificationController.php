@@ -105,7 +105,7 @@ class NotificationController extends BaseController
         $contact = Contact::create($data);
         $users = User::where('store_id', $request->store_id)->where('is_deleted', 0)->where('user_type', 'store')->get();
         foreach ($users as $user) {
-      
+
             try {
                 Mail::to($user->email)->send(new SendMail($data));
             } catch (\Exception $e) {

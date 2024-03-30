@@ -501,7 +501,7 @@ class StoreController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $stores = Store::whereIn('id', $request->id)->where('is_deleted', 0)->get();
@@ -574,8 +574,8 @@ class StoreController extends BaseController
 
 
 
-  
-    public function deleteall(Request $request)
+
+    public function deleteAll(Request $request)
     {
 
         $stores = Store::whereIn('id', $request->id)->where('is_deleted', 0)->get();
@@ -640,12 +640,12 @@ class StoreController extends BaseController
             'object_id' => null,
         ];
         $user = User::where('user_type', 'store')->where('store_id', $store->id)->first();
-  
+
         try {
             Mail::to($user->email)->send(new SendMail($data));
 
         } catch (\Exception $e) {
-       
+
             $errorMessage = 'Failed to send email. Please try again later.';
             Log::error('Email delivery failure: ' . $e->getMessage());
         }

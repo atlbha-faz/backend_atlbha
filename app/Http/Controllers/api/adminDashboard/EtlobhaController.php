@@ -95,7 +95,7 @@ class EtlobhaController extends BaseController
         } else {
             $validator = Validator::make($input, [
                 'cover' => 'required |string| max:1048',
-            
+
             ]);
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
@@ -185,7 +185,6 @@ class EtlobhaController extends BaseController
             }
         }
 
-   
         if ($request->has('attribute')) {
             if (!is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
@@ -261,7 +260,7 @@ class EtlobhaController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:25',
             'description' => 'required|string',
-       
+
             'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
@@ -269,7 +268,7 @@ class EtlobhaController extends BaseController
 
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'images' => 'nullable|array',
-     
+
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -356,10 +355,7 @@ class EtlobhaController extends BaseController
                 }
 
             }
-        }
-
-        
-        else {
+        } else {
             if ($request->has('images')) {
                 $files = $request->images;
                 $image_id = Image::where('product_id', $id)->pluck('id')->toArray();
@@ -442,7 +438,7 @@ class EtlobhaController extends BaseController
                         'name' => $data['name'],
                         'product_id' => $productid,
                         'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
-                        'less_qty' => (isset($data['less_qty']) && $data['less_qty'] !== null) ? $data['less_qty'] : 0
+                        'less_qty' => (isset($data['less_qty']) && $data['less_qty'] !== null) ? $data['less_qty'] : 0,
 
                     ]);
 
@@ -491,7 +487,7 @@ class EtlobhaController extends BaseController
 
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'etlobha')->get();
@@ -529,7 +525,7 @@ class EtlobhaController extends BaseController
         }
     }
 
-    public function changeStatusall(Request $request)
+    public function changeStatusAll(Request $request)
     {
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'etlobha')->get();
         if (count($products) > 0) {
