@@ -107,7 +107,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع القوالب بنجاح', 'templates return successfully');
     }
 
-    public function post_categories()
+    public function postCategories()
     {
         $success['categories'] = PostCategoryResource::collection(Postcategory::where('is_deleted', 0)->where('status', 'active')->get());
         $success['status'] = 200;
@@ -115,7 +115,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع تصنيفات المقالات بنجاح', 'Post Categories return successfully');
     }
 
-    public function page_categories()
+    public function pageCategories()
     {
         $success['categories'] = Page_categoryResource::collection(Page_category::where('is_deleted', 0)->where('id', '!=', 2)->where('status', 'active')->get());
         $success['status'] = 200;
@@ -129,7 +129,7 @@ class SelectorController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع الأدوار بنجاح', 'Roles return successfully');
     }
-    public function subcategories(Request $request)
+    public function subCategories(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [

@@ -85,12 +85,12 @@ class StockController extends BaseController
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
-          
+
             'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'images' => 'nullable|array',
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-           
+
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -160,7 +160,7 @@ class StockController extends BaseController
 
             }
         }
-     
+
         if ($request->has('attribute')) {
             if (!is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
@@ -281,7 +281,7 @@ class StockController extends BaseController
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'images' => 'nullable|array',
-       
+
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -388,9 +388,9 @@ class StockController extends BaseController
             }
         }
 
- 
 
-        
+
+
         $preAttributes = Attribute_product::where('product_id', $productid)->get();
         if ($preAttributes != null) {
             foreach ($preAttributes as $preAttribute) {
@@ -475,7 +475,7 @@ class StockController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'stock')->get();
@@ -547,7 +547,7 @@ class StockController extends BaseController
         try {
 
             Excel::import(new AdminProductImport, $request->file);
-        
+
 
             $success['status'] = 200;
 

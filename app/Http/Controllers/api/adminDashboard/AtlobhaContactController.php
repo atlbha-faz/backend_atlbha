@@ -23,7 +23,7 @@ class AtlobhaContactController extends BaseController
     }
 
 
-    
+
     public function show($contact)
     {
         $atlobhaContact= AtlobhaContact::query()->find($contact);
@@ -33,10 +33,10 @@ class AtlobhaContactController extends BaseController
              $success['atlobhaContacts'] = new atlobhaContactResource($atlobhaContact);
               $success['status']= 200;
 
-               
+
         return $this->sendResponse($success, 'تم عرض الطلب بنجاح', 'atlobhaContact showed successfully');
     }
-    
+
     public function changeStatus($id)
     {
         $atlobhaContact = AtlobhaContact::query()->find($id);
@@ -55,7 +55,7 @@ class AtlobhaContactController extends BaseController
         return $this->sendResponse($success, 'تم تعديل حالة الطلب بنجاح', 'atlobhaContact updated successfully');
 
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
 
@@ -63,7 +63,7 @@ class AtlobhaContactController extends BaseController
             if(count($atlobhaContacts)>0){
            foreach($atlobhaContacts as $atlobhaContact)
            {
-        
+
                $atlobhaContact->update(['is_deleted' => $atlobhaContact->id]);
               $success['atlobhaContacts']= New atlobhaContactResource($atlobhaContact);
 

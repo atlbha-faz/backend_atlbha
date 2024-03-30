@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\PlanResource;
 use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\PlanResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class PlanController extends BaseController
 {
-   
-  public function __construct()
-  {
-      $this->middleware('auth:api');
-  }
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
 
     /**
      * Display a listing of the resource.
@@ -22,13 +22,12 @@ class PlanController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index()
-   {
-       $success['plans']=PlanResource::collection(Plan::where('is_deleted',0)->get());
-        $success['status']= 200;
+    {
+        $success['plans'] = PlanResource::collection(Plan::where('is_deleted', 0)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع الخطط بنجاح','plans return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الخطط بنجاح', 'plans return successfully');
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -49,28 +48,23 @@ class PlanController extends BaseController
     public function store(Request $request)
     {
 
-      $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
 
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
         $plan = Plan::create([
             'name' => $request->name,
 
-          ]);
+        ]);
 
+        $success['plans'] = new PlanResource($plan);
+        $success['status'] = 200;
 
-         $success['plans']=New PlanResource($plan);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم إضافة خطة بنجاح','plan Added successfully');
-
-
+        return $this->sendResponse($success, 'تم إضافة خطة بنجاح', 'plan Added successfully');
 
     }
 
@@ -83,16 +77,15 @@ class PlanController extends BaseController
     public function show($plan)
     {
 
-          $plan = Plan::query()->find($plan);
-         if (is_null($plan) || $plan->is_deleted != 0){
-         return $this->sendError(" الخطة غير موجودة","plan is't exists");
-         }
+        $plan = Plan::query()->find($plan);
+        if (is_null($plan) || $plan->is_deleted != 0) {
+            return $this->sendError(" الخطة غير موجودة", "plan is't exists");
+        }
 
+        $success['plans'] = new PlanResource($plan);
+        $success['status'] = 200;
 
-        $success['plans']=New PlanResource($plan);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم عرض الخطة بنجاح','plan showed successfully');
+        return $this->sendResponse($success, 'تم عرض الخطة بنجاح', 'plan showed successfully');
 
     }
 
@@ -114,51 +107,48 @@ class PlanController extends BaseController
      * @param  \App\Models\Plan  $plane
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,  $plan)
-       {
+    public function update(Request $request, $plan)
+    {
         $plan = Plan::query()->find($plan);
-         if (is_null($plan) || $plan->is_deleted !=0){
-         return $this->sendError(" الخطة غير موجود","plan is't exists");
-          }
-         $input = $request->all();
-         $validator =  Validator::make($input ,[
-           'name'=>'required|string|max:255',
+        if (is_null($plan) || $plan->is_deleted != 0) {
+            return $this->sendError(" الخطة غير موجود", "plan is't exists");
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required|string|max:255',
 
-         ]);
-         if ($validator->fails())
-         {
+        ]);
+        if ($validator->fails()) {
             # code...
-            return $this->sendError(null,$validator->errors());
-         }
-         $plan->update([
+            return $this->sendError(null, $validator->errors());
+        }
+        $plan->update([
             'name' => $request->input('name'),
 
+        ]);
+        //$country->fill($request->post())->update();
+        $success['plans'] = new PlanResource($plan);
+        $success['status'] = 200;
 
-         ]);
-         //$country->fill($request->post())->update();
-            $success['plans']=New PlanResource($plan);
-            $success['status']= 200;
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'plan updated successfully');
+    }
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','plan updated successfully');
-        }
-
-       public function changeStatus($id)
+    public function changeStatus($id)
     {
         $plan = Plan::query()->find($id);
-         if (is_null($plan) || $plan->is_deleted !=0){
-         return $this->sendError(" الباقة غير موجود","plan is't exists");
-         }
-
-        if($plan->status === 'active'){
-        $plan->update(['status' => 'not_active']);
+        if (is_null($plan) || $plan->is_deleted != 0) {
+            return $this->sendError(" الباقة غير موجود", "plan is't exists");
         }
-        else{
-        $plan->update(['status' => 'active']);
-        }
-        $success['plans']=New PlanResource($plan);
-        $success['status']= 200;
 
-         return $this->sendResponse($success,'تم تعديل حالة الباقة بنجاح','plan updated successfully');
+        if ($plan->status === 'active') {
+            $plan->update(['status' => 'not_active']);
+        } else {
+            $plan->update(['status' => 'active']);
+        }
+        $success['plans'] = new PlanResource($plan);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تعديل حالة الباقة بنجاح', 'plan updated successfully');
 
     }
     /**
@@ -169,15 +159,15 @@ class PlanController extends BaseController
      */
     public function destroy($plan)
     {
-       $plan = Plan::query()->find($plan);
-         if (is_null($plan) || $plan->is_deleted !=0){
-         return $this->sendError("الباقة غير موجودة","plan is't exists");
-         }
+        $plan = Plan::query()->find($plan);
+        if (is_null($plan) || $plan->is_deleted != 0) {
+            return $this->sendError("الباقة غير موجودة", "plan is't exists");
+        }
         $plan->update(['is_deleted' => $plan->id]);
 
-        $success['plans']=New PlanResource($plan);
-        $success['status']= 200;
+        $success['plans'] = new PlanResource($plan);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم حذف الخطة بنجاح','plan deleted successfully');
+        return $this->sendResponse($success, 'تم حذف الخطة بنجاح', 'plan deleted successfully');
     }
 }

@@ -47,18 +47,18 @@ class CommonQuestionController extends BaseController
         return $this->sendResponse($success, 'تم الاضافة بنجاح', 'Added successfully');
     }
     public function show($question)
-    { 
+    {
         $common_question = CommonQuestion::find($question);
-        
+
         if (is_null($common_question)) {
             return $this->sendError("الاسئلة الشائعة غير موجودة", " Common Question is't exists");
         }
-        
+
         $success['common_question'] = new CommonQuestionResource($common_question);
         $success['status'] = 200;
         return $this->sendResponse($success,'تم ارجاع الاسئلة بنجاح','Questions return successfully');
 
-       
+
     }
 
     public function update(Request $request, $id)
@@ -74,7 +74,7 @@ class CommonQuestionController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $question = CommonQuestion::find($id);
-        
+
         if (is_null($question)) {
             return $this->sendError("الاسئلة الشائعة غير موجود", " Common Questions is't exists");
         }
@@ -90,7 +90,7 @@ class CommonQuestionController extends BaseController
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'updated successfully');
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $questions = CommonQuestion::whereIn('id', $request->id)->get();
@@ -102,7 +102,7 @@ class CommonQuestionController extends BaseController
             }
         }
         $success['commonQuestions']=CommonQuestionResource::collection($questions);
-            
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم الحذف بنجاح', 'deleted successfully');

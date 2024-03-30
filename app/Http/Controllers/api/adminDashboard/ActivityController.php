@@ -132,7 +132,7 @@ class ActivityController extends BaseController
      * @param  \App\Models\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $activities = Activity::whereIn('id', $request->id)->where('is_deleted', 0)->get();

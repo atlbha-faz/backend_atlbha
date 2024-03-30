@@ -274,7 +274,7 @@ class CategoryController extends BaseController
         return $this->sendResponse($success, 'تم حذف القسم بنجاح', 'category deleted successfully');
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
             $categorys =Category::whereIn('id',$request->id)->where('store_id', null)->where('is_deleted',0)->get();
@@ -300,7 +300,7 @@ class CategoryController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
         }
     }
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $categorys = Category::whereIn('id', $request->id)->where('is_deleted', 0)->get();

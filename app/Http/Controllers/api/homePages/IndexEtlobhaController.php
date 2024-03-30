@@ -122,7 +122,7 @@ class IndexEtlobhaController extends BaseController
 
         return $this->sendResponse($success, 'تم إضافة الرسالة  بنجاح', 'message Added successfully');
     }
-    public function commonquestion()
+    public function commonQuestion()
     {
 
         $success['commonQuestions']=CommonQuestionResource::collection(CommonQuestion::where('is_deleted',0)->get());

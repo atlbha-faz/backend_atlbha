@@ -150,7 +150,7 @@ class WebsiteorderController extends BaseController
         return $this->sendResponse($success, 'تم حذف  الطلب بنجاح', 'websiteorder deleted successfully');
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
         $websiteorders = Websiteorder::whereIn('id', $request->id)->where('is_deleted', 0)->get();
         if (count($websiteorders) > 0) {

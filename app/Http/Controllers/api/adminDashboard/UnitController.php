@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\UnitResource;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\UnitResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+
 class UnitController extends BaseController
 {
 
@@ -22,10 +23,10 @@ class UnitController extends BaseController
      */
     public function index()
     {
-       $success['units']=UnitResource::collection(Unit::where('is_deleted',0)->get());
-        $success['status']= 200;
+        $success['units'] = UnitResource::collection(Unit::where('is_deleted', 0)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع الوحدات بنجاح','units return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الوحدات بنجاح', 'units return successfully');
     }
 
     /**
@@ -47,32 +48,28 @@ class UnitController extends BaseController
     public function store(Request $request)
     {
 
-
-
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'title'=>'required|string|max:255',
-            'file'=>'mimes:pdf,doc,excel',
-            'course_id' =>'required|exists:courses,id'
-
+        $validator = Validator::make($input, [
+            'title' => 'required|string|max:255',
+            'file' => 'mimes:pdf,doc,excel',
+            'course_id' => 'required|exists:courses,id',
 
         ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
         }
         $unit = unit::create([
             'title' => $request->title,
-            'file'=>$request->file,
-            'course_id'=>$request->course_id,
+            'file' => $request->file,
+            'course_id' => $request->course_id,
 
-          ]);
+        ]);
 
-         // return new CountryResource($country);
-         $success['units']=New UnitResource($unit);
-        $success['status']= 200;
+        // return new CountryResource($country);
+        $success['units'] = new UnitResource($unit);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم إضافة وحدة بنجاح','unit Added successfully');
+        return $this->sendResponse($success, 'تم إضافة وحدة بنجاح', 'unit Added successfully');
 
     }
 
@@ -83,17 +80,16 @@ class UnitController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function show($unit)
-     {
-          $unit = Unit::query()->find($unit);
-         if (is_null($unit) || $unit->is_deleted != 0){
-         return $this->sendError("الوحدة غير موجودة","unit is't exists");
-         }
+    {
+        $unit = Unit::query()->find($unit);
+        if (is_null($unit) || $unit->is_deleted != 0) {
+            return $this->sendError("الوحدة غير موجودة", "unit is't exists");
+        }
 
+        $success['$units'] = new UnitResource($unit);
+        $success['status'] = 200;
 
-        $success['$units']=New UnitResource($unit);
-        $success['status']= 200;
-
-         return $this->sendResponse($success,'تم عرض بنجاح','unit showed successfully');
+        return $this->sendResponse($success, 'تم عرض بنجاح', 'unit showed successfully');
     }
 
     /**
@@ -115,52 +111,50 @@ class UnitController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Unit $unit)
-       {
-        $unit =Unit::query()->find($unit);
-         if (is_null($unit) || $unit->is_deleted !=0){
-         return $this->sendError("الوحدة غير موجودة","unit is't exists");
-          }
-         $input = $request->all();
-         $validator =  Validator::make($input ,[
-         'title'=>'required|string|max:255',
-            'file'=>'mimes:pdf,doc,excel',
-             'course_id' =>'required|exists:courses,id'
-         ]);
-         if ($validator->fails())
-         {
+    {
+        $unit = Unit::query()->find($unit);
+        if (is_null($unit) || $unit->is_deleted != 0) {
+            return $this->sendError("الوحدة غير موجودة", "unit is't exists");
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'title' => 'required|string|max:255',
+            'file' => 'mimes:pdf,doc,excel',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+        if ($validator->fails()) {
             # code...
-            return $this->sendError(null,$validator->errors());
-         }
-         $unit->update([
+            return $this->sendError(null, $validator->errors());
+        }
+        $unit->update([
             'title' => $request->input('title'),
             'file' => $request->input('file'),
-             'course_id' => $request->input('course_id'),
+            'course_id' => $request->input('course_id'),
 
-         ]);
-         //$country->fill($request->post())->update();
-            $success['units']=New UnitResource($unit);
-            $success['status']= 200;
+        ]);
+        //$country->fill($request->post())->update();
+        $success['units'] = new UnitResource($unit);
+        $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','unit updated successfully');
-        }
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'unit updated successfully');
+    }
 
-  public function changeStatus($id)
+    public function changeStatus($id)
     {
         $unit = Unit::query()->find($id);
-         if (is_null($unit) || $unit->is_deleted !=0){
-         return $this->sendError("الوحدة غير موجودة","unit is't exists");
-         }
-
-        if($unit->status === 'active'){
-        $unit->update(['status' => 'not_active']);
+        if (is_null($unit) || $unit->is_deleted != 0) {
+            return $this->sendError("الوحدة غير موجودة", "unit is't exists");
         }
-        else{
-        $unit->update(['status' => 'active']);
-        }
-        $success['$unit']=New UnitResource($unit);
-        $success['status']= 200;
 
-         return $this->sendResponse($success,'تم تعديل حالة الوحدة بنجاح','unit updated successfully');
+        if ($unit->status === 'active') {
+            $unit->update(['status' => 'not_active']);
+        } else {
+            $unit->update(['status' => 'active']);
+        }
+        $success['$unit'] = new UnitResource($unit);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم تعديل حالة الوحدة بنجاح', 'unit updated successfully');
 
     }
 
@@ -172,15 +166,15 @@ class UnitController extends BaseController
      */
     public function destroy($unit)
     {
-       $unit = Unit::query()->find($unit);
-         if (is_null($unit) || $unit->is_deleted !=0){
-         return $this->sendError("الوحدة غير موجودة","unit is't exists");
-         }
+        $unit = Unit::query()->find($unit);
+        if (is_null($unit) || $unit->is_deleted != 0) {
+            return $this->sendError("الوحدة غير موجودة", "unit is't exists");
+        }
         $unit->update(['is_deleted' => $unit->id]);
 
-        $success['unit']=New UnitResource($unit);
-        $success['status']= 200;
+        $success['unit'] = new UnitResource($unit);
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم حذف الوحدة بنجاح','unit deleted successfully');
+        return $this->sendResponse($success, 'تم حذف الوحدة بنجاح', 'unit deleted successfully');
     }
 }

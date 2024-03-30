@@ -111,7 +111,7 @@ class VerificationController extends BaseController
 
     }
 
-    public function verification_show($id)
+    public function verificationShow($id)
     {
         $store = Store::query()->find($id);
         if (is_null($store) || $store->is_deleted != 0) {
@@ -165,7 +165,7 @@ class VerificationController extends BaseController
         return $this->sendResponse($success, 'تم إضافة ملاحظة بنجاح', 'note Added successfully');
     }
 
-    public function verification_update(Request $request)
+    public function verificationUpdate(Request $request)
     {
         $store = Store::query()->find($request->store_id);
         if (is_null($store) || $store->is_deleted != 0) {
@@ -262,7 +262,7 @@ class VerificationController extends BaseController
 
         return $this->sendResponse($success, 'تم تعديل المتجر بنجاح', 'store update successfully');
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $stores = Store::whereIn('id', $request->id)->where('is_deleted', 0)->get();
