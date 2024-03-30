@@ -41,7 +41,7 @@ class ProductController extends BaseController
         }, 'category' => function ($query) {
             $query->select('id', 'name');
         }])
-                ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count)
+                ->where('is_deleted', 0)->where('is_import', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count)
         );
 
         // $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
@@ -89,7 +89,7 @@ class ProductController extends BaseController
     public function importedProducts(Request $request)
     {
         $store = Store::where('id', auth()->user()->store_id)->first();
-        if ($store->domain = "atlbha") {
+        if ($store->domain == "atlbha") {
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
             $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
                 ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->paginate($count)->makeHidden(['products.*status', 'selling_price', 'store_id']);
@@ -888,7 +888,7 @@ class ProductController extends BaseController
     public function searchImportProductName(Request $request)
     {
         $store = Store::where('id', auth()->user()->store_id)->first();
-        if ($store->domain = "atlbha") {
+        if ($store->domain == "atlbha") {
             $query = $request->input('query');
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
