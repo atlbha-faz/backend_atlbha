@@ -14,17 +14,6 @@ class importsResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
-            $status = 'نشط';
-        }else{
-            $status = 'غير نشط';
-        }
-
-        if ($this->special == null || $this->special == 'special') {
-            $special = 'مميز';
-        } else {
-            $special = 'غير مميز';
-        }
 
         return [
             "type" => "importProduct",
@@ -49,8 +38,8 @@ class importsResource extends JsonResource
             'discount_percent' => $this->discount_percent,
             'SEOdescription' => explode(',', $this->SEOdescription),
             'subcategory' => CategoryResource::collection(\App\Models\Category::whereIn('id', explode(',', $this->subcategory_id))->get()),
-            'status' => $status,
-            'special' => $special,
+            'status' =>  $this->status == null || $this->status == 'active' ? __('message.active'):__('message.not_active'),
+            'special' => $this->special == null ||$this->special  == 'special' ? __('message.special'):__('message.not_special'),
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

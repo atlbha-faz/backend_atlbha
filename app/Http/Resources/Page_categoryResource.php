@@ -14,15 +14,11 @@ class Page_categoryResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
-            $status = 'نشط';
-        }else{
-            $status = 'غير نشط';
-        }
+   
         return [
             'id' =>$this->id,
             'name' => $this->name,
-            'status' => $status,
+            'status' => $this->status == null || $this->status == 'active' ? __('message.active'):__('message.not_active'),
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         ];
     }

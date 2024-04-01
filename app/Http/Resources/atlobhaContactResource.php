@@ -14,20 +14,14 @@ class atlobhaContactResource extends JsonResource
      */
     public function toArray($request)
     {
-        if ($this->status == null || $this->status == 'pending') {
-            $status = 'قيد المعالجة';
-        } elseif ($this->status == 'finished') {
-            $status = 'منتهية';
-        } elseif ($this->status == 'not_finished') {
-            $status = 'غير منتهية';
-        }
+    
         return [
             'id' =>$this->id,
             'name' => $this->name,
             'email' => $this->email,
             'title' => $this->title,
             'content' => $this->content,
-            'status' => $status,
+            'status' => $this->status !== null ? __('messages' . $this->status):null,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         ];
     }

@@ -76,7 +76,7 @@ class CourseController extends BaseController
             'name' => $request->name,
             'description' => $request->description,
             'duration' => $request->duration,
-            'tags' => $request->tags,
+            'tags' =>$request->tags != ""?json_encode(explode(',', $request->tags)):null,
             'image' => $request->image,
             'user_id' => auth()->user()->id,
         ]);
@@ -222,7 +222,7 @@ class CourseController extends BaseController
             'description' => $request->input('description'),
             'image' => $request->image,
             'duration' => $request->input('duration'),
-            'tags' => $request->input('tags'),
+            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
         ]);
         $unit = Unit::where('course_id', $course_id);
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->longText('description');
             $table->time('duration')->nullable();
-            $table->text('tags')->nullable();
+            $table->json('tags')->nullable();
             $table->text('image')->nullable();
             $table->text('link')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();

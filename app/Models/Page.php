@@ -2,39 +2,39 @@
 
 namespace App\Models;
 
+use CyrildeWit\EloquentViewable\Contracts\Viewable;
+use CyrildeWit\EloquentViewable\InteractsWithViews;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use CyrildeWit\EloquentViewable\InteractsWithViews;
-use CyrildeWit\EloquentViewable\Contracts\Viewable;
 
 class Page extends Model implements Viewable
 {
     use HasFactory;
-     use InteractsWithViews;
-    protected $fillable = ['title','page_content','altImage','default_page','page_desc','seo_title','seo_link','seo_desc','tags','user_id','status','image','postcategory_id','store_id','is_deleted'];
+    use InteractsWithViews;
+    protected $fillable = ['title', 'page_content', 'altImage', 'default_page', 'page_desc', 'seo_title', 'seo_link', 'seo_desc', 'tags', 'user_id', 'status', 'image', 'postcategory_id', 'store_id', 'is_deleted'];
     protected $casts = [
-        'default_page'=>'integer'];
+        'default_page' => 'integer'];
     public function store()
     {
         return $this->belongsTo(Store::class);
     }
-      public function user()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
     public function page_categories()
     {
-       return $this->belongsToMany(
-        Page_category::class,
+        return $this->belongsToMany(
+            Page_category::class,
             'pages_page_categories',
             'page_id',
             'page_category_id'
-            );
+        );
     }
 
     public function postcategory()
     {
-        return $this->belongsTo(Postcategory::class,'postcategory_id','id');
+        return $this->belongsTo(Postcategory::class, 'postcategory_id', 'id');
     }
     public function setImageAttribute($image)
     {
@@ -51,7 +51,7 @@ class Page extends Model implements Viewable
     public function getImageAttribute($image)
     {
         if (is_null($image)) {
-            return  null;
+            return null;
         }
         return asset('storage/images/posts') . '/' . $image;
     }

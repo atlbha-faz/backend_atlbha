@@ -18,12 +18,6 @@ class CouponResource extends JsonResource
     public function toArray($request)
     {
 
-        if ($this->discount_type == null || $this->discount_type == 'fixed') {
-            $discount_type = 'مبلغ ثابت';
-        } else {
-            $discount_type = 'نسبة مئوية';
-        }
-
 
          $products =ProductResource::collection($this->products);
          $imports = importsResource::collection($this->imports);
@@ -32,7 +26,7 @@ class CouponResource extends JsonResource
         return [
             'id' => $this->id,
             'code' => $this->code,
-            'discount_type' => $discount_type,
+            'discount_type' => $this->discount_type == null || $this->discount_type == 'fixed' ? __('message.fixed'):__('message.percent'),
             'total_price' => $this->total_price,
             'discount' => $this->discount,
             'expire_date' => $this->expire_date,

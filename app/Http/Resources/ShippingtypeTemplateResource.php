@@ -15,7 +15,7 @@ class ShippingtypeTemplateResource extends JsonResource
     public function toArray($request)
     {
 
-        $status = 'نشط';
+        $status = __('message.active');
 
         return [
             'id' => $this->id,

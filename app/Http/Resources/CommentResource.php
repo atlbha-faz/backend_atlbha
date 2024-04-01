@@ -16,13 +16,12 @@ class CommentResource extends JsonResource
     {
         if ($this->status == null || $this->status == 'active') {
             if($this->store_id == null && $this->comment_for == 'store'){
-                  $status = 'تم النشر';
+                  $status = __('message.publish');
             }else{
             }
-            $status = 'نشط';
+            $status = __('message.active');
         } else {
-            $status = 'غير نشط';
-        }
+            $status =  __('message.not_active');       }
 
         return [
             'id' => $this->id,

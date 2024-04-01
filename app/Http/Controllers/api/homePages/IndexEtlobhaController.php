@@ -112,10 +112,10 @@ class IndexEtlobhaController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $atlobhaContact = AtlobhaContact::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'title' => $request->title,
-            'content' => $request->content,
+            'name' =>  $request->input('name'),
+            'email' => $request->input('email'),
+            'title' => $request->input('title'),
+            'content' =>  $request->input('content'),
         ]);
         $success['atlobhaContact'] = new atlobhaContactResource($atlobhaContact);
         $success['status'] = 200;

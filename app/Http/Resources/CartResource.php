@@ -38,7 +38,7 @@ class CartResource extends JsonResource
             'user' => new UserResource($this->user),
             // 'store' => New StoreResource($this->store),
             'cartDetail' => $this->cartDetails !== null ? CartDetailResource::collection($this->cartDetails) : 0,
-            'status' => "غير مكتمل",
+            'status' =>  __('messages.not_complete'),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
 
