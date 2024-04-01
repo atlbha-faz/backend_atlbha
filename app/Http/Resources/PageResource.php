@@ -15,9 +15,9 @@ class PageResource extends JsonResource
     public function toArray($request)
     {
         if ($this->status == null || $this->status == 'active') {
-            $status = 'تم النشر';
+            $status = __('message.publish');
         } else {
-            $status = 'محظور';
+            $status = __('message.forbidden');
         }
         return [
             'id' => $this->id,
@@ -30,7 +30,7 @@ class PageResource extends JsonResource
             'image' => $this->image != null ? $this->image : "",
             'altImage' => $this->altImage,
             'default_page' => $this->default_page,
-            'tags' =>$this->tags !== ""? explode(',', $this->tags):array(),
+            'tags' =>$this->tags != null ?json_decode($this->tags, true): array(),
             'store' => new StoreResource($this->store),
             'postCategory' => new PostCategoryResource($this->postcategory),
             'user' => new UserResource($this->user),

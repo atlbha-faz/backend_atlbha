@@ -15,20 +15,20 @@ class ProductResource extends JsonResource
     public function toArray($request)
     {
         if ($this->status == null || $this->status == 'active') {
-            $status = 'نشط';
+            $status = __('message.active');
         } else {
-            $status = 'غير نشط';
+            $status =  __('message.not_active');
         }
 
         if ($this->special == null || $this->special == 'special') {
-            $special = 'مميز';
+            $special =  __('message.special');
         } else {
-            $special = 'غير مميز';
+            $special =__('message.not_special');
         }
         if ($this->admin_special == null || $this->admin_special == 'special') {
-            $admin_special = 'مميز';
+            $admin_special = __('message.special');
         } else {
-            $admin_special = 'غير مميز';
+            $admin_special =__('message.not_special');
         }
         $domain = $this->store_id !== null ? $this->store->domain : 'atlbha';
 
@@ -58,7 +58,7 @@ class ProductResource extends JsonResource
                 'cover' => $this->cover,
                 'discount_price_import' => $this->discount_price !== null ? $this->discount_price : 0,
                 'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
-                'SEOdescription' => $this->SEOdescription !== "" ? explode(',', $this->SEOdescription) : array(),
+                'SEOdescription' =>$this->SEOdescription != null ?json_decode($this->SEOdescription, true): array(),
                 'snappixel' => $this->snappixel,
                 'tiktokpixel' => $this->tiktokpixel,
                 'twitterpixel' => $this->twitterpixel,

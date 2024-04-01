@@ -15,29 +15,29 @@ class PaymentOrderResource extends JsonResource
     public function toArray($request)
     {
         if ($this->payment_status == null || $this->payment_status == 'pending') {
-            $paymentstatus = 'لم يتم الدفع';
+            $paymentstatus =  __('message.paymentpending');
         }
         elseif ($this->payment_status == 'paid') {
-            $paymentstatus = 'تم الدفع';
+            $paymentstatus =  __('message.paid');
         } elseif ($this->payment_status == 'failed') {
-            $paymentstatus= 'فشل الدفع';
+            $paymentstatus= __('message.failed');
         }
 
         if ($this->order_status == null || $this->order_status == 'new') {
-            $status = 'جديد';
+            $status =  __('message.new');
         } elseif ($this->order_status == 'completed') {
-            $status = 'تم الشحن';
+            $status = __('message.completed');
         } elseif ($this->order_status == 'not_completed') {
-            $status = 'غير مكتمل';
+            $status = __('message.not_completed');
         } elseif ($this->order_status == 'delivery_in_progress') {
-            $status = 'قيد التجهيز';
+            $status =  __('message.delivery_in_progress');
         } elseif ($this->order_status == 'ready') {
-            $status = 'قيد التجهيز';
+            $status =  __('message.ready');
         } elseif ($this->order_status == 'canceled') {
-            $status = 'الغاء الشحنة';
+            $status = __('message.canceled');
         }
         elseif ($this->order_status == 'refund') {
-            $status = 'مسترجع';
+            $status =  __('message.refund');
         }
         return [
         'id' => $this->id,

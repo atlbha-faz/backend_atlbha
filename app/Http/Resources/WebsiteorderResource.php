@@ -15,11 +15,11 @@ class WebsiteorderResource extends JsonResource
     public function toArray($request)
     {
         if ($this->status == null || $this->status == 'pending') {
-            $status = 'قيد المعالجة';
+            $status = __('message.pending');
         } elseif ($this->status == 'accept') {
-            $status = 'منتهي';
+            $status = __('message.finished');
         } elseif ($this->status == 'reject') {
-            $status = 'غير منتهي';
+            $status = __('message.not_finished');
         }
 
         $type = '';

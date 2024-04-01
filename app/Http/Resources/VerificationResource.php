@@ -20,15 +20,15 @@ class VerificationResource extends JsonResource
         }
 
         if ($this->status == null || $this->status == 'active') {
-            $status = 'نشط';
+            $status = __('message.active');
         } else {
-            $status = 'غير نشط';
+            $status =  __('message.not_active');
         }
 
         if ($this->special == null || $this->special == 'special') {
-            $special = 'مميز';
+            $special =   __('message.special');
         } else {
-            $special = 'غير مميز';
+            $special = __('message.not_special');
         }
         // if ($this->verification_type == null || $this->verification_type == 'commercialregister') {
         //     $verification_type = 'commercialregister';
@@ -37,13 +37,13 @@ class VerificationResource extends JsonResource
         // }
 
         if ($this->verification_status == null || $this->verification_status == 'pending') {
-            $verification_status = 'لم يتم الطلب';
+            $verification_status =__('message.verificationpending');
         } elseif ($this->verification_status == 'admin_waiting') {
-            $verification_status = 'جاري التوثيق';
+            $verification_status =__('message.admin_waiting');
         } elseif ($this->verification_status == 'accept') {
-            $verification_status = 'تم التوثيق';
+            $verification_status = __('message.accept');
         } elseif ($this->verification_status == 'reject') {
-            $verification_status = 'التوثيق مرفوض';
+            $verification_status = __('message.reject');
         }
         return [
             'id' => $this->id,

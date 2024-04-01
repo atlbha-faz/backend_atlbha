@@ -15,17 +15,17 @@ class TechnicalsupportResource extends JsonResource
     public function toArray($request)
     {
         if ($this->status == null || $this->status == 'active') {
-            $status = 'نشط';
+            $status = __('message.active');
         } else {
-            $status = 'غير نشط';
+            $status =  __('message.not_active');
         }
 
         if ($this->supportstatus == null || $this->supportstatus == 'pending') {
-            $supportstatus = 'قيد المعالجة';
+            $supportstatus = __('message.pending');
         } elseif ($this->supportstatus == 'finished') {
-            $supportstatus = 'منتهية';
+            $supportstatus = __('message.finished');
         } elseif ($this->supportstatus == 'not_finished') {
-            $supportstatus = 'غير منتهية';
+            $supportstatus = __('message.not_finished');
         }
 
         if ($this->type == null || $this->type == 'enquiry') {

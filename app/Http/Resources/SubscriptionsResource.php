@@ -15,15 +15,15 @@ class SubscriptionsResource extends JsonResource
     public function toArray($request)
     {
         if( $this->packagestatus($this->id) ==null || $this->packagestatus($this->id)  == 'active'){
-            $status = 'نشط';
+            $status = __('message.active');
         }else{
-            $status = 'غير نشط';
+            $status =  __('message.not_active');
         }
         
         if($this->special ==null || $this->special == 'special'){
-            $special = 'مميز';
+            $special =   __('message.special');
         }else{
-            $special = 'غير مميز';
+            $special = __('message.not_special');
         }
         
        if($this->periodtype ==null)
