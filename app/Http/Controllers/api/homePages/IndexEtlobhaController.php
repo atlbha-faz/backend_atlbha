@@ -89,7 +89,7 @@ class IndexEtlobhaController extends BaseController
         $pages = Page_page_category::where('page_category_id', 3)->pluck('page_id')->toArray();
         // $startpages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
         // $success['start'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'created_at')->where('status', 'active')->whereIn('id',$startpages)->get());
-        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'created_at')->where('status', 'active')->whereIn('id', $pages)->get());
+        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status','page_content','page_desc','created_at')->where('status', 'active')->whereIn('id', $pages)->get());
         $success['website_socialmedia'] = website_socialmediaResource::collection(website_socialmedia::where('is_deleted', 0)->where('status', 'active')->get());
         $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
 
