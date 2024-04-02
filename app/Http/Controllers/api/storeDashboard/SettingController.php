@@ -20,7 +20,7 @@ class SettingController extends BaseController
         $this->middleware('auth:api');
     }
 
-    public function setting_store_show()
+    public function settingStoreShow()
     {
         // dd(auth()->user()->store_id);
         $success['setting_store'] = new StoreResource(Store::with(['categories' => function ($query) {
@@ -32,7 +32,7 @@ class SettingController extends BaseController
         return $this->sendResponse($success, 'تم عرض الاعدادات بنجاح', 'registration_status shown successfully');
     }
 
-    public function setting_store_update(Request $request)
+    public function settingStoreUpdate(Request $request)
     {
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $input = $request->all();
@@ -120,7 +120,7 @@ class SettingController extends BaseController
         ]);
         $request->working_status='active';
         if ($request->working_status == 'active') {
-            
+
             if (!is_null($request->data)) {
                 foreach ($request->data as $data) {
                     if ($data['status'] == "not_active") {

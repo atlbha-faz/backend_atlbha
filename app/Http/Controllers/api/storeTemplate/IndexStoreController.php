@@ -213,7 +213,7 @@ class IndexStoreController extends BaseController
             } else {
                 $success['category'] = array();
             }
-//////////////////////////////////////////////////////////
+       //////////////////////////////////////////////////////////
             $arr = array();
             $ratingsimport = array();
             $ratingsImports = array();
@@ -1011,7 +1011,7 @@ class IndexStoreController extends BaseController
             $importing = Importproduct::where('product_id', $rating->id)->where('store_id', $store_id)->first();
             if (!is_null($importing)) {
                 $ratingsimport[] =  $importing->product_id;
-             
+
             } else {
                 $arr[] = Product::where('id', $rating->id)->select('id', 'name', 'status', 'cover', 'stock', 'special', 'selling_price', 'purchasing_price', 'discount_price', 'status', 'created_at')->first();
             }

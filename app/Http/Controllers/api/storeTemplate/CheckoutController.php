@@ -401,7 +401,7 @@ class CheckoutController extends BaseController
         }
     }
 
-    public function paymentmethods($domain)
+    public function paymentMethods($domain)
     {
         $store = Store::where('is_deleted', 0)->where('domain', $domain)->first();
         $success['payment_types'] = PaymenttypeResource::collection($store->paymenttypes);
@@ -410,7 +410,7 @@ class CheckoutController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'Payment Types return successfully');
     }
 
-    public function shippingcompany($domain)
+    public function shippingCompany($domain)
     {
 
         $store = Store::where('is_deleted', 0)->where('domain', $domain)->first();
