@@ -21,13 +21,13 @@ class SubscriptionEmailController extends BaseController
         $success['page_count'] = $subsicriptions->lastPage();
         $success['current_page'] =$subsicriptions->currentPage();
         $success['subsicriptions'] = $subsicriptions;
-      
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع اشتراكات الايميل بنجاح', 'Subscription Emails return successfully');
 
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $subsicriptions = SubscriptionEmail::whereIn('id', $request->id)->get();

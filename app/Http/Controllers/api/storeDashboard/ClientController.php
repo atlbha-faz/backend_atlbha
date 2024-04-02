@@ -168,7 +168,7 @@ class ClientController extends BaseController
 
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $clients = Client::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();

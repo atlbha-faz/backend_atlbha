@@ -317,7 +317,7 @@ class AuthController extends BaseController
             return $this->sendResponse($success, 'تم التسجيل بنجاح', 'Register Successfully');
         }
     }
-    public function login_admin(Request $request)
+    public function loginAdmin(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -480,7 +480,7 @@ class AuthController extends BaseController
         return $this->sendResponse($success, 'تم تسجيل الخروج بنجاح', 'User logout Successfully');
     }
 
-    public function store_verify_message(Request $request)
+    public function storeVerifyMessage(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [

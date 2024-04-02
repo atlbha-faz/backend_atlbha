@@ -14,7 +14,7 @@ class storeInformationController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function socialMedia_store_show()
+    public function socialMediaStoreShow()
     {
         $success['snapchat'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('snapchat')->first();
         $success['facebook'] = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('facebook')->first();
@@ -28,7 +28,7 @@ class storeInformationController extends BaseController
         return $this->sendResponse($success, 'تم عرض صفحات التواصل بنجاح', 'social Media shown successfully');
     }
 
-    public function socialMedia_store_update(Request $request)
+    public function socialMediaStoreUpdate(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
