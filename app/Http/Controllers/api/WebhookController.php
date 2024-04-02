@@ -40,14 +40,14 @@ class WebhookController extends BaseController
         //5- Encode the result from the previous point with base64.
         $hash = base64_encode($result);
 
-        
+
 
         //6- Compare the signature header with the encrypted hash string. If they are equal, then the request is valid and from the MyFatoorah side.
         if ($MyFatoorah_Signature === $hash) {
-           
+
             return true;
         } else {
-       
+
             exit;
         }
     }
@@ -55,23 +55,23 @@ class WebhookController extends BaseController
     {
         $allData = $request->input('Data');
         if ($allData != null) {
-       
+
 
             //get MyFatoorah-Signature from request headers
              $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
-             
-             
+
+
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
             $secret = "snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
 
             $data = $request->all();
-            
+
             // $data = json_decode($body, true);
             if (!($this->validateSignature($data, $secret,  $MyFatoorah_Signature))) {
-                
+
                 return;
             }
-            
+
             $event = $request->input('EventType');
             // Log::debug('Webhook payload:', $event);
 
@@ -129,3 +129,4 @@ class WebhookController extends BaseController
     }
 
 }
+// 
