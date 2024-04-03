@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\shippingResource;
-use App\Models\Attribute_product;
 use App\Models\Importproduct;
 use App\Models\Option;
 use App\Models\Order;
@@ -13,7 +12,6 @@ use App\Models\Product;
 use App\Models\Shipping;
 use App\Models\Store;
 use App\Models\User;
-use App\Models\Value;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -38,10 +36,10 @@ class AdminOrderController extends BaseController
         })->where('is_deleted', 0)->count();
 
         $data = OrderResource::collection(Order::with(['user' => function ($query) {
-            $query->select('id','city_id');
+            $query->select('id', 'city_id');
         }, 'shipping', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', null)->where('is_deleted', 0)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity','created_at', 'order_status']));
+        }])->where('store_id', null)->where('is_deleted', 0)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']));
 
         $success['orders'] = $data;
         $success['status'] = 200;
@@ -110,115 +108,60 @@ class AdminOrderController extends BaseController
                 }
                 foreach ($order->items as $orderItem) {
                     $product = Product::where('id', $orderItem->product_id)->where('store_id', null)->first();
+                    $import_product_existing = Importproduct::where('product_id', $product->id)->where('store_id', $storeid->id )->first();
 
+                    if ($import_product_existing == null) {
+                        $import_product = Importproduct::create([
+                            'product_id' => $product->id,
+                            'store_id' => $storeid->id ,
+                            'price' => $orderItem->price,
+                            'qty' => $orderItem->quantity,
+                        ]);
+                        $new_stock = $product->stock - $import_product->qty;
+                        $product->update([
+                            'stock' => $new_stock,
+                        ]);
 
-                    $importOrder = Product::where('original_id', $orderItem->product_id)->where('store_id', $storeid->id)->where('is_import', 1)->where('is_deleted', 0)->first();
-                    if ($importOrder == null) {
-
-
-                        $newRecord = $product->replicate();
-                        $newRecord->store_id = $storeid->id;
-                        $newRecord->for = "store";
-                        $newRecord->selling_price = $orderItem->price;
-                        $newRecord->stock = $orderItem->quantity;
-                        $newRecord->original_id = $orderItem->product_id;
-                        $newRecord->is_import = 1;
-                        $newRecord->save();
-                        if ($orderItem->option_id !== null) {
-
-                            $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->first();
-                            $newOption = $option->replicate();
-                            $newOption->product_id = $newRecord->id;
-                            $newOption->original_id = $option->id;
-                            $newOption->quantity = $orderItem->quantity;
-                            $newOption->price = $orderItem->price;
-                            $newOption->save();
-
-                            // $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
-
-                            // $optionNames = array();
-                            // $values = array();
-                            // $optionNames = explode(',', $newOption->name['ar']);
-                            // foreach ($attrs as $attr) {
-
-                            //     $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
-
-                            //     foreach ($attruibtevalues as $attruibtevalue) {
-                            //         foreach ($optionNames as $optionName) {
-                            //             if (in_array($optionName, explode(',', $attruibtevalue->value))) {
-
-                            //                 $values[] = $attruibtevalue;
-                            //                 $valuesid[] = $attruibtevalue->id;
-
-                            //             }
-                            //         }
-                            //     }
-
-                            //     $lastValues = Value::where('attribute_id', $attr->id)->whereIn('id', $valuesid)->get();
-
-                            //     $newRecord->attributes()->attach($attr->id, ['value' => json_encode($lastValues)]);
-
-                            // }
-
-                        }
-
-                    } else {
-                        if ($orderItem->option_id !== null) {
-                            $option = Option::where('product_id', $importOrder->id)->where('original_id', $orderItem->option_id)->first();
-                            $orginalOption = Option::where('id', $orderItem->option_id)->first();
+                        if ($orderItem->option_id != null) {
+                            $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->where('importproduct_id', $importproduct->id)->first();
                             if ($option == null) {
-                                if ($orginalOption) {
-                                    $newOption = $orginalOption->replicate();
-                                    $newOption->product_id = $importOrder->id;
-                                    $newOption->price = $orderItem->price;
-                                    $newOption->original_id = $orderItem->option_id;
-                                    $newOption->quantity = $orderItem->quantity;
-                                    $newOption->save();
-                                    $qty = $importOrder->stock;
-                                    $importOrder->update([
-                                        'stock' => $qty + $orderItem->quantity,
-                                    ]);
-                                }
+                                $newOption = $option->replicate();
+                                $newOption->product_id = $product->id;
+                                $newOption->importproduct_id = $importproduct->id;
+                                $newOption->quantity = $orderItem->quantity;
+                                $newOption->price = $orderItem->price;
+                                $newOption->save();
                             } else {
                                 $qty = $option->quantity;
                                 $option->update([
-                                    'price' => $orderItem->price,
                                     'quantity' => $qty + $orderItem->quantity,
                                 ]);
-                                $qty_product = $importOrder->stock;
-                                $importOrder->update([
-                                    'stock' =>$qty_product+ $orderItem->quantity,
-                                ]);
-                            }
-                        } else {
-                            $qty = $importOrder->stock;
-                            $importOrder->update([
-                                'selling_price' => $orderItem->price,
-                                'stock' => $qty + $orderItem->quantity,
-                            ]);
-                        }
-                    }
 
-                    $newStock = $product->stock - $orderItem->quantity;
-                    $product->update([
-                        'stock' => $newStock,
-                    ]);
-                    //إستيراد الى متجر اطلبها
-                    $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-                    $importAtlbha = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $atlbha_id)->first();
-                    if ($importAtlbha == null) {
-                        $importAtlbha = Importproduct::create([
-                            'product_id' => $orderItem->product_id,
-                            'store_id' => $atlbha_id,
-                            'price' => $product->selling_price,
-                            'qty' => $product->stock,
-                        ]);
+                            }
+                        }
                     } else {
-                        $importAtlbha->update([
-                            'product_id' => $product->id,
-                            'store_id' => $atlbha_id,
-                            'qty' => $product->stock,
+                        $qty_product = $import_product_existing->qty;
+                        $import_product_existing->update([
+                            'qty' => $qty_product + $orderItem->quantity,
                         ]);
+                        if ($orderItem->option_id != null) {
+
+                            $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->where('importproduct_id', $import_product_existing->id)->first();
+                            if ($option == null) {
+                                $newOption = $option->replicate();
+                                $newOption->product_id = $product->id;
+                                $newOption->importproduct_id = $import_product_existing->id;
+                                $newOption->quantity = $orderItem->quantity;
+                                $newOption->price = $orderItem->price;
+                                $newOption->save();
+                            } else {
+                                $qty = $option->quantity;
+                                $option->update([
+                                    'quantity' => $qty + $orderItem->quantity,
+                                ]);
+
+                            }
+                        }
                     }
 
                 }
@@ -260,12 +203,11 @@ class AdminOrderController extends BaseController
     public function deleteAll(Request $request)
     {
 
-            $orders =Order::whereIn('id',$request->id)->where('store_id', null)->where('is_deleted',0)->get();
-            if(count($orders)>0){
-           foreach($orders as $order)
-           {
-             $order->update(['is_deleted' => $order->id]);
-            $success['orders']=New OrderResource($order);
+        $orders = Order::whereIn('id', $request->id)->where('store_id', null)->where('is_deleted', 0)->get();
+        if (count($orders) > 0) {
+            foreach ($orders as $order) {
+                $order->update(['is_deleted' => $order->id]);
+                $success['orders'] = new OrderResource($order);
 
             }
 
@@ -276,6 +218,29 @@ class AdminOrderController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
         }
+    }
+    public function searchName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $orders = Order::where('is_deleted', 0)->where('store_id', null)->whereHas('user', function ($userQuery) use ($query) {
+            $userQuery->whereHas('store', function ($storeQuery) use ($query) {
+                $storeQuery->where('store_name', 'like', "%$query%");
+            });
+        })->orWhere('order_number', 'like', "%$query%")
+            ->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $orders->total();
+        $success['page_count'] = $orders->lastPage();
+        $success['current_page'] = $orders->currentPage();
+        $success['orders'] = OrderResource::collection($orders);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع السلات المتروكة بنجاح', 'orders Information returned successfully');
+
     }
 
 }
