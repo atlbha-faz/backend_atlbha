@@ -28,6 +28,7 @@ use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\atlobhaContactResource;
 use App\Http\Resources\CommonQuestionResource;
+use App\Http\Resources\AtlbhaIndexProductResource;
 use App\Http\Resources\website_socialmediaResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -58,10 +59,12 @@ class IndexEtlobhaController extends BaseController
 
         $success['section1'] = Section::where('id', 1)->pluck('name')->first();
         if (!is_null(Section::where('id', 1)->where('is_deleted', 0)->where('status', 'active')->first())) {
-            $success['products'] = ProductResource::collection(Product::with(['store' => function ($query) {
+            $success['products'] = AtlbhaIndexProductResource::collection(Product::with(['store' => function ($query) {
                 $query->select('id', 'domain', 'store_name');
             }, 'category' => function ($query) {
-                $query->select('id', 'name');}])->where('is_deleted', 0)->where('admin_special', 'special')->select('id', 'name', 'status', 'cover', 'special', 'admin_special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->get());
+                $query->select('id', 'name');},'importproduct'])->where('is_deleted', 0)->where('admin_special', 'special')->select('id', 'name', 'status', 'cover', 'special', 'admin_special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->get());
+
+
         } else {
             $success['products'] = array();
         }
@@ -130,5 +133,39 @@ class IndexEtlobhaController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الاسئلة بنجاح','Questions return successfully');
     }
+    public function searchIndex(Request $request){
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $products = Product::where('is_deleted', 0)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+        ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
+
+    
+        $success['products_total_result'] =$products->total();
+        $success['products_page_count'] = $products->lastPage();
+        $success['products_current_page'] = $products->currentPage();
+        $success['products'] = AtlbhaIndexProductResource::collection($products);
+
+        $stores = Store::with(['categories' => function ($query) {
+            $query->select('name', 'icon');
+        }, 'city' => function ($query) {
+            $query->select('id','name');
+        }, 'country' => function ($query) {
+            $query->select('id');
+        }, 'user' => function ($query) {
+            $query->select('id');
+        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->where('store_name', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'store_name', 'domain','phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special','store_email','verification_status', 'city_id','verification_date', 'created_at')->paginate($count);
+
+     
+        $success['stores_total_result'] = $stores->total();
+        $success['stores_page_count'] = $stores->lastPage();
+        $success['stores_current_page'] =  $stores->currentPage();
+        $success['stores'] =  StoreResource::collection($stores);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع نتائج البحث بنجاح', 'search Information returned successfully');
+    }
+    
+
 }
 //
