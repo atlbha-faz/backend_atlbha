@@ -66,10 +66,12 @@ class AdminOrderController extends BaseController
         $order = Order::where('id', $order)->whereHas('items', function ($q) {
             $q->where('store_id', null);
         })->first();
+        if ($order->order_status=="completed") {
+            return $this->sendError("الطلب مكتمل", "Order is complete");
+        }
         if (is_null($order)) {
             return $this->sendError("'الطلب غير موجود", "Order is't exists");
         }
-
         $input = $request->all();
         $validator = Validator::make($input, [
             'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
