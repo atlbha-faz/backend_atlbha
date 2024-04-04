@@ -50,6 +50,7 @@ Route::get('/logoutcustomer', 'App\Http\Controllers\api\storeTemplate\AuthCustom
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'index']);
+Route::get('searchIndex', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'searchIndex']);
 Route::get('commonquestion', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'commonQuestion']);
 
 Route::post('atlobhaContactAdd', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'store']);
@@ -104,6 +105,7 @@ Route::post('storeClientVisit', [App\Http\Controllers\api\VisitCountController::
 Route::get('visit', [App\Http\Controllers\api\VisitCountController::class, 'visit']);
 
 Route::get('posts', [App\Http\Controllers\api\homePages\PostController::class, 'index']);
+Route::get('searchPost', [App\Http\Controllers\api\homePages\PostController::class, 'searchPost']);
 Route::get('start', [App\Http\Controllers\api\homePages\PostController::class, 'start']);
 Route::get('show/{id}', [App\Http\Controllers\api\homePages\PostController::class, 'show']);
 Route::get('show_post/{id}', [App\Http\Controllers\api\homePages\PostController::class, 'showPost']);

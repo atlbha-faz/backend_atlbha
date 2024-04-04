@@ -522,8 +522,17 @@ class StockController extends BaseController
                 'product_id' => $product->id,
                 'store_id' => $atlbha_id,
                 'price' => $product->selling_price,
-                'qty' => $product->stock,
+    
             ]);
+                $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
+                foreach ($options as $option) {
+                    $newOption = $option->replicate();
+                    $newOption->product_id = $product->id;
+                    $newOption->importproduct_id = $importproduct->id;
+                    $newOption->price = $product->selling_price;
+                    $newOption->save();
+    
+                }
         }
 
         $success['products'] = new ProductResource($product);
@@ -560,6 +569,24 @@ class StockController extends BaseController
             //     // Handle validation failures
             return $failures;
         }
+
+    }
+    public function searchProductName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $products = Product::where('is_deleted', 0)->where('store_id', null)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $products->total();
+        $success['page_count'] = $products->lastPage();
+        $success['current_page'] = $products->currentPage();
+        $success['products'] = ProductResource::collection($products);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات  بنجاح', 'Product Information returned successfully');
 
     }
 
