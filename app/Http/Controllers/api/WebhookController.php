@@ -41,7 +41,6 @@ class WebhookController extends BaseController
         $hash = base64_encode($result);
 
 
-
         //6- Compare the signature header with the encrypted hash string. If they are equal, then the request is valid and from the MyFatoorah side.
         if ($MyFatoorah_Signature === $hash) {
 
@@ -51,6 +50,7 @@ class WebhookController extends BaseController
             exit;
         }
     }
+
     public function handleWebhook(Request $request)
     {
         $allData = $request->input('Data');
@@ -58,7 +58,7 @@ class WebhookController extends BaseController
 
 
             //get MyFatoorah-Signature from request headers
-             $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
+            $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
 
 
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
@@ -67,7 +67,7 @@ class WebhookController extends BaseController
             $data = $request->all();
 
             // $data = json_decode($body, true);
-            if (!($this->validateSignature($data, $secret,  $MyFatoorah_Signature))) {
+            if (!($this->validateSignature($data, $secret, $MyFatoorah_Signature))) {
 
                 return;
             }
@@ -77,6 +77,11 @@ class WebhookController extends BaseController
 
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
+                if (!$payment) {
+                    $url = 'https://backend.atlbha.sa/api/webhook';
+                    $client = new \GuzzleHttp\Client();
+                    $request = $client->request('POST', $url, ['body' => $request->all()]);
+                }
                 $order = Order::where('id', $payment->orderID)->first();
                 switch ($request->input('Data.TransactionStatus')) {
                     case "SUCCESS":
