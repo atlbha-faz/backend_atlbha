@@ -281,7 +281,7 @@ class CouponController extends BaseController
 
         return $this->sendResponse($success, 'تم حذف الكوبون بنجاح', 'coupon deleted successfully');
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
 
@@ -318,7 +318,7 @@ class CouponController extends BaseController
             return $this->sendResponse($success, 'الكوبون غير صحيح', 'coupon does not exit');
         }
     }
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();

@@ -15,7 +15,8 @@ class ReportController extends BaseController
         $this->middleware('auth:api');
     }
     public function index(Request $request)
-    {$input = $request->all();
+    {
+        $input = $request->all();
 
         $validator = Validator::make($input, [
             // 'startDate' => 'date',

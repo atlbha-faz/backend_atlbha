@@ -17,6 +17,7 @@ use App\Models\AtlobhaContact;
 use App\Models\CommonQuestion;
 use App\Models\categories_stores;
 use App\Models\Page_page_category;
+use Illuminate\Support\Facades\DB;
 use App\Models\website_socialmedia;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\PageResource;
@@ -30,6 +31,8 @@ use App\Http\Resources\atlobhaContactResource;
 use App\Http\Resources\CommonQuestionResource;
 use App\Http\Resources\AtlbhaIndexProductResource;
 use App\Http\Resources\website_socialmediaResource;
+use App\Http\Resources\AtlbhaIndexSearchStoreResource;
+use App\Http\Resources\AtlbhaIndexSearchProductResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexEtlobhaController extends BaseController
@@ -52,7 +55,8 @@ class IndexEtlobhaController extends BaseController
         $success['banar3'] = Homepage::where('is_deleted', 0)->where('store_id', null)->where('banarstatus3', 'active')->pluck('banar3')->first();
         $categoriesStore = categories_stores::whereNot('store_id', null)->pluck('category_id')->toArray();
         $success['store_activities'] = CategoryResource::collection(Category::with(['subcategory' => function ($query) {
-            $query->select('id');}])->where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->whereIn('id', $categoriesStore)->where('status', 'active')->orderByDesc('created_at')->get());
+            $query->select('id');
+        }])->where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->whereIn('id', $categoriesStore)->where('status', 'active')->orderByDesc('created_at')->get());
 
         $citiesStore = Store::where('is_deleted', 0)->where('verification_status', 'accept')->pluck('city_id')->toArray();
         $success['cities'] = CityResource::collection(City::where('is_deleted', 0)->where('status', 'active')->whereIn('id', $citiesStore)->get());
@@ -62,8 +66,8 @@ class IndexEtlobhaController extends BaseController
             $success['products'] = AtlbhaIndexProductResource::collection(Product::with(['store' => function ($query) {
                 $query->select('id', 'domain', 'store_name');
             }, 'category' => function ($query) {
-                $query->select('id', 'name');},'importproduct'])->where('is_deleted', 0)->where('admin_special', 'special')->select('id', 'name', 'status', 'cover', 'special', 'admin_special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->get());
-
+                $query->select('id', 'name');
+            }, 'importproduct'])->where('is_deleted', 0)->where('admin_special', 'special')->select('id', 'name', 'status', 'cover', 'special', 'admin_special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->get());
 
         } else {
             $success['products'] = array();
@@ -92,7 +96,7 @@ class IndexEtlobhaController extends BaseController
         $pages = Page_page_category::where('page_category_id', 3)->pluck('page_id')->toArray();
         // $startpages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
         // $success['start'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'created_at')->where('status', 'active')->whereIn('id',$startpages)->get());
-        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status','page_content','page_desc','created_at')->where('status', 'active')->whereIn('id', $pages)->get());
+        $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'page_content', 'page_desc', 'created_at')->where('status', 'active')->whereIn('id', $pages)->get());
         $success['website_socialmedia'] = website_socialmediaResource::collection(website_socialmedia::where('is_deleted', 0)->where('status', 'active')->get());
         $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
 
@@ -115,10 +119,10 @@ class IndexEtlobhaController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $atlobhaContact = AtlobhaContact::create([
-            'name' =>  $request->input('name'),
+            'name' => $request->input('name'),
             'email' => $request->input('email'),
             'title' => $request->input('title'),
-            'content' =>  $request->input('content'),
+            'content' => $request->input('content'),
         ]);
         $success['atlobhaContact'] = new atlobhaContactResource($atlobhaContact);
         $success['status'] = 200;
@@ -128,25 +132,23 @@ class IndexEtlobhaController extends BaseController
     public function commonQuestion()
     {
 
-        $success['commonQuestions']=CommonQuestionResource::collection(CommonQuestion::where('is_deleted',0)->get());
-        $success['status']= 200;
+        $success['commonQuestions'] = CommonQuestionResource::collection(CommonQuestion::where('is_deleted', 0)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع الاسئلة بنجاح','Questions return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الاسئلة بنجاح', 'Questions return successfully');
     }
-    public function searchIndex(Request $request){
+    public function searchIndex(Request $request)
+    {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        
+        $query1= AtlbhaIndexSearchProductResource::collection(Product::with(['store' => function ($query) {
+            $query->select('id', 'domain', 'store_name');
+        }, 'category' => function ($query) {
+            $query->select('id', 'name');
+        }])->where('is_deleted', 0)->where('name', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->get());
 
-        $products = Product::where('is_deleted', 0)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
-        ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
-
-    
-        $success['products_total_result'] =$products->total();
-        $success['products_page_count'] = $products->lastPage();
-        $success['products_current_page'] = $products->currentPage();
-        $success['products'] = AtlbhaIndexProductResource::collection($products);
-
-        $stores = Store::with(['categories' => function ($query) {
+        $query2 =AtlbhaIndexSearchStoreResource::collection( Store::with(['categories' => function ($query) {
             $query->select('name', 'icon');
         }, 'city' => function ($query) {
             $query->select('id','name');
@@ -154,18 +156,13 @@ class IndexEtlobhaController extends BaseController
             $query->select('id');
         }, 'user' => function ($query) {
             $query->select('id');
-        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->where('store_name', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'store_name', 'domain','phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special','store_email','verification_status', 'city_id','verification_date', 'created_at')->paginate($count);
+        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->where('store_name', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'store_name', 'domain','phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special','store_email','verification_status', 'city_id','verification_date', 'created_at')->get());
+        $results =$query1->merge($query2);
 
-     
-        $success['stores_total_result'] = $stores->total();
-        $success['stores_page_count'] = $stores->lastPage();
-        $success['stores_current_page'] =  $stores->currentPage();
-        $success['stores'] =  StoreResource::collection($stores);
-        $success['status'] = 200;
+        $success['results'] = $results;
 
         return $this->sendResponse($success, 'تم ارجاع نتائج البحث بنجاح', 'search Information returned successfully');
     }
-    
 
 }
 //

@@ -7,13 +7,18 @@ use App\Http\Resources\PageResource;
 use App\Models\Page;
 use App\Models\Page_page_category;
 use App\Models\Postcategory;
+use Illuminate\Http\Request;
 
 class PostController extends BaseController
 {
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $post_page = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->paginate($count);
+        $success['pages'] = PageResource::collection($post_page);
+        $success['total_result'] = $post_page->total();
+        $success['page_count'] = $post_page->lastPage();
+        $success['current_page'] = $post_page->currentPage();
         $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
         $pages = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
 
@@ -30,13 +35,21 @@ class PostController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع صفحة كيف ابدأ بنجاح', 'start index return successfully');
     }
-    public function show($postCategory_id)
+    public function show($postCategory_id, Request $request)
     {
-        $postCategory_id = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->first();
-        if ($postCategory_id != null) {
-            $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $postCategory_check = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->get();
+        if ($postCategory_check != null) {
+
+            $category_pages = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->paginate($count);
+            $success['page_count'] = $category_pages->lastPage();
+            $success['current_page'] = $category_pages->currentPage();
+            $success['pages'] = PageResource::collection($category_pages);
             $pages = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم ارجاع الصفحات بنجاح', 'postcategory is return ');
 
         } else {
 
@@ -61,5 +74,27 @@ class PostController extends BaseController
             return $this->sendResponse($success, '  المدونه غير موجود', 'post is not exists');
 
         }
+    }
+    public function searchPost(Request $request)
+    {
+        $searchTerm = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $pages = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('title', 'like', "%$searchTerm%")
+                        ->orWhere('page_desc', 'LIKE', "%$searchTerm%")
+                        ->orWhere('page_content', 'LIKE', "%$searchTerm%");
+
+                })->orderBy('created_at', 'desc')->paginate($count));
+
+        $success['query'] = $searchTerm;
+        $success['total_result'] = $pages->total();
+        $success['page_count'] = $pages->lastPage();
+        $success['current_page'] = $pages->currentPage();
+        $success['pages'] = PageResource::collection($pages);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المقالات بنجاح', 'posts returned successfully');
     }
 }

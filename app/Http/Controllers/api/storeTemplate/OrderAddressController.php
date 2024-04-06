@@ -121,7 +121,7 @@ class OrderAddressController extends BaseController
         return $this->sendResponse($success, 'تم عرض القسم بنجاح', 'orderAddress showed successfully');
     }
 
-    public function show_default_address()
+    public function showDefaultAddress()
     {
         $orderAddress = orderAddress::where('user_id', auth()->user()->id)->where('default_address', 1)->first();
         if (is_null($orderAddress)) {
@@ -165,7 +165,7 @@ class OrderAddressController extends BaseController
             'street_address' => 'required|string',
             'district' => 'required|string',
             'postal_code' => 'nullable|string',
-           
+
         ]);
         if ($validator->fails()) {
             # code...
