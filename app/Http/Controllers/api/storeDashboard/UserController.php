@@ -236,7 +236,7 @@ class UserController extends BaseController
 
         return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'User deleted successfully');
     }
-    public function deleteAll(Request $request)
+    public function deleteall(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if ($storeAdmain != null) {
@@ -298,7 +298,7 @@ class UserController extends BaseController
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
     }
-    public function changeSatusAll(Request $request)
+    public function changeSatusall(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if ($storeAdmain != null) {

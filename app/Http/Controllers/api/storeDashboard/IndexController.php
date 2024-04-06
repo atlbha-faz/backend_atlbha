@@ -33,7 +33,8 @@ class IndexController extends BaseController
         $imports_id = Importproduct::where('store_id', auth()->user()->store_id)->count();
         $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
 
-        $import = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->get();
+        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $imports = importsResource::collection($import);
 
         $all = $products->merge($imports);

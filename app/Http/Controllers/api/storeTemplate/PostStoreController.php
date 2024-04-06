@@ -272,9 +272,9 @@ class PostStoreController extends BaseController
             }
         // }
     }
-    public function showPost($pageId, Request $request)
+    public function show_post($pageId, Request $request)
     {
-
+       
             $store = Store::where('domain', $request->domain)->whereNot('package_id', null)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
@@ -316,7 +316,7 @@ class PostStoreController extends BaseController
                 $cats = Page_page_category::where('page_category_id',1)->pluck('page_id')->toArray();
                 $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id',$cats)->whereNot('id', $pageId)->orderBy('created_at', 'desc')->take(3)->get());
                 $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->whereIn('id',$cats)->whereNot('id', $pageId)->orderBy('created_at', 'desc')->take(2)->get());
-
+          
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
                 $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
                 $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();

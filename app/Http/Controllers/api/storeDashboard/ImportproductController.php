@@ -117,7 +117,7 @@ class ImportproductController extends BaseController
         return $this->sendResponse($success, 'تم عرض المنتج بنجاح', 'product showed successfully');
     }
 
-    public function updateImportProduct(Request $request, $id)
+    public function updateimportproduct(Request $request, $id)
     {
         $importproduct = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
         $purchasing_price = Product::where('id', $id)->value('purchasing_price');

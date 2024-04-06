@@ -128,7 +128,7 @@ class OrderController extends BaseController
                         "shipper_phonenumber"=>auth()->user()->phonenumber,
                         "shipper_email"=>auth()->user()->email,
                         "order_id"=> $order->id
-
+        
                     ];
                     $aramex = new AramexService();
                     return $aramex->createOrder($data);
@@ -407,7 +407,7 @@ class OrderController extends BaseController
         }
     }
 
-    public function deleteAll(Request $request)
+    public function deleteall(Request $request)
     {
 
         $orders = Order::whereIn('id', $request->id)->whereHas('items', function ($q) {

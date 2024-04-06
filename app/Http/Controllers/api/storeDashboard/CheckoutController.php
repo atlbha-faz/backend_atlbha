@@ -95,7 +95,7 @@ class CheckoutController extends BaseController
                 $shipping_price = $cart->shipping_price;
             } else {
                 $shipping_price = 35;
-
+          
             }
 
             if ($cart->free_shipping == 1)
@@ -199,7 +199,7 @@ class CheckoutController extends BaseController
                 $cart->delete();
             } else {
                 if ($order->paymentype_id == 1) {
-
+                   
                 }
                 $order->update([
                     'payment_status' => "pending",
@@ -214,12 +214,12 @@ class CheckoutController extends BaseController
 
             $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم ارسال طلب الاستيرد
+            return $this->sendResponse($success, 'تم ارسال طلب الاستيرد 
             بعد الموافقة تجدها في قسم المنتجات وخلال ثلاث ايام توصلك المنتجات', 'order send successfully');
 
 
     }
-    public function paymentMethods()
+    public function paymentmethods()
     {
 
         $success['payment_types'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted',0)->orderByDesc('created_at')->whereNot('id',4)->get());
@@ -245,7 +245,7 @@ class CheckoutController extends BaseController
 
         if ($coupon != null && $coupon->status == 'active') {
 
-            $cart = Cart::where('id', $cart_id)->where('store_id', null)->first();
+            $cart = Cart::where('id', $cart_id)->where('store_id', null)->first();  
                 $coupon->users()->attach(auth()->user()->id);
                 $user = User::where('id', auth()->user()->id)->first();
                  $useCouponUser = coupons_users::where('user_id', auth()->user()->id)->where('coupon_id', $coupon->id)->get();
@@ -275,15 +275,15 @@ class CheckoutController extends BaseController
 
                         }
 
-                    }
+                    } 
                     else {
                         $success['status'] = 200;
-
+            
                         return $this->sendResponse($success, 'الكوبون غير صالح', 'The coupon is invalid');
-
+            
                     }
-
-
+              
+          
             $success['cart'] = new CartResource($cart);
             $success['status'] = 200;
 

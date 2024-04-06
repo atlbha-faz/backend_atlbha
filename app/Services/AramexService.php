@@ -247,7 +247,6 @@ class AramexService
       else{
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
-          
             $order->update([
                 'order_status' =>"ready" ,
             ]);
@@ -256,12 +255,7 @@ class AramexService
                     'order_status' => "ready",
                 ]);
             }
-            $shipping = Shipping::updateOrCreate(
-                [
-                    'order_id' => $order->id,
-                    'store_id' => $order->store_id,
-                ],
-                [
+            $shipping = Shipping::create([
                 'shipping_id' => $ship_id,
                 // 'track_id' => $track_id,
                 'sticker' => $url,
@@ -271,6 +265,8 @@ class AramexService
                 'city' => $data["shipper_city"] ,
                 'streetaddress' => $data["shipper_line1"],
                 'customer_id' => $order->user_id,
+                'order_id' => $order->id,
+                'store_id' => $order->store_id,
                 
             ]);
 

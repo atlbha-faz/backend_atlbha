@@ -131,7 +131,7 @@ class TechnicalSupportController extends BaseController
         return $this->sendResponse($success, 'تم حذف طلب الدعم بنجاح', 'technical Support deleted successfully');
     }
 
-    public function deleteAll(Request $request)
+    public function deleteall(Request $request)
     {
 
         $technicalSupports = technicalSupport::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();

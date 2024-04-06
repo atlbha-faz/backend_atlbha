@@ -2,39 +2,38 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\City;
-use App\Models\Plan;
-use App\Models\Store;
-use App\Models\Country;
-use App\Models\Package;
-use App\Models\Product;
-use App\Models\Service;
-use App\Models\Category;
-use App\Models\Shipping;
-use App\Models\Template;
-use App\Models\Paymenttype;
-use App\Models\Postcategory;
-use App\Models\Shippingtype;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Models\Page_category;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CityResource;
-use App\Http\Resources\PlanResource;
-use App\Http\Resources\StoreResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\PackageResource;
+use App\Http\Resources\Page_categoryResource;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\PlanResource;
+use App\Http\Resources\PostCategoryResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ServiceResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\TemplateResource;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\PaymenttypeResource;
-use App\Http\Resources\PostCategoryResource;
-use App\Http\Resources\Page_categoryResource;
 use App\Http\Resources\ShippingStoreResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\TemplateResource;
+use App\Models\Category;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Package;
+use App\Models\Page_category;
+use App\Models\Paymenttype;
+use App\Models\Plan;
+use App\Models\Postcategory;
+use App\Models\Product;
+use App\Models\Service;
+use App\Models\Shipping;
+use App\Models\Shippingtype;
+use App\Models\Store;
+use App\Models\Template;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class SelectorController extends BaseController
 {
@@ -52,7 +51,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'Products return successfully');
     }
 
-    public function paymentTypes()
+    public function payment_types()
     {
         $success['payment_types'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->get());
         $success['status'] = 200;
@@ -68,7 +67,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'Services return successfully');
     }
 
-    public function authUser()
+    public function auth_user()
     {
         $success['auth_user'] = new StoreResource(Store::find(auth()->user()->store_id));
         $success['status'] = 200;
@@ -131,7 +130,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم عرض الاقسام الفرعية بنجاح', 'sub_Category showed successfully');
     }
 // admin category
-    public function mainCategoriesEtlobha()
+    public function mainCategories_etlobha()
     {
         $success['categories'] = CategoryResource::collection(Category::
                 where('is_deleted', 0)
@@ -239,7 +238,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'serrvices return successfully');
     }
 
-    public function postCategories()
+    public function post_categories()
     {
         $success['categories'] = PostCategoryResource::collection(Postcategory::where('is_deleted', 0)->where('status', 'active')->get());
         $success['status'] = 200;
@@ -247,12 +246,13 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع تصنيفات المقالات بنجاح', 'Post Categories return successfully');
     }
 
-    public function storeImportProduct()
+    public function storeImportproduct()
     {
 
         $products = ProductResource::collection(Product::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
 
-        $import = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->get();
+        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
+            ->get(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
         $imports = importsResource::collection($import);
 
         $success['products'] = $products->merge($imports);
@@ -261,7 +261,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
     }
-    public function subCategories(Request $request)
+    public function subcategories(Request $request)
     {
 
         $input = $request->all();
@@ -287,7 +287,7 @@ class SelectorController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع عنوان المستودع بنجاح', 'address return successfully');
     }
-    public function shippingCities($id)
+    public function shippingcities($id)
     {
         $shippingCompany = Shippingtype::query()->find($id);
         $success['cities'] = ShippingCitiesResource::collection($shippingCompany->shippingcities()->where('status', 'active')->get());
@@ -297,6 +297,6 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع  المدن بنجاح', 'city return successfully');
 
     }
-
+   
 
 }

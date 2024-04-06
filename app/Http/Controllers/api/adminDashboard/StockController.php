@@ -522,17 +522,8 @@ class StockController extends BaseController
                 'product_id' => $product->id,
                 'store_id' => $atlbha_id,
                 'price' => $product->selling_price,
-    
+                'qty' => $product->stock,
             ]);
-                $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
-                foreach ($options as $option) {
-                    $newOption = $option->replicate();
-                    $newOption->product_id = $product->id;
-                    $newOption->importproduct_id = $importproduct->id;
-                    $newOption->price = $product->selling_price;
-                    $newOption->save();
-    
-                }
         }
 
         $success['products'] = new ProductResource($product);

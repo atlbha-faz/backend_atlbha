@@ -46,7 +46,7 @@ class CommentController extends BaseController
 
             $success['page_count'] = $comment_of_products->lastPage();
             $success['comment_of_products'] = $comment_of_products;
-
+      
         $success['commentActivation'] = Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->pluck('commentstatus')->first();
 
         $success['status'] = 200;
@@ -151,7 +151,7 @@ class CommentController extends BaseController
             'comment_for' => 'required|in:product,store',
             'store_id' => 'required_if:comment_for,store',
             'product_id' => 'required_if:comment_for,product',
-
+          
         ]);
         if ($validator->fails()) {
             # code...
@@ -162,9 +162,9 @@ class CommentController extends BaseController
             'rateing' => $request->input('rateing'),
             'product_id' => $request->input('product_id'),
             'store_id' => $request->input('store_id'),
-
+          
         ]);
-
+       
         $success['comments'] = new commentResource($comment);
         $success['status'] = 200;
 
@@ -229,7 +229,7 @@ class CommentController extends BaseController
         return $this->sendResponse($success, 'تم حذف التعليق بنجاح', ' comment deleted successfully');
     }
 
-    public function changeSatusAll(Request $request)
+    public function changeSatusall(Request $request)
     {
 
         $comments = Comment::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->get();

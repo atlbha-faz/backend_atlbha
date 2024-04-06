@@ -22,7 +22,7 @@ class VerificationController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function verificationShow()
+    public function verification_show()
     {
 
         $success['stores'] = StoreResource::collection(Store::with(['categories' => function ($query) {
@@ -46,7 +46,7 @@ class VerificationController extends BaseController
         return $this->sendResponse($success, 'تم عرض بيانات النوثيق بنجاح', 'verifiction shown successfully');
     }
 
-    public function verificationUpdate(Request $request)
+    public function verification_update(Request $request)
     {
         $store = Store::with(['categories' => function ($query) {
             $query->select('name');
@@ -64,7 +64,7 @@ class VerificationController extends BaseController
             'owner_name' => 'required|string|max:255',
             'commercial_name' => 'required_if:verification_type,commercialregister',
             'verification_code' => 'required',
-
+     
         ]);
         if ($validator->fails()) {
             # code...
@@ -122,7 +122,7 @@ class VerificationController extends BaseController
             Mail::to($user->email)->send(new SendMail($data));
         }
         event(new VerificationEvent($data));
-
+        
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل الاعدادات بنجاح', 'registration_status update successfully');

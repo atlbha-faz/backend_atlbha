@@ -51,7 +51,7 @@ class importsResource extends JsonResource
         //     'is_import' => true,
 
         // ];
-        if ($this->status == null || $this->status == 'active') {
+        if ($this->product->status == null || $this->product->status == 'active') {
           $status = __('message.active');
       } else {
           $status =  __('message.not_active');
@@ -69,7 +69,7 @@ class importsResource extends JsonResource
       }
       $domain = $this->product->store_id !== null ? $this->product->store->domain : 'atlbha';
 
-      if ($this->product->store_id == null) {
+      if ($this->product->is_import == 1) {
           $import = true;
           $type = "importProduct";
       } else {
@@ -89,7 +89,7 @@ class importsResource extends JsonResource
               'quantity' => $this->product->quantity,
               'weight' => $this->product->weight !== null ? $this->product->weight * 1000 : 500,
               'less_qty' => $this->product->less_qty,
-              'mainstock' => $import == true ? (\App\Models\Product::where('id', $this->product->id)->first()->stock) : $this->stock,
+              'mainstock' => $import == true ? (\App\Models\Product::where('id', $this->product->id)->first()->stock) : $this->product->stock,
               'stock' => $this->qty,
               'tags' => $this->product->tags,
               'cover' => $this->product->cover,
@@ -119,10 +119,10 @@ class importsResource extends JsonResource
               'created_at' => (string) $this->product->created_at,
               'updated_at' => (string) $this->product->updated_at,
               'category' => new CategoryResource($this->product->category),
-              'store' => new StoreResource($this->store),
+              'store' => new StoreResource($this->product->store),
                'images' => $import == true ? ImageResource::collection(\App\Models\Product::where('id', $this->product->id)->first()->image->where('is_deleted', 0)) : ImageResource::collection($this->product->image->where('is_deleted', 0)),
               'options' => OptionResource::collection($this->option),
-              'attributes' => $import == true ? AttributeResource::collection(\App\Models\Product::where('id', $this->product->id)->first()->attributes) : AttributeResource::collection($this->product->attributes),
+              'attributes' => $import == true ? AttributeResource::collection(\App\Models\Product::where('id', $this->product->original_id)->first()->attributes) : AttributeResource::collection($this->product->attributes),
               'type' => $type,
               'is_import' => $import,
 

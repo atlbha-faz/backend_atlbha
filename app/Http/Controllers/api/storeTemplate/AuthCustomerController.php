@@ -15,7 +15,7 @@ class AuthCustomerController extends BaseController
 {
     //login store template
 //login store with phoneNumber template
-    public function loginCustomer(Request $request)
+    public function login_customer(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -86,7 +86,7 @@ class AuthCustomerController extends BaseController
     }
 
     //login store with email template
-    public function loginCustomerEmail(Request $request)
+    public function login_customer_email(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -321,7 +321,7 @@ class AuthCustomerController extends BaseController
         }
 
     }
-
+   
     public function unifonicTest($request)
     {
 

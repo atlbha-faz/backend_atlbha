@@ -82,7 +82,7 @@ class PageController extends BaseController
         if ($validator2->fails()) {
             return $this->sendError(null, $validator2->errors());
         }
-
+  
         $page = Page::create([
             'title' => $request->title,
             'page_content' => $request->page_content,
@@ -312,7 +312,7 @@ class PageController extends BaseController
         return $this->sendResponse($success, 'تم تعديل حالة الصفحة بنجاح', 'page updated successfully');
 
     }
-    public function deleteAll(Request $request)
+    public function deleteall(Request $request)
     {
 
         $pages = Page::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
@@ -334,7 +334,7 @@ class PageController extends BaseController
 
         }
     }
-    public function changeSatusAll(Request $request)
+    public function changeSatusall(Request $request)
     {
 
         $pages = Page::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();

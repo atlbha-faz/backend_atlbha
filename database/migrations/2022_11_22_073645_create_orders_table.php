@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('total_price', 10, 2);
             $table->decimal('tax', 10, 2);
             $table->decimal('weight', 10, 2);
-            $table->decimal('cod', 10, 2)->default(0);
+            $table->decimal('cod', 10, 2);
             $table->string('description')->nullable();
             $table->decimal('shipping_price', 10, 2);
             $table->decimal('discount', 10, 2)->nullable();
