@@ -126,7 +126,7 @@ class IndexStoreController extends BaseController
                 if (!is_null($import)) {
                     $import_product[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $order->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
                         ->first(['products.*', 'importproducts.price', 'importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
-                    $moreSalesImports = importsResource::collection($import_product);
+                    $moreSalesImports = ImportsProductSearchResource::collection($import_product);
                 } else {
                     $main_product[] = Product::with(['store' => function ($query) {
                         $query->select('id', 'domain', 'store_name');
@@ -143,7 +143,7 @@ class IndexStoreController extends BaseController
 
             $resentimport = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')->where('importproducts.store_id', $store_id)->whereDate('importproducts.created_at', '>=', $oneWeekAgo)
                 ->get(['products.*', 'importproducts.price', 'importproducts.discount_price_import', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'purchasing_price', 'store_id']);
-            $resentimports = importsResource::collection($resentimport);
+            $resentimports = ImportsProductSearchResource::collection($resentimport);
             $resentproduct = ProductResource::collection(Product::with([
                 'category' => function ($query) {
                     $query->select('id', 'name');
@@ -227,7 +227,7 @@ class IndexStoreController extends BaseController
                 if (!is_null($importing)) {
                     $ratingsimport[] = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.id', $rating->id)->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)
                         ->first(['products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.discount_price_import', 'importproducts.status'])->makeHidden(['selling_price', 'store_id']);
-                    $ratingsImports = importsResource::collection($ratingsimport);
+                    $ratingsImports = ImportsProductSearchResource::collection($ratingsimport);
                 } else {
                     $arr[] = Product::where('id', $rating->id)->select('id', 'name', 'status', 'cover', 'stock', 'special', 'selling_price', 'purchasing_price', 'discount_price', 'status', 'created_at')->first();
                 }
