@@ -33,6 +33,7 @@ use App\Http\Resources\MaintenanceResource;
 use App\Http\Resources\ProductStoreResource;
 use App\Http\Resources\TechnicalsupportResource;
 use App\Http\Resources\SubscriptionEmailResource;
+use App\Http\Resources\ImportsProductSearchResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController extends BaseController
