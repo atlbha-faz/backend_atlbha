@@ -22,7 +22,6 @@ class ImportproductController extends BaseController
     }
     public function etlobhaShow(Request $request)
     {
-        return $request->all();
         $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
