@@ -30,7 +30,12 @@ class ImportproductController extends BaseController
             $products = $products->where('category_id',$request->category_id);
         }
         if ($request->has('subcategory_id')){
-            $products = $products->where('subcategory_id','like','%'.$request->subcategory_id.'%');
+            $terms = $request->subcategory_id;
+            $products = $products->where(function($query) use($terms) {
+                foreach($terms as $term) {
+                    $query->orWhere('subcategory_id', 'like', "%$term%");
+                };
+            });
         }
         $products = $products->paginate($count);
         $products = ProductResource::collection($products);
