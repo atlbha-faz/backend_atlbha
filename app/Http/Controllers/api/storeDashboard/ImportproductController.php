@@ -22,6 +22,7 @@ class ImportproductController extends BaseController
     }
     public function etlobhaShow(Request $request)
     {
+        return $request->all();
         $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
@@ -30,7 +31,12 @@ class ImportproductController extends BaseController
             $products = $products->where('category_id',$request->category_id);
         }
         if ($request->has('subcategory_id')){
-            $products = $products->where('subcategory_id','like','%'.$request->subcategory_id.'%');
+            $terms = $request->subcategory_id;
+            $products = $products->where(function($query) use($terms) {
+                foreach($terms as $term) {
+                    $query->orWhere('subcategory_id', 'like', "%$term%");
+                };
+            });
         }
         $products = $products->paginate($count);
         $products = ProductResource::collection($products);
