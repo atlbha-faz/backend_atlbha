@@ -160,6 +160,14 @@ class CheckoutController extends BaseController
                             'qty' => $importProduct->qty - $cartItem->qty,
                         ]);
                     }
+                    if ($cartItem->option_id != null) {
+                        $optionQty = Option::where('id', $cartItem->option_id)->where('importproduct_id', $importProduct->id)->first();
+                        if ($optionQty != null) {
+                            $optionQty->update([
+                                'quantity' => $optionQty->quantity - $cartItem->qty,
+                            ]);
+                        }
+                    }
                 }
             }
             foreach ($cart->cartDetails as $cartItem) {
@@ -613,14 +621,14 @@ class CheckoutController extends BaseController
                 ]);
             }
             $payment = Payment::where('orderID', $order->id)->first();
-            $mount=$order->total_price-$payment->deduction;
+            $mount = $order->total_price - $payment->deduction;
             $data = [
 
                 "Key" => $payment->paymentTransectionID,
                 "KeyType" => "invoiceid",
                 "RefundChargeOnCustomer" => false,
                 "ServiceChargeOnCustomer" => false,
-                "Amount" =>$mount,
+                "Amount" => $mount,
                 "Comment" => "refund to the customer",
                 "AmountDeductedFromSupplier" => 0,
                 "CurrencyIso" => "SA",
@@ -636,12 +644,12 @@ class CheckoutController extends BaseController
             }
             $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
-    
+
         } else {
             return $this->sendResponse($success, 'حالة الطلب لاتقبل الالغاء', 'Order can not cancel');
 
         }
-       
+
     }
 
 }

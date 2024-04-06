@@ -66,7 +66,7 @@ class AdminOrderController extends BaseController
         $order = Order::where('id', $order)->whereHas('items', function ($q) {
             $q->where('store_id', null);
         })->first();
-        if ($order->order_status=="completed") {
+        if ($order->order_status == "completed") {
             return $this->sendError("الطلب مكتمل", "Order is complete");
         }
         if (is_null($order)) {
@@ -110,12 +110,12 @@ class AdminOrderController extends BaseController
                 }
                 foreach ($order->items as $orderItem) {
                     $product = Product::where('id', $orderItem->product_id)->where('store_id', null)->first();
-                    $import_product_existing = Importproduct::where('product_id', $product->id)->where('store_id', $storeid->id )->first();
+                    $import_product_existing = Importproduct::where('product_id', $product->id)->where('store_id', $storeid->id)->first();
 
                     if ($import_product_existing == null) {
                         $import_product = Importproduct::create([
                             'product_id' => $product->id,
-                            'store_id' => $storeid->id ,
+                            'store_id' => $storeid->id,
                             'price' => $orderItem->price,
                             'qty' => $orderItem->quantity,
                         ]);
@@ -125,11 +125,13 @@ class AdminOrderController extends BaseController
                         ]);
 
                         if ($orderItem->option_id != null) {
-                            $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->where('importproduct_id', $importproduct->id)->first();
+                            $option = Option::where('is_deleted', 0)->where('original_id', $orderItem->option_id)->where('importproduct_id', $import_product->id)->first();
                             if ($option == null) {
-                                $newOption = $option->replicate();
-                                $newOption->product_id = $product->id;
-                                $newOption->importproduct_id = $importproduct->id;
+                                $orginal_option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->where('importproduct_id', null)->where('original_id', null)->first();
+                                $newOption = $orginal_option->replicate();
+                                $newOption->product_id = null;
+                                $newOption->original_id = $orginal_option->id;
+                                $newOption->importproduct_id = $import_product->id;
                                 $newOption->quantity = $orderItem->quantity;
                                 $newOption->price = $orderItem->price;
                                 $newOption->save();
@@ -148,10 +150,13 @@ class AdminOrderController extends BaseController
                         ]);
                         if ($orderItem->option_id != null) {
 
-                            $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->where('importproduct_id', $import_product_existing->id)->first();
+                            $option = Option::where('is_deleted', 0)->where('original_id', $orderItem->option_id)->where('importproduct_id', $import_product_existing->id)->first();
                             if ($option == null) {
-                                $newOption = $option->replicate();
-                                $newOption->product_id = $product->id;
+                                $orginal_option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->where('original_id', null)->first();
+
+                                $newOption = $orginal_option->replicate();
+                                $newOption->product_id = null;
+                                $newOption->original_id = $orginal_option->id;
                                 $newOption->importproduct_id = $import_product_existing->id;
                                 $newOption->quantity = $orderItem->quantity;
                                 $newOption->price = $orderItem->price;

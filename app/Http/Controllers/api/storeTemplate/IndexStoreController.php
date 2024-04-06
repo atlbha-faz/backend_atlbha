@@ -333,14 +333,22 @@ class IndexStoreController extends BaseController
 
             $product = Product::where('is_deleted', 0)->where('status', 'active')->where('id', $id)->first();
             $import = Importproduct::where('product_id', $id)->where('store_id', $store_id)->first();
-            if ($import != null) {
-                $success['product'] = new importsResource(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('products.status', 'active')->where('products.id', $id)->first(['products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price']));
-            } else {
-                $product = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('id', $id)->first();
-                if ($product != null) {
-                    $success['product'] = new ProductResource(Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('id', $id)->first());
+            if ($import == null && $product == null) {
+               
+                return $this->sendError("المنتج غير موجود", "product is't exists");  
                 } else {
-                    return $this->sendError("المنتج غير موجود", "product is't exists");
+        
+                    $success['product'] = new ProductStoreResource(Product::with(['importproduct'=> function ($query) use($store) {
+                        $query->where('store_id', $store->id);
+                    }])->where('is_deleted', 0)
+                    ->where(function ($main_query) use($store,$id) {
+                        $main_query->whereHas('importproduct' ,function ($productQuery) use($store,$id) {
+                            $productQuery->where('product_id', $id)->where('store_id', 2)->where('status', 'active');
+                        })->orwhere('store_id', $store->id)->where('id', $id)->where('status', 'active');
+        
+                    })->first());
+                
+                  
                 }
             }
             if ($product != null) {
@@ -394,11 +402,7 @@ class IndexStoreController extends BaseController
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارجاع صفحة المنتج للمتجر بنجاح', ' Product page return successfully');
-        } else {
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'صفحة المنتج غير موجود ', ' Product page is not exists');
-        }
+       
 
     }
     public function addComment(Request $request, $id)
@@ -553,7 +557,7 @@ class IndexStoreController extends BaseController
         $price_to = $request->input('price_to');
         $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
         if (is_null($filter_category)) {
-            $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
+            $importsproducts = ImportsProductSearchResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
                     ->where('importproducts.store_id', $store_id)
                     ->whereIn('products.id', $imports_id)
                     ->when($price_from, function ($query, $price_from) {
@@ -562,7 +566,7 @@ class IndexStoreController extends BaseController
                     $query->where('importproducts.price', '<=', $price_to);
                 })->select('products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.discount_price_import')->orderBy($s, $sort)->paginate($limit));
         } else {
-            $importsproducts = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
+            $importsproducts =ImportsProductSearchResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
                     ->where('importproducts.store_id', $store_id)
                     ->whereIn('products.id', $imports_id)
                     ->where(function ($query) use ($filter_category) {
@@ -590,6 +594,7 @@ class IndexStoreController extends BaseController
                     $productssStoreid[] = $subProduct->id;
                 }
             }
+            
             $storeproducts = ProductResource::collection(Product::with(['store' => function ($query) {
                 $query->select('id', 'domain', 'store_name');
             }, 'category' => function ($query) {
@@ -721,25 +726,32 @@ class IndexStoreController extends BaseController
         $category = $request->input('category');
         $query = $request->input('query');
         $imports_id = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
-        $imports_products = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
-                ->where('importproducts.store_id', $store->id)
-                ->whereIn('products.id', $imports_id)
-                ->where('products.name', 'like', '%' . $query . '%')
-                ->when($category, function ($query, $category) {
-                    $query->where('products.category_id', $category)->orWhere('products.subcategory_id', $category);
-                })
-                ->get(['products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price']));
-
-        $products = ProductResource::collection(Product::where('is_deleted', 0)
-                ->where('store_id', $store_id)
+        // $imports_products = importsResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)
+        //         ->where('importproducts.store_id', $store->id)
+        //         ->whereIn('products.id', $imports_id)
+        //         ->where('products.name', 'like', '%' . $query . '%')
+        //         ->when($category, function ($query, $category) {
+        //             $query->where('products.category_id', $category)->orWhere('products.subcategory_id', $category);
+        //         })
+        //         ->get(['products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price']));
+    
+    
+        $products =  ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
+            $query->where('store_id', $store->id);
+        }])->where('is_deleted', 0)
                 ->where('name', 'like', '%' . $query . '%')
+                ->where(function ($query) use($store) {
+                    $query->whereHas('importproduct' ,function ($productQuery) use($store) {
+                        $productQuery->where('store_id', $store->id)->where('status', 'active');
+                    })->orwhere('store_id', $store->id)->where('status', 'active');
+                })
                 ->when($category, function ($query, $category) {
                     $query->where('category_id', $category)->orWhere('subcategory_id', $category);
                 })
                 ->get());
 
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
-        $success['searchProducts'] = $products->merge($imports_products);
+        $success['searchProducts'] = $products;
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض المنتجات بنجاح', 'Category products successfully');
 
@@ -824,9 +836,14 @@ class IndexStoreController extends BaseController
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
            
 
-            $specialproducts =ProductStoreResource::collection( Product::with('importproduct')->where('status', 'active')->where('special', 'special')->where('is_deleted', 0)->whereHas('importproduct' ,function ($productQuery) use($store) {
+            $specialproducts =ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
+                $query->where('store_id', $store->id);
+            }])->where('status', 'active')->where('special', 'special')->where('is_deleted', 0)
+            ->where(function ($query) use($store) {
+                $query->whereHas('importproduct' ,function ($productQuery) use($store) {
                 $productQuery->where('store_id', $store->id)->where('status', 'active')->where('special', 'special');
-            })->orwhere('store_id', $store->id)->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price','store_id', 'created_at')->paginate($count));
+            })->orwhere('store_id', $store->id);
+                  })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price','store_id', 'created_at')->paginate($count));
 
             $success['specialProducts'] = $specialproducts;
             $success['page_count'] = $specialproducts->lastPage();
@@ -865,11 +882,13 @@ class IndexStoreController extends BaseController
                 $oneWeekAgo = Carbon::now()->subWeek();
 
 
-                $resentproduct = ProductStoreResource::collection( Product::with('importproduct')->where('status', 'active')->where('is_deleted', 0)
+                $resentproduct = ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
+                    $query->where('store_id', $store->id);
+                }])->where('status', 'active')->where('is_deleted', 0)
                 ->where(function ($query) use($store,$oneWeekAgo) {
                     $query->whereHas('importproduct' ,function ($productQuery) use($store,$oneWeekAgo) {
                         $productQuery->where('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
-                    })->orwhere('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');;
+                    })->orwhere('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
     
                 })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price','store_id', 'created_at')->paginate($count));
                 $success['resent_arrive'] = $resentproduct;
@@ -923,7 +942,9 @@ class IndexStoreController extends BaseController
 
                 $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-                $moreSalesProducts =ProductStoreResource::collection( Product::with('importproduct')->where('status', 'active')->where('is_deleted', 0)
+                $moreSalesProducts =ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
+                    $query->where('store_id', $store->id);
+                }])->where('status', 'active')->where('is_deleted', 0)
                 ->where(function ($query) use($store,$import_product,$main_product) {
                     $query->whereHas('importproduct' ,function ($productQuery) use($store,$import_product,$main_product) {
                         $productQuery->where('store_id', $store->id)->whereIn('product_id', $import_product)->where('status', 'active');
@@ -981,7 +1002,9 @@ class IndexStoreController extends BaseController
 
                 $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-                $resentproduct = ProductStoreResource::collection( Product::with('importproduct')->where('status', 'active')->where('is_deleted', 0)
+                $resentproduct = ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
+                    $query->where('store_id', $store->id);
+                }])->where('status', 'active')->where('is_deleted', 0)
                 ->where(function ($query) use($store,$ratingsimport, $arr) {
                     $query->whereHas('importproduct' ,function ($productQuery) use($store,$ratingsimport, $arr) {
                         $productQuery->where('store_id', $store->id)->whereIn('product_id', $ratingsimport)->where('status', 'active');

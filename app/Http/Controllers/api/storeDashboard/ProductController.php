@@ -99,7 +99,7 @@ class ProductController extends BaseController
 
             $success['page_count'] = $products->lastPage();
             $success['current_page'] = $products->currentPage();
-            $success['products'] = ProductResource::collection($products);
+            $success['products'] = importsResource::collection($products);
             $success['status'] = 200;
         
 
@@ -281,16 +281,14 @@ class ProductController extends BaseController
     public function show($product)
     {
 
-        $product = Product::query()->find($product);
+        $product = Product::query()->where('store_id', auth()->user()->store_id)->find($product);
 
         if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
         }
 
-        $newproduct = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $product->id)->first();
+        $newproduct = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $product->id)->first();
         if ($newproduct) {
-            $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $product->id)
-                ->first(['products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
             $success['product'] = new importsResource($newimportproduct);
 
         } else {
