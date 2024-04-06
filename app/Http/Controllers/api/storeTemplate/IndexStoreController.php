@@ -843,7 +843,7 @@ class IndexStoreController extends BaseController
             ->where(function ($query) use($store) {
                 $query->whereHas('importproduct' ,function ($productQuery) use($store) {
                 $productQuery->where('store_id', $store->id)->where('status', 'active')->where('special', 'special');
-            })->orwhere('store_id', $store->id);
+            })->orwhere('store_id', $store->id)->where('status', 'active')->where('special', 'special');
                   })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price','store_id', 'created_at')->paginate($count));
 
             $success['specialProducts'] = $specialproducts;
