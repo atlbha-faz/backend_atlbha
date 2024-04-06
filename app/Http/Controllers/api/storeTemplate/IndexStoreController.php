@@ -104,7 +104,7 @@ class IndexStoreController extends BaseController
 
             $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', $store_id)->where('importproducts.special', 'special')->orderBy('products.created_at', 'desc')
                 ->get(['products.*', 'importproducts.special', 'importproducts.discount_price_import', 'importproducts.price', 'importproducts.qty', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
-            $imports = importsResource::collection($import);
+            $imports = ImportsProductSearchResource::collection($import);
 
             $success['specialProducts'] = $specialproducts->merge($imports);
 
@@ -344,7 +344,7 @@ class IndexStoreController extends BaseController
                     }])->where('is_deleted', 0)
                     ->where(function ($main_query) use($store,$id) {
                         $main_query->whereHas('importproduct' ,function ($productQuery) use($store,$id) {
-                            $productQuery->where('product_id', $id)->where('store_id', 2)->where('status', 'active');
+                            $productQuery->where('product_id', $id)->where('store_id',$store->id)->where('status', 'active');
                         })->orwhere('store_id', $store->id)->where('id', $id)->where('status', 'active');
         
                     })->first());
@@ -994,7 +994,7 @@ class IndexStoreController extends BaseController
                 $ratingsimport[] = $importing->product_id;
 
             } else {
-                $arr[] = Product::where('id', $rating->id)->select('id', 'name', 'status', 'cover', 'stock', 'special', 'selling_price', 'purchasing_price', 'discount_price', 'status', 'created_at')->first();
+                $arr[] = $rating->id;
             }
         }
 
