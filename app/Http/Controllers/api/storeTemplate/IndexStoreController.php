@@ -839,7 +839,7 @@ class IndexStoreController extends BaseController
 
             $specialproducts =ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
                 $query->where('store_id', $store->id);
-            }])->where('status', 'active')->where('special', 'special')->where('is_deleted', 0)
+            }])->where('status', 'active')->where('is_deleted', 0)
             ->where(function ($query) use($store) {
                 $query->whereHas('importproduct' ,function ($productQuery) use($store) {
                 $productQuery->where('store_id', $store->id)->where('status', 'active')->where('special', 'special');
