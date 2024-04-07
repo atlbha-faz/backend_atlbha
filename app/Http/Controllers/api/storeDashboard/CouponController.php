@@ -327,7 +327,9 @@ class CouponController extends BaseController
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
-
+                if ($coupon->status == "expired") {
+                    return $this->sendError(" الكوبون منتهي لاعاده التفعيل قم بتعديل تاريخ الانتهاء", "coupon is expired");
+                }
                 if ($coupon->status === 'active') {
                     $coupon->update(['status' => 'not_active']);
                 } else {
