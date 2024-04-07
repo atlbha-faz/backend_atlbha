@@ -225,7 +225,6 @@ class CheckoutController extends BaseController
 
             $cart->delete();
         }
-
         $success['order'] = new OrderResource($order);
 
         $success['status'] = 200;
