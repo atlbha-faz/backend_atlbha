@@ -81,7 +81,8 @@ class WebhookController extends BaseController
                 if (!$payment) {
                     $url = 'https://backend.atlbha.sa/api/webhook';
                     $client = new \GuzzleHttp\Client();
-                    $request = $client->request('POST', $url, ['form_params' => $request->all()]);
+                    $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
+                    Log::alert('AAA-'.json_encode($request->all()));
                     return;
                 }
                 $order = Order::where('id', $payment->orderID)->first();
