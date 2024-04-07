@@ -225,13 +225,11 @@ class CheckoutController extends BaseController
 
             $cart->delete();
         }
-
         $success['order'] = new OrderResource($order);
 
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارسال طلب الاستيرد
-            بعد الموافقة تجدها في قسم المنتجات وخلال ثلاث ايام توصلك المنتجات', 'order send successfully');
+        return $this->sendResponse($success, 'تم الاستيراد بنجاح ', 'order send successfully');
 
     }
     public function paymentMethods()

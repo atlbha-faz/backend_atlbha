@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\ImportproductResource;
-use App\Http\Resources\ProductResource;
-use App\Models\Category;
-use App\Models\Importproduct;
+use App\Models\Store;
 use App\Models\Option;
 use App\Models\Product;
-use App\Models\Store;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ImportproductResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ImportproductController extends BaseController
 {
@@ -150,8 +151,9 @@ class ImportproductController extends BaseController
     
                     }
                 }
+                $importproduct=Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $id)->first();
 
-            $success['importproducts'] = new ProductResource($importproduct);
+            $success['importproducts'] = new importsResource($importproduct);
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم تعديل الاستيراد بنجاح', 'importproduct updated successfully');
