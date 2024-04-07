@@ -132,7 +132,7 @@ class CartController extends BaseController
             $cart->update(['is_deleted' => $cart->id]);
         }
         $success['status'] = 200;
-        return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+        return $this->sendResponse($success, 'تم حذف السلة بنجاح', 'cart deleted successfully');
     }
 
     /**
