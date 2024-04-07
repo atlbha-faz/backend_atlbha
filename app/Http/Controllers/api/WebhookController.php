@@ -6,6 +6,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class WebhookController extends BaseController
 {
@@ -67,10 +68,10 @@ class WebhookController extends BaseController
             $data = $request->all();
 
             // $data = json_decode($body, true);
-            if (!($this->validateSignature($data, $secret, $MyFatoorah_Signature))) {
-
-                return;
-            }
+//            if (!($this->validateSignature($data, $secret, $MyFatoorah_Signature))) {
+//
+//                return;
+//            }
 
             $event = $request->input('EventType');
             // Log::debug('Webhook payload:', $event);
@@ -80,7 +81,8 @@ class WebhookController extends BaseController
                 if (!$payment) {
                     $url = 'https://backend.atlbha.sa/api/webhook';
                     $client = new \GuzzleHttp\Client();
-                    $request = $client->request('POST', $url, ['body' => $request->all()]);
+                    $request = $client->request('POST', $url, ['form_params' => $request->all()]);
+                    return;
                 }
                 $order = Order::where('id', $payment->orderID)->first();
                 switch ($request->input('Data.TransactionStatus')) {
