@@ -113,7 +113,13 @@ class WebhookController extends BaseController
 
             } elseif ($event == 4) {
                 $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
-
+                if (!$account) {
+                    $url = 'https://backend.atlbha.sa/api/webhook';
+                    $client = new \GuzzleHttp\Client();
+                    $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
+                    return;
+                }
+                
                 switch ($request->input('Data.SupplierStatus')) {
                     case "APPROVED":
                         $account->update([
