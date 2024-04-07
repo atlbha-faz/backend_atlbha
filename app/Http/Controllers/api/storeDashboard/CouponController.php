@@ -156,6 +156,9 @@ class CouponController extends BaseController
         if (is_null($coupon) || $coupon->is_deleted != 0) {
             return $this->sendError("الكوبون غير موجودة", "coupon is't exists");
         }
+        if ($coupon->status == "expired") {
+            return $this->sendError(" الكوبون منتهي لاعاده التفعيل قم بتعديل تاريخ الانتهاء", "coupon is expired");
+        }
         if ($coupon->status === 'active') {
             $coupon->update(['status' => 'not_active']);
         } else {
