@@ -136,7 +136,7 @@ class ImportproductController extends BaseController
           
                 $importproduct->update([
                     'price' => $request->price,
-                    'discount_price_import' => $request->discount_price_import,
+                    'discount_price_import' => $request->discount_price,
 
                 ]);
                 if ($request->has('data') && !is_null($request->data)) {
