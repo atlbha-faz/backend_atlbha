@@ -461,7 +461,7 @@ class CategoryController extends BaseController
         $success['total_result'] = $categories->total();
         $success['page_count'] = $categories->lastPage();
         $success['current_page'] = $categories->currentPage();
-        $success['categories'] = CategoryResource::collection($categories);
+        $success['store_categories'] = CategoryResource::collection($categories);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع التصنيفات بنجاح', 'Categories Information returned successfully');
@@ -479,48 +479,12 @@ class CategoryController extends BaseController
         $success['total_result'] = $categories->total();
         $success['page_count'] = $categories->lastPage();
         $success['current_page'] = $categories->currentPage();
-        $success['categories'] = CategoryResource::collection($categories);
+        $success['etlobha_categories'] = CategoryResource::collection($categories);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع التصنيفات بنجاح', 'Categories Information returned successfully');
 
     }
-    public function filterCelebrity(Request $request)
-    {
-        $category_ids = array();
-        $category_ids = $request->category_ids;
-
-      
-
-        $celebrity = User::where('type', 'celebrity')->where('is_deleted',0)
-            ->with('celebrity')
-            ->when($categoryIds, function ($query) use ($categoryIds) {
-                // Apply condition only if $categoryIds is provided
-                $query->whereHas('celebrity', function ($subQuery) use ($categoryIds) {
-                    $subQuery->whereHas('categories', function ($query) use ($categoryIds) {
-     $query->whereIn('categories.id', $categoryIds);
-        });
-
-                });
-
-            })->when($statusIds, function ($query) use ($statusIds) {
-            $query->whereIn('verified_status_id', $statusIds);
-
-        })->when($verify_type1, function ($query) use ($verify_type1) {
-            $query->where('verified_status_id', $verify_type1);
-
-        })->when($verify_type2, function ($query) use ($verify_type2) {
-            $query->where('verified_status_id2', $verify_type2);
-
-        })->orderBy('created_at', 'desc')->paginate(20);
-        $success['page_count'] = $celebrity->lastPage();
-
-        $success['celebrities'] = CelebrityResource::collection($celebrity);
-
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم ارجاع المشاهير بنجاح', 'celebrities returned successfully');
-
-    }
+  
 
 }

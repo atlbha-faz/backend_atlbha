@@ -883,7 +883,7 @@ class ProductController extends BaseController
             $success['total_result'] = $imports->total();
             $success['page_count'] = $imports->lastPage();
             $success['current_page'] = $imports->currentPage();
-            $success['products'] = importsResource::collection($imports);
+            $success['import_products'] = importsResource::collection($imports);
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارجاع المنتجات  بنجاح', 'Product Information returned successfully');
