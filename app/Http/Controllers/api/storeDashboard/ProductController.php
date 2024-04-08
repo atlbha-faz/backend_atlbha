@@ -36,22 +36,24 @@ class ProductController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $products = ProductResource::collection(Product::with(['store' => function ($query) {
+        $products = Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
             $query->select('id', 'name');
         }])
                 ->where('is_deleted', 0)->where('is_import', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count)
-        );
+        ;
 
         // $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
         //     ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'importproducts.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
         // $imports = importsResource::collection($import);
+        if ($request->has('category_id')){
+            $products->where('category_id',$request->category_id);
+        }
 
-        $collection = $products;
         $success['page_count'] = $products->lastPage();
         $success['current_page'] = $products->currentPage();
-        $success['products'] = $collection;
+        $success['products'] = ProductResource::collection($products);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -96,7 +98,9 @@ class ProductController extends BaseController
             $products=Importproduct::with('product')->where('store_id', auth()->user()->store_id)->paginate($count);
             // $products = Product::where('is_deleted', 0)->where('is_import', 1)->where('store_id', auth()->user()->store_id)->orderBy('created_at', 'desc')
             //     ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
-
+            if ($request->has('category_id')){
+                $products->where('category_id',$request->category_id);
+            }
             $success['page_count'] = $products->lastPage();
             $success['current_page'] = $products->currentPage();
             $success['import_products'] = importsResource::collection($products);
