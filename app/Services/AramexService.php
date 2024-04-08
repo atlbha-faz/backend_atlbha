@@ -277,6 +277,7 @@ class AramexService
             return [
                 'success'           => true,
                 'message'           => new OrderResource($order),
+                'shipping'          =>new shippingResource($shipping)
             ];
          
         } 
