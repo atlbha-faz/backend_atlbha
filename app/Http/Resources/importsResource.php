@@ -51,6 +51,13 @@ class importsResource extends JsonResource
         //     'is_import' => true,
 
         // ];
+        if(json_decode($this->SEOdescription, true) == null){
+            $seo=explode(',',$this->SEOdescription);
+        }
+            else{
+             $seo=json_decode($this->SEOdescription, true);
+     
+            }
         if ($this->status == null || $this->status == 'active') {
           $status = __('message.active');
       } else {
@@ -94,7 +101,7 @@ class importsResource extends JsonResource
               'tags' => $this->product->tags,
               'cover' => $this->product->cover,
               'discount_price_import' => $this->discount_price_import !== null ? $this->discount_price_import : 0,
-              'SEOdescription' =>$this->product->SEOdescription != null ?json_decode($this->product->SEOdescription, true): array(),
+              'SEOdescription' =>$this->product->SEOdescription != null ?$seo: array(),
               'snappixel' => $this->product->snappixel,
               'tiktokpixel' => $this->product->tiktokpixel,
               'twitterpixel' => $this->product->twitterpixel,
