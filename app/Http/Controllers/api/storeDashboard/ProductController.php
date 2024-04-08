@@ -99,7 +99,7 @@ class ProductController extends BaseController
 
             $success['page_count'] = $products->lastPage();
             $success['current_page'] = $products->currentPage();
-            $success['products'] = importsResource::collection($products);
+            $success['import_products'] = importsResource::collection($products);
             $success['status'] = 200;
         
 
