@@ -281,18 +281,17 @@ class ProductController extends BaseController
     public function show($product)
     {
 
-        $product = Product::query()->where('store_id', auth()->user()->store_id)->find($product);
+        $orginal_product = Product::query()->where('store_id', auth()->user()->store_id)->find($product);
+        $new_import_product = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $product)->first();
+        if (is_null($product) && is_null($new_import_product)) {
+                 return $this->sendError("المنتج غير موجود", "product is't exists");
+            }
 
-        if (is_null($product) || $product->is_deleted != 0) {
-            return $this->sendError("المنتج غير موجود", "product is't exists");
-        }
-
-        $newproduct = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $product->id)->first();
-        if ($newproduct) {
-            $success['product'] = new importsResource($newimportproduct);
+        if ($new_import_product) {
+            $success['product'] = new importsResource($new_import_product);
 
         } else {
-            $success['product'] = new ProductResource($product);
+            $success['product'] = new ProductResource($orginal_product );
 
         }
 
