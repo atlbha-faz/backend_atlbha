@@ -65,7 +65,7 @@ class ProductResource extends JsonResource
                     'tags' => $this->tags,
                     'cover' => $this->cover,
                     'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
-                    'SEOdescription' =>$this->SEOdescription != null ?: array(),
+                    'SEOdescription' =>$this->SEOdescription != null ?$seo: array(),
                     'snappixel' => $this->snappixel,
                     'tiktokpixel' => $this->tiktokpixel,
                     'twitterpixel' => $this->twitterpixel,
