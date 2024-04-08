@@ -86,7 +86,7 @@ class CourseController extends BaseController
         $success['total_result'] = $courses->total();
         $success['page_count'] = $courses->lastPage();
         $success['current_page'] = $courses->currentPage();
-        $success['pages'] = CourseResource::collection($courses);
+        $success['courses'] = CourseResource::collection($courses);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الكورسات بنجاح', 'courses Information returned successfully');
