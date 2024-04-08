@@ -41,16 +41,16 @@ class ProductController extends BaseController
         }, 'category' => function ($query) {
             $query->select('id', 'name');
         }])
-                ->where('is_deleted', 0)->where('is_import', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count)
-        ;
+            ->where('is_deleted', 0)->where('is_import', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description');
 
         // $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
         //     ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'importproducts.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
         // $imports = importsResource::collection($import);
-        if ($request->has('category_id')){
-            $products->where('category_id',$request->category_id);
+        if ($request->has('category_id')) {
+            $products->where('category_id', $request->category_id);
         }
 
+        $products = $products->paginate($count);
         $success['page_count'] = $products->lastPage();
         $success['current_page'] = $products->currentPage();
         $success['products'] = ProductResource::collection($products);
@@ -91,21 +91,21 @@ class ProductController extends BaseController
     public function importedProducts(Request $request)
     {
         $store = Store::where('id', auth()->user()->store_id)->first();
-       
 
-            $query = $request->input('query');
-            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-            $products=Importproduct::with('product')->where('store_id', auth()->user()->store_id)->paginate($count);
-            // $products = Product::where('is_deleted', 0)->where('is_import', 1)->where('store_id', auth()->user()->store_id)->orderBy('created_at', 'desc')
-            //     ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
-            if ($request->has('category_id')){
-                $products->where('category_id',$request->category_id);
-            }
-            $success['page_count'] = $products->lastPage();
-            $success['current_page'] = $products->currentPage();
-            $success['import_products'] = importsResource::collection($products);
-            $success['status'] = 200;
-        
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $products = Importproduct::with('product')->where('store_id', auth()->user()->store_id);
+        // $products = Product::where('is_deleted', 0)->where('is_import', 1)->where('store_id', auth()->user()->store_id)->orderBy('created_at', 'desc')
+        //     ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
+        if ($request->has('category_id')) {
+            $products->where('category_id', $request->category_id);
+        }
+        $products = $products->paginate($count);
+
+        $success['page_count'] = $products->lastPage();
+        $success['current_page'] = $products->currentPage();
+        $success['import_products'] = importsResource::collection($products);
+        $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
@@ -182,7 +182,7 @@ class ProductController extends BaseController
             'selling_price' => $request->selling_price,
             'stock' => $request->stock,
             'cover' => $request->cover,
-            'SEOdescription' => $request->SEOdescription != ""?json_encode(explode(',', $request->SEOdescription)):null,
+            'SEOdescription' => $request->SEOdescription != "" ? json_encode(explode(',', $request->SEOdescription)) : null,
             'discount_price' => $request->discount_price,
             'snappixel' => $request->snappixel,
             'tiktokpixel' => $request->tiktokpixel,
@@ -288,14 +288,14 @@ class ProductController extends BaseController
         $orginal_product = Product::query()->where('store_id', auth()->user()->store_id)->find($product);
         $new_import_product = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $product)->first();
         if (is_null($product) && is_null($new_import_product)) {
-                 return $this->sendError("المنتج غير موجود", "product is't exists");
-            }
+            return $this->sendError("المنتج غير موجود", "product is't exists");
+        }
 
         if ($new_import_product) {
             $success['product'] = new importsResource($new_import_product);
 
         } else {
-            $success['product'] = new ProductResource($orginal_product );
+            $success['product'] = new ProductResource($orginal_product);
 
         }
 
@@ -335,7 +335,7 @@ class ProductController extends BaseController
             $importproduct->update([
                 'price' => $request->selling_price,
             ]);
-            $newimportproduct =Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $id)->first();
+            $newimportproduct = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $id)->first();
 
             $success['products'] = new importsResource($newimportproduct);
             $success['status'] = 200;
@@ -397,7 +397,7 @@ class ProductController extends BaseController
                 'selling_price' => $request->input('selling_price'),
                 'stock' => $request->input('stock'),
                 'cover' => $request->cover,
-                'SEOdescription' =>$request->SEOdescription != ""?json_encode(explode(',', $request->SEOdescription)):null,
+                'SEOdescription' => $request->SEOdescription != "" ? json_encode(explode(',', $request->SEOdescription)) : null,
                 'discount_price' => $request->input('discount_price'),
                 'snappixel' => $request->snappixel,
                 'tiktokpixel' => $request->tiktokpixel,
@@ -874,26 +874,22 @@ class ProductController extends BaseController
     public function searchImportProductName(Request $request)
     {
         $store = Store::where('id', auth()->user()->store_id)->first();
-    
-            $query = $request->input('query');
-            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-            $imports =Importproduct::whereHas('product' ,function ($userQuery) use ($query) {
-                $userQuery->where('name', 'like', "%$query%");
-            })->where('store_id', $store->id)->paginate($count);
-           
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-            $success['query'] = $query;
-            $success['total_result'] = $imports->total();
-            $success['page_count'] = $imports->lastPage();
-            $success['current_page'] = $imports->currentPage();
-            $success['import_products'] = importsResource::collection($imports);
-            $success['status'] = 200;
+        $imports = Importproduct::whereHas('product', function ($userQuery) use ($query) {
+            $userQuery->where('name', 'like', "%$query%");
+        })->where('store_id', $store->id)->paginate($count);
 
-            return $this->sendResponse($success, 'تم ارجاع المنتجات  بنجاح', 'Product Information returned successfully');
-        } 
+        $success['query'] = $query;
+        $success['total_result'] = $imports->total();
+        $success['page_count'] = $imports->lastPage();
+        $success['current_page'] = $imports->currentPage();
+        $success['import_products'] = importsResource::collection($imports);
+        $success['status'] = 200;
 
-      
-  
+        return $this->sendResponse($success, 'تم ارجاع المنتجات  بنجاح', 'Product Information returned successfully');
+    }
 
 }
