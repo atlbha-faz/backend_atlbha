@@ -45,9 +45,9 @@ class CategoryController extends BaseController
             $success['etlobha_current_page'] = $etlobha_categories->currentPage();
             $success['etlobha_categories'] = $etlobha_categories;
 
-            $success['page_count'] = $categories->lastPage();
-            $success['current_page'] = $categories->currentPage();
-            $success['categories'] = $categories;
+            $success['store_page_count'] = $categories->lastPage();
+            $success['store_current_page'] = $categories->currentPage();
+            $success['store_categories'] = $categories;
 
             $success['status'] = 200;
 
@@ -65,9 +65,9 @@ class CategoryController extends BaseController
             $success['etlobha_current_page'] = 0;
             $success['etlobha_categories'] = array();
 
-            $success['page_count'] = $categories->lastPage();
-            $success['current_page'] = $categories->currentPage();
-            $success['categories'] = $categories;
+            $success['store_page_count'] = $categories->lastPage();
+            $success['store_current_page'] = $categories->currentPage();
+            $success['store_categories'] = $categories;
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
