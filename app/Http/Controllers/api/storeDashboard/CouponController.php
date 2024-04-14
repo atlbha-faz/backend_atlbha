@@ -25,7 +25,14 @@ class CouponController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
+        $data= Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at');
+        if ($request->has('status')) {
+            $data->where('status', $request->status);
+        }
+        if ($request->has('discount_type')) {
+            $data->where('discount_type', $request->discount_type);
+        }
+        $coupons =CouponResource::collection($data);
         $success['page_count'] = $coupons->lastPage();
         $pageNumber = request()->query('page', 1);
         $success['current_page'] = $coupons->currentPage();

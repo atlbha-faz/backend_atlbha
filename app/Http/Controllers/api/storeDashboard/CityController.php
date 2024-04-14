@@ -39,34 +39,34 @@ class CityController extends BaseController
 
     }
 
-    public function importcities(Request $request)
-    {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'file' => 'required|mimes:csv,txt,xlsx,xls',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+    // public function importcities(Request $request)
+    // {
+    //     $input = $request->all();
+    //     $validator = Validator::make($input, [
+    //         'file' => 'required|mimes:csv,txt,xlsx,xls',
+    //     ]);
+    //     if ($validator->fails()) {
+    //         # code...
+    //         return $this->sendError(null, $validator->errors());
+    //     }
 
-        try {
+    //     try {
 
-            // Excel::import(new SaeeImport, $request->file);
-            Excel::import(new AramexImport, request()->file('file'));
+    //         // Excel::import(new SaeeImport, $request->file);
+    //         Excel::import(new AramexImport, request()->file('file'));
 
-            $success['status'] = 200;
+    //         $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم إضافة المنتجات بنجاح', 'products Added successfully');
-        } catch (ValidationException $e) {
-            // Handle other import error
-            // return "eroee";
-            $failures = $e->failures();
+    //         return $this->sendResponse($success, 'تم إضافة المنتجات بنجاح', 'products Added successfully');
+    //     } catch (ValidationException $e) {
+    //         // Handle other import error
+    //         // return "eroee";
+    //         $failures = $e->failures();
 
-            // Handle validation failures
-            return $failures;
-        }
-    }
+    //         // Handle validation failures
+    //         return $failures;
+    //     }
+    // }
  
 
 }

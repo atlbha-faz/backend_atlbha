@@ -96,13 +96,19 @@ class EtlobhaserviceController extends BaseController
     }
     public function marketerRequest(Request $request, $id)
     {
-        if ($request->has('page')) {
-
-            $marketers = UserResource::collection(User::where('is_deleted', 0)->where('city_id', $id)->where('user_type', "marketer")->paginate(15));
-            $success['page_count'] = $marketers->lastPage();
-            $success['marketers'] = $marketers;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $users = User::where('is_deleted', 0)->where('user_type', "marketer");
+        if (is_int($id)) {
+            $users = $users->where('city_id', $id)->paginate($count);
         } else {
-            $success['marketers'] = UserResource::collection(User::where('is_deleted', 0)->where('city_id', $id)->where('user_type', "marketer")->get());}
+            $users = $users->paginate($count);
+        }
+
+        $marketers = UserResource::collection($users);
+        $success['page_count'] = $marketers->lastPage();
+        $success['current_page'] = $marketers->currentPage();
+        $success['marketers'] = $marketers;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المندوبين بنجاح', 'marketer return successfully');

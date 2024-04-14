@@ -47,13 +47,19 @@ class OrderController extends BaseController
         $success['all'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id);
         })->count();
-        $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
+
+        
+        $data = Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status','payment_status', 'created_at'])->paginate($count));
+        }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status','payment_status', 'created_at']);
+        if ($request->has('order_status')) {
+            $data ->where('order_status', $request->order_status);
+        }
+        $data= $data->paginate($count);
         $success['page_count'] = $data->lastPage();
         $success['current_page'] = $data->currentPage();
 
-        $success['orders'] = $data;
+        $success['orders'] = OrderResource::collection($data);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'Orders return successfully');
