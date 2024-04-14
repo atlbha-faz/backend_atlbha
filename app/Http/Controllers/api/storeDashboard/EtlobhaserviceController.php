@@ -97,13 +97,8 @@ class EtlobhaserviceController extends BaseController
     public function marketerRequest(Request $request, $id)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $users = User::where('is_deleted', 0)->where('user_type', "marketer");
-        if (is_int($id)) {
-            $users = $users->where('city_id', $id)->paginate($count);
-        } else {
-            $users = $users->paginate($count);
-        }
-
+        $users = User::where('is_deleted', 0)->where('city_id', $id)->where('user_type', "marketer")->paginate($count);
+            
         $marketers = UserResource::collection($users);
         $success['page_count'] = $marketers->lastPage();
         $success['current_page'] = $marketers->currentPage();

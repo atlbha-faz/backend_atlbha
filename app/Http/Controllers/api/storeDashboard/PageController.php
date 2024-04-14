@@ -23,9 +23,17 @@ class PageController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $pages = PageResource::collection(Page::with(['user' => function ($query) {
+        $data =Page::with(['user' => function ($query) {
             $query->select('id', 'name');
-        }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status', 'default_page', 'user_id', 'created_at')->paginate($count));
+        }])->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->select('id', 'title', 'status', 'default_page', 'user_id', 'created_at');
+        if ($request->has('status')) {
+            $data->where('status', $request->status);
+        }
+        if ($request->has('date')) {
+            $data->where('created_at', $request->date);
+        }
+        $data=$data->paginate($count);
+        $pages=PageResource::collection($data);
         $success['page_count'] = $pages->lastPage();
         $success['current_page'] = $pages->currentPage();
 
