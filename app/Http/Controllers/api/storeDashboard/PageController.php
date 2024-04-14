@@ -29,9 +29,9 @@ class PageController extends BaseController
         if ($request->has('status')) {
             $data->where('status', $request->status);
         }
-        if ($request->has('date')) {
-            $data->where('created_at', $request->date);
-        }
+        // if ($request->has('date')) {
+        //     $data->where('created_at', $request->date);
+        // }
         $data=$data->paginate($count);
         $pages=PageResource::collection($data);
         $success['page_count'] = $pages->lastPage();
