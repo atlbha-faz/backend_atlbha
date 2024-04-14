@@ -509,13 +509,13 @@ class EtlobhaController extends BaseController
         if (count($products) > 0) {
             foreach ($products as $product) {
 
-                $imports = Importproduct::where('product_id', $product->id)->get();
-                if (count($imports) > 0) {
-                    foreach ($imports as $import) {
+                // $imports = Importproduct::where('product_id', $product->id)->get();
+                // if (count($imports) > 0) {
+                //     foreach ($imports as $import) {
 
-                        $import->delete();
-                    }
-                }
+                //         $import->delete();
+                //     }
+                // }
 
                 $product->update(['is_deleted' => $product->id]);
                 $preAttributes = Attribute_product::where('product_id', $product->id)->get();
