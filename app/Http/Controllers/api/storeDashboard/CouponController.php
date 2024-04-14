@@ -32,6 +32,7 @@ class CouponController extends BaseController
         if ($request->has('discount_type')) {
             $data->where('discount_type', $request->discount_type);
         }
+        $data=$data->paginate($count);
         $coupons =CouponResource::collection($data);
         $success['page_count'] = $coupons->lastPage();
         $pageNumber = request()->query('page', 1);
