@@ -56,7 +56,7 @@ class ExplainVideosController extends BaseController
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'explainvideo showed successfully');
     }
-    public function searchExplainVideosName(Request $request)
+    public function explainVideoName(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
@@ -69,7 +69,7 @@ class ExplainVideosController extends BaseController
         $success['total_result'] = $explain_videos->total();
         $success['page_count'] = $explain_videos->lastPage();
         $success['current_page'] = $explain_videos->currentPage();
-        $success['explainVideoName'] = ExplainVideoResource::collection($explain_videos);
+        $success['explainvideos'] = ExplainVideoResource::collection($explain_videos);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الشروحات بنجاح', 'explain_videos Information returned successfully');
