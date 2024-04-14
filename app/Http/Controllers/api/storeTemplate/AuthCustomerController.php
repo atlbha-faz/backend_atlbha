@@ -169,7 +169,11 @@ class AuthCustomerController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        $user = User::where('phonenumber', $request->phonenumber)->orWhere('email', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->latest()->first();
+        $phone = $request->phonenumber;
+        $user = User::where('user_type', 'customer')->where('is_deleted', 0)->where(function ($query) use ($phone) {
+            $query->where('phonenumber', $phone)->orWhere('email', $phone);
+
+        })->latest()->first();
         if (is_null($user)) {
             return $this->sendError('الحساب غير موجود', 'User not found');
         }
@@ -327,7 +331,7 @@ class AuthCustomerController extends BaseController
 
         $curl = curl_init();
         $data = array(
-            'AppSid' => env('AppSid','3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
+            'AppSid' => env('AppSid', '3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
             'Body' => $request->code,
             'Recipient' => $request->phonenumber);
 
