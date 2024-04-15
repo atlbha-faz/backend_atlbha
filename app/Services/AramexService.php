@@ -151,7 +151,7 @@ class AramexService
                             "City": "jeddah",
                             "StateOrProvinceCode": "Western Province",
                             "PostCode": "",
-                            "CountryCode": "",
+                            "CountryCode": "SA",
                             "Longitude": 0,
                             "Latitude": 0,
                             "BuildingNumber": null,
