@@ -68,7 +68,7 @@ class PaymenttypeController extends BaseController
         if ($paymenttype != null) {
             $paymenttype->delete();
         } else {
-            if ($id != 4 ){
+            if (in_array($id, [1,2,3]) ){
                 $account = Account::where('store_id', auth()->user()->store_id)->where('status','APPROVED')->first();
                 if($account == null){
                     return $this->sendError("  ليس لديك حساب بنكي", "account is't exists"); 
