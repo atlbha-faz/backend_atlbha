@@ -280,7 +280,7 @@ class SupplierController extends BaseController
 
     public function billing(Request $request)
     {
-        $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->orwhere('paymentype_id',4)->pluck('id')->toArray();
+        $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->pluck('id')->toArray();
         $payments =PaymentResource::collection(Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->orderByDesc('created_at')->get());
         $success['billing'] = $payments;
         $success['status'] = 200;
