@@ -33,6 +33,7 @@ class FatoorahServices
             $request = new Request($mothod , $this->base_url.$url, $this->headers,$data);
 
         }
+      
           $response = $client->sendAsync($request)->wait();
           if ($response->getStatusCode() != 200)
               return false;

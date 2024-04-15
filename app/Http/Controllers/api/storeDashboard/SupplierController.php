@@ -82,9 +82,9 @@ class SupplierController extends BaseController
         ];
 
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->buildRequest('v2/CreateSupplier','POST', $data);
+        $supplierCode = $supplier->buildRequest('v2/CreateSupplier','POST', json_encode($data));
         
-        if ($supplierCode->IsSuccess == false) {
+        if ($supplierCode['IsSuccess']== false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
         $account = Account::updateOrCreate(
@@ -95,11 +95,11 @@ class SupplierController extends BaseController
                 'bankAccountHolderName' => $request->input('bankAccountHolderName'),
                 'bankAccount' => $request->input('bankAccount'),
                 'iban' => $request->input('iban'),
-                'supplierCode' => $supplierCode->Data->SupplierCode,
+                'supplierCode' => $supplierCode['Data']['SupplierCode'],
                 'status' => 'active',
             ]);
         $storeAdmain->update([
-            'supplierCode' => $supplierCode->Data->SupplierCode]);
+            'supplierCode' => $supplierCode['Data']['SupplierCode']]);
       
 
         $arrays = array();
@@ -168,8 +168,8 @@ class SupplierController extends BaseController
             'Iban' => $request->iban,
         ];
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',$data);
-        if ($supplierCode->IsSuccess == false) {
+        $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',json_encode($data));
+        if ($supplierCode['IsSuccess'] == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
         $account = Account::where('store_id', auth()->user()->store_id)->where('status', 'active')->first();
@@ -178,9 +178,9 @@ class SupplierController extends BaseController
             'bankAccountHolderName' => $request->input('bankAccountHolderName'),
             'bankAccount' => $request->input('bankAccount'),
             'iban' => $request->input('iban'),
-            'supplierCode' => $supplierCode->Data->SupplierCode,
+            'supplierCode' => $supplierCode['Data']['SupplierCode'],
         ]);
-        $storeAdmain->update(['supplierCode' => $supplierCode->Data->SupplierCode]);
+        $storeAdmain->update(['supplierCode' => $supplierCode['Data']['SupplierCode']]);
 
         $arrays = array();
         if ($store->verification_type == "maeruf") {
