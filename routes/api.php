@@ -326,6 +326,14 @@ Route::middleware([AdminUser::class])->group(function () {
 
         Route::post('updateSeo', [App\Http\Controllers\api\adminDashboard\SeoController::class, 'updateSeo'])->name('admin.seo.update');
         Route::post('updateProfile/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'updateProfile'])->name('admin.store.updateProfile');
+
+        // Route::post('createSupplier', [App\Http\Controllers\api\adminDashboard\SupplierController::class, 'store'])->name('admin.supplier.create');
+        // Route::get('showSupplier', [App\Http\Controllers\api\adminDashboard\SupplierController::class, 'show'])->name('admin.supplier.show');
+        // Route::post('updateSupplier', [App\Http\Controllers\api\adminDashboard\SupplierController::class, 'update'])->name('admin.supplier.update');
+        // Route::get('showSupplierDashboard', [App\Http\Controllers\api\adminDashboard\SupplierController::class, 'showSupplierDashboard'])->name('admin.supplier.showSupplierDashboard');
+        // Route::post('uploadSupplierDocument', [App\Http\Controllers\api\adminDashboard\SupplierController::class, 'uploadSupplierDocument'])->name('admin.supplier.uploadSupplierDocument');
+        // Route::get('indexSupplier', [App\Http\Controllers\api\adminDashboard\SupplierController::class, 'index'])->name('admin.supplier.indexSupplier');
+        // Route::get('billing', [App\Http\Controllers\api\adminDashboard\SupplierController::class, 'billing'])->name('admin.supplier.billing');
     });
     });
 });

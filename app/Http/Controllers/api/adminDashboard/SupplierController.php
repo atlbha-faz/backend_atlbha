@@ -70,7 +70,7 @@ class SupplierController extends BaseController
             return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
         }
         $data = [
-            'SupplierName' => $store->owner_name,
+            'SupplierName' => $storeAdmain->name,
             'Mobile' => $storeAdmain->phonenumber,
             'Email' => $storeAdmain->email,
             'DepositTerms' => 'Daily',
@@ -81,9 +81,9 @@ class SupplierController extends BaseController
         ];
 
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->buildRequest('v2/CreateSupplier','POST', $data);
-        
-        if ($supplierCode->IsSuccess == false) {
+        $supplierCode = $supplier->buildRequest('v2/CreateSupplier','POST', json_encode($data));
+     
+        if ($supplierCode['IsSuccess'] == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
         $account = Account::updateOrCreate(
@@ -94,16 +94,16 @@ class SupplierController extends BaseController
                 'bankAccountHolderName' => $request->input('bankAccountHolderName'),
                 'bankAccount' => $request->input('bankAccount'),
                 'iban' => $request->input('iban'),
-                'supplierCode' => $supplierCode->Data->SupplierCode,
+                'supplierCode' =>$supplierCode['Data']['SupplierCode'],
                 'status' => 'active',
             ]);
         $storeAdmain->update([
-            'supplierCode' => $supplierCode->Data->SupplierCode]);
+            'supplierCode' => $supplierCode['Data']['SupplierCode']]);
       
 
         $arrays = array();
       
-        $arrays = [[$request->civil_id, 1],[$request->bankAccountLetter, 21], [$request->website_image, 25], [$request->file, $type]];
+        $arrays = [[$request->civil_id, 1],[$request->bankAccountLetter, 21], [$request->website_image, 25], [$request->file, 20]];
         foreach ($arrays as $file) {
             if (is_uploaded_file($file[0])) {
                 $supplier = new FatoorahServices();
@@ -123,6 +123,7 @@ class SupplierController extends BaseController
             ];
             if ($data['FileUpload'] != null) {
                 $supplierDocument = $supplier->uploadSupplierDocument('v2/UploadSupplierDocument', $data);
+
                 $supplierdocument = Supplierdocument::updateOrCreate(
                     [
                         'supplierCode' => $account->supplierCode,
@@ -150,7 +151,7 @@ class SupplierController extends BaseController
             return $this->sendError(" لا يوجد حساب بنكي", "account is't exists");
         }
         $data = [
-            'SupplierName' => $store->owner_name,
+            'SupplierName' => $storeAdmain->name,
             'SupplierCode' => $storeAdmain->supplierCode,
             'Mobile' => $storeAdmain->phonenumber,
             'Email' => $storeAdmain->email,
@@ -160,8 +161,8 @@ class SupplierController extends BaseController
             'Iban' => $request->iban,
         ];
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',$data);
-        if ($supplierCode->IsSuccess == false) {
+        $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',json_encode($data));
+        if ($supplierCode['IsSuccess']== false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
         $account = Account::where('store_id', null)->where('status', 'active')->first();
@@ -170,9 +171,9 @@ class SupplierController extends BaseController
             'bankAccountHolderName' => $request->input('bankAccountHolderName'),
             'bankAccount' => $request->input('bankAccount'),
             'iban' => $request->input('iban'),
-            'supplierCode' => $supplierCode->Data->SupplierCode,
+            'supplierCode' => $supplierCode['Data']['SupplierCode'],
         ]);
-        $storeAdmain->update(['supplierCode' => $supplierCode->Data->SupplierCode]);
+        $storeAdmain->update(['supplierCode' => $supplierCode['Data']['SupplierCode']]);
 
         $arrays = array();
       
