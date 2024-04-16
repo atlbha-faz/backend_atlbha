@@ -66,9 +66,9 @@ class SupplierController extends BaseController
     {
         $storeAdmain = User::where('user_type', 'admin')->where('is_deleted', 0)->where('store_id', null)->first();
         $account = Account::where('store_id', null)->first();
-        if ($account) {
-            return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
-        }
+        // if ($account) {
+        //     return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
+        // }
         $data = [
             'SupplierName' => $storeAdmain->name,
             'Mobile' => $storeAdmain->phonenumber,
@@ -81,24 +81,24 @@ class SupplierController extends BaseController
         ];
 
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->buildRequest('v2/CreateSupplier','POST', json_encode($data));
+        // $supplierCode = $supplier->buildRequest('v2/CreateSupplier','POST', json_encode($data));
      
-        if ($supplierCode['IsSuccess'] == false) {
-            return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
-        }
-        $account = Account::updateOrCreate(
-            [
-                'store_id' => null,
-            ], [
-                'bankId' => $request->input('bankId'),
-                'bankAccountHolderName' => $request->input('bankAccountHolderName'),
-                'bankAccount' => $request->input('bankAccount'),
-                'iban' => $request->input('iban'),
-                'supplierCode' =>$supplierCode['Data']['SupplierCode'],
-                'status' => 'active',
-            ]);
-        $storeAdmain->update([
-            'supplierCode' => $supplierCode['Data']['SupplierCode']]);
+        // if ($supplierCode['IsSuccess'] == false) {
+        //     return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
+        // }
+        // $account = Account::updateOrCreate(
+        //     [
+        //         'store_id' => null,
+        //     ], [
+        //         'bankId' => $request->input('bankId'),
+        //         'bankAccountHolderName' => $request->input('bankAccountHolderName'),
+        //         'bankAccount' => $request->input('bankAccount'),
+        //         'iban' => $request->input('iban'),
+        //         'supplierCode' =>$supplierCode['Data']['SupplierCode'],
+        //         'status' => 'active',
+        //     ]);
+        // $storeAdmain->update([
+        //     'supplierCode' => $supplierCode['Data']['SupplierCode']]);
       
 
         $arrays = array();
