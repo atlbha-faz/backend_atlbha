@@ -7,16 +7,17 @@ use App\Http\Requests\MadfuLoginRequest;
 use App\Services\Madfu;
 use Illuminate\Http\Request;
 
-class MadfuController extends Controller
+class MadfuController extends BaseController
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
     public function login(MadfuLoginRequest $request)
     {
         $username = 'Atlbha';
         $password = 'QU1NTAUNS1NXSSE';
-        return (new Madfu())->login($username, $password, $request->uuid);
+        $login_request = (new Madfu())->login($username, $password, $request->uuid);
+        if ($login_request->getStatusCode() == 200) {
+            return $this->sendResponse(['token' => json_decode($login_request->getBody()->getContents())->token], 'عملية ناجحة', 'Success process');
+        } else {
+            return $this->sendError('خطأ في العملية', 'process failed');
+        }
     }
 }

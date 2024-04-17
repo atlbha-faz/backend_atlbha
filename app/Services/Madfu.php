@@ -34,8 +34,7 @@ class Madfu
     private function initToken($uuid)
     {
         $url = $this->base_url . 'merchants/token/init';
-        $body = json_encode(["uuid" => $uuid, "systemInfo" => "web"]);
-
+        $body = ["uuid" => $uuid, "systemInfo" => "web"];
         $result = $this->makeRequest($url, $body);
         return $result;
     }
