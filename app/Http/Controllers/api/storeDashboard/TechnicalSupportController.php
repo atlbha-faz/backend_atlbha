@@ -201,7 +201,7 @@ class TechnicalSupportController extends BaseController
         $success['total_result'] = $technical_supports->total();
         $success['page_count'] = $technical_supports->lastPage();
         $success['current_page'] = $technical_supports->currentPage();
-        $success['technical_supports'] = TechnicalSupportResource::collection($technical_supports);
+        $success['Technicalsupports'] = TechnicalSupportResource::collection($technical_supports);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'technical_supports Information returned successfully');

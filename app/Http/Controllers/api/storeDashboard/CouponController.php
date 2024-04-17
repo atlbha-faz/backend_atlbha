@@ -25,7 +25,15 @@ class CouponController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
+        $data= Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at');
+        if ($request->has('status')) {
+            $data->where('status', $request->status);
+        }
+        if ($request->has('discount_type')) {
+            $data->where('discount_type', $request->discount_type);
+        }
+        $data=$data->paginate($count);
+        $coupons =CouponResource::collection($data);
         $success['page_count'] = $coupons->lastPage();
         $pageNumber = request()->query('page', 1);
         $success['current_page'] = $coupons->currentPage();
@@ -155,6 +163,9 @@ class CouponController extends BaseController
 
         if (is_null($coupon) || $coupon->is_deleted != 0) {
             return $this->sendError("الكوبون غير موجودة", "coupon is't exists");
+        }
+        if ($coupon->status == "expired") {
+            return $this->sendError(" الكوبون منتهي لاعاده التفعيل قم بتعديل تاريخ الانتهاء", "coupon is expired");
         }
         if ($coupon->status === 'active') {
             $coupon->update(['status' => 'not_active']);
@@ -324,7 +335,9 @@ class CouponController extends BaseController
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
-
+                if ($coupon->status == "expired") {
+                    return $this->sendError(" الكوبون منتهي لاعاده التفعيل قم بتعديل تاريخ الانتهاء", "coupon is expired");
+                }
                 if ($coupon->status === 'active') {
                     $coupon->update(['status' => 'not_active']);
                 } else {

@@ -160,6 +160,14 @@ class CheckoutController extends BaseController
                             'qty' => $importProduct->qty - $cartItem->qty,
                         ]);
                     }
+                    if ($cartItem->option_id != null) {
+                        $optionQty = Option::where('id', $cartItem->option_id)->where('importproduct_id', $importProduct->id)->first();
+                        if ($optionQty != null) {
+                            $optionQty->update([
+                                'quantity' => $optionQty->quantity - $cartItem->qty,
+                            ]);
+                        }
+                    }
                 }
             }
             foreach ($cart->cartDetails as $cartItem) {
@@ -276,7 +284,7 @@ class CheckoutController extends BaseController
                             $supplierobject,
                         ],
                     ];
-                    $data=json_encode($data);
+                    $data = json_encode($data);
                     $supplier = new FatoorahServices();
                     $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
 
@@ -356,7 +364,7 @@ class CheckoutController extends BaseController
                             $supplierobject,
                         ],
                     ];
-                    $data=json_encode($data);
+                    $data = json_encode($data);
                     $supplier = new FatoorahServices();
                     $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
 
@@ -602,17 +610,45 @@ class CheckoutController extends BaseController
         if (is_null($order)) {
             return $this->sendError("الطلب غير موجودة", "order is't exists");
         }
-        $order->update([
-            'order_status' => 'canceled',
-        ]);
-        foreach ($order->items as $orderItem) {
-            $orderItem->update([
+        if ($order->order_status == "new") {
+
+            $order->update([
                 'order_status' => 'canceled',
             ]);
-        }
+            foreach ($order->items as $orderItem) {
+                $orderItem->update([
+                    'order_status' => 'canceled',
+                ]);
+            }
+            $payment = Payment::where('orderID', $order->id)->first();
+            $mount = $order->total_price - $payment->deduction;
+            $data = [
 
-        $success['orders'] = new OrderResource($order);
-        return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+                "Key" => $payment->paymentTransectionID,
+                "KeyType" => "invoiceid",
+                "RefundChargeOnCustomer" => false,
+                "ServiceChargeOnCustomer" => false,
+                "Amount" => $mount,
+                "Comment" => "refund to the customer",
+                "AmountDeductedFromSupplier" => 0,
+                "CurrencyIso" => "SA",
+            ];
+
+            $supplier = new FatoorahServices();
+            $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+
+            if ($supplierCode->IsSuccess == false) {
+                return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+            } else {
+                $success['test'] = $supplierCode;
+            }
+            $success['orders'] = new OrderResource($order);
+            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
+
+        } else {
+            return $this->sendResponse($success, 'حالة الطلب لاتقبل الالغاء', 'Order can not cancel');
+
+        }
 
     }
 

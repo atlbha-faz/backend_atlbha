@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('twiter')->nullable();
             $table->string('youtube')->nullable();
             $table->string('instegram')->nullable();
+            $table->string('jaco')->nullable();
             $table->string('logo')->nullable();
             $table->string('entity_type')->nullable();
             $table->timestamp('start_at')->nullable();

@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
 
         Commands\AbandonedCart::class,
             Commands\DeleteStore::class,
+            Commands\PermanentDeletion::class
 
     ];
     protected function schedule(Schedule $schedule)
@@ -24,6 +25,8 @@ class Kernel extends ConsoleKernel
           $schedule->command('cart:abandoned') 
                 ->everyMinute();
                  $schedule->command('store:delete') 
+                ->everyMinute();
+                $schedule->command('deletion:permanent') 
                 ->everyMinute();
     }
 

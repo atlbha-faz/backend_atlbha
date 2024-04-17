@@ -17,5 +17,9 @@ class Importproduct extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    public function option()
+    {
+        return $this->hasMany(Option::class,'importproduct_id','id');
+    }
 
 }

@@ -123,7 +123,7 @@ class EtlobhaController extends BaseController
             'stock' => $request->stock,
             'cover' => $cover,
             'amount' => 1,
-            'SEOdescription' => $request->SEOdescription != ""?json_encode(explode(',', $request->SEOdescription)):null,
+            'SEOdescription' => $request->SEOdescription != "" ? json_encode(explode(',', $request->SEOdescription)) : null,
             'snappixel' => $request->snappixel,
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
@@ -139,14 +139,7 @@ class EtlobhaController extends BaseController
 
         ]);
         $productid = $product->id;
-        //إستيراد الى متجر اطلبها
-        $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-        $importproduct = Importproduct::create([
-            'product_id' => $product->id,
-            'store_id' => $atlbha_id,
-            'price' => $product->selling_price,
-            'qty' => $product->stock,
-        ]);
+
         if ($request->hasFile("images")) {
             $files = $request->images;
 
@@ -220,6 +213,7 @@ class EtlobhaController extends BaseController
                 }
             }
         }
+        $options = array();
         if ($request->has('data')) {
             if (!is_null($request->data)) {
 
@@ -243,6 +237,27 @@ class EtlobhaController extends BaseController
                 }
             }
         }
+        //إستيراد الى متجر اطلبها
+        $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+        $importproduct = Importproduct::create([
+            'product_id' => $product->id,
+            'store_id' => $atlbha_id,
+            'price' => $product->selling_price,
+            'qty'=>$product->stock
+
+        ]);
+      
+            $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
+            foreach ($options as $option) {
+                $newOption = $option->replicate();
+                $newOption->product_id = null;
+                $newOption->original_id = $option->id;
+                $newOption->importproduct_id = $importproduct->id;
+                $newOption->price = $option->price;
+                $newOption->save();
+
+            }
+        
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
@@ -308,7 +323,7 @@ class EtlobhaController extends BaseController
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
             'amount' => 1,
-            'SEOdescription' =>$request->SEOdescription != ""?json_encode(explode(',', $request->SEOdescription)):null,
+            'SEOdescription' => $request->SEOdescription != "" ? json_encode(explode(',', $request->SEOdescription)) : null,
             'snappixel' => $request->snappixel,
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
@@ -494,13 +509,13 @@ class EtlobhaController extends BaseController
         if (count($products) > 0) {
             foreach ($products as $product) {
 
-                $imports = Importproduct::where('product_id', $product->id)->get();
-                if (count($imports) > 0) {
-                    foreach ($imports as $import) {
+                // $imports = Importproduct::where('product_id', $product->id)->get();
+                // if (count($imports) > 0) {
+                //     foreach ($imports as $import) {
 
-                        $import->delete();
-                    }
-                }
+                //         $import->delete();
+                //     }
+                // }
 
                 $product->update(['is_deleted' => $product->id]);
                 $preAttributes = Attribute_product::where('product_id', $product->id)->get();

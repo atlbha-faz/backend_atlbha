@@ -26,48 +26,60 @@ class CategoryController extends BaseController
         $store = auth()->user()->store_id;
         if (auth()->user()->store->verification_status == "accept") {
 
-            $etlobha_categories = CategoryResource::collection(Category::with(['store' => function ($query) {
+            $etlobha_categories = Category::with(['store' => function ($query) {
                 $query->select('id');
             }])->
-                    where('is_deleted', 0)
-                    ->where('parent_id', null)
-                    ->where('store_id', null)
-                    ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->paginate($count));
+                where('is_deleted', 0)
+                ->where('parent_id', null)
+                ->where('store_id', null)
+                ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at');
 
-            $categories = CategoryResource::collection(Category::with(['store' => function ($query) {
+            if ($request->has('category_id')) {
+                $etlobha_categories->where('id', $request->category_id);
+            }
+            $etlobha_categories = $etlobha_categories->paginate($count);
+            $categories = Category::with(['store' => function ($query) {
                 $query->select('id');
             }])->where('is_deleted', 0)
-                    ->where('parent_id', null)
-                    ->where('store_id', auth()->user()->store_id)
-                    ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->paginate($count));
-
+                ->where('parent_id', null)
+                ->where('store_id', auth()->user()->store_id)
+                ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at');
+            if ($request->has('category_id')) {
+                $categories->where('id', $request->category_id);
+            }
+            $categories = $categories->paginate($count);
             $success['etlobha_page_count'] = $etlobha_categories->lastPage();
             $success['etlobha_current_page'] = $etlobha_categories->currentPage();
-            $success['etlobha_categories'] = $etlobha_categories;
+            $success['etlobha_categories'] = CategoryResource::collection($etlobha_categories);
 
-            $success['page_count'] = $categories->lastPage();
-            $success['current_page'] = $categories->currentPage();
-            $success['categories'] = $categories;
+            $success['store_page_count'] = $categories->lastPage();
+            $success['store_current_page'] = $categories->currentPage();
+            $success['store_categories'] = CategoryResource::collection($categories);
 
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
         } else {
-            $categories = CategoryResource::collection(Category::with(['store' => function ($query) {
+            $categories = Category::with(['store' => function ($query) {
                 $query->select('id');
             }])->
-                    where('is_deleted', 0)
-                    ->where('parent_id', null)
-                    ->where('store_id', auth()->user()->store_id)
-                    ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at')->paginate($count));
+                where('is_deleted', 0)
+                ->where('parent_id', null)
+                ->where('store_id', auth()->user()->store_id)
+                ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at');
 
+           
+            if ($request->has('category_id')) {
+                $categories->where('id', $request->category_id);
+            }
+            $categories = $categories->paginate($count);
             $success['etlobha_page_count'] = 0;
             $success['etlobha_current_page'] = 0;
             $success['etlobha_categories'] = array();
 
-            $success['page_count'] = $categories->lastPage();
-            $success['current_page'] = $categories->currentPage();
-            $success['categories'] = $categories;
+            $success['store_page_count'] = $categories->lastPage();
+            $success['store_current_page'] = $categories->currentPage();
+            $success['store_categories'] = CategoryResource::collection($categories);
             $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
@@ -461,7 +473,7 @@ class CategoryController extends BaseController
         $success['total_result'] = $categories->total();
         $success['page_count'] = $categories->lastPage();
         $success['current_page'] = $categories->currentPage();
-        $success['categories'] = CategoryResource::collection($categories);
+        $success['store_categories'] = CategoryResource::collection($categories);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع التصنيفات بنجاح', 'Categories Information returned successfully');
@@ -479,7 +491,7 @@ class CategoryController extends BaseController
         $success['total_result'] = $categories->total();
         $success['page_count'] = $categories->lastPage();
         $success['current_page'] = $categories->currentPage();
-        $success['categories'] = CategoryResource::collection($categories);
+        $success['etlobha_categories'] = CategoryResource::collection($categories);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع التصنيفات بنجاح', 'Categories Information returned successfully');

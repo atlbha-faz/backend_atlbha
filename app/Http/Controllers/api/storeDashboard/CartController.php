@@ -40,7 +40,7 @@ class CartController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $carts = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
             $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate($count));
+        }])->where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate($count));
         $success['page_count'] = $carts->lastPage();
         $success['current_page'] = $carts->currentPage();
         $success['carts'] = $carts;
@@ -123,14 +123,16 @@ class CartController extends BaseController
     public function delete(Request $request)
     {
 
-        $carts = DB::table('carts')->whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
+        $carts = Cart::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
 
         foreach ($carts as $cart) {
-
-            $cart->delete();
+            if (is_null($cart) || $cart->is_deleted != 0) {
+                return $this->sendError("القسم غير موجودة", "Category is't exists");
+            }
+            $cart->update(['is_deleted' => $cart->id]);
         }
         $success['status'] = 200;
-        return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+        return $this->sendResponse($success, 'تم حذف السلة بنجاح', 'cart deleted successfully');
     }
 
     /**

@@ -56,5 +56,24 @@ class ExplainVideosController extends BaseController
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'explainvideo showed successfully');
     }
+    public function explainVideoName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $explain_videos = ExplainVideos::where('is_deleted', 0)
+            ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $explain_videos->total();
+        $success['page_count'] = $explain_videos->lastPage();
+        $success['current_page'] = $explain_videos->currentPage();
+        $success['explainvideos'] = ExplainVideoResource::collection($explain_videos);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الشروحات بنجاح', 'explain_videos Information returned successfully');
+
+    }
 
 }

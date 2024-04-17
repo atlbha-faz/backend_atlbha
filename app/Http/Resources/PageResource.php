@@ -19,6 +19,13 @@ class PageResource extends JsonResource
         } else {
             $status = __('message.forbidden');
         }
+        if(json_decode($this->tags, true)== null){
+            $tags=explode(',',$this->tags);
+        }
+            else{
+             $tags=json_decode($this->tags, true);
+     
+            }
         return [
             'id' => $this->id,
             'title' => $this->title === "null" ? "" : $this->title,
@@ -30,7 +37,7 @@ class PageResource extends JsonResource
             'image' => $this->image != null ? $this->image : "",
             'altImage' => $this->altImage,
             'default_page' => $this->default_page,
-            'tags' =>$this->tags != null ?json_decode($this->tags, true): array(),
+            'tags' =>$this->tags != null ?$tags: array(),
             'store' => new StoreResource($this->store),
             'postCategory' => new PostCategoryResource($this->postcategory),
             'user' => new UserResource($this->user),

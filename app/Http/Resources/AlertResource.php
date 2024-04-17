@@ -15,7 +15,6 @@ class AlertResource extends JsonResource
     public function toArray($request)
     {
    
-        
         return [
             'id' =>$this->id,
             'subject' => $this->subject,

@@ -19,13 +19,18 @@ class Option extends Model
         'less_qty',
         'is_deleted',
         'default_option',
-        'original_id'
+        'original_id',
+        'importproduct_id'
     ];
     protected $casts = [
       'default_option'=>'integer'
     ];
      public function product(){
         return $this->belongsTo(Product::class);
+    }
+    public function importproduct()
+    {
+        return $this->belongsTo(Importproduct::class);
     }
     protected function name() : Attribute{
     return Attribute::make(

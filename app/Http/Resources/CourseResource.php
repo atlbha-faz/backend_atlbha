@@ -16,13 +16,19 @@ class CourseResource extends JsonResource
      */
     public function toArray($request)
     {
-
+        if(json_decode($this->tags, true)== null){
+            $tags=explode(',',$this->tags);
+        }
+            else{
+             $tags=json_decode($this->tags, true);
+     
+            }
         return [
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
             'image' => $this->image,
-            'tags' => $this->tags != null ?json_decode($this->tags, true): array(),
+            'tags' => $this->tags != null ? $tags: array(),
             'duration' => $this->duration,
             'status' => $this->status == null || $this->status == 'active' ? __('message.active'):__('message.not_active'),
             'url' => "https://store.atlbha.sa/Academy/CourseDetails/" . $this->id,
