@@ -6,6 +6,7 @@ use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
 use App\Http\Middleware\SetActiveStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\MadfuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +51,6 @@ Route::get('/logoutcustomer', 'App\Http\Controllers\api\storeTemplate\AuthCustom
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'index']);
-Route::get('searchIndex', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'searchIndex']);
 Route::get('commonquestion', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'commonQuestion']);
 
 Route::post('atlobhaContactAdd', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'store']);
@@ -392,7 +392,6 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('searchPageName', [App\Http\Controllers\api\storeDashboard\PageController::class, 'searchPageName']);
         Route::get('searchCourseName', [App\Http\Controllers\api\storeDashboard\CourseController::class, 'searchCourseName']);
         Route::get('searchTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'searchTechnicalSupport']);
-        Route::get('explainVideoName', [App\Http\Controllers\api\storeDashboard\ExplainVideosController::class, 'explainVideoName']);
 
         //couponall
         Route::get('couponchangeSatusItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeSatusItems']);
@@ -579,4 +578,9 @@ Route::middleware([StoreUser::class])->group(function () {
 
         // });
     });
+});
+
+
+Route::prefix('madfu')->group(function () {
+    Route::post('login', [MadfuController::class, 'login']);
 });
