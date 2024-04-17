@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\ownCors;
+use App\Http\Middleware\OwnCors;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -21,7 +21,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
-        ownCors::class,
+        OwnCors::class,
         //wafaa commit
         // \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
