@@ -580,6 +580,7 @@ Route::middleware([StoreUser::class])->group(function () {
     });
 });
 
+
 Route::prefix('madfu')->group(function () {
     Route::post('login', [MadfuController::class, 'login']);
 });
