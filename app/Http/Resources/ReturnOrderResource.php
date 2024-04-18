@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\OptionResource;
+use App\Http\Resources\PaymentOrderResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\AtlbhaIndexSearchProductResource;
 
@@ -28,7 +29,7 @@ class ReturnOrderResource extends JsonResource
         
         return [
             'id' =>$this->id,
-            'order' => new OrderResource($this->order),
+            'order' => new PaymentOrderResource($this->order),
             'user_id' => $this->user_id,
             'option_id' =>new OptionResource($this->option),
             'product_id' => new AtlbhaIndexSearchProductResource($this->product),
