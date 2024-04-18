@@ -209,6 +209,7 @@ class OrderController extends BaseController
             ->orderBy('created_at', 'desc')->paginate($count);
 
         $success['query'] = $query;
+        
         $success['total_result'] = $orders->total();
         $success['page_count'] = $orders->lastPage();
         $success['current_page'] = $orders->currentPage();
