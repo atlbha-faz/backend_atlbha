@@ -15,7 +15,7 @@ class MadfuController extends BaseController
         $password = 'QU1NTAUNS1NXSSE';
         $login_request = (new Madfu())->login($username, $password, $request->uuid);
         if ($login_request->getStatusCode() == 200) {
-            return $this->sendResponse(['token' => json_decode($login_request->getBody()->getContents())->token,
+            return $this->sendResponse(['token' => json_decode($login_request->getBody()->getContents()),
                 'data' => json_decode($login_request->getBody()->getContents())], 'عملية ناجحة', 'Success process');
         } else {
             return $this->sendError('خطأ في العملية', 'process failed');
