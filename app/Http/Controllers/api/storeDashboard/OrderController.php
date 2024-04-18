@@ -202,11 +202,14 @@ class OrderController extends BaseController
         })->orWhereHas('shippingtype', function ($shippingtypeQuery) use ($query) {
             $shippingtypeQuery->where('name', 'like', "%$query%");
         })->orWhereHas('shipping', function ($shippingQuery) use ($query) {
-            $shippingQuery->where('track_id', 'like', "%$query%");
-        })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            $shippingQuery->where(function ($sub_shippingQuery) use ($query) {
+                $sub_shippingQuery->where('track_id', 'like', "%$query%")->orwhere('shipping_id', 'like', "%$query%");
+        });
+         })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
             ->orderBy('created_at', 'desc')->paginate($count);
 
         $success['query'] = $query;
+        
         $success['total_result'] = $orders->total();
         $success['page_count'] = $orders->lastPage();
         $success['current_page'] = $orders->currentPage();
