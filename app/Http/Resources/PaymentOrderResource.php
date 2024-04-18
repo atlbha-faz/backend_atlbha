@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
+use App\Http\Resources\OrderItemsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentOrderResource extends JsonResource
@@ -51,6 +53,7 @@ class PaymentOrderResource extends JsonResource
         'total_price' => round($this->total_price, 2),
         'discount' => $this->discount != null ?-($this->discount) : 0,
         'status' => $status,
+        'orderItem' => OrderItemsResource::collection($this->items),
         'payment_status' => $paymentstatus,
         'created_at' => $this->created_at,
         ];
