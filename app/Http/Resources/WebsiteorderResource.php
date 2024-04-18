@@ -17,9 +17,9 @@ class WebsiteorderResource extends JsonResource
         if ($this->status == null || $this->status == 'pending') {
             $status = __('message.pending');
         } elseif ($this->status == 'accept') {
-            $status = __('message.finished');
+            $status = "منتهية";
         } elseif ($this->status == 'reject') {
-            $status = __('message.not_finished');
+            $status = "غير منتهية";
         }
 
         $type = '';
