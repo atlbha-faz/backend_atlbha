@@ -234,6 +234,7 @@ class IndexStoreController extends BaseController
             }
 
             $success['productsRatings'] = ProductResource::collection($arr)->merge($ratingsImports);
+            $success['storeId'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('id')->first();
 
             $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
             $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
