@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Validator;
 
 class ReturnOrderController extends BaseController
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
     public function index($id)
     {
         $success['ReturnOrders'] = ReturnOrderResource::collection(ReturnOrder::where('user_id', auth()->user()->id)->where('store_id', $id)->where('is_deleted', 0)->get());
@@ -48,7 +48,7 @@ class ReturnOrderController extends BaseController
             'reason_txt' => 'required|string',
             'store_id' => 'required',
             'data.*.product_id.*' => 'required|numeric',
-            'data.*.option_id.*' => 'required|numeric',
+            'data.*.option_id.*' => 'nullable|numeric',
             'data.*.price.*' => 'required|numeric',
             'data.*.qty.*' => 'required|numeric',
 
@@ -63,7 +63,7 @@ class ReturnOrderController extends BaseController
                     'order_id' => $request->input('order_id', null),
                     'reason_txt' => $request->input('reason_txt', null),
                     'product_id' => $data['product_id'],
-                    'option_id' =>  $data['option_id'],
+                    'option_id' =>  (isset($data['option_id']) && $data['option_id'] !== null) ? $data['option_id'] : null,
                     'qty' => $data['qty'],
                     'price' => $data['price'],
                     'store_id' => $request->input('store_id', null),
