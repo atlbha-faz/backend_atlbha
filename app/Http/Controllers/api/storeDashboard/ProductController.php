@@ -93,13 +93,13 @@ class ProductController extends BaseController
         $store = Store::where('id', auth()->user()->store_id)->first();
 
         $query = $request->input('query');
-        $filter_category = $request->input('filter_category',null);
+        $filter_category = $request->input('category_id');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $products = Importproduct::with(['product'=> function ($query) use($filter_category) {
-            $query->when($filter_category, function ($category_query, $filter_category)  {
-                $category_query->where('category_id', $filter_category);
-            });
-        }])  
+        $products = Importproduct::with('product')->when($filter_category,function ($query) use ($filter_category) {
+            $query->whereHas('product', function ($sub_query) use ($filter_category) {
+         $sub_query->where('category_id', $filter_category);
+                });
+        }) 
     ->where('store_id', auth()->user()->store_id)->paginate($count);
       
      
