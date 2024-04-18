@@ -44,7 +44,7 @@ class Madfu
         $token = $this->initToken($uuid);
         $url = $this->base_url . 'Merchants/sign-in';
         $body = ["userName" => $username, "password" => $password];
-        $login = $this->makeRequest($url, $body, ['token']);
+        $login = $this->makeRequest($url, $body, ['token' => json_decode($token->getBody()->getContents())->token]);
         return $login;
     }
 }
