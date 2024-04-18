@@ -36,9 +36,6 @@ class PaymentOrderResource extends JsonResource
         } elseif ($this->order_status == 'canceled') {
             $status = __('message.canceled');
         }
-        elseif ($this->order_status == 'refund') {
-            $status =  __('message.refund');
-        }
         return [
         'id' => $this->id,
         'order_number' => $this->order_number,

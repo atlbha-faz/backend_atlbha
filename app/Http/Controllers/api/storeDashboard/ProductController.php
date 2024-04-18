@@ -93,14 +93,16 @@ class ProductController extends BaseController
         $store = Store::where('id', auth()->user()->store_id)->first();
 
         $query = $request->input('query');
+        $filter_category = $request->input('filter_category',null);
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $products = Importproduct::with('product')->where('store_id', auth()->user()->store_id);
-        // $products = Product::where('is_deleted', 0)->where('is_import', 1)->where('store_id', auth()->user()->store_id)->orderBy('created_at', 'desc')
-        //     ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
-        if ($request->has('category_id')) {
-            $products->where('category_id', $request->category_id);
-        }
-        $products = $products->paginate($count);
+        $products = Importproduct::with(['product'=> function ($query) use($filter_category) {
+            $query->when($filter_category, function ($category_query, $filter_category)  {
+                $category_query->where('category_id', $filter_category);
+            });
+        }])  
+    ->where('store_id', auth()->user()->store_id)->paginate($count);
+      
+     
 
         $success['page_count'] = $products->lastPage();
         $success['current_page'] = $products->currentPage();

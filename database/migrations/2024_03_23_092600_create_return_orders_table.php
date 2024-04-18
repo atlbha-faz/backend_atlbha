@@ -19,13 +19,15 @@ return new class extends Migration
             $table->integer('user_id')->nullable();
             $table->integer('product_id')->nullable();
             $table->integer('option_id')->nullable();
+            $table->integer('qty')->nullable();
+             $table->integer('price')->nullable();
             $table->enum('return_status', ['pending', 'accept', 'reject'])
             ->default('pending');
             $table->longText('comment')->nullable();
             $table->longText('reason_txt')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-            $table->bigInteger('is_deleted')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

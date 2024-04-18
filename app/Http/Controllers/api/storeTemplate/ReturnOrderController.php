@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use App\Models\ReturnOrder;
-
-use Illuminate\Http\Request;
-use App\Http\Resources\ReturnOrderResource;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ReturnOrderResource;
+use App\Models\ReturnOrder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReturnOrderController extends BaseController
 {
@@ -18,7 +16,7 @@ class ReturnOrderController extends BaseController
     }
     public function index($id)
     {
-        $success['ReturnOrders'] =  ReturnOrderResource::collection(ReturnOrder::where('user_id',auth()->user()->id)->where('store_id',$id)->where('is_deleted', 0)->get());
+        $success['ReturnOrders'] = ReturnOrderResource::collection(ReturnOrder::where('user_id', auth()->user()->id)->where('store_id', $id)->where('is_deleted', 0)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
@@ -42,29 +40,40 @@ class ReturnOrderController extends BaseController
      */
     public function store(Request $request)
     {
+
         $input = $request->all();
         $validator = Validator::make($input, [
             'comment' => 'string|max:255',
             'order_id' => 'required|numeric',
             'reason_txt' => 'required|string',
             'store_id' => 'required',
+            'data.*.product_id.*' => 'required|numeric',
+            'data.*.option_id.*' => 'required|numeric',
+            'data.*.price.*' => 'required|numeric',
+            'data.*.qty.*' => 'required|numeric',
 
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-        $returnOrder = ReturnOrder::create([
-            'comment' => $request->input('comment'),
-            'order_id' => $request->input('order_id'),
-            'reason_txt' => $request->input('reason_txt',null),
-            'option_id' => $request->input('option_id',null),
-            'product_id' => $request->input('product_id',null),
-            'store_id' => $request->input('store_id'),
-            'user_id' => auth()->user()->id,
-            'return_status'=>'pending'
-        ]);
+        if (isset($request->data)) {
+            foreach ($request->data as $data) {
+                $returnOrders[] = ReturnOrder::create([
+                    'comment' => $request->input('comment', null),
+                    'order_id' => $request->input('order_id', null),
+                    'reason_txt' => $request->input('reason_txt', null),
+                    'product_id' => $data['product_id'],
+                    'option_id' =>  $data['option_id'],
+                    'qty' => $data['qty'],
+                    'price' => $data['price'],
+                    'store_id' => $request->input('store_id', null),
+                    'user_id' => auth()->user()->id,
+                    'return_status' => 'pending',
+                ]);
+            }
+        }
 
-        $success['ReturnOrders'] = new ReturnOrderResource($returnOrder);
+        $success['ReturnOrders'] =ReturnOrderResource::collection($returnOrders);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم إضافة طلب استرجاع بنجاح', ' Added return_status successfully');
