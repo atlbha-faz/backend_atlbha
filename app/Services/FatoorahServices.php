@@ -40,21 +40,7 @@ class FatoorahServices
         $response = json_decode($response->getBody(), true);
         return $response;
     }
-    public function refund($url, $mothod, $data)
-    {
-        $client = new Client();
-       
-            $request = new Request($mothod, $this->base_url . $url, $this->headers);
-        
-
-        $response = $client->sendAsync($request,)->wait();
-        if ($response->getStatusCode() != 200) {
-            return false;
-        }
-
-        $response = json_decode($response->getBody(), true);
-        return $response;
-    }
+  
     public function uploadSupplierDocument($url, $data)
     {
         $endpointURL = $this->base_url . $url;
