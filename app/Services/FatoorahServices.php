@@ -2,11 +2,9 @@
 namespace App\Services;
 
 use CURLFile;
-
-use App\ModelTax;
 use GuzzleHttp\Client;
-
 use GuzzleHttp\Psr7\Request;
+
 class FatoorahServices
 {
     private $base_url;
@@ -24,46 +22,58 @@ class FatoorahServices
         ];
     }
 
-    public function buildRequest($url,$mothod, $data=[] ){
-        $client = new Client(); 
-        if (empty($data)){
-            $request = new Request($mothod , $this->base_url.$url, $this->headers);
-        }
-        else{
-            $request = new Request($mothod , $this->base_url.$url, $this->headers,$data);
+    public function buildRequest($url, $mothod, $data = [])
+    {
+        $client = new Client();
+        if (empty($data)) {
+            $request = new Request($mothod, $this->base_url . $url, $this->headers);
+        } else {
+            $request = new Request($mothod, $this->base_url . $url, $this->headers, $data);
 
         }
-      
-          $response = $client->sendAsync($request)->wait();
-          if ($response->getStatusCode() != 200)
-              return false;
-          $response = json_decode ($response->getBody (),true);
-          return $response;
-      }
 
-   
+        $response = $client->sendAsync($request)->wait();
+        if ($response->getStatusCode() != 200) {
+            return false;
+        }
 
+        $response = json_decode($response->getBody(), true);
+        return $response;
+    }
+    public function refund($url, $mothod, $data)
+    {
+        $client = new Client();
+       
+            $request = new Request($mothod, $this->base_url . $url, $this->headers);
+        
 
- 
-   
-    public function uploadSupplierDocument($url,$data){
+        $response = $client->sendAsync($request,)->wait();
+        if ($response->getStatusCode() != 200) {
+            return false;
+        }
+
+        $response = json_decode($response->getBody(), true);
+        return $response;
+    }
+    public function uploadSupplierDocument($url, $data)
+    {
         $endpointURL = $this->base_url . $url;
         $curl = curl_init($endpointURL);
         curl_setopt_array($curl, array(
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'PUT',
-          CURLOPT_POSTFIELDS => array('FileUpload'=>new CURLFILE($data['FileUpload']),'FileType' => $data['FileType'],'SupplierCode' =>$data['SupplierCode']),
-          CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer '.$this->token
-        ),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_POSTFIELDS => array('FileUpload' => new CURLFILE($data['FileUpload']), 'FileType' => $data['FileType'], 'SupplierCode' => $data['SupplierCode']),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer ' . $this->token,
+            ),
         ));
-        
-        $response = curl_exec($curl); 
+
+        $response = curl_exec($curl);
         curl_close($curl);
         return json_decode($response);
 
