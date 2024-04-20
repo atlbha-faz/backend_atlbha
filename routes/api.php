@@ -398,6 +398,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('searchPageName', [App\Http\Controllers\api\storeDashboard\PageController::class, 'searchPageName']);
         Route::get('searchCourseName', [App\Http\Controllers\api\storeDashboard\CourseController::class, 'searchCourseName']);
         Route::get('searchTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'searchTechnicalSupport']);
+        Route::get('explainVideoName', [App\Http\Controllers\api\storeDashboard\ExplainVideosController::class, 'explainVideoName']);
 
         //couponall
         Route::get('couponchangeSatusItems', [App\Http\Controllers\api\storeDashboard\CouponController::class, 'changeSatusItems']);
