@@ -620,6 +620,7 @@ class CheckoutController extends BaseController
                     'order_status' => 'canceled',
                 ]);
             }
+            if($order->paymentype_id == 1){
             $payment = Payment::where('orderID', $order->id)->first();
             $mount = $order->total_price - $payment->deduction;
             $data = [
@@ -635,13 +636,15 @@ class CheckoutController extends BaseController
             ];
 
             $supplier = new FatoorahServices();
-            $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+            $data=
+            $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', json_encode($data));
 
             if ($supplierCode->IsSuccess == false) {
                 return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
             } else {
                 $success['test'] = $supplierCode;
             }
+        }
             $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
