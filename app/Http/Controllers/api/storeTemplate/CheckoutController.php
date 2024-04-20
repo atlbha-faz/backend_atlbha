@@ -646,6 +646,7 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
         } else {
+            $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'حالة الطلب لاتقبل الالغاء', 'Order can not cancel');
 
         }
