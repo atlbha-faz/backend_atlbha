@@ -647,7 +647,7 @@ class CheckoutController extends BaseController
 
         } else {
             $success['orders'] = new OrderResource($order);
-            return $this->sendResponse($success, 'حالة الطلب لاتقبل الالغاء', 'Order can not cancel');
+            return $this->sendError('حالة الطلب لاتقبل الالغاء', 'Order can not cancel');
 
         }
 
