@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\api\adminDashboard\ServiceController;
+use App\Http\Controllers\api\MadfuController;
 use App\Http\Controllers\api\storeDashboard\ReportController;
 use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
 use App\Http\Middleware\SetActiveStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\MadfuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +38,6 @@ Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorCo
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
 Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class, 'getBank']);
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
-
 
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi', 'App\Http\Controllers\api\AuthController@loginAdmin');
@@ -196,7 +195,6 @@ Route::middleware([AdminUser::class])->group(function () {
             Route::PUT('updateImportOrder/{id}', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'update'])->name('admin.adminOrder.update');
             Route::get('importordersdeleteall', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'deleteAll'])->name('admin.adminOrder.deleteall');
 
-
             Route::resource('platform', App\Http\Controllers\api\adminDashboard\PlatformController::class, ['names' => 'admin.platform']);
             Route::resource('service', App\Http\Controllers\api\adminDashboard\ServiceController::class, ['names' => 'admin.service']);
             Route::get('service/showDetail/{id}', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'showDetail'])->name('admin.service.showdetail');
@@ -221,9 +219,7 @@ Route::middleware([AdminUser::class])->group(function () {
 
             Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
 
-
             Route::resource('shippingtype', App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, ['names' => 'admin.shippingtype']);
-
 
             Route::resource('paymenttype', App\Http\Controllers\api\adminDashboard\PaymenttypeController::class, ['names' => 'admin.paymenttype']);
             Route::resource('comment', App\Http\Controllers\api\adminDashboard\CommentController::class, ['names' => 'admin.comment']);
@@ -252,7 +248,6 @@ Route::middleware([AdminUser::class])->group(function () {
             Route::resource('option', App\Http\Controllers\api\adminDashboard\OptionController::class);
             Route::resource('user', App\Http\Controllers\api\adminDashboard\UserController::class, ['names' => 'admin.user']);
             Route::resource('etlobha', App\Http\Controllers\api\adminDashboard\EtlobhaController::class, ['names' => 'admin.etlobha']);
-
 
             Route::get('statistics/{id}', [App\Http\Controllers\api\adminDashboard\EtlobhaController::class, 'statistics'])->name('admin.etlobha.statistics');
 
@@ -350,7 +345,6 @@ Route::middleware([StoreUser::class])->group(function () {
 
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
-
 
         Route::resource('pagecategory', App\Http\Controllers\api\storeDashboard\PageCategoryController::class);
         Route::get('changePageCategoryStatus/{id}', [App\Http\Controllers\api\storeDashboard\PageCategoryController::class, 'changeStatus']);
@@ -468,7 +462,6 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('specialStatus/{id}', [App\Http\Controllers\api\storeDashboard\ProductController::class, 'specialStatus'])->name('store.products.specialStatus');
         Route::post('importcities', [App\Http\Controllers\api\storeDashboard\CityController::class, 'importcities']);
 
-
         // importProduct
         Route::get('etlobhaShow', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'etlobhaShow'])->name('store.products.etlobhaShow');
         Route::get('etlobhaProductShow/{id}', [App\Http\Controllers\api\storeDashboard\ImportproductController::class, 'show'])->name('store.products.etlbhasingleproduct');
@@ -569,6 +562,7 @@ Route::middleware([StoreUser::class])->group(function () {
 
         Route::get('subsicriptions', [SubscriptionEmailController::class, 'index'])->name('store.subsicriptions.show');
         Route::get('subsicriptionsdeleteall', [SubscriptionEmailController::class, 'deleteAll'])->name('store.subsicriptions.deleteall');
+        Route::get('searchSubscriptionEmail', [SubscriptionEmailController::class, 'searchSubscriptionEmail'])->name('store.subsicriptions.searchSubscriptionEmail');
 
         // website seo
         Route::resource('seo', App\Http\Controllers\api\storeDashboard\SeoController::class, ['names' => 'store.seo']);
@@ -585,5 +579,3 @@ Route::middleware([StoreUser::class])->group(function () {
         // });
     });
 });
-
-
