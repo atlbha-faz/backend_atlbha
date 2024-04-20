@@ -637,7 +637,7 @@ class CheckoutController extends BaseController
 
             $supplier = new FatoorahServices();
         
-            $response = $supplier->buildRequest('v2/MakeRefund', 'POST', json_encode($data));
+            $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
 
             if ($response['IsSuccess'] == false) {
                 return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
