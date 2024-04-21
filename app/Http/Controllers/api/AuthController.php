@@ -12,15 +12,11 @@ use GuzzleHttp\Client;
 use App\Models\Setting;
 use App\Models\Homepage;
 use App\Models\Marketer;
-
+use App\Http\Resources\UserResource;
 use App\Models\paymenttype_store;
-
 use App\Models\shippingtype_store;
-
-
 use App\Notifications\verificationNotification;
 use App\Services\UnifonicSms;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
