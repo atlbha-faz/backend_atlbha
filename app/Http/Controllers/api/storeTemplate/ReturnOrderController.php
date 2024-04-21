@@ -64,20 +64,20 @@ class ReturnOrderController extends BaseController
                     'comment' => $request->input('comment', null),
                     'order_id' => $request->input('order_id', null),
                     'reason_txt' => $request->input('reason_txt', null),
-                    'order_item' => $data['order_item'],
+                    'order_item_id' => $data['order_item_id'],
                     'qty' => $data['qty'],
                     'price' => $data['price'],
                     'store_id' => $request->input('store_id', null),
                     'return_status' => 'pending',
                 ]);
-                $order_item=OrderItem::where('id', $data['order_item'])->get();
+                $order_item=OrderItem::where('id', $data['order_item_id'])->first();
                 $order_item->update([
                     'is_return' => 1
                 ]); 
             }
         }
 
-        $success['ReturnOrders'] =ReturnOrderResource::collection($returnOrders);
+        // $success['ReturnOrders'] =ReturnOrderResource::collection($returnOrders);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم إضافة طلب استرجاع بنجاح', ' Added return_status successfully');
