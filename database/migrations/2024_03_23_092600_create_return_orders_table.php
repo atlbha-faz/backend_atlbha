@@ -16,9 +16,8 @@ return new class extends Migration
         Schema::create('return_orders', function (Blueprint $table) {
             $table->id();
             $table->integer('order_id')->nullable();
-            $table->integer('user_id')->nullable();
-            $table->integer('product_id')->nullable();
-            $table->integer('option_id')->nullable();
+            $table->unsignedBigInteger('order_item_id')->nullable();
+            $table->foreign('order_item_id')->references('id')->on('order_items')->onDelete('cascade');
             $table->integer('qty')->nullable();
              $table->integer('price')->nullable();
             $table->enum('return_status', ['pending', 'accept', 'reject'])

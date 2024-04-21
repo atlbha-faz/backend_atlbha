@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ReturnOrderResource;
+use App\Models\OrderItem;
 use App\Models\ReturnOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ReturnOrderResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ReturnOrderController extends BaseController
 {
@@ -16,7 +17,9 @@ class ReturnOrderController extends BaseController
     }
     public function index($id)
     {
-        $success['ReturnOrders'] = ReturnOrderResource::collection(ReturnOrder::where('user_id', auth()->user()->id)->where('store_id', $id)->get());
+        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) {
+            $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+        })->where('user_id', auth()->user()->id)->where('store_id', $id)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
@@ -47,8 +50,7 @@ class ReturnOrderController extends BaseController
             'order_id' => 'required|numeric',
             'reason_txt' => 'required|string',
             'store_id' => 'required',
-            'data.*.product_id.*' => 'required|numeric',
-            'data.*.option_id.*' => 'nullable|numeric',
+            'data.*.order_item.*' => 'required|numeric',
             'data.*.price.*' => 'required|numeric',
             'data.*.qty.*' => 'required|numeric',
 
@@ -62,14 +64,16 @@ class ReturnOrderController extends BaseController
                     'comment' => $request->input('comment', null),
                     'order_id' => $request->input('order_id', null),
                     'reason_txt' => $request->input('reason_txt', null),
-                    'product_id' => $data['product_id'],
-                    'option_id' =>  (isset($data['option_id']) && $data['option_id'] !== null) ? $data['option_id'] : null,
+                    'order_item' => $data['order_item'],
                     'qty' => $data['qty'],
                     'price' => $data['price'],
                     'store_id' => $request->input('store_id', null),
-                    'user_id' => auth()->user()->id,
                     'return_status' => 'pending',
                 ]);
+                $order_item=OrderItem::where('id', $data['order_item'])->get();
+                $order_item->update([
+                    'is_return' => 1
+                ]); 
             }
         }
 
