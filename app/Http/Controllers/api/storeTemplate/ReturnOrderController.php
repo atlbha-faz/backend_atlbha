@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
+use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ReturnOrder;
 use Illuminate\Http\Request;
@@ -17,8 +18,8 @@ class ReturnOrderController extends BaseController
     }
     public function index($id)
     {
-        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) {
-            $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) use($id) {
+            $q->where('store_id', $id)->where('is_return', 1);
         })->where('user_id', auth()->user()->id)->where('store_id', $id)->get());
         $success['status'] = 200;
 

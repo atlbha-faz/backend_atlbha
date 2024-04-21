@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\OrderItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class ReturnOrder extends Model
 {
     use HasFactory;
@@ -21,7 +23,7 @@ class ReturnOrder extends Model
     }
     public function orderItem()
     {
-        return $this->belongsTo(OrderItem::class, 'order_item_id', 'id');
+        return $this->belongsTo(OrderItem::class,'order_item_id','id');
     }
  
   
