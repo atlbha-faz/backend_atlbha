@@ -620,30 +620,33 @@ class CheckoutController extends BaseController
                     'order_status' => 'canceled',
                 ]);
             }
-            if($order->paymentype_id == 1){
-            $payment = Payment::where('orderID', $order->id)->first();
-            $mount = $order->total_price - $payment->deduction;
-            $data = [
+            if ($order->paymentype_id == 1) {
+                $payment = Payment::where('orderID', $order->id)->first();
+                $mount = $order->total_price - $payment->deduction;
+                $data = [
 
-                "Key" => $payment->paymentTransectionID,
-                "KeyType" => "invoiceid",
-                "RefundChargeOnCustomer" => false,
-                "ServiceChargeOnCustomer" => false,
-                "Amount" => $mount,
-                "Comment" => "refund to the customer",
-                "AmountDeductedFromSupplier" => 0
-            ];
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "RefundChargeOnCustomer" => false,
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" => $mount,
+                    "Comment" => "refund to the customer",
+                    "AmountDeductedFromSupplier" => 0,
+                ];
 
-            $supplier = new FatoorahServices();
-          
-            $response = $supplier->refund('v2/MakeRefund','POST', $data);
+                $supplier = new FatoorahServices();
 
-            if ($response['IsSuccess'] == false) {
-                return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-            } else {
-                $success['message'] =$response;
+                $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+                if ($response) {
+                    if ($response['IsSuccess'] == false) {
+                        return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                    } else {
+                        $success['message'] = $response;
+                    }
+                } else {
+                    return $this->sendError("خطأ في الارجاع", 'error');
+                }
             }
-        }
             $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
