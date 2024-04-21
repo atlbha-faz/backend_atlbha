@@ -11,8 +11,8 @@ class MadfuController extends BaseController
 {
     public function login(MadfuLoginRequest $request)
     {
-        $username = 'Atlbha';
-        $password = 'QU1NTAUNS1NXSSE';
+        $username = 'wesam@faz-it.net';
+        $password = 'Welcome@123';
         $login_request = (new Madfu())->login($username, $password, $request->uuid);
         if ($login_request->getStatusCode() == 200) {
             $login_request = json_decode($login_request->getBody()->getContents());
