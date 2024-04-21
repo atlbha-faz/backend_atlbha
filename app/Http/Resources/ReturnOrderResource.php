@@ -30,16 +30,12 @@ class ReturnOrderResource extends JsonResource
         return [
             'id' =>$this->id,
             'order' => new PaymentOrderResource($this->order),
-            'user_id' => $this->user_id,
-            'option_id' =>new OptionResource($this->option),
-            'product_id' => new AtlbhaIndexSearchProductResource($this->product),
+            'orderItem' => OrderItemsResource::collection($this->returnOrders->orderItem),
             'price' => $this->price,
             'qty' => $this->qty,
             'comment' => $this->comment,
             'reason_txt' => $this->reason_txt,
             'status' => $status,
-            'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at,
             
         ];
     }
