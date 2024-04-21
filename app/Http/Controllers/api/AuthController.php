@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\api;
 
-use Exception;
-use Notification;
-use App\Models\Page;
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Theme;
-use App\Models\Setting;
+use App\Events\VerificationEvent;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\UserResource;
 use App\Models\Homepage;
 use App\Models\Marketer;
-use Illuminate\Http\Request;
-use App\Services\UnifonicSms;
-use Illuminate\Validation\Rule;
-use App\Events\VerificationEvent;
+use App\Models\Page;
 use App\Models\paymenttype_store;
+use App\Models\Setting;
 use App\Models\shippingtype_store;
-use App\Http\Resources\UserResource;
+use App\Models\Store;
+use App\Models\Theme;
+use App\Models\User;
+use App\Notifications\verificationNotification;
+use App\Services\UnifonicSms;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Notifications\verificationNotification;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
+use Notification;
 
 class AuthController extends BaseController
 {
@@ -561,7 +561,6 @@ class AuthController extends BaseController
 
     /////////////////////////////////////////////////// SMS
 
-
     public function social_mobile(Request $request)
     {
         $input = $request->all();
@@ -668,12 +667,13 @@ class AuthController extends BaseController
     public function unifonicTest(Request $request)
     {
         $data = array(
-            'AppSid' => env('AppSid','3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
+            'AppSid' => env('AppSid', '3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
             'Body' => $request->code,
-            'Recipient' => $request->phonenumber);
+            'Recipient' => $request->phonenumber,
+        );
 
-        $unifonic_sms=new UnifonicSms();
-        $responseData =$unifonic_sms->buildRequest('POST',$data);
+        $unifonic_sms = new UnifonicSms();
+        $responseData = $unifonic_sms->buildRequest('POST', $data);
 
         if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
             return true;
