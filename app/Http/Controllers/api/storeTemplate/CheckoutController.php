@@ -612,14 +612,7 @@ class CheckoutController extends BaseController
         }
         if ($order->order_status == "new") {
 
-            $order->update([
-                'order_status' => 'canceled',
-            ]);
-            foreach ($order->items as $orderItem) {
-                $orderItem->update([
-                    'order_status' => 'canceled',
-                ]);
-            }
+           
             if ($order->paymentype_id == 1) {
                 $payment = Payment::where('orderID', $order->id)->first();
                 $mount = $order->total_price - $payment->deduction;
@@ -644,8 +637,16 @@ class CheckoutController extends BaseController
                         $success['message'] = $response;
                     }
                 } else {
-                    return $this->sendError("خطأ في الارجاع", 'error');
+                    return $this->sendError("خطأ في الارجاع المالي", 'error');
                 }
+            }
+            $order->update([
+                'order_status' => 'canceled',
+            ]);
+            foreach ($order->items as $orderItem) {
+                $orderItem->update([
+                    'order_status' => 'canceled',
+                ]);
             }
             $success['orders'] = new OrderResource($order);
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
