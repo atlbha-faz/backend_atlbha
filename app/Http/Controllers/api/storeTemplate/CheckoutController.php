@@ -631,13 +631,12 @@ class CheckoutController extends BaseController
                 "ServiceChargeOnCustomer" => false,
                 "Amount" => $mount,
                 "Comment" => "refund to the customer",
-                "AmountDeductedFromSupplier" => 0,
-                "CurrencyIso" => "SA",
+                "AmountDeductedFromSupplier" => 0
             ];
 
             $supplier = new FatoorahServices();
-        
-            $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+          
+            $response = $supplier->refund('v2/MakeRefund','POST', $data);
 
             if ($response['IsSuccess'] == false) {
                 return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
