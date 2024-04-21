@@ -121,6 +121,7 @@ Route::post('verify-user', 'App\Http\Controllers\api\AuthController@verifyUser')
 
 Route::get('page/{id}', [App\Http\Controllers\api\homePages\SubpageController::class, "show"]);
 Route::get('packages', [App\Http\Controllers\api\homePages\SubpageController::class, "packages"]);
+Route::get('homeService', [App\Http\Controllers\api\homePages\SubpageController::class, "homeService"]);
 
 Route::get('profile', [App\Http\Controllers\api\ProfileController::class, 'index']);
 Route::post('profile', [App\Http\Controllers\api\ProfileController::class, 'update']);

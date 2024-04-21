@@ -12,17 +12,20 @@ use GuzzleHttp\Client;
 use App\Models\Setting;
 use App\Models\Homepage;
 use App\Models\Marketer;
-use Illuminate\Http\Request;
-use App\Services\UnifonicSms;
-use Illuminate\Validation\Rule;
-use App\Events\VerificationEvent;
+
 use App\Models\paymenttype_store;
+
 use App\Models\shippingtype_store;
-use App\Http\Resources\UserResource;
+
+
+use App\Notifications\verificationNotification;
+use App\Services\UnifonicSms;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Notifications\verificationNotification;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
+
 
 class AuthController extends BaseController
 {
@@ -562,7 +565,6 @@ class AuthController extends BaseController
 
     /////////////////////////////////////////////////// SMS
 
-
     public function social_mobile(Request $request)
     {
         $input = $request->all();
@@ -667,7 +669,7 @@ class AuthController extends BaseController
 
     }
     public function buildRequest($mothod, $data=[] ){
-        $client = new Client(); 
+        $client = new Client();
         $response = $client->post('https://el.cloud.unifonic.com/rest/SMS/messages', [
             'form_params' => $data,
         ]);
