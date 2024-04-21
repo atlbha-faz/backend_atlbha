@@ -33,6 +33,7 @@ class OrderItemsResource extends JsonResource
            }
         // $options = array_combine($array,$attribute);
         }
+       
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
