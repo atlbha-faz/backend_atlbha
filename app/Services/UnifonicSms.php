@@ -20,13 +20,9 @@ class UnifonicSms
     }
     public function buildRequest($mothod, $data=[] ){
         $client = new Client(); 
-        if (empty($data)){
-            $request = new Request($mothod , $this->base_url);
-        }
-        else{
-            $request = new Request($mothod , $this->base_url,$data);
-        }
-          $response = $client->sendAsync($request)->wait();
+        $response = $client->post('https://el.cloud.unifonic.com/rest/SMS/messages', [
+            'form_params' => $data,
+        ]);
           if ($response->getStatusCode() != 200)
               return false;
           $response = json_decode ($response->getBody (),true);

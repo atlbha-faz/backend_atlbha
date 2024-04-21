@@ -8,6 +8,7 @@ use App\Models\Page;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
+use GuzzleHttp\Client;
 use App\Models\Setting;
 use App\Models\Homepage;
 use App\Models\Marketer;
@@ -665,22 +666,15 @@ class AuthController extends BaseController
         }
 
     }
-    public function unifonicTest(Request $request)
-    {
-        $data = array(
-            'AppSid' => env('AppSid','3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
-            'Body' => $request->code,
-            'Recipient' => $request->phonenumber);
-
-        $unifonic_sms=new UnifonicSms();
-        $responseData =$unifonic_sms->buildRequest('POST',$data);
-
-        if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
+    public function buildRequest($mothod, $data=[] ){
+        $client = new Client(); 
+        $response = $client->post('https://el.cloud.unifonic.com/rest/SMS/messages', [
+            'form_params' => $data,
+        ]);
+          if ($response->getStatusCode() != 200)
+              return false;
+          $response = json_decode ($response->getBody (),true);
+          return $response;
+      }
 
 }

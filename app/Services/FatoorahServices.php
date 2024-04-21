@@ -29,9 +29,7 @@ class FatoorahServices
             $request = new Request($mothod, $this->base_url . $url, $this->headers);
         } else {
             $request = new Request($mothod, $this->base_url . $url, $this->headers, $data);
-
         }
-
         $response = $client->sendAsync($request)->wait();
         if ($response->getStatusCode() != 200) {
             return false;
@@ -64,5 +62,15 @@ class FatoorahServices
         return json_decode($response);
 
     }
+    public function refund( $url,$mothod, $data=[] ){
+        $client = new Client(); 
+        $response = $client->post( $this->base_url.$url, [
+            'form_params' => $data,
+        ]);
+          if ($response->getStatusCode() != 200)
+              return false;
+          $response = json_decode ($response->getBody (),true);
+          return $response;
+      }
 
 }
