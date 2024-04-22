@@ -275,7 +275,7 @@ class AramexCompanyService implements ShippingInterface
                 'success' => true,
                 'order' => new OrderResource($order),
                 'shipping' => new shippingResource($shipping),
-                'message' =>"تم اضافة طلب"
+                'message' =>"تم اضافة الطلب"
             ];
 
         }
@@ -534,7 +534,7 @@ class AramexCompanyService implements ShippingInterface
         return [
             'success' => true,
             'orders' => new OrderResource($order),
-            'message' =>"تم إلغاء طلب"
+            'message' =>"تم إلغاء الطلب"
         ];
 
     }
