@@ -100,10 +100,25 @@ class OrderController extends BaseController
         }
 
         if ($request->status == "canceled") {
+            if ($order->shippingtype->id == 5) {
+                $order->update([
+                    'order_status' => 'canceled',
+                ]);
+                foreach ($order->items as $orderItem) {
+                    $orderItem->update([
+                        'order_status' => 'canceled',
+                    ]);
+                }
+                return [
+                    'success' => true,
+                    'orders' => new OrderResource($order),
+                    'message' => "تم إلغاء الطلب",
+                ];
+            } else {
+                $shipping = $shipping_companies[$order->shippingtype->id];
+                return $shipping->cancelOrder($order->id);
 
-            $shipping = $shipping_companies[$order->shippingtype->id];
-            return $shipping->cancelOrder($order->id);
-
+            }
         } else {
             $data = [
                 "shipper_line1" => $request->street_address,
@@ -119,56 +134,85 @@ class OrderController extends BaseController
 
             ];
             if ($request->status === "ready") {
-                $shipping = $shipping_companies[$order->shippingtype->id];
-                return $shipping->createOrder($data);
-
+                if ($order->shippingtype->id == 5) {
+                    $order->update([
+                        'order_status' => $request->status,
+                    ]);
+                    foreach ($order->items as $orderItem) {
+                        $orderItem->update([
+                            'order_status' => $request->status,
+                        ]);
+                    }
+                    return [
+                        'success' => true,
+                        'orders' => new OrderResource($order),
+                        'message' => "تم إضافة الطلب",
+                    ];
+                } else {
+                    $shipping = $shipping_companies[$order->shippingtype->id];
+                    return $shipping->createOrder($data);
+                }
             }
             if ($request->status === "refund") {
-                $shipping = $shipping_companies[$order->shippingtype->id];
-                return $shipping->refundOrder($data);
-                $payment = Payment::where('orderID', $order->id)->first();
-                if ($payment != null) {
-                    $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', auth()->user()->store_id)->first();
-                    if ($shipping_price == null) {
-                        $shipping_price = 35;
-                        $extraprice = 2;
-                    } else {
-                        $overprice = $shipping_price->overprice;
-                        $shipping_price = $shipping_price->price;
-                        $extraprice = $overprice;
-                    }if ($order->weight > 15) {
-                        $default_extra_price = ($order->weight - 15) * 2;
-                        $extra_shipping_price = ($order->weight - 15) * $extraprice;
-                    } else {
-                        $extra_shipping_price = 0;
-                        $default_extra_price = 0;
+                if ($order->shippingtype->id == 5) {
+                    $order->update([
+                        'order_status' => $request->status,
+                    ]);
+                    foreach ($order->items as $orderItem) {
+                        $orderItem->update([
+                            'order_status' => $request->status,
+                        ]);
                     }
-                    $total_price_without_shipping = ($order->total_price) - ($shipping_price) - ($extra_shipping_price);
-                    $data = [
-
-                        "Key" => $payment->paymentTransectionID,
-                        "KeyType" => "invoiceid",
-                        "RefundChargeOnCustomer" => false,
-                        "ServiceChargeOnCustomer" => false,
-                        "Amount" => $total_price_without_shipping,
-                        "Comment" => "refund to the customer",
-                        "AmountDeductedFromSupplier" => 0,
-                        "CurrencyIso" => "SA",
+                    return [
+                        'success' => true,
+                        'orders' => new OrderResource($order),
+                        'message' => "تم إرجاع الطلب",
                     ];
+                } else {
+                    $shipping = $shipping_companies[$order->shippingtype->id];
+                    return $shipping->refundOrder($data);
+                    $payment = Payment::where('orderID', $order->id)->first();
+                    if ($payment != null) {
+                        $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', auth()->user()->store_id)->first();
+                        if ($shipping_price == null) {
+                            $shipping_price = 35;
+                            $extraprice = 2;
+                        } else {
+                            $overprice = $shipping_price->overprice;
+                            $shipping_price = $shipping_price->price;
+                            $extraprice = $overprice;
+                        }if ($order->weight > 15) {
+                            $default_extra_price = ($order->weight - 15) * 2;
+                            $extra_shipping_price = ($order->weight - 15) * $extraprice;
+                        } else {
+                            $extra_shipping_price = 0;
+                            $default_extra_price = 0;
+                        }
+                        $total_price_without_shipping = ($order->total_price) - ($shipping_price) - ($extra_shipping_price);
+                        $data = [
 
-                    $supplier = new FatoorahServices();
-                    $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+                            "Key" => $payment->paymentTransectionID,
+                            "KeyType" => "invoiceid",
+                            "RefundChargeOnCustomer" => false,
+                            "ServiceChargeOnCustomer" => false,
+                            "Amount" => $total_price_without_shipping,
+                            "Comment" => "refund to the customer",
+                            "AmountDeductedFromSupplier" => 0,
+                            "CurrencyIso" => "SA",
+                        ];
 
-                    if ($supplierCode->IsSuccess == false) {
-                        return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                    } else {
-                        $success['test'] = $supplierCode;
+                        $supplier = new FatoorahServices();
+                        $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+
+                        if ($supplierCode->IsSuccess == false) {
+                            return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                        } else {
+                            $success['test'] = $supplierCode;
+                        }
+
                     }
-
+                    $success['shipping'] = new shippingResource($shipping);
                 }
-                $success['shipping'] = new shippingResource($shipping);
-
-    
             }
         }
     }
@@ -204,12 +248,12 @@ class OrderController extends BaseController
         })->orWhereHas('shipping', function ($shippingQuery) use ($query) {
             $shippingQuery->where(function ($sub_shippingQuery) use ($query) {
                 $sub_shippingQuery->where('track_id', 'like', "%$query%")->orwhere('shipping_id', 'like', "%$query%");
-        });
-         })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            });
+        })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
             ->orderBy('created_at', 'desc')->paginate($count);
 
         $success['query'] = $query;
-        
+
         $success['total_result'] = $orders->total();
         $success['page_count'] = $orders->lastPage();
         $success['current_page'] = $orders->currentPage();
