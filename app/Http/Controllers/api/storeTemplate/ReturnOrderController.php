@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
+use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ReturnOrder;
@@ -59,12 +60,17 @@ class ReturnOrderController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
+        $end_date = Carbon::now()->subDays(14)->toDateString();
+        $order=Order::where('id', $request->input('order_id'))->whereDate('created_at','<',$end_date)->first();
+        if($order){
+            return $this->sendError("طلب الاسترجاع غير ممكن لانه تعدى المده المسموحه في الاسترجاع", "order can not return");  
+        }
         if (isset($request->data)) {
             foreach ($request->data as $data) {
                 $returnOrders[] = ReturnOrder::create([
                     'comment' => $request->input('comment', null),
                     'order_id' => $request->input('order_id', null),
-                    'reason_txt' => $request->input('reason_txt', null),
+                    'return_reason_id' => $request->input('return_reason_id', null),
                     'order_item_id' => $data['order_item_id'],
                     'qty' => $data['qty'],
                     'price' => $data['price'],
@@ -78,7 +84,6 @@ class ReturnOrderController extends BaseController
             }
         }
 
-        // $success['ReturnOrders'] =ReturnOrderResource::collection($returnOrders);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم إضافة طلب استرجاع بنجاح', ' Added return_status successfully');

@@ -522,11 +522,11 @@ class AramexCompanyService implements ShippingInterface
     {
         $order = Order::where('id', $id)->first();
         $order->update([
-            'order_status' => $request->input('status'),
+            'order_status' =>'canceled',
         ]);
         foreach ($order->items as $orderItem) {
             $orderItem->update([
-                'order_status' => $request->input('status'),
+                'order_status' =>'canceled',
             ]);
         }
         return [
