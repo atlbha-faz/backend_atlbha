@@ -19,7 +19,7 @@ class MadfuController extends BaseController
             if (!$login_request->status){
                 return $this->sendError('',$login_request->message);
             }
-            return $this->sendResponse(['token' => $login_request,
+            return $this->sendResponse(['token' => $login_request->token,
                 'data' => $login_request], 'عملية ناجحة', 'Success process');
         } else {
             return $this->sendError('خطأ في العملية', 'process failed');
