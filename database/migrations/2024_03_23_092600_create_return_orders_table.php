@@ -22,8 +22,9 @@ return new class extends Migration
              $table->integer('price')->nullable();
             $table->enum('return_status', ['pending', 'accept', 'reject'])
             ->default('pending');
+            $table->unsignedBigInteger('return_reason_id')->nullable();
+            $table->foreign('return_reason_id')->references('id')->on('return_reasons')->onDelete('cascade');
             $table->longText('comment')->nullable();
-            $table->longText('reason_txt')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->softDeletes();

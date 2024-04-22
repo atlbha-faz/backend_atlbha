@@ -19,9 +19,9 @@ class ReturnOrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'pending'){
+        if($this->returnOrders->first()->return_status==null || $this->returnOrders->first()->return_status== 'pending'){
             $status = 'جديد';
-        }elseif($this->status == 'accept'){
+        }elseif($this->returnOrders->first()->return_status == 'accept'){
             $status = 'قبول';
         }
         else{
@@ -32,7 +32,7 @@ class ReturnOrderResource extends JsonResource
             'order' => new PaymentOrderResource($this),
             'orderItem' => ReturnOrderItemsResource::collection($this->items->where('is_return', 1)),
             'comment' => $this->returnOrders->first()->comment,
-            'reason_txt' => $this->returnOrders->first()->reason_txt,
+            'reason_txt' => new ReturnResonsResource($this->returnOrders->first()->returnReason),
             'status' => $status,
             
         ];
