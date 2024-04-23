@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\api\homePages;
 
+use Carbon\Carbon;
 use App\Models\City;
 use App\Models\Page;
 use App\Models\Store;
 use App\Models\Comment;
+use App\Models\Package_store;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
@@ -17,14 +19,12 @@ use App\Models\AtlobhaContact;
 use App\Models\CommonQuestion;
 use App\Models\categories_stores;
 use App\Models\Page_page_category;
-use Illuminate\Support\Facades\DB;
 use App\Models\website_socialmedia;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PartnerResource;
-use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\atlobhaContactResource;
@@ -147,28 +147,29 @@ class IndexEtlobhaController extends BaseController
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        
-        $query1= AtlbhaIndexSearchProductResource::collection(Product::with(['store' => function ($query) {
+
+        $query1 = AtlbhaIndexSearchProductResource::collection(Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('name', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->get());
 
-        $query2 =AtlbhaIndexSearchStoreResource::collection( Store::with(['categories' => function ($query) {
+        $query2 = AtlbhaIndexSearchStoreResource::collection(Store::with(['categories' => function ($query) {
             $query->select('name', 'icon');
         }, 'city' => function ($query) {
-            $query->select('id','name');
+            $query->select('id', 'name');
         }, 'country' => function ($query) {
             $query->select('id');
         }, 'user' => function ($query) {
             $query->select('id');
-        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->where('store_name', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'store_name', 'domain','phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special','store_email','verification_status', 'city_id','verification_date', 'created_at')->get());
-        $results =$query1->merge($query2);
+        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->where('store_name', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special', 'store_email', 'verification_status', 'city_id', 'verification_date', 'created_at')->get());
+        $results = $query1->merge($query2);
 
         $success['results'] = $results;
 
         return $this->sendResponse($success, 'تم ارجاع نتائج البحث بنجاح', 'search Information returned successfully');
     }
+  
 
 }
 //
