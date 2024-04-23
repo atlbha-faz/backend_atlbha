@@ -99,7 +99,13 @@ class IndexEtlobhaController extends BaseController
         $success['footer'] = PageResource::collection(Page::where('is_deleted', 0)->where('store_id', null)->select('id', 'title', 'status', 'page_content', 'page_desc', 'created_at')->where('status', 'active')->whereIn('id', $pages)->get());
         $success['website_socialmedia'] = website_socialmediaResource::collection(website_socialmedia::where('is_deleted', 0)->where('status', 'active')->get());
         $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
-
+        $why_atlbha = [
+            [
+                'image' => 'https: //atlbha.com/static/media/img03.587747c3096737d2d3a8.jpg',
+                'link' => 'https: //www.youtube.com/channel/UCPypPqJuGFAGHz33RI7c5wg',
+            ],
+        ];
+        $success['why_atlbha'] = $why_atlbha;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الرئيسية بنجاح', 'etlobha index return successfully');
