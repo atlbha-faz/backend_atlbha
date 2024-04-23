@@ -47,4 +47,18 @@ class Madfu
         $login = $this->makeRequest($url, $body, ['token' => json_decode($token->getBody()->getContents())->token]);
         return $login;
     }
+
+    public function createOrder($token, $guest_order_data, $order, $order_details)
+    {
+//        ["GuestOrderData"=>{"CustomerMobile":"50XXXXXXX","CustomerName":"Your Customer Name","Lang":"ar"},
+//        "Order"=>{"Taxes":1.5,"ActualValue":12,"Amount":10.5,"MerchantReference":"15648-AAA"},
+//        "OrderDetails"=>[{"productName":"Product Name","SKU":"Stock keeping unit","productImage":"product image url","count":5,"totalAmount":200}]];
+        $url = $this->base_url . 'Merchants/Checkout/CreateOrder';
+
+        $body = ["GuestOrderData" => $guest_order_data,
+            "Order" => $order,
+            "OrderDetails" => $order_details];
+
+        return $this->makeRequest($url, $body, ['token' => $token]);
+    }
 }
