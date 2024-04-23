@@ -237,10 +237,7 @@ class AramexCompanyService implements ShippingInterface
                     $errorsMessages .= $error->Message;
                 }
             }
-            return [
-                'success' => false,
-                'message' => $errorsMessages,
-            ];
+            return $errorsMessages;
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
@@ -271,12 +268,9 @@ class AramexCompanyService implements ShippingInterface
 
                 ]);
 
-            return [
-                'success' => true,
-                'order' => new OrderResource($order),
-                'shipping' => new shippingResource($shipping),
-                'message' =>"تم اضافة الطلب"
-            ];
+            return new OrderResource($order);
+               
+        
 
         }
     }
@@ -480,10 +474,7 @@ class AramexCompanyService implements ShippingInterface
                     $errorsMessages .= $error->Message;
                 }
             }
-            return [
-                'success' => false,
-                'message' => $errorsMessages,
-            ];
+            return  $errorsMessages;
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
@@ -511,12 +502,7 @@ class AramexCompanyService implements ShippingInterface
                     'customer_id' => $order->user_id,
                 ]);
 
-            return [
-                'success' => true,
-                'order' => new OrderResource($order),
-                'shipping' => new shippingResource($shipping),
-                'message' =>"تم إرجاع طلب"
-            ];
+            return  new OrderResource($order);
         }
 
     }
@@ -531,11 +517,8 @@ class AramexCompanyService implements ShippingInterface
                 'order_status' =>'canceled',
             ]);
         }
-        return [
-            'success' => true,
-            'orders' => new OrderResource($order),
-            'message' =>"تم إلغاء الطلب"
-        ];
+        return new OrderResource($order);
+           
 
     }
 
