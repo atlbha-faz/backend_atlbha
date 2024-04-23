@@ -101,8 +101,8 @@ class IndexEtlobhaController extends BaseController
         $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
         $why_atlbha = [
             [
-                'image' => 'https: //atlbha.com/static/media/img03.587747c3096737d2d3a8.jpg',
-                'link' => 'https: //www.youtube.com/channel/UCPypPqJuGFAGHz33RI7c5wg',
+                'image' => 'https://atlbha.com/static/media/img03.587747c3096737d2d3a8.jpg',
+                'link' => 'https://www.youtube.com/channel/UCPypPqJuGFAGHz33RI7c5wg',
             ],
         ];
         $success['why_atlbha'] = $why_atlbha;
