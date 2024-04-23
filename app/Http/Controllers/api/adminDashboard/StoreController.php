@@ -38,7 +38,6 @@ class StoreController extends BaseController
 
         $user = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', $id)->first();
         if (isset($user->id) && $user->id != 0) {
-
             $success['user'] = new UserResource($user);
             $success['token'] = $user->createToken('authToken')->accessToken;
             $success['status'] = 200;
@@ -150,7 +149,7 @@ class StoreController extends BaseController
         $userid = $user->id;
 
         $request->package_id = 2;
-        $request->periodtype = "3months";
+        $request->periodtype = "6months";
 
         $store = Store::create([
             'store_name' => $request->store_name,

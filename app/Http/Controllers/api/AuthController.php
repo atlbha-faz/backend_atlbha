@@ -35,7 +35,7 @@ class AuthController extends BaseController
 
         } else {
             $request->package_id = 2;
-            $request->periodtype = "3months";
+            $request->periodtype = "6months";
 
             if ($request->user_type == 'store') {
 

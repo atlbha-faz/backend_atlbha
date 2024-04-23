@@ -25,7 +25,9 @@ class ImportproductController extends BaseController
     {
         $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
+        if (!$request->has('show_categories') && $request->input('show_categories') !== false){
         $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
+    }
         $products = Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id');
         if ($request->has('category_id')){
             $products = $products->where('category_id',$request->category_id);
@@ -41,6 +43,7 @@ class ImportproductController extends BaseController
         $products = $products->paginate($count);
         $products = ProductResource::collection($products);
         $success['page_count'] = $products->lastPage();
+        $success['current_page'] = $products->currentPage();
         $success['products'] = $products;
 
         $success['status'] = 200;
