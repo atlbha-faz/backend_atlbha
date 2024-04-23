@@ -205,7 +205,7 @@ class CartController extends BaseController
         //  Notification::send($user , new emailNotification($data));
         Mail::to($user->email)->send(new SendOfferCart($data));
 
-        $success = new CartResource($cart);
+        $success['offer_cart'] = new CartResource($cart);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم إرسال العرض بنجاح', 'Offer Cart Send successfully');
 
