@@ -30,7 +30,7 @@ class MadfuController extends BaseController
     public function createOrder(CreateOrderRequest $request)
     {
 
-        $create_order = (new Madfu())->createOrder($request->token, $request->guest_order_data, json_decode($request->order()), $request->order_details);
+        $create_order = (new Madfu())->createOrder($request->token, $request->guest_order_data, json_decode($request->order), $request->order_details);
         return $create_order;
         if ($create_order->getStatusCode() == 200) {
             $create_order = json_decode($create_order->getBody()->getContents());
