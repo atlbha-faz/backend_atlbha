@@ -109,14 +109,15 @@ class OrderController extends BaseController
                         'order_status' => 'canceled',
                     ]);
                 }
-                return [
-                    'success' => true,
-                    'orders' => new OrderResource($order),
-                    'message' => "تم إلغاء الطلب",
-                ];
+             
+                $success['orders'] = new OrderResource($order);
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'تم إلغاء الطلب', 'order canceled successfully');
             } else {
                 $shipping = $shipping_companies[$order->shippingtype->id];
-                return $shipping->cancelOrder($order->id);
+                $success['orders'] = $shipping->cancelOrder($order->id);
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'تم إلغاء الطلب', 'order canceled successfully');
 
             }
         } else {
@@ -143,14 +144,16 @@ class OrderController extends BaseController
                             'order_status' => $request->status,
                         ]);
                     }
-                    return [
-                        'success' => true,
-                        'orders' => new OrderResource($order),
-                        'message' => "تم إضافة الطلب",
-                    ];
+                  
+                    $success['orders'] = new OrderResource($order);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+                    
                 } else {
                     $shipping = $shipping_companies[$order->shippingtype->id];
-                    return $shipping->createOrder($data);
+                    $success['orders'] = $shipping->createOrder($data);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
                 }
             }
             if ($request->status === "refund") {
@@ -163,11 +166,9 @@ class OrderController extends BaseController
                             'order_status' => $request->status,
                         ]);
                     }
-                    return [
-                        'success' => true,
-                        'orders' => new OrderResource($order),
-                        'message' => "تم إرجاع الطلب",
-                    ];
+                    $success['orders'] = new OrderResource($order);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
                 } else {
                     $shipping = $shipping_companies[$order->shippingtype->id];
                     return $shipping->refundOrder($data);
@@ -212,6 +213,9 @@ class OrderController extends BaseController
 
                     }
                     $success['shipping'] = new shippingResource($shipping);
+                    $success['orders'] = new OrderResource($order);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
                 }
             }
         }
