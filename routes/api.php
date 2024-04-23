@@ -18,9 +18,11 @@ use App\Http\Controllers\api\MadfuController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
+
 Route::prefix('madfu')->group(function () {
 
     Route::post('login', [MadfuController::class, 'login']);
+    Route::post('create-order', [MadfuController::class, 'createOrder']);
 });
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
