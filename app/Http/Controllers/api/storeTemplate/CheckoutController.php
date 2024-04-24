@@ -610,7 +610,7 @@ class CheckoutController extends BaseController
         if (is_null($order)) {
             return $this->sendError("الطلب غير موجودة", "order is't exists");
         }
-        if ($order->order_status == "new") {
+        if ($order->order_status == "new" ||$order->order_status == "ready"  ) {
 
            
             if ($order->paymentype_id == 1) {

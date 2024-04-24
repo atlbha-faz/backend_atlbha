@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\shippingResource;
+use in;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Payment;
+use App\Models\Shipping;
+use App\Models\OrderItem;
+use Illuminate\Http\Request;
 use App\Models\shippingtype_store;
 use App\Services\FatoorahServices;
-use App\Services\ShippingComanies\AramexCompanyService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\shippingResource;
 use Illuminate\Support\Facades\Validator;
-use in;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class OrderController extends BaseController
 {
@@ -144,7 +145,23 @@ class OrderController extends BaseController
                             'order_status' => $request->status,
                         ]);
                     }
-                  
+                    $shipping = Shipping::updateOrCreate(
+                        [
+                            'order_id' => $order->id,
+                            'store_id' => $order->store_id,
+                        ],
+                        [
+                            'shipping_id' => $order->order_number ,
+                            // 'track_id' => $track_id,
+                            // 'sticker' => $url,
+                            'description' => $order->description,
+                            'price' => $order->total_price,
+                            'district' => $data["shipper_district"],
+                            'city' => $data["shipper_city"],
+                            'streetaddress' => $data["shipper_line1"],
+                            'customer_id' => $order->user_id,
+        
+                        ]);
                     $success['orders'] = new OrderResource($order);
                     $success['status'] = 200;
                     return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
@@ -155,6 +172,21 @@ class OrderController extends BaseController
                     $success['status'] = 200;
                     return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
                 }
+            }
+            else{
+                $order->update([
+                    'order_status' => $request->status,
+                ]);
+                foreach ($order->items as $orderItem) {
+                    $orderItem->update([
+                        'order_status' => $request->status,
+                    ]);
+                }
+              
+                $success['orders'] = new OrderResource($order);
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+
             }
           
         }
