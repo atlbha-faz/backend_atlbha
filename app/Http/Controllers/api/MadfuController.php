@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Requests\MadfuLoginRequest;
+use App\Models\Order;
 use App\Services\Madfu;
 use Illuminate\Http\Request;
 
@@ -44,5 +45,14 @@ class MadfuController extends BaseController
         }
     }
 
-
+    public function webhook(Request $request)
+    {
+        if ($request->status) {
+            if ($request->orderStatus == 125) {
+                $order = Order::where('id', $request->orderId)->first();
+                $order->payment_status = "Paid";;
+                $order->save();
+            }
+        }
+    }
 }
