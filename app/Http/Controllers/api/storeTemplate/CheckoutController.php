@@ -624,7 +624,8 @@ class CheckoutController extends BaseController
                     "ServiceChargeOnCustomer" => false,
                     "Amount" => $mount,
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => 0,
+                    "AmountDeductedFromSupplier" => $mount,
+                    "CurrencyIso"=> "SAR"
                 ];
 
                 $supplier = new FatoorahServices();

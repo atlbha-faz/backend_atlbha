@@ -101,6 +101,8 @@ class StoreResource extends JsonResource
             'twiter' => $this->twiter,
             'youtube' => $this->youtube,
             'instegram' => $this->instegram,
+            'tiktok' => $this->tiktok,
+            'jaco' => $this->jaco,
             'logo' => $this->logo,
             'entity_type' => $this->entity_type,
             'user' => new UserResource($this->user),
