@@ -43,6 +43,7 @@ class ImportproductController extends BaseController
         $products = $products->paginate($count);
         $products = ProductResource::collection($products);
         $success['page_count'] = $products->lastPage();
+        $success['total_result'] = $products->total();
         $success['current_page'] = $products->currentPage();
         $success['products'] = $products;
 
