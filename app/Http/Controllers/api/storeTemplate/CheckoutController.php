@@ -615,16 +615,15 @@ class CheckoutController extends BaseController
            
             if ($order->paymentype_id == 1) {
                 $payment = Payment::where('orderID', $order->id)->first();
-                $mount = $order->total_price - $payment->deduction;
                 
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" => $mount,
+                    "Amount" =>$order->total_price,
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $mount,
+                    "AmountDeductedFromSupplier" => $payment->price_after_deduction,
                     "CurrencyIso"=> "SAR"
                 ];
 
