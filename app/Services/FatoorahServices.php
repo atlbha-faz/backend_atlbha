@@ -67,7 +67,7 @@ class FatoorahServices
         $client = new Client(); 
         $response = $client->post( $this->base_url.$url, [
             'headers' => $this->headers,
-            'form_params' => $data,
+            'json' => $data,
         ]);
           if ($response->getStatusCode() != 200)
               return false;
