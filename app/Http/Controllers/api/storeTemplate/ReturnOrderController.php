@@ -50,7 +50,7 @@ class ReturnOrderController extends BaseController
         $validator = Validator::make($input, [
             'comment' => 'string|max:255',
             'order_id' => 'required|numeric',
-            'reason_txt' => 'required|string',
+            'return_reason_id' => 'required|numeric',
             'store_id' => 'required',
             'data.*.order_item.*' => 'required|numeric',
             'data.*.price.*' => 'required|numeric',
