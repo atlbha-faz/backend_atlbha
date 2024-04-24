@@ -23,7 +23,7 @@ Route::prefix('madfu')->group(function () {
 
     Route::post('login', [MadfuController::class, 'login']);
     Route::post('create-order', [MadfuController::class, 'createOrder']);
-    Route::post('webhook', [MadfuController::class, 'createOrder']);
+    Route::post('webhook', [MadfuController::class, 'webhook']);
 });
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
