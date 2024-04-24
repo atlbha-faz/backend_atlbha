@@ -649,10 +649,12 @@ class CheckoutController extends BaseController
                 ]);
             }
             $success['orders'] = new OrderResource($order);
+            $success['status'] = 200;
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
 
         } else {
             $success['orders'] = new OrderResource($order);
+            $success['status'] = 200;
             return $this->sendError('حالة الطلب لاتقبل الالغاء', 'Order can not cancel');
 
         }
