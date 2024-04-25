@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use Carbon\Carbon;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ReturnOrderResource;
 use App\Models\Order;
 use App\Models\Payment;
-use App\Models\OrderItem;
 use App\Models\ReturnOrder;
-use App\Models\shippingtype_store;
-use Illuminate\Http\Request;
 use App\Services\FatoorahServices;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\shippingResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\ReturnOrderResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class ReturnOrderController extends BaseController
 {
@@ -24,7 +19,7 @@ class ReturnOrderController extends BaseController
     }
     public function index()
     {
-        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) use($id) {
+        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) use ($id) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where('store_id', auth()->user()->store_id)->get());
         $success['status'] = 200;
@@ -48,7 +43,6 @@ class ReturnOrderController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
 
     /**
      * Display the specified resource.
@@ -79,23 +73,20 @@ class ReturnOrderController extends BaseController
      * @param  \App\Models\returnOrder  $returnOrder
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $order_id)
     {
-        $return=ReturnOrder::where('id', $id)->first();
-        if (is_null($return)) {
-            return $this->sendError("'طلب الاسترجاع غير موجود", "ReturnOrder is't exists");
-        }
-        $order= $return->order_id;
-        $order = Order::where('id', $order)->whereHas('items', function ($q) {
+
+        $order = Order::where('id', $order_id)->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id);
         })->first();
-     
+        if (is_null($order)) {
+            return $this->sendError("'الطلب غير موجود", "Order is't exists");
+        }
 
         $shipping_companies = [
             1 => new AramexCompanyService(),
-            5=> new OtherCompanyService()
+            5 => new OtherCompanyService(),
         ];
-        
         $input = $request->all();
         $validator = Validator::make($input, [
             'status' => 'required|in:accept,reject',
@@ -106,22 +97,26 @@ class ReturnOrderController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         if ($request->status === "accept") {
-           
-                $shipping = $shipping_companies[$order->shippingtype->id];
-                $success['shipping'] = $shipping->refundOrder( $order);
-                $payment = Payment::where('orderID', $order->id)->first();
-               
-                foreach($returns as $returns)
+
+            $shipping = $shipping_companies[$order->shippingtype->id];
+
+            $payment = Payment::where('orderID', $order->id)->first();
+            $returns = ReturnOrder::where('order_id', $order->id)->get();
+            $prices=0;
+            foreach ($returns as $return) {
+                $prices=$prices+($return->qty*$return->price);
+                
+            }
                 if ($payment != null) {
-                   
+
                     $data = [
                         "Key" => $payment->paymentTransectionID,
                         "KeyType" => "invoiceid",
                         "RefundChargeOnCustomer" => false,
                         "ServiceChargeOnCustomer" => false,
-                        "Amount" => $total_price_without_shipping,
+                        "Amount" => $prices,
                         "Comment" => "refund to the customer",
-                        "AmountDeductedFromSupplier" => 0,
+                        "AmountDeductedFromSupplier" => $prices,
                         "CurrencyIso" => "SA",
                     ];
 
@@ -133,14 +128,14 @@ class ReturnOrderController extends BaseController
                     } else {
                         $success['payment'] = $supplierCode;
                     }
-
                 }
-              
-                $success['status'] = 200;
-                return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
             
+            $success['shipping'] = $shipping->refundOrder($order_id);
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+
         }
-        
+
     }
 
     /**

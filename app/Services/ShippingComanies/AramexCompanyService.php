@@ -274,13 +274,14 @@ class AramexCompanyService implements ShippingInterface
 
         }
     }
-    public function refundOrder($data)
+    public function refundOrder($order_id)
     {
-        $order = Order::where('id', $data["order_id"])->first();
-        $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
+        $order = Order::where('id',  $order_id)->first();
+        $orderAddress = OrderOrderAddress::where('order_id',  $order_id)->where('type', 'shipping')->value('order_address_id');
         $address = OrderAddress::where('id', $orderAddress)->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
-        $shipping = Shipping::where('order_id', $data["order_id"])->first();
+        $shipping = Shipping::where('order_id',  $order_id)->first();
+        $store=Store::where('id',$order->store_id)->first();
         if ($shipping == null) {
             return $this->sendError("لايمكن استرجاع الطلب", "shipping is't exists");
         }
@@ -364,15 +365,15 @@ class AramexCompanyService implements ShippingInterface
                                     },
                                     "Contact": {
                                         "Department": "",
-                                        "PersonName": "' . $data["shipper_name"] . '",
-                                        "CompanyName": "' . $data["shipper_comany"] . '",
-                                        "PhoneNumber1": "' . $data["shipper_phonenumber"] . '",
+                                        "PersonName": "' .   $store->user->name . '",
+                                        "CompanyName": "' . $store->store_name  . '",
+                                        "PhoneNumber1": "' . $store->phonenumber . '",
                                         "PhoneNumber1Ext": "",
                                         "PhoneNumber2": "",
                                         "PhoneNumber2Ext": "",
                                         "FaxNumber": "",
-                                        "CellPhone": "' . $data["shipper_phonenumber"] . '",
-                                        "EmailAddress": "' . $data["shipper_email"] . '",
+                                        "CellPhone": "' . $store->phonenumber  . '",
+                                        "EmailAddress": "' . $store->store_email  . '",
                                         "Type": ""
                                     }
                                 },
