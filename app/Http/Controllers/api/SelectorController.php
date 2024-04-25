@@ -109,4 +109,15 @@ class SelectorController extends BaseController
 
     }
 
+    public function returnReason()
+    {
+
+        $success['return_reasons'] = ReturnResonsResource::collection(ReturnReason::get());
+
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع  البنوك بنجاح', 'bank return successfully');
+
+    }
+
 }

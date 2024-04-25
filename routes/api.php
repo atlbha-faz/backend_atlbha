@@ -37,6 +37,7 @@ Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorCon
 Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
 Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class, 'getBank']);
+Route::get('selector/returnReasons', [App\Http\Controllers\api\SelectorController::class, 'returnReason']);
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
@@ -549,7 +550,7 @@ Route::middleware([StoreUser::class])->group(function () {
         //  Etlobha services
         Route::get('etlobhaservice/show', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'show'])->name('store.platformservices.show');
         Route::post('etlobhaservice', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'store'])->name('store.platformservices.add');
-        Route::get('marketerRequest/{id}', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'marketerRequest'])->name('store.platformservices.marketerRequest');
+        Route::get('marketerRequest', [App\Http\Controllers\api\storeDashboard\EtlobhaserviceController::class, 'marketerRequest'])->name('store.platformservices.marketerRequest');
 
         //  payment
         Route::post('payment', [App\Http\Controllers\api\storeDashboard\PaymentController::class, 'payment']);
@@ -579,7 +580,9 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('uploadSupplierDocument', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'uploadSupplierDocument'])->name('store.supplier.uploadSupplierDocument');
         Route::get('indexSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'index'])->name('store.supplier.indexSupplier');
         Route::get('billing', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'billing'])->name('store.supplier.billing');
-
+        //
+        Route::get('returnOrderIndex', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'index']);
+        Route::post('returnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'update']);
         // });
     });
 });

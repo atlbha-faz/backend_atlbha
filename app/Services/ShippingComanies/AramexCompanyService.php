@@ -479,24 +479,13 @@ class AramexCompanyService implements ShippingInterface
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
 
-            $order->update([
-                'order_status' => "refund",
-            ]);
-            foreach ($order->items as $orderItem) {
-                $orderItem->update([
-                    'order_status' => "refund",
-                ]);
-            }
             $shipping = Shipping::Create([
-               
                     'order_id' => $order->id,
                     'store_id' => $order->store_id,
                     'shipping_id' => $ship_id,
-                    // 'track_id' => $track_id,
                     'sticker' => $url,
                     'description' => $order->description,
                     'price' => $order->total_price,
-                    // 'district' => $data["shipper_district"],
                     'city' => $address->city,
                     'streetaddress' =>  $address->street_address,
                     'customer_id' => $order->user_id,
