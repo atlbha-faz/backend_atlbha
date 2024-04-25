@@ -94,7 +94,7 @@ class EtlobhaserviceController extends BaseController
 
         return $this->sendResponse($success, 'تم إضافة الطلب بنجاح', 'Websiteorder Added successfully');
     }
-    public function marketerRequest(Request $request, $id)
+    public function marketerRequest(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $users = User::where('is_deleted', 0)->where('user_type', "marketer");
