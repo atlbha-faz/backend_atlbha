@@ -22,11 +22,11 @@ class ReturnOrderController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index($id)
+    public function index()
     {
         $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) use($id) {
-            $q->where('store_id', $id)->where('is_return', 1);
-        })->where('user_id', auth()->user()->id)->where('store_id', $id)->get());
+            $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+        })->where('store_id', auth()->user()->store_id)->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
@@ -79,45 +79,42 @@ class ReturnOrderController extends BaseController
      * @param  \App\Models\returnOrder  $returnOrder
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, returnOrder $returnOrder)
+    public function update(Request $request, $id)
     {
-        if ($request->status === "refund") {
-            if ($order->shippingtype->id == 5) {
-                $order->update([
-                    'order_status' => $request->status,
-                ]);
-                foreach ($order->items as $orderItem) {
-                    $orderItem->update([
-                        'order_status' => $request->status,
-                    ]);
-                }
-                $success['orders'] = new OrderResource($order);
-                $success['status'] = 200;
-                return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-            }
-             else {
-                $shipping = $shipping_companies[$order->shippingtype->id];
-                return $shipping->refundOrder($data);
-                $payment = Payment::where('orderID', $order->id)->first();
-                if ($payment != null) {
-                    $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', auth()->user()->store_id)->first();
-                    if ($shipping_price == null) {
-                        $shipping_price = 35;
-                        $extraprice = 2;
-                    } else {
-                        $overprice = $shipping_price->overprice;
-                        $shipping_price = $shipping_price->price;
-                        $extraprice = $overprice;
-                    }if ($order->weight > 15) {
-                        $default_extra_price = ($order->weight - 15) * 2;
-                        $extra_shipping_price = ($order->weight - 15) * $extraprice;
-                    } else {
-                        $extra_shipping_price = 0;
-                        $default_extra_price = 0;
-                    }
-                    $total_price_without_shipping = ($order->total_price) - ($shipping_price) - ($extra_shipping_price);
-                    $data = [
+        $return=ReturnOrder::where('id', $id)->first();
+        if (is_null($return)) {
+            return $this->sendError("'طلب الاسترجاع غير موجود", "ReturnOrder is't exists");
+        }
+        $order= $return->order_id;
+        $order = Order::where('id', $order)->whereHas('items', function ($q) {
+            $q->where('store_id', auth()->user()->store_id);
+        })->first();
+     
 
+        $shipping_companies = [
+            1 => new AramexCompanyService(),
+            5=> new OtherCompanyService()
+        ];
+        
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'status' => 'required|in:accept,reject',
+
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+        if ($request->status === "accept") {
+           
+                $shipping = $shipping_companies[$order->shippingtype->id];
+                $success['shipping'] = $shipping->refundOrder( $order);
+                $payment = Payment::where('orderID', $order->id)->first();
+               
+                foreach($returns as $returns)
+                if ($payment != null) {
+                   
+                    $data = [
                         "Key" => $payment->paymentTransectionID,
                         "KeyType" => "invoiceid",
                         "RefundChargeOnCustomer" => false,
@@ -134,15 +131,14 @@ class ReturnOrderController extends BaseController
                     if ($supplierCode->IsSuccess == false) {
                         return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
                     } else {
-                        $success['test'] = $supplierCode;
+                        $success['payment'] = $supplierCode;
                     }
 
                 }
-                $success['shipping'] = new shippingResource($shipping);
-                $success['orders'] = new OrderResource($order);
+              
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-            }
+            
         }
         
     }

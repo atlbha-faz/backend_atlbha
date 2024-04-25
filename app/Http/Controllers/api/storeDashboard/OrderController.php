@@ -87,10 +87,11 @@ class OrderController extends BaseController
 
         $shipping_companies = [
             1 => new AramexCompanyService(),
+            5=> new OtherCompanyService()
         ];
         $input = $request->all();
         $validator = Validator::make($input, [
-            'status' => 'required|in:new,completed,delivery_in_progress,ready,refund,canceled',
+            'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
 
             'city' => 'required_if:status,==,ready',
             'street_address' => 'required_if:status,==,ready',
@@ -101,26 +102,12 @@ class OrderController extends BaseController
         }
 
         if ($request->status == "canceled") {
-            if ($order->shippingtype->id == 5) {
-                $order->update([
-                    'order_status' => 'canceled',
-                ]);
-                foreach ($order->items as $orderItem) {
-                    $orderItem->update([
-                        'order_status' => 'canceled',
-                    ]);
-                }
-             
-                $success['orders'] = new OrderResource($order);
-                $success['status'] = 200;
-                return $this->sendResponse($success, 'تم إلغاء الطلب', 'order canceled successfully');
-            } else {
+            
                 $shipping = $shipping_companies[$order->shippingtype->id];
                 $success['orders'] = $shipping->cancelOrder($order->id);
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم إلغاء الطلب', 'order canceled successfully');
 
-            }
         } else {
             $data = [
                 "shipper_line1" => $request->street_address,
@@ -136,42 +123,12 @@ class OrderController extends BaseController
 
             ];
             if ($request->status === "ready") {
-                if ($order->shippingtype->id == 5) {
-                    $order->update([
-                        'order_status' => $request->status,
-                    ]);
-                    foreach ($order->items as $orderItem) {
-                        $orderItem->update([
-                            'order_status' => $request->status,
-                        ]);
-                    }
-                    $shipping = Shipping::updateOrCreate(
-                        [
-                            'order_id' => $order->id,
-                            'store_id' => $order->store_id,
-                        ],
-                        [
-                            'shipping_id' => $order->order_number ,
-                            // 'track_id' => $track_id,
-                            // 'sticker' => $url,
-                            'description' => $order->description,
-                            'price' => $order->total_price,
-                            'district' => $data["shipper_district"],
-                            'city' => $data["shipper_city"],
-                            'streetaddress' => $data["shipper_line1"],
-                            'customer_id' => $order->user_id,
-        
-                        ]);
-                    $success['orders'] = new OrderResource($order);
-                    $success['status'] = 200;
-                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-                    
-                } else {
+       
                     $shipping = $shipping_companies[$order->shippingtype->id];
                     $success['orders'] = $shipping->createOrder($data);
                     $success['status'] = 200;
                     return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-                }
+                
             }
             else{
                 $order->update([
