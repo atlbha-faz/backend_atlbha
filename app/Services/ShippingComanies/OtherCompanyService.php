@@ -57,19 +57,17 @@ class OtherCompanyService implements ShippingInterface{
             return new OrderResource($order);
                
     }
-    public function refundOrder($data)
+    public function refundOrder( $order_id)
     {
-        $order = Order::where('id', $data["order_id"])->first();
+        $order = Order::where('id',  $order_id)->first();
       
-        $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
+        $orderAddress = OrderOrderAddress::where('order_id',  $order_id)->where('type', 'shipping')->value('order_address_id');
         $address = OrderAddress::where('id', $orderAddress)->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
-        
+        $shipping = Shipping::where('order_id',  $order_id)->first();
             $shipping = Shipping::Create([
-               
                     'order_id' => $order->id,
                     'store_id' => $order->store_id,
-                    'shipping_id' => $ship_id,
                     'description' => $order->description,
                     'price' => $order->total_price,
                     'city' => $address->city,
