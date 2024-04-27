@@ -42,9 +42,9 @@ class OtherCompanyService implements ShippingInterface{
                     'store_id' => $order->store_id,
                 ],
                 [
-                    'shipping_id' => $ship_id,
+                    'shipping_id' => $order->order_number,
                     // 'track_id' => $track_id,
-                    'sticker' => $url,
+                    // 'sticker' => $url,
                     'description' => $order->description,
                     'price' => $order->total_price,
                     'district' => $data["shipper_district"],
