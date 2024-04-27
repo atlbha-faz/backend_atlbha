@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ReturnOrder;
 use Illuminate\Http\Request;
+use App\Http\Requests\ReturnOrderRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ReturnOrderResource;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -19,7 +20,7 @@ class ReturnOrderController extends BaseController
     }
     public function index($id)
     {
-        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) use($id) {
+        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
             $q->where('store_id', $id)->where('is_return', 1);
         })->where('user_id', auth()->user()->id)->where('store_id', $id)->get());
         $success['status'] = 200;
@@ -43,28 +44,10 @@ class ReturnOrderController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ReturnOrderRequest $request)
     {
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment' => 'string|max:255',
-            'order_id' => 'required|numeric',
-            'return_reason_id' => 'required|numeric',
-            'store_id' => 'required',
-            'data.*.order_item.*' => 'required|numeric',
-            'data.*.price.*' => 'required|numeric',
-            'data.*.qty.*' => 'required|numeric',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-        $end_date = Carbon::now()->subDays(14)->toDateString();
-        $order=Order::where('id', $request->input('order_id'))->whereDate('created_at','<',$end_date)->first();
-        if($order){
-            return $this->sendError("طلب الاسترجاع غير ممكن لانه تعدى المده المسموحه في الاسترجاع", "order can not return");  
-        }
         if (isset($request->data)) {
             foreach ($request->data as $data) {
                 $returnOrders[] = ReturnOrder::create([
