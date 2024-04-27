@@ -583,6 +583,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('uploadSupplierDocument', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'uploadSupplierDocument'])->name('store.supplier.uploadSupplierDocument');
         Route::get('indexSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'index'])->name('store.supplier.indexSupplier');
         Route::get('billing', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'billing'])->name('store.supplier.billing');
+        Route::get('showBilling/{id}', [App\Http\Controllers\api\adminDashboard\SupplierController::class, 'showBilling'])->name('admin.supplier.showBilling');
+
         //
         Route::get('returnOrderIndex', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'index']);
         Route::post('returnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'update']);

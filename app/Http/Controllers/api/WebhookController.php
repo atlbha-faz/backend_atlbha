@@ -63,7 +63,7 @@ class WebhookController extends BaseController
 
 
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
-            $secret = "snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
+            $secret = env("secret");
 
             $data = $request->all();
 
@@ -78,13 +78,13 @@ class WebhookController extends BaseController
 
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
-                if (!$payment) {
-                    $url = 'https://backend.atlbha.sa/api/webhook';
-                    $client = new \GuzzleHttp\Client();
-                    $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
-                    Log::alert('AAA-'.json_encode($request->all()));
-                    return;
-                }
+                // if (!$payment) {
+                //     $url = 'https://backend.atlbha.sa/api/webhook';
+                //     $client = new \GuzzleHttp\Client();
+                //     $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
+                //     Log::alert('AAA-'.json_encode($request->all()));
+                //     return;
+                // }
                 $order = Order::where('id', $payment->orderID)->first();
                 switch ($request->input('Data.TransactionStatus')) {
                     case "SUCCESS":
@@ -113,12 +113,12 @@ class WebhookController extends BaseController
 
             } elseif ($event == 4) {
                 $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
-                if (!$account) {
-                    $url = 'https://backend.atlbha.sa/api/webhook';
-                    $client = new \GuzzleHttp\Client();
-                    $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
-                    return;
-                }
+                // if (!$account) {
+                //     $url = 'https://backend.atlbha.sa/api/webhook';
+                //     $client = new \GuzzleHttp\Client();
+                //     $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
+                //     return;
+                // }
                 
                 switch ($request->input('Data.SupplierStatus')) {
                     case "APPROVED":
