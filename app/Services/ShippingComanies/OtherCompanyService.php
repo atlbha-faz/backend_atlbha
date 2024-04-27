@@ -36,6 +36,14 @@ class OtherCompanyService implements ShippingInterface{
     public function createOrder($data)
     {
         $order = Order::where('id', $data["order_id"])->first();
+        $order->update([
+            'order_status' =>'ready',
+        ]);
+        foreach ($order->items as $orderItem) {
+            $orderItem->update([
+                'order_status' =>'ready',
+            ]);
+        }
             $shipping = Shipping::updateOrCreate(
                 [
                     'order_id' => $order->id,
