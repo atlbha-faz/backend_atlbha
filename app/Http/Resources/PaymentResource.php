@@ -15,7 +15,7 @@ class PaymentResource extends JsonResource
      */
     public function toArray($request)
     {
-
+        $orderAddress = \App\Models\OrderOrderAddress::where('order_id', $this->order->id)->where('type', 'shipping')->value('order_address_id');
         
         return [
             'id' =>$this->id,
@@ -24,6 +24,7 @@ class PaymentResource extends JsonResource
             'paymentTransectionID' => $this->paymentTransectionID,
             // 'paymentCardID' => $this->paymentCardID,
             'order' =>new PaymentOrderResource( $this->order),
+            'OrderAddress' => $orderAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $orderAddress)->first()) : null,
             'deduction' => $this->deduction,
             'price_after_deduction' => $this->price_after_deduction,
             'created_at' => (string) $this->created_at,
