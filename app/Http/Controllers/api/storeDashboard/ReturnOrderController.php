@@ -77,7 +77,7 @@ class ReturnOrderController extends BaseController
     {
 
         $order = Order::where('id', $order_id)->whereHas('items', function ($q) {
-            $q->where('store_id', auth()->user()->store_id);
+            $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->first();
         if (is_null($order)) {
             return $this->sendError("'الطلب غير موجود", "Order is't exists");
