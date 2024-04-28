@@ -71,7 +71,7 @@ class SupplierController extends BaseController
         }
         $data = [
             'SupplierName' => $storeAdmain->name,
-            'Mobile' => $storeAdmain->phonenumber,
+            'Mobile' => str_replace("+", "00", $storeAdmain->phonenumber),
             'Email' => $storeAdmain->email,
             'DepositTerms' => 'Daily',
             'BankId' => $request->bankId,
@@ -153,7 +153,7 @@ class SupplierController extends BaseController
         $data = [
             'SupplierName' => $storeAdmain->name,
             'SupplierCode' => $storeAdmain->supplierCode,
-            'Mobile' => $storeAdmain->phonenumber,
+            'Mobile' => str_replace("+", "00", $storeAdmain->phonenumber),
             'Email' => $storeAdmain->email,
             'BankId' => $request->bankId,
             'BankAccountHolderName' => $request->bankAccountHolderName,
@@ -165,7 +165,7 @@ class SupplierController extends BaseController
         if ($supplierCode['IsSuccess']== false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
-        $account = Account::where('store_id', null)->where('status', 'active')->first();
+        $account = Account::where('store_id', null)->first();
         $account->update([
             'bankId' => $request->input('bankId'),
             'bankAccountHolderName' => $request->input('bankAccountHolderName'),
@@ -208,7 +208,7 @@ class SupplierController extends BaseController
                 );
             }
         }
-        $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?suppplierCode=' .$storeAdmain->supplierCode);
+        $supplierDocument = $supplier->buildRequest('v2/GetSupplierDocuments?suppplierCode=' .$storeAdmain->supplierCode,'GET');
 
         $success['supplierUserDocument'] =$supplierDocument;
         $success['supplierUser'] = new SupplierResource($account);
