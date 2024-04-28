@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Rules\returnDatePassed;
 use Illuminate\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Http\FormRequest;
 
 
@@ -40,7 +41,7 @@ class ReturnOrderRequest extends FormRequest
             'data.*.qty.*' => 'required|numeric',
         ];
     }
-    // protected function failedValidation(Validator $validator){
-    //     return Helper::sendError(null, $validator->errors());
-    // }
+    public function failedValidation(Validator $validator){
+        return Helper::sendError(null, $validator->errors());
+    }
 }

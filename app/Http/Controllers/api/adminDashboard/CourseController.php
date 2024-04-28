@@ -76,7 +76,7 @@ class CourseController extends BaseController
             'name' => $request->name,
             'description' => $request->description,
             'duration' => $request->duration,
-            'tags' =>$request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' =>$request->tags,
             'image' => $request->image,
             'user_id' => auth()->user()->id,
         ]);

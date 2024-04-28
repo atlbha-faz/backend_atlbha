@@ -14,13 +14,7 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-   if(json_decode($this->SEOdescription, true) == null){
-       $seo=explode(',',$this->SEOdescription);
-   }
-       else{
-        $seo=json_decode($this->SEOdescription, true);
 
-       }
        
             if ($this->status == null || $this->status == 'active') {
                 $status = __('message.active');
@@ -65,7 +59,7 @@ class ProductResource extends JsonResource
                     'tags' => $this->tags,
                     'cover' => $this->cover,
                     'discount_price' => $this->discount_price !== null ? $this->discount_price : 0,
-                    'SEOdescription' =>$this->SEOdescription != null ?$seo: array(),
+                    'SEOdescription' =>$this->SEOdescription != null ?  explode(',',$this->SEOdescription): array(),
                     'snappixel' => $this->snappixel,
                     'tiktokpixel' => $this->tiktokpixel,
                     'twitterpixel' => $this->twitterpixel,
