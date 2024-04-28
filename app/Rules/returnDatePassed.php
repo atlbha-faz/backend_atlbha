@@ -29,13 +29,9 @@ class returnDatePassed implements Rule
     public function passes($attribute, $value)
     {
        
-        $order=Order::where('id', $value)->where('is_deleted', 0)->first();
-      
-       if($order){
+        $order = Order::where('id', $value)->where('is_deleted', 0)->first();
+        return Carbon::now()->lt($order->created_at->addDays(14));
     
-       return !$order->created_at->addDays(14)->isPast();
-       }
-       return false;
 
     }
 

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('seo_link')->nullable();
             $table->longText('seo_desc')->nullable();
             $table->longText('page_desc')->nullable();
-            $table->json('tags');
+            $table->text('tags')->nullable();
             $table->string('image')->nullable();
             $table->string('altImage')->nullable();
             $table->integer('default_page')->nullable()->default(0);

@@ -87,7 +87,7 @@ class PageController extends BaseController
             'seo_title' => $request->seo_title,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
-            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' => $request->tags,
             'user_id' => auth()->user()->id,
             'status' => 'not_active',
         ]);
@@ -147,7 +147,7 @@ class PageController extends BaseController
             'seo_title' => $request->seo_title,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
-            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' => $request->tags,
             'user_id' => auth()->user()->id,
             'status' => 'active',
         ]);

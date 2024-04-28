@@ -98,7 +98,7 @@ class PageController extends BaseController
             'page_desc' => $request->page_desc,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
-            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' => $request->tags,
             'store_id' => auth()->user()->store_id,
             'user_id' => auth()->user()->id,
             'status' => "not_active",
