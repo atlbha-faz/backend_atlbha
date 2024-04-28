@@ -252,7 +252,7 @@ class PageController extends BaseController
             'seo_title' => $request->input('seo_title'),
             'seo_link' => $request->input('seo_link'),
             'seo_desc' => $request->input('seo_desc'),
-            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' => $request->tags,
         ]);
         //$request->input('name', []);
         if ($request->pageCategory) {
