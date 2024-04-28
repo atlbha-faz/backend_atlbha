@@ -763,7 +763,7 @@ class ProductController extends BaseController
         if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
-                $product = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
+                $product = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
                 if (is_null($product)) {
                     return $this->sendError("المنتج غير موجود", "product is't exists");
                 }
