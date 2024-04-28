@@ -281,8 +281,11 @@ class SupplierController extends BaseController
     public function billing(Request $request)
     {
         $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->pluck('id')->toArray();
-        $payments =PaymentResource::collection(Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->orderByDesc('created_at')->get());
-        $success['billing'] = $payments;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $payments=Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->orderByDesc('created_at')->paginate($count);
+        $success['page_count'] = $payments->lastPage();
+        $success['current_page'] = $payments->currentPage();
+        $success['billing'] = PaymentResource::collection($payments);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الفواتير', ' show successfully');
