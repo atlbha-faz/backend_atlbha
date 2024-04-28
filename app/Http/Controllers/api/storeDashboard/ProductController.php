@@ -763,7 +763,7 @@ class ProductController extends BaseController
         if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
-                $product = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
+                $product = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
                 if (is_null($product)) {
                     return $this->sendError("المنتج غير موجود", "product is't exists");
                 }
@@ -772,7 +772,7 @@ class ProductController extends BaseController
                 } else {
                     $product->update(['status' => 'active']);
                 }
-                $success['products'] = new importsResource($importproduct);
+                $success['products'] = new importsResource($product);
 
             }
 
@@ -839,17 +839,19 @@ class ProductController extends BaseController
             } else {
                 $product->update(['special' => 'not_special']);
             }
+            $success['product'] = new productResource($product);
         } else {
-            $importproduct = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
+            $importproduct = Importproduct::with('product')->where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
             if ($importproduct->special === 'not_special') {
                 $importproduct->update(['special' => 'special']);
             } else {
                 $importproduct->update(['special' => 'not_special']);
             }
+            $success['import_product'] = new importsResource($importproduct);
 
         }
 
-        $success['product'] = new productResource($product);
+       
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');

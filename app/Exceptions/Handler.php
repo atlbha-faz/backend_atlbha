@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Helpers\Helper;
+use Dotenv\Exception\ValidationException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -47,4 +49,8 @@ class Handler extends ExceptionHandler
             //
         });
     }
+    // protected function invalidJson($request, ValidationException $exception)
+    // {
+    //           return Helper::sendError(null, $$exception->message());
+    // }
 }
