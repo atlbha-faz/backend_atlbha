@@ -259,7 +259,7 @@ class CartController extends BaseController
         $carts = Cart::whereHas('user', function ($userQuery) use ($query) {
             $userQuery->where('name', 'like', "%$query%");
         })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
-            ->orderBy('created_at', 'desc')
+            ->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderBy('created_at', 'desc')
             ->paginate($count);
 
         $success['query'] = $query;
