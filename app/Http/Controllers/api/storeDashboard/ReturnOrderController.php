@@ -104,7 +104,7 @@ class ReturnOrderController extends BaseController
             $returns = ReturnOrder::where('order_id', $order->id)->get();
             $prices=0;
             foreach ($returns as $return) {
-                $prices=$prices+($return->qty*$return->price);
+                $prices=$prices+($return->qty*$return->orderItem->price);
                 
             }
                 if ($payment != null) {
