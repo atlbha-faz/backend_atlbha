@@ -34,7 +34,7 @@ class ReturnOrderRequest extends FormRequest
             'order_id' => ['required','numeric',new returnDatePassed()],
             'return_reason_id' => 'required|numeric',
             'store_id' => 'required',
-            'data.*.order_item' => ['required','numeric','unique:return_orders,order_item_id'],
+            'data.*.order_item_id' => ['required','numeric','unique:return_orders,order_item_id'],
             'data.*.qty' => 'required|numeric',
         ];
     }
