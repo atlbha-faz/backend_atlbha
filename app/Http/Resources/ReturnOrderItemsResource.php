@@ -22,7 +22,6 @@ class ReturnOrderItemsResource extends JsonResource
             'id' => $this->id,
             'product' => new ProductResource($this->product),
             'return_qty' => $this->order->returnOrders->where('order_item_id',$this->id)->first()->qty,
-            'return_price' =>$this->order->returnOrders->where('order_item_id',$this->id)->first()->price,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
 
