@@ -56,7 +56,6 @@ class ReturnOrderController extends BaseController
                     'return_reason_id' => $request->input('return_reason_id', null),
                     'order_item_id' => $data['order_item_id'],
                     'qty' => $data['qty'],
-                    'price' => $data['price'],
                     'store_id' => $request->input('store_id', null),
                     'return_status' => 'pending',
                 ]);
