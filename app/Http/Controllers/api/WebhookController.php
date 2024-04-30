@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Models\MyfatoorahLog;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebhookController extends BaseController
 {
@@ -65,26 +66,19 @@ class WebhookController extends BaseController
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
             $secret = env("secret");
 
-            $data = $request->all();
-
-            // $data = json_decode($body, true);
-//            if (!($this->validateSignature($data, $secret, $MyFatoorah_Signature))) {
-//
-//                return;
-//            }
-
+    
+            $body = $request->all();
+      
+            if (!($this->validateSignature( $body, $secret, $MyFatoorah_Signature))) {
+                return;
+            }
+            MyfatoorahLog::create([
+                'request'=>$body
+            ]);
             $event = $request->input('EventType');
-            // Log::debug('Webhook payload:', $event);
-
+          
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
-                // if (!$payment) {
-                //     $url = 'https://backend.atlbha.sa/api/webhook';
-                //     $client = new \GuzzleHttp\Client();
-                //     $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
-                //     Log::alert('AAA-'.json_encode($request->all()));
-                //     return;
-                // }
                 $order = Order::where('id', $payment->orderID)->first();
                 switch ($request->input('Data.TransactionStatus')) {
                     case "SUCCESS":
@@ -112,20 +106,18 @@ class WebhookController extends BaseController
                 }
 
             } elseif ($event == 4) {
-                $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
-                // if (!$account) {
-                //     $url = 'https://backend.atlbha.sa/api/webhook';
-                //     $client = new \GuzzleHttp\Client();
-                //     $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
-                //     return;
-                // }
-                
+                $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first(); 
                 switch ($request->input('Data.SupplierStatus')) {
                     case "APPROVED":
                         $account->update([
                             'status' => "APPROVED",
                         ]);
                         break;
+                        case "Active":
+                            $account->update([
+                                'status' => "APPROVED",
+                            ]);
+                            break;
                     case "REJECTED":
                         $account->update([
                             'status' => "REJECTED",
