@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class MyfatoorahLog extends Model
 {
     use HasFactory;
+    protected $table="myfatoorah_logs";
     protected $fillable = ['request'];
 }
