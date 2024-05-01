@@ -164,11 +164,10 @@ class OrderController extends BaseController
         return $this->sendResponse($success, 'تم حذف الطلبات بنجاح', 'Order deleted successfully');
     }
 
-    public function tracking($order)
+    public function tracking($track_id)
     {
-        $order = Order::where('id', $order)->whereHas('items', function ($q) {
-            $q->where('store_id', auth()->user()->store_id);
-        })->first();
+        $shipping = Shipping::where('shipping_id', $track_id)->first();
+        $order = Order::where('id', $shipping->order_id)->first();
         if (is_null($order)) {
             return $this->sendError("'الطلب غير موجود", "Order is't exists");
         }
