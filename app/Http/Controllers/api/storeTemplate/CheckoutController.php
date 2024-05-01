@@ -111,7 +111,7 @@ class CheckoutController extends BaseController
                 $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
                 if ($shipping_price == null) {
                     $shipping_price = 35;
-                    $extraprice = 2;
+                    $extraprice = 3;
                 } else {
                     $overprice = $shipping_price->overprice;
                     $shipping_price = $shipping_price->price;
@@ -119,7 +119,7 @@ class CheckoutController extends BaseController
                 }
             }
             if ($order->weight > 15) {
-                $default_extra_price = ($order->weight - 15) * 2;
+                $default_extra_price = ($order->weight - 15) * 3;
                 $extra_shipping_price = ($order->weight - 15) * $extraprice;
             } else {
                 $extra_shipping_price = 0;
