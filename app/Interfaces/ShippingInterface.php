@@ -7,5 +7,6 @@ interface ShippingInterface
     public function createOrder($data);
     public function refundOrder($data);
     public function cancelOrder($id);
+    public function tracking($id);
 }
 ?>

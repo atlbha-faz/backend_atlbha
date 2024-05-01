@@ -511,5 +511,43 @@ class AramexCompanyService implements ShippingInterface
            
 
     }
+    public function tracking($id)
+    {
+       
+        $client = new Client();
+        $headers = [
+          'Accept' => 'application/json',
+          'Content-Type' => 'application/json'
+        ];
+        $body = '{
+          "ClientInfo": {
+            "UserName": "armx.ruh.it@gmail.com",
+            "Password": "YUre@9982",
+            "Version": "v1",
+            "AccountNumber": "117620",
+            "AccountPin": "553654",
+            "AccountEntity": "JED",
+            "AccountCountryCode": "SA",
+            "Source": 24
+          },
+          "GetLastTrackingUpdateOnly": false,
+          "Shipments": [
+            "' . $id  . '"
+          ],
+          "Transaction": {
+            "Reference1": "",
+            "Reference2": "",
+            "Reference3": "",
+            "Reference4": "",
+            "Reference5": ""
+          }
+        }';
+        $request = new Request('POST', 'https://ws.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
+        $res = $client->sendAsync($request)->wait();
+         return $res->getBody();
+          
+           
+
+    }
 
 }

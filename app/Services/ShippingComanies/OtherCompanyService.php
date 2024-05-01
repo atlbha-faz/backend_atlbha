@@ -102,5 +102,11 @@ class OtherCompanyService implements ShippingInterface{
            
 
     }
+    public function tracking($id)
+    {
+        
+        return null;   
+
+    }
 
 }

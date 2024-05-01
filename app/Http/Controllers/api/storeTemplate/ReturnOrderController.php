@@ -20,6 +20,12 @@ class ReturnOrderController extends BaseController
     }
     public function index($id)
     {
+        $return= Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
+            $q->where('store_id', $id)->where('is_return', 1);
+        })->where('user_id', auth()->user()->id)->where('store_id', $id)->get();
+        if (is_null($return) ) {
+            return $this->sendError("لا يوجد طلبات مسترجعة", "return is't exists");
+        }
         $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
             $q->where('store_id', $id)->where('is_return', 1);
         })->where('user_id', auth()->user()->id)->where('store_id', $id)->get());

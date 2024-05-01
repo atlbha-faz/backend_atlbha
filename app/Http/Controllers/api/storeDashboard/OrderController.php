@@ -2,21 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use in;
-use App\Models\Order;
-use App\Models\Payment;
-use App\Models\Shipping;
-use App\Models\OrderItem;
-use Illuminate\Http\Request;
-use App\Models\shippingtype_store;
-use App\Services\FatoorahServices;
-use Illuminate\Support\Facades\Http;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\shippingResource;
-use Illuminate\Support\Facades\Validator;
-use App\Services\ShippingComanies\OtherCompanyService;
-use App\Services\ShippingComanies\AramexCompanyService;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\OrderResource;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Services\ShippingComanies\OtherCompanyService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
+use in;
 
 class OrderController extends BaseController
 {
@@ -48,7 +43,7 @@ class OrderController extends BaseController
 
         $data = Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status','paymentype_id', 'created_at']);
+        }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id', 'created_at']);
         if ($request->has('order_status')) {
             $data->where('order_status', $request->order_status);
         }
@@ -88,7 +83,7 @@ class OrderController extends BaseController
 
         $shipping_companies = [
             1 => new AramexCompanyService(),
-            5=> new OtherCompanyService()
+            5 => new OtherCompanyService(),
         ];
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -103,11 +98,11 @@ class OrderController extends BaseController
         }
 
         if ($request->status == "canceled") {
-            
-                $shipping = $shipping_companies[$order->shippingtype->id];
-                $success['orders'] = $shipping->cancelOrder($order->id);
-                $success['status'] = 200;
-                return $this->sendResponse($success, 'تم إلغاء الطلب', 'order canceled successfully');
+
+            $shipping = $shipping_companies[$order->shippingtype->id];
+            $success['orders'] = $shipping->cancelOrder($order->id);
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم إلغاء الطلب', 'order canceled successfully');
 
         } else {
             $data = [
@@ -124,14 +119,13 @@ class OrderController extends BaseController
 
             ];
             if ($request->status === "ready") {
-       
-                    $shipping = $shipping_companies[$order->shippingtype->id];
-                    $success['orders'] = $shipping->createOrder($data);
-                    $success['status'] = 200;
-                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-                
-            }
-            else{
+
+                $shipping = $shipping_companies[$order->shippingtype->id];
+                $success['orders'] = $shipping->createOrder($data);
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+
+            } else {
                 $order->update([
                     'order_status' => $request->status,
                 ]);
@@ -140,13 +134,13 @@ class OrderController extends BaseController
                         'order_status' => $request->status,
                     ]);
                 }
-              
+
                 $success['orders'] = new OrderResource($order);
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
 
             }
-          
+
         }
     }
 
@@ -168,6 +162,27 @@ class OrderController extends BaseController
         $success['orders'] = OrderResource::collection($orders);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف الطلبات بنجاح', 'Order deleted successfully');
+    }
+
+    public function tracking($order)
+    {
+        $order = Order::where('id', $order)->whereHas('items', function ($q) {
+            $q->where('store_id', auth()->user()->store_id);
+        })->first();
+        if (is_null($order)) {
+            return $this->sendError("'الطلب غير موجود", "Order is't exists");
+        }
+
+        $shipping_companies = [
+            1 => new AramexCompanyService(),
+            5 => new OtherCompanyService(),
+        ];
+
+        $shipping = $shipping_companies[$order->shippingtype->id];
+        $success['orders'] = $shipping->tracking();
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم التتبع بنجاح', 'orders tracking returned successfully');
+
     }
     public function searchOrder(Request $request)
     {
