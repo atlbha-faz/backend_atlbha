@@ -93,6 +93,7 @@ Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\storeTemplate\Ord
 Route::get('cancelOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'cancelOrder']);
 Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'index']);
 Route::post('returnOrder', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'store']);
+Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'show']);
 
 Route::get('postStore/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'index']);
 Route::get('postByCategory/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'show']);
