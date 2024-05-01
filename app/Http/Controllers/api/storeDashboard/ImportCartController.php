@@ -150,7 +150,7 @@ class ImportCartController extends BaseController
                 'weight' => $weight,
             ]);
 
-            $success = new CartResource($cart);
+            $success['data'] = new CartResource($cart);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم اضافة الطلب في السلة', 'Cart Added successfully');
 
