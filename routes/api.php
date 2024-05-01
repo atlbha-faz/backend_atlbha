@@ -564,7 +564,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('ordersdeleteall', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'deleteAll'])->name('store.orders.deleteall');
         Route::get('permissions', [App\Http\Controllers\api\storeDashboard\PermissionController::class, 'index'])->name('permissions');
         Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class, ['names' => 'store.roles']);
-        Route::get('tracking/{id}', App\Http\Controllers\api\storeDashboard\OrderController::class, 'tracking');
+        Route::get('tracking/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'tracking']);
 
         // reports
         Route::get('reports', [ReportController::class, 'index'])->name('store.reports.show');
