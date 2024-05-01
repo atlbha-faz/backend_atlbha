@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\MyfatoorahLog;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use App\Models\MyfatoorahLog;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebhookController extends BaseController
 {
@@ -42,7 +41,6 @@ class WebhookController extends BaseController
         //5- Encode the result from the previous point with base64.
         $hash = base64_encode($result);
 
-
         //6- Compare the signature header with the encrypted hash string. If they are equal, then the request is valid and from the MyFatoorah side.
         if ($MyFatoorah_Signature === $hash) {
 
@@ -58,25 +56,22 @@ class WebhookController extends BaseController
         $allData = $request->input('Data');
         if ($allData != null) {
 
-
             //get MyFatoorah-Signature from request headers
             $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
-
 
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
             $secret = env("secret");
 
-    
             $body = $request->all();
-      
-            if (!($this->validateSignature( $body, $secret, $MyFatoorah_Signature))) {
+
+            if (!($this->validateSignature($body, $secret, $MyFatoorah_Signature))) {
                 return;
             }
-            MyfatoorahLog::create([
-                'request'=>$body
-            ]);
+            $myfatoorahLog = new MyfatoorahLog();
+            $myfatoorahLog->request = json_encode($body);
+            $myfatoorahLog->save();
             $event = $request->input('EventType');
-          
+
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                 $order = Order::where('id', $payment->orderID)->first();
@@ -106,18 +101,18 @@ class WebhookController extends BaseController
                 }
 
             } elseif ($event == 4) {
-                $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first(); 
+                $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
                 switch ($request->input('Data.SupplierStatus')) {
                     case "APPROVED":
                         $account->update([
                             'status' => "APPROVED",
                         ]);
                         break;
-                        case "Active":
-                            $account->update([
-                                'status' => "APPROVED",
-                            ]);
-                            break;
+                    case "Active":
+                        $account->update([
+                            'status' => "APPROVED",
+                        ]);
+                        break;
                     case "REJECTED":
                         $account->update([
                             'status' => "REJECTED",
@@ -135,4 +130,4 @@ class WebhookController extends BaseController
     }
 
 }
-// 
+//

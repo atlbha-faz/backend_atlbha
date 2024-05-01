@@ -111,7 +111,7 @@ class ShippingtypeController extends BaseController
                 if($id == 1){
                     $request->price=30;
                     $request->time=3;
-                    $request->overprice=2;
+                    $request->overprice=3;
                 }
             $shippingtype = shippingtype_store::create([
                 'shippingtype_id' => $id,
