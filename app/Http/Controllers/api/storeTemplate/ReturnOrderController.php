@@ -78,9 +78,14 @@ class ReturnOrderController extends BaseController
      * @param  \App\Models\returnOrder  $returnOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(returnOrder $returnOrder)
+    public function show( $returnOrder)
     {
-        //
+        $success['ReturnOrders'] = new ReturnOrderResource(Order::with('returnOrders')->where('id',$returnOrder)->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
+            $q->where('is_return', 1);
+        })->where('user_id', auth()->user()->id)->get());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
     }
 
     /**
