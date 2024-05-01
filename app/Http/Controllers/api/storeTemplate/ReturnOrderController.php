@@ -82,7 +82,7 @@ class ReturnOrderController extends BaseController
     {
         $success['ReturnOrders'] = new ReturnOrderResource(Order::with('returnOrders')->where('id',$returnOrder)->where('is_deleted', 0)->whereHas('items', function ($q) {
             $q->where('is_return', 1);
-        })->where('user_id', auth()->user()->id)->get());
+        })->where('user_id', auth()->user()->id)->first());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
