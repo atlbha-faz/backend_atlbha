@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\OrderResource;
+use in;
 use App\Models\Order;
+use App\Models\Shipping;
 use App\Models\OrderItem;
-use App\Services\ShippingComanies\AramexCompanyService;
-use App\Services\ShippingComanies\OtherCompanyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
-use in;
+use App\Services\ShippingComanies\OtherCompanyService;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class OrderController extends BaseController
 {
@@ -167,6 +168,9 @@ class OrderController extends BaseController
     public function tracking($track_id)
     {
         $shipping = Shipping::where('shipping_id', $track_id)->first();
+        if (is_null($shipping)) {
+            return $this->sendError("'الشحنة غير موجود", "shipping is't exists");
+        }
         $order = Order::where('id', $shipping->order_id)->first();
         if (is_null($order)) {
             return $this->sendError("'الطلب غير موجود", "Order is't exists");
