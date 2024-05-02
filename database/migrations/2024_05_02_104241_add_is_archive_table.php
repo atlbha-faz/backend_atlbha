@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('roles', function (Blueprint $table) {
-            $table->unsignedBigInteger('store_id')->nullable();
-            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-            $table->unique(['name', 'guard_name','store_id']);
+        Schema::table('orders', function (Blueprint $table) {
+            $table->boolean('is_archive')->default(0);  
         });
     }
 
@@ -27,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('roles', function (Blueprint $table) {
-           $table->dropColumn('store_id');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('is_archive');
         });
     }
 };
