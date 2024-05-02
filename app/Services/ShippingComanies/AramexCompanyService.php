@@ -544,7 +544,8 @@ class AramexCompanyService implements ShippingInterface
         }';
         $request = new Request('POST', 'https://ws.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
         $res = $client->sendAsync($request)->wait();
-         return $res->getBody();
+        $response = json_decode( $res->getBody());
+         return $response;
           
            
 

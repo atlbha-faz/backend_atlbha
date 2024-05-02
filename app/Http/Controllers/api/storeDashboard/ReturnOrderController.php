@@ -19,6 +19,12 @@ class ReturnOrderController extends BaseController
     }
     public function index()
     {
+        $return = Order::with('returnOrders')->whereHas('items', function ($q) use ($id) {
+            $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+        })->where('store_id', auth()->user()->store_id)->first();
+        if (is_null($return)) {
+            return $this->sendError("لا يوجد طلبات مسترجعة", "return is't exists");
+        }
         $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) use ($id) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where('store_id', auth()->user()->store_id)->get());
@@ -50,9 +56,21 @@ class ReturnOrderController extends BaseController
      * @param  \App\Models\returnOrder  $returnOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(returnOrder $returnOrder)
+    public function show($returnOrder)
     {
-        //
+        $return = Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q) use ($id) {
+            $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+        })->where('store_id', auth()->user()->store_id)->first();
+        if (is_null($return)) {
+            return $this->sendError("لا يوجد طلب مسترجع", "return is't exists");
+        }
+        $success['ReturnOrder'] = new ReturnOrderResource(
+            Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q) use ($id) {
+                $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+            })->where('store_id', auth()->user()->store_id)->first());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
     }
 
     /**
@@ -96,40 +114,39 @@ class ReturnOrderController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
-        if ($request->status === "accept") {
 
             $shipping = $shipping_companies[$order->shippingtype->id];
 
             $payment = Payment::where('orderID', $order->id)->first();
             $returns = ReturnOrder::where('order_id', $order->id)->get();
-            $prices=0;
+            $prices = 0;
             foreach ($returns as $return) {
-                $prices=$prices+($return->qty*$return->orderItem->price);
-                
+                $prices = $prices + ($return->qty * $return->orderItem->price);
+
             }
-                if ($payment != null) {
+            if ($payment != null) {
 
-                    $data = [
-                        "Key" => $payment->paymentTransectionID,
-                        "KeyType" => "invoiceid",
-                        "RefundChargeOnCustomer" => false,
-                        "ServiceChargeOnCustomer" => false,
-                        "Amount" => $prices,
-                        "Comment" => "refund to the customer",
-                        "AmountDeductedFromSupplier" => $prices,
-                        "CurrencyIso" => "SA",
-                    ];
+                $data = [
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "RefundChargeOnCustomer" => false,
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" => $prices,
+                    "Comment" => "refund to the customer",
+                    "AmountDeductedFromSupplier" => $prices,
+                    "CurrencyIso" => "SA",
+                ];
 
-                    $supplier = new FatoorahServices();
-                    $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+                $supplier = new FatoorahServices();
+                $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
 
-                    if ($supplierCode->IsSuccess == false) {
-                        return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                    } else {
-                        $success['payment'] = $supplierCode;
-                    }
+                if ($supplierCode->IsSuccess == false) {
+                    return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                } else {
+                    $success['payment'] = $supplierCode;
                 }
             
+
             $success['shipping'] = $shipping->refundOrder($order_id);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
