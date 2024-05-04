@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('roles', function (Blueprint $table) {
-            $table->unsignedBigInteger('store_id')->nullable();
-            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-            $table->unique(['name', 'guard_name','store_id']);
+        Schema::create('myfatoorah_logs', function (Blueprint $table) {
+            $table->id();
+            $table->json('request')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -27,8 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('roles', function (Blueprint $table) {
-           $table->dropColumn('store_id');
-        });
+        Schema::dropIfExists('myfatoorah_logs');
     }
 };

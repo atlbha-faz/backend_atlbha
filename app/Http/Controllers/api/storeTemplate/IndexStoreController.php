@@ -2,39 +2,39 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use DB;
-use Carbon\Carbon;
-use App\Models\Seo;
-use App\Models\Page;
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Theme;
-use App\Models\Comment;
-use App\Models\Product;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\DayResource;
+use App\Http\Resources\DaystoreResource;
+use App\Http\Resources\ImportsProductSearchResource;
+use App\Http\Resources\importsResource;
+use App\Http\Resources\MaintenanceResource;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductStoreResource;
+use App\Http\Resources\SeoResource;
+use App\Http\Resources\SubscriptionEmailResource;
+use App\Http\Resources\TechnicalsupportResource;
+use App\Http\Resources\ThemeResource;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Homepage;
-use Illuminate\Http\Request;
 use App\Models\Importproduct;
 use App\Models\Package_store;
-use App\Models\TechnicalSupport;
-use App\Models\SubscriptionEmail;
+use App\Models\Page;
 use App\Models\Page_page_category;
-use App\Http\Resources\DayResource;
-use App\Http\Resources\SeoResource;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\ThemeResource;
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\importsResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\DaystoreResource;
+use App\Models\Product;
+use App\Models\Seo;
+use App\Models\Store;
+use App\Models\SubscriptionEmail;
+use App\Models\TechnicalSupport;
+use App\Models\Theme;
+use App\Models\User;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\MaintenanceResource;
-use App\Http\Resources\ProductStoreResource;
-use App\Http\Resources\TechnicalsupportResource;
-use App\Http\Resources\SubscriptionEmailResource;
-use App\Http\Resources\ImportsProductSearchResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexStoreController extends BaseController
 {
@@ -336,75 +336,73 @@ class IndexStoreController extends BaseController
             $product = Product::where('is_deleted', 0)->where('status', 'active')->where('id', $id)->first();
             $import = Importproduct::where('product_id', $id)->where('store_id', $store_id)->first();
             if ($import == null && $product == null) {
-               
-                return $this->sendError("المنتج غير موجود", "product is't exists");  
-                } else {
-        
-                    $success['product'] = new ProductStoreResource(Product::with(['importproduct'=> function ($query) use($store) {
-                        $query->where('store_id', $store->id);
-                    }])->where('is_deleted', 0)
-                    ->where(function ($main_query) use($store,$id) {
-                        $main_query->whereHas('importproduct' ,function ($productQuery) use($store,$id) {
-                            $productQuery->where('product_id', $id)->where('store_id',$store->id)->where('status', 'active');
-                        })->orwhere('store_id', $store->id)->where('id', $id)->where('status', 'active');
-        
-                    })->first());
-                
-                  
-                }
-            }
-            if ($product != null) {
-                $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')
-                        ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
-            }
 
-            $commentStatus = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('commentstatus', 'active')->first();
-
-            if ($commentStatus != null) {
-
-                $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $id)->where('status', 'active')->get());
+                return $this->sendError("المنتج غير موجود", "product is't exists");
             } else {
-                $success['commentOfProducts'] = array();
+
+                $success['product'] = new ProductStoreResource(Product::with(['importproduct' => function ($query) use ($store) {
+                    $query->where('store_id', $store->id);
+                }])->where('is_deleted', 0)
+                        ->where(function ($main_query) use ($store, $id) {
+                            $main_query->whereHas('importproduct', function ($productQuery) use ($store, $id) {
+                                $productQuery->where('product_id', $id)->where('store_id', $store->id)->where('status', 'active');
+                            })->orwhere('store_id', $store->id)->where('id', $id)->where('status', 'active');
+
+                        })->first());
+
             }
+        }
+        if ($product != null) {
+            $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')
+                    ->where('store_id', $store_id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
+        }
 
-            $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
-            $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
-            $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
-            $success['phonenumber'] = User::where('is_deleted', 0)->where('store_id', $store_id)->pluck('phonenumber')->first();
-            $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
+        $commentStatus = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('commentstatus', 'active')->first();
 
-            $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
-            $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
-            $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
-            $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
-            $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
-            $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
-            $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
-            $success['verification_code'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('verification_code')->first();
-            $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
+        if ($commentStatus != null) {
 
-            $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
+            $success['commentOfProducts'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', $store_id)->where('product_id', $id)->where('status', 'active')->get());
+        } else {
+            $success['commentOfProducts'] = array();
+        }
 
-            $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
+        $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
+        $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
+        $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
+        $success['phonenumber'] = User::where('is_deleted', 0)->where('store_id', $store_id)->pluck('phonenumber')->first();
+        $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
 
-            $arr = array();
-            if ($store->verification_status == 'accept') {
-                if ($store->verification_type == 'maeruf') {
+        $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
+        $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
+        $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
+        $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
+        $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+        $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
+        $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
+        $success['verification_code'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('verification_code')->first();
+        $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
 
-                    $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
-                } else {
-                    $arr['link'] = null;
-                    $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
-                }
-                $verificayionMethod = $arr;
+        $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
+
+        $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
+
+        $arr = array();
+        if ($store->verification_status == 'accept') {
+            if ($store->verification_type == 'maeruf') {
+
+                $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
             } else {
-                $verificayionMethod = null;
+                $arr['link'] = null;
+                $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
             }
-            $success['verificayionMethod'] = $verificayionMethod;
-            $success['status'] = 200;
+            $verificayionMethod = $arr;
+        } else {
+            $verificayionMethod = null;
+        }
+        $success['verificayionMethod'] = $verificayionMethod;
+        $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم ارجاع صفحة المنتج للمتجر بنجاح', ' Product page return successfully');
-       
+        return $this->sendResponse($success, 'تم ارجاع صفحة المنتج للمتجر بنجاح', ' Product page return successfully');
 
     }
     public function addComment(Request $request, $id)
@@ -561,6 +559,7 @@ class IndexStoreController extends BaseController
         if (is_null($filter_category)) {
             $importsproducts = ImportsProductSearchResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
                     ->where('importproducts.store_id', $store_id)
+                    ->where('importproducts.status', 'active')
                     ->whereIn('products.id', $imports_id)
                     ->when($price_from, function ($query, $price_from) {
                         $query->where('importproducts.price', '>=', $price_from);
@@ -568,8 +567,9 @@ class IndexStoreController extends BaseController
                     $query->where('importproducts.price', '<=', $price_to);
                 })->select('products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.discount_price_import')->orderBy($s, $sort)->paginate($limit));
         } else {
-            $importsproducts =ImportsProductSearchResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
+            $importsproducts = ImportsProductSearchResource::collection(Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')
                     ->where('importproducts.store_id', $store_id)
+                    ->where('importproducts.status', 'active')
                     ->whereIn('products.id', $imports_id)
                     ->where(function ($query) use ($filter_category) {
                         $query->where('products.category_id', $filter_category)->orWhere('products.subcategory_id', $filter_category);
@@ -596,7 +596,7 @@ class IndexStoreController extends BaseController
                     $productssStoreid[] = $subProduct->id;
                 }
             }
-            
+
             $storeproducts = ProductResource::collection(Product::with(['store' => function ($query) {
                 $query->select('id', 'domain', 'store_name');
             }, 'category' => function ($query) {
@@ -736,14 +736,13 @@ class IndexStoreController extends BaseController
         //             $query->where('products.category_id', $category)->orWhere('products.subcategory_id', $category);
         //         })
         //         ->get(['products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price']));
-    
-    
-        $products =  ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
+
+        $products = ProductStoreResource::collection(Product::with(['importproduct' => function ($query) use ($store) {
             $query->where('store_id', $store->id);
         }])->where('is_deleted', 0)
                 ->where('name', 'like', '%' . $query . '%')
-                ->where(function ($query) use($store) {
-                    $query->whereHas('importproduct' ,function ($productQuery) use($store) {
+                ->where(function ($query) use ($store) {
+                    $query->whereHas('importproduct', function ($productQuery) use ($store) {
                         $productQuery->where('store_id', $store->id)->where('status', 'active');
                     })->orwhere('store_id', $store->id)->where('status', 'active');
                 })
@@ -836,16 +835,15 @@ class IndexStoreController extends BaseController
         if ($store != null) {
 
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-           
 
-            $specialproducts =ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
+            $specialproducts = ProductStoreResource::collection(Product::with(['importproduct' => function ($query) use ($store) {
                 $query->where('store_id', $store->id);
             }])->where('status', 'active')->where('is_deleted', 0)
-            ->where(function ($query) use($store) {
-                $query->whereHas('importproduct' ,function ($productQuery) use($store) {
-                $productQuery->where('store_id', $store->id)->where('status', 'active')->where('special', 'special');
-            })->orwhere('store_id', $store->id)->where('status', 'active')->where('special', 'special');
-                  })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price','store_id', 'created_at')->paginate($count));
+                    ->where(function ($query) use ($store) {
+                        $query->whereHas('importproduct', function ($productQuery) use ($store) {
+                            $productQuery->where('store_id', $store->id)->where('status', 'active')->where('special', 'special');
+                        })->orwhere('store_id', $store->id)->where('status', 'active')->where('special', 'special');
+                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'created_at')->paginate($count));
 
             $success['specialProducts'] = $specialproducts;
             $success['page_count'] = $specialproducts->lastPage();
@@ -878,26 +876,24 @@ class IndexStoreController extends BaseController
         }
         $store_id = $store->id;
         if ($store != null) {
-          
-                $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-                $oneWeekAgo = Carbon::now()->subWeek();
+            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
+            $oneWeekAgo = Carbon::now()->subWeek();
 
-                $resentproduct = ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
-                    $query->where('store_id', $store->id);
-                }])->where('status', 'active')->where('is_deleted', 0)
-                ->where(function ($query) use($store,$oneWeekAgo) {
-                    $query->whereHas('importproduct' ,function ($productQuery) use($store,$oneWeekAgo) {
-                        $productQuery->where('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
-                    })->orwhere('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
-    
-                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price','store_id', 'created_at')->paginate($count));
-                $success['resent_arrive'] = $resentproduct;
-                $success['page_count'] = $resentproduct->lastPage();
-                $success['current_page'] = $resentproduct->currentPage();
-                $success['status'] = 200;
-          
+            $resentproduct = ProductStoreResource::collection(Product::with(['importproduct' => function ($query) use ($store) {
+                $query->where('store_id', $store->id);
+            }])->where('status', 'active')->where('is_deleted', 0)
+                    ->where(function ($query) use ($store, $oneWeekAgo) {
+                        $query->whereHas('importproduct', function ($productQuery) use ($store, $oneWeekAgo) {
+                            $productQuery->where('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
+                        })->orwhere('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
+
+                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'created_at')->paginate($count));
+            $success['resent_arrive'] = $resentproduct;
+            $success['page_count'] = $resentproduct->lastPage();
+            $success['current_page'] = $resentproduct->currentPage();
+            $success['status'] = 200;
 
             return $this->sendResponse($success, 'تم ارجاع المنتجات الجديده بنجاح', 'newProducts show successfully');
         }
@@ -940,28 +936,27 @@ class IndexStoreController extends BaseController
         }
 
         if ($store != null) {
-         
 
-                $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-                $moreSalesProducts =ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
-                    $query->where('store_id', $store->id);
-                }])->where('status', 'active')->where('is_deleted', 0)
-                ->where(function ($query) use($store,$import_product,$main_product) {
-                    $query->whereHas('importproduct' ,function ($productQuery) use($store,$import_product,$main_product) {
-                        $productQuery->where('store_id', $store->id)->whereIn('product_id', $import_product)->where('status', 'active');
-                    })->orwhere('store_id', $store->id)->whereIn('id', $main_product)->where('status', 'active');
-    
-                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price','store_id', 'created_at')->paginate($count));
+            $moreSalesProducts = ProductStoreResource::collection(Product::with(['importproduct' => function ($query) use ($store) {
+                $query->where('store_id', $store->id);
+            }])->where('status', 'active')->where('is_deleted', 0)
+                    ->where(function ($query) use ($store, $import_product, $main_product) {
+                        $query->whereHas('importproduct', function ($productQuery) use ($store, $import_product, $main_product) {
+                            $productQuery->where('store_id', $store->id)->whereIn('product_id', $import_product)->where('status', 'active');
+                        })->orwhere('store_id', $store->id)->whereIn('id', $main_product)->where('status', 'active');
 
-                $success['moreSalesProducts'] = $moreSalesProducts;
-                $success['page_count'] = $moreSalesProducts->lastPage();
-                $success['current_page'] = $moreSalesProducts->currentPage();
-                $success['status'] = 200;
-            }
+                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'created_at')->paginate($count));
 
-            return $this->sendResponse($success, 'تم ارجاع المنتجات الاكثر طلبا بنجاح', 'specialProducts show successfully');
-        
+            $success['moreSalesProducts'] = $moreSalesProducts;
+            $success['page_count'] = $moreSalesProducts->lastPage();
+            $success['current_page'] = $moreSalesProducts->currentPage();
+            $success['status'] = 200;
+        }
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات الاكثر طلبا بنجاح', 'specialProducts show successfully');
+
     }
     public function productsRatings(Request $request, $id)
     {
@@ -1000,28 +995,26 @@ class IndexStoreController extends BaseController
         }
 
         if ($store != null) {
-          
 
-                $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-                $resentproduct = ProductStoreResource::collection( Product::with(['importproduct'=> function ($query) use($store) {
-                    $query->where('store_id', $store->id);
-                }])->where('status', 'active')->where('is_deleted', 0)
-                ->where(function ($query) use($store,$ratingsimport, $arr) {
-                    $query->whereHas('importproduct' ,function ($productQuery) use($store,$ratingsimport, $arr) {
-                        $productQuery->where('store_id', $store->id)->whereIn('product_id', $ratingsimport)->where('status', 'active');
-                    })->orwhere('store_id', $store->id)->whereIn('id', $arr)->where('status', 'active');
-    
-                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price','store_id', 'created_at')->paginate($count));
+            $resentproduct = ProductStoreResource::collection(Product::with(['importproduct' => function ($query) use ($store) {
+                $query->where('store_id', $store->id);
+            }])->where('status', 'active')->where('is_deleted', 0)
+                    ->where(function ($query) use ($store, $ratingsimport, $arr) {
+                        $query->whereHas('importproduct', function ($productQuery) use ($store, $ratingsimport, $arr) {
+                            $productQuery->where('store_id', $store->id)->whereIn('product_id', $ratingsimport)->where('status', 'active');
+                        })->orwhere('store_id', $store->id)->whereIn('id', $arr)->where('status', 'active');
 
-                $success['ratingsProducts'] = $resentproduct;
-                $success['page_count'] = $resentproduct->lastPage();
-                $success['current_page'] = $resentproduct->currentPage();
-                $success['status'] = 200;
-            }
+                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'created_at')->paginate($count));
 
-            return $this->sendResponse($success, 'تم ارجاع المنتجات  الاكثر تقييما بنجاح', 'ratingsProducts show successfully');
+            $success['ratingsProducts'] = $resentproduct;
+            $success['page_count'] = $resentproduct->lastPage();
+            $success['current_page'] = $resentproduct->currentPage();
+            $success['status'] = 200;
         }
-    
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات  الاكثر تقييما بنجاح', 'ratingsProducts show successfully');
+    }
 
 }

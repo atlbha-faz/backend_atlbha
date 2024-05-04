@@ -96,6 +96,7 @@ Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\storeTemplate\Ord
 Route::get('cancelOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'cancelOrder']);
 Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'index']);
 Route::post('returnOrder', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'store']);
+Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'show']);
 
 Route::get('postStore/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'index']);
 Route::get('postByCategory/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'show']);
@@ -563,6 +564,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('ordersdeleteall', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'deleteAll'])->name('store.orders.deleteall');
         Route::get('permissions', [App\Http\Controllers\api\storeDashboard\PermissionController::class, 'index'])->name('permissions');
         Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class, ['names' => 'store.roles']);
+        Route::get('tracking/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'tracking']);
+
         // reports
         Route::get('reports', [ReportController::class, 'index'])->name('store.reports.show');
 
@@ -588,6 +591,9 @@ Route::middleware([StoreUser::class])->group(function () {
         //
         Route::get('returnOrderIndex', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'index']);
         Route::post('returnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'update']);
+        Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'show']);
+        Route::get('searchReturnOrder', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'searchReturnOrder']);
+
         // });
     });
 });

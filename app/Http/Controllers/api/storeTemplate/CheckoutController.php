@@ -37,7 +37,6 @@ class CheckoutController extends BaseController
     {
         $this->middleware('auth:api');
     }
-
     public function cheackOut(Request $request, $domain)
     {
         // انشاء الorder
@@ -84,7 +83,7 @@ class CheckoutController extends BaseController
             } else {
 
                 $number = $order_number->order_number;
-                $number = ((int)$number) + 1;
+                $number = ((int) $number) + 1;
             }
             $order->order_number = str_pad($number, 4, '0', STR_PAD_LEFT);
             $order->user_id = $cart->user->id; // Assign the customer's ID
@@ -112,7 +111,7 @@ class CheckoutController extends BaseController
                 $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
                 if ($shipping_price == null) {
                     $shipping_price = 35;
-                    $extraprice = 2;
+                    $extraprice = 3;
                 } else {
                     $overprice = $shipping_price->overprice;
                     $shipping_price = $shipping_price->price;
@@ -120,7 +119,7 @@ class CheckoutController extends BaseController
                 }
             }
             if ($order->weight > 15) {
-                $default_extra_price = ($order->weight - 15) * 2;
+                $default_extra_price = ($order->weight - 15) * 3;
                 $extra_shipping_price = ($order->weight - 15) * $extraprice;
             } else {
                 $extra_shipping_price = 0;
@@ -269,8 +268,8 @@ class CheckoutController extends BaseController
                         "AutoCapture" => true,
                         "Bypass3DS" => false,
                     ];
-                    $processingDetailsobject = (object)($processingDetails);
-                    $supplierobject = (object)($supplierdata);
+                    $processingDetailsobject = (object) ($processingDetails);
+                    $supplierobject = (object) ($supplierdata);
                     $data = [
                         "PaymentMethodId" => $paymenttype->paymentMethodId,
                         "CustomerName" => $customer->name,
@@ -329,8 +328,7 @@ class CheckoutController extends BaseController
                         $overprice = $shipping_price->overprice;
                         $shipping_price = $shipping_price->price;
                         $extraprice = $overprice;
-                    }
-                    if ($order->weight > 15) {
+                    }if ($order->weight > 15) {
                         $default_extra_price = ($order->weight - 15) * 2;
                         $extra_shipping_price = ($order->weight - 15) * $extraprice;
                     } else {
@@ -350,8 +348,8 @@ class CheckoutController extends BaseController
                         "AutoCapture" => true,
                         "Bypass3DS" => false,
                     ];
-                    $processingDetailsobject = (object)($processingDetails);
-                    $supplierobject = (object)($supplierdata);
+                    $processingDetailsobject = (object) ($processingDetails);
+                    $supplierobject = (object) ($supplierdata);
                     $data = [
                         "PaymentMethodId" => $paymenttype->paymentMethodId,
                         "CustomerName" => $customer->name,
@@ -578,7 +576,6 @@ class CheckoutController extends BaseController
         }
 
     }
-
     public function ordersUser(Request $request, $domain)
     {
         $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
@@ -596,7 +593,6 @@ class CheckoutController extends BaseController
 
         }
     }
-
     public function orderUser(Request $request, $domain, $order_id)
     {
         $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
@@ -614,28 +610,26 @@ class CheckoutController extends BaseController
 
         }
     }
-
     public function cancelOrder($id)
     {
         $order = Order::where('user_id', auth()->user()->id)->where('id', $id)->where('is_deleted', 0)->first();
         if (is_null($order)) {
             return $this->sendError("الطلب غير موجودة", "order is't exists");
         }
-        if ($order->order_status == "new" || $order->order_status == "ready") {
+        if ($order->order_status == "new" ||$order->order_status == "ready"  ) {
 
-
-            if ($order->paymentype_id == 1) {
+            if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
                 $payment = Payment::where('orderID', $order->id)->first();
-
+                
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" => $order->total_price,
+                    "Amount" =>$order->total_price,
                     "Comment" => "refund to the customer",
                     "AmountDeductedFromSupplier" => $payment->price_after_deduction,
-                    "CurrencyIso" => "SAR"
+                    "CurrencyIso" => "SAR",
                 ];
 
                 $supplier = new FatoorahServices();
@@ -658,7 +652,24 @@ class CheckoutController extends BaseController
                 $orderItem->update([
                     'order_status' => 'canceled',
                 ]);
+                if ($order->payment_status == "paid") {
+                    $product = \App\Models\Product::where('id', $orderItem->product_id)->where('store_id', $orderItem->store_id)->first();
+                    if ($product) {
+                        $product->stock = $product->stock + $orderItem->quantity;
+                        $product->save();
+                    } else {
+                        $import_product = \App\Models\Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $orderItem->store_id)->first();
+                        if ($import_product) {
+                            $import_product->qty = $import_product->qty + $orderItem->quantity;
+                            $import_product->save();
+                        }
+
+                    }
+                    $order->is_archive = 1;
+                    $order->save();
+                }
             }
+
             $success['orders'] = new OrderResource($order);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');

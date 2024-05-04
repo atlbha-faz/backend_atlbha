@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = ['order_number', 'store_id', 'user_id', 'quantity', 'total_price', 'tax', 'shipping_price', 'discount', 'paymentype_id','weight', 'shippingtype_id', 'order_status', 'payment_status', 'is_deleted','cod','created_at', 'description','subtotal','totalCount'];
+    protected $fillable = ['order_number', 'store_id', 'user_id', 'quantity', 'total_price', 'tax', 'shipping_price', 'discount', 'paymentype_id','weight', 'shippingtype_id', 'order_status', 'payment_status', 'is_deleted','cod','created_at', 'is_archive','description','subtotal','totalCount'];
     protected $casts = [
         'total_price' => 'float',
         'subtotal' => 'float',
@@ -56,7 +56,7 @@ class Order extends Model
 
     public function shipping()
     {
-        return $this->hasOne(Shipping::class);
+        return $this->hasMany(Shipping::class);
     }
     public function payment()
     {

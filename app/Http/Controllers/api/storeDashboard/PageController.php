@@ -98,7 +98,7 @@ class PageController extends BaseController
             'page_desc' => $request->page_desc,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
-            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' => $request->tags,
             'store_id' => auth()->user()->store_id,
             'user_id' => auth()->user()->id,
             'status' => "not_active",
@@ -156,7 +156,7 @@ class PageController extends BaseController
             'seo_title' => $request->seo_title,
             'seo_link' => $request->seo_link,
             'seo_desc' => $request->seo_desc,
-            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' => $request->tags,
             'store_id' => auth()->user()->store_id,
             'user_id' => auth()->user()->id,
             'status' => 'active',
@@ -252,7 +252,7 @@ class PageController extends BaseController
             'seo_title' => $request->input('seo_title'),
             'seo_link' => $request->input('seo_link'),
             'seo_desc' => $request->input('seo_desc'),
-            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' => $request->tags,
         ]);
         //$request->input('name', []);
         if ($request->pageCategory) {

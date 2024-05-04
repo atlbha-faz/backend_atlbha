@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\MyfatoorahLog;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class WebhookController extends BaseController
 {
@@ -41,7 +41,6 @@ class WebhookController extends BaseController
         //5- Encode the result from the previous point with base64.
         $hash = base64_encode($result);
 
-
         //6- Compare the signature header with the encrypted hash string. If they are equal, then the request is valid and from the MyFatoorah side.
         if ($MyFatoorah_Signature === $hash) {
 
@@ -57,34 +56,24 @@ class WebhookController extends BaseController
         $allData = $request->input('Data');
         if ($allData != null) {
 
-
             //get MyFatoorah-Signature from request headers
             $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
-
 
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
             $secret = env("secret");
 
-            $data = $request->all();
+            $body = $request->all();
 
-            // $data = json_decode($body, true);
-//            if (!($this->validateSignature($data, $secret, $MyFatoorah_Signature))) {
-//
-//                return;
-//            }
-
+            if (!($this->validateSignature($body, $secret, $MyFatoorah_Signature))) {
+                return;
+            }
+            $myfatoorahLog = new MyfatoorahLog();
+            $myfatoorahLog->request = json_encode($body);
+            $myfatoorahLog->save();
             $event = $request->input('EventType');
-            // Log::debug('Webhook payload:', $event);
 
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
-                // if (!$payment) {
-                //     $url = 'https://backend.atlbha.sa/api/webhook';
-                //     $client = new \GuzzleHttp\Client();
-                //     $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
-                //     Log::alert('AAA-'.json_encode($request->all()));
-                //     return;
-                // }
                 $order = Order::where('id', $payment->orderID)->first();
                 switch ($request->input('Data.TransactionStatus')) {
                     case "SUCCESS":
@@ -113,15 +102,13 @@ class WebhookController extends BaseController
 
             } elseif ($event == 4) {
                 $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
-                // if (!$account) {
-                //     $url = 'https://backend.atlbha.sa/api/webhook';
-                //     $client = new \GuzzleHttp\Client();
-                //     $request_sa = $client->request('POST', $url, ['form_params' => $request->all()]);
-                //     return;
-                // }
-                
                 switch ($request->input('Data.SupplierStatus')) {
                     case "APPROVED":
+                        $account->update([
+                            'status' => "APPROVED",
+                        ]);
+                        break;
+                    case "Active":
                         $account->update([
                             'status' => "APPROVED",
                         ]);
@@ -143,4 +130,4 @@ class WebhookController extends BaseController
     }
 
 }
-// 
+//

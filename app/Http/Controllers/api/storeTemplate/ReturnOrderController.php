@@ -20,6 +20,12 @@ class ReturnOrderController extends BaseController
     }
     public function index($id)
     {
+        $return= Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
+            $q->where('store_id', $id)->where('is_return', 1);
+        })->where('user_id', auth()->user()->id)->where('store_id', $id)->first();
+        if (is_null($return) ) {
+            return $this->sendError("لا يوجد طلبات مسترجعة", "return is't exists");
+        }
         $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
             $q->where('store_id', $id)->where('is_return', 1);
         })->where('user_id', auth()->user()->id)->where('store_id', $id)->get());
@@ -46,7 +52,8 @@ class ReturnOrderController extends BaseController
      */
     public function store(ReturnOrderRequest $request)
     {
-
+      
+       
         $input = $request->all();
         if (isset($request->data)) {
             foreach ($request->data as $data) {
@@ -56,7 +63,6 @@ class ReturnOrderController extends BaseController
                     'return_reason_id' => $request->input('return_reason_id', null),
                     'order_item_id' => $data['order_item_id'],
                     'qty' => $data['qty'],
-                    'price' => $data['price'],
                     'store_id' => $request->input('store_id', null),
                     'return_status' => 'pending',
                 ]);
@@ -79,9 +85,20 @@ class ReturnOrderController extends BaseController
      * @param  \App\Models\returnOrder  $returnOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(returnOrder $returnOrder)
+    public function show( $returnOrder)
     {
-        //
+        $return= Order::with('returnOrders')->where('id',$returnOrder)->where('is_deleted', 0)->whereHas('items', function ($q) {
+            $q->where('is_return', 1);
+        })->where('user_id', auth()->user()->id)->first();
+        if (is_null($return) ) {
+            return $this->sendError("لا يوجد طلب مسترجع", "return is't exists");
+        }
+        $success['ReturnOrder'] = new ReturnOrderResource(Order::with('returnOrders')->where('id',$returnOrder)->where('is_deleted', 0)->whereHas('items', function ($q) {
+            $q->where('is_return', 1);
+        })->where('user_id', auth()->user()->id)->first());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
     }
 
     /**

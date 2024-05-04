@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('order_item_id')->nullable();
             $table->foreign('order_item_id')->references('id')->on('order_items')->onDelete('cascade');
             $table->integer('qty')->nullable();
-             $table->integer('price')->nullable();
             $table->enum('return_status', ['pending', 'accept', 'reject'])
             ->default('pending');
             $table->unsignedBigInteger('return_reason_id')->nullable();
