@@ -2,21 +2,21 @@
 
 namespace App\Rules;
 
-use Carbon\Carbon;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Contracts\Validation\Rule;
 
-class returnDatePassed implements Rule
+class BelongsToOrderRule implements Rule
 {
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-  
-    public function __construct()
+    protected $orderId;
+    public function __construct($orderId)
     {
-     
+        $this->orderId = $orderId;
     }
 
     /**
@@ -28,13 +28,15 @@ class returnDatePassed implements Rule
      */
     public function passes($attribute, $value)
     {
-      
-        $order = Order::where('id', $value)->where('user_id', auth()->user()->id)->where('is_deleted', 0)->first();
-        if($order){
-        return Carbon::now()->lt($order->created_at->addDays(14));
-        }
-       return false;
+        $order = Order::find($this->orderId);
 
+        if ($order) {
+            $item = OrderItem::find($value);
+
+            return $item && $item->order_id === $order->id;
+        }
+
+        return false;
     }
 
     /**
@@ -44,6 +46,6 @@ class returnDatePassed implements Rule
      */
     public function message()
     {
-        return "طلب الاسترجاع غير ممكن لانه تعدى المده المسموحه في الاسترجاع";
+        return 'هذا العنصر لاينتمي الى الطلب.';
     }
 }
