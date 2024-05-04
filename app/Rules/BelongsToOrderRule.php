@@ -33,7 +33,7 @@ class BelongsToOrderRule implements Rule
         if ($order) {
             $item = OrderItem::find($value);
 
-            return $item && $item->order_id === $order->id;
+            return $item && $item->order_id == $order->id;
         }
 
         return false;
