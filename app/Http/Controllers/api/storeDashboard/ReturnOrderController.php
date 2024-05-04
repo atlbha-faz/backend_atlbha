@@ -19,15 +19,24 @@ class ReturnOrderController extends BaseController
     }
     public function index()
     {
-        $return = Order::with('returnOrders')->whereHas('items', function ($q)  {
+        $return = Order::with('returnOrders')->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where('store_id', auth()->user()->store_id)->first();
         if (is_null($return)) {
             return $this->sendError("لا يوجد طلبات مسترجعة", "return is't exists");
         }
-        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q)  {
+        $data = Order::with('returnOrders')->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
-        })->where('store_id', auth()->user()->store_id)->get());
+        })->where('store_id', auth()->user()->store_id);
+        if ($request->has('status')) {
+            $data = Order::with('returnOrders')->whereHas('items', function ($q) {
+                $q->where('store_id', auth()->user()->store_id)->where('is_return', 1)->where('return_status', $request->status);
+            })->where('store_id', auth()->user()->store_id);
+        }
+        $data = $data->paginate($count);
+        $success['ReturnOrders'] = ReturnOrderResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض الطلبات المسترجعة بنجاح', 'ReturnOrders showed successfully');
@@ -58,14 +67,14 @@ class ReturnOrderController extends BaseController
      */
     public function show($returnOrder)
     {
-        $return = Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q)  {
+        $return = Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where('store_id', auth()->user()->store_id)->first();
         if (is_null($return)) {
             return $this->sendError("لا يوجد طلب مسترجع", "return is't exists");
         }
-        $success['ReturnOrder'] = new ReturnOrderResource(
-            Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q)  {
+        $success['return_order'] = new ReturnOrderResource(
+            Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q) {
                 $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
             })->where('store_id', auth()->user()->store_id)->first());
         $success['status'] = 200;
@@ -115,17 +124,34 @@ class ReturnOrderController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-            $shipping = $shipping_companies[$order->shippingtype->id];
+        $shipping = $shipping_companies[$order->shippingtype->id];
 
-            $payment = Payment::where('orderID', $order->id)->first();
-            $returns = ReturnOrder::where('order_id', $order->id)->get();
-            $prices = 0;
-            foreach ($returns as $return) {
-                $prices = $prices + ($return->qty * $return->orderItem->price);
+        $payment = Payment::where('orderID', $order->id)->first();
+        $returns = ReturnOrder::where('order_id', $order->id)->get();
+        $prices = 0;
+        foreach ($returns as $return) {
+            $prices = $prices + ($return->qty * $return->orderItem->price);
+            if ($order->payment_status == "paid") {
 
+                $product = \App\Models\Product::where('id', $return->orderItem->product_id)->where('store_id', auth()->user()->store_id)->first();
+                if ($product) {
+                    $product->stock = $product->stock + $return->qty;
+                    $product->save();
+                } else {
+                    $import_product = \App\Models\Importproduct::where('product_id', $return->orderItem->product_id)->where('store_id', auth()->user()->store_id)->first();
+                    if ($import_product) {
+                        $import_product->qty = $import_product->qty + $return->qty;
+                        $import_product->save();
+                    }
+
+                }
+
+                $order->is_archive = 1;
+                $order->save();
             }
-            if($order->payment_status == "paid" && $order->paymentype_id == 1 )
-            {
+
+        }
+        if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
             if ($payment != null) {
 
                 $data = [
@@ -148,12 +174,10 @@ class ReturnOrderController extends BaseController
                     $success['payment'] = $supplierCode;
                 }
             }
-            }
-            $success['shipping'] = $shipping->refundOrder($order_id);
-            $success['status'] = 200;
-            return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-
-        
+        }
+        $success['shipping'] = $shipping->refundOrder($order_id);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
 
     }
 
@@ -166,5 +190,30 @@ class ReturnOrderController extends BaseController
     public function destroy(returnOrder $returnOrder)
     {
         //
+    }
+    public function searchReturnOrder(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $orders = Order::with('returnOrders')->whereHas('items', function ($q) {
+            $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+        })->where(function ($main_query) use ($query) {
+            $main_query - whereHas('user', function ($userQuery) use ($query) {
+                $userQuery->where('name', 'like', "%$query%");
+            })->orWhere('order_number', 'like', "%$query%");
+        })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->orderBy('created_at', 'desc')->paginate($count);
+
+        $success['query'] = $query;
+
+        $success['total_result'] = $orders->total();
+        $success['page_count'] = $orders->lastPage();
+        $success['current_page'] = $orders->currentPage();
+        $success['return_orders'] = ReturnOrderResource::collection($orders);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
+
     }
 }

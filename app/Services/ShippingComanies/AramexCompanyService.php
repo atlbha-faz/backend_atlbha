@@ -1,16 +1,15 @@
 <?php
 namespace App\Services\ShippingComanies;
 
-use Carbon\Carbon;
-use App\Models\Order;
-use GuzzleHttp\Client;
-use App\Models\Shipping;
-use App\Models\OrderAddress;
-use GuzzleHttp\Psr7\Request;
-use App\Models\OrderOrderAddress;
 use App\Http\Resources\OrderResource;
-use App\Http\Resources\shippingResource;
 use App\Interfaces\ShippingInterface;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderOrderAddress;
+use App\Models\Shipping;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 class AramexCompanyService implements ShippingInterface
 {
@@ -269,19 +268,17 @@ class AramexCompanyService implements ShippingInterface
                 ]);
 
             return new OrderResource($order);
-               
-        
 
         }
     }
     public function refundOrder($order_id)
     {
-        $order = Order::where('id',  $order_id)->first();
-        $orderAddress = OrderOrderAddress::where('order_id',  $order_id)->where('type', 'shipping')->value('order_address_id');
+        $order = Order::where('id', $order_id)->first();
+        $orderAddress = OrderOrderAddress::where('order_id', $order_id)->where('type', 'shipping')->value('order_address_id');
         $address = OrderAddress::where('id', $orderAddress)->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
-        $shipping = Shipping::where('order_id',  $order_id)->first();
-        $store=Store::where('id',$order->store_id)->first();
+        $shipping = Shipping::where('order_id', $order_id)->first();
+        $store = Store::where('id', $order->store_id)->first();
         if ($shipping == null) {
             return $this->sendError("لايمكن استرجاع الطلب", "shipping is't exists");
         }
@@ -365,15 +362,15 @@ class AramexCompanyService implements ShippingInterface
                                     },
                                     "Contact": {
                                         "Department": "",
-                                        "PersonName": "' .   $store->user->name . '",
-                                        "CompanyName": "' . $store->store_name  . '",
+                                        "PersonName": "' . $store->user->name . '",
+                                        "CompanyName": "' . $store->store_name . '",
                                         "PhoneNumber1": "' . $store->phonenumber . '",
                                         "PhoneNumber1Ext": "",
                                         "PhoneNumber2": "",
                                         "PhoneNumber2Ext": "",
                                         "FaxNumber": "",
-                                        "CellPhone": "' . $store->phonenumber  . '",
-                                        "EmailAddress": "' . $store->store_email  . '",
+                                        "CellPhone": "' . $store->phonenumber . '",
+                                        "EmailAddress": "' . $store->store_email . '",
                                         "Type": ""
                                     }
                                 },
@@ -475,49 +472,96 @@ class AramexCompanyService implements ShippingInterface
                     $errorsMessages .= $error->Message;
                 }
             }
-            return  $errorsMessages;
+            return $errorsMessages;
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
 
             $shipping = Shipping::Create([
-                    'order_id' => $order->id,
-                    'store_id' => $order->store_id,
-                    'shipping_id' => $ship_id,
-                    'sticker' => $url,
-                    'description' => $order->description,
-                    'price' => $order->total_price,
-                    'city' => $address->city,
-                    'streetaddress' =>  $address->street_address,
-                    'customer_id' => $order->user_id,
-                ]);
+                'order_id' => $order->id,
+                'store_id' => $order->store_id,
+                'shipping_id' => $ship_id,
+                'sticker' => $url,
+                'description' => $order->description,
+                'price' => $order->total_price,
+                'city' => $address->city,
+                'streetaddress' => $address->street_address,
+                'customer_id' => $order->user_id,
+            ]);
 
-            return  new OrderResource($order);
+            return new OrderResource($order);
         }
 
     }
     public function cancelOrder($id)
     {
         $order = Order::where('id', $id)->first();
+        if ($order->order_status == "new" || $order->order_status == "ready") {
+
+            if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
+                $payment = Payment::where('orderID', $order->id)->first();
+
+                $data = [
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "RefundChargeOnCustomer" => false,
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" => $order->total_price,
+                    "Comment" => "refund to the customer",
+                    "AmountDeductedFromSupplier" => $payment->price_after_deduction,
+                    "CurrencyIso" => "SAR",
+                ];
+
+                $supplier = new FatoorahServices();
+
+                $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+                if ($response) {
+                    if ($response['IsSuccess'] == false) {
+                        return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                    } else {
+                        $success['message'] = $response;
+                    }
+                } else {
+                    return $this->sendError("خطأ في الارجاع المالي", 'error');
+                }
+            }
+        }
         $order->update([
-            'order_status' =>'canceled',
+            'order_status' => 'canceled',
         ]);
         foreach ($order->items as $orderItem) {
             $orderItem->update([
-                'order_status' =>'canceled',
+                'order_status' => 'canceled',
             ]);
+            if ($order->payment_status  == "paid") {
+                $product = \App\Models\Product::where('id', $orderItem->product_id)->where('store_id', $orderItem->store_id)->first();
+                if ($product) {
+                    $product->stock = $product->stock + $orderItem->quantity;
+                    $product->save();
+                } else {
+                    $import_product = \App\Models\Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $orderItem->store_id)->first();
+                    if ($import_product) {
+                        $import_product->qty = $import_product->qty + $orderItem->quantity;
+                        $import_product->save();
+                    }
+
+                }
+                $order->is_archive = 1;
+                $order->save();
+            }
         }
+       
+
         return new OrderResource($order);
-           
 
     }
     public function tracking($id)
     {
-       
+
         $client = new Client();
         $headers = [
-          'Accept' => 'application/json',
-          'Content-Type' => 'application/json'
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
         ];
         $body = '{
           "ClientInfo": {
@@ -532,7 +576,7 @@ class AramexCompanyService implements ShippingInterface
           },
           "GetLastTrackingUpdateOnly": false,
           "Shipments": [
-            "' . $id  . '"
+            "' . $id . '"
           ],
           "Transaction": {
             "Reference1": "",
@@ -544,10 +588,8 @@ class AramexCompanyService implements ShippingInterface
         }';
         $request = new Request('POST', 'https://ws.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
         $res = $client->sendAsync($request)->wait();
-        $response = json_decode( $res->getBody());
-         return $response;
-          
-           
+        $response = json_decode($res->getBody());
+        return $response;
 
     }
 
