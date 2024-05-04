@@ -201,7 +201,7 @@ class ReturnOrderController extends BaseController
         $orders = Order::with('returnOrders')->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where(function ($main_query) use ($query) {
-            $main_query - whereHas('user', function ($userQuery) use ($query) {
+            $main_query->whereHas('user', function ($userQuery) use ($query) {
                 $userQuery->where('name', 'like', "%$query%");
             })->orWhere('order_number', 'like', "%$query%");
         })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
