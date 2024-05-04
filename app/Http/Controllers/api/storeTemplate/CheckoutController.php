@@ -455,7 +455,14 @@ class CheckoutController extends BaseController
         $coupon = Coupon::where('code', $request->code)->where('is_deleted', 0)->where('store_id', $store_domain)->first();
 
         if ($coupon != null && $coupon->status == 'active') {
+
             $cart = Cart::where('id', $cart_id)->where('store_id', $store_domain)->first();
+            if ($cart->coupon_id == $coupon->id) {
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
+            } else {
+                $this->restCart($cart->id);
+            }
             $total = $cart->total - $cart->shipping_price;
             if ($total >= $coupon->total_price) {
                 $coupon->users()->attach(auth()->user()->id);
@@ -609,17 +616,17 @@ class CheckoutController extends BaseController
         if (is_null($order)) {
             return $this->sendError("الطلب غير موجودة", "order is't exists");
         }
-        if ($order->order_status == "new" || $order->order_status == "ready") {
+        if ($order->order_status == "new" ||$order->order_status == "ready"  ) {
 
             if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
                 $payment = Payment::where('orderID', $order->id)->first();
-
+                
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" => $order->total_price,
+                    "Amount" =>$order->total_price,
                     "Comment" => "refund to the customer",
                     "AmountDeductedFromSupplier" => $payment->price_after_deduction,
                     "CurrencyIso" => "SAR",
@@ -662,7 +669,7 @@ class CheckoutController extends BaseController
                     $order->save();
                 }
             }
-          
+
             $success['orders'] = new OrderResource($order);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
@@ -674,6 +681,20 @@ class CheckoutController extends BaseController
 
         }
 
+    }
+
+    private function restCart($id)
+    {
+        $cart = Cart::where('id', $id)->first();
+        $coupon = Coupon::with()->where('id', $cart->coupon_id)->first();
+
+        $cart->update([
+            'total' => $cart->total + $cart->discount_total,
+            'discount_type' => null,
+            'discount_value' => null,
+            'discount_total' => 0,
+            'coupon_id' => null,
+        ]);
     }
 
 }
