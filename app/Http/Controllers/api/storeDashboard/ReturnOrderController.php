@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\storeTemplate;
+namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\ReturnOrderResource;
@@ -19,18 +19,18 @@ class ReturnOrderController extends BaseController
     }
     public function index()
     {
-        $return = Order::with('returnOrders')->whereHas('items', function ($q) use ($id) {
+        $return = Order::with('returnOrders')->whereHas('items', function ($q)  {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where('store_id', auth()->user()->store_id)->first();
         if (is_null($return)) {
             return $this->sendError("لا يوجد طلبات مسترجعة", "return is't exists");
         }
-        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q) use ($id) {
+        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->whereHas('items', function ($q)  {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where('store_id', auth()->user()->store_id)->get());
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
+        return $this->sendResponse($success, 'تم  عرض الطلبات المسترجعة بنجاح', 'ReturnOrders showed successfully');
     }
 
     /**
@@ -58,19 +58,19 @@ class ReturnOrderController extends BaseController
      */
     public function show($returnOrder)
     {
-        $return = Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q) use ($id) {
+        $return = Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q)  {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where('store_id', auth()->user()->store_id)->first();
         if (is_null($return)) {
             return $this->sendError("لا يوجد طلب مسترجع", "return is't exists");
         }
         $success['ReturnOrder'] = new ReturnOrderResource(
-            Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q) use ($id) {
+            Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q)  {
                 $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
             })->where('store_id', auth()->user()->store_id)->first());
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
+        return $this->sendResponse($success, 'تم  عرض الطلب المسترجع بنجاح', 'ReturnOrders showed successfully');
     }
 
     /**
@@ -124,6 +124,8 @@ class ReturnOrderController extends BaseController
                 $prices = $prices + ($return->qty * $return->orderItem->price);
 
             }
+            if($order->payment_status == "paid" && $order->paymentype_id == 1 )
+            {
             if ($payment != null) {
 
                 $data = [
@@ -145,13 +147,13 @@ class ReturnOrderController extends BaseController
                 } else {
                     $success['payment'] = $supplierCode;
                 }
-            
-
+            }
+            }
             $success['shipping'] = $shipping->refundOrder($order_id);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
 
-        }
+        
 
     }
 
