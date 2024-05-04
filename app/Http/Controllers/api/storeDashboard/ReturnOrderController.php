@@ -33,6 +33,8 @@ class ReturnOrderController extends BaseController
         if ($request->has('status')) {
             $data = Order::with('returnOrders')->whereHas('items', function ($q) {
                 $q->where('store_id', auth()->user()->store_id)->where('is_return', 1)->where('return_status', $request->status);
+            })->whereHas('returnOrders', function ($q) use($request) {
+                $q->where('return_status', $request->status);
             })->where('store_id', auth()->user()->store_id);
         }
         $data = $data->paginate($count);
@@ -75,7 +77,7 @@ class ReturnOrderController extends BaseController
         if (is_null($return)) {
             return $this->sendError("لا يوجد طلب مسترجع", "return is't exists");
         }
-        $success['return_order'] = new ReturnOrderResource(
+        $success['ReturnOrder'] = new ReturnOrderResource(
             Order::with('returnOrders')->where('id', $returnOrder)->whereHas('items', function ($q) {
                 $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
             })->where('store_id', auth()->user()->store_id)->first());
@@ -212,7 +214,7 @@ class ReturnOrderController extends BaseController
         $success['total_result'] = $orders->total();
         $success['page_count'] = $orders->lastPage();
         $success['current_page'] = $orders->currentPage();
-        $success['return_orders'] = ReturnOrderResource::collection($orders);
+        $success['ReturnOrders'] = ReturnOrderResource::collection($orders);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
