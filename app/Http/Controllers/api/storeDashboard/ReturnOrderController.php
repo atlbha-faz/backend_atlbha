@@ -17,8 +17,10 @@ class ReturnOrderController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+
         $return = Order::with('returnOrders')->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
         })->where('store_id', auth()->user()->store_id)->first();
