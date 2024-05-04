@@ -32,7 +32,7 @@ class ReturnOrderController extends BaseController
         })->where('store_id', auth()->user()->store_id);
         if ($request->has('status')) {
             $data = Order::with('returnOrders')->whereHas('items', function ($q) {
-                $q->where('store_id', auth()->user()->store_id)->where('is_return', 1)->where('return_status', $request->status);
+                $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
             })->whereHas('returnOrders', function ($q) use($request) {
                 $q->where('return_status', $request->status);
             })->where('store_id', auth()->user()->store_id);
