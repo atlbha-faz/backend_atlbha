@@ -686,7 +686,7 @@ class CheckoutController extends BaseController
     private function restCart($id)
     {
         $cart = Cart::where('id', $id)->first();
-        $coupon = Coupon::with()->where('id', $cart->coupon_id)->first();
+        $coupon = Coupon::where('id', $cart->coupon_id)->first();
 
         $cart->update([
             'total' => $cart->total + $cart->discount_total,
