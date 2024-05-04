@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Cart extends Model
 {
     use HasFactory;
-    protected $table="carts";
-      protected $fillable = ['user_id','store_id','count','total','message','discount_type','subtotal','totalCount','discount_value','shipping_price','tax','weight','discount_total','free_shipping','discount_expire_date','is_deleted'];
-        protected $casts = [
+
+    protected $table = "carts";
+    protected $fillable = ['user_id', 'store_id', 'count', 'total', 'message', 'discount_type', 'subtotal', 'totalCount', 'discount_value', 'shipping_price', 'tax', 'weight', 'discount_total', 'free_shipping', 'discount_expire_date', 'is_deleted','coupon_id'];
+    protected $casts = [
         'total' => 'float',
         'subtotal' => 'float',
         'count'=>'integer',

@@ -65,7 +65,7 @@ class CheckoutController extends BaseController
         } else {
 
             $number = $order_number->order_number;
-            $number = ((int) $number) + 1;
+            $number = ((int)$number) + 1;
         }
         $order->order_number = str_pad($number, 4, '0', STR_PAD_LEFT);
         $order->user_id = $cart->user->id; // Assign the customer's ID
@@ -232,6 +232,7 @@ class CheckoutController extends BaseController
         return $this->sendResponse($success, 'تم الاستيراد بنجاح ', 'order send successfully');
 
     }
+
     public function paymentMethods()
     {
 
@@ -257,6 +258,12 @@ class CheckoutController extends BaseController
         if ($coupon != null && $coupon->status == 'active') {
 
             $cart = Cart::where('id', $cart_id)->where('store_id', null)->first();
+            if ($cart->coupon_id == $coupon->id) {
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
+            } else {
+                $this->restCart($cart->id);
+            }
             $coupon->users()->attach(auth()->user()->id);
             $user = User::where('id', auth()->user()->id)->first();
             $useCouponUser = coupons_users::where('user_id', auth()->user()->id)->where('coupon_id', $coupon->id)->get();
@@ -269,7 +276,7 @@ class CheckoutController extends BaseController
                         'discount_type' => 'fixed',
                         'discount_value' => $coupon->discount,
                         'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + $coupon->discount,
-
+                        'coupon_id' => $coupon->id
                     ]);
 
                 } else {
@@ -282,6 +289,7 @@ class CheckoutController extends BaseController
                         'discount_type' => 'percent',
                         'discount_value' => $coupon->discount . '%',
                         'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
+                        'coupon_id' => $coupon->id
                     ]);
 
                 }
@@ -305,6 +313,20 @@ class CheckoutController extends BaseController
 
         }
 
+    }
+
+    private function restCart($id)
+    {
+        $cart = Cart::where('id', $id)->first();
+        $coupon = Coupon::with()->where('id', $cart->coupon_id)->first();
+
+        $cart->update([
+            'total' => $cart->total + $cart->discount_total,
+            'discount_type' => null,
+            'discount_value' => null,
+            'discount_total' => 0,
+            'coupon_id' => null,
+        ]);
     }
 
 }

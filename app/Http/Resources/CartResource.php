@@ -41,6 +41,7 @@ class CartResource extends JsonResource
             'status' =>  __('message.not_complete'),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
+            'coupon'=>$this->coupon
 
         ];
 
