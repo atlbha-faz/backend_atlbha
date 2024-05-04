@@ -455,7 +455,6 @@ class CheckoutController extends BaseController
         $coupon = Coupon::where('code', $request->code)->where('is_deleted', 0)->where('store_id', $store_domain)->first();
 
         if ($coupon != null && $coupon->status == 'active') {
-
             $cart = Cart::where('id', $cart_id)->where('store_id', $store_domain)->first();
             $total = $cart->total - $cart->shipping_price;
             if ($total >= $coupon->total_price) {
@@ -610,21 +609,20 @@ class CheckoutController extends BaseController
         if (is_null($order)) {
             return $this->sendError("الطلب غير موجودة", "order is't exists");
         }
-        if ($order->order_status == "new" ||$order->order_status == "ready"  ) {
+        if ($order->order_status == "new" || $order->order_status == "ready") {
 
-           
-            if ($order->paymentype_id == 1) {
+            if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
                 $payment = Payment::where('orderID', $order->id)->first();
-                
+
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" =>$order->total_price,
+                    "Amount" => $order->total_price,
                     "Comment" => "refund to the customer",
                     "AmountDeductedFromSupplier" => $payment->price_after_deduction,
-                    "CurrencyIso"=> "SAR"
+                    "CurrencyIso" => "SAR",
                 ];
 
                 $supplier = new FatoorahServices();
@@ -647,22 +645,24 @@ class CheckoutController extends BaseController
                 $orderItem->update([
                     'order_status' => 'canceled',
                 ]);
-                $product=\App\Models\Product::where('id',$orderItem->product_id )->where('store_id',$orderItem->store_id)->first();
-                if( $product){
-                    $product->stock=$product->stock+$orderItem->quantity;
-                    $product->save();
-                }
-                else{
-                    $import_product=\App\Models\Importproduct::where('product_id',$orderItem->product_id )->where('store_id',$orderItem->store_id)->first();
-                    if( $import_product){
-                        $import_product->qty=$import_product->qty+$orderItem->quantity;
-                        $import_product->save();
-                    }
+                if ($order->payment_status == "paid") {
+                    $product = \App\Models\Product::where('id', $orderItem->product_id)->where('store_id', $orderItem->store_id)->first();
+                    if ($product) {
+                        $product->stock = $product->stock + $orderItem->quantity;
+                        $product->save();
+                    } else {
+                        $import_product = \App\Models\Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $orderItem->store_id)->first();
+                        if ($import_product) {
+                            $import_product->qty = $import_product->qty + $orderItem->quantity;
+                            $import_product->save();
+                        }
 
+                    }
+                    $order->is_archive = 1;
+                    $order->save();
                 }
             }
-            $order->is_archive=1;
-            $order->save();
+          
             $success['orders'] = new OrderResource($order);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
