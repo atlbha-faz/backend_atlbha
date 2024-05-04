@@ -30,23 +30,25 @@ class ArchiveIdleOrders extends Command
     {
         $orders =\App\Models\Order::whereNot('paymentype_id',4)->where('is_archive',0)->whereNot('payment_status','paid')->whereDate('created_at', '<=', Carbon::now()->subMinutes(30)->format('Y-m-d'))->get();
         foreach($orders  as $order){
-            $orders_items =\App\Models\OrderItem::where('id',$order->id)->get();
+            $orders_items =\App\Models\OrderItem::where('order_id',$order->id)->get();
             foreach($orders_items  as $orders_item){
                 $product=\App\Models\Product::where('id',$orders_item->product_id )->where('store_id',$orders_item->store_id)->first();
                 if( $product){
-                    $product->update(['stock',$product->stock+$orders_item->quantity]);
-
+                    $product->stock=$product->stock+$orders_item->quantity;
+                    $product->save();
                 }
                 else{
                     $import_product=\App\Models\Importproduct::where('product_id',$orders_item->product_id )->where('store_id',$orders_item->store_id)->first();
                     if( $import_product){
-                        $import_product->update(['qty',$import_product->qty+$orders_item->quantity]);
-                      
+                        $import_product->qty=$import_product->qty+$orders_item->quantity;
+                        $import_product->save();
                     }
 
                 }
             }
-            $order->update(['is_archive',1]);
+            $order->is_archive=1;
+            $order->save();
         }
+        
     }
 }

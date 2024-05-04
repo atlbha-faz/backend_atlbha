@@ -647,7 +647,22 @@ class CheckoutController extends BaseController
                 $orderItem->update([
                     'order_status' => 'canceled',
                 ]);
+                $product=\App\Models\Product::where('id',$orderItem->product_id )->where('store_id',$orderItem->store_id)->first();
+                if( $product){
+                    $product->stock=$product->stock+$orderItem->quantity;
+                    $product->save();
+                }
+                else{
+                    $import_product=\App\Models\Importproduct::where('product_id',$orderItem->product_id )->where('store_id',$orderItem->store_id)->first();
+                    if( $import_product){
+                        $import_product->qty=$import_product->qty+$orderItem->quantity;
+                        $import_product->save();
+                    }
+
+                }
             }
+            $order->is_archive=1;
+            $order->save();
             $success['orders'] = new OrderResource($order);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');

@@ -5,9 +5,10 @@ namespace App\Http\Requests;
 use App\Helpers\Helper;
 use App\Rules\returnDatePassed;
 use Illuminate\Validation\Rule;
+use App\Rules\BelongsToOrderRule;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Foundation\Http\FormRequest;
 
 
 class ReturnOrderRequest extends FormRequest
@@ -30,11 +31,12 @@ class ReturnOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'comment' => 'string|max:255',
+            
             'order_id' => ['required','numeric',new returnDatePassed()],
             'return_reason_id' => 'required|numeric',
+            'comment' => ['string','required_if:return_reason_id,==,5'],
             'store_id' => 'required',
-            'data.*.order_item_id' => ['required','numeric','exists:order_items,id','unique:return_orders,order_item_id'],
+            'data.*.order_item_id' => ['required','numeric',new BelongsToOrderRule($this->order_id),'unique:return_orders,order_item_id'],
             'data.*.qty' => 'required|numeric',
         ];
     }
