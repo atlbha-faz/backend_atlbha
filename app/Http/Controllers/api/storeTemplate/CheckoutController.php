@@ -37,6 +37,7 @@ class CheckoutController extends BaseController
     {
         $this->middleware('auth:api');
     }
+
     public function cheackOut(Request $request, $domain)
     {
         // انشاء الorder
@@ -83,7 +84,7 @@ class CheckoutController extends BaseController
             } else {
 
                 $number = $order_number->order_number;
-                $number = ((int) $number) + 1;
+                $number = ((int)$number) + 1;
             }
             $order->order_number = str_pad($number, 4, '0', STR_PAD_LEFT);
             $order->user_id = $cart->user->id; // Assign the customer's ID
@@ -268,8 +269,8 @@ class CheckoutController extends BaseController
                         "AutoCapture" => true,
                         "Bypass3DS" => false,
                     ];
-                    $processingDetailsobject = (object) ($processingDetails);
-                    $supplierobject = (object) ($supplierdata);
+                    $processingDetailsobject = (object)($processingDetails);
+                    $supplierobject = (object)($supplierdata);
                     $data = [
                         "PaymentMethodId" => $paymenttype->paymentMethodId,
                         "CustomerName" => $customer->name,
@@ -328,7 +329,8 @@ class CheckoutController extends BaseController
                         $overprice = $shipping_price->overprice;
                         $shipping_price = $shipping_price->price;
                         $extraprice = $overprice;
-                    }if ($order->weight > 15) {
+                    }
+                    if ($order->weight > 15) {
                         $default_extra_price = ($order->weight - 15) * 2;
                         $extra_shipping_price = ($order->weight - 15) * $extraprice;
                     } else {
@@ -348,8 +350,8 @@ class CheckoutController extends BaseController
                         "AutoCapture" => true,
                         "Bypass3DS" => false,
                     ];
-                    $processingDetailsobject = (object) ($processingDetails);
-                    $supplierobject = (object) ($supplierdata);
+                    $processingDetailsobject = (object)($processingDetails);
+                    $supplierobject = (object)($supplierdata);
                     $data = [
                         "PaymentMethodId" => $paymenttype->paymentMethodId,
                         "CustomerName" => $customer->name,
@@ -456,12 +458,12 @@ class CheckoutController extends BaseController
 
         if ($coupon != null && $coupon->status == 'active') {
 
-            $cart = Cart::where('id', $cart_id)->where('store_id', $store_domain)->first();
+            $cart = Cart::with([])->where('id', $cart_id)->where('store_id', $store_domain)->first();
             if ($cart->coupon_id == $coupon->id) {
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
             } else {
-                $this->restCart($cart->id);
+               $cart = $this->restCart($cart->id);
             }
             $total = $cart->total - $cart->shipping_price;
             if ($total >= $coupon->total_price) {
@@ -582,6 +584,7 @@ class CheckoutController extends BaseController
         }
 
     }
+
     public function ordersUser(Request $request, $domain)
     {
         $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
@@ -599,6 +602,7 @@ class CheckoutController extends BaseController
 
         }
     }
+
     public function orderUser(Request $request, $domain, $order_id)
     {
         $store_domain = Store::where('is_deleted', 0)->where('domain', $domain)->pluck('id')->first();
@@ -616,23 +620,24 @@ class CheckoutController extends BaseController
 
         }
     }
+
     public function cancelOrder($id)
     {
         $order = Order::where('user_id', auth()->user()->id)->where('id', $id)->where('is_deleted', 0)->first();
         if (is_null($order)) {
             return $this->sendError("الطلب غير موجودة", "order is't exists");
         }
-        if ($order->order_status == "new" ||$order->order_status == "ready"  ) {
+        if ($order->order_status == "new" || $order->order_status == "ready") {
 
             if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
                 $payment = Payment::where('orderID', $order->id)->first();
-                
+
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" =>$order->total_price,
+                    "Amount" => $order->total_price,
                     "Comment" => "refund to the customer",
                     "AmountDeductedFromSupplier" => $payment->price_after_deduction,
                     "CurrencyIso" => "SAR",
@@ -691,7 +696,7 @@ class CheckoutController extends BaseController
 
     private function restCart($id)
     {
-        $cart = Cart::where('id', $id)->first();
+        $cart = Cart::with([])->where('id', $id)->first();
         $coupon = Coupon::where('id', $cart->coupon_id)->first();
 
         $cart->update([
@@ -701,6 +706,7 @@ class CheckoutController extends BaseController
             'discount_total' => 0,
             'coupon_id' => null,
         ]);
+        return $cart->refresh();
     }
 
 }
