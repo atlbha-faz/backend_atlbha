@@ -527,6 +527,8 @@ class CheckoutController extends BaseController
                                         'discount_type' => 'fixed',
                                         'discount_value' => $coupon->discount,
                                         'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + $coupon->discount,
+                                        'coupon_id' => $coupon->id,
+
                                     ]);
 
                                 } else {
@@ -544,6 +546,8 @@ class CheckoutController extends BaseController
                                         'discount_type' => 'percent',
                                         'discount_value' => $coupon->discount . '%',
                                         'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
+                                        'coupon_id' => $coupon->id,
+
                                     ]);
 
                                 }
