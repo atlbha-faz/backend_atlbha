@@ -48,7 +48,7 @@ class Madfu
         return $login;
     }
 
-    public function createOrder($token, $guest_order_data, $order, $order_details)
+    public function createOrder($token, $guest_order_data, $order, $order_details, $url)
     {
 //        ["GuestOrderData"=>{"CustomerMobile":"50XXXXXXX","CustomerName":"Your Customer Name","Lang":"ar"},
 //        "Order"=>{"Taxes":1.5,"ActualValue":12,"Amount":10.5,"MerchantReference":"15648-AAA"},
@@ -57,7 +57,9 @@ class Madfu
 
         $body = ["GuestOrderData" => $guest_order_data,
             "Order" => $order,
-            "OrderDetails" => $order_details];
+            "OrderDetails" => $order_details,
+            "MerchantUrls" => ["Success" => route('madfu-webhook'), "Failure" => route('madfu-webhook'), "Cancel" => $url]
+        ];
 
         return $this->makeRequest($url, $body, ['token' => $token]);
     }
