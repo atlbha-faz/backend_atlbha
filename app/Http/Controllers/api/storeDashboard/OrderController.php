@@ -42,7 +42,7 @@ class OrderController extends BaseController
             $q->where('store_id', auth()->user()->store_id);
         })->count();
 
-        $data = Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
+        $data = Order::with(['user', 'shippings', 'shippingtype', 'items' => function ($query) {
             $query->select('id');
         }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id', 'created_at']);
         if ($request->has('order_status')) {
