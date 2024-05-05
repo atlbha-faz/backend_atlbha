@@ -27,7 +27,8 @@ class CreateOrderRequest extends FormRequest
             'token' => 'required',
             'guest_order_data' => 'required',
             'order' => 'required',
-            'order_details' => 'required'
+            'order_details' => 'required',
+            'url' => 'required'
         ];
     }
 }
