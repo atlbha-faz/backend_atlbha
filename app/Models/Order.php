@@ -54,7 +54,7 @@ class Order extends Model
     }
   
 
-    public function shipping()
+    public function shippings()
     {
         return $this->hasMany(Shipping::class);
     }
