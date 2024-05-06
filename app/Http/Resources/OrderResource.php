@@ -91,7 +91,7 @@ class OrderResource extends JsonResource
 
             'OrderAddress' => $orderAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $orderAddress)->first()) : null,
             //   'billingAddress' => $billingAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $billingAddress)->first()):null,
-            'shipping' => $this->shipping != null ? new shippingResource($this->shippings->first()) : null,
+            'shipping' => $this->shippings->first() != null ? new shippingResource($this->shippings->first()) : null,
             'paymenttypes' => $this->paymentype != null ? new PaymenttypeResource($this->paymentype) : null,           'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
             'trackingLink' => $track,
             'cod' => $this->cod,
