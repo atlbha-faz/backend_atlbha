@@ -130,55 +130,55 @@ class ReturnOrderController extends BaseController
 
         $shipping = $shipping_companies[$order->shippingtype->id];
 
-        $payment = Payment::where('orderID', $order->id)->first();
-        $returns = ReturnOrder::where('order_id', $order->id)->get();
-        $prices = 0;
-        foreach ($returns as $return) {
-            $prices = $prices + ($return->qty * $return->orderItem->price);
-            if ($order->payment_status == "paid") {
+        // $payment = Payment::where('orderID', $order->id)->first();
+        // $returns = ReturnOrder::where('order_id', $order->id)->get();
+        // $prices = 0;
+        // foreach ($returns as $return) {
+        //     $prices = $prices + ($return->qty * $return->orderItem->price);
+        //     if ($order->payment_status == "paid") {
 
-                $product = \App\Models\Product::where('id', $return->orderItem->product_id)->where('store_id', auth()->user()->store_id)->first();
-                if ($product) {
-                    $product->stock = $product->stock + $return->qty;
-                    $product->save();
-                } else {
-                    $import_product = \App\Models\Importproduct::where('product_id', $return->orderItem->product_id)->where('store_id', auth()->user()->store_id)->first();
-                    if ($import_product) {
-                        $import_product->qty = $import_product->qty + $return->qty;
-                        $import_product->save();
-                    }
+        //         $product = \App\Models\Product::where('id', $return->orderItem->product_id)->where('store_id', auth()->user()->store_id)->first();
+        //         if ($product) {
+        //             $product->stock = $product->stock + $return->qty;
+        //             $product->save();
+        //         } else {
+        //             $import_product = \App\Models\Importproduct::where('product_id', $return->orderItem->product_id)->where('store_id', auth()->user()->store_id)->first();
+        //             if ($import_product) {
+        //                 $import_product->qty = $import_product->qty + $return->qty;
+        //                 $import_product->save();
+        //             }
 
-                }
+        //         }
 
-                $order->is_archive = 1;
-                $order->save();
-            }
+        //         $order->is_archive = 1;
+        //         $order->save();
+        //     }
 
-        }
-        if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
-            if ($payment != null) {
+        // }
+        // if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
+        //     if ($payment != null) {
 
-                $data = [
-                    "Key" => $payment->paymentTransectionID,
-                    "KeyType" => "invoiceid",
-                    "RefundChargeOnCustomer" => false,
-                    "ServiceChargeOnCustomer" => false,
-                    "Amount" => $prices,
-                    "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $prices,
-                    "CurrencyIso" => "SA",
-                ];
+        //         $data = [
+        //             "Key" => $payment->paymentTransectionID,
+        //             "KeyType" => "invoiceid",
+        //             "RefundChargeOnCustomer" => false,
+        //             "ServiceChargeOnCustomer" => false,
+        //             "Amount" => $prices,
+        //             "Comment" => "refund to the customer",
+        //             "AmountDeductedFromSupplier" => $prices,
+        //             "CurrencyIso" => "SA",
+        //         ];
 
-                $supplier = new FatoorahServices();
-                $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+        //         $supplier = new FatoorahServices();
+        //         $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
 
-                if ($supplierCode->IsSuccess == false) {
-                    return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                } else {
-                    $success['payment'] = $supplierCode;
-                }
-            }
-        }
+        //         if ($supplierCode->IsSuccess == false) {
+        //             return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+        //         } else {
+        //             $success['payment'] = $supplierCode;
+        //         }
+        //     }
+        // }
         $success['shipping'] = $shipping->refundOrder($order_id);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');

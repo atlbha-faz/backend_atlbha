@@ -36,6 +36,8 @@ class OtherCompanyService implements ShippingInterface
     public function createOrder($data)
     {
         $order = Order::where('id', $data["order_id"])->first();
+        $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
+        $address = OrderAddress::where('id', $orderAddress)->first();
         $order->update([
             'order_status' => 'ready',
         ]);
@@ -44,12 +46,11 @@ class OtherCompanyService implements ShippingInterface
                 'order_status' => 'ready',
             ]);
         }
-        $shipping = Shipping::updateOrCreate(
+        $shipping = Shipping::Create(
             [
                 'order_id' => $order->id,
                 'store_id' => $order->store_id,
-            ],
-            [
+
                 'shipping_id' => $order->order_number,
                 // 'track_id' => $track_id,
                 // 'sticker' => $url,
@@ -59,6 +60,10 @@ class OtherCompanyService implements ShippingInterface
                 'city' => $data["shipper_city"],
                 'streetaddress' => $data["shipper_line1"],
                 'customer_id' => $order->user_id,
+                'destination_district' => $address->district,
+                'destination_city' => $address->city,
+                'destination_streetaddress' => $address->street_address,
+                'shipping_type' => 'send',
 
             ]);
 
@@ -69,8 +74,8 @@ class OtherCompanyService implements ShippingInterface
     {
         $order = Order::where('id', $order_id)->first();
 
-        $orderAddress = OrderOrderAddress::where('order_id', $order_id)->where('type', 'shipping')->value('order_address_id');
-        $address = OrderAddress::where('id', $orderAddress)->first();
+        // $orderAddress = OrderOrderAddress::where('order_id', $order_id)->where('type', 'shipping')->value('order_address_id');
+        // $address = OrderAddress::where('id', $orderAddress)->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
         $shipping = Shipping::where('order_id', $order_id)->first();
         $shipping = Shipping::Create([
@@ -78,9 +83,13 @@ class OtherCompanyService implements ShippingInterface
             'store_id' => $order->store_id,
             'description' => $order->description,
             'price' => $order->total_price,
-            'city' => $address->city,
-            'streetaddress' => $address->street_address,
+            'city' => $shipping->destination_city,
+            'streetaddress' => $shipping->destination_streetaddress,
             'customer_id' => $order->user_id,
+            'destination_district' => $shipping->district,
+            'destination_city' => $shipping->city,
+            'destination_streetaddress' => $shipping->streetaddress,
+            'shipping_type' => 'return',
         ]);
 
         return new OrderResource($order);
