@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Shipping extends Model
 {
     use HasFactory;
-    protected $fillable = ['description','price','store_id','city','streetaddress', 'sticker','shipping_id','track_id','district',
-    'customer_id','order_id','is_deleted'];
+    protected $fillable = ['description','price','store_id','city','streetaddress', 'sticker','shipping_id','track_id','district','shipping_type',
+    'destination_city','destination_district','destination_streetaddress','shippingtype_id','weight','quantity','customer_id','order_id','is_deleted'];
     public function customer()
     {
         return $this->belongsTo(User::class, 'customer_id', 'id');

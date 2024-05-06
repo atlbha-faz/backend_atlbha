@@ -249,23 +249,24 @@ class AramexCompanyService implements ShippingInterface
                     'order_status' => "ready",
                 ]);
             }
-            $shipping = Shipping::updateOrCreate(
-                [
-                    'order_id' => $order->id,
-                    'store_id' => $order->store_id,
-                ],
-                [
-                    'shipping_id' => $ship_id,
-                    // 'track_id' => $track_id,
-                    'sticker' => $url,
-                    'description' => $order->description,
-                    'price' => $order->total_price,
-                    'district' => $data["shipper_district"],
-                    'city' => $data["shipper_city"],
-                    'streetaddress' => $data["shipper_line1"],
-                    'customer_id' => $order->user_id,
+            $shipping = Shipping::create([
 
-                ]);
+                'order_id' => $order->id,
+                'store_id' => $order->store_id,
+                'shipping_id' => $ship_id,
+                'sticker' => $url,
+                'description' => $order->description,
+                'price' => $order->total_price,
+                'district' => $data["shipper_district"],
+                'city' => $data["shipper_city"],
+                'streetaddress' => $data["shipper_line1"],
+                'customer_id' => $order->user_id,
+                'destination_district' => $address->district,
+                'destination_city' => $address->city,
+                'destination_streetaddress' => $address->street_address,
+                'shipping_type' => 'send',
+
+            ]);
 
             return new OrderResource($order);
 
@@ -274,8 +275,8 @@ class AramexCompanyService implements ShippingInterface
     public function refundOrder($order_id)
     {
         $order = Order::where('id', $order_id)->first();
-        $orderAddress = OrderOrderAddress::where('order_id', $order_id)->where('type', 'shipping')->value('order_address_id');
-        $address = OrderAddress::where('id', $orderAddress)->first();
+        // $orderAddress = OrderOrderAddress::where('order_id', $order_id)->where('type', 'shipping')->value('order_address_id');
+        // $address = OrderAddress::where('id', $orderAddress)->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
         $shipping = Shipping::where('order_id', $order_id)->first();
         $store = Store::where('id', $order->store_id)->first();
@@ -308,10 +309,10 @@ class AramexCompanyService implements ShippingInterface
                                     "Reference2": "",
                                     "AccountNumber": "117620",
                                     "PartyAddress": {
-                                        "Line1": "' . $address->street_address . '",
-                                        "Line2": "' . $address->street_address . '",
+                                        "Line1": "' . $shipping->destination_streetaddress . '",
+                                        "Line2": "' . $shipping->destination_streetaddress . '",
                                         "Line3": "",
-                                        "City": "' . $address->city . '",
+                                        "City": "' . $shipping->destination_city . '",
                                         "StateOrProvinceCode": "",
                                         "PostCode": "",
                                         "CountryCode": "SA",
@@ -484,9 +485,13 @@ class AramexCompanyService implements ShippingInterface
                 'sticker' => $url,
                 'description' => $order->description,
                 'price' => $order->total_price,
-                'city' => $address->city,
-                'streetaddress' => $address->street_address,
+                'city' => $shipping->destination_city,
+                'streetaddress' => $shipping->destination_streetaddress,
                 'customer_id' => $order->user_id,
+                'destination_district' => $shipping->district,
+                'destination_city' => $shipping->city,
+                'destination_streetaddress' => $shipping->streetaddress,
+                'shipping_type' => 'return',
             ]);
 
             return new OrderResource($order);
@@ -533,7 +538,7 @@ class AramexCompanyService implements ShippingInterface
             $orderItem->update([
                 'order_status' => 'canceled',
             ]);
-            if ($order->payment_status  == "paid") {
+            if ($order->payment_status == "paid") {
                 $product = \App\Models\Product::where('id', $orderItem->product_id)->where('store_id', $orderItem->store_id)->first();
                 if ($product) {
                     $product->stock = $product->stock + $orderItem->quantity;
@@ -550,7 +555,6 @@ class AramexCompanyService implements ShippingInterface
                 $order->save();
             }
         }
-       
 
         return new OrderResource($order);
 
