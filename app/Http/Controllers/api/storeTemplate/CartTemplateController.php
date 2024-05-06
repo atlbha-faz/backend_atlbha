@@ -35,7 +35,7 @@ class CartTemplateController extends BaseController
 
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
 
         $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
