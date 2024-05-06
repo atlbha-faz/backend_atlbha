@@ -68,12 +68,17 @@ class CartTemplateController extends BaseController
         if (is_null($cart)) {
             return $this->sendError("السلة غير موجودة", "cart is't exists");
         }
-
+         if($request->has('delete')){
+            $cart->delete();
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم حذف السلة بنجاح', 'Cart deleted successfully');
+         }
+         else{
         $success['cart'] = new CartResource($cart);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
-
+         }
         // }
     }
     public function addToCart(Request $request, $domain)
