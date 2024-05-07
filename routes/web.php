@@ -13,6 +13,10 @@ use App\Http\Controllers\GotexController;
 | contains the "web" middleware group. Now create something great!
 |
  */
+Route::get('/.well-known/apple-developer-merchantid-domain-association.txt', function () {
+    $file = fopen(public_path('well-known/apple-developer-merchantid-domain-association.txt1'), 'r');
+    return $file;
+});
 Route::post('webhook', [App\Http\Controllers\api\WebhookController::class, 'handleWebhook']);
 
 Route::get('/', function () {
@@ -31,8 +35,8 @@ Route::get('/tagpage', function () {
 Route::get('/test', function () {
     $res = app(GotexController::class)->printSticker('655f5689ebfe6bfa43d3ea2b');
     // dd( $res);
-     return $res->body();
-    
+    return $res->body();
+
 });
 
 Auth::routes();
