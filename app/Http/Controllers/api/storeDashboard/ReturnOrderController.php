@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\Order;
-use App\Models\Payment;
-use App\Models\ReturnOrder;
-use Illuminate\Http\Request;
-use App\Services\FatoorahServices;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\ReturnOrderResource;
-use App\Services\ShippingComanies\OtherCompanyService;
-use App\Services\ShippingComanies\AramexCompanyService;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ReturnOrderResource;
+use App\Models\Order;
+use App\Models\ReturnOrder;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Services\ShippingComanies\OtherCompanyService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReturnOrderController extends BaseController
 {
@@ -21,7 +19,7 @@ class ReturnOrderController extends BaseController
     }
     public function index(Request $request)
     {
-        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $return = Order::with('returnOrders')->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
@@ -35,7 +33,7 @@ class ReturnOrderController extends BaseController
         if ($request->has('status')) {
             $data = Order::with('returnOrders')->whereHas('items', function ($q) {
                 $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
-            })->whereHas('returnOrders', function ($q) use($request) {
+            })->whereHas('returnOrders', function ($q) use ($request) {
                 $q->where('return_status', $request->status);
             })->where('store_id', auth()->user()->store_id)->orderByDesc('id');
         }
@@ -132,6 +130,12 @@ class ReturnOrderController extends BaseController
 
         $shipping = $shipping_companies[$order->shippingtype->id];
 
+        $returns = ReturnOrder::where('order_id', $order->id)->get();
+
+        foreach ($returns as $return) {
+            $return->return_status=$reques->status;
+            $$return->save();
+        }
         // $payment = Payment::where('orderID', $order->id)->first();
         // $returns = ReturnOrder::where('order_id', $order->id)->get();
         // $prices = 0;
@@ -181,7 +185,9 @@ class ReturnOrderController extends BaseController
         //         }
         //     }
         // }
-        $success['shipping'] = $shipping->refundOrder($order_id);
+        if ($reques->status == 'accept') {
+            $success['shipping'] = $shipping->refundOrder($order_id);
+        }
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
 

@@ -66,7 +66,7 @@ class CheckoutController extends BaseController
                 'paymentype_id' => 'required|exists:paymenttypes,id',
                 'shippingtype_id' => 'required|exists:shippingtypes,id',
                 'cod' => 'nullable',
-                'description' => 'required|string',
+                'description' => 'nullable|string',
 
             ], [
                 'paymentype_id.required' => 'اختر طرق الدفع اولاً',
