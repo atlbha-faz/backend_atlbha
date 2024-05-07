@@ -22,10 +22,10 @@ class ReturnOrderResource extends JsonResource
         if($this->returnOrders->first()->return_status==null || $this->returnOrders->first()->return_status== 'pending'){
             $status = 'جديد';
         }elseif($this->returnOrders->first()->return_status == 'accept'){
-            $status = 'قبول';
+            $status = 'تم الاسترجاع';
         }
         else{
-            $status = 'رفض';
+            $status = 'لم يتم الاسترجاع';
         }
         
         return [
