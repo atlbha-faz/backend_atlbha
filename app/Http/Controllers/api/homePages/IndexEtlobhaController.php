@@ -2,42 +2,40 @@
 
 namespace App\Http\Controllers\api\homePages;
 
-use Carbon\Carbon;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\AtlbhaIndexProductResource;
+use App\Http\Resources\AtlbhaIndexSearchProductResource;
+use App\Http\Resources\AtlbhaIndexSearchStoreResource;
+use App\Http\Resources\atlobhaContactResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CityResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\CommonQuestionResource;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\PartnerResource;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\website_socialmediaResource;
+use App\Models\AtlobhaContact;
+use App\Models\categories_stores;
+use App\Models\Category;
 use App\Models\City;
-use App\Models\Page;
-use App\Models\Store;
 use App\Models\Comment;
-use App\Models\Package_store;
+use App\Models\CommonQuestion;
+use App\Models\Homepage;
+use App\Models\Page;
+use App\Models\Page_page_category;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Setting;
-use App\Models\Category;
-use App\Models\Homepage;
-use Illuminate\Http\Request;
-use App\Models\AtlobhaContact;
-use App\Models\CommonQuestion;
-use App\Models\categories_stores;
-use App\Models\Page_page_category;
+use App\Models\Store;
 use App\Models\website_socialmedia;
-use App\Http\Resources\CityResource;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\StoreResource;
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\PartnerResource;
-use App\Http\Resources\CategoryResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\atlobhaContactResource;
-use App\Http\Resources\CommonQuestionResource;
-use App\Http\Resources\AtlbhaIndexProductResource;
-use App\Http\Resources\website_socialmediaResource;
-use App\Http\Resources\AtlbhaIndexSearchStoreResource;
-use App\Http\Resources\AtlbhaIndexSearchProductResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexEtlobhaController extends BaseController
 {
-    public function index()
+    public function index(Request $request)
     {
         // visit count
         $homepage = Homepage::where('is_deleted', 0)->where('store_id', null)->first();
@@ -72,19 +70,24 @@ class IndexEtlobhaController extends BaseController
         } else {
             $success['products'] = array();
         }
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $success['section2'] = Section::where('id', 2)->pluck('name')->first();
         if (!is_null(Section::where('id', 2)->where('is_deleted', 0)->where('status', 'active')->first())) {
-            $success['stores'] = StoreResource::collection(Store::with(['user' => function ($query) {
+            $stores=Store::with(['user' => function ($query) {
                 $query->select('id');
             }, 'city' => function ($query) {
                 $query->select('id', 'name');
             }, 'country' => function ($query) {
                 $query->select('id', 'name');
-            }])->where('is_deleted', 0)->where('special', 'special')->get());
+            }])->where('is_deleted', 0)->where('special', 'special');
+            $stores = $stores->paginate($count);
+            $success['stores'] = StoreResource::collection($stores);
+            $success['stores_total_result'] = $stores->total();
+            $success['stores_page_count'] = $stores->lastPage();
+            $success['stores_current_page'] = $stores->currentPage();
         } else {
             $success['stores'] = array();
         }
-        // $success['packages'] = PackageResource::collection(Package::where('is_deleted', 0)->get());
 
         $success['comment'] = CommentResource::collection(Comment::with(['user' => function ($query) {
             $query->with(['store' => function ($query) {
@@ -109,6 +112,35 @@ class IndexEtlobhaController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الرئيسية بنجاح', 'etlobha index return successfully');
+    }
+    public function storesFilter(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $data = Store::with(['user' => function ($query) {
+            $query->select('id');
+        },
+        ])->where('is_deleted', 0)->where('special', 'special');
+
+        if ($request->has('name')) {
+            $name = $request->input('name');
+            $data->where('store_name', 'like', "%$name%");
+        }
+        if ($request->has('city_id')) {
+            $data->where('city_id', $request->input('city_id'));
+        }
+        if ($request->has('category_id')) {
+            $data->whereHas('categories', function ($q) use($request) {
+                $q->where('category_id', $request->input('category_id'));
+            });
+        }
+        $data = $data->paginate($count);
+        $success['total_result'] = $data->total();
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
+        $success['stores'] = StoreResource::collection($data);
+        return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'etlobha stores return successfully');
+
     }
 
     public function store(Request $request)
@@ -169,7 +201,6 @@ class IndexEtlobhaController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع نتائج البحث بنجاح', 'search Information returned successfully');
     }
-  
 
 }
 //

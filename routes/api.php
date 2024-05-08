@@ -57,6 +57,7 @@ Route::get('/logoutcustomer', 'App\Http\Controllers\api\storeTemplate\AuthCustom
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'index']);
+Route::get('storesFilter', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'storesFilter']);
 Route::get('commonquestion', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'commonQuestion']);
 Route::get('addstoremonth', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'addstoremonth']);
 Route::get('searchIndex', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'searchIndex']);

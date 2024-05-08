@@ -14,13 +14,7 @@ class AtlbhaIndexProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        if(json_decode($this->SEOdescription, true) == null){
-            $seo=explode(',',$this->SEOdescription);
-        }
-            else{
-             $seo=json_decode($this->SEOdescription, true);
-     
-            }
+       
         $firstImportProduct = $this->importproduct->first();
 
       
@@ -67,7 +61,7 @@ class AtlbhaIndexProductResource extends JsonResource
                 'tags' => $this->tags,
                 'cover' => $this->cover,
                 'discount_price' => $firstImportProduct !== null ? $firstImportProduct->discount_price_import:$this->discount_price,
-                'SEOdescription' =>$this->SEOdescription != null ?$seo: array(),
+                'SEOdescription' =>$this->SEOdescription != null ?explode(',',$this->SEOdescription): array(),
                 'snappixel' => $this->snappixel,
                 'tiktokpixel' => $this->tiktokpixel,
                 'twitterpixel' => $this->twitterpixel,
