@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserPageResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PageResource extends JsonResource
@@ -34,7 +35,7 @@ class PageResource extends JsonResource
             'tags' =>$this->tags != null ? explode(',',$this->tags): array(),
             'store' => new StoreResource($this->store),
             'postCategory' => new PostCategoryResource($this->postcategory),
-            'user' => new UserResource($this->user),
+            'user' => new UserPageResource($this->user),
             'pageCategory' => Page_categoryResource::collection($this->page_categories),
             // 'page_url' => $this->store_id == null ? 'https://atlbha.sa/post/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title) : 'https: //template.atlbha.sa/' . $this->store->domain . '/site/SitePages/' . $this->id,
             'created_at' => (string) $this->created_at,

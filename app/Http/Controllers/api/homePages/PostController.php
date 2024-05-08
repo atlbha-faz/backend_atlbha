@@ -14,7 +14,13 @@ class PostController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $post_page = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->paginate($count);
+        $post_page = Page::with(['user' => function ($query) {
+            $query->select('id', 'name');
+        }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc');
+        if ($request->has('post_category_id')) {
+            $post_page->where('postcategory_id', $request->input('post_category_id'));
+        }
+        $post_page = $post_page->paginate($count);
         $success['pages'] = PageResource::collection($post_page);
         $success['total_result'] = $post_page->total();
         $success['page_count'] = $post_page->lastPage();
@@ -80,14 +86,17 @@ class PostController extends BaseController
         $searchTerm = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $pages = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)
-                ->where(function ($query) use ($searchTerm) {
-                    $query->where('title', 'like', "%$searchTerm%")
-                        ->orWhere('page_desc', 'LIKE', "%$searchTerm%")
-                        ->orWhere('page_content', 'LIKE', "%$searchTerm%");
+        $pages = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)
+            ->where(function ($query) use ($searchTerm) {
+                $query->where('title', 'like', "%$searchTerm%")
+                    ->orWhere('page_desc', 'LIKE', "%$searchTerm%")
+                    ->orWhere('page_content', 'LIKE', "%$searchTerm%");
 
-                })->orderBy('created_at', 'desc')->paginate($count));
-
+            })->orderBy('created_at', 'desc');
+        if ($request->has('post_category_id')) {
+            $pages->where('postcategory_id', $request->input('post_category_id'));
+        }
+        $pages = $pages->paginate($count);
         $success['query'] = $searchTerm;
         $success['total_result'] = $pages->total();
         $success['page_count'] = $pages->lastPage();
