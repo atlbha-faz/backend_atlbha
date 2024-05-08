@@ -133,8 +133,8 @@ class ReturnOrderController extends BaseController
         $returns = ReturnOrder::where('order_id', $order->id)->get();
 
         foreach ($returns as $return) {
-            $return->return_status=$reques->status;
-            $$return->save();
+            $return->return_status=$request->status;
+            $return->save();
         }
         // $payment = Payment::where('orderID', $order->id)->first();
         // $returns = ReturnOrder::where('order_id', $order->id)->get();
@@ -185,7 +185,7 @@ class ReturnOrderController extends BaseController
         //         }
         //     }
         // }
-        if ($reques->status == 'accept') {
+        if ($request->status == 'accept') {
             $success['shipping'] = $shipping->refundOrder($order_id);
         }
         $success['status'] = 200;
