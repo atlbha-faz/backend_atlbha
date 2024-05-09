@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Requests\MadfuLoginRequest;
+use App\Models\MadfuLog;
 use App\Models\Order;
 use App\Services\Madfu;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class MadfuController extends BaseController
     public function createOrder(CreateOrderRequest $request)
     {
 
-        $create_order = (new Madfu())->createOrder($request->token, json_decode($request->guest_order_data), json_decode($request->order), json_decode($request->order_details),$request->url);
+        $create_order = (new Madfu())->createOrder($request->token, json_decode($request->guest_order_data), json_decode($request->order), json_decode($request->order_details), $request->url);
         return $create_order;
         if ($create_order->getStatusCode() == 200) {
             $create_order = json_decode($create_order->getBody()->getContents());
@@ -47,6 +48,7 @@ class MadfuController extends BaseController
 
     public function webhook(Request $request)
     {
+        MadfuLog::create(['request' => json_encode($request->all())]);
         if ($request->status) {
             if ($request->orderStatus == 125) {
                 $order = Order::where('id', $request->orderId)->first();

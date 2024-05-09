@@ -58,7 +58,7 @@ class Madfu
         $body = ["GuestOrderData" => $guest_order_data,
             "Order" => $order,
             "OrderDetails" => $order_details,
-            "MerchantUrls" => ["Success" => $cancel_url.'/shop/checkout/success', "Failure" => $cancel_url.'/shop/checkout/failed', "Cancel" => $cancel_url]
+            "MerchantUrls" => ["Success" => $cancel_url.'shop/checkout/success', "Failure" => $cancel_url.'shop/checkout/failed', "Cancel" => $cancel_url]
         ];
 
         return $this->makeRequest($url, $body, ['token' => $token]);
