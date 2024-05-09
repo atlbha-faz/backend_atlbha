@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\MyfatoorahLog;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -48,12 +49,14 @@ class WebhookController extends BaseController
             return true;
         } else {
        
-            exit;
+            return false;
         }
     }
     public function handleWebhook(Request $request)
     {
+         
         $allData = $request->input('Data');
+        
         if ($allData != null) {
        
 
@@ -62,19 +65,20 @@ class WebhookController extends BaseController
              
              
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
-            $secret = "snLLm1lSOhrSDobmSGrALBIjNapQA2/C7P9rKcHHijzbb38GHsgWu3mGUpyvH+mVhDdT7GHetfd7bRskIUcUvA==";
+            $secret = "bihY5Rwfn/OaLb03FKF1Rqe01D4JEyvplZlfMubj61tEjVGV5DSSgyaffVW7qnkj4krymtJYpYhKkaR+vf1u8g==";
 
-            $data = $request->all();
-            
-            // $data = json_decode($body, true);
-            if (!($this->validateSignature($data, $secret,  $MyFatoorah_Signature))) {
-                
+            $body = $request->all();
+      
+            if (!($this->validateSignature( $body, $secret, $MyFatoorah_Signature))) {
+        
                 return;
             }
-            
+              $myfatoorahLog = new MyfatoorahLog();
+        $myfatoorahLog->request =json_encode($body);
+         $myfatoorahLog->save();   
             $event = $request->input('EventType');
             // Log::debug('Webhook payload:', $event);
-
+     
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                 $order = Order::where('id', $payment->orderID)->first();
@@ -105,9 +109,13 @@ class WebhookController extends BaseController
 
             } elseif ($event == 4) {
                 $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
-
                 switch ($request->input('Data.SupplierStatus')) {
                     case "APPROVED":
+                        $account->update([
+                            'status' => "APPROVED",
+                        ]);
+                        break;
+                    case "Active":
                         $account->update([
                             'status' => "APPROVED",
                         ]);

@@ -150,7 +150,7 @@ class StoreController extends BaseController
         $userid = $user->id;
 
         $request->package_id = 2;
-        $request->periodtype = "3months";
+        $request->periodtype = "6months";
 
         $store = Store::create([
             'store_name' => $request->store_name,

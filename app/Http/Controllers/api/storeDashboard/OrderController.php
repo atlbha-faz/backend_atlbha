@@ -58,7 +58,7 @@ class OrderController extends BaseController
 
             $data = OrderResource::collection(Order::with(['user', 'shipping', 'shippingtype', 'items' => function ($query) {
                 $query->select('id');
-            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->get(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status']));
+            }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->get(['id', 'user_id', 'shippingtype_id', 'total_price','payment_status', 'quantity', 'order_status']));
 
         }
         $success['orders'] = $data;

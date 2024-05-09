@@ -17,35 +17,21 @@ use App\Http\Controllers\api\BaseController as BaseController;
 class SubpageController extends BaseController
 {
 
-    public function show($page_id)
+     public function show($page_id)
     {
-        $page= Page::with(['user' => function ($query) {
-            $query->select('id','name');
-        }])->where('id',$page_id)->select('id','title','page_content','altImage','default_page','page_desc','seo_title','seo_link','seo_desc','tags','status','image')->first();
-        if (is_null($page) || $page->is_deleted !=0){
-               return $this->sendError("الصفحة غير موجودة","Page is't exists");
-               }
-              $success['pages']=New PageResource($page);
-              $success['logo']=Homepage::where('is_deleted',0)->where('store_id',null)->pluck('logo')->first();
-              $success['website_socialmedia']=website_socialmediaResource::collection(website_socialmedia::where('is_deleted',0)->where('status','active')->get());
-              $categories= Page_page_category::where('page_id',$page->id)->get();
-              $categories_id=array();
-              foreach($categories as $category)
-              {
+        $page = Page::with(['user' => function ($query) {
+            $query->select('id', 'name');
+        }])->where('id', $page_id)->select('id', 'title', 'page_content', 'altImage', 'default_page', 'page_desc', 'seo_title', 'seo_link', 'seo_desc', 'tags', 'status', 'image')->first();
+        if (is_null($page) || $page->is_deleted != 0) {
+            return $this->sendError("الصفحة غير موجودة", "Page is't exists");
+        }
+        $success['pages'] = new PageResource($page);
+        
+        $success['status'] = 200;
 
-                  $categories_id[]=$category->page_category_id;
-              }
-
-
-              $pages_id =Page_page_category::whereIn('page_category_id',$categories_id)->pluck('page_id')->toArray();
-                  $pages=Page::with(['user' => function ($query) {
-                    $query->select('id','name');
-                }])->whereIn('id',$pages_id)->where('id','!=',$page_id)->select('id','title','page_content','altImage','default_page','page_desc','tags','status','image')->get();
-            //  $success['Relatedpages']=  PageResource::collection($pages);
-              $success['status']= 200;
-
-               return $this->sendResponse($success,'تم عرض الصفحة بنجاح','Page showed successfully');
+        return $this->sendResponse($success, 'تم عرض الصفحة بنجاح', 'Page showed successfully');
     }
+
 
     public function packages()
     {

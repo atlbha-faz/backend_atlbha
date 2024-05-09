@@ -16,11 +16,11 @@ class FatoorahServices
     public function __construct()
     {
 
-        $this->base_url = env('fatoora_base_url', 'https://apitest.myfatoorah.com/');
-        $this->token = env("fatoora_token", "WVjz6cCoT9N7ZlqmZBMPANjkh30UvH9uwB20g-xGJi8tOjADM9NWiKaasfQCwkGLBy0ZNzoRXYCwMoLzaNwNgvY9H_3pO0bfTfwcEBCHe4s7FDQ0oGYFdMj8UwECAoiV4_3buuymrCmvdzc6QmZZuPsNfFCPg0vtwanErRHxM975FhaReP5QZsp6cU5bE8zupH5qOL7y8Hb9kSTW4u4ffx5V0WqUTrL2GmBWmAhx4eZBqoppO-jxG93E_FU7drhRA8SxiH__pNDDj3RJXBFqbLjzLjQ0iLtvR4s-c7X_dcLWXCj0X5lCBxVPFquo7Fsosbv5-NHJ-8nygVqy-HhwqnN3CV5HRD005E34zf32K8Y0eC526P2wZer5U-jr275rPEtfotn2wFFuDcWWnuT5f37p7oLDOgb2BclrmSj5crn5BxtkbG7awbxR7yVXoW-q19oE6-mcQWoNX8vdSbbdJ8arugLsR6qKW15juYZ8LztWfwnq65rRPZdh_JuE3KO96_rQR72a90FXy0mxjuXWmQU94Nek-2X_9DyecBqPxANjFwotZRNybG353CZchyvyJ60WjhVlfmxLMCdTD6wsBB5Ew5xKNru_jdG5TsshtNUgiogmf4FvJ0M8R3Xlxv98z5VXkqYytzBEtk2rbCwFopar9Ejj2Dwun5YaT5xyllcXrJltQ4UwofJ9j-bislP57_wQZCSachFOs2BaXqnRJEMb8sf6QeRm06TV-F4x7-iGJ-z7");
+        $this->base_url = env('fatoora_base_url', 'https://api-sa.myfatoorah.com/');
+        $this->token = env("fatoora_token", "-VPCuFhmYQ8TsTR26lm9sMFThPxz8fLm7yuc_1XJlV9tAVwzD-M0PCDgmQ9-NdBpVMIEF6vpzfKFnPlrfQVAdqUVzCvSLV1yCeVaIwTFzvHq6eatdSnidxZY8P_K9fddQS0izedOmpv9Tm4ghOWywfQ8vyrTpJwDspwm5tU9nkND_1CNt7Ljr54tRRhYMESeIQPckHBzXgTvbgHG49HrzKtd32ILNDiWJDeSHepR7dFq9PM4hI76iCy7U7sNxY79wv-JlJBNclKq-pVMypZNXzxVzlJb40bN3K6kZAd_qO0gMXXzAHG9Yy7SUSzd3mYpNaqgtzp30Qaq5IjjqNom6y6_v8cajlI6xcuv78PpJnfJ8gVWkAgm5FAXuFDxT3MJ-k2rWEsRZV_ji4IWMHEofJEEdxc5NPcLb6ZEe2FxpogP0wvu_RZGCPr30bP4VeF0_CYUUUJg2GISv6eSBon2p-c-hn0K8hrvya5fu7oveVlq1uCW_czSjG5g9vnIZpP1NWKFv_nDSJRJN68o5hcimkoQVifl3EkQ08kkcQjoFVgAfYketKWuRmeHRGkFdHRNfi9Gi0RH2Yq9Sya_T-mgDzd23ka2NHE-6f5tb1LYw6Aig753DDtKhFNQGb34Ffyg7npnFV-7HJAnBYO2KK2iRT_JltS6oHPaHgyhK-mfydM-tc60Qif3K9L3R_jzvpKfZlo7wtkUOxLvyztE-tv_cR0BAhddfO0kYQ11ltY19Phx9-ap");
         $this->headers = [
             "Content-Type" => 'application/json',
-            "authorization" => 'Bearer ' . env("fatoora_token", "WVjz6cCoT9N7ZlqmZBMPANjkh30UvH9uwB20g-xGJi8tOjADM9NWiKaasfQCwkGLBy0ZNzoRXYCwMoLzaNwNgvY9H_3pO0bfTfwcEBCHe4s7FDQ0oGYFdMj8UwECAoiV4_3buuymrCmvdzc6QmZZuPsNfFCPg0vtwanErRHxM975FhaReP5QZsp6cU5bE8zupH5qOL7y8Hb9kSTW4u4ffx5V0WqUTrL2GmBWmAhx4eZBqoppO-jxG93E_FU7drhRA8SxiH__pNDDj3RJXBFqbLjzLjQ0iLtvR4s-c7X_dcLWXCj0X5lCBxVPFquo7Fsosbv5-NHJ-8nygVqy-HhwqnN3CV5HRD005E34zf32K8Y0eC526P2wZer5U-jr275rPEtfotn2wFFuDcWWnuT5f37p7oLDOgb2BclrmSj5crn5BxtkbG7awbxR7yVXoW-q19oE6-mcQWoNX8vdSbbdJ8arugLsR6qKW15juYZ8LztWfwnq65rRPZdh_JuE3KO96_rQR72a90FXy0mxjuXWmQU94Nek-2X_9DyecBqPxANjFwotZRNybG353CZchyvyJ60WjhVlfmxLMCdTD6wsBB5Ew5xKNru_jdG5TsshtNUgiogmf4FvJ0M8R3Xlxv98z5VXkqYytzBEtk2rbCwFopar9Ejj2Dwun5YaT5xyllcXrJltQ4UwofJ9j-bislP57_wQZCSachFOs2BaXqnRJEMb8sf6QeRm06TV-F4x7-iGJ-z7"),
+            "authorization" => 'Bearer ' . env("fatoora_token", "-VPCuFhmYQ8TsTR26lm9sMFThPxz8fLm7yuc_1XJlV9tAVwzD-M0PCDgmQ9-NdBpVMIEF6vpzfKFnPlrfQVAdqUVzCvSLV1yCeVaIwTFzvHq6eatdSnidxZY8P_K9fddQS0izedOmpv9Tm4ghOWywfQ8vyrTpJwDspwm5tU9nkND_1CNt7Ljr54tRRhYMESeIQPckHBzXgTvbgHG49HrzKtd32ILNDiWJDeSHepR7dFq9PM4hI76iCy7U7sNxY79wv-JlJBNclKq-pVMypZNXzxVzlJb40bN3K6kZAd_qO0gMXXzAHG9Yy7SUSzd3mYpNaqgtzp30Qaq5IjjqNom6y6_v8cajlI6xcuv78PpJnfJ8gVWkAgm5FAXuFDxT3MJ-k2rWEsRZV_ji4IWMHEofJEEdxc5NPcLb6ZEe2FxpogP0wvu_RZGCPr30bP4VeF0_CYUUUJg2GISv6eSBon2p-c-hn0K8hrvya5fu7oveVlq1uCW_czSjG5g9vnIZpP1NWKFv_nDSJRJN68o5hcimkoQVifl3EkQ08kkcQjoFVgAfYketKWuRmeHRGkFdHRNfi9Gi0RH2Yq9Sya_T-mgDzd23ka2NHE-6f5tb1LYw6Aig753DDtKhFNQGb34Ffyg7npnFV-7HJAnBYO2KK2iRT_JltS6oHPaHgyhK-mfydM-tc60Qif3K9L3R_jzvpKfZlo7wtkUOxLvyztE-tv_cR0BAhddfO0kYQ11ltY19Phx9-ap"),
         ];
     }
 
@@ -108,7 +108,7 @@ class FatoorahServices
         $curl = curl_init();
         
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://apitest.myfatoorah.com/v2/ExecutePayment',
+          CURLOPT_URL => 'https://api-sa.myfatoorah.com/v2/ExecutePayment',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -119,7 +119,7 @@ class FatoorahServices
           CURLOPT_POSTFIELDS => json_encode($data),
           CURLOPT_HTTPHEADER => array(
             'Content-Type: application/json',
-            'Authorization: Bearer WVjz6cCoT9N7ZlqmZBMPANjkh30UvH9uwB20g-xGJi8tOjADM9NWiKaasfQCwkGLBy0ZNzoRXYCwMoLzaNwNgvY9H_3pO0bfTfwcEBCHe4s7FDQ0oGYFdMj8UwECAoiV4_3buuymrCmvdzc6QmZZuPsNfFCPg0vtwanErRHxM975FhaReP5QZsp6cU5bE8zupH5qOL7y8Hb9kSTW4u4ffx5V0WqUTrL2GmBWmAhx4eZBqoppO-jxG93E_FU7drhRA8SxiH__pNDDj3RJXBFqbLjzLjQ0iLtvR4s-c7X_dcLWXCj0X5lCBxVPFquo7Fsosbv5-NHJ-8nygVqy-HhwqnN3CV5HRD005E34zf32K8Y0eC526P2wZer5U-jr275rPEtfotn2wFFuDcWWnuT5f37p7oLDOgb2BclrmSj5crn5BxtkbG7awbxR7yVXoW-q19oE6-mcQWoNX8vdSbbdJ8arugLsR6qKW15juYZ8LztWfwnq65rRPZdh_JuE3KO96_rQR72a90FXy0mxjuXWmQU94Nek-2X_9DyecBqPxANjFwotZRNybG353CZchyvyJ60WjhVlfmxLMCdTD6wsBB5Ew5xKNru_jdG5TsshtNUgiogmf4FvJ0M8R3Xlxv98z5VXkqYytzBEtk2rbCwFopar9Ejj2Dwun5YaT5xyllcXrJltQ4UwofJ9j-bislP57_wQZCSachFOs2BaXqnRJEMb8sf6QeRm06TV-F4x7-iGJ-z7',
+            'Authorization: Bearer -VPCuFhmYQ8TsTR26lm9sMFThPxz8fLm7yuc_1XJlV9tAVwzD-M0PCDgmQ9-NdBpVMIEF6vpzfKFnPlrfQVAdqUVzCvSLV1yCeVaIwTFzvHq6eatdSnidxZY8P_K9fddQS0izedOmpv9Tm4ghOWywfQ8vyrTpJwDspwm5tU9nkND_1CNt7Ljr54tRRhYMESeIQPckHBzXgTvbgHG49HrzKtd32ILNDiWJDeSHepR7dFq9PM4hI76iCy7U7sNxY79wv-JlJBNclKq-pVMypZNXzxVzlJb40bN3K6kZAd_qO0gMXXzAHG9Yy7SUSzd3mYpNaqgtzp30Qaq5IjjqNom6y6_v8cajlI6xcuv78PpJnfJ8gVWkAgm5FAXuFDxT3MJ-k2rWEsRZV_ji4IWMHEofJEEdxc5NPcLb6ZEe2FxpogP0wvu_RZGCPr30bP4VeF0_CYUUUJg2GISv6eSBon2p-c-hn0K8hrvya5fu7oveVlq1uCW_czSjG5g9vnIZpP1NWKFv_nDSJRJN68o5hcimkoQVifl3EkQ08kkcQjoFVgAfYketKWuRmeHRGkFdHRNfi9Gi0RH2Yq9Sya_T-mgDzd23ka2NHE-6f5tb1LYw6Aig753DDtKhFNQGb34Ffyg7npnFV-7HJAnBYO2KK2iRT_JltS6oHPaHgyhK-mfydM-tc60Qif3K9L3R_jzvpKfZlo7wtkUOxLvyztE-tv_cR0BAhddfO0kYQ11ltY19Phx9-ap',
             'Cookie: ApplicationGatewayAffinity=61939aeb6b7c5f38617144d210b01e24; ApplicationGatewayAffinityCORS=61939aeb6b7c5f38617144d210b01e24'
           ),
         ));

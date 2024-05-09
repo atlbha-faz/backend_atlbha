@@ -80,7 +80,6 @@ class SupplierController extends BaseController
             'BankAccount' => $request->bankAccount,
             'Iban' => $request->iban,
         ];
-
         $supplier = new FatoorahServices();
         $supplierCode = $supplier->createSupplier('v2/CreateSupplier', $data);
         
@@ -286,6 +285,16 @@ class SupplierController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الفواتير', ' show successfully');
+    }
+      public function showBilling($id)
+    {
+        $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->pluck('id')->toArray();
+        $payment=Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->where('id',$id)->orderByDesc('created_at')->first();
+        $payments =new PaymentResource($payment);
+        $success['billing'] = $payments;
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم عرض الفاتورة بنجاح', ' show successfully');
     }
 
 }

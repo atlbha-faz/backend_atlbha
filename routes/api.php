@@ -49,9 +49,14 @@ Route::get('/logoutcustomer', 'App\Http\Controllers\api\AuthCustomerController@l
 //  index Ettlobha page
 
 Route::get('index', [App\Http\Controllers\api\IndexEtlobhaController::class, 'index']);
+Route::get('searchIndex', [App\Http\Controllers\api\IndexEtlobhaController::class, 'searchIndex']);
 Route::get('commonquestion', [App\Http\Controllers\api\IndexEtlobhaController::class, 'commonquestion']);
 
+
 Route::post('atlobhaContactAdd', [App\Http\Controllers\api\IndexEtlobhaController::class, 'store']);
+
+Route::get('storesFilter', [App\Http\Controllers\api\IndexEtlobhaController::class, 'storesFilter']);
+
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('indexStore/{id}', [App\Http\Controllers\api\IndexStoreController::class, 'index']);
@@ -101,6 +106,7 @@ Route::post('storeClientVisit', [App\Http\Controllers\api\VisitCountController::
 Route::get('visit', [App\Http\Controllers\api\VisitCountController::class, 'visit']);
 
 Route::get('posts', [App\Http\Controllers\api\PostController::class, 'index']);
+Route::get('searchPost', [App\Http\Controllers\api\PostController::class, 'searchPost']);
 Route::get('start', [App\Http\Controllers\api\PostController::class, 'start']);
 Route::get('show/{id}', [App\Http\Controllers\api\PostController::class, 'show']);
 Route::get('show_post/{id}', [App\Http\Controllers\api\PostController::class, 'show_post']);
@@ -150,7 +156,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('pagecategory', App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
-
+       Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class, ['names' => 'admin.storecategory']);
          Route::middleware([AdminCheckPermission::class])->group(function () {
          Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
     
@@ -203,7 +209,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('EmailShow/{id}', [App\Http\Controllers\api\adminDashboard\EmailController::class, 'show'])->name('admin.email.show');
 
         Route::resource('category', App\Http\Controllers\api\adminDashboard\CategoryController::class, ['names' => 'admin.category']);
-        Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class, ['names' => 'admin.storecategory']);
+      
     
         Route::get('deleteunit/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deleteunit'])->name('admin.course.deleteunit');
 
@@ -551,6 +557,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('uploadSupplierDocument', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'uploadSupplierDocument'])->name('store.supplier.uploadSupplierDocument');
         Route::get('indexSupplier', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'index'])->name('store.supplier.indexSupplier');
         Route::get('billing', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'billing'])->name('store.supplier.billing');
+        Route::get('showBilling/{id}', [App\Http\Controllers\api\storeDashboard\SupplierController::class, 'showBilling'])->name('admin.supplier.showBilling');
+
 
         // });
     });
