@@ -8,9 +8,10 @@ use App\Models\Page;
 use App\Models\Page_page_category;
 use App\Models\Postcategory;
 use Illuminate\Http\Request;
+
 class PostController extends BaseController
 {
-     public function index(Request $request)
+    public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $post_page = Page::with(['user' => function ($query) {
@@ -41,16 +42,16 @@ class PostController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع صفحة كيف ابدأ بنجاح', 'start index return successfully');
     }
-   public function show($postCategory_id, Request $request)
+    public function show($postCategory_id, Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $postCategory_check = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->get();
-        if ( $postCategory_check != null) {
-            
-            $category_pages= Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->paginate($count);
+        if ($postCategory_check != null) {
+
+            $category_pages = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', $postCategory_id)->paginate($count);
             $success['page_count'] = $category_pages->lastPage();
             $success['current_page'] = $category_pages->currentPage();
-            $success['pages'] = PageResource::collection ($category_pages);
+            $success['pages'] = PageResource::collection($category_pages);
             $pages = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
             $success['status'] = 200;
@@ -81,19 +82,22 @@ class PostController extends BaseController
 
         }
     }
-      public function searchPost(Request $request)
+    public function searchPost(Request $request)
     {
         $searchTerm = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $pages = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)
-                ->where(function ($query) use ($searchTerm) {
-                    $query->where('title', 'like', "%$searchTerm%")
-                        ->orWhere('page_desc', 'LIKE', "%$searchTerm%")
-                        ->orWhere('page_content', 'LIKE', "%$searchTerm%");
+        $pages = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)
+            ->where(function ($query) use ($searchTerm) {
+                $query->where('title', 'like', "%$searchTerm%")
+                    ->orWhere('page_desc', 'LIKE', "%$searchTerm%")
+                    ->orWhere('page_content', 'LIKE', "%$searchTerm%");
 
-                })->orderBy('created_at', 'desc')->paginate($count));
-
+            })->orderBy('created_at', 'desc');
+        if ($request->has('post_category_id')) {
+            $pages->where('postcategory_id', $request->input('post_category_id'));
+        }
+        $pages = $pages->paginate($count);
         $success['query'] = $searchTerm;
         $success['total_result'] = $pages->total();
         $success['page_count'] = $pages->lastPage();
