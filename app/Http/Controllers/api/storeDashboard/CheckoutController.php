@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CartResource;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\PaymenttypeResource;
 use App\Models\Cart;
-use App\Models\Coupon;
-use App\Models\coupons_users;
-use App\Models\Importproduct;
-use App\Models\Option;
+use App\Models\User;
 use App\Models\Order;
-use App\Models\OrderAddress;
+use App\Models\Store;
+use App\Models\Coupon;
+use App\Models\Option;
+use App\Models\Product;
 use App\Models\OrderItem;
 use App\Models\Paymenttype;
-use App\Models\Product;
-use App\Models\Store;
-use App\Models\User;
+use App\Models\OrderAddress;
+use App\Models\Shippingtype;
 use Illuminate\Http\Request;
+use App\Models\coupons_users;
+use App\Models\Importproduct;
+use App\Http\Resources\CartResource;
+use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\ShippingtypeResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CheckoutController extends BaseController
 {
@@ -240,6 +242,15 @@ class CheckoutController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'Payment Types return successfully');
+    }
+
+    public function shippingMethods()
+    {
+
+        $success['shippingtypes'] = ShippingtypeResource::collection(Shippingtype::whereNot('id',5)->where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع شركات الشحن بنجاح', 'Shippingtype return successfully');
     }
 
     public function applyCoupon(Request $request, $cart_id)
