@@ -95,7 +95,8 @@ class OrderResource extends JsonResource
             
             'shipping_return' => $this->shippings->where('shipping_type','return')->first() != null ? new shippingResource($this->shippings->where('shipping_type','return')->first()) : null,
 
-            'paymenttypes' => $this->paymentype != null ? new PaymenttypeResource($this->paymentype) : null,           'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
+            'paymenttypes' => $this->paymentype != null ? new PaymenttypeResource($this->paymentype) : null,      
+            'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
             'trackingLink' => $track,
             'cod' => $this->cod,
             'codprice' => $this->cod == 1 ? 10 : 0,

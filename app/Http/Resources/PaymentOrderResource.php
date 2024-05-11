@@ -57,6 +57,7 @@ class PaymentOrderResource extends JsonResource
             'OrderAddress' => $orderAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $orderAddress)->first()) : null,
             'orderItem' => OrderItemsResource::collection($this->items),
             'payment_status' => $paymentstatus,
+            'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
             'shipping' => $this->shippings->where('shipping_type', 'send')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'send')->first()) : null,
             'shipping_return' => $this->shippings->where('shipping_type', 'return')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'return')->first()) : null,
             'created_at' => $this->created_at,
