@@ -36,7 +36,6 @@ class shippingResource extends JsonResource
              'district'=>$this->district,
             'city'=>$this->city,
             'street_address'=>$this->streetaddress,
-
             'destination_district'=>$this->destination_district,
             'destination_city'=>$this->destination_city,
             'destination_streetaddress'=>$this->destination_streetaddress,
