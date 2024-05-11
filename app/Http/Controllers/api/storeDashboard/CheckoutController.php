@@ -126,22 +126,22 @@ class CheckoutController extends BaseController
                     'quantity' => $optionQty->quantity - $cartItem->qty,
                 ]);
             }
-            $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-            $importProduct = Importproduct::where('product_id', $cartItem->product_id)->where('store_id', $atlbha_id)->first();
-            if ($importProduct != null) {
-                $importProduct->update([
-                    'qty' => $importProduct->qty - $cartItem->qty,
-                ]);
+            // $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+            // $importProduct = Importproduct::where('product_id', $cartItem->product_id)->where('store_id', $atlbha_id)->first();
+            // if ($importProduct != null) {
+            //     $importProduct->update([
+            //         'qty' => $importProduct->qty - $cartItem->qty,
+            //     ]);
 
-                if ($cartItem->option_id != null) {
-                    $optionQty = Option::where('original_id', $cartItem->option_id)->where('importproduct_id', $importProduct->id)->first();
-                    if ($optionQty != null) {
-                        $optionQty->update([
-                            'quantity' => $optionQty->quantity - $cartItem->qty,
-                        ]);
-                    }
-                }
-            }
+            //     if ($cartItem->option_id != null) {
+            //         $optionQty = Option::where('original_id', $cartItem->option_id)->where('importproduct_id', $importProduct->id)->first();
+            //         if ($optionQty != null) {
+            //             $optionQty->update([
+            //                 'quantity' => $optionQty->quantity - $cartItem->qty,
+            //             ]);
+            //         }
+            //     }
+            // }
 
         }
         foreach ($cart->cartDetails as $cartItem) {

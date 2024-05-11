@@ -8,8 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Shippingtype extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'status', 'image', 'cod', 'is_deleted'];
-
+    protected $fillable = ['name','price','overprice','time', 'status', 'image', 'cod', 'is_deleted'];
+    protected $casts = [
+        'price' => 'float',
+        'overprice' => 'float',
+    
+    ];
     public function stores()
     {
         return $this->belongsToMany(
