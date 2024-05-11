@@ -193,10 +193,13 @@ class ReturnOrderController extends BaseController
         // }
         if ($request->status == 'accept') {
             $success['order'] = $shipping->refundOrder($order_id);
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم  قبول طلب الارجاع', 'order  return accept successfully');
         }
+        else{
         $success['status'] = 200;
-        return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-
+        return $this->sendResponse($success, 'تم رفض  طلب الارجاع', 'order return reject successfully');
+        }
     }
 
     /**
