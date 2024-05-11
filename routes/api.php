@@ -423,6 +423,8 @@ Route::middleware([StoreUser::class])->group(function () {
 
         //  paymenttype import
         Route::get('paymentmethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'paymentMethods']);
+        Route::get('shippingMethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'shippingMethods']);
+
         // page
         Route::resource('page', App\Http\Controllers\api\storeDashboard\PageController::class, ['names' => 'store.pages']);
         Route::post('page-publish', [App\Http\Controllers\api\storeDashboard\PageController::class, 'publish'])->name('store.pages.publish');
