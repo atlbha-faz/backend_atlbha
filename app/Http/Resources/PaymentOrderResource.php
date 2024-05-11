@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\UserResource;
 use App\Http\Resources\OrderItemsResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentOrderResource extends JsonResource
@@ -17,45 +17,46 @@ class PaymentOrderResource extends JsonResource
     public function toArray($request)
     {
         if ($this->payment_status == null || $this->payment_status == 'pending') {
-            $paymentstatus =  __('message.paymentpending');
-        }
-        elseif ($this->payment_status == 'paid') {
-            $paymentstatus =  __('message.paid');
+            $paymentstatus = __('message.paymentpending');
+        } elseif ($this->payment_status == 'paid') {
+            $paymentstatus = __('message.paid');
         } elseif ($this->payment_status == 'failed') {
-            $paymentstatus= __('message.failed');
+            $paymentstatus = __('message.failed');
         }
 
         if ($this->order_status == null || $this->order_status == 'new') {
-            $status =  __('message.new');
+            $status = __('message.new');
         } elseif ($this->order_status == 'completed') {
             $status = __('message.completed');
         } elseif ($this->order_status == 'not_completed') {
             $status = __('message.not_completed');
         } elseif ($this->order_status == 'delivery_in_progress') {
-            $status =  __('message.delivery_in_progress');
+            $status = __('message.delivery_in_progress');
         } elseif ($this->order_status == 'ready') {
-            $status =  __('message.ready');
+            $status = __('message.ready');
         } elseif ($this->order_status == 'canceled') {
             $status = __('message.canceled');
         }
         return [
-        'id' => $this->id,
-        'order_number' => $this->order_number,
-        'user' => new UserResource($this->user),
-        'totalCount' => $this->totalCount,
-        'quantity' => $this->quantity,
-        'weight' => $this->weight,
-        'overweight' => $this->weight > 15 ? ($this->weight - 15) : 0,
-        'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,
-        'tax' => round($this->tax, 2),
-        'shipping_price' => $this->shipping_price,
-        'subtotal' => round($this->subtotal, 2),
-        'total_price' => round($this->total_price, 2),
-        'discount' => $this->discount != null ?-($this->discount) : 0,
-        'status' => $status,
-        'orderItem' => OrderItemsResource::collection($this->items),
-        'payment_status' => $paymentstatus,
-        'created_at' => $this->created_at,
+            'id' => $this->id,
+            'order_number' => $this->order_number,
+            'user' => new UserResource($this->user),
+            'totalCount' => $this->totalCount,
+            'quantity' => $this->quantity,
+            'weight' => $this->weight,
+            'overweight' => $this->weight > 15 ? ($this->weight - 15) : 0,
+            'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,
+            'tax' => round($this->tax, 2),
+            'shipping_price' => $this->shipping_price,
+            'subtotal' => round($this->subtotal, 2),
+            'total_price' => round($this->total_price, 2),
+            'discount' => $this->discount != null ? -($this->discount) : 0,
+            'status' => $status,
+            'orderItem' => OrderItemsResource::collection($this->items),
+            'payment_status' => $paymentstatus,
+            'shipping' => $this->shippings->where('shipping_type', 'send')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'send')->first()) : null,
+            'shipping_return' => $this->shippings->where('shipping_type', 'return')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'return')->first()) : null,
+            'created_at' => $this->created_at,
         ];
     }
 }
