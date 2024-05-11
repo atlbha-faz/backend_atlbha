@@ -78,6 +78,8 @@ class OtherCompanyService implements ShippingInterface
         // $address = OrderAddress::where('id', $orderAddress)->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
         $shipping = Shipping::where('order_id', $order_id)->first();
+        if($shipping != null)
+        {
         $shipping = Shipping::Create([
             'order_id' => $order->id,
             'store_id' => $order->store_id,
@@ -91,7 +93,7 @@ class OtherCompanyService implements ShippingInterface
             'destination_streetaddress' => $shipping->streetaddress,
             'shipping_type' => 'return',
         ]);
-
+    }
         return new OrderResource($order);
 
     }
