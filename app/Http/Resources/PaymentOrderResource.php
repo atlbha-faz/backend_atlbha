@@ -16,6 +16,8 @@ class PaymentOrderResource extends JsonResource
      */
     public function toArray($request)
     {
+        $orderAddress = \App\Models\OrderOrderAddress::where('order_id', $this->id)->where('type', 'shipping')->value('order_address_id');
+        $billingAddress = \App\Models\OrderOrderAddress::where('order_id', $this->id)->where('type', 'billing')->value('order_address_id');
         if ($this->payment_status == null || $this->payment_status == 'pending') {
             $paymentstatus = __('message.paymentpending');
         } elseif ($this->payment_status == 'paid') {
@@ -52,6 +54,7 @@ class PaymentOrderResource extends JsonResource
             'total_price' => round($this->total_price, 2),
             'discount' => $this->discount != null ? -($this->discount) : 0,
             'status' => $status,
+            'OrderAddress' => $orderAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $orderAddress)->first()) : null,
             'orderItem' => OrderItemsResource::collection($this->items),
             'payment_status' => $paymentstatus,
             'shipping' => $this->shippings->where('shipping_type', 'send')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'send')->first()) : null,
