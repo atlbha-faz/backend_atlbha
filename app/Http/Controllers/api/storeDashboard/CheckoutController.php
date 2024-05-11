@@ -23,7 +23,7 @@ use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
-use App\Http\Resources\ShippingtypeResource;
+use App\Http\Resources\ShippingtypeImportResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class CheckoutController extends BaseController
@@ -332,7 +332,7 @@ class CheckoutController extends BaseController
     public function shippingMethods()
     {
 
-        $success['shippingtypes'] = ShippingtypeResource::collection(Shippingtype::whereNot('id',5)->where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['shippingtypes'] = ShippingtypeImportResource::collection(Shippingtype::whereNot('id',5)->where('is_deleted', 0)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع شركات الشحن بنجاح', 'Shippingtype return successfully');
