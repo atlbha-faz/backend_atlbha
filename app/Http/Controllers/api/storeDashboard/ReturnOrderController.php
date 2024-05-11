@@ -131,8 +131,14 @@ class ReturnOrderController extends BaseController
         $shipping = $shipping_companies[$order->shippingtype->id];
 
         $returns = ReturnOrder::where('order_id', $order->id)->get();
+        $return_first = ReturnOrder::where('order_id', $order->id)->first();
+        if( $return_first->return_status == "accept" || $return_first->return_status == "reject")
+        {
+            return $this->sendError("تم التعديل مسبقا", "return is't exists");
 
+        }
         foreach ($returns as $return) {
+           
             $return->return_status=$request->status;
             $return->save();
         }
@@ -186,7 +192,7 @@ class ReturnOrderController extends BaseController
         //     }
         // }
         if ($request->status == 'accept') {
-            $success['shipping'] = $shipping->refundOrder($order_id);
+            $success['order'] = $shipping->refundOrder($order_id);
         }
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
