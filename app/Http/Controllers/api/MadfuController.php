@@ -51,8 +51,8 @@ class MadfuController extends BaseController
         MadfuLog::create(['request' => json_encode($request->all())]);
         if ($request->status) {
             if ($request->orderStatus == 125) {
-                $order = Order::where('id', $request->orderId)->first();
-                $order->payment_status = "Paid";;
+                $order = Order::where('order_number', $request->MerchantReference)->first();
+                $order->payment_status = "Paid";
                 $order->save();
             }
         }
