@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\Store;
-use App\Models\Option;
-use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\importsResource;
 use App\Http\Resources\ProductResource;
-use App\Http\Resources\CategoryResource;
+use App\Models\Category;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\ImportproductResource;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class ImportproductController extends BaseController
 {
@@ -23,19 +21,19 @@ class ImportproductController extends BaseController
     }
     public function etlobhaShow(Request $request)
     {
-        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $success['count_products'] = (Importproduct::where('store_id', auth()->user()->store_id)->count());
-        if (!$request->has('show_categories') && $request->input('show_categories') !== false){
-        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
-    }
-        $products = Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id');
-        if ($request->has('category_id')){
-            $products = $products->where('category_id',$request->category_id);
+        if (!$request->has('show_categories') && $request->input('show_categories') !== false) {
+            $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->get());
         }
-        if ($request->has('subcategory_id')){
+        $products = Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id');
+        if ($request->has('category_id')) {
+            $products = $products->where('category_id', $request->category_id);
+        }
+        if ($request->has('subcategory_id')) {
             $terms = $request->subcategory_id;
-            $products = $products->where(function($query) use($terms) {
-                foreach($terms as $term) {
+            $products = $products->where(function ($query) use ($terms) {
+                foreach ($terms as $term) {
                     $query->orWhere('subcategory_id', 'like', "%$term%");
                 };
             });
@@ -137,25 +135,25 @@ class ImportproductController extends BaseController
             if ($validator->fails()) {
                 return $this->sendError(null, $validator->errors());
             }
-          
-                $importproduct->update([
-                    'price' => $request->price,
-                    'discount_price_import' => $request->discount_price,
 
-                ]);
-                if ($request->has('data') && !is_null($request->data)) {
-                    foreach ($request->data as $data) {
-    
-                        $option = Option::where('id', $data['option_id'])->first();
-                        $option->update([
-                            'price' => $data['price'],
-                            'discount_price' => $data['discount_price'],
-                            'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
-                        ]);
-    
-                    }
+            $importproduct->update([
+                'price' => $request->price,
+                'discount_price_import' => $request->discount_price,
+
+            ]);
+            if ($request->has('data') && !is_null($request->data)) {
+                foreach ($request->data as $data) {
+
+                    $option = Option::where('id', $data['option_id'])->first();
+                    $option->update([
+                        'price' => $data['price'],
+                        'discount_price' => $data['discount_price'],
+                        'default_option' => (isset($data['default_option']) && $data['default_option'] !== null) ? $data['default_option'] : 0,
+                    ]);
+
                 }
-                $importproduct=Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $id)->first();
+            }
+            $importproduct = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $id)->first();
 
             $success['importproducts'] = new importsResource($importproduct);
             $success['status'] = 200;

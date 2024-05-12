@@ -84,13 +84,14 @@ class CheckoutController extends BaseController
             } else {
 
                 $number = $order_number->order_number;
-                $number = ((int)$number) + 1;
+                $number = ((int) $number) + 1;
             }
             $order->order_number = str_pad($number, 4, '0', STR_PAD_LEFT);
             $order->user_id = $cart->user->id; // Assign the customer's ID
             $order->total_price = $cart->total; // Initialize the total price
             $order->quantity = $cart->count;
             $order->weight = $cart->weight;
+            $order->overweight_price = $cart->overweight_price;
             $order->totalCount = $cart->totalCount;
             $order->subtotal = $cart->subtotal;
             $order->tax = $cart->tax;
@@ -101,40 +102,41 @@ class CheckoutController extends BaseController
             $order->shippingtype_id = $request->shippingtype_id;
             $order->paymentype_id = $request->paymentype_id;
             $order->cod = $request->cod;
+            $order->shipping_price = $cart->shipping_price;
             $order->description = $request->description;
 
             // Save the order to the database
             $order->save();
 
-            if ($cart->free_shipping == 1) {
-                $shipping_price = $cart->shipping_price;
-            } else {
-                $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
-                if ($shipping_price == null) {
-                    $shipping_price = 35;
+                $shipping_type_object = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
+                if ($shipping_type_object == null) {
+                    $shipping_price = 30;
                     $extraprice = 3;
+                    if ($order->weight > 15) {
+                        $extra_shipping_price = ($order->weight - 15) * 3;
+                    } else {
+                        $extra_shipping_price = 0;
+                    }
                 } else {
-                    $overprice = $shipping_price->overprice;
-                    $shipping_price = $shipping_price->price;
-                    $extraprice = $overprice;
+                    $extraprice = $shipping_type_object->overprice;
+                    $shipping_price = $shipping_type_object->price;
+                    if ($order->weight > 15) {
+                        $extra_shipping_price = ($order->weight - 15) * $extraprice;
+                    } else {
+                        $extra_shipping_price = 0;
+                    }
                 }
-            }
-            if ($order->weight > 15) {
-                $default_extra_price = ($order->weight - 15) * 3;
-                $extra_shipping_price = ($order->weight - 15) * $extraprice;
-            } else {
-                $extra_shipping_price = 0;
-                $default_extra_price = 0;
-            }
+
             if ($cart->free_shipping == 1) {
                 $order->update([
-                    'shipping_price' => $shipping_price,
-                    'total_price' => $order->total_price,
+                    'shipping_price' => $cart->shipping_price,
+                    'overweight_price' => 0,
                 ]);
             } else {
                 $order->update([
                     'shipping_price' => $shipping_price,
-                    'total_price' => (($order->total_price - 35) - $default_extra_price) + $shipping_price + $extra_shipping_price,
+                    'total_price' => (($order->total_price - $order->shipping_price) - $order->overweight_price) + $shipping_price + $extra_shipping_price,
+                    'overweight_price' => $extra_shipping_price,
                 ]);
 
             }
@@ -254,12 +256,13 @@ class CheckoutController extends BaseController
             } else {
                 $InvoiceId = null;
                 if ($order->paymentype_id == 1 && $order->shippingtype_id == 5) {
-
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $deduction = ($order->total_price * 0.01) + 1;
-                    $price_after_deduction = $order->total_price - $deduction;
+                    $total_price_without_shipping = ($order->total_price) - ($order->shipping_price) - ($order->overweight_price);
+                    $deduction = ($total_price_without_shipping * 0.01) + 1;
+                    $price_after_deduction = $total_price_without_shipping - $deduction;
+                    
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
                         "ProposedShare" => $price_after_deduction,
@@ -269,8 +272,8 @@ class CheckoutController extends BaseController
                         "AutoCapture" => true,
                         "Bypass3DS" => false,
                     ];
-                    $processingDetailsobject = (object)($processingDetails);
-                    $supplierobject = (object)($supplierdata);
+                    $processingDetailsobject = (object) ($processingDetails);
+                    $supplierobject = (object) ($supplierdata);
                     $data = [
                         "PaymentMethodId" => $paymenttype->paymentMethodId,
                         "CustomerName" => $customer->name,
@@ -321,24 +324,9 @@ class CheckoutController extends BaseController
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $shipping_price = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
-                    if ($shipping_price == null) {
-                        $shipping_price = 35;
-                        $extraprice = 2;
-                    } else {
-                        $overprice = $shipping_price->overprice;
-                        $shipping_price = $shipping_price->price;
-                        $extraprice = $overprice;
-                    }
-                    if ($order->weight > 15) {
-                        $default_extra_price = ($order->weight - 15) * 2;
-                        $extra_shipping_price = ($order->weight - 15) * $extraprice;
-                    } else {
-                        $extra_shipping_price = 0;
-                        $default_extra_price = 0;
-                    }
+                  
                     $order->total_price = $order->total_price;
-                    $total_price_without_shipping = ($order->total_price) - ($shipping_price) - ($extra_shipping_price);
+                    $total_price_without_shipping = ($order->total_price) - ($order->shipping_price) - ($order->overweight_price);
                     $deduction = ($total_price_without_shipping * 0.01) + 1;
                     $price_after_deduction = $total_price_without_shipping - $deduction;
                     $supplierdata = [
@@ -350,8 +338,8 @@ class CheckoutController extends BaseController
                         "AutoCapture" => true,
                         "Bypass3DS" => false,
                     ];
-                    $processingDetailsobject = (object)($processingDetails);
-                    $supplierobject = (object)($supplierdata);
+                    $processingDetailsobject = (object) ($processingDetails);
+                    $supplierobject = (object) ($supplierdata);
                     $data = [
                         "PaymentMethodId" => $paymenttype->paymentMethodId,
                         "CustomerName" => $customer->name,
@@ -463,7 +451,7 @@ class CheckoutController extends BaseController
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
             } else {
-               $cart = $this->restCart($cart->id);
+                $cart = $this->restCart($cart->id);
             }
             $total = $cart->total - $cart->shipping_price;
             if ($total >= $coupon->total_price) {

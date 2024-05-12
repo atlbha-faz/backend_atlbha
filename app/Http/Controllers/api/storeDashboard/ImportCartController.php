@@ -59,7 +59,7 @@ class ImportCartController extends BaseController
             ], [
                 'total' => 0,
                 'count' => 0,
-                'shipping_price' => 35,
+                'shipping_price' => 30,
                 'tax' => 0,
             ]);
             $cartid = $cart->id;
@@ -146,6 +146,7 @@ class ImportCartController extends BaseController
                 'count' => CartDetail::where('cart_id', $cartid)->count(),
                 'subtotal' => $subtotal- $tax,
                 'totalCount' => $totalCount,
+                'overweight_price' => $extra_shipping_price,
                 'tax' => $tax,
                 'weight' => $weight,
             ]);

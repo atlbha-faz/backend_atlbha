@@ -2,29 +2,27 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Coupon;
-use App\Models\Option;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\OrderItem;
-use App\Models\Paymenttype;
-use App\Models\OrderAddress;
-use App\Models\Shippingtype;
-use Illuminate\Http\Request;
-use App\Models\coupons_users;
-use App\Models\Importproduct;
-use App\Services\FatoorahServices;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\ShippingtypeImportResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\Cart;
+use App\Models\Coupon;
+use App\Models\coupons_users;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderItem;
+use App\Models\Payment;
+use App\Models\Paymenttype;
+use App\Models\Product;
+use App\Models\Shippingtype;
+use App\Models\User;
+use App\Services\FatoorahServices;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends BaseController
 {
@@ -70,7 +68,7 @@ class CheckoutController extends BaseController
         } else {
 
             $number = $order_number->order_number;
-            $number = ((int)$number) + 1;
+            $number = ((int) $number) + 1;
         }
         $order->order_number = str_pad($number, 4, '0', STR_PAD_LEFT);
         $order->user_id = $cart->user->id; // Assign the customer's ID
@@ -84,6 +82,7 @@ class CheckoutController extends BaseController
         $order->order_status = "new";
         $order->payment_status = "pending";
         $order->store_id = null;
+        $order->shipping_price = $cart->shipping_price;
         $order->shippingtype_id = $request->shippingtype_id;
         $order->paymentype_id = $request->paymentype_id;
         $order->cod = $request->cod;
@@ -91,23 +90,32 @@ class CheckoutController extends BaseController
 
         // Save the order to the database
         $order->save();
-
-        if ($cart->free_shipping == 1) {
-            $shipping_price = $cart->shipping_price;
+        $shipping_object = Shippingtype::where('shippingtype_id', $order->shippingtype_id)->first();
+        if ($shipping_object != null) {
+            $shipping_price = $shipping_object->price;
+            if ($cart->weight > 15) {
+                $extra_shipping_price = ($cart->weight - 15) * $shipping_object->overprice;
+            } else {
+                $extra_shipping_price = 0;
+            }
         } else {
-            $shipping_price = 35;
-
+            $shipping_price = 30;
+            if ($cart->weight > 15) {
+                $extra_shipping_price = ($cart->weight - 15) * 3;
+            } else {
+                $extra_shipping_price = 0;
+            }
         }
-
         if ($cart->free_shipping == 1) {
             $order->update([
-                'shipping_price' => $shipping_price,
-                'total_price' => $order->total_price,
+                'shipping_price' => $cart->shipping_price,
+                'overweight_price' => 0,
             ]);
         } else {
             $order->update([
                 'shipping_price' => $shipping_price,
-                'total_price' => ($order->total_price - 35) + $shipping_price,
+                'total_price' => (($order->total_price - $order->shipping_price) - $order->overweight_price) + $shipping_price + $extra_shipping_price,
+                'overweight_price' => $extra_shipping_price,
             ]);
 
         }
@@ -126,22 +134,6 @@ class CheckoutController extends BaseController
                     'quantity' => $optionQty->quantity - $cartItem->qty,
                 ]);
             }
-            // $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-            // $importProduct = Importproduct::where('product_id', $cartItem->product_id)->where('store_id', $atlbha_id)->first();
-            // if ($importProduct != null) {
-            //     $importProduct->update([
-            //         'qty' => $importProduct->qty - $cartItem->qty,
-            //     ]);
-
-            //     if ($cartItem->option_id != null) {
-            //         $optionQty = Option::where('original_id', $cartItem->option_id)->where('importproduct_id', $importProduct->id)->first();
-            //         if ($optionQty != null) {
-            //             $optionQty->update([
-            //                 'quantity' => $optionQty->quantity - $cartItem->qty,
-            //             ]);
-            //         }
-            //     }
-            // }
 
         }
         foreach ($cart->cartDetails as $cartItem) {
@@ -206,117 +198,75 @@ class CheckoutController extends BaseController
             }
 
         }
-        // if ($order->paymentype_id == 4) {
 
-        //     //الدفع عند الاستلام
-        //     $order->update([
-        //         'total_price' => $order->total_price + 10,
-        //         'payment_status' => "pending",
-        //         'order_status' => "new",
-        //         'cod' => 1,
-        //     ]);
+        $InvoiceId = null;
+        if ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
 
-        //     $cart->delete();
-        //     $payment = Payment::create([
-        //         'paymenDate' => Carbon::now(),
-        //         'paymentType' => $order->paymentype->name,
-        //         'orderID' => $order->id,
-        //         'deduction' => 0,
-        //         'price_after_deduction' => $order->total_price,
-        //     ]);
-        // } else {
-            $InvoiceId = null;
-            if  ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
+            $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
+            $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
+            $total_price_without_shipping = ($order->total_price) - ($order->shipping_price) - ($order->overweight_price);
+            $deduction = ($total_price_without_shipping * 0.01) + 1;
+            $price_after_deduction = $total_price_without_shipping - $deduction;
 
-                $account = Account::where('store_id',null)->first();
-                $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
-                $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                $shipping_price = Shippingtype::where('shippingtype_id', $order->shippingtype_id)->first();
-                if ($shipping_price == null) {
-                    $shipping_price = 35;
-                    $extraprice = 3;
-                } else {
-                    $overprice = $shipping_price->overprice;
-                    $shipping_price = $shipping_price->price;
-                    $extraprice = $overprice;
-                }
-                if ($order->weight > 15) {
-                    $default_extra_price = ($order->weight - 15) * 3;
-                    $extra_shipping_price = ($order->weight - 15) * $extraprice;
-                } else {
-                    $extra_shipping_price = 0;
-                    $default_extra_price = 0;
-                }
-                $order->total_price = $order->total_price;
-                $total_price_without_shipping = ($order->total_price) - ($shipping_price) - ($extra_shipping_price);
-                $deduction = ($total_price_without_shipping * 0.01) + 1;
-                $price_after_deduction = $total_price_without_shipping - $deduction;
-                $supplierdata = [
-                    "SupplierCode" => $account->supplierCode,
-                    "ProposedShare" => $price_after_deduction,
-                    "InvoiceShare" => $order->total_price,
-                ];
-                $processingDetails = [
-                    "AutoCapture" => true,
-                    "Bypass3DS" => false,
-                ];
-                $processingDetailsobject = (object)($processingDetails);
-                $supplierobject = (object)($supplierdata);
-                $data = [
-                    "PaymentMethodId" => $paymenttype->paymentMethodId,
-                    "CustomerName" => $customer->name,
-                    "InvoiceValue" => $order->total_price, // total_price
-                    "CustomerEmail" => $customer->email,
-                    "CallBackUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/success',
-                    "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/failed',
-                    "Language" => 'ar',
-                    "DisplayCurrencyIso" => 'SAR',
-                    "ProcessingDetails" => $processingDetailsobject,
-                    "Suppliers" => [
-                        $supplierobject,
-                    ],
-                ];
-                $data = json_encode($data);
-                $supplier = new FatoorahServices();
-                $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
+            $processingDetails = [
+                "AutoCapture" => true,
+                "Bypass3DS" => false,
+            ];
+            $processingDetailsobject = (object) ($processingDetails);
+            $supplierobject = (object) ($supplierdata);
+            $data = [
+                "PaymentMethodId" => $paymenttype->paymentMethodId,
+                "CustomerName" => $customer->name,
+                "InvoiceValue" => $order->total_price, // total_price
+                "CustomerEmail" => $customer->email,
+                "CallBackUrl" => 'https://store.atlbha.sa/Products/SouqOtlobha',
+                "ErrorUrl" => 'https://store.atlbha.sa/Products/SouqOtlobha',
+                "Language" => 'AR',
+                "DisplayCurrencyIso" => 'SAR',
+                "ProcessingDetails" => $processingDetailsobject,
+            ];
+            $data = json_encode($data);
+            $supplier = new FatoorahServices();
+            $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
 
-                if (isset($response['IsSuccess'])) {
-                    if ($response['IsSuccess'] == true) {
+            if (isset($response['IsSuccess'])) {
+                if ($response['IsSuccess'] == true) {
 
-                        $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
-                        $success['payment'] = $response;
-                        $payment = Payment::create([
-                            'paymenDate' => Carbon::now(),
-                            'paymentType' => $order->paymentype->name,
-                            'orderID' => $order->id,
-                            'store_id' => $store_domain,
-                            'deduction' => $deduction,
-                            'price_after_deduction' => $price_after_deduction,
-                            'paymentTransectionID' => $InvoiceId,
+                    $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
+                    $success['payment'] = $response;
+                    $payment = Payment::create([
+                        'paymenDate' => Carbon::now(),
+                        'paymentType' => $order->paymentype->name,
+                        'orderID' => $order->id,
+                        'store_id' => null,
+                        'deduction' => $deduction,
+                        'price_after_deduction' => $price_after_deduction,
+                        'paymentTransectionID' => $InvoiceId,
 
-                        ]);
+                    ]);
 
-                    } else {
-                        $success['payment'] = $response;
-                    }
                 } else {
                     $success['payment'] = $response;
                 }
-                $cart->delete();
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
-
+            } else {
+                $success['payment'] = $response;
             }
+            $cart->delete();
+            $success['order'] = new OrderResource($order);
+            $success['status'] = 200;
 
-     
+            return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
+
+        }
+
+        $cart->delete();
         // }
 
-        $success['order'] = new OrderResource($order);
+        // $success['order'] = new OrderResource($order);
 
-        $success['status'] = 200;
+        // $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم الاستيراد بنجاح ', 'order send successfully');
+        // return $this->sendResponse($success, 'تم الاستيراد بنجاح ', 'order send successfully');
 
     }
 
@@ -332,7 +282,7 @@ class CheckoutController extends BaseController
     public function shippingMethods()
     {
 
-        $success['shippingtypes'] = ShippingtypeImportResource::collection(Shippingtype::whereNot('id',5)->where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['shippingtypes'] = ShippingtypeImportResource::collection(Shippingtype::whereNot('id', 5)->where('is_deleted', 0)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع شركات الشحن بنجاح', 'Shippingtype return successfully');
@@ -372,7 +322,7 @@ class CheckoutController extends BaseController
                         'discount_type' => 'fixed',
                         'discount_value' => $coupon->discount,
                         'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + $coupon->discount,
-                        'coupon_id' => $coupon->id
+                        'coupon_id' => $coupon->id,
                     ]);
 
                 } else {
@@ -385,7 +335,7 @@ class CheckoutController extends BaseController
                         'discount_type' => 'percent',
                         'discount_value' => $coupon->discount . '%',
                         'discount_total' => ($cart->discount_total !== null ? $cart->discount_total : 0) + round($cartCopun, 2),
-                        'coupon_id' => $coupon->id
+                        'coupon_id' => $coupon->id,
                     ]);
 
                 }
@@ -413,8 +363,8 @@ class CheckoutController extends BaseController
 
     private function restCart($id)
     {
-        $cart = Cart::where('id', $id)->first();
-        $coupon = Coupon::with()->where('id', $cart->coupon_id)->first();
+        $cart = Cart::with([])->where('id', $id)->first();
+        $coupon = Coupon::where('id', $cart->coupon_id)->first();
 
         $cart->update([
             'total' => $cart->total + $cart->discount_total,
@@ -423,6 +373,7 @@ class CheckoutController extends BaseController
             'discount_total' => 0,
             'coupon_id' => null,
         ]);
+        return $cart->refresh();
     }
 
 }
