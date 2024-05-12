@@ -163,7 +163,7 @@ class CheckoutController extends BaseController
                 'postal_code' => $request->postal_code,
                 'default_address' => $request->default_address,
                 'user_id' => auth()->user()->id,
-                'shippingtype_id' => null,
+                'shippingtype_id' => $request->shippingtype_id,
 
             ]);
             if ($orderaddress->default_address === '1') {
@@ -184,7 +184,7 @@ class CheckoutController extends BaseController
                 'district' => $request->district,
                 'postal_code' => $request->postal_code,
                 'default_address' => $request->default_address,
-                'shippingtype_id' => null,
+                'shippingtype_id' => $request->shippingtype_id,
             ]);
             $order->order_addresses()->attach($orderAddress->id, ["type" => "shipping"]);
             if ($orderAddress->default_address === '1') {
@@ -213,7 +213,7 @@ class CheckoutController extends BaseController
                 "Bypass3DS" => false,
             ];
             $processingDetailsobject = (object) ($processingDetails);
-            $supplierobject = (object) ($supplierdata);
+
             $data = [
                 "PaymentMethodId" => $paymenttype->paymentMethodId,
                 "CustomerName" => $customer->name,
