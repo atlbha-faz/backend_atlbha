@@ -50,7 +50,7 @@ class CheckoutController extends BaseController
             'postal_code' => 'nullable|string',
             'default_address' => 'required',
             'paymentype_id' => 'required|exists:paymenttypes,id',
-
+            'shippingtype_id' => 'required|exists:shippingtypes,id',
             'cod' => 'nullable',
             'description' => 'nullable|string',
 
@@ -90,7 +90,7 @@ class CheckoutController extends BaseController
 
         // Save the order to the database
         $order->save();
-        $shipping_object = Shippingtype::where('shippingtype_id', $order->shippingtype_id)->first();
+        $shipping_object = Shippingtype::where('id', $order->shippingtype_id)->first();
         if ($shipping_object != null) {
             $shipping_price = $shipping_object->price;
             if ($cart->weight > 15) {
