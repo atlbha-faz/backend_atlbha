@@ -77,7 +77,7 @@ class OrderResource extends JsonResource
             'quantity' => $this->quantity,
             'weight' => $this->weight,
             'overweight' => $this->weight > 15 ? ($this->weight - 15) : 0,
-            'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,
+            'overweight_price' => $this->weight > 15 ? round($this->overweight_price, 2) : 0,
             'tax' => round($this->tax, 2),
             'shipping_price' => $this->shipping_price,
             'subtotal' => round($this->subtotal, 2),

@@ -12,7 +12,6 @@ class Shippingtype extends Model
     protected $casts = [
         'price' => 'float',
         'overprice' => 'float',
-    
     ];
     public function stores()
     {
