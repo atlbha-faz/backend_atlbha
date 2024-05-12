@@ -11,10 +11,11 @@ class AramexController extends Controller
 {
     public function webhook(Request $request)
     {
-        if ($request->has('key')) {
-            if ($request->has('value')) {
-                if ($request->value->UpdateCode == 'SH005') {
-                    $shipping = Shipping::where('shipping_id', $request->key)->first();
+
+        if ($request->has('Key')) {
+            if ($request->has('Value')) {
+                if ($request->Value['UpdateCode'] == 'SH005') {
+                    $shipping = Shipping::where('shipping_id', $request->Key)->first();
                     $order_id = $shipping->order_id ?? 0;
                     $order = Order::where('id', $order_id)->first();
                     $order->order_status = 'completed';
