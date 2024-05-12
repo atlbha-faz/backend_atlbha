@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\shippingResource;
-use App\Models\Importproduct;
-use App\Models\Option;
+use App\Models\User;
 use App\Models\Order;
+use App\Models\Store;
+use App\Models\Option;
 use App\Models\Product;
 use App\Models\Shipping;
-use App\Models\Store;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\shippingResource;
 use Illuminate\Support\Facades\Validator;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class AdminOrderController extends BaseController
 {
@@ -37,7 +38,7 @@ class AdminOrderController extends BaseController
 
         $data = OrderResource::collection(Order::with(['user' => function ($query) {
             $query->select('id', 'city_id');
-        }, 'shipping', 'items' => function ($query) {
+        }, 'shippings', 'items' => function ($query) {
             $query->select('id');
         }])->where('store_id', null)->where('is_deleted', 0)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']));
 
@@ -84,22 +85,6 @@ class AdminOrderController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        if ($request->input('status') !== "completed") {
-
-            $order->update([
-                'order_status' => $request->input('status'),
-            ]);
-            foreach ($order->items as $orderItem) {
-                $orderItem->update([
-                    'order_status' => $request->input('status'),
-                ]);
-            }
-
-            $success['orders'] = new OrderResource($order);
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
-        } else {
             if ($request->status === "completed") {
 
                 $storeAdmain = User::whereIn('user_type', ['store', 'store_employee'])->where('id', $order->user_id)->first();
@@ -172,40 +157,55 @@ class AdminOrderController extends BaseController
                     }
 
                 }
-
-                $order->update([
-                    'order_status' => $request->input('status'),
-                ]);
-                foreach ($order->items as $orderItem) {
-                    $orderItem->update([
-                        'order_status' => $request->input('status'),
-                    ]);
-                }
-
-                $shipping = Shipping::create([
-                    'shipping_id' => $order->order_number,
-                    'track_id' => null,
-                    'description' => $order->description,
-                    'quantity' => $order->quantity,
-                    'price' => $order->total_price,
-                    'weight' => $order->weight,
-                    'district' => $request->district,
-                    'city' => $request->city,
-                    'streetaddress' => $request->street_address,
-                    'customer_id' => $order->user_id,
-                    'shippingtype_id' => null,
-                    'order_id' => $order->id,
-                    'shipping_status' => $order->order_status,
-                    'store_id' => null,
-                    'cashondelivery' => $order->cashondelivery,
-                ]);
-                $success['shipping'] = new shippingResource($shipping);
             }
-            $success['orders'] = new OrderResource($order);
-            $success['status'] = 200;
+            $shipping_companies = [
+                1 => new AramexCompanyService(),
+            ];
+            if ($request->status == "canceled") {
 
-            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
-        }
+                $shipping = $shipping_companies[$order->shippingtype->id];
+                $success['orders'] = $shipping->cancelOrder($order->id);
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'تم إلغاء الطلب', 'order canceled successfully');
+    
+            } else {
+                $data = [
+                    "shipper_line1" => $request->street_address,
+                    "shipper_line2" => $request->street_address,
+                    "shipper_city" => $request->city,
+                    "shipper_district" => $request->district,
+                    "shipper_name" => "atlbha",
+                    "shipper_comany" => "atlbha",
+                    "shipper_name" => "atlbha",
+                    "shipper_phonenumber" =>"00966506340450",
+                    "shipper_email" => "help@atlbha.sa",
+                    "order_id" => $order->id,
+    
+                ];
+                if ($request->status === "ready") {
+    
+                    $shipping = $shipping_companies[$order->shippingtype->id];
+                    $success['orders'] = $shipping->createOrder($data);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+    
+                } else {
+                    $order->update([
+                        'order_status' => $request->status,
+                    ]);
+                    foreach ($order->items as $orderItem) {
+                        $orderItem->update([
+                            'order_status' => $request->status,
+                        ]);
+                    }
+    
+                    $success['orders'] = new OrderResource($order);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+    
+                }
+            }    
+        
     }
     public function deleteAll(Request $request)
     {
