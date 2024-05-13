@@ -19,7 +19,7 @@ class HomeController extends BaseController
         $products_pagintion = $products->paginate($count);
         $products_resources= ProductResource::collection($products_pagintion);
         $success['page_count'] =   $products_pagintion->lastPage();
-        $success['total_result'] =   $products_pagintion>total();
+        $success['total_result'] =   $products_pagintion->total();
         $success['current_page'] =   $products_pagintion->currentPage();
         $success['products'] =  $products_resources;
         $success['status'] = 200;
