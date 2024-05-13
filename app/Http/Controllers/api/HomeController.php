@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Models\Order;
+
 use App\Models\Product;
-use App\Models\Shipping;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
@@ -18,7 +17,7 @@ class HomeController extends BaseController
 
         $products = Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id');
         $products_pagintion = $products->paginate($count);
-        $products_resources= ProductResource::collection($product_pagintion);
+        $products_resources= ProductResource::collection($products_pagintion);
         $success['page_count'] =   $products_pagintion->lastPage();
         $success['total_result'] =   $products_pagintion>total();
         $success['current_page'] =   $products_pagintion->currentPage();
