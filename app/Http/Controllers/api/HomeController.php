@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\api\BaseController as BaseController;
 class HomeController extends BaseController
 {
-    public function products()
+    public function products(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
 
