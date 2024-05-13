@@ -314,7 +314,7 @@ class CheckoutController extends BaseController
                     } else {
                         $success['payment'] = $response;
                     }
-                    $cart->delete();
+                   $cart->update(['order_id'=> $order->id]);
                     $success['status'] = 200;
 
                     return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
@@ -380,14 +380,14 @@ class CheckoutController extends BaseController
                     } else {
                         $success['payment'] = $response;
                     }
-                    $cart->delete();
+                    $cart->update(['order_id'=> $order->id]);
                     $success['status'] = 200;
 
                     return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
                 }
 
-                $cart->delete();
+               
             }
 
             $success['order'] = new OrderResource($order);
