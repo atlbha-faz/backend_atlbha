@@ -5,6 +5,7 @@ use App\Http\Controllers\api\MadfuController;
 use App\Http\Controllers\api\storeDashboard\ReportController;
 use App\Http\Controllers\api\storeDashboard\SubscriptionEmailController;
 use App\Http\Middleware\SetActiveStore;
+use App\Http\Controllers\api\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AramexController;
@@ -28,6 +29,9 @@ Route::prefix('madfu')->group(function () {
 });
 Route::prefix('aramex')->group(function () {
     Route::post('webhook', [AramexController::class, 'webhook'])->name('aramex-webhook');
+});
+Route::group(['prefix' => 'home'], function () {
+    Route::get('products', [HomeController::class, 'products']);
 });
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
