@@ -201,7 +201,7 @@ class OrderController extends BaseController
             $userQuery->where('name', 'like', "%$query%");
         })->orWhereHas('shippingtype', function ($shippingtypeQuery) use ($query) {
             $shippingtypeQuery->where('name', 'like', "%$query%");
-        })->orWhereHas('shipping', function ($shippingQuery) use ($query) {
+        })->orWhereHas('shippings', function ($shippingQuery) use ($query) {
             $shippingQuery->where(function ($sub_shippingQuery) use ($query) {
                 $sub_shippingQuery->where('track_id', 'like', "%$query%")->orwhere('shipping_id', 'like', "%$query%");
             });
