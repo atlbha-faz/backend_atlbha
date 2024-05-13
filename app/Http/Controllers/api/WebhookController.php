@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Models\MyfatoorahLog;
+use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Models\MyfatoorahLog;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebhookController extends BaseController
 {
@@ -75,6 +76,7 @@ class WebhookController extends BaseController
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                 $order = Order::where('id', $payment->orderID)->first();
+                $cart = Cart::where('order_id', $payment->orderID)->first();
                 switch ($request->input('Data.TransactionStatus')) {
                     case "SUCCESS":
                         $order->update([
@@ -83,6 +85,7 @@ class WebhookController extends BaseController
                         $payment->update([
                             'paymentCardID' => $request->input('Data.PaymentId'),
                         ]);
+                        $cart->delete();
                         break;
                     case "FAILED":
                         $order->update([

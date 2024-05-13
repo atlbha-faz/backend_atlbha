@@ -44,7 +44,7 @@ class OrderController extends BaseController
 
         $data = Order::with(['user', 'shippings', 'shippingtype', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id', 'created_at']);
+        }])->where('store_id', auth()->user()->store_id)->where('is_archive',0)->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id', 'created_at']);
         if ($request->has('order_status')) {
             $data->where('order_status', $request->order_status);
         }

@@ -251,7 +251,7 @@ class CheckoutController extends BaseController
             } else {
                 $success['payment'] = $response;
             }
-            $cart->delete();
+            $cart->update(['order_id'=> $order->id]);
             $success['order'] = new OrderResource($order);
             $success['status'] = 200;
 
@@ -259,7 +259,7 @@ class CheckoutController extends BaseController
 
         }
 
-        $cart->delete();
+       
         // }
 
         // $success['order'] = new OrderResource($order);
