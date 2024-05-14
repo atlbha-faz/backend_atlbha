@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Controllers\api\BaseController as BaseController;
 
-class HomeController extends Controller
+
+class HomeController extends BaseController
 {
     public function products(Request $request)
     {
