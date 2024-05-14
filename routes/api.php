@@ -604,6 +604,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::post('returnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'update']);
         Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'show']);
         Route::get('searchReturnOrder', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'searchReturnOrder']);
+        Route::get('refundReturnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'refundReturnOrder']);
 
         // });
     });

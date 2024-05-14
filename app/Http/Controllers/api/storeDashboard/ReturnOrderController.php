@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ReturnOrderResource;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\ReturnOrder;
-use App\Services\ShippingComanies\AramexCompanyService;
-use App\Services\ShippingComanies\OtherCompanyService;
 use Illuminate\Http\Request;
+use App\Services\FatoorahServices;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ReturnOrderResource;
+use App\Services\ShippingComanies\OtherCompanyService;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ReturnOrderController extends BaseController
 {
@@ -142,55 +144,6 @@ class ReturnOrderController extends BaseController
             $return->return_status=$request->status;
             $return->save();
         }
-        // $payment = Payment::where('orderID', $order->id)->first();
-        // $returns = ReturnOrder::where('order_id', $order->id)->get();
-        // $prices = 0;
-        // foreach ($returns as $return) {
-        //     $prices = $prices + ($return->qty * $return->orderItem->price);
-        //     if ($order->payment_status == "paid") {
-
-        //         $product = \App\Models\Product::where('id', $return->orderItem->product_id)->where('store_id', auth()->user()->store_id)->first();
-        //         if ($product) {
-        //             $product->stock = $product->stock + $return->qty;
-        //             $product->save();
-        //         } else {
-        //             $import_product = \App\Models\Importproduct::where('product_id', $return->orderItem->product_id)->where('store_id', auth()->user()->store_id)->first();
-        //             if ($import_product) {
-        //                 $import_product->qty = $import_product->qty + $return->qty;
-        //                 $import_product->save();
-        //             }
-
-        //         }
-
-        //         $order->is_archive = 1;
-        //         $order->save();
-        //     }
-
-        // }
-        // if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
-        //     if ($payment != null) {
-
-        //         $data = [
-        //             "Key" => $payment->paymentTransectionID,
-        //             "KeyType" => "invoiceid",
-        //             "RefundChargeOnCustomer" => false,
-        //             "ServiceChargeOnCustomer" => false,
-        //             "Amount" => $prices,
-        //             "Comment" => "refund to the customer",
-        //             "AmountDeductedFromSupplier" => $prices,
-        //             "CurrencyIso" => "SA",
-        //         ];
-
-        //         $supplier = new FatoorahServices();
-        //         $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
-
-        //         if ($supplierCode->IsSuccess == false) {
-        //             return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-        //         } else {
-        //             $success['payment'] = $supplierCode;
-        //         }
-        //     }
-        // }
         if ($request->status == 'accept') {
             $success['order'] = $shipping->refundOrder($order_id);
             $success['status'] = 200;
@@ -236,5 +189,46 @@ class ReturnOrderController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
 
+    }
+    public function refundReturnOrder($order_id)
+    {
+        $order = Order::where('id', $order_id)->whereHas('items', function ($q) {
+            $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+        })->first();
+        if (is_null($order)) {
+            return $this->sendError("'الطلب غير موجود", "Order is't exists");
+        }
+        $payment = Payment::where('orderID', $order->id)->first();
+        $returns = ReturnOrder::where('order_id', $order->id)->get();
+        $prices = 0;
+        foreach ($returns as $return) {
+            $prices = $prices + ($return->qty * $return->orderItem->price);         
+        }
+        if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
+            if ($payment != null) {
+
+                $data = [
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "RefundChargeOnCustomer" => false,
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" => $prices,
+                    "Comment" => "refund to the customer",
+                    "AmountDeductedFromSupplier" => $prices,
+                    "CurrencyIso" => "SA",
+                ];
+
+                $supplier = new FatoorahServices();
+                $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+
+                if ($supplierCode->IsSuccess == false) {
+                    return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                } else {
+                    $success['payment'] = $supplierCode;
+                }
+            }
+        }
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
     }
 }
