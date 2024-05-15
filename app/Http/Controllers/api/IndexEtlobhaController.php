@@ -104,7 +104,11 @@ $stores=Store::with(['user' => function ($query) {
         $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
 
         $success['status'] = 200;
-
+        $success['atlbha_products'] = ProductResource::collection(Product::with(['store' => function ($query) {
+            $query->select('id', 'domain', 'store_name');
+        }, 'category' => function ($query) {
+            $query->select('id', 'name');}])->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at','short_description', 'category_id', 'subcategory_id') ->limit(20)
+            ->get());
         return $this->sendResponse($success, 'تم ارجاع الرئيسية بنجاح', 'etlobha index return successfully');
     }
 
