@@ -88,7 +88,12 @@ class IndexEtlobhaController extends BaseController
         } else {
             $success['stores'] = array();
         }
-
+        $success['atlbha_products'] = ProductResource::collection(Product::with(['store' => function ($query) {
+            $query->select('id', 'domain', 'store_name');
+        }, 'category' => function ($query) {
+            $query->select('id', 'name');}])->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at','short_description', 'category_id', 'subcategory_id') ->limit(20)
+            ->get());
+            
         $success['comment'] = CommentResource::collection(Comment::with(['user' => function ($query) {
             $query->with(['store' => function ($query) {
                 $query->select('id', 'domain', 'store_name', 'logo');

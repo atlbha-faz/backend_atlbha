@@ -15,7 +15,7 @@ class HomeController extends BaseController
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
 
-        $products = Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'subcategory_id');
+        $products = Product::where('is_deleted', 0)->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'category_id', 'short_description','subcategory_id');
         $products_pagintion = $products->paginate($count);
         $products_resources= ProductResource::collection($products_pagintion);
         $success['page_count'] =   $products_pagintion->lastPage();
