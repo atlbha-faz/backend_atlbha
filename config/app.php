@@ -147,6 +147,8 @@ return [
     'allowed_hosts' => [
         'atlbha.com',
         '*.atlbha.com',
+        'atlbha.sa',
+        '*.atlbha.sa',
     ],
 
     /*
