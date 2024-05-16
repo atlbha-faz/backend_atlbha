@@ -2,8 +2,11 @@
 namespace App\Services;
 
 use CURLFile;
+use GuzzleHttp\Psr7\Utils;
+use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\RequestOptions;
 
 class FatoorahServices
 {
@@ -22,13 +25,67 @@ class FatoorahServices
         ];
     }
 
-    public function buildRequest($url, $mothod, $data = [])
+    public function buildRequest($url, $mothod, $data = [],$logo=null)
     {
         $client = new Client();
         if (empty($data)) {
             $request = new Request($mothod, $this->base_url . $url, $this->headers);
         } else {
-            $request = new Request($mothod, $this->base_url . $url, $this->headers, $data);
+            if($logo != null)
+            {
+         
+              $options = [
+                'multipart' => [
+                  [
+                    'name' => 'SupplierName',
+                    'contents' => $data['SupplierName']
+                  ],
+                  [
+                    'name' => 'Mobile',
+                    'contents' => $data['Mobile']
+                  ],
+                  [
+                    'name' => 'Email',
+                    'contents' => $data['Email']
+                  ],
+                  [
+                    'name' => 'DepositTerms',
+                    'contents' =>  $data['DepositTerms']
+                  ],
+                  [
+                    'name' => 'BankId',
+                    'contents' =>  $data['BankId']
+                  ],
+                  [
+                    'name' => 'BankAccountHolderName',
+                    'contents' =>  $data['BankAccountHolderName']
+                  ],
+                  [
+                    'name' => 'BankAccount',
+                    'contents' =>  $data['BankAccount']
+                  ],
+                  [
+                    'name' => 'logoFile',
+                    'contents' => Utils::tryFopen( $data['logo'], 'r'),
+                    'filename' =>  $data['logo'],
+                    'headers'  => [
+                      'Content-Type' => '<Content-type header>'
+                    ]
+                  ],
+                  [
+                    'name' => 'BusinessName',
+                    'contents' =>  $data['BusinessName']
+                  ]
+              ]];
+              $request = new Request($mothod, $this->base_url . $url, $this->headers);
+              $res = $client->sendAsync($request, $options)->wait();
+              $response = json_decode($res->getBody(), true);
+              return $response;
+              
+            }
+            else{
+                $request = new Request($mothod, $this->base_url . $url, $this->headers, $data);
+            }
         }
         $response = $client->sendAsync($request)->wait();
         if ($response->getStatusCode() != 200) {
