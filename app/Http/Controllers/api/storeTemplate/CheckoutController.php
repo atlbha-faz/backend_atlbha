@@ -585,8 +585,8 @@ class CheckoutController extends BaseController
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;  
             $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->orderByDesc('created_at');
             $orders= $orders->paginate($count);
-            $success['page_count'] = $data->lastPage();
-            $success['current_page'] = $data->currentPage();
+            $success['page_count'] = $orders->lastPage();
+            $success['current_page'] = $orders->currentPage();
             $success['order'] = OrderResource::collection($orders);
             $success['status'] = 200;
 
