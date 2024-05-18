@@ -140,7 +140,7 @@ class ReturnOrderController extends BaseController
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $orders = Order::with('returnOrders')->whereHas('items', function ($q) {
+        $orders = Order::with('returnOrders')->whereHas('items', function ($q) use($id) {
             $q->where('store_id', $id)->where('is_return', 1);
         })->where(function ($main_query) use ($query) {
             $main_query->whereHas('items', function ($itemQuery) use ($query) {
