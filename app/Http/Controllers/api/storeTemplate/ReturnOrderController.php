@@ -18,7 +18,7 @@ class ReturnOrderController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index($id)
+    public function index(Request $request,$id)
     {
         $return= Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
             $q->where('store_id', $id)->where('is_return', 1);
@@ -26,9 +26,14 @@ class ReturnOrderController extends BaseController
         if (is_null($return) ) {
             return $this->sendError("لا يوجد طلبات مسترجعة", "return is't exists");
         }
-        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;       
+        $data=Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
             $q->where('store_id', $id)->where('is_return', 1);
-        })->where('user_id', auth()->user()->id)->where('store_id', $id)->orderByDesc('id')->get());
+        })->where('user_id', auth()->user()->id)->where('store_id', $id)->orderByDesc('id');
+        $data=  $data->paginate( $count);
+        $success['ReturnOrders'] = ReturnOrderResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
