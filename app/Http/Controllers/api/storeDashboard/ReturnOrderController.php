@@ -215,7 +215,7 @@ class ReturnOrderController extends BaseController
                     "Amount" => $prices,
                     "Comment" => "refund to the customer",
                     "AmountDeductedFromSupplier" => $prices,
-                    "CurrencyIso" => "SA",
+                    "CurrencyIso" => "SAR",
                 ];
 
                 $supplier = new FatoorahServices();
