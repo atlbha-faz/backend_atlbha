@@ -150,8 +150,8 @@ class OtherCompanyService implements ShippingInterface
                     }
 
                 }
-                $order->is_archive = 1;
-                $order->save();
+                // $order->is_archive = 1;
+                // $order->save();
             }
         }
 
