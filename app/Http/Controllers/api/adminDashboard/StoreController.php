@@ -33,6 +33,7 @@ class StoreController extends BaseController
     {
         $this->middleware('auth:api');
     }
+
     public function loginId($id)
     {
 
@@ -48,6 +49,7 @@ class StoreController extends BaseController
         }
 
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -57,15 +59,15 @@ class StoreController extends BaseController
     {
 
         $success['stores'] =
-        StoreResource::collection(Store::with(['categories' => function ($query) {
-            $query->select('name', 'icon');
-        }, 'city' => function ($query) {
-            $query->select('id','name');
-        }, 'country' => function ($query) {
-            $query->select('id');
-        }, 'user' => function ($query) {
-            $query->select('id');
-        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain','phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special','store_email','verification_status', 'city_id','verification_date', 'created_at')->get());
+            StoreResource::collection(Store::with(['categories' => function ($query) {
+                $query->select('name', 'icon');
+            }, 'city' => function ($query) {
+                $query->select('id', 'name');
+            }, 'country' => function ($query) {
+                $query->select('id');
+            }, 'user' => function ($query) {
+                $query->select('id');
+            }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special', 'store_email', 'verification_status', 'city_id', 'verification_date', 'created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
@@ -84,7 +86,7 @@ class StoreController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -280,7 +282,7 @@ class StoreController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Store  $store
+     * @param \App\Models\Store $store
      * @return \Illuminate\Http\Response
      */
     public function show($store)
@@ -299,7 +301,7 @@ class StoreController extends BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Store  $store
+     * @param \App\Models\Store $store
      * @return \Illuminate\Http\Response
      */
     public function edit(Store $store)
@@ -310,8 +312,8 @@ class StoreController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Store  $store
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Store $store
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $store)
@@ -496,7 +498,7 @@ class StoreController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Store  $store
+     * @param \App\Models\Store $store
      * @return \Illuminate\Http\Response
      */
 
@@ -572,8 +574,6 @@ class StoreController extends BaseController
     }
 
 
-
-
     public function deleteAll(Request $request)
     {
 
@@ -596,6 +596,7 @@ class StoreController extends BaseController
         }
 
     }
+
 //
     public function unVerificationStore()
     {
@@ -654,4 +655,16 @@ class StoreController extends BaseController
         return $this->sendResponse($success, 'تم إضافة ملاحظة بنجاح', 'note Added successfully');
     }
 
+    public function storeToken($id)
+    {
+        $store = Store::find($id);
+        if ($store) {
+            $user = User::find($store->user_id);
+            return $this->sendResponse(['token' => ($user) ? $user->createToken('authToken')->accessToken : ''], 'تم انشاء توكين', 'token created');
+
+        } else {
+            return $this->sendError('المتجر غير موجود', 'store not found');
+
+        }
+    }
 }
