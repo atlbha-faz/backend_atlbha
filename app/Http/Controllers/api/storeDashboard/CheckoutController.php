@@ -219,8 +219,8 @@ class CheckoutController extends BaseController
                 "CustomerName" => $customer->name,
                 "InvoiceValue" => $order->total_price, // total_price
                 "CustomerEmail" => $customer->email,
-                "CallBackUrl" => 'https://store.atlbha.sa/Products/SouqOtlobha',
-                "ErrorUrl" => 'https://store.atlbha.sa/Products/SouqOtlobha',
+                "CallBackUrl" => 'https://store.atlbha.com/Products/SouqOtlobha',
+                "ErrorUrl" => 'https://store.atlbha.com/Products/SouqOtlobha',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
                 "ProcessingDetails" => $processingDetailsobject,
@@ -251,7 +251,7 @@ class CheckoutController extends BaseController
             } else {
                 $success['payment'] = $response;
             }
-            $cart->update(['order_id'=> $order->id]);
+            $cart->update(['order_id' => $order->id]);
             $success['order'] = new OrderResource($order);
             $success['status'] = 200;
 
@@ -259,7 +259,6 @@ class CheckoutController extends BaseController
 
         }
 
-       
         // }
 
         // $success['order'] = new OrderResource($order);
@@ -374,6 +373,52 @@ class CheckoutController extends BaseController
             'coupon_id' => null,
         ]);
         return $cart->refresh();
+    }
+    public function shippingCalculation($shipping_id)
+    {
+        $cart = Cart::where('user_id', auth()->user()->id)->where('store_id', null)->first();
+
+        if ($cart == null) {
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, ' سلة فارغة', 'cart is not exist');
+
+        }
+        $shipping_object = Shippingtype::where('id', $shipping_id)->first();
+        if ($shipping_object != null) {
+            $shipping_price = $shipping_object->price;
+            if ($cart->weight > 15) {
+                $extra_shipping_price = ($cart->weight - 15) * $shipping_object->overprice;
+            } else {
+                $extra_shipping_price = 0;
+            }
+        } else {
+            $shipping_price = 30;
+            if ($cart->weight > 15) {
+                $extra_shipping_price = ($cart->weight - 15) * 3;
+            } else {
+                $extra_shipping_price = 0;
+            }
+        }
+        if ($cart->free_shipping == 1) {
+            $cart->update([
+                'shipping_price' => $cart->shipping_price,
+                'overweight_price' => 0,
+            ]);
+        } else {
+            $cart->update([
+                'shipping_price' => $shipping_price,
+                'total' => (($cart->total - $cart->shipping_price) - $cart->overweight_price) + $shipping_price + $extra_shipping_price,
+                'overweight_price' => $extra_shipping_price,
+            ]);
+
+        }
+
+        $success['cart'] = new CartResource($cart);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع السلة بنجاح', 'cart return successfully');
+
     }
 
 }

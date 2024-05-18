@@ -106,6 +106,7 @@ Route::get('cancelOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutC
 Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'index']);
 Route::post('returnOrder', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'store']);
 Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'show']);
+Route::get('shippingCalculation/{store_id}/{shipping_id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'shippingCalculation']);
 
 Route::get('postStore/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'index']);
 Route::get('postByCategory/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'show']);
@@ -432,6 +433,7 @@ Route::middleware([StoreUser::class])->group(function () {
         //  paymenttype import
         Route::get('paymentmethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'paymentMethods']);
         Route::get('shippingMethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'shippingMethods']);
+        Route::get('shippingCalculation/{id}', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'shippingCalculation']);
 
         // page
         Route::resource('page', App\Http\Controllers\api\storeDashboard\PageController::class, ['names' => 'store.pages']);
