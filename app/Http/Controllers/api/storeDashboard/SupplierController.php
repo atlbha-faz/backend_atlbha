@@ -70,27 +70,29 @@ class SupplierController extends BaseController
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
-        if ($account) {
-            return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
-        }
-           
+        // if ($account) {
+        //     return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
+        // }
+ 
         $data = [
             'SupplierName' => $store->owner_name,
             'Mobile' => str_replace("+", "00", $storeAdmain->phonenumber),
             'Email' => $storeAdmain->email,
             'DepositTerms' => 'Daily',
-            'BankId' => $request->bankId,
+             'BankId' => $request->bankId,
             'BankAccountHolderName' => $request->bankAccountHolderName,
             'BankAccount' => $request->bankAccount,
             'Iban' => $request->iban,
             'BusinessName'=>$store->store_name,
-            'logo'=>str_replace('/',"\\",public_path(explode(asset('https://backend.atlbha.sa/'),$store->logo)[1]))
+            'logo'=>public_path('storage\images\storelogo') . '\\' . $store->logo_pure 
+
         ];
+
        
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->buildRequest('v2/CreateSupplier','POST', $data,true);
-        
-        if ($supplierCode['IsSuccess']== false) {
+        $supplierCode = $supplier->createSupplier('v2/CreateSupplier' ,$data);
+
+        if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
         $account = Account::updateOrCreate(
@@ -101,11 +103,10 @@ class SupplierController extends BaseController
                 'bankAccountHolderName' => $request->input('bankAccountHolderName'),
                 'bankAccount' => $request->input('bankAccount'),
                 'iban' => $request->input('iban'),
-                'supplierCode' => $supplierCode['Data']['SupplierCode'],
-                'status' => 'active',
+                'supplierCode' => $supplierCode->Data->SupplierCode,               'status' => 'active',
             ]);
         $storeAdmain->update([
-            'supplierCode' => $supplierCode['Data']['SupplierCode']]);
+            'supplierCode' => $supplierCode->Data->SupplierCode]);
       
 
         $arrays = array();

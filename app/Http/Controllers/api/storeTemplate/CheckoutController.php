@@ -696,5 +696,58 @@ class CheckoutController extends BaseController
         ]);
         return $cart->refresh();
     }
+    public function shippingCalculation($store_id,$shipping_id)
+    {
+        $store_domain = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('id')->first();
+        if ($store_domain == null) {
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
+
+        } else {
+            $cart = Cart::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->first();
+
+        if ($cart == null) {
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, ' سلة فارغة', 'cart is not exist');
+
+        }
+        $shipping_object = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
+        if ($shipping_object != null) {
+            $shipping_price = $shipping_object->price;
+            if ($cart->weight > 15) {
+                $extra_shipping_price = ($cart->weight - 15) * $shipping_object->overprice;
+            } else {
+                $extra_shipping_price = 0;
+            }
+        } else {
+            $shipping_price = 30;
+            if ($cart->weight > 15) {
+                $extra_shipping_price = ($cart->weight - 15) * 3;
+            } else {
+                $extra_shipping_price = 0;
+            }
+        }
+        if ($cart->free_shipping == 1) {
+            $cart->update([
+                'shipping_price' => $cart->shipping_price,
+                'overweight_price' => 0,
+            ]);
+        } else {
+            $cart->update([
+                'shipping_price' => $shipping_price,
+                'total' => (($cart->total - $cart->shipping_price) - $cart->overweight_price) + $shipping_price + $extra_shipping_price,
+                'overweight_price' => $extra_shipping_price,
+            ]);
+
+        }
+
+        $success['cart'] = new CartResource($cart);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع السلة بنجاح', 'cart return successfully');
+    }
+    }
 
 }
