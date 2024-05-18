@@ -106,6 +106,8 @@ Route::get('cancelOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutC
 Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'index']);
 Route::post('returnOrder', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'store']);
 Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'show']);
+Route::get('searchReturnOrder/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'searchReturnOrder']);
+
 Route::get('shippingCalculation/{store_id}/{shipping_id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'shippingCalculation']);
 
 Route::get('postStore/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'index']);
