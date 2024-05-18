@@ -2,8 +2,7 @@
 namespace App\Services;
 
 use CURLFile;
-use GuzzleHttp\Psr7\Utils;
-use GuzzleHttp\Psr7;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
@@ -31,7 +30,7 @@ class FatoorahServices
         if (empty($data)) {
             $request = new Request($mothod, $this->base_url . $url, $this->headers);
         } else {
-                $request = new Request($mothod, $this->base_url . $url, $this->headers, $data);
+                $request = new Request($mothod, $this->base_url.$url, $this->headers, $data);
            
         }
         $response = $client->sendAsync($request)->wait();
