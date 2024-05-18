@@ -111,6 +111,7 @@ Route::get('shippingCalculation/{store_id}/{shipping_id}', [App\Http\Controllers
 Route::get('postStore/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'index']);
 Route::get('postByCategory/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'show']);
 Route::get('postdetail/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'showPost']);
+Route::get('searchPost/{domain}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'searchPost']);
 
 Route::group([
     'middleware' => 'auth:api',
