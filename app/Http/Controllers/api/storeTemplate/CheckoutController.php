@@ -104,7 +104,6 @@ class CheckoutController extends BaseController
             $order->cod = $request->cod;
             $order->shipping_price = $cart->shipping_price;
             $order->description = $request->description;
-           $order->is_archive=false;
             // Save the order to the database
             $order->save();
 
@@ -704,7 +703,7 @@ class CheckoutController extends BaseController
         $success['total_result'] = $orders->total();
         $success['page_count'] = $orders->lastPage();
         $success['current_page'] = $orders->currentPage();
-        $success['ReturnOrders'] = OrderResource::collection($orders);
+        $success['orders'] = OrderResource::collection($orders);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الطلبات  بنجاح', 'orders Information returned successfully');
