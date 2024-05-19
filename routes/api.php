@@ -103,6 +103,7 @@ Route::resource('OrderAddress', App\Http\Controllers\api\storeTemplate\OrderAddr
 Route::get('show_default_address', [App\Http\Controllers\api\storeTemplate\OrderAddressController::class, 'showDefaultAddress']);
 Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\storeTemplate\OrderAddressController::class, 'setDefaultAddress']);
 Route::get('cancelOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'cancelOrder']);
+Route::get('searchOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'searchOrder']);
 Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'index']);
 Route::post('returnOrder', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'store']);
 Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'show']);

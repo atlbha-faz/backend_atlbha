@@ -104,7 +104,7 @@ class CheckoutController extends BaseController
             $order->cod = $request->cod;
             $order->shipping_price = $cart->shipping_price;
             $order->description = $request->description;
-
+           $order->is_archive=false;
             // Save the order to the database
             $order->save();
 
@@ -685,7 +685,31 @@ class CheckoutController extends BaseController
         }
 
     }
+    public function searchOrder(Request $request,$id)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
+        $orders = Order::with('items')->where(function ($main_query) use ($query) {
+            $main_query->whereHas('items', function ($itemQuery) use ($query) {
+                $itemQuery->whereHas('product', function ($productQuery) use ($query) {
+                   $productQuery->Where('name', 'like', "%$query%");
+                });
+            })->orWhere('order_number', 'like', "%$query%");
+        })->where('is_deleted', 0)->where('store_id',$id)->where('user_id', auth()->user()->id)
+            ->orderBy('created_at', 'desc')->paginate($count);
+
+        $success['query'] = $query;
+
+        $success['total_result'] = $orders->total();
+        $success['page_count'] = $orders->lastPage();
+        $success['current_page'] = $orders->currentPage();
+        $success['ReturnOrders'] = OrderResource::collection($orders);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الطلبات  بنجاح', 'orders Information returned successfully');
+
+    }
     private function restCart($id)
     {
         $cart = Cart::with([])->where('id', $id)->first();
