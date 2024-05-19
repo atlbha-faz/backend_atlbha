@@ -78,7 +78,8 @@ class FatoorahServices
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('SupplierName' => $data['SupplierName'],'Mobile' => $data['Mobile'],'Email' => $data['Email'],'DepositTerms' =>$data['DepositTerms'],'BankId' => $data['BankId'],'BankAccountHolderName' => $data['BankAccountHolderName'],'BankAccount' =>$data['BankAccount'],'logoFile'=> new CURLFILE($data['logo']),'BusinessName' => $data['BusinessName']),
+        CURLOPT_POSTFIELDS => array('SupplierName' => $data['SupplierName'],'Mobile' => $data['Mobile'],'Email' => $data['Email'],'DepositTerms' =>$data['DepositTerms'],'BankId' => $data['BankId'],'BankAccountHolderName' => $data['BankAccountHolderName'],'BankAccount' =>$data['BankAccount'],
+        'logoFile'=> new CURLFILE($data['logo']),'BusinessName' => $data['BusinessName'],'DisplaySupplierDetails'=> $data['DisplaySupplierDetails']),
         CURLOPT_HTTPHEADER => array(
           'Authorization: Bearer ' . $this->token,
       ),

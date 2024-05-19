@@ -84,8 +84,8 @@ class SupplierController extends BaseController
             'BankAccount' => $request->bankAccount,
             'Iban' => $request->iban,
             'BusinessName'=>$store->store_name,
-            'logo'=>public_path('storage\images\storelogo') . '\\' . $store->logo_pure 
-
+            'logo'=>public_path('storage\images\storelogo') . '\\' . $store->logo_pure ,
+            'DisplaySupplierDetails'=>true
         ];
 
        

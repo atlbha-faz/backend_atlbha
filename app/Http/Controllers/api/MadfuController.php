@@ -52,7 +52,8 @@ class MadfuController extends BaseController
         if ($request->status) {
             if ($request->orderStatus == 125) {
                 $order = Order::where('order_number', $request->MerchantReference)->first();
-                $order->payment_status = "Paid";
+                $order->payment_status = "paid";
+                $order->is_archive =0;
                 $order->save();
             }
         }
