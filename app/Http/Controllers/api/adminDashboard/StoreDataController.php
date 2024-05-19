@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Token;
 use Laravel\Sanctum\PersonalAccessToken;
+use Lcobucci\JWT\Parser as JwtParser;
+
 
 class StoreDataController extends BaseController
 {
@@ -31,9 +33,8 @@ class StoreDataController extends BaseController
     public function getStoreToken()
     {
         $token = Storage::get('tokens/swapToken.txt');
-        $user = Token::with([])->find($token);
-
-
+        $user = app(JwtParser::class)->parse($token)->claims()->get('jti');
+        $user = User::find((Token::with([])->find($user))->user_id);
         return ['token' => $token, 'user' => $user];
     }
 }
