@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
-         ActivitySeeder::class,
+         ReturnReasonsSeeder::class,
             CountrySeeder::class,
             RegionSeeder::class,
             CitySeeder::class,
