@@ -7,6 +7,7 @@ use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Passport\Token;
 
 class StoreDataController extends Controller
 {
@@ -27,6 +28,10 @@ class StoreDataController extends Controller
 
     public function getStoreToken()
     {
-        return ['token' => Storage::get('tokens/swapToken.txt')];
+        $token = Storage::get('tokens/swapToken.txt');
+        $user = Token::find($token)->user;
+
+
+        return ['token' => $token,'user' => $user];
     }
 }
