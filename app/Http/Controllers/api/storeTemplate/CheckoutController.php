@@ -740,7 +740,7 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, ' سلة فارغة', 'cart is not exist');
 
         }
-        $shipping_object = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
+        $shipping_object = shippingtype_store::where('shippingtype_id', $shipping_id)->where('store_id', $store_domain)->first();
         if ($shipping_object != null) {
             $shipping_price = $shipping_object->price;
             if ($cart->weight > 15) {
