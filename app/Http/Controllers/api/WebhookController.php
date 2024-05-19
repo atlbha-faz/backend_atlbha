@@ -81,6 +81,7 @@ class WebhookController extends BaseController
                     case "SUCCESS":
                         $order->update([
                             'payment_status' => "Paid",
+                            'is_archive'=>0
                         ]);
                         $payment->update([
                             'paymentCardID' => $request->input('Data.PaymentId'),
