@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Notification;
 use App\Models\Page;
 use App\Models\User;
@@ -317,6 +318,7 @@ class AuthController extends BaseController
             return $this->sendResponse($success, 'تم التسجيل بنجاح', 'Register Successfully');
         }
     }
+
     public function loginAdmin(Request $request)
     {
         $input = $request->all();
@@ -368,10 +370,10 @@ class AuthController extends BaseController
          */
         $remember = request('remember');
         if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
-            $query->whereIn('user_type', ['admin', 'admin_employee']);
-        } /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
-            $query->whereIn('user_type', ['admin', 'admin_employee']);
-        } /*'verified' => 1 */])) {
+                $query->whereIn('user_type', ['admin', 'admin_employee']);
+            } /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
+                $query->whereIn('user_type', ['admin', 'admin_employee']);
+            } /*'verified' => 1 */])) {
             $user = auth()->user();
             $user->update(['device_token' => $request->device_token]);
         }
@@ -450,10 +452,10 @@ class AuthController extends BaseController
         // $remember = request('remember');
 
         if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
-            $query->whereIn('user_type', ['store', 'store_employee']);
-        }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
-            $query->whereIn('user_type', ['store', 'store_employee']);
-        }, 'verified' => 1])) {
+                $query->whereIn('user_type', ['store', 'store_employee']);
+            }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
+                $query->whereIn('user_type', ['store', 'store_employee']);
+            }, 'verified' => 1])) {
             $user = auth()->user();
             $user->update([
                 'device_token' => $request->device_token]);
@@ -474,6 +476,7 @@ class AuthController extends BaseController
         }
         $user = auth("api")->user()->token();
         auth("api")->user()->update(['device_token' => ""]);
+        Storage::delete('tokens/swapToken.txt');
         $user->revoke();
 
         $success['status'] = 200;
@@ -602,11 +605,11 @@ class AuthController extends BaseController
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
     }
+
     public function sendSms($request)
     {
 
-        try
-        {
+        try {
             $data_string = json_encode($request);
 
             $curl = curl_init();
@@ -664,15 +667,17 @@ class AuthController extends BaseController
         }
 
     }
-    public function buildRequest($mothod, $data=[] ){
+
+    public function buildRequest($mothod, $data = [])
+    {
         $client = new Client();
         $response = $client->post('https://el.cloud.unifonic.com/rest/SMS/messages', [
             'form_params' => $data,
         ]);
-          if ($response->getStatusCode() != 200)
-              return false;
-          $response = json_decode ($response->getBody (),true);
-          return $response;
-      }
+        if ($response->getStatusCode() != 200)
+            return false;
+        $response = json_decode($response->getBody(), true);
+        return $response;
+    }
 
 }
