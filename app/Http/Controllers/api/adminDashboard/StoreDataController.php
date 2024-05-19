@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\api\BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Store;
 use App\Models\User;
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Token;
 
-class StoreDataController extends Controller
+class StoreDataController extends BaseController
 {
     public function storeToken($id)
     {
