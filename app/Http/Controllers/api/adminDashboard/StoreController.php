@@ -671,8 +671,8 @@ class StoreController extends BaseController
         }
     }
 
-    public function getStoreToken($id)
+    public function getStoreToken()
     {
-        return Storage::get('tokens/swapToken.txt');;
+        return Storage::get('tokens/swapToken.txt');
     }
 }
