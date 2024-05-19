@@ -206,15 +206,15 @@ class ReturnOrderController extends BaseController
         }
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
             if ($payment != null) {
-
+                $final_price=$prices-$payment->deduction;
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" => $prices,
+                    "Amount" =>  $final_price,
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $prices,
+                    "AmountDeductedFromSupplier" =>  $final_price,
                     "CurrencyIso" => "SAR",
                 ];
 
