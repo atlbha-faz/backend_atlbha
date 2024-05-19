@@ -673,6 +673,6 @@ class StoreController extends BaseController
 
     public function getStoreToken()
     {
-        return Storage::get('tokens/swapToken.txt');
+        return ['token' => Storage::get('tokens/swapToken.txt')];
     }
 }
