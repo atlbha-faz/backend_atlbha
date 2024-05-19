@@ -159,8 +159,9 @@ Route::group([
 });
 // ,AdminCheckPermission::class
 // change status routers
-Route::get('store_token/{id}',[\App\Http\Controllers\api\adminDashboard\StoreController::class,'storeToken']);
-Route::get('store_token',[\App\Http\Controllers\api\adminDashboard\StoreController::class,'getStoreToken']);
+Route::get('store_token/{id}',[\App\Http\Controllers\api\adminDashboard\StoreDataController::class,'storeToken']);
+Route::get('store_token',[\App\Http\Controllers\api\adminDashboard\StoreDataController::class,'getStoreToken']);
+
 Route::middleware([AdminUser::class])->group(function () {
     Route::prefix('/Admin')->group(function () {
 
