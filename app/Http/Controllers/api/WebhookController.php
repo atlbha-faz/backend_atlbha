@@ -80,7 +80,7 @@ class WebhookController extends BaseController
                 switch ($request->input('Data.TransactionStatus')) {
                     case "SUCCESS":
                         $order->update([
-                            'payment_status' => "Paid",
+                            'payment_status' => "paid",
                             'is_archive'=>0
                         ]);
                         $payment->update([
