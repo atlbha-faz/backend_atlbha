@@ -30,7 +30,7 @@ class StoreDataController extends BaseController
 
     public function getStoreToken()
     {
-        $token = Storage::get('tokens/swapToken.txt');
+        $token = file_get_contents(Storage::get('tokens/swapToken.txt'));
         $user = PersonalAccessToken::findToken($token)->tokenable();
 
 
