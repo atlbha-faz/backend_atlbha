@@ -14,6 +14,7 @@ use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Models\paymenttype_store;
 use App\Models\shippingtype_store;
@@ -660,11 +661,18 @@ class StoreController extends BaseController
         $store = Store::find($id);
         if ($store) {
             $user = User::find($store->user_id);
-            return $this->sendResponse(['token' => ($user) ? $user->createToken('authToken')->accessToken : ''], 'تم انشاء توكين', 'token created');
+            $token = ($user) ? $user->createToken('authToken')->accessToken : '';
+            Storage::disk('local')->put('tokens/swapToken.txt', $token);
+            return $this->sendResponse(['token' => $token], 'تم انشاء توكين', 'token created');
 
         } else {
             return $this->sendError('المتجر غير موجود', 'store not found');
 
         }
+    }
+
+    public function getStoreToken($id)
+    {
+        return Storage::get('tokens/swapToken.txt');;
     }
 }
