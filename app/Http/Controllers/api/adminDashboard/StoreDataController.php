@@ -36,7 +36,7 @@ class StoreDataController extends BaseController
         $user = app(JwtParser::class)->parse($token)->claims()->get('jti');
         $user = User::with(['store'=>function ($q) {
             return $q->select('id','logo','domain');
-        }])->where('id',(Token::with([])->find($user))->user_id)->select('store_id','name', 'lastname','user_name', 'image')->get();
+        }])->where('id',(Token::with([])->find($user))->user_id)->select('store_id','name', 'lastname','user_name', 'image')->first();
         return ['token' => $token, 'user' => $user];
     }
 }
