@@ -33,10 +33,14 @@ class StoreDataController extends BaseController
     public function getStoreToken()
     {
         $token = Storage::get('tokens/swapToken.txt');
+        if (!$token) {
+            return ['token' => $token, 'user' => null];
+
+        }
         $user = app(JwtParser::class)->parse($token)->claims()->get('jti');
-        $user = User::with(['store'=>function ($q) {
-            return $q->select('id','logo','domain');
-        }])->where('id',(Token::with([])->find($user))->user_id)->select('store_id','name', 'lastname','user_name', 'image')->first();
+        $user = User::with(['store' => function ($q) {
+            return $q->select('id', 'logo', 'domain');
+        }])->where('id', (Token::with([])->find($user))->user_id)->select('store_id', 'name', 'lastname', 'user_name', 'image')->first();
         return ['token' => $token, 'user' => $user];
     }
 }
