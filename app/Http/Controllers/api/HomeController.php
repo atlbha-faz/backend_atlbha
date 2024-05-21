@@ -75,10 +75,12 @@ class HomeController extends BaseController
             ->where('store_id', $store_id)->get()->merge($category)->concat($lastCategory);
 
         if ($categories != null) {
-            $success['category'] = CategoryResource::collection($categories);
+            $success['categories'] = CategoryResource::collection($categories);
         } else {
-            $success['category'] = array();
+            $success['categories'] = array();
         }
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم عرض التصنيفات بنجاح', 'categories showed successfully');
     }
 
 
