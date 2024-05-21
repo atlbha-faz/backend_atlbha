@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
+use App\Http\Resources\RegionrResource;
 use App\Models\Region;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 class RegionController extends Controller
 {
     /**
@@ -14,7 +17,7 @@ class RegionController extends Controller
      */
     public function index()
     {
-        $success['regions'] = RegionResource::collection(Region::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $success['regions'] = RegionrResource::collection(Region::where('is_deleted', 0)->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المناطق بنجاح', 'regions return successfully');
@@ -54,7 +57,7 @@ class RegionController extends Controller
             'country_id' => $request->country_id,
         ]);
 
-        $success['regions'] = new RegionResource($region);
+        $success['regions'] = new RegionrResource($region);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم إضافة منطقة بنجاح', 'Region Added successfully');
@@ -63,7 +66,7 @@ class RegionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\c  $c
+     * @param  \App\Models\Region  $c
      * @return \Illuminate\Http\Response
      */
     public function show(Region $region)
@@ -74,7 +77,7 @@ class RegionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\c  $c
+     * @param  \App\Models\Region  $c
      * @return \Illuminate\Http\Response
      */
     public function edit(Region $region)
@@ -86,7 +89,7 @@ class RegionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\c  $c
+     * @param  \App\Models\Region  $c
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $region)
@@ -96,7 +99,7 @@ class RegionController extends Controller
             return $this->sendError("المنطقه غير موجودة", "region is't exists");
         }
         $input = $request->all();
-        $validator = Validator::make($input, [
+        $validator = \Illuminate\Support\Facades\Validator::make($input, [
             'name' => 'required|string|max:255',
             'country_id' => 'required|exists:countries,id',
         ]);
@@ -110,7 +113,7 @@ class RegionController extends Controller
             'country_id' => $request->input('country_id'),
         ]);
 
-        $success['regions'] = new RegionResource($region);
+        $success['regions'] = new RegionrResource($region);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'region updated successfully');
@@ -127,7 +130,7 @@ class RegionController extends Controller
         } else {
             $region->update(['status' => 'active']);
         }
-        $success['regions'] = new RegionResource($region);
+        $success['regions'] = new RegionrResource($region);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة المنطقة بنجاح', 'region updated successfully');
@@ -136,7 +139,7 @@ class RegionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\c  $c
+     * @param  \App\Models\Region  $c
      * @return \Illuminate\Http\Response
      */
     public function destroy(Region $region)

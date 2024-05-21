@@ -13,6 +13,7 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\CommonQuestionResource;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\PartnerResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\website_socialmediaResource;
 use App\Models\AtlobhaContact;
