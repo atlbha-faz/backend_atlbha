@@ -893,7 +893,7 @@ class IndexStoreController extends BaseController
                         $productQuery->where('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
                     })->orwhere('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
 
-                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'created_at');
+                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id','category_id', 'created_at');
             if ($request->has('category_id')) {
                 $resentproduct->where('category_id', $request->category_id);
             }
