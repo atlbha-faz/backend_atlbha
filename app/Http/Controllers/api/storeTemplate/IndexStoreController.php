@@ -843,7 +843,7 @@ class IndexStoreController extends BaseController
                     $query->whereHas('importproduct', function ($productQuery) use ($store) {
                         $productQuery->where('store_id', $store->id)->where('status', 'active')->where('special', 'special');
                     })->orwhere('store_id', $store->id)->where('status', 'active')->where('special', 'special');
-                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'created_at');
+                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id','category_id', 'created_at');
             if ($request->has('category_id')) {
                 $specialproducts->where('category_id', $request->category_id);
             }
@@ -956,8 +956,12 @@ class IndexStoreController extends BaseController
                             $productQuery->where('store_id', $store->id)->whereIn('product_id', $import_product)->where('status', 'active');
                         })->orwhere('store_id', $store->id)->whereIn('id', $main_product)->where('status', 'active');
 
-                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'created_at')->paginate($count));
-
+                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'category_id','created_at'));
+                    if ($request->has('category_id')) {
+                        $moreSalesProducts->where('category_id', $request->category_id);
+                    }
+            
+            $moreSalesProducts =  $moreSalesProducts->paginate($count);
             $success['moreSalesProducts'] = $moreSalesProducts;
             $success['page_count'] = $moreSalesProducts->lastPage();
             $success['current_page'] = $moreSalesProducts->currentPage();
@@ -1015,8 +1019,11 @@ class IndexStoreController extends BaseController
                             $productQuery->where('store_id', $store->id)->whereIn('product_id', $ratingsimport)->where('status', 'active');
                         })->orwhere('store_id', $store->id)->whereIn('id', $arr)->where('status', 'active');
 
-                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'created_at')->paginate($count));
-
+                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id','category_id', 'created_at'));
+                    if ($request->has('category_id')) {
+                        $resentproduct->where('category_id', $request->category_id);
+                    }
+            $resentproduct =  $resentproduct->paginate($count);       
             $success['ratingsProducts'] = $resentproduct;
             $success['page_count'] = $resentproduct->lastPage();
             $success['current_page'] = $resentproduct->currentPage();
