@@ -948,7 +948,7 @@ class IndexStoreController extends BaseController
 
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-            $moreSalesProducts = ProductStoreResource::collection(Product::with(['importproduct' => function ($query) use ($store) {
+            $moreSalesProducts = Product::with(['importproduct' => function ($query) use ($store) {
                 $query->where('store_id', $store->id);
             }])->where('status', 'active')->where('is_deleted', 0)
                     ->where(function ($query) use ($store, $import_product, $main_product) {
@@ -956,13 +956,13 @@ class IndexStoreController extends BaseController
                             $productQuery->where('store_id', $store->id)->whereIn('product_id', $import_product)->where('status', 'active');
                         })->orwhere('store_id', $store->id)->whereIn('id', $main_product)->where('status', 'active');
 
-                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'category_id','created_at'));
+                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'category_id','created_at');
                     if ($request->has('category_id')) {
                         $moreSalesProducts->where('category_id', $request->category_id);
                     }
             
             $moreSalesProducts =  $moreSalesProducts->paginate($count);
-            $success['moreSalesProducts'] = $moreSalesProducts;
+            $success['moreSalesProducts'] = ProductStoreResource::collection($moreSalesProducts);
             $success['page_count'] = $moreSalesProducts->lastPage();
             $success['current_page'] = $moreSalesProducts->currentPage();
             $success['status'] = 200;
@@ -1011,7 +1011,7 @@ class IndexStoreController extends BaseController
 
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-            $resentproduct = ProductStoreResource::collection(Product::with(['importproduct' => function ($query) use ($store) {
+            $resentproduct = Product::with(['importproduct' => function ($query) use ($store) {
                 $query->where('store_id', $store->id);
             }])->where('status', 'active')->where('is_deleted', 0)
                     ->where(function ($query) use ($store, $ratingsimport, $arr) {
@@ -1019,12 +1019,12 @@ class IndexStoreController extends BaseController
                             $productQuery->where('store_id', $store->id)->whereIn('product_id', $ratingsimport)->where('status', 'active');
                         })->orwhere('store_id', $store->id)->whereIn('id', $arr)->where('status', 'active');
 
-                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id','category_id', 'created_at'));
+                    })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id','category_id', 'created_at');
                     if ($request->has('category_id')) {
                         $resentproduct->where('category_id', $request->category_id);
                     }
             $resentproduct =  $resentproduct->paginate($count);       
-            $success['ratingsProducts'] = $resentproduct;
+            $success['ratingsProducts'] = ProductStoreResource::collection($resentproduct);
             $success['page_count'] = $resentproduct->lastPage();
             $success['current_page'] = $resentproduct->currentPage();
             $success['status'] = 200;
