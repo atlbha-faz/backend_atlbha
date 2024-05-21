@@ -32,6 +32,8 @@ class HomeController extends BaseController
 
     public function categories(Request $request,$store_id)
     {
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+        $store_id = $store->id;
         $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
         $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
         $category = array();
