@@ -31,7 +31,7 @@ class HomeController extends BaseController
         return $this->sendResponse($success, 'تم عرض المنتجات بنجاح', 'Products Added successfully');
     }
 
-    public function categories(Request $request,$store_id)
+    public function categories(Request $request,$id)
     {
         $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
         $store_id = $store->id;
