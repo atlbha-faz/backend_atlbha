@@ -32,8 +32,8 @@ Route::prefix('aramex')->group(function () {
 });
 Route::group(['prefix' => 'home'], function () {
     Route::get('products', [HomeController::class, 'products']);
-    Route::get('categories', [HomeController::class, 'categories']);
-    Route::get('category/{id}/products', [HomeController::class, 'categoryProducts']);
+    Route::get('categories/{id}', [HomeController::class, 'categories']);
+    Route::get('storeproducts/{domain}', [HomeController::class, 'storeProducts']);
 });
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
