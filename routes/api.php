@@ -32,6 +32,8 @@ Route::prefix('aramex')->group(function () {
 });
 Route::group(['prefix' => 'home'], function () {
     Route::get('products', [HomeController::class, 'products']);
+    Route::get('categories', [HomeController::class, 'categories']);
+    Route::get('category/{id}/products', [HomeController::class, 'categoryProducts']);
 });
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
@@ -159,8 +161,8 @@ Route::group([
 });
 // ,AdminCheckPermission::class
 // change status routers
-Route::get('store_token/{id}',[\App\Http\Controllers\api\adminDashboard\StoreDataController::class,'storeToken']);
-Route::get('store_token',[\App\Http\Controllers\api\adminDashboard\StoreDataController::class,'getStoreToken']);
+Route::get('store_token/{id}', [\App\Http\Controllers\api\adminDashboard\StoreDataController::class, 'storeToken']);
+Route::get('store_token', [\App\Http\Controllers\api\adminDashboard\StoreDataController::class, 'getStoreToken']);
 
 Route::middleware([AdminUser::class])->group(function () {
     Route::prefix('/Admin')->group(function () {
