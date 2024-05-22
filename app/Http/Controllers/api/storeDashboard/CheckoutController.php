@@ -219,8 +219,9 @@ class CheckoutController extends BaseController
                 "CustomerName" => $customer->name,
                 "InvoiceValue" => $order->total_price, // total_price
                 "CustomerEmail" => $customer->email,
-                "CallBackUrl" => 'http://localhost:3000/Products/SouqOtlobha/successCheckout',
-                "ErrorUrl" => 'http://localhost:3000/Products/SouqOtlobha/failedCheckout',
+                "CallBackUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/successCheckout',
+                "ErrorUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/failedCheckout
+                ',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
                 "ProcessingDetails" => $processingDetailsobject,
