@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\ReturnOrder;
 use Illuminate\Http\Request;
 use App\Services\FatoorahServices;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ReturnOrderResource;
 use App\Services\ShippingComanies\OtherCompanyService;
@@ -222,7 +223,7 @@ class ReturnOrderController extends BaseController
                 try{
                 $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', json_encode($data));
                 }
-                catch(Exception $e) {
+                catch(ClientException $e) {
                     return $this->sendError("تم الارجاع مسبقا",'Message: ' .$e->getMessage());
 
                  }
