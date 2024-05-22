@@ -259,15 +259,15 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
         }
-
+else{
         // }
 
-        // $success['order'] = new OrderResource($order);
+        $success['order'] = new OrderResource($order);
 
-        // $success['status'] = 200;
+        $success['status'] = 200;
 
-        // return $this->sendResponse($success, 'تم الاستيراد بنجاح ', 'order send successfully');
-
+        return $this->sendResponse($success, 'تم ارسال بنجاح ', 'order send successfully');
+}
     }
 
     public function paymentMethods()
