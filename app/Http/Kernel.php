@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
 
+
 //        OwnCors::class,
         //wafaa commit
         // \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,

@@ -18,7 +18,7 @@ class ReturnOrderController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index($id)
+    public function index(Request $request,$id)
     {
         $return= Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
             $q->where('store_id', $id)->where('is_return', 1);
@@ -26,9 +26,14 @@ class ReturnOrderController extends BaseController
         if (is_null($return) ) {
             return $this->sendError("لا يوجد طلبات مسترجعة", "return is't exists");
         }
-        $success['ReturnOrders'] = ReturnOrderResource::collection(Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;       
+        $data=Order::with('returnOrders')->where('is_deleted', 0)->whereHas('items', function ($q) use($id) {
             $q->where('store_id', $id)->where('is_return', 1);
-        })->where('user_id', auth()->user()->id)->where('store_id', $id)->orderByDesc('id')->get());
+        })->where('user_id', auth()->user()->id)->where('store_id', $id)->orderByDesc('id');
+        $data=  $data->paginate( $count);
+        $success['ReturnOrders'] = ReturnOrderResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'ReturnOrders showed successfully');
@@ -130,8 +135,31 @@ class ReturnOrderController extends BaseController
      * @param  \App\Models\returnOrder  $returnOrder
      * @return \Illuminate\Http\Response
      */
-    public function destroy(returnOrder $returnOrder)
+    public function searchReturnOrder(Request $request,$id)
     {
-        //
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $orders = Order::with('returnOrders')->whereHas('items', function ($q) use($id) {
+            $q->where('store_id', $id)->where('is_return', 1);
+        })->where(function ($main_query) use ($query) {
+            $main_query->whereHas('items', function ($itemQuery) use ($query) {
+                $itemQuery->whereHas('product', function ($productQuery) use ($query) {
+                   $productQuery->Where('name', 'like', "%$query%");
+                });
+            })->orWhere('order_number', 'like', "%$query%");
+        })->where('is_deleted', 0)->where('store_id',$id)->where('user_id', auth()->user()->id)
+            ->orderBy('created_at', 'desc')->paginate($count);
+
+        $success['query'] = $query;
+
+        $success['total_result'] = $orders->total();
+        $success['page_count'] = $orders->lastPage();
+        $success['current_page'] = $orders->currentPage();
+        $success['ReturnOrders'] = ReturnOrderResource::collection($orders);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الطلبات المترجعة بنجاح', 'orders Information returned successfully');
+
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\ReturnOrder;
 use Illuminate\Http\Request;
 use App\Services\FatoorahServices;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ReturnOrderResource;
 use App\Services\ShippingComanies\OtherCompanyService;
@@ -206,22 +207,27 @@ class ReturnOrderController extends BaseController
         }
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
             if ($payment != null) {
-
+                $final_price=$prices-$payment->deduction;
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" => $prices,
+                    "Amount" =>  $final_price,
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $prices,
-                    "CurrencyIso" => "SA",
+                    "AmountDeductedFromSupplier" =>  $final_price,
+                    "CurrencyIso" => "SAR",
                 ];
 
                 $supplier = new FatoorahServices();
-                $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', $data);
+                try{
+                $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', json_encode($data));
+                }
+                catch(ClientException $e) {
+                    return $this->sendError("تم الارجاع مسبقا",'Message: ' .$e->getMessage());
 
-                if ($supplierCode->IsSuccess == false) {
+                 }
+                if ($supplierCode['IsSuccess'] == false) {
                     return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
                 } else {
                     $success['payment'] = $supplierCode;

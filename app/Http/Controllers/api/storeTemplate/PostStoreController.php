@@ -18,43 +18,9 @@ use Illuminate\Http\Request;
 
 class PostStoreController extends BaseController
 {
-    public function index($id)
+    public function index(Request $request,$id)
     {
-        // if ($id == 'atlbha') {
-
-        //     $success['domain'] = $id;
-        //     $success['logo'] = Homepage::where('is_deleted', 0)->where('store_id', null)->pluck('logo')->first();
-        //     $success['icon'] = Setting::where('is_deleted', 0)->pluck('icon')->first();
-
-        //     $tagarr = array();
-        //     $tags = Page::where('is_deleted', 0)->where('store_id', null)->where('postcategory_id', '!=', null)->pluck('tags')->toArray();
-        //     //    dd($tags);
-        //     foreach ($tags as $tag) {
-        //         $tagarr[] = $tag;
-        //     }
-        //     $success['tags'] = $tagarr;
-        //     $success['category'] = Category::where('is_deleted', 0)->where('store_id', null)->with('products')->has('products')->get();
-        //     $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', null)->get());
-        //     $success['posts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->get());
-        //     $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
-        //     $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', null)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
-        //     // footer
-        //     $success['storeName'] = Setting::where('is_deleted', 0)->pluck('name')->first();
-        //     $success['storeEmail'] = Setting::where('is_deleted', 0)->pluck('email')->first();
-        //     $success['storeAddress'] = Setting::where('is_deleted', 0)->pluck('address')->first();
-        //     $success['phonenumber'] = Setting::where('is_deleted', 0)->pluck('phonenumber')->first();
-        //     $success['description'] = Setting::where('is_deleted', 0)->pluck('description')->first();
-        //     $success['snapchat'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-        //     $success['facebook'] = website_socialmedia::where('is_deleted', 0)->where('name', 'facebook')->pluck('link')->first();
-        //     $success['twiter'] = website_socialmedia::where('is_deleted', 0)->where('name', 'twitter')->pluck('link')->first();
-        //     // $success['youtube'] =website_socialmedia::where('is_deleted', 0)->where('name', 'Snapchat')->pluck('link')->first();
-        //     $success['instegram'] = website_socialmedia::where('is_deleted', 0)->where('name', 'Instegram')->pluck('link')->first();
-
-        //     $success['paymentMethod'] = Paymenttype::where('is_deleted', 0)->where('status', 'active')->get();
-
-        //     return $this->sendResponse($success, 'تم ارجاع المدونة بنجاح', 'posts return successfully');
-
-        // } else {
+       
             $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
             if (!is_null($store)) {
                 $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
@@ -91,9 +57,13 @@ class PostStoreController extends BaseController
                 $success['category'] = Category::where('is_deleted', 0)->where('store_id', $id)->with('products')->has('products')->get();
                 $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->where('postcategory_id', null)->get());
                 $postIds = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
-
-                $success['posts'] = PageResource::collection(Page::whereIn('id',$postIds)->where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->orderBy('created_at', 'desc')->get());
-                $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
+                $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+                $data=Page::whereIn('id',$postIds)->where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->orderBy('created_at', 'desc');
+                $data=  $data->paginate( $count);
+                $success['posts'] = PageResource::collection($data);
+                $success['page_count'] = $data->lastPage();
+                $success['current_page'] = $data->currentPage();
+                // $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
                 $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)->whereIn('id',$postIds)->orderBy('created_at', 'desc')->take(3)->get());
                 // footer
                 $success['storeName'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('store_name')->first();
@@ -357,5 +327,49 @@ class PostStoreController extends BaseController
 
             }
         // }
+    }
+    public function searchPost(Request $request,$id)
+    {
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
+        if (!is_null($store)) {
+            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+        }
+
+        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
+            return $this->sendError("المتجر غير موجودة", "Store is't exists");
+        }
+        if ($store->maintenance != null) {
+            if ($store->maintenance->status == 'active') {
+                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
+
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+
+            }
+
+        }
+
+        $id = $store->id;
+        $searchTerm = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $pages = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $id)
+            ->where(function ($query) use ($searchTerm) {
+                $query->where('title', 'like', "%$searchTerm%")
+                    ->orWhere('page_desc', 'LIKE', "%$searchTerm%")
+                    ->orWhere('page_content', 'LIKE', "%$searchTerm%");
+
+            })->orderBy('created_at', 'desc');
+     
+        $pages = $pages->paginate($count);
+        $success['query'] = $searchTerm;
+        $success['total_result'] = $pages->total();
+        $success['page_count'] = $pages->lastPage();
+        $success['current_page'] = $pages->currentPage();
+        $success['pages'] = PageResource::collection($pages);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المقالات بنجاح', 'posts returned successfully');
     }
 }

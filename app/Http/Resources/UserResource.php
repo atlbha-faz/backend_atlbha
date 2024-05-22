@@ -35,6 +35,7 @@ class UserResource extends JsonResource
         'updated_at' => (string) $this->updated_at,
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
+        'store_id' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->id:"",
         'store_logo' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->logo:"",
         'store_domain' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->domain:"",
          'role' => New RoleResource($this->roles->first()),
