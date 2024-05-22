@@ -364,6 +364,8 @@ Auth::routes();
 
 Route::middleware([StoreUser::class])->group(function () {
     Route::prefix('/Store')->group(function () {
+// cheackout import
+        Route::post('checkoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'checkOut']);
 
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
@@ -430,8 +432,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('showImportCart', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'index']);
         Route::post('addImportCart', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'addToCart']);
         Route::get('deleteImportCart/{id}', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'delete']);
-        // cheackout import
-        Route::post('checkoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'checkOut']);
+
         Route::post('applyCoupon/{cart_id}', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'applyCoupon']);
 
         //  paymenttype import
