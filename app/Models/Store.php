@@ -207,6 +207,12 @@ class Store extends Model
         }
 
     }
+    
+    public function getLogoPureAttribute()
+    {
+        return $this->attributes['logo'];
+
+    }
 
     public function setIconAttribute($icon)
     {

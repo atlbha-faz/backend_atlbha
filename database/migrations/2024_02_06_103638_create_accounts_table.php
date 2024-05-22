@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('bankId')->nullable();
             $table->string('bankAccountHolderName')->nullable();
-            $table->integer('bankAccount')->nullable();
+            $table->bigInteger('bankAccount')->nullable();
             $table->text('iban')->nullable();
             $table->string('supplierCode')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();

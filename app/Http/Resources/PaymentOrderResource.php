@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\OrderItemsResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\OrderItemsResource;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\ShippingtypeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentOrderResource extends JsonResource
@@ -58,6 +60,7 @@ class PaymentOrderResource extends JsonResource
             'orderItem' => OrderItemsResource::collection($this->items),
             'payment_status' => $paymentstatus,
             'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
+            'paymenttype' => $this->paymentype != null ? new PaymenttypeResource($this->paymentype) : null,      
             'shipping' => $this->shippings->where('shipping_type', 'send')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'send')->first()) : null,
             'shipping_return' => $this->shippings->where('shipping_type', 'return')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'return')->first()) : null,
             'created_at' => $this->created_at,

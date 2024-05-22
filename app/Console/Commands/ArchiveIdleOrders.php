@@ -28,7 +28,8 @@ class ArchiveIdleOrders extends Command
      */
     public function handle()
     {
-        $orders =\App\Models\Order::whereNot('paymentype_id',4)->where('is_archive',0)->whereNot('payment_status','paid')->whereDate('created_at', '<=', Carbon::now()->subMinutes(30)->format('Y-m-d'))->get();
+       
+        $orders =\App\Models\Order::whereNot('paymentype_id',4)->where('is_archive',0)->whereNot('payment_status','paid')->where('created_at', '<', Carbon::now()->subMinutes(30)->toDateTimeString())->get();
         foreach($orders  as $order){
             $orders_items =\App\Models\OrderItem::where('order_id',$order->id)->get();
             foreach($orders_items  as $orders_item){

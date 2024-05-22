@@ -32,8 +32,7 @@ Route::prefix('aramex')->group(function () {
 });
 Route::group(['prefix' => 'home'], function () {
     Route::get('products', [HomeController::class, 'products']);
-    Route::get('categories', [HomeController::class, 'categories']);
-    Route::get('category/{id}/products', [HomeController::class, 'categoryProducts']);
+    Route::get('categories/{id}', [HomeController::class, 'categories']);
 });
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
@@ -76,6 +75,11 @@ Route::post('atlobhaContactAdd', [App\Http\Controllers\api\homePages\IndexEtlobh
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('indexStore/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'index']);
+    Route::get('lastPosts/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'lastPosts']);
+
+    Route::get('silders/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'silders']);
+    Route::get('banars/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'banars']);
+
     Route::get('productPage/{domain}/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'productPage']);
     Route::get('storPage/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'storPage']);
     Route::get('category/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'category']);
@@ -105,13 +109,18 @@ Route::resource('OrderAddress', App\Http\Controllers\api\storeTemplate\OrderAddr
 Route::get('show_default_address', [App\Http\Controllers\api\storeTemplate\OrderAddressController::class, 'showDefaultAddress']);
 Route::get('setDefaultAddress/{id}', [App\Http\Controllers\api\storeTemplate\OrderAddressController::class, 'setDefaultAddress']);
 Route::get('cancelOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'cancelOrder']);
+Route::get('searchOrder/{id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'searchOrder']);
 Route::get('returnOrderIndex/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'index']);
 Route::post('returnOrder', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'store']);
 Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'show']);
+Route::get('searchReturnOrder/{id}', [App\Http\Controllers\api\storeTemplate\ReturnOrderController::class, 'searchReturnOrder']);
+
+Route::get('shippingCalculation/{store_id}/{shipping_id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'shippingCalculation']);
 
 Route::get('postStore/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'index']);
 Route::get('postByCategory/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'show']);
 Route::get('postdetail/{id}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'showPost']);
+Route::get('searchPost/{domain}', [App\Http\Controllers\api\storeTemplate\PostStoreController::class, 'searchPost']);
 
 Route::group([
     'middleware' => 'auth:api',
@@ -438,6 +447,7 @@ Route::middleware([StoreUser::class])->group(function () {
         //  paymenttype import
         Route::get('paymentmethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'paymentMethods']);
         Route::get('shippingMethodsImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'shippingMethods']);
+        Route::get('shippingCalculation/{id}', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'shippingCalculation']);
 
         // page
         Route::resource('page', App\Http\Controllers\api\storeDashboard\PageController::class, ['names' => 'store.pages']);

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Helpers\Helper;
 use App\Models\Shipping;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class AramexController extends Controller
 {
@@ -20,6 +21,9 @@ class AramexController extends Controller
                     $order = Order::where('id', $order_id)->first();
                     $order->order_status = 'completed';
                     $order->save();
+                    if($order->store_id== null){
+                        Helper::orderProductShow($order->id);
+                    }
                 }
             }
         }

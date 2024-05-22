@@ -104,7 +104,6 @@ class CheckoutController extends BaseController
             $order->cod = $request->cod;
             $order->shipping_price = $cart->shipping_price;
             $order->description = $request->description;
-
             // Save the order to the database
             $order->save();
 
@@ -582,7 +581,11 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
 
         } else {
-            $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->orderByDesc('created_at')->get();
+            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;  
+            $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->orderByDesc('created_at');
+            $orders= $orders->paginate($count);
+            $success['page_count'] = $orders->lastPage();
+            $success['current_page'] = $orders->currentPage();
             $success['order'] = OrderResource::collection($orders);
             $success['status'] = 200;
 
@@ -664,8 +667,8 @@ class CheckoutController extends BaseController
                         }
 
                     }
-                    $order->is_archive = 1;
-                    $order->save();
+                    // $order->is_archive = 1;
+                    // $order->save();
                 }
             }
 
@@ -681,7 +684,31 @@ class CheckoutController extends BaseController
         }
 
     }
+    public function searchOrder(Request $request,$id)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
+        $orders = Order::with('items')->where(function ($main_query) use ($query) {
+            $main_query->whereHas('items', function ($itemQuery) use ($query) {
+                $itemQuery->whereHas('product', function ($productQuery) use ($query) {
+                   $productQuery->Where('name', 'like', "%$query%");
+                });
+            })->orWhere('order_number', 'like', "%$query%");
+        })->where('is_deleted', 0)->where('store_id',$id)->where('user_id', auth()->user()->id)
+            ->orderBy('created_at', 'desc')->paginate($count);
+
+        $success['query'] = $query;
+
+        $success['total_result'] = $orders->total();
+        $success['page_count'] = $orders->lastPage();
+        $success['current_page'] = $orders->currentPage();
+        $success['orders'] = OrderResource::collection($orders);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الطلبات  بنجاح', 'orders Information returned successfully');
+
+    }
     private function restCart($id)
     {
         $cart = Cart::with([])->where('id', $id)->first();
@@ -695,6 +722,59 @@ class CheckoutController extends BaseController
             'coupon_id' => null,
         ]);
         return $cart->refresh();
+    }
+    public function shippingCalculation($store_id,$shipping_id)
+    {
+        $store_domain = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('id')->first();
+        if ($store_domain == null) {
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
+
+        } else {
+            $cart = Cart::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->first();
+
+        if ($cart == null) {
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, ' سلة فارغة', 'cart is not exist');
+
+        }
+        $shipping_object = shippingtype_store::where('shippingtype_id', $shipping_id)->where('store_id', $store_domain)->first();
+        if ($shipping_object != null) {
+            $shipping_price = $shipping_object->price;
+            if ($cart->weight > 15) {
+                $extra_shipping_price = ($cart->weight - 15) * $shipping_object->overprice;
+            } else {
+                $extra_shipping_price = 0;
+            }
+        } else {
+            $shipping_price = 30;
+            if ($cart->weight > 15) {
+                $extra_shipping_price = ($cart->weight - 15) * 3;
+            } else {
+                $extra_shipping_price = 0;
+            }
+        }
+        if ($cart->free_shipping == 1) {
+            $cart->update([
+                'shipping_price' => $cart->shipping_price,
+                'overweight_price' => 0,
+            ]);
+        } else {
+            $cart->update([
+                'shipping_price' => $shipping_price,
+                'total' => (($cart->total - $cart->shipping_price) - $cart->overweight_price) + $shipping_price + $extra_shipping_price,
+                'overweight_price' => $extra_shipping_price,
+            ]);
+
+        }
+
+        $success['cart'] = new CartResource($cart);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع السلة بنجاح', 'cart return successfully');
+    }
     }
 
 }

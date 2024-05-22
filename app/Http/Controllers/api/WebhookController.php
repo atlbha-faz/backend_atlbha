@@ -80,7 +80,7 @@ class WebhookController extends BaseController
                 switch ($request->input('Data.TransactionStatus')) {
                     case "SUCCESS":
                         $order->update([
-                            'payment_status' => "Paid",
+                            'payment_status' => "paid",
                         ]);
                         $payment->update([
                             'paymentCardID' => $request->input('Data.PaymentId'),
@@ -109,11 +109,13 @@ class WebhookController extends BaseController
                     case "APPROVED":
                         $account->update([
                             'status' => "APPROVED",
+                            'comment'=>null
                         ]);
                         break;
                     case "Active":
                         $account->update([
                             'status' => "APPROVED",
+                            'comment'=>null
                         ]);
                         break;
                     case "REJECTED":
