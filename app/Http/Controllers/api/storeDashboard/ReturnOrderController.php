@@ -219,8 +219,13 @@ class ReturnOrderController extends BaseController
                 ];
 
                 $supplier = new FatoorahServices();
+                try{
                 $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', json_encode($data));
+                }
+                catch(Exception $e) {
+                    return $this->sendError("تم الارجاع مسبقا",'Message: ' .$e->getMessage());
 
+                 }
                 if ($supplierCode['IsSuccess'] == false) {
                     return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
                 } else {
