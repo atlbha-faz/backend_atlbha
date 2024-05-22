@@ -109,11 +109,13 @@ class WebhookController extends BaseController
                     case "APPROVED":
                         $account->update([
                             'status' => "APPROVED",
+                            'comment'=>null
                         ]);
                         break;
                     case "Active":
                         $account->update([
                             'status' => "APPROVED",
+                            'comment'=>null
                         ]);
                         break;
                     case "REJECTED":
