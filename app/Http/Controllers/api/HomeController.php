@@ -36,6 +36,7 @@ class HomeController extends BaseController
     {
         $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
         $store_id = $store->id;
+        /////////////////////////////////////////
         $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
         $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
         $category = array();
@@ -50,8 +51,8 @@ class HomeController extends BaseController
         }
         ////////////////////////////////////////////////////////////////////
         $originalcategory = array();
-        $originalcategory1 = array();
-        $originalcategory2 = array();
+        $original_category_first = array();
+        $original_category_second = array();
         $originalProdutcts = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->get();
         foreach ($originalProdutcts as $originalProdutct) {
             $mainCategory = Category::with(['subcategory' => function ($query) use ($originalProdutct) {
@@ -60,19 +61,19 @@ class HomeController extends BaseController
             )->where('store_id', null)->where('status', 'active')->first();
             if ($mainCategory !== null) {
                 if (!empty($originalProdutct->subcategory()->pluck('id')->toArray())) {
-                    $originalcategory1 = array_merge($originalcategory1, $originalProdutct->subcategory()->pluck('id')->toArray());
+                    $original_category_first = array_merge($original_category_first, $originalProdutct->subcategory()->pluck('id')->toArray());
                 }
 
-                $originalcategory2[] = $mainCategory->id;
+                $original_category_second[] = $mainCategory->id;
 
             }
         }
-        $originalcategory1 = array_unique($originalcategory1);
-        $originalcategory2 = array_unique($originalcategory2);
+        $original_category_first = array_unique($original_category_first);
+        $original_category_second = array_unique($original_category_second);
 
-        $lastCategory = Category::with(['subcategory' => function ($query) use ($originalcategory1) {
-            $query->whereIn('id', $originalcategory1);
-        }])->where('is_deleted', 0)->where('id', $originalcategory2
+        $lastCategory = Category::with(['subcategory' => function ($query) use ($original_category_first) {
+            $query->whereIn('id', $original_category_first);
+        }])->where('is_deleted', 0)->where('id', $original_category_second
         )->where('store_id', null)->where('status', 'active')->get();
 
         $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
