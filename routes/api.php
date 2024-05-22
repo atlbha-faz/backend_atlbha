@@ -33,7 +33,6 @@ Route::prefix('aramex')->group(function () {
 Route::group(['prefix' => 'home'], function () {
     Route::get('products', [HomeController::class, 'products']);
     Route::get('categories/{id}', [HomeController::class, 'categories']);
-    Route::get('storeproducts/{domain}', [HomeController::class, 'storeProducts']);
 });
 //  test sms
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
@@ -76,6 +75,11 @@ Route::post('atlobhaContactAdd', [App\Http\Controllers\api\homePages\IndexEtlobh
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
     Route::get('indexStore/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'index']);
+    Route::get('lastPosts/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'lastPosts']);
+
+    Route::get('silders/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'silders']);
+    Route::get('banars/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'banars']);
+
     Route::get('productPage/{domain}/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'productPage']);
     Route::get('storPage/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'storPage']);
     Route::get('category/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'category']);

@@ -1032,5 +1032,61 @@ class IndexStoreController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات  الاكثر تقييما بنجاح', 'ratingsProducts show successfully');
     }
+    public function lastPosts(Request $request, $id)
+    {
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+        $posts = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
+
+        $success['lastPosts'] = PageResource::collection(Page::with(['store' => function ($query) {
+            $query->select('id');
+        }, 'user' => function ($query) {
+            $query->select('id');
+        }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->whereIn('id', $posts)->orderBy('created_at', 'desc')->take(6)->get());
+
+        return $this->sendResponse($success, 'تم ارجاع المقالات بنجاح', 'posts show successfully');
+    }
+    public function silders(Request $request, $id){
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+        $store_id=$store->id;
+        $sliders = array();
+        $s1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
+        if (!is_null($s1)) {
+            $sliders[] = $s1;
+        }
+        $s2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus2', 'active')->pluck('slider2')->first();
+        if (!is_null($s2)) {
+            $sliders[] = $s2;
+        }
+        $s3 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus3', 'active')->pluck('slider3')->first();
+        if (!is_null($s3)) {
+            $sliders[] = $s3;
+        }
+        $success['sliders'] = $sliders;
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم ارجاع السيالدر بنجاح', 'sliders show successfully');
+
+    }
+    public function banars(Request $request, $id){
+        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+        $store_id=$store->id;
+        $banars = array();
+            $b1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus1', 'active')->pluck('banar1')->first();
+            if (!is_null($b1)) {
+                $banars[] = $b1;
+            }
+            $b2 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus2', 'active')->pluck('banar2')->first();
+            if (!is_null($b2)) {
+                $banars[] = $b2;
+            }
+            $b3 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus3', 'active')->pluck('banar3')->first();
+            if (!is_null($b3)) {
+                $banars[] = $b3;
+            }
+        $success['banars'] = $banars;
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم ارجاع البانرات بنجاح', 'banars show successfully');
+
+    }
+
 
 }
