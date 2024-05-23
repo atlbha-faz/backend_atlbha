@@ -24,16 +24,21 @@ class CouponController extends BaseController
      */
     public function index(Request $request)
     {
-        if ($request->has('page')) {
-
-            $coupons = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(5));
-            $success['page_count'] = $coupons->lastPage();
-            $pageNumber = request()->query('page', 1);
-            $success['current_page'] = $coupons->currentPage();
-            $success['coupons'] = $coupons;
-        } else {
-            $success['coupons'] = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data= Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at');
+        if ($request->has('status')) {
+            $data->where('status', $request->status);
         }
+        if ($request->has('discount_type')) {
+            $data->where('discount_type', $request->discount_type);
+        }
+        $data=$data->paginate($count);
+        $coupons =CouponResource::collection($data);
+        $success['page_count'] = $coupons->lastPage();
+        $pageNumber = request()->query('page', 1);
+        $success['current_page'] = $coupons->currentPage();
+        $success['coupons'] = $coupons;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الكوبونات بنجاح', 'coupons return successfully');
@@ -158,6 +163,9 @@ class CouponController extends BaseController
 
         if (is_null($coupon) || $coupon->is_deleted != 0) {
             return $this->sendError("الكوبون غير موجودة", "coupon is't exists");
+        }
+        if ($coupon->status == "expired") {
+            return $this->sendError(" الكوبون منتهي لاعاده التفعيل قم بتعديل تاريخ الانتهاء", "coupon is expired");
         }
         if ($coupon->status === 'active') {
             $coupon->update(['status' => 'not_active']);
@@ -284,7 +292,7 @@ class CouponController extends BaseController
 
         return $this->sendResponse($success, 'تم حذف الكوبون بنجاح', 'coupon deleted successfully');
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
 
@@ -321,13 +329,15 @@ class CouponController extends BaseController
             return $this->sendResponse($success, 'الكوبون غير صحيح', 'coupon does not exit');
         }
     }
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $coupons = Coupon::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
         if (count($coupons) > 0) {
             foreach ($coupons as $coupon) {
-
+                if ($coupon->status == "expired") {
+                    return $this->sendError(" الكوبون منتهي لاعاده التفعيل قم بتعديل تاريخ الانتهاء", "coupon is expired");
+                }
                 if ($coupon->status === 'active') {
                     $coupon->update(['status' => 'not_active']);
                 } else {
@@ -383,6 +393,25 @@ class CouponController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'الكوبون غير صحيح', 'coupon does not exit');
         }
+    }
+    public function searchCouponName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $coupons = Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->where('code', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $coupons->total();
+        $success['page_count'] = $coupons->lastPage();
+        $success['current_page'] = $coupons->currentPage();
+        $success['coupons'] = CouponResource::collection($coupons);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الكوبونات بنجاح', 'coupons Information returned successfully');
+
     }
 
 }

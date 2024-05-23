@@ -48,7 +48,7 @@ class ExplainVideosController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    
+
     public function store(Request $request)
     {
 
@@ -57,36 +57,34 @@ class ExplainVideosController extends BaseController
             'title' => 'required|string|max:255',
             'video' => 'required|string',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
-        
 
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-        
+
         if (isset($request->video)) {
             preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $request->video, $matches);
 
             if (isset($matches[1])) {
                 $videoId = $matches[1];
 
-            $explainvideos = new ExplainVideos([
-                'title' => $request->title,
-                'video' => $request->video,
-                'thumbnail' => $request->thumbnail,
-                'user_id' => auth()->user()->id,
+                $explainvideos = new ExplainVideos([
+                    'title' => $request->title,
+                    'video' => $request->video,
+                    'thumbnail' => $request->thumbnail,
+                    'user_id' => auth()->user()->id,
 
-            ]);
-            $videodata = $explainvideos->get_youtube_title($videoId);
-            $explainvideos->duration = $videodata[0]['duration'];
-            $explainvideos->save();
-        }
-        else{
-         return $this->sendResponse($success, 'قم بنسخ الامبداد الخاص بالفيديو من اليوتيوب', 'copy embeded video from youtube');
+                ]);
+                $videodata = $explainvideos->get_youtube_title($videoId);
+                $explainvideos->duration = $videodata[0]['duration'];
+                $explainvideos->save();
+            } else {
+                return $this->sendResponse($success, 'قم بنسخ الامبداد الخاص بالفيديو من اليوتيوب', 'copy embeded video from youtube');
 
+            }
         }
-    }
-  
+
         $success['explainvideos'] = new ExplainVideoResource($explainvideos);
         $success['status'] = 200;
 
@@ -142,7 +140,7 @@ class ExplainVideosController extends BaseController
             'title' => 'required|string|max:255',
             'video' => 'nullable|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
-       
+
         ]);
         if ($validator->fails()) {
             # code...
@@ -158,14 +156,14 @@ class ExplainVideosController extends BaseController
             $explainvideos = $explainVideosoObject->update([
                 'title' => $request->input('title'),
                 'video' => $request->input('video'),
-    
+
                 'thumbnail' => $request->thumbnail,
             ]);
 
             $videodata = $explainVideosoObject->get_youtube_title($videoId);
 
             if (!is_null($request->video)) {
-              
+
                 $explainvideos = $explainVideosoObject->update([
                     'duration' => $videodata[0]['duration'],
 

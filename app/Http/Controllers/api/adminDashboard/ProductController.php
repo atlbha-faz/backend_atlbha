@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\Note;
-use App\Models\User;
-use App\Models\Store;
-use App\Mail\SendMail;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Events\VerificationEvent;
-use App\Http\Resources\NoteResource;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Resources\ProductResource;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Notification;
-use App\Http\Resources\ProductAdaminResource;
-use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\ProductAdaminResource;
+use App\Http\Resources\ProductResource;
+use App\Mail\SendMail;
+use App\Models\Note;
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\User;
+use App\Notifications\verificationNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends BaseController
 {
@@ -33,14 +33,13 @@ class ProductController extends BaseController
      */
     public function index()
     {
-        {
-            $success['products'] = ProductAdaminResource::collection(Product::with(['store' => function ($query) {
-                $query->select('id', 'domain', 'store_name', 'store_email','logo','icon');
-            }, 'category'])->where('is_deleted', 0)->where('for', 'store')->where('original_id',null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'admin_special')->get());
-            $success['status'] = 200;
+        $success['products'] = ProductAdaminResource::collection(Product::with(['store' => function ($query) {
+            $query->select('id', 'domain', 'store_name', 'store_email', 'logo', 'icon');
+        }, 'category'])->where('is_deleted', 0)->where('for', 'store')->where('original_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'admin_special')->get());
+        $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
-        }
+        return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
+
     }
 
     /**
@@ -60,7 +59,6 @@ class ProductController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-
     /**
      * Display the specified resource.
      *
@@ -79,7 +77,7 @@ class ProductController extends BaseController
         return $this->sendResponse($success, 'تم عرض المنتج بنجاح', 'product showed successfully');
     }
 
-    public function specialStatusall(Request $request)
+    public function specialStatusAll(Request $request)
     {
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'store')->get();
 
@@ -122,7 +120,7 @@ class ProductController extends BaseController
 
     }
 
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'store')->get();
@@ -174,14 +172,13 @@ class ProductController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'store')->get();
@@ -228,7 +225,6 @@ class ProductController extends BaseController
         Notification::send($user, new verificationNotification($data));
         event(new VerificationEvent($data));
         Mail::to($user->email)->send(new SendMail($data));
-
 
         $success['notes'] = new NoteResource($note);
         $success['status'] = 200;

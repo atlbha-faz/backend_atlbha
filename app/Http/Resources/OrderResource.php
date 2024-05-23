@@ -20,30 +20,28 @@ class OrderResource extends JsonResource
         $billingAddress = \App\Models\OrderOrderAddress::where('order_id', $this->id)->where('type', 'billing')->value('order_address_id');
 
         if ($this->order_status == null || $this->order_status == 'new') {
-            $status = 'جديد';
-        } elseif ($this->order_status == 'completed') {
-            $status = 'تم الشحن';
+            $status =  __('message.new');
+               } elseif ($this->order_status == 'completed') {
+            $status = __('message.completed');
         } elseif ($this->order_status == 'not_completed') {
-            $status = 'غير مكتمل';
+            $status = __('message.not_completed');
         } elseif ($this->order_status == 'delivery_in_progress') {
-            $status = 'قيد التجهيز';
+            $status = __('message.delivery_in_progress');
         } elseif ($this->order_status == 'ready') {
-            $status = 'قيد التجهيز';
+            $status = __('message.ready');
         } elseif ($this->order_status == 'canceled') {
-            $status = 'الغاء الشحنة';
+            $status = __('message.canceled');
         }
-        elseif ($this->order_status == 'refund') {
-            $status = 'مسترجع';
-        }
+     
 
 
         if ($this->payment_status == null || $this->payment_status == 'pending') {
-            $paymentstatus = 'لم يتم الدفع';
+            $paymentstatus = __('message.paymentpending');
         }
         elseif ($this->payment_status == 'paid') {
-            $paymentstatus = 'تم الدفع';
+            $paymentstatus = __('message.paid');
         } elseif ($this->payment_status == 'failed') {
-            $paymentstatus= 'فشل الدفع';
+            $paymentstatus= __('message.failed');
         }
         if ($this->shippingtype == null) {
             $track = null;
@@ -79,7 +77,7 @@ class OrderResource extends JsonResource
             'quantity' => $this->quantity,
             'weight' => $this->weight,
             'overweight' => $this->weight > 15 ? ($this->weight - 15) : 0,
-            'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,
+            'overweight_price' => $this->weight > 15 ? round($this->overweight_price, 2) : 0,
             'tax' => round($this->tax, 2),
             'shipping_price' => $this->shipping_price,
             'subtotal' => round($this->subtotal, 2),
@@ -93,8 +91,11 @@ class OrderResource extends JsonResource
 
             'OrderAddress' => $orderAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $orderAddress)->first()) : null,
             //   'billingAddress' => $billingAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $billingAddress)->first()):null,
-            'shipping' => $this->shipping != null ? new shippingResource($this->shipping) : null,
-            'paymenttypes' => $this->payment != null ? new PaymentResource($this->payment) : null,
+            'shipping' => $this->shippings->where('shipping_type','send')->first() != null ? new shippingResource($this->shippings->where('shipping_type','send')->first()) : null,
+            
+            'shipping_return' => $this->shippings->where('shipping_type','return')->first() != null ? new shippingResource($this->shippings->where('shipping_type','return')->first()) : null,
+
+            'paymenttypes' => $this->paymentype != null ? new PaymenttypeResource($this->paymentype) : null,      
             'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
             'trackingLink' => $track,
             'cod' => $this->cod,

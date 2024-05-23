@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('seo_link')->nullable();
             $table->longText('seo_desc')->nullable();
             $table->longText('page_desc')->nullable();
-            $table->text('tags');
+            $table->text('tags')->nullable();
             $table->string('image')->nullable();
-            $table->text('altImage')->nullable();
+            $table->string('altImage')->nullable();
             $table->integer('default_page')->nullable()->default(0);
             $table->unsignedBigInteger('postcategory_id')->nullable();
             $table->foreign('postcategory_id')->references('id')->on('postcategories')->onDelete('cascade');

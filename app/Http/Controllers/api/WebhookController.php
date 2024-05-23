@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Models\MyfatoorahLog;
+use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Models\MyfatoorahLog;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebhookController extends BaseController
 {
@@ -41,55 +42,50 @@ class WebhookController extends BaseController
         //5- Encode the result from the previous point with base64.
         $hash = base64_encode($result);
 
-        
-
         //6- Compare the signature header with the encrypted hash string. If they are equal, then the request is valid and from the MyFatoorah side.
         if ($MyFatoorah_Signature === $hash) {
-           
+
             return true;
         } else {
-       
-            return false;
+
+            exit;
         }
     }
+
     public function handleWebhook(Request $request)
     {
-         
         $allData = $request->input('Data');
-        
         if ($allData != null) {
-       
 
             //get MyFatoorah-Signature from request headers
-             $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
-             
-             
+            $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
+
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
-            $secret = "bihY5Rwfn/OaLb03FKF1Rqe01D4JEyvplZlfMubj61tEjVGV5DSSgyaffVW7qnkj4krymtJYpYhKkaR+vf1u8g==";
+            $secret = env("secret");
 
             $body = $request->all();
-      
-            if (!($this->validateSignature( $body, $secret, $MyFatoorah_Signature))) {
-        
+
+            if (!($this->validateSignature($body, $secret, $MyFatoorah_Signature))) {
                 return;
             }
-              $myfatoorahLog = new MyfatoorahLog();
-        $myfatoorahLog->request =json_encode($body);
-         $myfatoorahLog->save();   
+            $myfatoorahLog = new MyfatoorahLog();
+            $myfatoorahLog->request = json_encode($body);
+            $myfatoorahLog->save();
             $event = $request->input('EventType');
-            // Log::debug('Webhook payload:', $event);
-     
+
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                 $order = Order::where('id', $payment->orderID)->first();
+                $cart = Cart::where('order_id', $payment->orderID)->first();
                 switch ($request->input('Data.TransactionStatus')) {
                     case "SUCCESS":
                         $order->update([
-                            'payment_status' => "Paid",
+                            'payment_status' => "paid",
                         ]);
                         $payment->update([
                             'paymentCardID' => $request->input('Data.PaymentId'),
                         ]);
+                        $cart->delete();
                         break;
                     case "FAILED":
                         $order->update([
@@ -113,11 +109,13 @@ class WebhookController extends BaseController
                     case "APPROVED":
                         $account->update([
                             'status' => "APPROVED",
+                            'comment'=>null
                         ]);
                         break;
                     case "Active":
                         $account->update([
                             'status' => "APPROVED",
+                            'comment'=>null
                         ]);
                         break;
                     case "REJECTED":
@@ -137,3 +135,4 @@ class WebhookController extends BaseController
     }
 
 }
+//

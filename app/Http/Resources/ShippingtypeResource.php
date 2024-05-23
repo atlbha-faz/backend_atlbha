@@ -17,21 +17,21 @@ class ShippingtypeResource extends JsonResource
 
         if (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
             if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null) {
-                $status = 'نشط';
+                $status = __('message.active');
             } else {
-                $status = 'غير نشط';
+                $status =  __('message.not_active');
             }
         } else {
             if ($this->status == null || $this->status == 'active') {
-                $status = 'نشط';
+                $status = __('message.active');
             } else {
-                $status = 'غير نشط';
+                $status =  __('message.not_active');
             }
         }
         if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'admin_employee') {
-            $price = null;
-            $time = 0;
-            $overprice=0;
+            $price =  $this->price;
+            $time = $this->time;
+            $overprice= $this->overprice;
 
         } elseif (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
             if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null) {

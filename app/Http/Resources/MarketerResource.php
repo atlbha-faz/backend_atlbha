@@ -16,14 +16,6 @@ class MarketerResource extends JsonResource
     public function toArray($request)
     {
         
-        
-       if($this->user->status ==null || $this->user->status == 'active'){
-            $status = 'نشط';
-        }else{
-            $status = 'غير نشط';
-        }
-        
-        
         // return parent::toArray($request);
           return [
             'id' =>$this->id,
@@ -37,7 +29,7 @@ class MarketerResource extends JsonResource
         //'password' => $this->password,
         'phonenumber' => $this->user->phonenumber,
         'image' =>$this->user->image,
-        'status' => $status,
+        'status' => $this->user->status == null || $this->user->status == 'active' ? __('message.active'):__('message.not_active'),
         'is_deleted' => $this->user->is_deleted!==null ? $this->user->is_deleted:0,
         'country' => New CountryResource($this->user->country),
         'city' => New CityResource($this->user->city),

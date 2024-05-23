@@ -177,7 +177,7 @@ class CityController extends BaseController
          return $this->sendResponse($success,'تم حذف المدينة بنجاح','city deleted successfully');
     }
 
-      public function deleteall(Request $request)
+      public function deleteAll(Request $request)
     {
 
             $citys =city::whereIn('id',$request->id)->where('is_deleted',0)->get();

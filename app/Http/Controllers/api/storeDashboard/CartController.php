@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -34,20 +35,15 @@ class CartController extends BaseController
     }
 
     public function admin(Request $request)
-    {if ($request->has('page')) {
-        $cart = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
+    {
+
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $carts = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
             $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate(8));
-        $success['page_count'] = $cart->lastPage();
-
-        $success['cart'] = $cart;
-
-    } else {
-        $success['cart'] = CartResource::collection(Cart::with(['user', 'cartDetails' => function ($query) {
-            $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->get(['id', 'user_id', 'total', 'count', 'created_at']));
-
-    }
+        }])->where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderByDesc('created_at')->select(['id', 'user_id', 'total', 'count', 'created_at'])->paginate($count));
+        $success['page_count'] = $carts->lastPage();
+        $success['current_page'] = $carts->currentPage();
+        $success['carts'] = $carts;
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
 
@@ -130,11 +126,13 @@ class CartController extends BaseController
         $carts = Cart::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->get();
 
         foreach ($carts as $cart) {
-
-            $cart->delete();
+            if (is_null($cart) || $cart->is_deleted != 0) {
+                return $this->sendError("القسم غير موجودة", "Category is't exists");
+            }
+            $cart->update(['is_deleted' => $cart->id]);
         }
         $success['status'] = 200;
-        return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
+        return $this->sendResponse($success, 'تم حذف السلة بنجاح', 'cart deleted successfully');
     }
 
     /**
@@ -207,7 +205,7 @@ class CartController extends BaseController
         //  Notification::send($user , new emailNotification($data));
         Mail::to($user->email)->send(new SendOfferCart($data));
 
-        $success = new CartResource($cart);
+        $success['offer_cart'] = new CartResource($cart);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم إرسال العرض بنجاح', 'Offer Cart Send successfully');
 
@@ -252,6 +250,27 @@ class CartController extends BaseController
     public function update(Request $request, Cart $cart)
     {
         //
+    }
+    public function searchCartName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $carts = Cart::whereHas('user', function ($userQuery) use ($query) {
+            $userQuery->where('name', 'like', "%$query%");
+        })->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->whereNot('count', 0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $carts->total();
+        $success['page_count'] = $carts->lastPage();
+        $success['current_page'] = $carts->currentPage();
+        $success['carts'] = CartResource::collection($carts);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع السلات المتروكة بنجاح', 'carts Information returned successfully');
+
     }
 
     /**

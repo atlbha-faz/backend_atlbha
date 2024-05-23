@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('cover');
             $table->text("tags")->nullable();
             $table->decimal('discount_price', 10, 2)->nullable();
-            $table->string('SEOdescription')->nullable();
+            $table->json('SEOdescription')->nullable();
             $table->longText('robot_link')->nullable();
             $table->longText('google_analytics')->nullable();
             $table->decimal('weight', 10, 2)->default(0.5)->nullable();

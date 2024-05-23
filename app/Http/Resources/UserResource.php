@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -14,12 +15,8 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->status ==null || $this->status == 'active'){
-            $status = 'نشط';
-        }else{
-            $status = 'غير نشط';
-        }
         
+
         return [
         'id' =>$this->id,
         'user_id' =>$this->user_id,
@@ -32,12 +29,15 @@ class UserResource extends JsonResource
         //'password' => $this->password,
         'phonenumber' => $this->phonenumber,
         'image' =>$this->image,
-        'status' => $status,
+        'status' => $this->status == null || $this->status == 'active' ? __('message.active'):__('message.not_active'),
         'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
         'created_at' => (string) $this->created_at,
         'updated_at' => (string) $this->updated_at,
         'country' => New CountryResource($this->country),
         'city' => New CityResource($this->city),
+        'store_id' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->id:"",
+        'store_logo' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->logo:"",
+        'store_domain' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->domain:"",
          'role' => New RoleResource($this->roles->first()),
         ];
     }

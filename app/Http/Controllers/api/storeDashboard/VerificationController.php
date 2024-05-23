@@ -22,7 +22,7 @@ class VerificationController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function verification_show()
+    public function verificationShow()
     {
 
         $success['stores'] = StoreResource::collection(Store::with(['categories' => function ($query) {
@@ -46,7 +46,7 @@ class VerificationController extends BaseController
         return $this->sendResponse($success, 'تم عرض بيانات النوثيق بنجاح', 'verifiction shown successfully');
     }
 
-    public function verification_update(Request $request)
+    public function verificationUpdate(Request $request)
     {
         $store = Store::with(['categories' => function ($query) {
             $query->select('name');
@@ -64,7 +64,7 @@ class VerificationController extends BaseController
             'owner_name' => 'required|string|max:255',
             'commercial_name' => 'required_if:verification_type,commercialregister',
             'verification_code' => 'required',
-     
+
         ]);
         if ($validator->fails()) {
             # code...
@@ -103,7 +103,7 @@ class VerificationController extends BaseController
         $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id', [1, 2])->get();
 
         $data = [
-            'message' => ' https://admin.atlbha.com/verification  '
+            'message' => ' https://admin.atlbha.sa/verification  '
             . $store->owner_name . ' طلب توثيق من ',
             'store_id' => $store->id,
             'user_id' => auth()->user()->id,
@@ -122,7 +122,7 @@ class VerificationController extends BaseController
             Mail::to($user->email)->send(new SendMail($data));
         }
         event(new VerificationEvent($data));
-        
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل الاعدادات بنجاح', 'registration_status update successfully');

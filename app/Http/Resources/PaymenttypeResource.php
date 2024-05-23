@@ -16,15 +16,15 @@ class PaymenttypeResource extends JsonResource
     {
         if(auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee'){
               if($this->stores()->where('store_id',auth()->user()->store_id )->first() != null){
-            $status = 'نشط';
+            $status = __('message.active');
         }else{
-            $status = 'غير نشط';
+            $status = __('message.not_active');
         }
         }else{
               if($this->status ==null || $this->status == 'active'){
-            $status = 'نشط';
+            $status =__('message.active');
         }else{
-            $status = 'غير نشط';
+            $status =  __('message.not_active');
         }
         }
         

@@ -91,7 +91,7 @@ class PageController extends BaseController
             'user_id' => auth()->user()->id,
             'status' => 'not_active',
         ]);
-    
+
         if ($request->pageCategory) {
             $page->page_categories()->attach($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
@@ -122,7 +122,7 @@ class PageController extends BaseController
             'altImage' => 'nullable',
             'pageCategory' => ['required', 'array'],
             'pageCategory.*' => 'required',
- 
+
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -232,7 +232,7 @@ class PageController extends BaseController
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
-   
+
 
         ]);
         if ($validator2->fails()) {
@@ -245,10 +245,10 @@ class PageController extends BaseController
             'seo_title' => $request->input('seo_title'),
             'seo_link' => $request->input('seo_link'),
             'seo_desc' => $request->input('seo_desc'),
-            'tags' => $request->input('tags'),
+            'tags' => $request->tags,
 
         ]);
-      
+
         if ($request->pageCategory) {
             $page->page_categories()->sync($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
@@ -314,7 +314,7 @@ class PageController extends BaseController
         return $this->sendResponse($success, 'تم تعديل حالة الصفحة بنجاح', 'page updated successfully');
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $pages = Page::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', null)->get();
@@ -333,7 +333,7 @@ class PageController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
     }
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $pages = Page::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', null)->get();

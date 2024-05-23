@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\Controller;
 use App\Models\Partner;
 use Illuminate\Http\Request;
 

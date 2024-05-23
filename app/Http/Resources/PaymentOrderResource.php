@@ -2,6 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
+use App\Http\Resources\OrderItemsResource;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\ShippingtypeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PaymentOrderResource extends JsonResource
@@ -14,48 +18,52 @@ class PaymentOrderResource extends JsonResource
      */
     public function toArray($request)
     {
+        $orderAddress = \App\Models\OrderOrderAddress::where('order_id', $this->id)->where('type', 'shipping')->value('order_address_id');
+        $billingAddress = \App\Models\OrderOrderAddress::where('order_id', $this->id)->where('type', 'billing')->value('order_address_id');
         if ($this->payment_status == null || $this->payment_status == 'pending') {
-            $paymentstatus = 'لم يتم الدفع';
-        }
-        elseif ($this->payment_status == 'paid') {
-            $paymentstatus = 'تم الدفع';
+            $paymentstatus = __('message.paymentpending');
+        } elseif ($this->payment_status == 'paid') {
+            $paymentstatus = __('message.paid');
         } elseif ($this->payment_status == 'failed') {
-            $paymentstatus= 'فشل الدفع';
+            $paymentstatus = __('message.failed');
         }
 
         if ($this->order_status == null || $this->order_status == 'new') {
-            $status = 'جديد';
+            $status = __('message.new');
         } elseif ($this->order_status == 'completed') {
-            $status = 'تم الشحن';
+            $status = __('message.completed');
         } elseif ($this->order_status == 'not_completed') {
-            $status = 'غير مكتمل';
+            $status = __('message.not_completed');
         } elseif ($this->order_status == 'delivery_in_progress') {
-            $status = 'قيد التجهيز';
+            $status = __('message.delivery_in_progress');
         } elseif ($this->order_status == 'ready') {
-            $status = 'قيد التجهيز';
+            $status = __('message.ready');
         } elseif ($this->order_status == 'canceled') {
-            $status = 'الغاء الشحنة';
-        }
-        elseif ($this->order_status == 'refund') {
-            $status = 'مسترجع';
+            $status = __('message.canceled');
         }
         return [
-        'id' => $this->id,
-        'order_number' => $this->order_number,
-        'user' => new UserResource($this->user),
-        'totalCount' => $this->totalCount,
-        'quantity' => $this->quantity,
-        'weight' => $this->weight,
-        'overweight' => $this->weight > 15 ? ($this->weight - 15) : 0,
-        'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,
-        'tax' => round($this->tax, 2),
-        'shipping_price' => $this->shipping_price,
-        'subtotal' => round($this->subtotal, 2),
-        'total_price' => round($this->total_price, 2),
-        'discount' => $this->discount != null ?-($this->discount) : 0,
-        'status' => $status,
-        'payment_status' => $paymentstatus,
-        'created_at' => $this->created_at,
+            'id' => $this->id,
+            'order_number' => $this->order_number,
+            'user' => new UserResource($this->user),
+            'totalCount' => $this->totalCount,
+            'quantity' => $this->quantity,
+            'weight' => $this->weight,
+            'overweight' => $this->weight > 15 ? ($this->weight - 15) : 0,
+            'overweight_price' => $this->weight > 15 ? round(($this->weight - 15) * 3, 2) : 0,
+            'tax' => round($this->tax, 2),
+            'shipping_price' => $this->shipping_price,
+            'subtotal' => round($this->subtotal, 2),
+            'total_price' => round($this->total_price, 2),
+            'discount' => $this->discount != null ? -($this->discount) : 0,
+            'status' => $status,
+            'OrderAddress' => $orderAddress != null ? new OrderAddressResource(\App\Models\OrderAddress::where('id', $orderAddress)->first()) : null,
+            'orderItem' => OrderItemsResource::collection($this->items),
+            'payment_status' => $paymentstatus,
+            'shippingtypes' => $this->shippingtype != null ? new ShippingtypeResource($this->shippingtype) : null,
+            'paymenttype' => $this->paymentype != null ? new PaymenttypeResource($this->paymentype) : null,      
+            'shipping' => $this->shippings->where('shipping_type', 'send')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'send')->first()) : null,
+            'shipping_return' => $this->shippings->where('shipping_type', 'return')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'return')->first()) : null,
+            'created_at' => $this->created_at,
         ];
     }
 }

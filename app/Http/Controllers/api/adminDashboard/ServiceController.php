@@ -79,7 +79,7 @@ class ServiceController extends BaseController
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-   
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -136,7 +136,7 @@ class ServiceController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $services = Service::whereIn('id', $request->id)->where('is_deleted', 0)->get();

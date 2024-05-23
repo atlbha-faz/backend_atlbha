@@ -28,8 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('roles', function (Blueprint $table) {
-            $table->unsignedBigInteger('store_id')->nullable();
-            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+           $table->dropColumn('store_id');
         });
     }
 };

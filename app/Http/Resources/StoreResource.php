@@ -35,15 +35,15 @@ class StoreResource extends JsonResource
         }
 
         if ($this->status == null || $this->status == 'active') {
-            $status = 'نشط';
+            $status = __('message.active');
         } else {
-            $status = 'غير نشط';
+            $status =  __('message.not_active');
         }
 
         if ($this->special == null || $this->special == 'special') {
-            $special = 'مميز';
+            $special =  __('message.special');
         } else {
-            $special = 'غير مميز';
+            $special = __('message.not_special');
         }
 
         if ($this->working_status == 'not_active') {
@@ -101,6 +101,8 @@ class StoreResource extends JsonResource
             'twiter' => $this->twiter,
             'youtube' => $this->youtube,
             'instegram' => $this->instegram,
+            'tiktok' => $this->tiktok,
+            'jaco' => $this->jaco,
             'logo' => $this->logo,
             'entity_type' => $this->entity_type,
             'user' => new UserResource($this->user),

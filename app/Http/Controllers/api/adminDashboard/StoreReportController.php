@@ -100,7 +100,7 @@ class StoreReportController extends BaseController
         } else {
             $success['average_of_services'] = 0;
         }
-// احمالي المتاجر خلال 6 شهور
+     // احمالي المتاجر خلال 6 شهور
         if (is_null($request->startDate1) || is_null($request->endDate1)) {
             $sum = 0;
             $p = Package::where('is_deleted', 0)->count();

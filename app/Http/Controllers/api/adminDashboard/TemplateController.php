@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\TemplateResource;
 use App\Models\Template;
 use Illuminate\Http\Request;
-use App\Http\Resources\TemplateResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class TemplateController extends BaseController
 {
-     
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -23,10 +23,10 @@ class TemplateController extends BaseController
      */
     public function index()
     {
-        $success['templates']=TemplateResource::collection(Template::where('is_deleted',0)->get());
-        $success['status']= 200;
+        $success['templates'] = TemplateResource::collection(Template::where('is_deleted', 0)->get());
+        $success['status'] = 200;
 
-         return $this->sendResponse($success,'تم ارجاع جميع القوالب بنجاح','templates return successfully');
+        return $this->sendResponse($success, 'تم ارجاع جميع القوالب بنجاح', 'templates return successfully');
     }
 
     /**
@@ -46,51 +46,44 @@ class TemplateController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-   {
+    {
 
-        if($request->parent_id == null)
-        {
+        if ($request->parent_id == null) {
 
             $input = $request->all();
-            $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255',
+            $validator = Validator::make($input, [
+                'name' => 'required|string|max:255',
 
             ]);
-            if ($validator->fails())
-            {
-                return $this->sendError(null,$validator->errors());
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
             }
 
-
-
-            $template =Template::create([
+            $template = Template::create([
                 'name' => $request->name,
-                'parent_id'=>$request->parent_id,
-              ]);
+                'parent_id' => $request->parent_id,
+            ]);
+        } else {
+
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'name' => 'required|string|max:255',
+
+                'parent_id' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError(null, $validator->errors());
+            }
+            $template = Template::create([
+                'name' => $request->name,
+                'parent_id' => $request->parent_id,
+            ]);
+
         }
-        else{
+        $success['templates'] = new TemplateResource($template);
+        $success['status'] = 200;
 
-            $input = $request->all();
-            $validator =  Validator::make($input ,[
-                'name'=>'required|string|max:255',
-
-                'parent_id'=>'required'
-            ]);
-            if ($validator->fails())
-            {
-                return $this->sendError(null,$validator->errors());
-            }
-            $template =Template::create([
-                'name' => $request->name,
-                'parent_id'=>$request->parent_id,
-              ]);
-
-
-    }
-    $success['templates']=New TemplateResource($template);
-    $success['status']= 200;
-
-     return $this->sendResponse($success,'تم إضافة قالب بنجاح','Template Added successfully');
+        return $this->sendResponse($success, 'تم إضافة قالب بنجاح', 'Template Added successfully');
     }
 
     /**
@@ -101,14 +94,14 @@ class TemplateController extends BaseController
      */
     public function show($template)
     {
-        $template= Template::query()->find($template);
-        if (is_null($template) || $template->is_deleted !=0){
-               return $this->sendError("القالب غير موجود","template is't exists");
-               }
-              $success['categories']=New templateResource($template);
-              $success['status']= 200;
+        $template = Template::query()->find($template);
+        if (is_null($template) || $template->is_deleted != 0) {
+            return $this->sendError("القالب غير موجود", "template is't exists");
+        }
+        $success['categories'] = new templateResource($template);
+        $success['status'] = 200;
 
-               return $this->sendResponse($success,'تم عرض القالب بنجاح','template showed successfully');
+        return $this->sendResponse($success, 'تم عرض القالب بنجاح', 'template showed successfully');
     }
 
     /**
@@ -129,73 +122,68 @@ class TemplateController extends BaseController
      * @param  \App\Models\Template  $template
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,  $template)
-     {
-        $template =Template::query()->find($template);
-        if (is_null($template) || $template->is_deleted !=0){
-            return $this->sendError("القسم غير موجودة"," template is't exists");
-       }
-        if($request->parent_id == null){
+    public function update(Request $request, $template)
+    {
+        $template = Template::query()->find($template);
+        if (is_null($template) || $template->is_deleted != 0) {
+            return $this->sendError("القسم غير موجودة", " template is't exists");
+        }
+        if ($request->parent_id == null) {
 
             $input = $request->all();
-           $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-
-
-           ]);
-           if ($validator->fails())
-           {
-               # code...
-               return $this->sendError(null,$validator->errors());
-           }
-           $template->update([
-               'name' => $request->input('name'),
-               'parent_id' => $request->input('parent_id'),
-
-           ]);
-           }
-           else{
-            $input = $request->all();
-            $validator =  Validator::make($input ,[
-             'name'=>'required|string|max:255',
-
-             'parent_id'=>'required'
+            $validator = Validator::make($input, [
+                'name' => 'required|string|max:255',
 
             ]);
-            if ($validator->fails())
-            {
+            if ($validator->fails()) {
                 # code...
-                return $this->sendError(null,$validator->errors());
+                return $this->sendError(null, $validator->errors());
+            }
+            $template->update([
+                'name' => $request->input('name'),
+                'parent_id' => $request->input('parent_id'),
+
+            ]);
+        } else {
+            $input = $request->all();
+            $validator = Validator::make($input, [
+                'name' => 'required|string|max:255',
+
+                'parent_id' => 'required',
+
+            ]);
+            if ($validator->fails()) {
+                # code...
+                return $this->sendError(null, $validator->errors());
             }
             $template->update([
                 'name' => $request->input('name'),
 
-                'parent_id' =>$request->input('parent_id'),
+                'parent_id' => $request->input('parent_id'),
 
             ]);
-           }
+        }
 
-           $success['templates']=New templateResource($template);
-           $success['status']= 200;
+        $success['templates'] = new templateResource($template);
+        $success['status'] = 200;
 
-            return $this->sendResponse($success,'تم التعديل بنجاح','template updated successfully');
+        return $this->sendResponse($success, 'تم التعديل بنجاح', 'template updated successfully');
     }
 
-  public function changeStatus($id)
+    public function changeStatus($id)
     {
         $template = Template::query()->find($id);
-        if (is_null($template) || $template->is_deleted !=0){
-         return $this->sendError("القسم غير موجودة","template is't exists");
-         }
-        if($template->status === 'active'){
+        if (is_null($template) || $template->is_deleted != 0) {
+            return $this->sendError("القسم غير موجودة", "template is't exists");
+        }
+        if ($template->status === 'active') {
             $template->update(['status' => 'not_active']);
-     }
-    else{
-        $template->update(['status' => 'active']);
-    }
-        $success['templates']=New TemplateResource($template);
-        $success['status']= 200;
-         return $this->sendResponse($success,'تم تعدبل حالة القالب بنجاح',' template status updared successfully');
+        } else {
+            $template->update(['status' => 'active']);
+        }
+        $success['templates'] = new TemplateResource($template);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم تعدبل حالة القالب بنجاح', ' template status updared successfully');
 
     }
     /**
@@ -206,14 +194,14 @@ class TemplateController extends BaseController
      */
     public function destroy($template)
     {
-        $template =Template::query()->find($template);
-        if (is_null($template) || $template->is_deleted !=0){
-            return $this->sendError("القالب غير موجودة","template is't exists");
-            }
-           $template->update(['is_deleted' => $template->id]);
+        $template = Template::query()->find($template);
+        if (is_null($template) || $template->is_deleted != 0) {
+            return $this->sendError("القالب غير موجودة", "template is't exists");
+        }
+        $template->update(['is_deleted' => $template->id]);
 
-           $success['templates']=New TemplateResource($template);
-           $success['status']= 200;
-            return $this->sendResponse($success,'تم حذف القالب بنجاح','template deleted successfully');
+        $success['templates'] = new TemplateResource($template);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم حذف القالب بنجاح', 'template deleted successfully');
     }
 }

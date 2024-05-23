@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = ['order_number', 'store_id', 'user_id', 'quantity', 'total_price', 'tax', 'shipping_price', 'discount', 'paymentype_id','weight', 'shippingtype_id', 'order_status', 'payment_status', 'is_deleted','cod','created_at', 'description','subtotal','totalCount'];
+    protected $fillable = ['order_number', 'store_id', 'user_id', 'quantity', 'total_price', 'tax', 'shipping_price', 'discount', 'paymentype_id','weight', 'shippingtype_id', 'order_status', 'payment_status', 'is_deleted','cod','created_at', 'is_archive','description','subtotal','overweight_price','totalCount'];
+    protected $attributes = [
+        'is_archive' =>false,
+    ];
     protected $casts = [
         'total_price' => 'float',
         'subtotal' => 'float',
@@ -17,7 +20,8 @@ class Order extends Model
         'discount' => 'float',
         'shipping_price' => 'float',
         'tax' => 'float',    
-        'quantity'=>'integer'
+        'quantity'=>'integer',
+        'overweight_price' => 'float'
     ];
     public function user()
     {
@@ -48,14 +52,15 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-    // public function shippingAddress()
-    // {
-    //     return $this->hasOne(OrderAddress::class, 'order_id', 'id');
-    // }
-
-    public function shipping()
+    public function returnOrders()
     {
-        return $this->hasOne(Shipping::class);
+        return $this->hasMany(ReturnOrder::class);
+    }
+  
+
+    public function shippings()
+    {
+        return $this->hasMany(Shipping::class);
     }
     public function payment()
     {

@@ -85,12 +85,12 @@ class StockController extends BaseController
             'purchasing_price' => ['required', 'numeric', 'gt:0'],
             'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
             'stock' => ['required', 'numeric', 'gt:0'],
-          
+
             'less_qty' => ['nullable', 'numeric', 'gt:0'],
             'images' => 'nullable|array',
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-           
+
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -160,7 +160,7 @@ class StockController extends BaseController
 
             }
         }
-     
+
         if ($request->has('attribute')) {
             if (!is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
@@ -281,7 +281,7 @@ class StockController extends BaseController
             'stock' => ['required', 'numeric', 'gt:0'],
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'images' => 'nullable|array',
-       
+
             'SEOdescription' => 'nullable',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
@@ -321,7 +321,7 @@ class StockController extends BaseController
             'stock' => $request->input('stock'),
             'cover' => $request->cover,
             'amount' => 1,
-            'SEOdescription' => $request->input('SEOdescription'),
+            'SEOdescription' => $request->SEOdescription,
             'snappixel' => $request->snappixel,
             'tiktokpixel' => $request->tiktokpixel,
             'twitterpixel' => $request->twitterpixel,
@@ -388,9 +388,9 @@ class StockController extends BaseController
             }
         }
 
- 
 
-        
+
+
         $preAttributes = Attribute_product::where('product_id', $productid)->get();
         if ($preAttributes != null) {
             foreach ($preAttributes as $preAttribute) {
@@ -475,7 +475,7 @@ class StockController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $products = Product::whereIn('id', $request->id)->where('is_deleted', 0)->where('for', 'stock')->get();
@@ -522,8 +522,19 @@ class StockController extends BaseController
                 'product_id' => $product->id,
                 'store_id' => $atlbha_id,
                 'price' => $product->selling_price,
-                'qty' => $product->stock,
+                'qty'=>$product->stock
+    
             ]);
+                $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
+                foreach ($options as $option) {
+                    $newOption = $option->replicate();
+                    $newOption->product_id = null;
+                    $newOption->original_id = $option->id;
+                    $newOption->importproduct_id = $importproduct->id;
+                    $newOption->price = $option->price;
+                    $newOption->save();
+    
+                }
         }
 
         $success['products'] = new ProductResource($product);
@@ -547,7 +558,7 @@ class StockController extends BaseController
         try {
 
             Excel::import(new AdminProductImport, $request->file);
-        
+
 
             $success['status'] = 200;
 
@@ -560,6 +571,24 @@ class StockController extends BaseController
             //     // Handle validation failures
             return $failures;
         }
+
+    }
+    public function searchProductName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $products = Product::where('is_deleted', 0)->where('store_id', null)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $products->total();
+        $success['page_count'] = $products->lastPage();
+        $success['current_page'] = $products->currentPage();
+        $success['products'] = ProductResource::collection($products);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات  بنجاح', 'Product Information returned successfully');
 
     }
 

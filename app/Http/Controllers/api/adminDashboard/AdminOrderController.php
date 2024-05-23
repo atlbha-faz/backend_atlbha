@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\shippingResource;
-use App\Models\Attribute_product;
-use App\Models\Importproduct;
-use App\Models\Option;
+use App\Models\User;
 use App\Models\Order;
+use App\Models\Store;
+use App\Models\Option;
+use App\Helpers\Helper;
 use App\Models\Product;
 use App\Models\Shipping;
-use App\Models\Store;
-use App\Models\User;
-use App\Models\Value;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\shippingResource;
 use Illuminate\Support\Facades\Validator;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class AdminOrderController extends BaseController
 {
@@ -38,10 +38,10 @@ class AdminOrderController extends BaseController
         })->where('is_deleted', 0)->count();
 
         $data = OrderResource::collection(Order::with(['user' => function ($query) {
-            $query->select('id','city_id');
-        }, 'shipping', 'items' => function ($query) {
+            $query->select('id', 'city_id');
+        }, 'shippings', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', null)->where('is_deleted', 0)->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity','created_at', 'order_status']));
+        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']));
 
         $success['orders'] = $data;
         $success['status'] = 200;
@@ -68,10 +68,12 @@ class AdminOrderController extends BaseController
         $order = Order::where('id', $order)->whereHas('items', function ($q) {
             $q->where('store_id', null);
         })->first();
+        if ($order->order_status == "completed") {
+            return $this->sendError("الطلب مكتمل", "Order is complete");
+        }
         if (is_null($order)) {
             return $this->sendError("'الطلب غير موجود", "Order is't exists");
         }
-
         $input = $request->all();
         $validator = Validator::make($input, [
             'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
@@ -84,189 +86,67 @@ class AdminOrderController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        if ($request->input('status') !== "completed") {
-
-            $order->update([
-                'order_status' => $request->input('status'),
-            ]);
-            foreach ($order->items as $orderItem) {
-                $orderItem->update([
-                    'order_status' => $request->input('status'),
-                ]);
-            }
-
-            $success['orders'] = new OrderResource($order);
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
-        } else {
             if ($request->status === "completed") {
-
-                $storeAdmain = User::whereIn('user_type', ['store', 'store_employee'])->where('id', $order->user_id)->first();
-
-                if ($storeAdmain != null) {
-                    $storeid = Store::where('id', $storeAdmain->store_id)->first();
-
-                }
-                foreach ($order->items as $orderItem) {
-                    $product = Product::where('id', $orderItem->product_id)->where('store_id', null)->first();
- 
-
-                    $importOrder = Product::where('original_id', $orderItem->product_id)->where('store_id', $storeid->id)->where('is_import', 1)->where('is_deleted', 0)->first();
-                    if ($importOrder == null) {
-                        
-                      
-                        $newRecord = $product->replicate();
-                        $newRecord->store_id = $storeid->id;
-                        $newRecord->for = "store";
-                        $newRecord->selling_price = $orderItem->price;
-                        $newRecord->stock = $orderItem->quantity;
-                        $newRecord->original_id = $orderItem->product_id;
-                        $newRecord->is_import = 1;
-                        $newRecord->save();
-                        if ($orderItem->option_id !== null) {
-                            
-                            $option = Option::where('is_deleted', 0)->where('id', $orderItem->option_id)->first();
-                            $newOption = $option->replicate();
-                            $newOption->product_id = $newRecord->id;
-                            $newOption->original_id = $option->id;
-                            $newOption->quantity = $orderItem->quantity;
-                            $newOption->price = $orderItem->price;
-                            $newOption->save();
-                          
-                            // $attrs = Attribute_product::where('product_id', $orderItem->product_id)->get();
-                           
-                            // $optionNames = array();
-                            // $values = array();
-                            // $optionNames = explode(',', $newOption->name['ar']);
-                            // foreach ($attrs as $attr) {
-                                
-                            //     $attruibtevalues = Value::where('attribute_id', $attr->attribute_id)->get();
-                                
-                            //     foreach ($attruibtevalues as $attruibtevalue) {
-                            //         foreach ($optionNames as $optionName) {
-                            //             if (in_array($optionName, explode(',', $attruibtevalue->value))) {
-                                            
-                            //                 $values[] = $attruibtevalue;
-                            //                 $valuesid[] = $attruibtevalue->id;
-                                           
-                            //             }
-                            //         }
-                            //     }
-
-                            //     $lastValues = Value::where('attribute_id', $attr->id)->whereIn('id', $valuesid)->get();
-
-                            //     $newRecord->attributes()->attach($attr->id, ['value' => json_encode($lastValues)]);
-
-                            // }
-
-                        }
-
-                    } else {
-                        if ($orderItem->option_id !== null) {
-                            $option = Option::where('product_id', $importOrder->id)->where('original_id', $orderItem->option_id)->first();
-                            $orginalOption = Option::where('id', $orderItem->option_id)->first();
-                            if ($option == null) {
-                                if ($orginalOption) {
-                                    $newOption = $orginalOption->replicate();
-                                    $newOption->product_id = $importOrder->id;
-                                    $newOption->price = $orderItem->price;
-                                    $newOption->original_id = $orderItem->option_id;
-                                    $newOption->quantity = $orderItem->quantity;
-                                    $newOption->save();
-                                    $qty = $importOrder->stock;
-                                    $importOrder->update([
-                                        'stock' => $qty + $orderItem->quantity,
-                                    ]);
-                                }
-                            } else {
-                                $qty = $option->quantity;
-                                $option->update([
-                                    'price' => $orderItem->price,
-                                    'quantity' => $qty + $orderItem->quantity,
-                                ]);
-                                $qty_product = $importOrder->stock;
-                                $importOrder->update([
-                                    'stock' =>$qty_product+ $orderItem->quantity,
-                                ]);
-                            }
-                        } else {
-                            $qty = $importOrder->stock;
-                            $importOrder->update([
-                                'selling_price' => $orderItem->price,
-                                'stock' => $qty + $orderItem->quantity,
-                            ]);
-                        }
-                    }
-
-                    $newStock = $product->stock - $orderItem->quantity;
-                    $product->update([
-                        'stock' => $newStock,
-                    ]);
-                    //إستيراد الى متجر اطلبها
-                    $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-                    $importAtlbha = Importproduct::where('product_id', $orderItem->product_id)->where('store_id', $atlbha_id)->first();
-                    if ($importAtlbha == null) {
-                        $importAtlbha = Importproduct::create([
-                            'product_id' => $orderItem->product_id,
-                            'store_id' => $atlbha_id,
-                            'price' => $product->selling_price,
-                            'qty' => $product->stock,
-                        ]);
-                    } else {
-                        $importAtlbha->update([
-                            'product_id' => $product->id,
-                            'store_id' => $atlbha_id,
-                            'qty' => $product->stock,
-                        ]);
-                    }
-
-                }
-
-                $order->update([
-                    'order_status' => $request->input('status'),
-                ]);
-                foreach ($order->items as $orderItem) {
-                    $orderItem->update([
-                        'order_status' => $request->input('status'),
-                    ]);
-                }
-
-                $shipping = Shipping::create([
-                    'shipping_id' => $order->order_number,
-                    'track_id' => null,
-                    'description' => $order->description,
-                    'quantity' => $order->quantity,
-                    'price' => $order->total_price,
-                    'weight' => $order->weight,
-                    'district' => $request->district,
-                    'city' => $request->city,
-                    'streetaddress' => $request->street_address,
-                    'customer_id' => $order->user_id,
-                    'shippingtype_id' => null,
-                    'order_id' => $order->id,
-                    'shipping_status' => $order->order_status,
-                    'store_id' => null,
-                    'cashondelivery' => $order->cashondelivery,
-                ]);
-                $success['shipping'] = new shippingResource($shipping);
+                Helper::orderProductShow($order->id);
             }
-            $success['orders'] = new OrderResource($order);
-            $success['status'] = 200;
+            $shipping_companies = [
+                1 => new AramexCompanyService(),
+            ];
+            if ($request->status == "canceled") {
 
-            return $this->sendResponse($success, 'تم التعديل بنجاح', 'Order updated successfully');
-        }
+                $shipping = $shipping_companies[$order->shippingtype->id];
+                $success['orders'] = $shipping->cancelOrder($order->id);
+                $success['status'] = 200;
+                return $this->sendResponse($success, 'تم إلغاء الطلب', 'order canceled successfully');
+    
+            } else {
+                $data = [
+                    "shipper_line1" => $request->street_address,
+                    "shipper_line2" => $request->street_address,
+                    "shipper_city" => $request->city,
+                    "shipper_district" => $request->district,
+                    "shipper_name" => "atlbha",
+                    "shipper_comany" => "atlbha",
+                    "shipper_name" => "atlbha",
+                    "shipper_phonenumber" =>"00966506340450",
+                    "shipper_email" => "help@atlbha.sa",
+                    "order_id" => $order->id,
+    
+                ];
+                if ($request->status === "ready") {
+    
+                    $shipping = $shipping_companies[$order->shippingtype->id];
+                    $success['orders'] = $shipping->createOrder($data);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+    
+                } else {
+                    $order->update([
+                        'order_status' => $request->status,
+                    ]);
+                    foreach ($order->items as $orderItem) {
+                        $orderItem->update([
+                            'order_status' => $request->status,
+                        ]);
+                    }
+    
+                    $success['orders'] = new OrderResource($order);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+    
+                }
+            }    
+        
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
-            $orders =Order::whereIn('id',$request->id)->where('store_id', null)->where('is_deleted',0)->get();
-            if(count($orders)>0){
-           foreach($orders as $order)
-           {
-             $order->update(['is_deleted' => $order->id]);
-            $success['orders']=New OrderResource($order);
-    
+        $orders = Order::whereIn('id', $request->id)->where('store_id', null)->where('is_deleted', 0)->get();
+        if (count($orders) > 0) {
+            foreach ($orders as $order) {
+                $order->update(['is_deleted' => $order->id]);
+                $success['orders'] = new OrderResource($order);
+
             }
 
             $success['status'] = 200;
@@ -276,6 +156,29 @@ class AdminOrderController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
         }
+    }
+    public function searchName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $orders = Order::where('is_deleted', 0)->where('store_id', null)->whereHas('user', function ($userQuery) use ($query) {
+            $userQuery->whereHas('store', function ($storeQuery) use ($query) {
+                $storeQuery->where('store_name', 'like', "%$query%");
+            });
+        })->orWhere('order_number', 'like', "%$query%")
+            ->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $orders->total();
+        $success['page_count'] = $orders->lastPage();
+        $success['current_page'] = $orders->currentPage();
+        $success['orders'] = OrderResource::collection($orders);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع السلات المتروكة بنجاح', 'orders Information returned successfully');
+
     }
 
 }

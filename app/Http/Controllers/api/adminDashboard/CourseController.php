@@ -76,7 +76,7 @@ class CourseController extends BaseController
             'name' => $request->name,
             'description' => $request->description,
             'duration' => $request->duration,
-            'tags' => $request->tags,
+            'tags' =>$request->tags,
             'image' => $request->image,
             'user_id' => auth()->user()->id,
         ]);
@@ -141,7 +141,7 @@ class CourseController extends BaseController
                                 $video->duration = $videodata[0]['duration'];
                                 $video->save();
                             } else {
-                                return $this->sendResponse($success, 'قم بنسخ الامبداد الخاص بالفيديو من اليوتيوب', 'copy embeded video from youtube');
+                                return $this->sendError("قم بنسخ الامبداد الخاص بالفيديو من اليوتيوب'", "copy embeded video from youtube");
 
                             }
                         }
@@ -222,7 +222,7 @@ class CourseController extends BaseController
             'description' => $request->input('description'),
             'image' => $request->image,
             'duration' => $request->input('duration'),
-            'tags' => $request->input('tags'),
+            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
         ]);
         $unit = Unit::where('course_id', $course_id);
 
@@ -284,7 +284,7 @@ class CourseController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'course updated successfully');
     }
 
- 
+
 
     /**
      * Remove the specified resource from storage.
@@ -305,7 +305,7 @@ class CourseController extends BaseController
 
         return $this->sendResponse($success, 'تم حذف الكورس بنجاح', 'course deleted successfully');
     }
-    public function addvideo(Request $request)
+    public function addVideo(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -315,7 +315,7 @@ class CourseController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-        
+
         preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $request->video, $matches);
 
         if (isset($matches[1])) {
@@ -330,7 +330,7 @@ class CourseController extends BaseController
         $video->duration = $videodata[0]['duration'];
         $video->save();
 
- 
+
         $success['videos'] = new VideoResource($video);
         $success['status'] = 200;
 
@@ -338,7 +338,7 @@ class CourseController extends BaseController
 
     }
 
-    public function deletevideo($video_id)
+    public function deleteVideo($video_id)
     {
         $video = Video::query()->find($video_id);
         if (is_null($video) || $video->is_deleted != 0) {
@@ -351,7 +351,7 @@ class CourseController extends BaseController
 
         return $this->sendResponse($success, 'تم حذف بنجاح', 'video deleted successfully');
     }
-    public function deleteunit($unit)
+    public function deleteUnit($unit)
     {
         $unit = Unit::query()->find($unit);
         if (is_null($unit) || $unit->is_deleted != 0) {

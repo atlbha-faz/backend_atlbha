@@ -11,7 +11,5 @@ class categories_stores extends Model
     
     protected $table="categories_stores";
     protected $fillable = ['category_id','subcategory_id','store_id'];
-        protected $casts = [
-    'category_id' => 'array',
-];
+
 }

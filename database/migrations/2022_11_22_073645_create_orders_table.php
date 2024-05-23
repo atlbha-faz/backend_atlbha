@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('total_price', 10, 2);
             $table->decimal('tax', 10, 2);
             $table->decimal('weight', 10, 2);
-            $table->decimal('cod', 10, 2);
+            $table->decimal('cod', 10, 2)->default(0);
             $table->string('description')->nullable();
             $table->decimal('shipping_price', 10, 2);
             $table->decimal('discount', 10, 2)->nullable();
@@ -30,10 +30,17 @@ return new class extends Migration
             $table->integer('totalCount')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-            $table->enum('order_status', ['new', 'completed','refund' ,'delivery_in_progress', 'ready', 'canceled', 'not_completed'])->default('new');
+            $table->unsignedBigInteger('shippingtype_id')->nullable();
+            $table->foreign('shippingtype_id')->references('id')->on('shippingtypes')->onDelete('cascade');
+            
+            $table->unsignedBigInteger('paymentype_id')->nullable();
+            $table->foreign('paymentype_id')->references('id')->on('paymenttypes')->onDelete('cascade');
+
+            $table->enum('order_status', ['new', 'completed', 'delivery_in_progress', 'ready', 'canceled', 'not_completed'])->default('new');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])
                 ->default('pending');
             $table->bigInteger('is_deleted')->default(0);
+            $table->boolean('cod')->default(0);
             $table->timestamps();
         });
     }

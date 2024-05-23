@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use Psr7\Utils;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Store;
 use App\Models\Account;
+
 use App\Models\Payment;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -32,11 +34,11 @@ class SupplierController extends BaseController
         if (is_null($account)) {
             return $this->sendError("لا يوجد حساب بنكي", "Account is't exists");
         }
-        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
-        $supplierDeposits = $supplier->getSupplierDashboard('v2/GetSupplierDeposits?SupplierCode' . $storeAdmain->supplierCode);
+        $supplierCode = $supplier->buildRequest('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode,'GET');
+        // $supplierDeposits = $supplier->buildRequest('v2/GetSupplierDeposits?SupplierCode=' . $storeAdmain->supplierCode,'GET');
         $success['supplierUser'] = new SupplierResource($account);
         $success['SupplierDetails'] = $supplierCode;
-        $success['SupplierDeposits'] =  $supplierDeposits;
+        // $success['SupplierDeposits'] =  $supplierDeposits;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بيانات الحساب البنكي بنجاح', ' show successfully');
@@ -51,12 +53,12 @@ class SupplierController extends BaseController
         }
         $supplierdocument = Supplierdocument::where('store_id', auth()->user()->store_id)->whereNot('type' , 20)->get();
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode);
-        $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?SupplierCode=' . $storeAdmain->supplierCode);
+        $supplierCode = $supplier->buildRequest('v2/GetSupplierDetails?suppplierCode=' . $storeAdmain->supplierCode,'GET');
+        // $supplierDocument = $supplier->buildRequest('v2/GetSupplierDocuments?SupplierCode=' . $storeAdmain->supplierCode,'GET');
         $success['supplierUser'] = new SupplierResource($account);
         $success['SupplierDetails'] = $supplierCode;
-        $success['SupplierDocumentUser'] = $supplierdocument;
-        $success['SupplierDocument'] = $supplierDocument;
+         $success['SupplierDocumentUser'] = $supplierdocument;
+        // $success['SupplierDocument'] = $supplierDocument;
 
         $success['status'] = 200;
 
@@ -64,25 +66,32 @@ class SupplierController extends BaseController
     }
     public function store(Request $request)
     {
+       
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
-        if ($account) {
-            return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
-        }
+        // if ($account) {
+        //     return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
+        // }
+ 
         $data = [
             'SupplierName' => $store->owner_name,
-            'Mobile' => $storeAdmain->phonenumber,
+            'Mobile' => str_replace("+", "00", $storeAdmain->phonenumber),
             'Email' => $storeAdmain->email,
             'DepositTerms' => 'Daily',
-            'BankId' => $request->bankId,
+             'BankId' => $request->bankId,
             'BankAccountHolderName' => $request->bankAccountHolderName,
             'BankAccount' => $request->bankAccount,
             'Iban' => $request->iban,
+            'BusinessName'=>$store->store_name,
+            'logo'=>public_path('storage\images\storelogo') . '\\' . $store->logo_pure ,
+            'DisplaySupplierDetails'=>true
         ];
+
+       
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->createSupplier('v2/CreateSupplier', $data);
-        
+        $supplierCode = $supplier->createSupplier('v2/CreateSupplier' ,$data);
+
         if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
@@ -94,12 +103,11 @@ class SupplierController extends BaseController
                 'bankAccountHolderName' => $request->input('bankAccountHolderName'),
                 'bankAccount' => $request->input('bankAccount'),
                 'iban' => $request->input('iban'),
-                'supplierCode' => $supplierCode->Data->SupplierCode,
-                'status' => 'active',
+                'supplierCode' => $supplierCode->Data->SupplierCode,               'status' => 'active',
             ]);
         $storeAdmain->update([
             'supplierCode' => $supplierCode->Data->SupplierCode]);
-        // $success['supplier'] = $supplierCode;
+      
 
         $arrays = array();
         if ($store->verification_type == "maeruf") {
@@ -159,7 +167,7 @@ class SupplierController extends BaseController
         $data = [
             'SupplierName' => $store->owner_name,
             'SupplierCode' => $storeAdmain->supplierCode,
-            'Mobile' => $storeAdmain->phonenumber,
+            'Mobile' => str_replace("+", "00", $storeAdmain->phonenumber),
             'Email' => $storeAdmain->email,
             'BankId' => $request->bankId,
             'BankAccountHolderName' => $request->bankAccountHolderName,
@@ -167,19 +175,19 @@ class SupplierController extends BaseController
             'Iban' => $request->iban,
         ];
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->createSupplier('v2/EditSupplier', $data);
-        if ($supplierCode->IsSuccess == false) {
+        $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',json_encode($data));
+        if ($supplierCode['IsSuccess'] == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
-        $account = Account::where('store_id', auth()->user()->store_id)->where('status', 'active')->first();
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
         $account->update([
             'bankId' => $request->input('bankId'),
             'bankAccountHolderName' => $request->input('bankAccountHolderName'),
             'bankAccount' => $request->input('bankAccount'),
             'iban' => $request->input('iban'),
-            'supplierCode' => $supplierCode->Data->SupplierCode,
+            'supplierCode' => $supplierCode['Data']['SupplierCode'],
         ]);
-        $storeAdmain->update(['supplierCode' => $supplierCode->Data->SupplierCode]);
+        $storeAdmain->update(['supplierCode' => $supplierCode['Data']['SupplierCode']]);
 
         $arrays = array();
         if ($store->verification_type == "maeruf") {
@@ -220,7 +228,7 @@ class SupplierController extends BaseController
                 );
             }
         }
-        $supplierDocument = $supplier->getSupplierDashboard('v2/GetSupplierDocuments?suppplierCode=' .$storeAdmain->supplierCode);
+        $supplierDocument = $supplier->buildRequest('v2/GetSupplierDocuments?suppplierCode=' .$storeAdmain->supplierCode,'GET');
 
         $success['supplierUserDocument'] =$supplierDocument;
         $success['supplierUser'] = new SupplierResource($account);
@@ -233,7 +241,7 @@ class SupplierController extends BaseController
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->getSupplierDashboard('v2/GetSupplierDashboard?SupplierCode=' . $storeAdmain->supplierCode);
+        $supplierCode = $supplier->buildRequest('v2/GetSupplierDashboard?SupplierCode=' . $storeAdmain->supplierCode,'GET');
         // if ( $supplierCode->IsSuccess == false){
         //    return $this->sendError("خطأ في البيانات",$supplierCode->FieldsErrors[0]->Error);
         // }
@@ -246,7 +254,7 @@ class SupplierController extends BaseController
     public function uploadSupplierDocument(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
-        $account = Account::where('store_id', auth()->user()->store_id)->where('status', 'active')->first();
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
         $supplier = new FatoorahServices();
         $imageName = Str::random(10) . time() . '.' . $request->FileUpload->getClientOriginalExtension();
         $filePath = 'images/storelogo/' . $imageName;
@@ -279,14 +287,17 @@ class SupplierController extends BaseController
 
     public function billing(Request $request)
     {
-        $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->orwhere('paymentype_id',4)->pluck('id')->toArray();
-        $payments =PaymentResource::collection(Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->orderByDesc('created_at')->get());
-        $success['billing'] = $payments;
+        $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->pluck('id')->toArray();
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $payments=Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->orderByDesc('created_at')->paginate($count);
+        $success['page_count'] = $payments->lastPage();
+        $success['current_page'] = $payments->currentPage();
+        $success['billing'] = PaymentResource::collection($payments);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض الفواتير', ' show successfully');
     }
-      public function showBilling($id)
+    public function showBilling($id)
     {
         $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->pluck('id')->toArray();
         $payment=Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->where('id',$id)->orderByDesc('created_at')->first();

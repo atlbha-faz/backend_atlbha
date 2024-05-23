@@ -25,26 +25,15 @@ class UserController extends BaseController
     public function index(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
-        if ($request->has('page')) {
-            if ($storeAdmain != null) {
-                $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
-                $success['page_count'] = $users->lastPage();
-                $success['users'] = $users;
-            } else {
-                $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
-                $success['page_count'] = $users->lastPage();
-                $success['users'] = $users;
 
-            }
+        if ($storeAdmain != null) {
+            $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
 
-        } else {
+            $users = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
+            $success['users'] = $users;
+            $success['page_count'] = $users->lastPage();
+            $success['current_page'] =$users->currentPage();
 
-            if ($storeAdmain != null) {
-                $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->whereNot('id', $storeAdmain->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-            } else {
-                $success['users'] = UserResource::collection(User::where('is_deleted', 0)->whereNot('id', auth()->user()->id)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-
-            }
         }
         $success['status'] = 200;
 
@@ -247,7 +236,7 @@ class UserController extends BaseController
 
         return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'User deleted successfully');
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if ($storeAdmain != null) {
@@ -277,16 +266,15 @@ class UserController extends BaseController
                     $success['users'] = null;
                 }
             }
-                $success['status'] = 200;
+            $success['status'] = 200;
 
-                return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'user deleted successfully');
-            
-         }
-          else {
-                $success['status'] = 200;
-                return $this->sendError("المستخدم غير موجودة", "user is't exists");
-            }
-        
+            return $this->sendResponse($success, 'تم حذف المستخدم بنجاح', 'user deleted successfully');
+
+        } else {
+            $success['status'] = 200;
+            return $this->sendError("المستخدم غير موجودة", "user is't exists");
+        }
+
     }
     public function deleteItems(Request $request)
     {
@@ -310,7 +298,7 @@ class UserController extends BaseController
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
     }
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
         $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
         if ($storeAdmain != null) {

@@ -29,35 +29,24 @@ class CommentController extends BaseController
      */
     public function index(Request $request)
     {
-
-        $success['comment_of_store'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'store')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $success['comment_of_store'] = CommentResource::collection(Comment::where('is_deleted', 0)->where('comment_for', 'store')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
         $product_id = array();
         $products = Product::where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->get();
         foreach ($products as $product) {
             $product_id[] = $product->id;
         }
-        if ($request->has('page')) {
             $comment_of_products = CommentResource::collection(Comment::with(['user' => function ($query) {
-                $query->select('id', 'name', 'user_type', 'image');
+                $query->select('id', 'name', 'user_type', 'image','email');
             }, 'product' => function ($query) {
                 $query->select('id', 'name');
-            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(10));
+            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
             $pageNumber = request()->query('page', 1);
             $success['current_page'] = $comment_of_products->currentPage();
 
             $success['page_count'] = $comment_of_products->lastPage();
             $success['comment_of_products'] = $comment_of_products;
-        } else {
-            $success['comment_of_products'] = CommentResource::collection(Comment::with(['user' => function ($query) {
 
-                $query->select('id', 'name', 'user_type', 'image','email');
-
-            }, 'product' => function ($query) {
-
-                $query->select('id', 'name');
-
-            }])->where('is_deleted', 0)->where('comment_for', 'product')->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-        }
         $success['commentActivation'] = Homepage::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->pluck('commentstatus')->first();
 
         $success['status'] = 200;
@@ -162,7 +151,7 @@ class CommentController extends BaseController
             'comment_for' => 'required|in:product,store',
             'store_id' => 'required_if:comment_for,store',
             'product_id' => 'required_if:comment_for,product',
-          
+
         ]);
         if ($validator->fails()) {
             # code...
@@ -173,9 +162,9 @@ class CommentController extends BaseController
             'rateing' => $request->input('rateing'),
             'product_id' => $request->input('product_id'),
             'store_id' => $request->input('store_id'),
-          
+
         ]);
-       
+
         $success['comments'] = new commentResource($comment);
         $success['status'] = 200;
 
@@ -240,7 +229,7 @@ class CommentController extends BaseController
         return $this->sendResponse($success, 'تم حذف التعليق بنجاح', ' comment deleted successfully');
     }
 
-    public function changeSatusall(Request $request)
+    public function changeSatusAll(Request $request)
     {
 
         $comments = Comment::whereIn('id', $request->id)->where('store_id', auth()->user()->store_id)->where('is_deleted', 0)->get();

@@ -16,9 +16,9 @@ class VideoResource extends JsonResource
     public function toArray($request)
     {
         if ($this->status == null || $this->status == 'active') {
-            $status = 'نشط';
+            $status = __('message.active');
         } else {
-            $status = 'غير نشط';
+            $status =  __('message.not_active');
         }
         $videoSrc = Str::between($this->video, 'src="', '" title');
 

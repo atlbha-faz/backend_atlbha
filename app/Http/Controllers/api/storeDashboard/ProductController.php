@@ -12,6 +12,7 @@ use App\Models\Image;
 use App\Models\Importproduct;
 use App\Models\Option;
 use App\Models\Product;
+use App\Models\Store;
 use App\Models\Value;
 use Google\Service\Resource;
 use Illuminate\Http\Request;
@@ -32,68 +33,80 @@ class ProductController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $products = ProductResource::collection(Product::with(['store' => function ($query) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $products = Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
-            $query->select('id', 'name');}])
-                ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description','is_import','original_id','short_description')->get()
-        );
+            $query->select('id', 'name');
+        }])
+            ->where('is_deleted', 0)->where('is_import', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description');
 
-        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
-            ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'importproducts.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
-        $imports = importsResource::collection($import);
+        // $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
+        //     ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'importproducts.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
+        // $imports = importsResource::collection($import);
+        if ($request->has('category_id')) {
+            $products->where('category_id', $request->category_id);
+        }
 
-        $collection = $products->merge($imports);
-
-        $success['products'] = $collection;
+        $products = $products->paginate($count);
+        $success['page_count'] = $products->lastPage();
+        $success['current_page'] = $products->currentPage();
+        $success['products'] = ProductResource::collection($products);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
     }
     public function products(Request $request)
-    {if ($request->has('page')) {
-        $products = ProductResource::collection(Product::with(['store' => function ($query) {
-            $query->select('id', 'domain', 'store_name');
-        }, 'category' => function ($query) {
-            $query->select('id', 'name');}])
-                ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->paginate(8)
-        );
-        $success['page_count'] = $products->lastPage();
+    {
+        if ($request->has('page')) {
+            $products = ProductResource::collection(Product::with(['store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }, 'category' => function ($query) {
+                $query->select('id', 'name');
+            }])
+                    ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->paginate(8)
+            );
+            $success['page_count'] = $products->lastPage();
 
-    } else {
-        $products = ProductResource::collection(Product::with(['store' => function ($query) {
-            $query->select('id', 'domain', 'store_name');
-        }, 'category' => function ($query) {
-            $query->select('id', 'name');}])
-                ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->get()
-        );
+        } else {
+            $products = ProductResource::collection(Product::with(['store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }, 'category' => function ($query) {
+                $query->select('id', 'name');
+            }])
+                    ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->get()
+            );
 
-    }
+        }
         $collection = $products;
 
         $success['products'] = $collection;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
-
     }
-    public function importedProducts()
+    public function importedProducts(Request $request)
     {
+        $store = Store::where('id', auth()->user()->store_id)->first();
 
-        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
-            ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->paginate(15)->makeHidden(['products.*status', 'selling_price', 'store_id']);
-        $forpage = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
+        $query = $request->input('query');
+        $filter_category = $request->input('category_id');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $products = Importproduct::with('product')->when($filter_category,function ($query) use ($filter_category) {
+            $query->whereHas('product', function ($sub_query) use ($filter_category) {
+         $sub_query->where('category_id', $filter_category);
+                });
+        }) 
+    ->where('store_id', auth()->user()->store_id)->paginate($count);
+      
+     
 
-            ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->paginate(15);
-
-        $imports = importsResource::collection($import);
-        $success['page_count'] = $forpage->lastPage();
-
-        $success['products'] = $imports;
+        $success['page_count'] = $products->lastPage();
+        $success['current_page'] = $products->currentPage();
+        $success['import_products'] = importsResource::collection($products);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -265,7 +278,6 @@ class ProductController extends BaseController
         return $this->sendResponse($success, 'تم إضافة منتج بنجاح', 'product Added successfully');
     }
 
- 
     /**
      * Display the specified resource.
      *
@@ -275,20 +287,17 @@ class ProductController extends BaseController
     public function show($product)
     {
 
-        $product = Product::query()->find($product);
-
-        if (is_null($product) || $product->is_deleted != 0) {
+        $orginal_product = Product::query()->where('store_id', auth()->user()->store_id)->find($product);
+        $new_import_product = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $product)->first();
+        if (is_null($product) && is_null($new_import_product)) {
             return $this->sendError("المنتج غير موجود", "product is't exists");
         }
 
-        $newproduct = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $product->id)->first();
-        if ($newproduct) {
-            $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $product->id)
-                ->first(['products.*', 'importproducts.qty', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
-            $success['product'] = new importsResource($newimportproduct);
+        if ($new_import_product) {
+            $success['product'] = new importsResource($new_import_product);
 
         } else {
-            $success['product'] = new ProductResource($product);
+            $success['product'] = new ProductResource($orginal_product);
 
         }
 
@@ -328,8 +337,7 @@ class ProductController extends BaseController
             $importproduct->update([
                 'price' => $request->selling_price,
             ]);
-            $newimportproduct = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->where('importproducts.product_id', $id)
-                ->first(['products.*', 'importproducts.price', 'importproducts.status'])->makeHidden(['products.*status', 'selling_price', 'store_id']);
+            $newimportproduct = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $id)->first();
 
             $success['products'] = new importsResource($newimportproduct);
             $success['status'] = 200;
@@ -391,7 +399,7 @@ class ProductController extends BaseController
                 'selling_price' => $request->input('selling_price'),
                 'stock' => $request->input('stock'),
                 'cover' => $request->cover,
-                'SEOdescription' => $request->input('SEOdescription'),
+                'SEOdescription' => $request->SEOdescription,
                 'discount_price' => $request->input('discount_price'),
                 'snappixel' => $request->snappixel,
                 'tiktokpixel' => $request->tiktokpixel,
@@ -616,7 +624,7 @@ class ProductController extends BaseController
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $importproducts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)->whereIn('importproducts.product_id', $request->id)
@@ -676,12 +684,12 @@ class ProductController extends BaseController
         $productss = ProductResource::collection(Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
-            $query->select('id', 'name');}])
+            $query->select('id', 'name');
+        }])
                 ->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->get()
         );
 
-        $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
-            ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'products.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
+        $import = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->get();
         $imports = importsResource::collection($import);
 
         $success['products'] = $productss->merge($imports);
@@ -755,7 +763,7 @@ class ProductController extends BaseController
         if (count($importproducts) > 0) {
             foreach ($importproducts as $importproduct) {
 
-                $product = Importproduct::where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
+                $product = Importproduct::with('product')->where('store_id', auth()->user()->store_id)->where('product_id', $importproduct->id)->first();
                 if (is_null($product)) {
                     return $this->sendError("المنتج غير موجود", "product is't exists");
                 }
@@ -764,7 +772,7 @@ class ProductController extends BaseController
                 } else {
                     $product->update(['status' => 'active']);
                 }
-                $success['products'] = new importsResource($importproduct);
+                $success['products'] = new importsResource($product);
 
             }
 
@@ -831,22 +839,61 @@ class ProductController extends BaseController
             } else {
                 $product->update(['special' => 'not_special']);
             }
+            $success['product'] = new productResource($product);
         } else {
-            $importproduct = Importproduct::where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
+            $importproduct = Importproduct::with('product')->where('product_id', $id)->where('store_id', auth()->user()->store_id)->first();
             if ($importproduct->special === 'not_special') {
                 $importproduct->update(['special' => 'special']);
             } else {
                 $importproduct->update(['special' => 'not_special']);
             }
+            $success['import_product'] = new importsResource($importproduct);
 
         }
 
-        $success['product'] = new productResource($product);
+       
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');
 
     }
+    public function searchProductName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-  
+        $products = Product::where('is_deleted', 0)->where('is_import', 0)->where('store_id', auth()->user()->store_id)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $products->total();
+        $success['page_count'] = $products->lastPage();
+        $success['current_page'] = $products->currentPage();
+        $success['products'] = ProductResource::collection($products);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات  بنجاح', 'Product Information returned successfully');
+
+    }
+    public function searchImportProductName(Request $request)
+    {
+        $store = Store::where('id', auth()->user()->store_id)->first();
+
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $imports = Importproduct::whereHas('product', function ($userQuery) use ($query) {
+            $userQuery->where('name', 'like', "%$query%");
+        })->where('store_id', $store->id)->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $imports->total();
+        $success['page_count'] = $imports->lastPage();
+        $success['current_page'] = $imports->currentPage();
+        $success['import_products'] = importsResource::collection($imports);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات  بنجاح', 'Product Information returned successfully');
+    }
+
 }

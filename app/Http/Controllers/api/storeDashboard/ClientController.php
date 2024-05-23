@@ -19,9 +19,13 @@ class ClientController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['clients'] = ClientResource::collection(Client::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $clients=Client::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count);
+        $success['clients'] = ClientResource::collection( $clients);
+        $success['page_count'] = $clients->lastPage();
+        $success['current_page'] = $clients->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع العملاء بنجاح', 'clients return successfully');
@@ -164,7 +168,7 @@ class ClientController extends BaseController
 
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $clients = Client::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();

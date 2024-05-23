@@ -10,7 +10,5 @@ class orders_products extends Model
     use HasFactory;
     protected $table="orders_products";
   protected $fillable = ['order_id','product_id','qty','price','subtotal'];
-      protected $casts = [
-  'product_id' => 'array',
-];
+
 }

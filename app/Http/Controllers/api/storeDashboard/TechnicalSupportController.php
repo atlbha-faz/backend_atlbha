@@ -25,14 +25,12 @@ class TechnicalSupportController extends BaseController
      */
     public function index(Request $request)
     {
-        if ($request->has('page')) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-            $Technicalsupports = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
-            $success['page_count'] = $Technicalsupports->lastPage();
-            $success['Technicalsupports'] = $Technicalsupports;
-        } else {
-            $success['Technicalsupports'] = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-        }
+        $technical_supports = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
+        $success['page_count'] = $technical_supports->lastPage();
+        $success['current_page'] =$technical_supports->currentPage();
+        $success['Technicalsupports'] =$technical_supports;
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'Technical Support return successfully');
@@ -54,7 +52,6 @@ class TechnicalSupportController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   
 
     /**
      * Display the specified resource.
@@ -93,7 +90,6 @@ class TechnicalSupportController extends BaseController
      * @param  \App\Models\TechnicalSupport  $technicalSupport
      * @return \Illuminate\Http\Response
      */
-   
 
     public function changeStatus($id)
     {
@@ -135,7 +131,7 @@ class TechnicalSupportController extends BaseController
         return $this->sendResponse($success, 'تم حذف طلب الدعم بنجاح', 'technical Support deleted successfully');
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $technicalSupports = technicalSupport::whereIn('id', $request->id)->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get();
@@ -170,7 +166,6 @@ class TechnicalSupportController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
 
-        
         $store = Store::where('id', auth()->user()->store_id)->value('store_name');
         //dd(Store::where('id', auth()->user()->store_id)->get());
         $data = [
@@ -192,5 +187,24 @@ class TechnicalSupportController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم اضافة رد بنجاح', ' Added successfully');
+    }
+    public function searchTechnicalSupport(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $technical_supports = technicalSupport::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
+            ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $technical_supports->total();
+        $success['page_count'] = $technical_supports->lastPage();
+        $success['current_page'] = $technical_supports->currentPage();
+        $success['Technicalsupports'] = TechnicalSupportResource::collection($technical_supports);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'technical_supports Information returned successfully');
+
     }
 }

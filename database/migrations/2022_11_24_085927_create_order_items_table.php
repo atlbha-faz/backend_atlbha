@@ -27,7 +27,9 @@ return new class extends Migration
            $table->decimal('discount', 10, 2);
            $table->integer('quantity');
            $table->decimal('total_price', 10, 2);
-           $table->longText('options')->nullable();
+           $table->boolean('is_return')->default(0);
+           $table->unsignedBigInteger('option_id')->nullable();
+           $table->foreign('option_id')->references('id')->on('options')->onDelete('cascade');
            $table->enum('order_status',['new','completed','delivery_in_progress','ready','canceled'])->default('new');
            $table->enum('payment_status', ['pending', 'paid', 'failed'])
             ->default('pending');

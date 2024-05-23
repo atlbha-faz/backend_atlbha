@@ -150,7 +150,7 @@ class WebsiteorderController extends BaseController
         return $this->sendResponse($success, 'تم حذف  الطلب بنجاح', 'websiteorder deleted successfully');
     }
 
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
         $websiteorders = Websiteorder::whereIn('id', $request->id)->where('is_deleted', 0)->get();
         if (count($websiteorders) > 0) {
@@ -244,6 +244,13 @@ class WebsiteorderController extends BaseController
 
         foreach ($users as $user) {
             Notification::send($user, new verificationNotification($data));
+            if ($user->device_token !== null) {
+
+                $fcm = $this->sendFCM($user->device_token,
+                    $user->id, 'منصة اطلبها', ' تم رفض خدمة' . implode(',', $serviceName), $user->notifications()->count());
+
+            }
+
         }
 
         event(new VerificationEvent($data));

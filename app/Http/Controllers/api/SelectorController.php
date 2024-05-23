@@ -10,9 +10,8 @@ use App\Models\Country;
 use App\Models\Package;
 use App\Models\Setting;
 use App\Models\Activity;
+use App\Models\ReturnReason;
 use App\Models\Shippingtype;
-use App\Services\FatoorahServices;
-use Spatie\Permission\Models\Role;
 use App\Http\Resources\BankResource;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\CityResource;
@@ -20,6 +19,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\PackageResource;
 use App\Http\Resources\ActivityResource;
+use App\Http\Resources\ReturnResonsResource;
 use App\Http\Resources\ShippingCitiesResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -67,13 +67,11 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
     }
 
-
-
-    public function shippingcities($id)
+    public function shippingCities($id)
     {
 
         $shippingCompany = Shippingtype::query()->find($id);
-        $success['cities'] =  $shippingCompany !== null ? ShippingCitiesResource::collection($shippingCompany->shippingcities()->where('status', 'active')->get()) : array();
+        $success['cities'] = $shippingCompany !== null ? ShippingCitiesResource::collection($shippingCompany->shippingcities()->where('status', 'active')->get()) : array();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المدن بنجاح', 'city return successfully');
@@ -95,22 +93,33 @@ class SelectorController extends BaseController
 
     }
 
-  public function registrationMarketer(){
-    $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
-    $success['status'] = 200;
+    public function registrationMarketer()
+    {
+        $success['registration_marketer'] = Setting::orderBy('id', 'desc')->pluck('registration_marketer')->first();
+        $success['status'] = 200;
         return $this->sendResponse($success, 'تم عرض حالة المندوب بنجاح', 'registration_marketer show successfully');
 
-  }
-  public function getBank()
-  {
-    
+    }
+    public function getBank()
+    {
 
-      $success['Banks'] = BankResource::collection(Bank::get());
+        $success['Banks'] = BankResource::collection(Bank::get());
 
-      $success['status'] = 200;
+        $success['status'] = 200;
 
-      return $this->sendResponse($success, 'تم ارجاع  البنوك بنجاح', 'bank return successfully');
+        return $this->sendResponse($success, 'تم ارجاع  البنوك بنجاح', 'bank return successfully');
 
-  }
+    }
+
+    public function returnReason()
+    {
+
+        $success['return_reasons'] = ReturnResonsResource::collection(ReturnReason::get());
+
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع  البنوك بنجاح', 'bank return successfully');
+
+    }
 
 }

@@ -101,7 +101,7 @@ class MarketerController extends BaseController
             'whatsapp' => $request->whatsapp,
             'youtube' => $request->youtube,
             'instegram' => $request->instegram,
-          
+
         ]);
 
         $success['marketers'] = new MarketerResource($marketer);
@@ -171,7 +171,7 @@ class MarketerController extends BaseController
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',Rule::unique('users')->where(function ($query) use($marketer) {
                 return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
             }),
-            ],    
+            ],
             'snapchat' => 'required',
             'facebook' => 'required',
             'twiter' => 'required',
@@ -182,7 +182,7 @@ class MarketerController extends BaseController
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'status' => 'required|in:active,not_active',
-    
+
 
         ]);
         if ($validator->fails()) {
@@ -262,7 +262,7 @@ class MarketerController extends BaseController
         return $this->sendResponse($success, 'تم حذف المسوق  بنجاح', 'Marketers deleted successfully');
 
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
         $marketers = Marketer::whereIn('id', $request->id)->get();
         $marketers_id = Marketer::whereIn('id', $request->id)->pluck('user_id')->toArray();

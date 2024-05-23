@@ -15,19 +15,19 @@ class SubscriptionEmailController extends BaseController
     }
     public function index(Request $request)
     {
-        if ($request->has('page')) {
-            $subsicriptions = SubscriptionEmailResource::collection(SubscriptionEmail::where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate(15));
-            $success['page_count'] = $subsicriptions->lastPage();
-            $success['subsicriptions'] = $subsicriptions;
-        } else {
-            $success['subsicriptions'] = SubscriptionEmailResource::collection(SubscriptionEmail::where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->get());
-        }
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $subsicriptions = SubscriptionEmailResource::collection(SubscriptionEmail::where('store_id', auth()->user()->store_id)->orderByDesc('created_at')->paginate($count));
+        $success['page_count'] = $subsicriptions->lastPage();
+        $success['current_page'] = $subsicriptions->currentPage();
+        $success['subsicriptions'] = $subsicriptions;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع اشتراكات الايميل بنجاح', 'Subscription Emails return successfully');
 
     }
-    public function deleteall(Request $request)
+    public function deleteAll(Request $request)
     {
 
         $subsicriptions = SubscriptionEmail::whereIn('id', $request->id)->get();
@@ -46,5 +46,24 @@ class SubscriptionEmailController extends BaseController
         }
 
     }
+    public function searchSubscriptionEmail(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
+        $subsicriptions = SubscriptionEmail::where('email', 'like', "%$query%")
+            ->where('store_id', auth()->user()->store_id)
+            ->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $subsicriptions->total();
+        $success['page_count'] = $subsicriptions->lastPage();
+        $success['current_page'] = $subsicriptions->currentPage();
+        $success['subsicriptions'] = SubscriptionEmailResource::collection($subsicriptions);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع السلات المتروكة بنجاح', 'carts Information returned successfully');
+
+    }
 }

@@ -16,20 +16,19 @@ class NotificationController extends BaseController
     }
     public function index(Request $request)
     {
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
         $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
-        if ($request->has('page')) {
-            $userNotifications = auth()->user()->notifications()->paginate(10);
 
-            $notifications = NotificationResource::collection($userNotifications);
+        $userNotifications = auth()->user()->notifications()->paginate($count);
 
-            // $notifications = NotificationResource::collection(auth()->user()->Notifications->paginate(5));
-            $success['page_count'] = $notifications->lastPage();
-            $pageNumber = request()->query('page', 1);
-            $success['current_page'] = $notifications->currentPage();
-            $success['notifications'] = $notifications;
-        } else {
-            $success['notifications'] = NotificationResource::collection(auth()->user()->Notifications);
-        }
+        $notifications = NotificationResource::collection($userNotifications);
+
+        // $notifications = NotificationResource::collection(auth()->user()->Notifications->paginate(5));
+        $success['page_count'] = $notifications->lastPage();
+        $pageNumber = request()->query('page', 1);
+        $success['current_page'] = $notifications->currentPage();
+        $success['notifications'] = $notifications;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الاشعارات بنجاح', 'Notifications return successfully');

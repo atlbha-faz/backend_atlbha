@@ -17,7 +17,7 @@ class ImportCartController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
 
         $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', null)->first();
@@ -59,7 +59,7 @@ class ImportCartController extends BaseController
             ], [
                 'total' => 0,
                 'count' => 0,
-                'shipping_price' => 35,
+                'shipping_price' => 30,
                 'tax' => 0,
             ]);
             $cartid = $cart->id;
@@ -146,11 +146,12 @@ class ImportCartController extends BaseController
                 'count' => CartDetail::where('cart_id', $cartid)->count(),
                 'subtotal' => $subtotal- $tax,
                 'totalCount' => $totalCount,
+                'overweight_price' => $extra_shipping_price,
                 'tax' => $tax,
                 'weight' => $weight,
             ]);
 
-            $success = new CartResource($cart);
+            $success['data'] = new CartResource($cart);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم اضافة الطلب في السلة', 'Cart Added successfully');
 

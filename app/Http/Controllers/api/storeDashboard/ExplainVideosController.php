@@ -20,14 +20,13 @@ class ExplainVideosController extends BaseController
      */
     public function index(Request $request)
     {
-        if ($request->has('page')) {
 
-            $explainvideos = ExplainVideoResource::collection(ExplainVideos::where('is_deleted', 0)->orderByDesc('created_at')->paginate(8));
-            $success['page_count'] = $explainvideos->lastPage();
-            $success['explainvideos'] = $explainvideos;
-        } else {
-            $success['explainvideos'] = ExplainVideoResource::collection(ExplainVideos::where('is_deleted', 0)->orderByDesc('created_at')->get());
-        }
+        $count= ($request->has('number') && $request->input('number') !== null)? $request->input('number'):10;
+        $explainvideos = ExplainVideoResource::collection(ExplainVideos::where('is_deleted', 0)->orderByDesc('created_at')->paginate($count));
+        $success['page_count'] = $explainvideos->lastPage();
+        $success['current_page'] = $explainvideos->currentPage();
+        $success['explainvideos'] = $explainvideos;
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الفيديوهات المشروحة بنجاح', 'ExplainVideos return successfully');
@@ -56,6 +55,25 @@ class ExplainVideosController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'explainvideo showed successfully');
+    }
+    public function explainVideoName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $explain_videos = ExplainVideos::where('is_deleted', 0)
+            ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $explain_videos->total();
+        $success['page_count'] = $explain_videos->lastPage();
+        $success['current_page'] = $explain_videos->currentPage();
+        $success['explainvideos'] = ExplainVideoResource::collection($explain_videos);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الشروحات بنجاح', 'explain_videos Information returned successfully');
+
     }
 
 }
