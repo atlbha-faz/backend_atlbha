@@ -150,11 +150,11 @@ class IndexStoreController extends BaseController
             if ($store->verification_status == 'accept') {
                 if ($store->verification_type == 'maeruf') {
                     $verificayion_arr['link'] = 'https://eauthenticate.saudibusiness.gov.sa/inquiry';
-                    $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.jpeg';
+                    $verificayion_arr['image'] = 'https://backend.atlbha.sa/assets/media/maroof.jpeg';
                     $verificayion_arr['type'] = 'maeruf';
                 } else {
                     $verificayion_arr['link'] = 'https://eauthenticate.saudibusiness.gov.sa/inquiry';
-                    $verificayion_arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
+                    $verificayion_arr['image'] = 'https://backend.atlbha.sa/assets/media/new_commerce.png';
                     $verificayion_arr['type'] = 'commerce';
                 }
                 $verificayionMethod = $verificayion_arr;
@@ -283,10 +283,10 @@ class IndexStoreController extends BaseController
         if ($store->verification_status == 'accept') {
             if ($store->verification_type == 'maeruf') {
 
-                $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
+                $arr['image'] = 'https://backend.atlbha.sa/assets/media/maroof.png';
             } else {
                 $arr['link'] = null;
-                $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
+                $arr['image'] = 'https://backend.atlbha.sa/assets/media/new_commerce.png';
             }
             $verificayionMethod = $arr;
         } else {
@@ -379,10 +379,10 @@ class IndexStoreController extends BaseController
             if ($store->verification_status == 'accept') {
                 if ($store->verification_type == 'maeruf') {
                     $arr['link'] = $store->link;
-                    $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
+                    $arr['image'] = 'https://backend.atlbha.sa/assets/media/maroof.png';
                 } else {
                     $arr['link'] = null;
-                    $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
+                    $arr['image'] = 'https://backend.atlbha.sa/assets/media/new_commerce.png';
                 }
                 $verificayionMethod = $arr;
             } else {
