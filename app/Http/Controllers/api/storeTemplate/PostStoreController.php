@@ -88,10 +88,10 @@ class PostStoreController extends BaseController
                 if ($store->verification_status == 'accept') {
                     if ($store->verification_type == 'maeruf') {
                         // $arr['link'] = $store->link;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
+                        $arr['image'] = 'https://backend.atlbha.sa/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
+                        $arr['image'] = 'https://backend.atlbha.sa/assets/media/new_commerce.png';
                     }
                     $verificayionMethod = $arr;
                 } else {
@@ -222,10 +222,10 @@ class PostStoreController extends BaseController
                 if ($store->verification_status == 'accept') {
                     if ($store->verification_type == 'maeruf') {
                         $arr['link'] = $store->link;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/maroof.png';
+                        $arr['image'] = 'https://backend.atlbha.sa/assets/media/maroof.png';
                     } else {
                         $arr['link'] = null;
-                        $arr['image'] = 'https://backend.atlbha.com/assets/media/new_commerce.png';
+                        $arr['image'] = 'https://backend.atlbha.sa/assets/media/new_commerce.png';
                     }
                     $verificayionMethod = $arr;
                 } else {
