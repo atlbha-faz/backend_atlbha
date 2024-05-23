@@ -35,6 +35,7 @@ class ReturnOrderResource extends JsonResource
             'comment' => $this->returnOrders->first()->comment,
             'reason_txt' => new ReturnResonsResource($this->returnOrders->first()->returnReason),
             'status' => $status,
+            'refund_status' => $this->returnOrders->first()->refund_status,
             
         ];
     }

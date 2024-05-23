@@ -12,7 +12,7 @@ class ReturnOrder extends Model
     use HasFactory;
     use SoftDeletes;
     protected $table="return_orders";
-    protected $fillable = ['order_id','order_item_id','qty','return_status','comment','return_reason_id','store_id'];
+    protected $fillable = ['order_id','order_item_id','qty','return_status','comment','refund_status','return_reason_id','store_id'];
     public function store()
     {
         return $this->belongsTo(Store::class, 'store_id', 'id');
