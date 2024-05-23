@@ -102,6 +102,7 @@ class OrderResource extends JsonResource
             'codprice' => $this->cod == 1 ? 10 : 0,
             'description' => $this->description,
             'is_deleted' => $this->is_deleted,
+            'is_return' => $this->is_return,
             'store' => $store,
         ];
     }

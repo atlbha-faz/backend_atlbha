@@ -63,6 +63,7 @@ class PaymentOrderResource extends JsonResource
             'paymenttype' => $this->paymentype != null ? new PaymenttypeResource($this->paymentype) : null,      
             'shipping' => $this->shippings->where('shipping_type', 'send')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'send')->first()) : null,
             'shipping_return' => $this->shippings->where('shipping_type', 'return')->first() != null ? new shippingResource($this->shippings->where('shipping_type', 'return')->first()) : null,
+            'is_return' => $this->is_return,
             'created_at' => $this->created_at,
         ];
     }
