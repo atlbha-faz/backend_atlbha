@@ -15,7 +15,7 @@ return [
     'percent'=>'نسبة مئوية',
     'new'=>'جديد',
     'completed'=>'مكتمل',
-    'delivery_in_progress'=>'تم الشحن ',
+    'delivery_in_progress'=>'تم الشحن',
     'ready'=>'قيد التجهيز',
     'canceled'=>'ملغي',
     'refund'=>'مسترجع',
