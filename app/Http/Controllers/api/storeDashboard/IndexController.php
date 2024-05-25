@@ -9,6 +9,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Importproduct;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Store;
 use App\Models\User;
 use DB;
 
@@ -18,6 +19,7 @@ class IndexController extends BaseController
     {
         $this->middleware('auth:api');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +27,8 @@ class IndexController extends BaseController
      */
     public function index()
     {
-        $success['visits'] = 0;
+        $store = Store::with([])->where('id', auth()->user()->store_id)->first();
+        $success['visits'] = $store->views ?? 0;
         $success['orders_count'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id);
         })->count();
@@ -99,8 +102,8 @@ class IndexController extends BaseController
             $success['sales_weekly_compare'] = 1;
         }
         if ($success['sales_monthly'] != null) {
-            $success['sales_percent'] = (int) number_format($success['sales_weekly'] / $success['sales_monthly'] * 100, 0, '.', '');
-            $success['sales_avg'] = (double) number_format($success['sales_weekly'] / $success['sales_monthly'], 2, '.', '');
+            $success['sales_percent'] = (int)number_format($success['sales_weekly'] / $success['sales_monthly'] * 100, 0, '.', '');
+            $success['sales_avg'] = (double)number_format($success['sales_weekly'] / $success['sales_monthly'], 2, '.', '');
 
         } else {
             $success['sales_percent'] = 0;
