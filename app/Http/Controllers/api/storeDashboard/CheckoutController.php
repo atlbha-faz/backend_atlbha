@@ -212,7 +212,6 @@ class CheckoutController extends BaseController
                 "Bypass3DS" => false,
             ];
             $processingDetailsobject = (object) ($processingDetails);
-
             $data = [
                 "PaymentMethodId" => $paymenttype->paymentMethodId,
                 "CustomerName" => $customer->name,
