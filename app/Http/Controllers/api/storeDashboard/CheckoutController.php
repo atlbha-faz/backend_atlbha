@@ -201,7 +201,6 @@ class CheckoutController extends BaseController
 
         $InvoiceId = null;
         if ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
-
             $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
             $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
             $total_price_without_shipping = ($order->total_price) - ($order->shipping_price) - ($order->overweight_price);
@@ -219,8 +218,8 @@ class CheckoutController extends BaseController
                 "CustomerName" => $customer->name,
                 "InvoiceValue" => $order->total_price, // total_price
                 "CustomerEmail" => $customer->email,
-                "CallBackUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/successCheckout',
-                "ErrorUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/failedCheckout
+                "CallBackUrl" => 'https://store.atlbha.sa/Products/SouqOtlobha/successCheckout',
+                "ErrorUrl" => 'https://store.atlbha.sa/Products/SouqOtlobha/failedCheckout
                 ',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
@@ -259,15 +258,14 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
         }
+     else{
 
-        // }
+        $success['order'] = new OrderResource($order);
 
-        // $success['order'] = new OrderResource($order);
+        $success['status'] = 200;
 
-        // $success['status'] = 200;
-
-        // return $this->sendResponse($success, 'تم الاستيراد بنجاح ', 'order send successfully');
-
+        return $this->sendResponse($success, 'تم ارسال بنجاح ', 'order send successfully');
+     }
     }
 
     public function paymentMethods()

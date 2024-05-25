@@ -231,6 +231,12 @@ class ReturnOrderController extends BaseController
                     return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
                 } else {
                     $success['payment'] = $supplierCode;
+                    $returns = ReturnOrder::where('order_id', $order->id)->get();
+                    foreach ($returns as $return) {
+                        $return->update([
+                            'refund_status' => 1
+                        ]);
+                    }
                 }
             }
         }

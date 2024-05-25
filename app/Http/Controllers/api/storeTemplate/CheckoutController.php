@@ -278,8 +278,8 @@ class CheckoutController extends BaseController
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
-                        "CallBackUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/success',
-                        "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/failed',
+                        "CallBackUrl" => 'https://template.atlbha.sa/' . $domain . '/shop/checkout/success',
+                        "ErrorUrl" => 'https://template.atlbha.sa/' . $domain . '/shop/checkout/failed',
                         "Language" => 'ar',
                         "DisplayCurrencyIso" => 'SAR',
                         "ProcessingDetails" => $processingDetailsobject,
@@ -344,8 +344,8 @@ class CheckoutController extends BaseController
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
-                        "CallBackUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/success',
-                        "ErrorUrl" => 'https://template.atlbha.com/' . $domain . '/shop/checkout/failed',
+                        "CallBackUrl" => 'https://template.atlbha.sa/' . $domain . '/shop/checkout/success',
+                        "ErrorUrl" => 'https://template.atlbha.sa/' . $domain . '/shop/checkout/failed',
                         "Language" => 'ar',
                         "DisplayCurrencyIso" => 'SAR',
                         "ProcessingDetails" => $processingDetailsobject,
@@ -582,7 +582,11 @@ class CheckoutController extends BaseController
 
         } else {
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;  
-            $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->orderByDesc('created_at');
+            $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->where('is_archive',0)
+            ->where(function ($sub_query) {
+                $sub_query->where('paymentype_id',4)->orWhere('payment_status','paid');
+                 
+            })->orderByDesc('created_at');
             $orders= $orders->paginate($count);
             $success['page_count'] = $orders->lastPage();
             $success['current_page'] = $orders->currentPage();
