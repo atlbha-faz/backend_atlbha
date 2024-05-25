@@ -207,7 +207,7 @@ class ReturnOrderController extends BaseController
         }
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
             if ($payment != null) {
-                $final_price=$prices-$payment->deduction;
+                $final_price=$prices;
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
