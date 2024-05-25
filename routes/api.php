@@ -95,7 +95,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
 
     Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addSubsicription']);
 
-});
+
 Route::get('cartShow/{id}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'show']);
 Route::post('addCart/{domain}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'addToCart']);
 Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'delete']);
@@ -131,6 +131,7 @@ Route::group([
 
         Route::post('login', [MadfuController::class, 'login']);
     });
+});
 });
 // visit count
 Route::post('storeClientVisit', [App\Http\Controllers\api\VisitCountController::class, 'storeClientVisit']);
