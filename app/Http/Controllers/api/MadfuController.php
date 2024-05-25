@@ -36,9 +36,7 @@ class MadfuController extends BaseController
 //        return $create_order;
         if ($create_order->getStatusCode() == 200) {
             $create_order = json_decode($create_order->getBody()->getContents());
-            if (!$create_order->status) {
-                return $this->sendError('', $create_order->message);
-            }
+
             return $this->sendResponse(['token' => $create_order->token,
                 'data' => $create_order], 'عملية ناجحة', 'Success process');
         } else {
