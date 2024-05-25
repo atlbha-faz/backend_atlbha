@@ -76,6 +76,10 @@ class ReturnOrderController extends BaseController
                     'is_return' => 1
                 ]); 
             }
+            $order=Order::where('id', $request->order_id)->first();
+            $order->update([
+                'is_return' => 1
+            ]); 
         }
 
         $success['status'] = 200;
