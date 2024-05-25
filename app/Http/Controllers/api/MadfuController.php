@@ -22,7 +22,7 @@ class MadfuController extends BaseController
             if (!$login_request->status) {
                 return $this->sendError('', $login_request->message);
             }
-            return $this->sendResponse(['token' => $login_request->token,
+            return $this->sendResponse(['status' => 200,
                 'data' => $login_request], 'عملية ناجحة', 'Success process');
         } else {
             return $this->sendError('خطأ في العملية', 'process failed');
@@ -33,13 +33,11 @@ class MadfuController extends BaseController
     {
 
         $create_order = (new Madfu())->createOrder($request->token, json_decode($request->guest_order_data), json_decode($request->order), json_decode($request->order_details), $request->url);
-        return $create_order;
+//        return $create_order;
         if ($create_order->getStatusCode() == 200) {
             $create_order = json_decode($create_order->getBody()->getContents());
-            if (!$create_order->status) {
-                return $this->sendError('', $create_order->message);
-            }
-            return $this->sendResponse(['token' => $create_order->token,
+
+            return $this->sendResponse(['status' => 200,
                 'data' => $create_order], 'عملية ناجحة', 'Success process');
         } else {
             return $this->sendError('خطأ في العملية', 'process failed');
