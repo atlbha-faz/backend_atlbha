@@ -23,7 +23,7 @@ class AdminOrderController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
         $success['new'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'new')->count();
         $success['completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'completed')->count();
@@ -36,14 +36,15 @@ class AdminOrderController extends BaseController
         $success['all'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null);
         })->where('is_deleted', 0)->count();
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $data = OrderResource::collection(Order::with(['user' => function ($query) {
+        $data = Order::with(['user' => function ($query) {
             $query->select('id', 'city_id');
         }, 'shippings', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']));
-
-        $success['orders'] = $data;
+        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']);
+        $data= $data->paginate($count);
+        $success['orders'] = OrderResource::collection($data);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'Orders return successfully');

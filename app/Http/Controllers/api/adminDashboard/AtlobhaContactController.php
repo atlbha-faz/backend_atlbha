@@ -14,9 +14,14 @@ class AtlobhaContactController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
-        $success['atlobhaContact']=atlobhaContactResource::collection(AtlobhaContact::where('is_deleted',0)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+       $data=AtlobhaContact::where('is_deleted',0)->orderByDesc('created_at');
+       $data= $data->paginate($count);
+        $success['atlobhaContact']=atlobhaContactResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الرسائل  بنجاح','atlobhaContact return successfully');

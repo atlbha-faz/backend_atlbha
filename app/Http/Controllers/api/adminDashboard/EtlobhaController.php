@@ -27,7 +27,7 @@ class EtlobhaController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
         $success['newProducts'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('created_at', '>=', Carbon::now()->subDay())->count();
         $more_sales = $products = DB::table('order_items')->join('products', 'order_items.product_id', '=', 'products.id')->where('products.store_id', null)->where('products.for', 'etlobha')->where('products.is_deleted', 0)
@@ -40,11 +40,15 @@ class EtlobhaController extends BaseController
         }
         $success['not_active_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('status', 'not_active')->count();
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
-        $success['products'] = ProductResource::collection(Product::with(['store', 'category' => function ($query) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Product::with(['store', 'category' => function ($query) {
             $query->select('id', 'name');
-        }])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'admin_special')->get());
+        }])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'admin_special');
+        $data= $data->paginate($count);
+        $success['products'] = ProductResource::collection($data);
         $success['status'] = 200;
-
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
     }

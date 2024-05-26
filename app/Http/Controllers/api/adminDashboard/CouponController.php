@@ -22,9 +22,14 @@ class CouponController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['coupons'] = CouponResource::collection(Coupon::where('is_deleted', 0)->where('store_id', null)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data =Coupon::where('is_deleted', 0)->where('store_id', null)->orderByDesc('created_at');
+        $data = $data->paginate($count);
+        $success['coupons'] = CouponResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الكوبونات بنجاح', 'coupons return successfully');

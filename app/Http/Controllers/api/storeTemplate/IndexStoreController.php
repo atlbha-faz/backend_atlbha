@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
+use App\Helpers\StoreHelper;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CommentResource;
@@ -40,185 +41,142 @@ class IndexStoreController extends BaseController
 {
     public function index($id)
     {
-
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
-
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجود", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
-
+        $store = StoreHelper::check_store_existing($id);
         $store_id = $store->id;
-        if ($store != null) {
-            $success['logo'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('logo')->first();
-            $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
-            $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
-            $theme = Theme::where('store_id', $store_id)->first();
-            if ($theme != null) {
-                $success['Theme'] = new ThemeResource(Theme::where('store_id', $store_id)->select('id', 'primaryBg', 'secondaryBg', 'headerBg', 'layoutBg', 'iconsBg', 'footerBorder', 'footerBg', 'fontColor')->first());
-            }
-        
-            /////////////////////////////////////////
-            $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
-            $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
-            $category = array();
-            foreach ($prodtcts as $prodtct) {
-                $categoryOne = Category::with(['subcategory' => function ($query) use ($prodtct) {
-                    $query->whereIn('id', $prodtct->subcategory()->pluck('id')->toArray());
-                }])->where('is_deleted', 0)->where('id', $prodtct->category_id
-                )->where('status', 'active')->first();
-                if ($categoryOne !== null) {
-                    $category[] = $categoryOne;
-                }
-            }
-            ////////////////////////////////////////////////////////////////////
-            $originalcategory = array();
-            $original_category_first = array();
-            $original_category_second = array();
-            $originalProdutcts = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->get();
-            foreach ($originalProdutcts as $originalProdutct) {
-                $mainCategory = Category::with(['subcategory' => function ($query) use ($originalProdutct) {
-                    $query->whereIn('id', $originalProdutct->subcategory()->pluck('id')->toArray());
-                }])->where('is_deleted', 0)->where('id', $originalProdutct->category_id
-                )->where('store_id', null)->where('status', 'active')->first();
-                if ($mainCategory !== null) {
-                    if (!empty($originalProdutct->subcategory()->pluck('id')->toArray())) {
-                        $original_category_first = array_merge($original_category_first, $originalProdutct->subcategory()->pluck('id')->toArray());
-                    }
-    
-                    $original_category_second[] = $mainCategory->id;
-    
-                }
-            }
-            $original_category_first = array_unique($original_category_first);
-            $original_category_second = array_unique($original_category_second);
-    
-            $lastCategory = Category::with(['subcategory' => function ($query) use ($original_category_first) {
-                $query->whereIn('id', $original_category_first);
-            }])->where('is_deleted', 0)->where('id', $original_category_second
-            )->where('store_id', null)->where('status', 'active')->get();
-    
-            $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
-                ->where('store_id', $store_id)->get()->merge($category)->concat($lastCategory);
-    
-            if ($categories != null) {
-                $success['categories'] = CategoryResource::collection($categories);
-            } else {
-                $success['categories'] = array();
-            }
 
-
-
-            $pages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
-            $success['pages'] = PageResource::collection(Page::with(['store' => function ($query) {
-                $query->select('id');
-            }, 'user' => function ($query) {
-                $query->select('id');
-            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
-
-            $success['storeId'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('id')->first();
-
-            $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
-            $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
-            $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
-            $success['phonenumber'] = User::where('is_deleted', 0)->where('store_id', $store_id)->pluck('phonenumber')->first();
-            $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
-            $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
-            $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
-            $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
-            $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
-            $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
-            $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
-            $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
-            $success['verification_code'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('verification_code')->first();
-
-            $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
-            $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
-            $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
-            $verificayion_arr = array();
-            if ($store->verification_status == 'accept') {
-                if ($store->verification_type == 'maeruf') {
-                    $verificayion_arr['link'] = 'https://eauthenticate.saudibusiness.gov.sa/inquiry';
-                    $verificayion_arr['image'] = 'https://backend.atlbha.sa/assets/media/maroof.jpeg';
-                    $verificayion_arr['type'] = 'maeruf';
-                } else {
-                    $verificayion_arr['link'] = 'https://eauthenticate.saudibusiness.gov.sa/inquiry';
-                    $verificayion_arr['image'] = 'https://backend.atlbha.sa/assets/media/new_commerce.png';
-                    $verificayion_arr['type'] = 'commerce';
-                }
-                $verificayionMethod = $verificayion_arr;
-            } else {
-                $verificayionMethod = null;
-            }
-            $success['verificayionMethod'] = $verificayionMethod;
-
-            if ($store->working_status == 'not_active') {
-                foreach (\App\Models\Day::get() as $day) {
-
-                    $daystore[] = (object) [
-                        'day' => new DayResource($day),
-                        'from' => '00:00:00',
-                        'to' => '12:00:00',
-                        'status' => 'active',
-                    ];
-
-                }
-            } else {
-                $daystore = $store->daystore;
-            }
-
-            $success['workDays'] = DaystoreResource::collection($daystore);
-
-            $seo = Seo::where('is_deleted', 0)->where('store_id', $store_id)->select('id', 'google_analytics', 'snappixel', 'tiktokpixel', 'twitterpixel', 'instapixel', 'robot_link', 'key_words')->first();
-            if ($seo !== null) {
-                $success['Seo'] = new SeoResource($seo);
-            } else {
-                $success['Seo'] = null;
-            }
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
-        } else {
-
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, ' المتجر غير موجود', 'Store is not exists');
+        $success['logo'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('logo')->first();
+        $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
+        $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
+        $theme = Theme::where('store_id', $store_id)->first();
+        if ($theme != null) {
+            $success['Theme'] = new ThemeResource(Theme::where('store_id', $store_id)->select('id', 'primaryBg', 'secondaryBg', 'headerBg', 'layoutBg', 'iconsBg', 'footerBorder', 'footerBg', 'fontColor')->first());
         }
+
+        /////////////////////////////////////////
+        $product_ids = Importproduct::where('store_id', $store_id)->pluck('product_id')->toArray();
+        $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
+        $category = array();
+        foreach ($prodtcts as $prodtct) {
+            $categoryOne = Category::with(['subcategory' => function ($query) use ($prodtct) {
+                $query->whereIn('id', $prodtct->subcategory()->pluck('id')->toArray());
+            }])->where('is_deleted', 0)->where('id', $prodtct->category_id
+            )->where('status', 'active')->first();
+            if ($categoryOne !== null) {
+                $category[] = $categoryOne;
+            }
+        }
+        ////////////////////////////////////////////////////////////////////
+        $originalcategory = array();
+        $original_category_first = array();
+        $original_category_second = array();
+        $originalProdutcts = Product::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->get();
+        foreach ($originalProdutcts as $originalProdutct) {
+            $mainCategory = Category::with(['subcategory' => function ($query) use ($originalProdutct) {
+                $query->whereIn('id', $originalProdutct->subcategory()->pluck('id')->toArray());
+            }])->where('is_deleted', 0)->where('id', $originalProdutct->category_id
+            )->where('store_id', null)->where('status', 'active')->first();
+            if ($mainCategory !== null) {
+                if (!empty($originalProdutct->subcategory()->pluck('id')->toArray())) {
+                    $original_category_first = array_merge($original_category_first, $originalProdutct->subcategory()->pluck('id')->toArray());
+                }
+
+                $original_category_second[] = $mainCategory->id;
+
+            }
+        }
+        $original_category_first = array_unique($original_category_first);
+        $original_category_second = array_unique($original_category_second);
+
+        $lastCategory = Category::with(['subcategory' => function ($query) use ($original_category_first) {
+            $query->whereIn('id', $original_category_first);
+        }])->where('is_deleted', 0)->where('id', $original_category_second
+        )->where('store_id', null)->where('status', 'active')->get();
+
+        $categories = Category::where('is_deleted', 0)->where('status', 'active')->where('parent_id', null)
+            ->where('store_id', $store_id)->get()->merge($category)->concat($lastCategory);
+
+        if ($categories != null) {
+            $success['categories'] = CategoryResource::collection($categories);
+        } else {
+            $success['categories'] = array();
+        }
+
+        $pages = Page_page_category::where('page_category_id', 2)->pluck('page_id')->toArray();
+        $success['pages'] = PageResource::collection(Page::with(['store' => function ($query) {
+            $query->select('id');
+        }, 'user' => function ($query) {
+            $query->select('id');
+        }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store_id)->where('postcategory_id', null)->get());
+
+        $success['storeId'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('id')->first();
+
+        $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_name')->first();
+        $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_email')->first();
+        $success['storeAddress'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('store_address')->first();
+        $success['phonenumber'] = User::where('is_deleted', 0)->where('store_id', $store_id)->pluck('phonenumber')->first();
+        $success['description'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('description')->first();
+        $success['snapchat'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('snapchat')->first();
+        $success['facebook'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('facebook')->first();
+        $success['twiter'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('twiter')->first();
+        $success['youtube'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('youtube')->first();
+        $success['instegram'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('instegram')->first();
+        $success['tiktok'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('tiktok')->first();
+        $success['jaco'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('jaco')->first();
+        $success['verification_code'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('verification_code')->first();
+
+        $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
+        $success['paymentMethod'] = $store->paymenttypes()->where('status', 'active')->get();
+        $store = Store::where('is_deleted', 0)->where('id', $store_id)->first();
+        $verificayion_arr = array();
+        if ($store->verification_status == 'accept') {
+            if ($store->verification_type == 'maeruf') {
+                $verificayion_arr['link'] = 'https://eauthenticate.saudibusiness.gov.sa/inquiry';
+                $verificayion_arr['image'] = 'https://backend.atlbha.sa/assets/media/maroof.jpeg';
+                $verificayion_arr['type'] = 'maeruf';
+            } else {
+                $verificayion_arr['link'] = 'https://eauthenticate.saudibusiness.gov.sa/inquiry';
+                $verificayion_arr['image'] = 'https://backend.atlbha.sa/assets/media/new_commerce.png';
+                $verificayion_arr['type'] = 'commerce';
+            }
+            $verificayionMethod = $verificayion_arr;
+        } else {
+            $verificayionMethod = null;
+        }
+        $success['verificayionMethod'] = $verificayionMethod;
+
+        if ($store->working_status == 'not_active') {
+            foreach (\App\Models\Day::get() as $day) {
+
+                $daystore[] = (object) [
+                    'day' => new DayResource($day),
+                    'from' => '00:00:00',
+                    'to' => '12:00:00',
+                    'status' => 'active',
+                ];
+
+            }
+        } else {
+            $daystore = $store->daystore;
+        }
+
+        $success['workDays'] = DaystoreResource::collection($daystore);
+
+        $seo = Seo::where('is_deleted', 0)->where('store_id', $store_id)->select('id', 'google_analytics', 'snappixel', 'tiktokpixel', 'twitterpixel', 'instapixel', 'robot_link', 'key_words')->first();
+        if ($seo !== null) {
+            $success['Seo'] = new SeoResource($seo);
+        } else {
+            $success['Seo'] = null;
+        }
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الرئيسية للمتجر بنجاح', 'Store index return successfully');
 
     }
 
     public function productPage($domain, $id)
     {
-
-        $store_id = Store::where('domain', $domain)->pluck('id')->first();
-
-        $store = Store::where('id', $store_id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجودة", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
+        $store = StoreHelper::check_store_existing($id);
+        $store_id = $store->id;
 
         if ($store_id != null) {
             $success['domain'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('domain')->first();
@@ -335,23 +293,7 @@ class IndexStoreController extends BaseController
     public function storPage(Request $request, $id)
     {
 
-        $store = Store::where('domain', $request->domain)->whereNot('package_id', null)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->first();
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجودة", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
-
+        $store = StoreHelper::check_store_existing($request->domain);
         $store_id = $store->id;
         $page = Page::where('is_deleted', 0)->where('id', $id)->where('store_id', $store_id)->first();
         if ($page != null) {
@@ -399,26 +341,8 @@ class IndexStoreController extends BaseController
     }
     public function storeProductCategory(Request $request)
     {
-
-        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجودة", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
-
+        $store = StoreHelper::check_store_existing($request->domain);
         $store_id = $store->id;
-
         $input = $request->all();
 
         $validator = Validator::make($input, [
@@ -590,23 +514,7 @@ class IndexStoreController extends BaseController
     }
     public function productSearch(Request $request)
     {
-
-        $store = Store::where('domain', $request->domain)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجودة", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
+        $store = StoreHelper::check_store_existing($request->domain);
 
         $store_id = $store->id;
         $input = $request->all();
@@ -678,14 +586,7 @@ class IndexStoreController extends BaseController
     // المدونه
     public function addSubsicription(Request $request, $domain)
     {
-        $store = Store::where('domain', $domain)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
-
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجودة", "Store is't exists");
-        }
+        $store = StoreHelper::check_store_existing($domain);
 
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -710,43 +611,26 @@ class IndexStoreController extends BaseController
     public function specialProducts(Request $request, $id)
     {
 
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+        $store = StoreHelper::check_store_existing($id);
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+        $specialproducts = Product::with(['importproduct' => function ($query) use ($store) {
+            $query->where('store_id', $store->id);
+        }])->where('status', 'active')->where('is_deleted', 0)
+            ->where(function ($query) use ($store) {
+                $query->whereHas('importproduct', function ($productQuery) use ($store) {
+                    $productQuery->where('store_id', $store->id)->where('status', 'active')->where('special', 'special');
+                })->orwhere('store_id', $store->id)->where('status', 'active')->where('special', 'special');
+            })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'category_id', 'created_at');
+        if ($request->has('category_id')) {
+            $specialproducts->where('category_id', $request->category_id);
         }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجود", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-                $success['status'] = 200;
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
-        if ($store != null) {
 
-            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-
-            $specialproducts = Product::with(['importproduct' => function ($query) use ($store) {
-                $query->where('store_id', $store->id);
-            }])->where('status', 'active')->where('is_deleted', 0)
-                ->where(function ($query) use ($store) {
-                    $query->whereHas('importproduct', function ($productQuery) use ($store) {
-                        $productQuery->where('store_id', $store->id)->where('status', 'active')->where('special', 'special');
-                    })->orwhere('store_id', $store->id)->where('status', 'active')->where('special', 'special');
-                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'category_id', 'created_at');
-            if ($request->has('category_id')) {
-                $specialproducts->where('category_id', $request->category_id);
-            }
-
-            $specialproducts = $specialproducts->paginate($count);
-            $success['specialProducts'] = ProductStoreResource::collection($specialproducts);
-            $success['page_count'] = $specialproducts->lastPage();
-            $success['current_page'] = $specialproducts->currentPage();
-            $success['status'] = 200;
-        }
+        $specialproducts = $specialproducts->paginate($count);
+        $success['specialProducts'] = ProductStoreResource::collection($specialproducts);
+        $success['page_count'] = $specialproducts->lastPage();
+        $success['current_page'] = $specialproducts->currentPage();
+        $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات المميزه بنجاح', 'specialProducts show successfully');
 
@@ -754,72 +638,39 @@ class IndexStoreController extends BaseController
     public function recentProducts(Request $request, $id)
     {
 
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
-
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجود", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
+        $store = StoreHelper::check_store_existing($id);
         $store_id = $store->id;
-        if ($store != null) {
 
-            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-            $oneWeekAgo = Carbon::now()->subWeek();
+        $oneWeekAgo = Carbon::now()->subWeek();
 
-            $resentproduct = Product::with(['importproduct' => function ($query) use ($store) {
-                $query->where('store_id', $store->id);
-            }])->where('status', 'active')->where('is_deleted', 0)
-                ->where(function ($query) use ($store, $oneWeekAgo) {
-                    $query->whereHas('importproduct', function ($productQuery) use ($store, $oneWeekAgo) {
-                        $productQuery->where('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
-                    })->orwhere('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
+        $resentproduct = Product::with(['importproduct' => function ($query) use ($store) {
+            $query->where('store_id', $store->id);
+        }])->where('status', 'active')->where('is_deleted', 0)
+            ->where(function ($query) use ($store, $oneWeekAgo) {
+                $query->whereHas('importproduct', function ($productQuery) use ($store, $oneWeekAgo) {
+                    $productQuery->where('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
+                })->orwhere('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
 
-                })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'category_id', 'created_at');
-            if ($request->has('category_id')) {
-                $resentproduct->where('category_id', $request->category_id);
-            }
-
-            $resentproduct = $resentproduct->paginate($count);
-            $success['resent_arrive'] = ProductStoreResource::collection($resentproduct);
-            $success['page_count'] = $resentproduct->lastPage();
-            $success['current_page'] = $resentproduct->currentPage();
-            $success['status'] = 200;
-
-            return $this->sendResponse($success, 'تم ارجاع المنتجات الجديده بنجاح', 'newProducts show successfully');
+            })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'category_id', 'created_at');
+        if ($request->has('category_id')) {
+            $resentproduct->where('category_id', $request->category_id);
         }
+
+        $resentproduct = $resentproduct->paginate($count);
+        $success['resent_arrive'] = ProductStoreResource::collection($resentproduct);
+        $success['page_count'] = $resentproduct->lastPage();
+        $success['current_page'] = $resentproduct->currentPage();
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات الجديده بنجاح', 'newProducts show successfully');
+
     }
     public function moreSalesProducts(Request $request, $id)
     {
 
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
-
-        if (!is_null($store)) {
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجود", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
+        $store=StoreHelper::check_store_existing($id);
         $store_id = $store->id;
         $main_product = array();
         $import_product = array();
@@ -837,7 +688,6 @@ class IndexStoreController extends BaseController
             }
         }
 
-        if ($store != null) {
 
             $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
@@ -859,8 +709,6 @@ class IndexStoreController extends BaseController
             $success['page_count'] = $moreSalesProducts->lastPage();
             $success['current_page'] = $moreSalesProducts->currentPage();
             $success['status'] = 200;
-        }
-
         return $this->sendResponse($success, 'تم ارجاع المنتجات الاكثر طلبا بنجاح', 'specialProducts show successfully');
 
     }
@@ -927,8 +775,8 @@ class IndexStoreController extends BaseController
     }
     public function lastPosts(Request $request, $id)
     {
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
-        $posts = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
+        $store=StoreHelper::check_store_existing($id);
+       $posts = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
 
         $success['lastPosts'] = PageResource::collection(Page::with(['store' => function ($query) {
             $query->select('id');
@@ -940,7 +788,7 @@ class IndexStoreController extends BaseController
     }
     public function silders(Request $request, $id)
     {
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+        $store=StoreHelper::check_store_existing($id);
         $store_id = $store->id;
         $sliders = array();
         $s1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('sliderstatus1', 'active')->pluck('slider1')->first();
@@ -962,7 +810,7 @@ class IndexStoreController extends BaseController
     }
     public function banars(Request $request, $id)
     {
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+        $store=StoreHelper::check_store_existing($id);
         $store_id = $store->id;
         $banars = array();
         $b1 = Homepage::where('is_deleted', 0)->where('store_id', $store_id)->where('banarstatus1', 'active')->pluck('banar1')->first();

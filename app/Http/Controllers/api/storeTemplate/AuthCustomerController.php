@@ -53,12 +53,7 @@ class AuthCustomerController extends BaseController
             if ($status === false) {
                 $this->sendSms($request);
             }
-            // $data = array(
-            //     'code' => $request->code,
-            // );
-
-            // Mail::to($user->email)->send(new SendCode($data));
-
+            
         } else {
             $user = User::where('phonenumber', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->first();
             if ($user->status == 'not_active') {
@@ -210,9 +205,6 @@ class AuthCustomerController extends BaseController
             $input = $request->all();
             $validator = Validator::make($input, [
                 'name' => 'required|string',
-                //  'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
-                //     return $query->where('user_type','customer')->where('is_deleted',0);
-                // })],
                 'user_name' => 'nullable',
                 'lastname' => 'nullable|string',
                 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
