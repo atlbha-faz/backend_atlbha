@@ -343,31 +343,7 @@ class AuthController extends BaseController
             }])
         ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
-        } /* elseif (
-        !auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-        $query->whereIn('user_type',  ['admin','admin_employee']);
-        }, 'verified' => 1])
-        && !auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'user_type' => function ($query) {
-        $query->whereIn('user_type',  ['admin','admin_employee']);
-        }, 'verified' => 1])
-        ) {
-        $user_name =$request->user_name;
-        $user = User::whereIn('user_type',  ['admin','admin_employee']) ->where(function($query) use ($user_name) {
-        $query->where('user_name', $user_name)->orWhere('email', $user_name);
-        })
-        ->first();
-
-        if ($user) {
-
-        $user->generateVerifyCode();
-        $request->code = $user->verify_code;
-        $request->phonenumber = $user->phonenumber;
-        $this->sendSms($request); // send and return its response
-        }
-
-        return $this->sendError('الحساب غير محقق', 'User not verified');
-        }
-         */
+        } 
         $remember = request('remember');
         if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
                 $query->whereIn('user_type', ['admin', 'admin_employee']);
@@ -586,7 +562,7 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                $status = $this->unifonicTest($request);
+                $status = $this->buildRequest($request);
                 if ($status === false) {
                     $this->sendSms($request);
                 }
@@ -668,16 +644,49 @@ class AuthController extends BaseController
 
     }
 
-    public function buildRequest($mothod, $data = [])
+    // public function buildRequest($mothod, $data = [])
+    // {
+    //     $client = new Client();
+    //     $response = $client->post('https://el.cloud.unifonic.com/rest/SMS/messages', [
+    //         'form_params' => $data,
+    //     ]);
+    //     if ($response->getStatusCode() != 200)
+    //         return false;
+    //     $response = json_decode($response->getBody(), true);
+    //     return $response;
+    // }
+    public function unifonicTest($request)
     {
-        $client = new Client();
-        $response = $client->post('https://el.cloud.unifonic.com/rest/SMS/messages', [
-            'form_params' => $data,
-        ]);
-        if ($response->getStatusCode() != 200)
+
+        $curl = curl_init();
+        $data = array(
+            'AppSid' => env('AppSid', '3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
+            'Body' => $request->code,
+            'Recipient' => $request->phonenumber);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $data,
+        ));
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $responseData = json_decode($response);
+
+        if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
+            return true;
+        } else {
             return false;
-        $response = json_decode($response->getBody(), true);
-        return $response;
+        }
+
     }
 
 }

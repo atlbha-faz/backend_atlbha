@@ -17,11 +17,11 @@ class SetActiveStore
      */
     public function handle(Request $request, Closure $next)
     {
-        $host =$request->host();
-        $store=Store::where('domain',$host)->first();
-        if($store){
-        app()->instance('store',$store);
-        }
+        // $host =$request->host();
+        // $store=Store::where('domain',$host)->first();
+        // if($store){
+        // app()->instance('store',$store);
+        // }
       
          return $next($request);
     }

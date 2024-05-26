@@ -42,7 +42,8 @@
         },
         "files": [
 
-            "app/Helpers/Helper.php"
+            "app/Helpers/Helper.php",
+            "app/Helpers/StoreHelper.php"
     
         ]
     },

@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use App\Http\Controllers\api\BaseController as BaseController;
+use Carbon\Carbon;
+use App\Models\Cart;
+use App\Models\User;
+use App\Models\Store;
+use App\Models\Option;
+use App\Models\Product;
+use App\Models\CartDetail;
+use App\Helpers\StoreHelper;
+use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use App\Models\Package_store;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OptionResource;
-use App\Models\Cart;
-use App\Models\CartDetail;
-use App\Models\Importproduct;
-use App\Models\Option;
-use App\Models\Package_store;
-use App\Models\Product;
-use App\Models\Store;
-use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CartTemplateController extends BaseController
 {
@@ -37,28 +38,7 @@ class CartTemplateController extends BaseController
 
     public function show(Request $request, $id)
     {
-
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereDate('end_at', '>', Carbon::now())->whereNot('package_id', null)->first();
-
-        if (!is_null($store)) {
-
-            $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        }
-        if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجودة", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-
-            }
-
-        }
-
+        $store=StoreHelper::check_store_existing($id);
         $id = $store->id;
 
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();

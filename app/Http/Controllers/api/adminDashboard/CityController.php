@@ -22,9 +22,14 @@ class CityController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $success['cities']=CityResource::collection(City::where('is_deleted',0)->orderByDesc('created_at')->get());
+    public function index(Request $request)
+    {      
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=City::where('is_deleted',0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['cities']=CityResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المدن بنجاح','cities return successfully');

@@ -14,10 +14,14 @@ class CommonQuestionController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['commonQuestions']=CommonQuestionResource::collection(CommonQuestion::where('is_deleted',0)->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=CommonQuestion::where('is_deleted',0);
+        $data= $data->paginate($count);
+        $success['commonQuestions']=CommonQuestionResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الاسئلة بنجاح','Questions return successfully');

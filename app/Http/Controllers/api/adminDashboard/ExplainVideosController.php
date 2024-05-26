@@ -22,13 +22,17 @@ class ExplainVideosController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['explainvideos'] = ExplainVideoResource::collection(ExplainVideos::with(['user' => function ($query) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=ExplainVideos::with(['user' => function ($query) {
             $query->select('id');
-        }])->where('is_deleted', 0)->orderByDesc('created_at')->get());
+        }])->where('is_deleted', 0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['explainvideos'] = ExplainVideoResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
-
         return $this->sendResponse($success, 'تم ارجاع الفيديوهات المشروحة بنجاح', 'ExplainVideos return successfully');
     }
 

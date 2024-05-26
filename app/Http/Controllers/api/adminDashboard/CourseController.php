@@ -27,12 +27,16 @@ class CourseController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['courses'] = CourseResource::collection(Course::with(['user' => function ($query) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data = Course::with(['user' => function ($query) {
             $query->select('id');
-        }])->where('is_deleted', 0)->orderByDesc('created_at')->get());
+        }])->where('is_deleted', 0)->orderByDesc('created_at');
+        $data = $data->paginate($count);
+        $success['courses'] = CourseResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الكورسات المشروحة بنجاح', 'courses return successfully');
@@ -76,7 +80,7 @@ class CourseController extends BaseController
             'name' => $request->name,
             'description' => $request->description,
             'duration' => $request->duration,
-            'tags' =>$request->tags,
+            'tags' => $request->tags,
             'image' => $request->image,
             'user_id' => auth()->user()->id,
         ]);
@@ -222,7 +226,7 @@ class CourseController extends BaseController
             'description' => $request->input('description'),
             'image' => $request->image,
             'duration' => $request->input('duration'),
-            'tags' => $request->tags != ""?json_encode(explode(',', $request->tags)):null,
+            'tags' => $request->tags != "" ? json_encode(explode(',', $request->tags)) : null,
         ]);
         $unit = Unit::where('course_id', $course_id);
 
@@ -284,8 +288,6 @@ class CourseController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'course updated successfully');
     }
 
-
-
     /**
      * Remove the specified resource from storage.
      *
@@ -329,7 +331,6 @@ class CourseController extends BaseController
         $video->name = $videodata[0]['title'];
         $video->duration = $videodata[0]['duration'];
         $video->save();
-
 
         $success['videos'] = new VideoResource($video);
         $success['status'] = 200;

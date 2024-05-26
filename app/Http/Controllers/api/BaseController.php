@@ -10,25 +10,12 @@ class BaseController extends Controller
 {
    public function sendResponse($result , $message, $message_en)
    {
-    if (app()->has('store')) {
+   
     $response = [
         'success' =>true ,
         'data'=>$result,
-        'message'=>['en' => $message_en, 'ar' => $message],
-        'store'=> app('store')
-
+        'message'=>['en' => $message_en, 'ar' => $message]
     ];
-}else{
-    $response = [
-        'success' =>true ,
-        'data'=>$result,
-        'message'=>['en' => $message_en, 'ar' => $message],
-
-
-    ];
-
-}
-  
 
     return response()->json($response , 200);
 
