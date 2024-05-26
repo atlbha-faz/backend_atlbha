@@ -43,6 +43,7 @@ class IndexStoreController extends BaseController
     {
         $store = StoreHelper::check_store_existing($id);
         $store_id = $store->id;
+        $store->increment('views');
 
         $success['logo'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('logo')->first();
         $success['icon'] = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('icon')->first();
@@ -50,6 +51,7 @@ class IndexStoreController extends BaseController
         $theme = Theme::where('store_id', $store_id)->first();
         if ($theme != null) {
             $success['Theme'] = new ThemeResource(Theme::where('store_id', $store_id)->select('id', 'primaryBg', 'secondaryBg', 'headerBg', 'layoutBg', 'iconsBg', 'footerBorder', 'footerBg', 'fontColor')->first());
+
         }
 
         /////////////////////////////////////////
