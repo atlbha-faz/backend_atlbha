@@ -32,8 +32,9 @@ class VerificationController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $stores = Store::with(['categories' => function ($query) {
             $query->select('name', 'icon');
@@ -43,7 +44,8 @@ class VerificationController extends BaseController
             $query->select('id');
         }, 'user' => function ($query) {
             $query->select('id', 'name', 'email', 'phonenumber');
-        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->get();
+        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at');
+        $stores= $stores->paginate($count);
         $success['stores'] = VerificationResource::collection($stores);
         $success['status'] = 200;
 
@@ -284,6 +286,28 @@ class VerificationController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
+    }
+    public function searchVerificationStoreName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')
+        ->orwhere('store_name', 'like', "%$query%")
+        ->orwhere('store_email', 'like', "%$query%")
+        ->orwhere('phonenumber', 'like', "%$query%")
+            ->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $stores->total();
+        $success['page_count'] = $stores->lastPage();
+        $success['current_page'] = $stores->currentPage();
+        $success['stores'] = StoreResource::collection($stores);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'stores Information returned successfully');
+
     }
 
 }

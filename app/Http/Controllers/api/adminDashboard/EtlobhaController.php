@@ -43,7 +43,19 @@ class EtlobhaController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data=Product::with(['store', 'category' => function ($query) {
             $query->select('id', 'name');
-        }])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'admin_special');
+        }])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select(['id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'admin_special']);
+        if ($request->has('category_id')) {
+            $data = $data->where('category_id', $request->category_id);
+        }
+        if ($request->has('subcategory_id')) {
+            $terms = $request->subcategory_id;
+            $data = $data->where(function ($query) use ($terms) {
+                foreach ($terms as $term) {
+                    $query->orWhere('subcategory_id', 'like', "%$term%");
+                };
+            });
+        }
+
         $data= $data->paginate($count);
         $success['products'] = ProductResource::collection($data);
         $success['status'] = 200;

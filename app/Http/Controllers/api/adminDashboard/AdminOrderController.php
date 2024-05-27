@@ -42,7 +42,7 @@ class AdminOrderController extends BaseController
             $query->select('id', 'city_id');
         }, 'shippings', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']);
+        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->select(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']);
         $data= $data->paginate($count);
         $success['orders'] = OrderResource::collection($data);
         $success['status'] = 200;
@@ -178,7 +178,7 @@ class AdminOrderController extends BaseController
         $success['orders'] = OrderResource::collection($orders);
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارجاع السلات المتروكة بنجاح', 'orders Information returned successfully');
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
 
     }
 

@@ -39,7 +39,6 @@ Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
 Route::get('sendMessage', 'App\Http\Controllers\api\AuthController@storeVerifyMessage');
 Route::post('webhook', [App\Http\Controllers\api\WebhookController::class, 'handleWebhook']);
 
-Route::get('unifonicTest', 'App\Http\Controllers\api\AuthController@unifonicTest');
 Route::get('selector/cities', [App\Http\Controllers\api\SelectorController::class, 'cities']);
 Route::get('selector/countries', [App\Http\Controllers\api\SelectorController::class, 'countries']);
 Route::get('selector/activities', [App\Http\Controllers\api\SelectorController::class, 'activities']);
@@ -194,6 +193,12 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
         Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
+        //search
+        Route::get('searchName', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'searchName']);
+        Route::get('searchStoreName', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'searchStoreName']);
+        Route::get('searchStoreProductName', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'searchStoreProductName']);
+        Route::get('searchVerificationStoreName', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'searchVerificationStoreName']);
+
 
         Route::middleware([AdminCheckPermission::class])->group(function () {
             Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
