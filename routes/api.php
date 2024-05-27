@@ -198,6 +198,9 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('searchStoreName', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'searchStoreName']);
         Route::get('searchStoreProductName', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'searchStoreProductName']);
         Route::get('searchVerificationStoreName', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'searchVerificationStoreName']);
+        Route::get('searchPageName', [App\Http\Controllers\api\adminDashboard\PageController::class, 'searchPageName']);
+
+        Route::get('searchQuestionName', [App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, 'searchQuestionName']);
 
 
         Route::middleware([AdminCheckPermission::class])->group(function () {

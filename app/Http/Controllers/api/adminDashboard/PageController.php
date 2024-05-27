@@ -361,5 +361,24 @@ class PageController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
     }
+    public function searchPageName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $pages = Page::where('is_deleted', 0)->where('store_id',null)
+            ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $pages->total();
+        $success['page_count'] = $pages->lastPage();
+        $success['current_page'] = $pages->currentPage();
+        $success['pages'] = PageResource::collection($pages);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الصفحات بنجاح', 'pages Information returned successfully');
+
+    }
 
 }
