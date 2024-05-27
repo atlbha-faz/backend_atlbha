@@ -31,11 +31,16 @@ class ProductController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['products'] = ProductAdaminResource::collection(Product::with(['store' => function ($query) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name', 'store_email', 'logo', 'icon');
-        }, 'category'])->where('is_deleted', 0)->where('for', 'store')->where('original_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'admin_special')->get());
+        }, 'category'])->where('is_deleted', 0)->where('for', 'store')->where('original_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'admin_special');
+        $data= $data->paginate($count);
+        $success['products'] = ProductAdaminResource::collection( $data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -230,5 +235,26 @@ class ProductController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم إضافة ملاحظة بنجاح', 'note Added successfully');
+    }
+    public function searchStoreProductName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $products = Product::where('is_deleted', 0)
+        ->whereHas('store', function ($storeQuery) use ($query) {
+            $storeQuery->where('store_name', 'like', "%$query%");
+        })->orWhere('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $products->total();
+        $success['page_count'] = $products->lastPage();
+        $success['current_page'] = $products->currentPage();
+        $success['products'] = ProductResource::collection($products);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المنتجات  بنجاح', 'Product Information returned successfully');
+
     }
 }

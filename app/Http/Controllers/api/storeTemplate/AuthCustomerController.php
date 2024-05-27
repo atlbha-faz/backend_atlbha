@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
+use App\Helpers\StoreHelper;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\UserResource;
 use App\Mail\SendCode;
@@ -49,11 +50,11 @@ class AuthCustomerController extends BaseController
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            $status = $this->unifonicTest($request);
+            $status = StoreHelper::unifonicSms($request);
             if ($status === false) {
-                $this->sendSms($request);
+                StoreHelper::sendSms($request);
             }
-            
+
         } else {
             $user = User::where('phonenumber', $request->phonenumber)->where('user_type', 'customer')->where('is_deleted', 0)->first();
             if ($user->status == 'not_active') {
@@ -62,9 +63,9 @@ class AuthCustomerController extends BaseController
             $user->generateVerifyCode();
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            $status = $this->unifonicTest($request);
+            $status = StoreHelper::unifonicSms($request);
             if ($status === false) {
-                $this->sendSms($request);
+                StoreHelper::sendSms($request);
             } // send and return its response
             // $data = array(
             //     'code' => $request->code,
@@ -128,7 +129,6 @@ class AuthCustomerController extends BaseController
                 'code' => $request->code,
             );
 
-            //  $request->phonenumber = $user->phonenumber;
             Mail::to($user->email)->send(new SendCode($data));
 
         }
@@ -173,10 +173,10 @@ class AuthCustomerController extends BaseController
         if (is_null($user)) {
             return $this->sendError('الحساب غير موجود', 'User not found');
         }
-        $a = now()->toDateTimeString();
+        $now = now()->toDateTimeString();
 
-        if ($user->verify_code_expires_at < $a) {
-            $success['status'] = $a;
+        if ($user->verify_code_expires_at < $now) {
+            $success['status'] = $now;
             return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
         }
         if ($request->code == $user->verify_code || $request->code == '4287') {
@@ -218,7 +218,6 @@ class AuthCustomerController extends BaseController
             }
             $user->update([
                 'name' => $request->name,
-                // 'user_name' => $request->user_name,
                 'lastname' => $request->lastname,
                 'email' => $request->email,
 
@@ -227,9 +226,6 @@ class AuthCustomerController extends BaseController
             $input = $request->all();
             $validator = Validator::make($input, [
                 'name' => 'required|string',
-                // 'user_name' =>  ['required', 'string','max:255', Rule::unique('users')->where(function ($query) {
-                //     return $query->where('user_type', 'customer')->where('is_deleted',0);
-                // })],
                 'user_name' => 'nullable',
                 'lastname' => 'required|string',
                 'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
@@ -245,7 +241,6 @@ class AuthCustomerController extends BaseController
             }
             $user->update([
                 'name' => $request->name,
-                // 'user_name' => $request->user_name,
                 'lastname' => $request->lastname,
                 'phonenumber' => $request->phonenumber,
 
@@ -257,99 +252,5 @@ class AuthCustomerController extends BaseController
         return $this->sendResponse($success, 'تم التسجيل', 'regsiter');
     }
 
-    public function sendSms($request)
-    {
 
-        try {
-            $data_string = json_encode($request);
-
-            $curl = curl_init();
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://rest.gateway.sa/api/SendSMS',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => '{
-        "api_id":"' . env("GETWAY_API", null) . '",
-        "api_password":"' . env("GETWAY_PASSWORD", null) . '",
-        "sms_type": "T",
-        "encoding":"T",
-        "sender_id": "ATLBHA",
-        "phonenumber": "' . $request->phonenumber . '",
-        "textmessage":"' . $request->code . '",
-
-                    "templateid": "1868",
-                    "V1": "' . $request->code . '",
-                    "V2": null,
-                    "V3": null,
-                    "V4": null,
-                    "V5": null,
-                "ValidityPeriodInSeconds": 60,
-                "uid":"xyz",
-                "callback_url":"https://xyz.com/",
-                "pe_id":"xyz",
-                "template_id":"1868"
-
-
-                        }
-                        ',
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json',
-                ),
-            ));
-
-            $response = curl_exec($curl);
-
-            $decoded = json_decode($response);
-
-            if ($decoded->status == "S") {
-                return true;
-            }
-
-            return $this->sendError("فشل ارسال الرسالة", "Failed Send Message");
-
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
-        }
-
-    }
-
-    public function unifonicTest($request)
-    {
-
-        $curl = curl_init();
-        $data = array(
-            'AppSid' => env('AppSid', '3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
-            'Body' => $request->code,
-            'Recipient' => $request->phonenumber);
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $data,
-        ));
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        $responseData = json_decode($response);
-
-        if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
 }

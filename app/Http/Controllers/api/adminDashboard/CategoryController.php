@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CategoryController extends BaseController
 {
@@ -25,6 +26,9 @@ class CategoryController extends BaseController
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data=Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at');
+        if ($request->has('category_id')) {
+            $data = $data->where('id', $request->category_id);
+        }
         $data= $data->paginate($count);
         $success['categories'] = CategoryResource::collection($data);
         $success['page_count'] =  $data->lastPage();
@@ -78,7 +82,6 @@ class CategoryController extends BaseController
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
             'parent_id' => null,
-
             'store_id' => null,
         ]);
 
@@ -209,7 +212,6 @@ class CategoryController extends BaseController
 
         $subcategory = Category::where('parent_id', $category_id);
 
-        // dd($request->$data['id']);
         $subcategories_id = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         foreach ($subcategories_id as $oid) {
             if ($request->data != null) {

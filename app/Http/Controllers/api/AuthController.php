@@ -2,27 +2,25 @@
 
 namespace App\Http\Controllers\api;
 
-use Exception;
-use Illuminate\Support\Facades\Storage;
 use Notification;
 use App\Models\Page;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
-use GuzzleHttp\Client;
 use App\Models\Setting;
 use App\Models\Homepage;
 use App\Models\Marketer;
-use App\Http\Resources\UserResource;
+use App\Helpers\StoreHelper;
+use Illuminate\Http\Request;
+use App\Services\UnifonicSms;
+use Illuminate\Validation\Rule;
 use App\Models\paymenttype_store;
 use App\Models\shippingtype_store;
-use App\Notifications\verificationNotification;
-use App\Services\UnifonicSms;
-use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-
+use App\Notifications\verificationNotification;
 
 class AuthController extends BaseController
 {
@@ -45,20 +43,11 @@ class AuthController extends BaseController
                     'checkbox_field' => 'required|in:1',
                     'device_token' => 'nullable|string',
                     'user_type' => 'required|in:store,marketer',
-                    // 'name'=>'required|string|max:255',
                     'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
                         return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
                     })],
-                    //'store_name'=>'required_if:user_type,store|string|max:255',
-
-                    //'store_email'=>'required_if:user_type,store|email|unique:stores',
                     'password' => 'required|min:8|string',
-                    //'domain'=>'required_if:user_type,store|unique:stores',
-
                     'city_id' => 'required_if:user_type,marketer|exists:cities,id',
-                    //'periodtype' => 'required_if:user_type,store|in:6months,year',
-                    //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
-                    // 'periodtype' => 'required|in:6months,year',
                     'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                         return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
                     }), Rule::unique('stores', 'store_email')->where(function ($query) {
@@ -83,23 +72,9 @@ class AuthController extends BaseController
                     $validator = Validator::make($input, [
                         'checkbox_field' => 'required|in:1',
                         'user_type' => 'required|in:store,marketer',
-                        // 'name'=>'required|string|max:255',
-                        // 'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
-                        //     return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0);
-                        // })],
-                        //'store_name'=>'required_if:user_type,store|string|max:255',
                         'user_name' => 'nullable',
-
-                        //'store_email'=>'required_if:user_type,store|email|unique:stores',
-                        // 'password' => 'required|min:8|string',
                         'password' => 'nullable',
-                        //'domain'=>'required_if:user_type,store|unique:stores',
-                        //'phonenumber' =>['required_if:user_type,store','numeric','regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-                        //'activity_id' =>'required_if:user_type,store|array|exists:activities,id',
-                        //'package_id' => 'required_if:user_type,store|exists:packages,id',
-                        //'country_id'=>'required_if:user_type,store|exists:countries,id',
                         'city_id' => 'required_if:user_type,marketer|exists:cities,id',
-                        //'periodtype' => 'required_if:user_type,store|in:6months,year',
                         'email' => 'nullable', 'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
                             return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0);
                         }),
@@ -119,7 +94,6 @@ class AuthController extends BaseController
             if ($request->user_type == "store") {
 
                 $user = User::create([
-                    //'name' => $request->name,
                     'email' => $request->email,
                     'user_name' => $request->user_name,
                     'user_type' => "store",
@@ -131,16 +105,9 @@ class AuthController extends BaseController
                 $userid = $user->id;
 
                 $store = Store::create([
-                    // 'store_name' => $request->store_name,
-                    // 'store_email'=>$request->store_email,
-                    // 'domain' =>$request->domain,
-                    // 'phonenumber' => $request->phonenumber,
                     'package_id' => $request->package_id,
                     'user_id' => $userid,
                     'periodtype' => '6months',
-                    //'country_id' => $request->country_id,
-                    //  'city_id' => $request->city_id,
-
                 ]);
 
                 $user->update([
@@ -246,9 +213,9 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                $status = $this->unifonicTest($request);
+                $status = StoreHelper::unifonicSms($request);
                 if ($status === false) {
-                    $this->sendSms($request);
+                    StoreHelper::sendSms($request);
                 }
 
                 // $data = array(
@@ -295,9 +262,9 @@ class AuthController extends BaseController
                     $user->generateVerifyCode();
                     $request->code = $user->verify_code;
                     $request->phonenumber = $user->phonenumber;
-                    $status = $this->unifonicTest($request);
+                    $status = StoreHelper::unifonicSms($request);
                     if ($status === false) {
-                        $this->sendSms($request);
+                        StoreHelper::sendSms($request);
                     }
 
                     // $data = array(
@@ -343,13 +310,13 @@ class AuthController extends BaseController
             }])
         ) {
             return $this->sendError('خطأ في اسم المستخدم أو كلمة المرور', 'Invalid Credentials');
-        } 
+        }
         $remember = request('remember');
         if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['admin', 'admin_employee']);
-            } /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['admin', 'admin_employee']);
-            } /*'verified' => 1 */])) {
+            $query->whereIn('user_type', ['admin', 'admin_employee']);
+        } /*'verified' => 1 */]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
+            $query->whereIn('user_type', ['admin', 'admin_employee']);
+        } /*'verified' => 1 */])) {
             $user = auth()->user();
             $user->update(['device_token' => $request->device_token]);
         }
@@ -405,9 +372,9 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                $status = $this->unifonicTest($request);
+                $status = StoreHelper::unifonicSms($request);
                 if ($status === false) {
-                    $this->sendSms($request);
+                    StoreHelper::sendSms($request);
                 }
                 // send and return its response
                 // $data = array(
@@ -425,13 +392,12 @@ class AuthController extends BaseController
             return $this->sendError('الحساب غير محقق', 'User not verified');
 
         }
-        // $remember = request('remember');
 
         if (auth()->guard()->attempt(['email' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['store', 'store_employee']);
-            }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
-                $query->whereIn('user_type', ['store', 'store_employee']);
-            }, 'verified' => 1])) {
+            $query->whereIn('user_type', ['store', 'store_employee']);
+        }, 'verified' => 1]) || auth()->guard()->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'is_deleted' => 0, 'status' => 'active', 'user_type' => function ($query) {
+            $query->whereIn('user_type', ['store', 'store_employee']);
+        }, 'verified' => 1])) {
             $user = auth()->user();
             $user->update([
                 'device_token' => $request->device_token]);
@@ -442,7 +408,6 @@ class AuthController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
-        // }
     }
 
     public function logout()
@@ -481,9 +446,9 @@ class AuthController extends BaseController
 
             $request->code = $user->verify_code;
             $request->phonenumber = $user->phonenumber;
-            $status = $this->unifonicTest($request);
+            $status = StoreHelper::unifonicSms($request);
             if ($status === false) {
-                $this->sendSms($request);
+                StoreHelper::sendSms($request);
             }
             // send and return its response
             // $data = array(
@@ -518,12 +483,6 @@ class AuthController extends BaseController
         }
 
         $user = User::where('user_name', $request->user_name)->orWhere('email', $request->user_name)->latest()->first();
-        // $a = now()->toDateTimeString();
-
-        // if ($user->verify_code_expires_at < $a) {
-        //     $success['status'] = $a;
-        //     return $this->sendResponse($success, 'انتهت صلاحية الكود', 'not verified');
-        // }
         if ($request->code == $user->verify_code) {
             $user->resetVerifyCode();
             $user->verified = 1;
@@ -562,9 +521,9 @@ class AuthController extends BaseController
                 $user->generateVerifyCode();
                 $request->code = $user->verify_code;
                 $request->phonenumber = $user->phonenumber;
-                $status = $this->buildRequest($request);
+                $status = StoreHelper::unifonicSms($request);
                 if ($status === false) {
-                    $this->sendSms($request);
+                    StoreHelper::sendSms($request);
                 }
                 // send and return its response
             }
@@ -580,113 +539,6 @@ class AuthController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
-    }
-
-    public function sendSms($request)
-    {
-
-        try {
-            $data_string = json_encode($request);
-
-            $curl = curl_init();
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://rest.gateway.sa/api/SendSMS',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => '{
-        "api_id":"' . env("GETWAY_API", null) . '",
-        "api_password":"' . env("GETWAY_PASSWORD", null) . '",
-        "sms_type": "T",
-        "encoding":"T",
-        "sender_id": "ATLBHA",
-        "phonenumber": "' . $request->phonenumber . '",
-        "textmessage":"' . $request->code . '",
-
-                    "templateid": "1868",
-                    "V1": "' . $request->code . '",
-                    "V2": null,
-                    "V3": null,
-                    "V4": null,
-                    "V5": null,
-                "ValidityPeriodInSeconds": 60,
-                "uid":"xyz",
-                "callback_url":"https://xyz.com/",
-                "pe_id":"xyz",
-                "template_id":"1868"
-
-
-                        }
-                        ',
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json',
-                ),
-            ));
-
-            $response = curl_exec($curl);
-
-            $decoded = json_decode($response);
-
-            if ($decoded->status == "S") {
-                return true;
-            }
-
-            return $this->sendError("فشل ارسال الرسالة", "Failed Send Message");
-
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
-        }
-
-    }
-
-    // public function buildRequest($mothod, $data = [])
-    // {
-    //     $client = new Client();
-    //     $response = $client->post('https://el.cloud.unifonic.com/rest/SMS/messages', [
-    //         'form_params' => $data,
-    //     ]);
-    //     if ($response->getStatusCode() != 200)
-    //         return false;
-    //     $response = json_decode($response->getBody(), true);
-    //     return $response;
-    // }
-    public function unifonicTest($request)
-    {
-
-        $curl = curl_init();
-        $data = array(
-            'AppSid' => env('AppSid', '3x6ZYsW1gCpWwcCoMhT9a1Cj1a6JVz'),
-            'Body' => $request->code,
-            'Recipient' => $request->phonenumber);
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://el.cloud.unifonic.com/rest/SMS/messages',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $data,
-        ));
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        $responseData = json_decode($response);
-
-        if (!is_null($responseData) && isset($responseData->success) && $responseData->success === true) {
-            return true;
-        } else {
-            return false;
-        }
-
     }
 
 }

@@ -34,7 +34,7 @@ class StockController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         $success['total_stock'] = Product::where('is_deleted', 0)->where('for', 'stock')->count();
@@ -51,9 +51,18 @@ class StockController extends BaseController
         } else {
             $success['most_order'] = 0;
         }
-        $success['products'] = ProductResource::collection(Product::with(['store', 'category' => function ($query) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Product::with(['store', 'category' => function ($query) {
             $query->select('id', 'name', 'icon');
-        }])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'description', 'short_description')->get());
+        }])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select(['id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'description', 'short_description']);
+        if ($request->has('category_id')) {
+            $data = $data->where('category_id', $request->category_id);
+        }
+
+        $data= $data->paginate($count);
+        $success['products'] = ProductResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');

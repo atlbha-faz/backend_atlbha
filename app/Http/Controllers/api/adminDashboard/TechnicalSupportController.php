@@ -23,7 +23,7 @@ class TechnicalSupportController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $success['Store_Technicalsupports'] = count(DB::table('technical_supports')->where('is_deleted', 0)
                 ->select(DB::raw('count(*) as total'))
@@ -40,7 +40,10 @@ class TechnicalSupportController extends BaseController
         $success['TechnicalsupportsCount'] = TechnicalSupport::where('is_deleted', 0)->count();
         $success['pending_Technicalsupports'] = TechnicalSupport::where('is_deleted', 0)->where('supportstatus', 'pending')->count();
         $success['finished_Technicalsupports'] = TechnicalSupport::where('is_deleted', 0)->where('supportstatus', 'finished')->count();
-        $success['Technicalsupports'] = TechnicalsupportResource::collection(TechnicalSupport::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=TechnicalSupport::where('is_deleted', 0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['Technicalsupports'] = TechnicalsupportResource::collection($data);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'Technical Support return successfully');

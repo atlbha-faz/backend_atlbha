@@ -2,30 +2,28 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Note;
-use App\Models\Page;
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Theme;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\VerificationResource;
 use App\Mail\SendMail;
 use App\Models\Comment;
-use App\Models\Product;
 use App\Models\Homepage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use App\Models\Note;
+use App\Models\Page;
 use App\Models\paymenttype_store;
+use App\Models\Product;
 use App\Models\shippingtype_store;
+use App\Models\Store;
+use App\Models\Theme;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\NoteResource;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\VerificationResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class StoreController extends BaseController
 {
@@ -56,19 +54,22 @@ class StoreController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['stores'] =
-            StoreResource::collection(Store::with(['categories' => function ($query) {
-                $query->select('name', 'icon');
-            }, 'city' => function ($query) {
-                $query->select('id', 'name');
-            }, 'country' => function ($query) {
-                $query->select('id');
-            }, 'user' => function ($query) {
-                $query->select('id');
-            }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special', 'store_email', 'verification_status', 'city_id', 'verification_date', 'created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data = Store::with(['categories' => function ($query) {
+            $query->select('name', 'icon');
+        }, 'city' => function ($query) {
+            $query->select('id', 'name');
+        }, 'country' => function ($query) {
+            $query->select('id');
+        }, 'user' => function ($query) {
+            $query->select('id');
+        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special', 'store_email', 'verification_status', 'city_id', 'verification_date', 'created_at');
+        $data= $data->paginate($count);
+        $success['stores'] = StoreResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
@@ -574,7 +575,6 @@ class StoreController extends BaseController
         return $this->sendResponse($success, 'تم حذف المتجر بنجاح', 'store deleted successfully');
     }
 
-
     public function deleteAll(Request $request)
     {
 
@@ -674,5 +674,25 @@ class StoreController extends BaseController
     public function getStoreToken()
     {
         return ['token' => Storage::get('tokens/swapToken.txt')];
+    }
+    public function searchStoreName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')
+        ->where('store_name', 'like', "%$query%")
+            ->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $stores->total();
+        $success['page_count'] = $stores->lastPage();
+        $success['current_page'] = $stores->currentPage();
+        $success['stores'] = StoreResource::collection($stores);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'stores Information returned successfully');
+
     }
 }

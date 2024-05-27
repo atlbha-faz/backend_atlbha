@@ -51,63 +51,7 @@ class ImportproductController extends BaseController
 
     }
 
-    // public function store(Request $request)
-    // {
-
-    //     $importedproduct = Importproduct::where('product_id', $request->product_id)->where('store_id', auth()->user()->store_id)->first();
-
-    //     $purchasing_price = Product::where('id', $request->product_id)->value('purchasing_price');
-
-    //     $input = $request->all();
-    //     $validator = Validator::make($input, [
-    //         'price' => ['required', 'numeric',
-    //             'gte:' . $purchasing_price],
-    //         'qty' => ['required', 'numeric'],
-    //         'product_id' => 'required',
-    //     ]);
-    //     if ($validator->fails()) {
-    //         return $this->sendError(null, $validator->errors());
-    //     }
-    //     $product = Product::where('id', $request->product_id)->first();
-    //     if ($request->qty > $product->stock) {
-    //         return $this->sendError(' الكمية المطلوبة غير متوفرة', 'quanity more than avaliable');
-    //     } else {
-    //         $importproduct = Importproduct::create([
-    //             'product_id' => $request->product_id,
-    //             'store_id' => auth()->user()->store_id,
-    //             'price' => $request->price,
-    //             'qty' => $request->qty,
-    //         ]);
-    //         $newStock = $product->stock - $importproduct->qty;
-    //         $product->update([
-    //             'stock' => $newStock,
-    //         ]);
-    //         //إستيراد الى متجر اطلبها
-    //         $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
-    //         $importAtlbha = Importproduct::where('product_id', $request->product_id)->where('store_id', $atlbha_id)->first();
-    //         if ($importAtlbha == null) {
-    //             $importAtlbha = Importproduct::create([
-    //                 'product_id' => $request->product_id,
-    //                 'store_id' => $atlbha_id,
-    //                 'price' => $product->selling_price,
-    //                 'qty' => $product->stock,
-    //             ]);
-    //         } else {
-    //             $importAtlbha->update([
-    //                 'product_id' => $product->id,
-    //                 'store_id' => $atlbha_id,
-    //                 'qty' => $product->stock,
-    //             ]);
-    //         }
-
-    //     }
-
-    //     $success['importproducts'] = new ImportproductResource($importproduct);
-    //     $success['status'] = 200;
-
-    //     return $this->sendResponse($success, 'تم إضافة الاستيراد بنجاح', 'importproduct Added successfully');
-    // }
-
+    
     public function show($product)
     {
         $product = Product::query()->where('is_deleted', 0)->where('store_id', null)->find($product);

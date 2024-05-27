@@ -28,7 +28,7 @@ class WebsiteorderController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         $success['count_of_serivces_order'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->count();
@@ -41,8 +41,10 @@ class WebsiteorderController extends BaseController
         $success['count_of_celebrities'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->whereHas('services', function ($q) {
             $q->where('service_id', 3);
         })->count();
-
-        $success['Websiteorder'] = WebsiteorderResource::collection(Websiteorder::where('is_deleted', 0)->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Websiteorder::where('is_deleted', 0)->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
+        $data= $data->paginate($count);
+        $success['Websiteorder'] = WebsiteorderResource::collection($data);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الطلبات بنجاح', 'Websiteorder return successfully');

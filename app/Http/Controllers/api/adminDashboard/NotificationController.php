@@ -24,11 +24,14 @@ class NotificationController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
-        $success['notifications'] = NotificationResource::collection(auth()->user()->Notifications);
+        $success['notifications'] = NotificationResource::collection(auth()->user()->notifications()->paginate($count));
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الاشعارات بنجاح', 'Notifications return successfully');
