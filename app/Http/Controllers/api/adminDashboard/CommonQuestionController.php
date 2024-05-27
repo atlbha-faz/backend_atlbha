@@ -111,4 +111,23 @@ class CommonQuestionController extends BaseController
 
         return $this->sendResponse($success, 'تم الحذف بنجاح', 'deleted successfully');
     }
+    public function searchQuestionName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $pages = CommonQuestion::where('is_deleted', 0)
+            ->where('question', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $pages->total();
+        $success['page_count'] = $pages->lastPage();
+        $success['current_page'] = $pages->currentPage();
+        $success['questions'] = CommonQuestionResource::collection($pages);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الاسئلة الشائعة بنجاح', 'questions Information returned successfully');
+
+    }
 }
