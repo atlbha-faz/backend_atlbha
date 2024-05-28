@@ -270,8 +270,10 @@ class UserController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $query = $request->input('query');
         $users = User::where('is_deleted', 0)->where('user_type', 'admin_employee')->whereNot('id', auth()->user()->id)->whereNot('id', $userAdmain->id)
-        ->where('user_name', 'like', "%$query%")
-        ->orwhere('name', 'like', "%$query%")->orderByDesc('created_at');
+        ->where(function ($q) use($query) {
+           $q->where('user_name', 'like', "%$query%")
+        ->orwhere('name', 'like', "%$query%");
+        })->orderByDesc('created_at');
         $users->paginate($count);
 
         $success['query'] = $query;
