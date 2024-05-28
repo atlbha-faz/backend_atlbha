@@ -203,5 +203,23 @@ class CityController extends BaseController
              return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
               }
     }
+    public function searchCity(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $query = $request->input('query');
+        $cities = City::where('is_deleted', 0)
+        ->where('name', 'like', "%$query%")->orderByDesc('created_at');
+        $cities->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $cities->total();
+        $success['page_count'] = $cities->lastPage();
+        $success['current_page'] = $cities->currentPage();
+        $success['cities'] = cityResource::collection($cities);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المدن بنجاح', 'city Information returned successfully');
+
+    }
 
 }

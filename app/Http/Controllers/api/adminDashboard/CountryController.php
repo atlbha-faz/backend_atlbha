@@ -196,4 +196,22 @@ class CountryController extends BaseController
         }
 
     }
+    public function searchCountry(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $query = $request->input('query');
+        $countries = Country::where('is_deleted', 0)
+        ->where('name', 'like', "%$query%")->orderByDesc('created_at');
+        $countries->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $countries->total();
+        $success['page_count'] = $countries->lastPage();
+        $success['current_page'] = $countries->currentPage();
+        $success['countries'] = CountryResource::collection($countries);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المدن بنجاح', 'Country Information returned successfully');
+
+    }
 }

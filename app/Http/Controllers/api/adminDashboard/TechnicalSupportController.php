@@ -177,4 +177,22 @@ class TechnicalSupportController extends BaseController
         return $this->sendResponse($success, 'تم تعدبل حالة الشكوى بنجاح', ' technicalSupport status updared successfully');
 
     }
+    public function searchTechnicalSupport(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $query = $request->input('query');
+        $supports = TechnicalSupport::where('is_deleted', 0)
+        ->where('title', 'like', "%$query%")->orderByDesc('created_at');
+        $supports->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $supports->total();
+        $success['page_count'] = $supports->lastPage();
+        $success['current_page'] = $supports->currentPage();
+        $success['supports'] = TechnicalsupportResource::collection($supports);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الدعم الفني بنجاح', 'supports Information returned successfully');
+
+    }
 }

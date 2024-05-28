@@ -262,5 +262,23 @@ class WebsiteorderController extends BaseController
         return $this->sendResponse($success, 'تم رفض الطلب بنجاح', ' reject successfully');
 
     }
+    public function searchOrderServiceName(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $query = $request->input('query');
+        $orders = Websiteorder::where('is_deleted', 0)
+        ->where('order_number', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
+        $orders->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $orders->total();
+        $success['page_count'] = $orders->lastPage();
+        $success['current_page'] = $orders->currentPage();
+        $success['orders'] = WebsiteorderResource::collection($orders);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
+
+    }
 
 }
