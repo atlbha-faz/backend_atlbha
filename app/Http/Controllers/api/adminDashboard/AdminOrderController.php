@@ -45,6 +45,8 @@ class AdminOrderController extends BaseController
         }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->select(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']);
         $data= $data->paginate($count);
         $success['orders'] = OrderResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'Orders return successfully');
