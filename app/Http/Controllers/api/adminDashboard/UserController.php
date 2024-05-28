@@ -274,7 +274,7 @@ class UserController extends BaseController
            $q->where('user_name', 'like', "%$query%")
         ->orwhere('name', 'like', "%$query%");
         })->orderByDesc('created_at');
-        $users->paginate($count);
+        $users=$users->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $users->total();

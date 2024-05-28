@@ -183,7 +183,7 @@ class TechnicalSupportController extends BaseController
         $query = $request->input('query');
         $supports = TechnicalSupport::where('is_deleted', 0)
         ->where('title', 'like', "%$query%")->orderByDesc('created_at');
-        $supports->paginate($count);
+        $supports=$supports->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $supports->total();

@@ -202,7 +202,7 @@ class CountryController extends BaseController
         $query = $request->input('query');
         $countries = Country::where('is_deleted', 0)
         ->where('name', 'like', "%$query%")->orderByDesc('created_at');
-        $countries->paginate($count);
+        $countries =$countries->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $countries->total();
