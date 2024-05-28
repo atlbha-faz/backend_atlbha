@@ -241,10 +241,11 @@ class ProductController extends BaseController
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $products = Product::where('is_deleted', 0)
-        ->whereHas('store', function ($storeQuery) use ($query) {
+        $products = Product::where('is_deleted', 0)->where(function ($q)  use ($query)  {
+            $q->whereHas('store', function ($storeQuery) use ($query) {
             $storeQuery->where('store_name', 'like', "%$query%");
-        })->orWhere('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+        })->orWhere('name', 'like', "%$query%");
+         })->orderBy('created_at', 'desc')
             ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description')->paginate($count);
 
         $success['query'] = $query;
