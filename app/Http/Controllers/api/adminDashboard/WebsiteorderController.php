@@ -268,7 +268,7 @@ class WebsiteorderController extends BaseController
         $query = $request->input('query');
         $orders = Websiteorder::where('is_deleted', 0)
         ->where('order_number', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
-        $orders->paginate($count);
+        $orders=$orders->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $orders->total();

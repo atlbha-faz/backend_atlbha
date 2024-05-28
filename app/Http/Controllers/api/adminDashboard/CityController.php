@@ -209,7 +209,7 @@ class CityController extends BaseController
         $query = $request->input('query');
         $cities = City::where('is_deleted', 0)
         ->where('name', 'like', "%$query%")->orderByDesc('created_at');
-        $cities->paginate($count);
+        $cities = $cities->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $cities->total();
