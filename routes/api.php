@@ -199,9 +199,13 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('searchStoreProductName', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'searchStoreProductName']);
         Route::get('searchVerificationStoreName', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'searchVerificationStoreName']);
         Route::get('searchPageName', [App\Http\Controllers\api\adminDashboard\PageController::class, 'searchPageName']);
-
         Route::get('searchQuestionName', [App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, 'searchQuestionName']);
-
+        Route::get('searchUserName', [App\Http\Controllers\api\adminDashboard\UserController::class, 'searchUserName']);
+        Route::get('searchMarketerName', [App\Http\Controllers\api\adminDashboard\MarketerController::class, 'searchMarketerName']);
+        Route::get('searchOrderServiceName', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'searchOrderServiceName']);
+        Route::get('searchTechnicalSupport', [App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class, 'searchTechnicalSupport']);
+        Route::get('searchCity', [App\Http\Controllers\api\adminDashboard\CityController::class, 'searchCity']);
+        Route::get('searchCountry', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'searchCountry']);
 
         Route::middleware([AdminCheckPermission::class])->group(function () {
             Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');

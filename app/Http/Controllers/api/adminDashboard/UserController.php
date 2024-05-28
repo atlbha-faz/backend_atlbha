@@ -28,6 +28,11 @@ class UserController extends BaseController
         $userAdmain = User::where('user_type', 'admin')->first();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data=User::where('is_deleted', 0)->where('user_type', 'admin_employee')->whereNot('id', auth()->user()->id)->whereNot('id', $userAdmain->id)->orderByDesc('created_at');
+        if ($request->has('id')) {
+            $data = $data->whereHas('roles' ,function ($userQuery) use ($request) {
+                $userQuery->where('id', $request->id);
+            });
+        }
         $data= $data->paginate($count);
         $success['users'] = UserResource::collection( $data);
         $success['status'] = 200;
@@ -259,5 +264,25 @@ class UserController extends BaseController
         }
     }
 
+  public function searchUserName(Request $request)
+    {
+        $userAdmain = User::where('user_type', 'admin')->first();
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $query = $request->input('query');
+        $users = User::where('is_deleted', 0)->where('user_type', 'admin_employee')->whereNot('id', auth()->user()->id)->whereNot('id', $userAdmain->id)
+        ->where('user_name', 'like', "%$query%")
+        ->orwhere('name', 'like', "%$query%")->orderByDesc('created_at');
+        $users->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $users->total();
+        $success['page_count'] = $users->lastPage();
+        $success['current_page'] = $users->currentPage();
+        $success['users'] = UserResource::collection($users);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المستخدمين بنجاح', 'users Information returned successfully');
+
+    }
 
 }
