@@ -45,7 +45,7 @@ class VerificationController extends BaseController
         }, 'user' => function ($query) {
             $query->select('id', 'name', 'email', 'phonenumber');
         }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at');
-        $stores= $stores->paginate($count);
+        $stores = $stores->paginate($count);
         $success['stores'] = VerificationResource::collection($stores);
         $success['status'] = 200;
 
@@ -293,9 +293,11 @@ class VerificationController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')
-        ->orwhere('store_name', 'like', "%$query%")
-        ->orwhere('store_email', 'like', "%$query%")
-        ->orwhere('phonenumber', 'like', "%$query%")
+            ->where(function ($q) use ($query) {
+                $q->orwhere('store_name', 'like', "%$query%")
+                    ->orwhere('store_email', 'like', "%$query%")
+                    ->orwhere('phonenumber', 'like', "%$query%");
+            })
             ->orderBy('created_at', 'desc')
             ->paginate($count);
 

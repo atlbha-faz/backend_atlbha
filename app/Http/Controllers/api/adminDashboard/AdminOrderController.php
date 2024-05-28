@@ -163,11 +163,13 @@ class AdminOrderController extends BaseController
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $orders = Order::where('is_deleted', 0)->where('store_id', null)->whereHas('user', function ($userQuery) use ($query) {
+        $orders = Order::where('is_deleted', 0)->where('store_id', null)->where(function ($q) use($query) {
+            $q->whereHas('user', function ($userQuery) use ($query) {
             $userQuery->whereHas('store', function ($storeQuery) use ($query) {
                 $storeQuery->where('store_name', 'like', "%$query%");
             });
-        })->orWhere('order_number', 'like', "%$query%")
+        })->orWhere('order_number', 'like', "%$query%");
+    })
             ->orderBy('created_at', 'desc')
             ->paginate($count);
 
