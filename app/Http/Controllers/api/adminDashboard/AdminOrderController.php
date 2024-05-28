@@ -158,7 +158,7 @@ class AdminOrderController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
         }
     }
-    public function searchName(Request $request)
+    public function searchOrder(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;

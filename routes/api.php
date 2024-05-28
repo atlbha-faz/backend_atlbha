@@ -194,7 +194,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
         Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
         //search
-        Route::get('searchName', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'searchName']);
+        Route::get('searchOrder', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'searchOrder']);
         Route::get('searchStoreName', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'searchStoreName']);
         Route::get('searchStoreProductName', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'searchStoreProductName']);
         Route::get('searchVerificationStoreName', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'searchVerificationStoreName']);
