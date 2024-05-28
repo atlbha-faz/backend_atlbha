@@ -305,7 +305,7 @@ class VerificationController extends BaseController
         $success['total_result'] = $stores->total();
         $success['page_count'] = $stores->lastPage();
         $success['current_page'] = $stores->currentPage();
-        $success['stores'] = StoreResource::collection($stores);
+        $success['stores'] = VerificationResource::collection($stores);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'stores Information returned successfully');
