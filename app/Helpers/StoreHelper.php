@@ -35,7 +35,7 @@ class StoreHelper
             $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
         }
         if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return $this->sendError("المتجر غير موجود", "Store is't exists");
+            return static::sendError("المتجر غير موجود", "Store is't exists");
         }
         if ($store->maintenance != null) {
             if ($store->maintenance->status == 'active') {
@@ -43,7 +43,7 @@ class StoreHelper
 
                 $success['status'] = 200;
 
-                return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+                return $this->static::sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
             }
         }
         if ($store != null) {
@@ -52,7 +52,7 @@ class StoreHelper
 
             $success['status'] = 200;
 
-            return $this->sendResponse($success, ' المتجر غير موجود', 'Store is not exists');
+            return static::sendResponse($success, ' المتجر غير موجود', 'Store is not exists');
         }
 
     }
