@@ -172,7 +172,7 @@ class AdminOrderController extends BaseController
             });
         })->orWhere('order_number', 'like', "%$query%");
     })
-            ->orderBy('created_at', 'desc')
+            ->where('is_archive',0)->where('payment_status','paid')->orderBy('created_at', 'desc')
             ->paginate($count);
 
         $success['query'] = $query;
