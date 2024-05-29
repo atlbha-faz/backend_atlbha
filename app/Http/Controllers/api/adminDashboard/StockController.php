@@ -587,7 +587,7 @@ class StockController extends BaseController
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $products = Product::where('is_deleted', 0)->where('store_id', null)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+        $products = Product::where('is_deleted', 0)->where('for','stock')->where('store_id', null)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
             ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->paginate($count);
 
         $success['query'] = $query;

@@ -177,7 +177,7 @@ class IndexStoreController extends BaseController
 
     public function productPage($domain, $id)
     {
-        $store = StoreHelper::check_store_existing($id);
+        $store = StoreHelper::check_store_existing($domain);
         $store_id = $store->id;
 
         if ($store_id != null) {
