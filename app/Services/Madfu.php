@@ -2,13 +2,21 @@
 
 namespace App\Services;
 
+use App\Models\Order;
+use Illuminate\Http\Request;
+use \Illuminate\Support\Str;
+
 class Madfu
 {
     private $base_url;
+    private $username;
+    private $password;
 
     public function __construct()
     {
         $this->base_url = env('MADFU_BASE_URL');
+        $this->username = env('MADFU_USERNAME');
+        $this->password = env('MADFU_PASSWORD');
     }
 
     private function makeRequest($url, $body, $header = [], $method = 'POST')
@@ -58,9 +66,26 @@ class Madfu
         $body = ["GuestOrderData" => $guest_order_data,
             "Order" => $order,
             "OrderDetails" => $order_details,
-            "MerchantUrls" => ["Success" => $cancel_url.'/success', "Failure" => $cancel_url.'/failed', "Cancel" => $cancel_url]
+            "MerchantUrls" => ["Success" => $cancel_url . '/success', "Failure" => $cancel_url . '/failed', "Cancel" => $cancel_url]
         ];
 
+        return $this->makeRequest($url, $body, ['token' => $token]);
+    }
+
+    public function calculateFees($orderid, $refundAmount)
+    {
+        $order = Order::find($orderid);
+        $token = json_decode($this->login($this->username, $this->password, Str::random(8))->getBody()->getContents())->token;
+        $url = $this->base_url . 'api/Refund/RefundFee/Calculate';
+        $body = ["orderid" => $order->payment_id, "refundAmount" => $refundAmount];
+        return $this->makeRequest($url, $body, ['token' => $token]);
+    }
+    public function refund($orderid, $refundAmount,$refundFees)
+    {
+        $order = Order::find($orderid);
+        $token = json_decode($this->login($this->username, $this->password, Str::random(8))->getBody()->getContents())->token;
+        $url = $this->base_url . 'api/Refund/Create';
+        $body = ["orderid" => $order->payment_id, "refundAmount" => $refundAmount,'refundFees'=>$refundFees,'merchantReference'=>$order->order_number];
         return $this->makeRequest($url, $body, ['token' => $token]);
     }
 }
