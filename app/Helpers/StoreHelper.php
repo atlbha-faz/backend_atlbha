@@ -7,8 +7,26 @@ use App\Models\Store;
 use App\Models\Package_store;
 use App\Http\Resources\MaintenanceResource;
 
-class StoreHelper
+class StoreHelper 
 {
+    public function sendError($error ,$error_en , $errorMessages=[], $code=200)
+    {
+     $response = [
+         'success' =>false ,
+         'message'=>['en' => $error_en, 'ar' => $error]
+ 
+     ];
+ 
+     if (!empty($errorMessages)) {
+         # code...
+         $response['data']= $errorMessages;
+     }else{
+         $response['data']= null;
+     }
+ 
+         return response()->json($response,$code);
+ 
+    }
     public static function check_store_existing($id)
     {
         $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();

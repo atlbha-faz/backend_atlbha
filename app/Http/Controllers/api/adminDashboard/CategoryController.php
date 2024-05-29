@@ -54,19 +54,11 @@ class CategoryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'icon' => ['nullable'],
-            'data.*.name' => 'nullable|string|max:255',
-            'data.*.id' => 'nullable|numeric',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+  
 
         $cat = Category::orderBy('id', 'desc')->first();
         if (is_null($cat)) {
@@ -184,27 +176,16 @@ class CategoryController extends BaseController
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $category)
+    public function update(CategoryRequest $request, $category)
     {
         $category = Category::where('id', $category)->where('store_id', null)->first();
         if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("التصنيف غير موجودة", " Category is't exists");
         }
         $category_id = $category->id;
-        // if($request->parent_id == null){
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'icon' => ['nullable'],
-            'data.*.name' => 'nullable|string|max:255',
-            'data.*.id' => 'nullable|numeric',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-
+    
         $category->update([
             'name' => $request->input('name'),
             'icon' => $request->icon,

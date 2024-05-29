@@ -52,20 +52,10 @@ class CityController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CityRequest $request)
     {
 
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'name_en'=>'required|string|max:255',
-            'code' =>'required',
-            'country_id'=>'required|exists:countries,id'
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
         $city = City::create([
             'name' => $request->name,
             'name_en'=>$request->name_en,
@@ -132,24 +122,14 @@ class CityController extends BaseController
      * @param  \App\Models\City  $city
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $city)
+    public function update(CityRequest $request, $city)
 {
     $city =  City::where('id', $city)->first();
         if (is_null($city) || $city->is_deleted !=0){
          return $this->sendError("المدينه غير موجودة","city is't exists");
     }
          $input = $request->all();
-        $validator =  Validator::make($input ,[
-             'name'=>'required|string|max:255',
-            'name_en'=>'required|string|max:255',
-            'code' =>'required',
-             'country_id'=>'required|exists:countries,id'
-        ]);
-        if ($validator->fails())
-        {
-            # code...
-            return $this->sendError(null,$validator->errors());
-        }
+    
         $city->update([
             'name' => $request->input('name'),
             'name_en' => $request->input('name_en'),
