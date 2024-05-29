@@ -582,7 +582,7 @@ class StockController extends BaseController
         }
 
     }
-    public function searchProductName(Request $request)
+    public function searchStockName(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;

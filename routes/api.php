@@ -196,6 +196,7 @@ Route::middleware([AdminUser::class])->group(function () {
         //search
         Route::get('searchOrder', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'searchOrder']);
         Route::get('searchStoreName', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'searchStoreName']);
+        Route::get('searchStockName', [App\Http\Controllers\api\adminDashboard\StockController::class, 'searchStockName']);
         Route::get('searchStoreProductName', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'searchStoreProductName']);
         Route::get('searchVerificationStoreName', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'searchVerificationStoreName']);
         Route::get('searchPageName', [App\Http\Controllers\api\adminDashboard\PageController::class, 'searchPageName']);
