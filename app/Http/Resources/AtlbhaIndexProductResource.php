@@ -76,7 +76,7 @@ class AtlbhaIndexProductResource extends JsonResource
                 'status' => $status,
                 'special' => $special,
                 'admin_special' => $admin_special,
-                'url' => 'https://template.atlbha.com/' . $domain . '/shop/product/' . $this->id.'/'.$this->name,
+                'url' => 'https://template.atlbha.com/' . $domain . '/shop/product/' . $this->id.'/'.str_replace(" ","-", $this->name),
                 'amount' => $this->amount,
                 'product_has_options' => $this->product_has_options,
                 'productRating' => $this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
