@@ -1,16 +1,16 @@
 <?php
 namespace App\Services\ShippingComanies;
 
-use Carbon\Carbon;
-use App\Models\Order;
-use App\Models\Store;
-use GuzzleHttp\Client;
-use App\Models\Shipping;
-use App\Models\OrderAddress;
-use GuzzleHttp\Psr7\Request;
-use App\Models\OrderOrderAddress;
 use App\Http\Resources\OrderResource;
 use App\Interfaces\ShippingInterface;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderOrderAddress;
+use App\Models\Shipping;
+use App\Models\Store;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 class AramexCompanyService implements ShippingInterface
 {
@@ -38,6 +38,43 @@ class AramexCompanyService implements ShippingInterface
         }
         $response = json_decode((string) $response->getBody());
         return $response;
+    }
+    public function tracking($id)
+    {
+
+        $client = new Client();
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ];
+        $body = '{
+          "ClientInfo": {
+            "UserName": "armx.ruh.it@gmail.com",
+            "Password": "YUre@9982",
+            "Version": "v1",
+            "AccountNumber": "117620",
+            "AccountPin": "553654",
+            "AccountEntity": "JED",
+            "AccountCountryCode": "SA",
+            "Source": 24
+          },
+          "GetLastTrackingUpdateOnly": false,
+          "Shipments": [
+            "' . $id . '"
+          ],
+          "Transaction": {
+            "Reference1": "",
+            "Reference2": "",
+            "Reference3": "",
+            "Reference4": "",
+            "Reference5": ""
+          }
+        }';
+        $request = new Request('POST', 'https://ws.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
+        $res = $client->sendAsync($request)->wait();
+        $response = json_decode($res->getBody());
+        return $response;
+
     }
     public function createOrder($data)
     {
@@ -241,7 +278,11 @@ class AramexCompanyService implements ShippingInterface
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
-
+            $track_id=null;
+            if ($ship_id) {
+                $tracking= $this->tracking($ship_id);
+                $track_id=$tracking->TrackingResults[0]->Key;
+            }
             $order->update([
                 'order_status' => "ready",
             ]);
@@ -255,6 +296,7 @@ class AramexCompanyService implements ShippingInterface
                 'order_id' => $order->id,
                 'store_id' => $order->store_id,
                 'shipping_id' => $ship_id,
+                'track_id'=>$track_id,
                 'sticker' => $url,
                 'description' => $order->description,
                 'price' => $order->total_price,
@@ -558,43 +600,6 @@ class AramexCompanyService implements ShippingInterface
         }
 
         return new OrderResource($order);
-
-    }
-    public function tracking($id)
-    {
-
-        $client = new Client();
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ];
-        $body = '{
-          "ClientInfo": {
-            "UserName": "armx.ruh.it@gmail.com",
-            "Password": "YUre@9982",
-            "Version": "v1",
-            "AccountNumber": "117620",
-            "AccountPin": "553654",
-            "AccountEntity": "JED",
-            "AccountCountryCode": "SA",
-            "Source": 24
-          },
-          "GetLastTrackingUpdateOnly": false,
-          "Shipments": [
-            "' . $id . '"
-          ],
-          "Transaction": {
-            "Reference1": "",
-            "Reference2": "",
-            "Reference3": "",
-            "Reference4": "",
-            "Reference5": ""
-          }
-        }';
-        $request = new Request('POST', 'https://ws.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
-        $res = $client->sendAsync($request)->wait();
-        $response = json_decode($res->getBody());
-        return $response;
 
     }
 
