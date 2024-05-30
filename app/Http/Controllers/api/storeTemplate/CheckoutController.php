@@ -324,7 +324,6 @@ class CheckoutController extends BaseController
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
                   
-                    $order->total_price = $order->total_price;
                     $total_price_without_shipping = ($order->total_price) - ($order->shipping_price) - ($order->overweight_price);
                     $deduction = ($total_price_without_shipping * 0.01) + 1;
                     $price_after_deduction = $total_price_without_shipping - $deduction;

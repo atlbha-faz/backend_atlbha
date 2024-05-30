@@ -1,58 +1,23 @@
 <?php
 namespace App\Helpers;
 
-
-use Carbon\Carbon;
-use App\Models\Store;
 use App\Models\Package_store;
-use App\Http\Resources\MaintenanceResource;
+use App\Models\Store;
+use Carbon\Carbon;
 
-class StoreHelper 
+class StoreHelper
 {
-    public function sendError($error ,$error_en , $errorMessages=[], $code=200)
-    {
-     $response = [
-         'success' =>false ,
-         'message'=>['en' => $error_en, 'ar' => $error]
- 
-     ];
- 
-     if (!empty($errorMessages)) {
-         # code...
-         $response['data']= $errorMessages;
-     }else{
-         $response['data']= null;
-     }
- 
-         return response()->json($response,$code);
- 
-    }
+
     public static function check_store_existing($id)
     {
         $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
-
         if (!is_null($store)) {
             $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
         }
         if (is_null($store) || $store->is_deleted != 0 || is_null($store_package) || $store_package->status == "not_active") {
-            return static::sendError("المتجر غير موجود", "Store is't exists");
-        }
-        if ($store->maintenance != null) {
-            if ($store->maintenance->status == 'active') {
-                $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
-
-                $success['status'] = 200;
-
-                return $this->static::sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
-            }
-        }
-        if ($store != null) {
-            return $store;
+            return false;
         } else {
-
-            $success['status'] = 200;
-
-            return static::sendResponse($success, ' المتجر غير موجود', 'Store is not exists');
+            return $store;
         }
 
     }
@@ -109,8 +74,14 @@ class StoreHelper
             if ($decoded->status == "S") {
                 return true;
             }
+            $response = [
+                'success' => false,
+                'message' => ['en' => "Failed Send Message", 'ar' => "فشل ارسال الرسالة"],
 
-            return $this->sendError("فشل ارسال الرسالة", "Failed Send Message");
+            ];
+            $response['data'] = null;
+
+            return response()->json($response, 200);
 
         } catch (Exception $e) {
             return $this->sendError($e->getMessage());

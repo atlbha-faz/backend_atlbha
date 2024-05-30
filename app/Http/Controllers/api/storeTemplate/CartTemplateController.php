@@ -38,12 +38,22 @@ class CartTemplateController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $store=StoreHelper::check_store_existing($id);
-        $id = $store->id;
+        $store = StoreHelper::check_store_existing($id);
+        if ($store) {
+            if ($store->maintenance != null) {
+                if ($store->maintenance->status == 'active') {
+                    $success['maintenanceMode'] =new MaintenanceResource($store->maintenance);
+                    $success['status'] = 200;
+                    return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
+                }
+            }
+        } else {
+            return $this->sendError("  المتجر غير موجود", "store is't exists");
+        }
+        
+        $success['domain'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('domain')->first();
 
-        $success['domain'] = Store::where('is_deleted', 0)->where('id', $id)->pluck('domain')->first();
-
-        $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $id)->first();
+        $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $store->id)->first();
 
         if (is_null($cart)) {
             return $this->sendError("السلة غير موجودة", "cart is't exists");
