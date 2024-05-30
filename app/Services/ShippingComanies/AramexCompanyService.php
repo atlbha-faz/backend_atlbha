@@ -278,11 +278,11 @@ class AramexCompanyService implements ShippingInterface
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
-            $track_id=null;
-            if ($ship_id) {
-                $tracking= $this->tracking($ship_id);
-                $track_id=$tracking->TrackingResults[0]->Key;
-            }
+            // $track_id=null;
+            // if ($ship_id) {
+            //     $tracking= $this->tracking($ship_id);
+            //     $track_id=$tracking->TrackingResults[0]->Key;
+            // }
             $order->update([
                 'order_status' => "ready",
             ]);
@@ -296,7 +296,7 @@ class AramexCompanyService implements ShippingInterface
                 'order_id' => $order->id,
                 'store_id' => $order->store_id,
                 'shipping_id' => $ship_id,
-                'track_id'=>$track_id,
+                'track_id'=>$ship_id,
                 'sticker' => $url,
                 'description' => $order->description,
                 'price' => $order->total_price,
