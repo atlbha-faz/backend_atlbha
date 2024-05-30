@@ -54,20 +54,10 @@ class CommentController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment_text' => 'required|string|max:255',
-            'rateing' => 'required|numeric',
-            'comment_for' => 'required|in:product,store',
-            'product_id' => 'required|exists:products,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $comment = Comment::create([
             'comment_text' => $request->comment_text,
             'rateing' => $request->rateing,
@@ -122,24 +112,13 @@ class CommentController extends BaseController
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $comment)
+    public function update(CommentRequest $request, $comment)
     {
         $comment = Comment::where('id', $comment)->first();
         if (is_null($comment) || $comment->is_deleted != 0) {
             return $this->sendError(" التعليق غير موجود", "comment is't exists");
         }
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment_text' => 'required|string|max:255',
-            'rateing' => 'required|numeric',
-            'comment_for' => 'required|in:product,store',
-            'product_id' => 'required|exists:products,id',
-            'user_id' => 'required|exists:users,id',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $comment->update([
             'comment_text' => $request->input('comment_text'),
             'rateing' => $request->input('rateing'),
