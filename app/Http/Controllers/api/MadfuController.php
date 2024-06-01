@@ -17,7 +17,12 @@ class MadfuController extends BaseController
     {
         $username = 'wesam@faz-it.net';
         $password = 'Welcome@123';
+        try{
         $login_request = (new Madfu())->login($username, $password, $request->uuid);
+        }
+        catch(ClientException $e) {
+            return $this->sendError("خطأ في البيانات المدخلة",'Message: ' .$e->getMessage());
+         }
         if ($login_request->getStatusCode() == 200) {
             $login_request = json_decode($login_request->getBody()->getContents());
             if (!$login_request->status) {
