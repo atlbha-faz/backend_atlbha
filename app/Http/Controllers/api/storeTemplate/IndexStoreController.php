@@ -296,13 +296,13 @@ class IndexStoreController extends BaseController
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
         }
-         $store->id = Store::where('domain', $request->domain)->pluck('id')->first();
+         $store_id = Store::where('domain', $request->domain)->pluck('id')->first();
         $comment = Comment::create([
             'comment_text' => $request->comment_text,
             'rateing' => $request->rateing,
             'comment_for' => 'product',
             'product_id' => $id,
-            'store_id' => $store->id,
+            'store_id' => $store_id,
             'user_id' => auth()->user()->id,
             'status' => 'not_active',
         ]);
