@@ -16,6 +16,7 @@ use App\Services\FatoorahServices;
 use App\Http\Resources\PaymentResource;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\SupplierResource;
+use GuzzleHttp\Exception\ClientException;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class SupplierController extends BaseController
@@ -180,7 +181,12 @@ class SupplierController extends BaseController
             'Iban' => $request->iban,
         ];
         $supplier = new FatoorahServices();
+        try{
         $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',json_encode($data));
+        }
+        catch(ClientException $e) {
+            return $this->sendError("خطأ في البيانات المدخلة",'Message: ' .$e->getMessage());
+         }
         if ($supplierCode['IsSuccess'] == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
