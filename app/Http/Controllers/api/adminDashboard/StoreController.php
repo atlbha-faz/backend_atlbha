@@ -708,8 +708,8 @@ class StoreController extends BaseController
         }
         $store = Store::find($id);
         if ($store) {
-            $store->madfu_username = $request->madfu_username;
-            $store->madfu_password = $request->madfu_password;
+            $store->madfu_username = $request->username;
+            $store->madfu_password = $request->password;
             $store->save();
         }
         $success['status'] = 200;
