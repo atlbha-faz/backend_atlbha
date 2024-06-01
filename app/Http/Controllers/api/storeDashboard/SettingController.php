@@ -121,7 +121,6 @@ class SettingController extends BaseController
         ]);
        
         if ($request->working_status == 'active') {
-
             if (!is_null($request->data)) {
                 foreach ($request->data as $data) {
                     if ($data['status'] == "not_active") {

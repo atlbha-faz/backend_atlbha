@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateOrderRequest;
-use App\Http\Requests\MadfuLoginRequest;
-use App\Models\MadfuLog;
 use App\Models\Order;
 use App\Services\Madfu;
+use App\Models\MadfuLog;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\MadfuLoginRequest;
+use App\Http\Requests\CreateOrderRequest;
+use GuzzleHttp\Exception\ClientException;
 
 class MadfuController extends BaseController
 {
@@ -32,7 +33,12 @@ class MadfuController extends BaseController
     public function createOrder(CreateOrderRequest $request)
     {
 
+        try{
         $create_order = (new Madfu())->createOrder($request->token, json_decode($request->guest_order_data), json_decode($request->order), json_decode($request->order_details), $request->url);
+        }
+        catch(ClientException $e) {
+            return $this->sendError("خطأ في البيانات المدخلة",'Message: ' .$e->getMessage());
+         }
 //        return $create_order;
         if ($create_order->getStatusCode() == 200) {
             $create_order = json_decode($create_order->getBody()->getContents());
