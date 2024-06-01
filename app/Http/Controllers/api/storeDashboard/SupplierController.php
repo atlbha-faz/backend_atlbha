@@ -70,9 +70,9 @@ class SupplierController extends BaseController
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
-        // if ($account) {
-        //     return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
-        // }
+        if ($account) {
+            return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
+        }
  
         $data = [
             'SupplierName' => $store->owner_name,
@@ -88,10 +88,14 @@ class SupplierController extends BaseController
             'DisplaySupplierDetails'=>true
         ];
 
-       
-        $supplier = new FatoorahServices();
-        $supplierCode = $supplier->createSupplier('v2/CreateSupplier' ,$data);
 
+        $supplier = new FatoorahServices();
+        try{
+        $supplierCode = $supplier->createSupplier('v2/CreateSupplier' ,$data);
+        }
+        catch(ClientException $e) {
+            return $this->sendError("خطأ في البيانات المدخلة",'Message: ' .$e->getMessage());            
+          }
         if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
