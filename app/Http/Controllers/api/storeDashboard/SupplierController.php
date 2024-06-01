@@ -84,11 +84,11 @@ class SupplierController extends BaseController
             'BankAccount' => $request->bankAccount,
             'Iban' => $request->iban,
             'BusinessName'=>$store->store_name,
-            'logo'=>public_path('storage\images\storelogo') . '\\' . $store->logo_pure ,
-            'DisplaySupplierDetails'=>true
+            'logo'=>public_path('storage/images/storelogo') . '/' . $store->logo_pure ,
+            'DisplaySupplierDetails'=>"true"
         ];
 
-       
+
         $supplier = new FatoorahServices();
         try{
         $supplierCode = $supplier->createSupplier('v2/CreateSupplier' ,$data);
@@ -99,6 +99,7 @@ class SupplierController extends BaseController
         if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
+
         $account = Account::updateOrCreate(
             [
                 'store_id' => auth()->user()->store_id,
