@@ -84,6 +84,7 @@ class SettingController extends BaseController
             return $this->sendError(null, $validator2->errors());
         }
         $settingStore = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        $request->working_status='active';
         $settingStore->update([
             'description' => $request->input('description'),
             'domain' => $request->input('domain'),
@@ -93,7 +94,7 @@ class SettingController extends BaseController
             'store_name' => $request->input('store_name'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
-            // 'working_status' => $request->input('working_status'),
+            'working_status' =>$request->working_status,
         ]);
         $parameters = ['icon', 'logo'];
 
@@ -118,7 +119,6 @@ class SettingController extends BaseController
         ], [
             'logo' => $request->logo,
         ]);
-        $request->working_status='active';
         if ($request->working_status == 'active') {
 
             if (!is_null($request->data)) {
