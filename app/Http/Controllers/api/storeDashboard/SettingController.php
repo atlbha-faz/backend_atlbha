@@ -93,7 +93,7 @@ class SettingController extends BaseController
             'store_name' => $request->input('store_name'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
-            // 'working_status' => $request->input('working_status'),
+            'working_status' => 'active',
         ]);
         $parameters = ['icon', 'logo'];
 
