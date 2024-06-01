@@ -255,6 +255,7 @@ class AramexCompanyService implements ShippingInterface
                 'order_id' => $order->id,
                 'store_id' => $order->store_id,
                 'shipping_id' => $ship_id,
+                'track_id' => $ship_id,
                 'sticker' => $url,
                 'description' => $order->description,
                 'price' => $order->total_price,
