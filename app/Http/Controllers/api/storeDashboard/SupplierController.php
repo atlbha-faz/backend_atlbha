@@ -90,8 +90,12 @@ class SupplierController extends BaseController
 
        
         $supplier = new FatoorahServices();
+        try{
         $supplierCode = $supplier->createSupplier('v2/CreateSupplier' ,$data);
-
+        }
+        catch(ClientException $e) {
+            return $this->sendError("خطأ في البيانات المدخلة",'Message: ' .$e->getMessage());
+         }
         if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
@@ -240,6 +244,11 @@ class SupplierController extends BaseController
     public function showSupplierDashboard()
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
+
+        if (!$account) {
+            return $this->sendError(" لا يوجد حساب بنكي", "account is't exists");
+        }
         $supplier = new FatoorahServices();
         $supplierCode = $supplier->buildRequest('v2/GetSupplierDashboard?SupplierCode=' . $storeAdmain->supplierCode,'GET');
         // if ( $supplierCode->IsSuccess == false){
