@@ -36,7 +36,9 @@ class storeInformationController extends BaseController
             'facebook' => 'required_without_all:snapchat,twiter,youtube,instegram|url',
             'twiter' => 'required_without_all:facebook,snapchat,youtube,instegram|url',
             'youtube' => 'required_without_all:facebook,twiter,snapchat,instegram|url',
-            'instegram' => 'required_without_all:facebook,twiter,youtube,snapchat|url'
+            'instegram' => 'required_without_all:facebook,twiter,youtube,snapchat|url',
+            'tiktok' => 'required_without_all:facebook,twiter,youtube,snapchat,instegram|url',
+            'jaco' => 'required_without_all:facebook,twiter,youtube,snapchat,instegram,tiktok|url'
         ]);
         if ($validator->fails()) {
             # code...
