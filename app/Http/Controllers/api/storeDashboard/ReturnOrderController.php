@@ -206,6 +206,7 @@ class ReturnOrderController extends BaseController
             $prices = $prices + ($return->qty * $return->orderItem->price);         
         }
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
+            $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
                 $final_price=$prices;
                 $data = [
@@ -224,8 +225,14 @@ class ReturnOrderController extends BaseController
                 $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', json_encode($data));
                 }
                 catch(ClientException $e) {
+                    if($return_status->refund_status == 1)
+                    {
                     return $this->sendError("تم الارجاع مسبقا",'Message: ' .$e->getMessage());
-
+                    }
+                    else{
+                    return $this->sendError("لايوجد لديك رصيد كافي",'Message: ' .$e->getMessage());
+ 
+                    }
                  }
                 if ($supplierCode['IsSuccess'] == false) {
                     return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
