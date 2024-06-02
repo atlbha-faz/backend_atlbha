@@ -30,7 +30,7 @@ class PaymenttypeResource extends JsonResource
             }
         }
         $store = Store::find(auth()->user()->store_id);
-        $is_madfu = $store->madfu_username != null && $store->madfu_password != null && $this->id == 5;
+        $is_madfu = ($store) ? ($store->madfu_username != null && $store->madfu_password != null && $this->id == 5) : false;
         return [
             'id' => $this->id,
             'name' => $this->name,
