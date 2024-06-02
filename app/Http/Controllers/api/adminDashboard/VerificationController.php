@@ -46,6 +46,8 @@ class VerificationController extends BaseController
             $query->select('id', 'name', 'email', 'phonenumber');
         }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at');
         $stores = $stores->paginate($count);
+        $success['page_count'] = $stores>lastPage();
+        $success['current_page'] = $stores->currentPage();
         $success['stores'] = VerificationResource::collection($stores);
         $success['status'] = 200;
 
