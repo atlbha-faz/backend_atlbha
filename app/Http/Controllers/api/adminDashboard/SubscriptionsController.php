@@ -171,7 +171,7 @@ class SubscriptionsController extends BaseController
         $success['stores'] = SubscriptionsResource::collection($stores);
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'stores Information returned successfully');
+        return $this->sendResponse($success, 'تم ارجاع الاشتراكات بنجاح', 'Subscriptions Information returned successfully');
 
     }
 

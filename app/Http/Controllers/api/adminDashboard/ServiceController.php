@@ -23,10 +23,14 @@ class ServiceController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['Services'] = ServiceResource::collection(Service::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data = Service::where('is_deleted', 0)->orderByDesc('created_at');
+        $data = $data->paginate($count);
+        $success['Services'] = ServiceResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'Services return successfully');
@@ -192,6 +196,22 @@ class ServiceController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة الخدمة بنجاح', 'service updated successfully');
+
+    }
+    public function searchServiceName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $services = Service::where('is_deleted', 0)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')->paginate($count);
+        $success['query'] = $query;
+        $success['total_result'] = $services->total();
+        $success['page_count'] = $services->lastPage();
+        $success['current_page'] = $services->currentPage();
+        $success['services'] = ServiceResource::collection($services);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الخدمات  بنجاح', 'service Information returned successfully');
 
     }
 }
