@@ -20,7 +20,7 @@ class SubscriptionsController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index(Request $reques)
+    public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
 
