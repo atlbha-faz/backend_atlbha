@@ -22,9 +22,14 @@ class PackageController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['packages'] = PackageResource::collection(Package::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
+        $data=Package::where('is_deleted', 0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
+        $success['packages'] =  PackageResource::collection($data);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
