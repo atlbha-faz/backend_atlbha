@@ -24,7 +24,7 @@ class SubscriptionsController extends BaseController
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
 
-         $data= Store::with(['categories' => function ($query) {
+        $data = Store::with(['categories' => function ($query) {
             $query->select('name');
         }, 'city' => function ($query) {
             $query->select('id');
@@ -34,10 +34,10 @@ class SubscriptionsController extends BaseController
             $query->select('id');
         }])->where('is_deleted', 0)->where('package_id', '!=', null)->orderByDesc('created_at')->select('id', 'store_name', 'verification_status', 'logo', 'package_id', 'created_at');
         $success['status'] = 200;
-        $data= $data->paginate($count);
+        $data = $data->paginate($count);
         $success['stores'] = SubscriptionsResource::collection($data);
-        $success['page_count'] =  $data->lastPage();
-        $success['current_page'] =  $data->currentPage();
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Subscriptions return successfully');
     }
@@ -151,13 +151,16 @@ class SubscriptionsController extends BaseController
 
         return $this->sendResponse($success, 'تم إضافة بنجاح', ' Added successfully');
     }
-    public function searchStoreName(Request $request)
+    public function searchSubscriptionsName(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')
-        ->where('store_name', 'like', "%$query%")
+        $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')->where(function ($q) use ($query) {
+            $q->where('store_name', 'like', "%$query%")->orWhereHas('packages', function ($subQuery) use ($query) {
+                $subQuery->where('name', 'like', "%$query%");
+            });
+        })
             ->orderBy('created_at', 'desc')
             ->paginate($count);
 
