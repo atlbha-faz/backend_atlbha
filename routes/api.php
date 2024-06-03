@@ -204,6 +204,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('searchTechnicalSupport', [App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class, 'searchTechnicalSupport']);
         Route::get('searchCity', [App\Http\Controllers\api\adminDashboard\CityController::class, 'searchCity']);
         Route::get('searchCountry', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'searchCountry']);
+        Route::get('searchSubscriptionsName', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'searchSubscriptionsName']);
 
         Route::middleware([AdminCheckPermission::class])->group(function () {
             Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
