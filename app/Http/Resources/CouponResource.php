@@ -6,6 +6,7 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PaymenttypeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ImportsProductSearchResource;
 
 class CouponResource extends JsonResource
 {
@@ -20,7 +21,7 @@ class CouponResource extends JsonResource
 
 
          $products =ProductResource::collection($this->products);
-         $imports = importsResource::collection($this->imports);
+         $imports = ImportsProductSearchResource::collection($this->imports);
        //  $all=$products->merge($imports);
         //dd($all);
         return [

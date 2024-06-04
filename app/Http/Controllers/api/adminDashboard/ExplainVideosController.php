@@ -84,7 +84,7 @@ class ExplainVideosController extends BaseController
                 $explainvideos->duration = $videodata[0]['duration'];
                 $explainvideos->save();
             } else {
-                return $this->sendResponse($success, 'قم بنسخ الامبداد الخاص بالفيديو من اليوتيوب', 'copy embeded video from youtube');
+                return $this->sendError('قم بنسخ الامبداد الخاص بالفيديو من اليوتيوب', 'copy embeded video from youtube');
 
             }
         }
