@@ -702,6 +702,9 @@ class StoreController extends BaseController
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required',
+            'api_key' => 'required',
+            'app_code' => 'required',
+            'authorization' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -710,6 +713,9 @@ class StoreController extends BaseController
         if ($store) {
             $store->madfu_username = $request->username;
             $store->madfu_password = $request->password;
+            $store->madfu_api_key = $request->api_key;
+            $store->madfu_app_code = $request->app_code;
+            $store->madfu_authorization = $request->authorization;
             $store->save();
         }
         $success['status'] = 200;
