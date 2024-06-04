@@ -15,7 +15,7 @@ class Madfu
     {
         $client = new \GuzzleHttp\Client();
         $header = array_merge($header, [
-            'APIKey' => ' b55dd64-dc765-12c5-bcd5-4',
+            'APIKey' => 'b55dd64-dc765-12c5-bcd5-4',
             'Appcode' => 'Atlbha',
             'Authorization' => 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==',
             'PlatformTypeId' => '5',
