@@ -61,6 +61,12 @@ class MadfuController extends BaseController
         if ($request->status) {
             if ($request->orderStatus == 125) {
                 $order = Order::where('order_number', $request->MerchantReference)->first();
+                if($order == null){
+                    $client = new Client();
+                    $response = $client->post('https://api.fayezbinsaleh.me/api/webhook', [
+                        'json' => json_encode($request->all()),
+                    ]);
+                }
                 $order->payment_status = "paid";
                 $order->save();
             }
