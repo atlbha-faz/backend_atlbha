@@ -45,6 +45,8 @@ class WebsiteorderController extends BaseController
         $data=Websiteorder::where('is_deleted', 0)->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
         $data= $data->paginate($count);
         $success['Websiteorder'] = WebsiteorderResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الطلبات بنجاح', 'Websiteorder return successfully');

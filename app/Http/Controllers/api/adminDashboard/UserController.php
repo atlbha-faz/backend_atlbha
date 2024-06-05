@@ -35,6 +35,8 @@ class UserController extends BaseController
         }
         $data= $data->paginate($count);
         $success['users'] = UserResource::collection( $data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع االمستخدمين بنجاح', 'Users return successfully');
