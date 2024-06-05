@@ -41,7 +41,7 @@ class PostStoreController extends BaseController
         foreach ($tags as $tag) {
             $tagarr[] = $tag;
         }
-        $success['tags'] = $tagarr;
+        $success['tags'] =array_filter($tagarr);
         $success['category'] = Category::where('is_deleted', 0)->where('store_id', $store->id)->with('products')->has('products')->get();
         $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', null)->get());
         $postIds = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
