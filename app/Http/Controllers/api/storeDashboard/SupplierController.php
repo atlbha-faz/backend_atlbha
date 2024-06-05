@@ -70,9 +70,9 @@ class SupplierController extends BaseController
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
-        // if ($account) {
-        //     return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
-        // }
+        if ($account) {
+            return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
+        }
  
         $data = [
             'SupplierName' => $store->owner_name,
@@ -84,14 +84,18 @@ class SupplierController extends BaseController
             'BankAccount' => $request->bankAccount,
             'Iban' => $request->iban,
             'BusinessName'=>$store->store_name,
-            'logo'=>public_path('storage\images\storelogo') . '\\' . $store->logo_pure ,
-            'DisplaySupplierDetails'=>true
+            'logo'=>public_path('storage/images/storelogo') . '/' . $store->logo_pure ,
+            'DisplaySupplierDetails'=>"true"
         ];
 
-       
-        $supplier = new FatoorahServices();
-        $supplierCode = $supplier->createSupplier('v2/CreateSupplier' ,$data);
 
+        $supplier = new FatoorahServices();
+        try{
+        $supplierCode = $supplier->createSupplier('v2/CreateSupplier' ,$data);
+        }
+        catch(ClientException $e) {
+            return $this->sendError("خطأ في البيانات المدخلة",'Message: ' .$e->getMessage());
+         }
         if ($supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
@@ -103,7 +107,7 @@ class SupplierController extends BaseController
                 'bankAccountHolderName' => $request->input('bankAccountHolderName'),
                 'bankAccount' => $request->input('bankAccount'),
                 'iban' => $request->input('iban'),
-                'supplierCode' => $supplierCode->Data->SupplierCode,               'status' => 'active',
+                'supplierCode' => $supplierCode->Data->SupplierCode
             ]);
         $storeAdmain->update([
             'supplierCode' => $supplierCode->Data->SupplierCode]);
@@ -175,7 +179,12 @@ class SupplierController extends BaseController
             'Iban' => $request->iban,
         ];
         $supplier = new FatoorahServices();
-        $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',json_encode($data));
+        try{
+            $supplierCode = $supplier->buildRequest('v2/EditSupplier','POST',json_encode($data));
+            }
+            catch(ClientException $e) {
+                return $this->sendError("خطأ في البيانات المدخلة",'Message: ' .$e->getMessage());
+             }
         if ($supplierCode['IsSuccess'] == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
@@ -240,6 +249,11 @@ class SupplierController extends BaseController
     public function showSupplierDashboard()
     {
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
+
+        if (!$account) {
+            return $this->sendError(" لا يوجد حساب بنكي", "account is't exists");
+        }
         $supplier = new FatoorahServices();
         $supplierCode = $supplier->buildRequest('v2/GetSupplierDashboard?SupplierCode=' . $storeAdmain->supplierCode,'GET');
         // if ( $supplierCode->IsSuccess == false){

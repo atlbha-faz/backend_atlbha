@@ -163,7 +163,12 @@ class CheckoutController extends BaseController
                         ]);
                     }
                     if ($cartItem->option_id != null) {
-                        $optionQty = Option::where('id', $cartItem->option_id)->where('importproduct_id', $importProduct->id)->first();
+                        if($importProduct == null){
+                            $importProduct= null;
+                        }else{
+                            $importProduct= $importProduct->id;
+                        }
+                        $optionQty = Option::where('id', $cartItem->option_id)->where('importproduct_id', $importProduct)->first();
                         if ($optionQty != null) {
                             $optionQty->update([
                                 'quantity' => $optionQty->quantity - $cartItem->qty,

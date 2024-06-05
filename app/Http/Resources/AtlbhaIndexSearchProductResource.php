@@ -22,7 +22,7 @@ class AtlbhaIndexSearchProductResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'image'=> $this->cover,
-            'url' => 'https://template.atlbha.sa/' . $domain . '/shop/product/' . $this->id,
+            'url' => 'https://template.atlbha.sa/' . $domain . '/shop/product/' . $this->id .'/'.preg_replace('/ /', '-',$this->name),
         ];
       
        
