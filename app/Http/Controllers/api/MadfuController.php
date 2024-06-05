@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Order;
+use GuzzleHttp\Client;
 use App\Services\Madfu;
 use App\Models\MadfuLog;
 use Illuminate\Http\Request;
