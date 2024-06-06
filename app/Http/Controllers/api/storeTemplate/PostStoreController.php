@@ -41,7 +41,7 @@ class PostStoreController extends BaseController
         foreach ($tags as $tag) {
             $tagarr[] = $tag;
         }
-        $success['tags'] =array_filter($tagarr);
+        $success['tags'] = array_filter($tagarr);
         $success['category'] = Category::where('is_deleted', 0)->where('store_id', $store->id)->with('products')->has('products')->get();
         $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', null)->get());
         $postIds = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
@@ -112,8 +112,11 @@ class PostStoreController extends BaseController
             $success['icon'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('icon')->first();
             //    dd($tags);
             foreach ($tags as $tag) {
-                if( $tag !== ""){
-                $tagarr[] = $tag;
+                if ($tag !== "" && $tag !== null) {
+                    $tag = explode(',', $tag);
+                    foreach ($tag as $t) {
+                        $tagarr[] = $t;
+                    }
                 }
             }
             $success['tags'] = $tagarr;
