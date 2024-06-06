@@ -112,7 +112,9 @@ class PostStoreController extends BaseController
             $success['icon'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('icon')->first();
             //    dd($tags);
             foreach ($tags as $tag) {
+                if( $tag !== ""){
                 $tagarr[] = $tag;
+                }
             }
             $success['tags'] = $tagarr;
 
