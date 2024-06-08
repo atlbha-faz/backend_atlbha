@@ -94,7 +94,7 @@ class importsResource extends JsonResource
               'stock' => $this->qty,
               'tags' => $this->product->tags,
               'cover' => $this->product->cover,
-              'discount_price_import' => $this->discount_price_import !== null ? $this->discount_price_import :"",
+              'discount_price_import' => $this->discount_price_import !== null ?( $this->discount_price_import > 0 ?  $this->discount_price_import :""):"",
               'SEOdescription' =>$this->product->SEOdescription != null ?explode(',',$this->product->SEOdescription): array(),
               'snappixel' => $this->product->snappixel,
               'tiktokpixel' => $this->product->tiktokpixel,
