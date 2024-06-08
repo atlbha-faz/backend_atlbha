@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\City;
 use Illuminate\Http\Request;
+use App\Http\Requests\CityRequest;
 use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;

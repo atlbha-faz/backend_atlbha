@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use App\Http\Requests\ClientRequest;
+use App\Http\Resources\ClientResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ClientController extends BaseController
 {
