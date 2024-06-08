@@ -32,6 +32,7 @@ class ReturnOrderResource extends JsonResource
             'id'=>$this->id,
             'order' => new PaymentOrderResource($this),
             'orderItem' => ReturnOrderItemsResource::collection($this->items->where('is_return', 1)),
+            'return_total'=>$this->sumReturns($this->id),
             'comment' => $this->returnOrders->first()->comment,
             'reason_txt' => new ReturnResonsResource($this->returnOrders->first()->returnReason),
             'status' => $status,
