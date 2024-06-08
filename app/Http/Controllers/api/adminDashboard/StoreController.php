@@ -717,6 +717,11 @@ class StoreController extends BaseController
             $store->madfu_app_code = $request->app_code;
             $store->madfu_authorization = $request->authorization;
             $store->save();
+            $paymenttype = paymenttype_store::firstOrCreate([
+                'paymentype_id' => 5,
+                'store_id' => $id,
+            ]);
+
         }
         $success['status'] = 200;
 
