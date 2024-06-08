@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use App\Http\Requests\ContactRequest;
+use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ContactController extends BaseController
 {
@@ -50,17 +51,9 @@ class ContactController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string',
-            'store_id' => 'required|exists:stores,id',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+
         $contact = Contact::create([
             'subject' => $request->subject,
             'message' => $request->message,
@@ -124,7 +117,7 @@ class ContactController extends BaseController
      * @param  \App\Models\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $contact)
+    public function update(ContactRequest $request, $contact)
     {
         $contact = Contact::where('id', $contact)->first();
         if (is_null($contact) || $contact->is_deleted != 0) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use Illuminate\Http\Request;
 use App\Models\CommonQuestion;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CommonQuestionRequest;
 use App\Http\Resources\CommonQuestionResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -26,18 +27,9 @@ class CommonQuestionController extends BaseController
 
          return $this->sendResponse($success,'تم ارجاع الاسئلة بنجاح','Questions return successfully');
     }
-    public function store(Request $request)
+    public function store(CommonQuestionRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'question' =>  ['required','string','max:255'],
-            'answer' =>  ['required','string','max:255'],
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+      
 
         $CommonQuestion = CommonQuestion::create([
             'question' => $request->question,
@@ -65,18 +57,8 @@ class CommonQuestionController extends BaseController
 
     }
 
-    public function update(Request $request, $id)
+    public function update(CommonQuestionRequest $request, $id)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'question' =>  ['required','string','max:255'],
-            'answer' =>  ['required','string','max:255'],
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $question = CommonQuestion::find($id);
 
         if (is_null($question)) {

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CountryResource;
 use App\Models\Country;
 use Illuminate\Http\Request;
+use App\Http\Requests\CountryRequest;
+use App\Http\Resources\CountryResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CountryController extends BaseController
 {
@@ -51,17 +52,9 @@ class CountryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CountryRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
-            'code' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+       
         $country = Country::create([
             'name' => $request->name,
             'name_en' => $request->name_en,
@@ -129,22 +122,13 @@ class CountryController extends BaseController
      * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $country)
+    public function update(CountryRequest $request, $country)
     {
         $country = Country::query()->find($country);
         if (is_null($country) || $country->is_deleted != 0) {
             return $this->sendError("الدولة غير موجودة", "country is't exists");
         }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
-            'code' => 'required',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+        
         $country->update([
             'name' => $request->input('name'),
             'name_en' => $request->input('name_en'),
