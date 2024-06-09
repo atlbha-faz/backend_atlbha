@@ -79,7 +79,7 @@ class SupplierController extends BaseController
             'SupplierName' => $store->owner_name,
             'Mobile' => str_replace("+", "00", $storeAdmain->phonenumber),
             'Email' => $storeAdmain->email,
-            'DepositTerms' => 'Daily',
+            'DepositTerms' => 'Weekly',
              'BankId' => $request->bankId,
             'BankAccountHolderName' => $request->bankAccountHolderName,
             'BankAccount' => $request->bankAccount,
