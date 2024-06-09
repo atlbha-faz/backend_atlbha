@@ -58,8 +58,31 @@ class MadfuController extends BaseController
                     ]);
                 }
                 $order->payment_status = "paid";
+                $order->payment_id = $request->orderId;
                 $order->save();
             }
+        }
+    }
+
+    public function refundFees(Request $request)
+    {
+        $fees = (new Madfu())->calculateFees($request->orderid, $request->refundAmount);
+        if ($fees->getStatusCode() == 200) {
+            return $this->sendResponse(['status' => 200,
+                'data' => json_decode($fees->getBody()->getContents())], 'عملية ناجحة', 'Success process');
+        } else {
+            return $this->sendError('خطأ في العملية', 'process failed');
+        }
+    }
+
+    public function refund(Request $request)
+    {
+        $refund = (new Madfu())->refund($request->orderid, $request->refundAmount, $request->refundFees);
+        if ($refund->getStatusCode() == 200) {
+            return $this->sendResponse(['status' => 200,
+                'data' => json_decode($refund->getBody()->getContents())], 'عملية ناجحة', 'Success process');
+        } else {
+            return $this->sendError('خطأ في العملية', 'process failed');
         }
     }
 }
