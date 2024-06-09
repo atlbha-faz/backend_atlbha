@@ -58,6 +58,7 @@ class IndexStoreController extends BaseController
                 return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
             }
         }
+        $store->increment('views');
 
         $store_id = $store->id;
         if ($store != null) {
