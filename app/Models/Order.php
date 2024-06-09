@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ReturnOrder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
@@ -86,6 +87,15 @@ class Order extends Model
             'order_id',
             'order_address_id'
        )->withPivot('type');
+    }
+    public function sumReturns($id){
+        $returns = ReturnOrder::where('order_id', $id)->get();
+        $prices = 0;
+        foreach ($returns as $return) {
+            $prices = $prices + ($return->qty * $return->orderItem->price);         
+        }  
+        return $prices;
+        
     }
 
    
