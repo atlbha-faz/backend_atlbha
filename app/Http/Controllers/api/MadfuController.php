@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateOrderRequest;
-use App\Http\Requests\MadfuLoginRequest;
-use App\Models\MadfuLog;
 use App\Models\Order;
+use GuzzleHttp\Client;
 use App\Services\Madfu;
+use App\Models\MadfuLog;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\MadfuLoginRequest;
+use App\Http\Requests\CreateOrderRequest;
 
 class MadfuController extends BaseController
 {
@@ -50,6 +51,12 @@ class MadfuController extends BaseController
         if ($request->status) {
             if ($request->orderStatus == 125) {
                 $order = Order::where('order_number', $request->MerchantReference)->first();
+                if($order == null){
+                    $client = new Client();
+                    $response = $client->post('https://api.fayezbinsaleh.me/api/webhook', [
+                        'json' => json_encode($request->all()),
+                    ]);
+                }
                 $order->payment_status = "paid";
                 $order->save();
             }
