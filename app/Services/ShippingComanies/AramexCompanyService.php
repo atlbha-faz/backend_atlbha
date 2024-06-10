@@ -584,12 +584,15 @@ class AramexCompanyService implements ShippingInterface
                 $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
                 if ($response) {
                     if ($response['IsSuccess'] == false) {
-                        return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                        // return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                        $success['error'] = "خطأ في الارجاع المالي";
+
                     } else {
                         $success['message'] = $response;
                     }
                 } else {
-                    return $this->sendError("خطأ في الارجاع المالي", 'error');
+                    $success['error'] = "خطأ في الارجاع المالي";
+                    // return $this->sendError("خطأ في الارجاع المالي", 'error');
                 }
             }
         }
