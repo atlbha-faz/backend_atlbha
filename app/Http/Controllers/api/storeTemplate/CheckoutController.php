@@ -264,8 +264,8 @@ class CheckoutController extends BaseController
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
                     $vat=$order->total_price*0.15;
-                    $deduction = ($order->total_price * 0.01) + 1;
-                    $price_after_deduction = $order->total_price - $deduction - $vat;
+                    $deduction = ($order->total_price * 0.01) + 1 + $vat;
+                    $price_after_deduction = $order->total_price - $deduction;
                     
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
@@ -328,11 +328,10 @@ class CheckoutController extends BaseController
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                  
-                    
+                
                     $vat=$order->total_price*0.15;
-                    $deduction = ($order->total_price * 0.01) + 1;
-                    $price_after_deduction = $order->total_price -($order->shipping_price)-($order->overweight_price)- $deduction- $vat;
+                    $deduction = ($order->total_price * 0.01) + 1 +$vat;
+                    $price_after_deduction = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $deduction;
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
                         "ProposedShare" => $price_after_deduction,
