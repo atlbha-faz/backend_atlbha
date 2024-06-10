@@ -64,7 +64,7 @@ class ProductStoreResource extends JsonResource
             'tags' => $this->tags,
             'cover' => $this->cover,
             'discount_price' =>$import == true ? $object->discount_price_import : $this->discount_price,
-            'SEOdescription' => $this->SEOdescription != null ? json_decode($this->SEOdescription, true) : array(),
+            'SEOdescription' => $this->SEOdescription != null ?  explode(',',$this->SEOdescription) : array(),
             'snappixel' => $this->snappixel,
             'tiktokpixel' => $this->tiktokpixel,
             'twitterpixel' => $this->twitterpixel,
