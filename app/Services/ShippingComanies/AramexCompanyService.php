@@ -1,16 +1,18 @@
 <?php
 namespace App\Services\ShippingComanies;
 
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\Store;
+use GuzzleHttp\Client;
+use App\Models\Payment;
+use App\Models\Shipping;
+use App\Models\OrderAddress;
+use GuzzleHttp\Psr7\Request;
+use App\Models\OrderOrderAddress;
+use App\Services\FatoorahServices;
 use App\Http\Resources\OrderResource;
 use App\Interfaces\ShippingInterface;
-use App\Models\Order;
-use App\Models\OrderAddress;
-use App\Models\OrderOrderAddress;
-use App\Models\Shipping;
-use App\Models\Store;
-use Carbon\Carbon;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 
 class AramexCompanyService implements ShippingInterface
 {
@@ -556,7 +558,7 @@ class AramexCompanyService implements ShippingInterface
                     "ServiceChargeOnCustomer" => false,
                     "Amount" => $order->total_price,
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $payment->price_after_deduction,
+                    "AmountDeductedFromSupplier" => $order->total_price,
                     "CurrencyIso" => "SAR",
                 ];
 
