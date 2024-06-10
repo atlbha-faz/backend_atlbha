@@ -55,6 +55,10 @@ class WebhookController extends BaseController
     public function handleWebhook(Request $request)
     {
         $allData = $request->input('Data');
+        $body = $request->all();
+        $myfatoorahLog = new MyfatoorahLog();
+        $myfatoorahLog->request = json_encode($body);
+        $myfatoorahLog->save();
         if ($allData != null) {
 
             //get MyFatoorah-Signature from request headers
@@ -62,17 +66,10 @@ class WebhookController extends BaseController
 
             // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
             $secret = env("secret");
-
-            $body = $request->all();
-
             if (!($this->validateSignature($body, $secret, $MyFatoorah_Signature))) {
                 return;
             }
-            $myfatoorahLog = new MyfatoorahLog();
-            $myfatoorahLog->request = json_encode($body);
-            $myfatoorahLog->save();
             $event = $request->input('EventType');
-
             if ($event == 1) {
                 $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                 $order = Order::where('id', $payment->orderID)->first();
