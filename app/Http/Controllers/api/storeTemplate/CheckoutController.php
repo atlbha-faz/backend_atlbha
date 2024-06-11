@@ -326,6 +326,9 @@ class CheckoutController extends BaseController
                 } elseif ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
 
                     $account = Account::where('store_id', $store_domain)->first();
+                    if(!$account){
+                        return $this->sendError("لا يوجد حساب بنكي","account is not exsit");
+                    }
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
                   
