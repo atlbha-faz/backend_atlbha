@@ -7,6 +7,7 @@ use App\Models\Store;
 use GuzzleHttp\Client;
 use App\Models\Payment;
 use App\Models\Shipping;
+use App\Models\ReturnOrder;
 use App\Models\OrderAddress;
 use GuzzleHttp\Psr7\Request;
 use App\Models\OrderOrderAddress;
@@ -567,18 +568,32 @@ class AramexCompanyService implements ShippingInterface
 
             if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
                 $payment = Payment::where('orderID', $order->id)->first();
-
+              if($order->store_id== null)
+              {
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" => $order->total_price,
+                    "Amount" =>$payment->price_after_deduction,
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $order->total_price,
+                    "AmountDeductedFromSupplier" => 0,
+                    "CurrencyIso" => "SAR",
+                ];
+            }
+            else{
+                $data = [
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "RefundChargeOnCustomer" => false,
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" =>$payment->price_after_deduction,
+                    "Comment" => "refund to the customer",
+                    "AmountDeductedFromSupplier" => $payment->price_after_deduction,
                     "CurrencyIso" => "SAR",
                 ];
 
+            }
                 $supplier = new FatoorahServices();
 
                 $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
@@ -589,6 +604,12 @@ class AramexCompanyService implements ShippingInterface
 
                     } else {
                         $success['message'] = $response;
+                        $returns = ReturnOrder::where('order_id', $order->id)->get();
+                        foreach ($returns as $return) {
+                            $return->update([
+                                'refund_status' => 1
+                            ]);
+                        }
                     }
                 } else {
                     $success['error'] = "خطأ في الارجاع المالي";
