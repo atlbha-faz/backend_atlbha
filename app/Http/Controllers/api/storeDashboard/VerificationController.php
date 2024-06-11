@@ -99,7 +99,8 @@ class VerificationController extends BaseController
         } else {
             $subcategory = null;
         }
-        $store->categories()->sync($request->activity_id, ['subcategory_id' => $subcategory]);
+        $store->categories()->detach();
+        $store->categories()->attach($request->activity_id, ['subcategory_id' => $subcategory]);
         $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id', [1, 2])->get();
 
         $data = [
