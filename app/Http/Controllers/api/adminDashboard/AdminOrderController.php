@@ -25,17 +25,17 @@ class AdminOrderController extends BaseController
     }
     public function index()
     {
-        $success['new'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'new')->count();
-        $success['completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'completed')->count();
+        $success['new'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->where('order_status', 'new')->count();
+        $success['completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'completed')->where('is_archive',0)->where('payment_status','paid')->count();
 
-        $success['not_completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'not_completed')->count();
+        $success['not_completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'not_completed')->where('is_archive',0)->where('payment_status','paid')->count();
         $success['canceled'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null)->where('order_status', 'canceled');
-        })->count();
+        })->where('is_archive',0)->where('payment_status','paid')->count();
 
         $success['all'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null);
-        })->where('is_deleted', 0)->count();
+        })->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->count();
 
         $data = OrderResource::collection(Order::with(['user' => function ($query) {
             $query->select('id', 'city_id');

@@ -55,7 +55,7 @@ class WebhookController extends BaseController
     public function handleWebhook(Request $request)
     {
         $allData = $request->input('Data');
-        if ($allData != null) {
+        // if ($allData != null) {
 
             //get MyFatoorah-Signature from request headers
             $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
@@ -65,9 +65,9 @@ class WebhookController extends BaseController
 
             $body = $request->all();
 
-            if (!($this->validateSignature($body, $secret, $MyFatoorah_Signature))) {
-                return;
-            }
+            // if (!($this->validateSignature($body, $secret, $MyFatoorah_Signature))) {
+            //     return;
+            // }
             $myfatoorahLog = new MyfatoorahLog();
             $myfatoorahLog->request = json_encode($body);
             $myfatoorahLog->save();
@@ -132,7 +132,7 @@ class WebhookController extends BaseController
             }
         }
 
-    }
+    // }
 
 }
-//
+
