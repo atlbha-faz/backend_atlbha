@@ -16,6 +16,7 @@ class MadfuController extends BaseController
 {
     public function login(MadfuLoginRequest $request)
     {
+
         $username = 'wesam@faz-it.net';
         $password = 'Welcome@123';
         try{

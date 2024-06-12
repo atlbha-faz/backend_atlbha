@@ -66,10 +66,10 @@ class StoreController extends BaseController
         }, 'user' => function ($query) {
             $query->select('id');
         }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special', 'store_email', 'verification_status', 'city_id', 'verification_date', 'created_at');
-        $data= $data->paginate($count);
+        $data = $data->paginate($count);
         $success['stores'] = StoreResource::collection($data);
-        $success['page_count'] =  $data->lastPage();
-        $success['current_page'] =  $data->currentPage();
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
@@ -675,13 +675,14 @@ class StoreController extends BaseController
     {
         return ['token' => Storage::get('tokens/swapToken.txt')];
     }
+
     public function searchStoreName(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')
-        ->where('store_name', 'like', "%$query%")
+            ->where('store_name', 'like', "%$query%")
             ->orderBy('created_at', 'desc')
             ->paginate($count);
 
@@ -693,6 +694,38 @@ class StoreController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'stores Information returned successfully');
+
+    }
+
+    public function madfuAuth(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'password' => 'required',
+            'api_key' => 'required',
+            'app_code' => 'required',
+            'authorization' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
+        $store = Store::find($id);
+        if ($store) {
+            $store->madfu_username = $request->username;
+            $store->madfu_password = $request->password;
+            $store->madfu_api_key = $request->api_key;
+            $store->madfu_app_code = $request->app_code;
+            $store->madfu_authorization = $request->authorization;
+            $store->save();
+            $paymenttype = paymenttype_store::firstOrCreate([
+                'paymentype_id' => 5,
+                'store_id' => $id,
+            ]);
+
+        }
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم الحفظ', 'saved');
 
     }
 }

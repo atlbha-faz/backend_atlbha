@@ -123,6 +123,7 @@ class SupplierController extends BaseController
             $file = $store->file;
             $type = 20;
         }
+
         $arrays = [[$request->civil_id, 1],[$request->bankAccountLetter, 21], [$request->website_image, 25], [$file, $type],[$request->national_address, 5]];
         foreach ($arrays as $file) {
             if (is_uploaded_file($file[0])) {
