@@ -793,6 +793,7 @@ class CheckoutController extends BaseController
         $data=[
             'CustomerIdentifier'=>(String)Str::uuid()
         ];
+        $data = json_encode($data);
         $response = $payment->buildRequest('v2/InitiateSession', 'POST', $data);
 
         if (isset($response['IsSuccess'])) {
