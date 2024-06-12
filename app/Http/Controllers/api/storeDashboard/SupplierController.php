@@ -198,7 +198,8 @@ class SupplierController extends BaseController
             'bankAccount' => $request->input('bankAccount'),
             'iban' => $request->input('iban'),
             'supplierCode' => $supplierCode['Data']['SupplierCode'],
-            'status' => "Pending"
+            'status' => "Pending",
+            'comment'=>''
         ]);
         $storeAdmain->update(['supplierCode' => $supplierCode['Data']['SupplierCode']]);
 
