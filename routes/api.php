@@ -127,10 +127,6 @@ Route::group([
 ], function () {
     Route::post('addComment/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addComment']);
     Route::post('addContact', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addContact']);
-    Route::prefix('madfu')->group(function () {
-
-        Route::post('login', [MadfuController::class, 'login']);
-    });
 });
 });
 // visit count
@@ -393,6 +389,7 @@ Auth::routes();
 
 Route::middleware([StoreUser::class])->group(function () {
     Route::prefix('/Store')->group(function () {
+        Route::post('madfu-auth/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'madfuAuth']);
 // cheackout import
         Route::post('checkoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'checkOut']);
 

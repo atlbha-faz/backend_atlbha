@@ -16,31 +16,38 @@ use Illuminate\Support\Str;
 class Store extends Model
 {
     use HasFactory;
+
     protected $fillable = ['store_name', 'store_email', 'domain', 'slug', 'icon', 'description', 'business_license', 'phonenumber', 'verification_type', 'link', 'verification_status', 'store_address',
-        'snapchat', 'facebook', 'tiktok','twiter', 'youtube', 'instegram', 'jaco','logo', 'entity_type', 'user_id', 'activity_id', 'package_id', 'country_id', 'city_id', 'user_country_id', 'user_city_id', 'category_id', 'start_at', 'end_at', 'period', 'verification_date',
-        'periodtype', 'special', 'file', 'tiktok', 'working_status', 'status', 'category_id', 'subcategory_id', 'is_deleted', 'owner_name', 'commercial_name','verification_code','views'];
+        'snapchat', 'facebook', 'tiktok', 'twiter', 'youtube', 'instegram', 'jaco', 'logo', 'entity_type', 'user_id', 'activity_id', 'package_id', 'country_id', 'city_id', 'user_country_id', 'user_city_id', 'category_id', 'start_at', 'end_at', 'period', 'verification_date',
+        'periodtype', 'special', 'file', 'tiktok', 'working_status', 'status', 'category_id', 'subcategory_id', 'is_deleted', 'owner_name', 'commercial_name', 'verification_code', 'views', 'madfu_username', 'madfu_password',
+        'madfu_api_key','madfu_app_code','madfu_authorization'];
 
     public function rate($id)
     {
         $product_id = Product::select('id')->where('store_id', $id)->get();
         return Comment::whereIn('product_id', $product_id)->where('comment_for', 'store')->avg('rateing');
     }
+
     protected $casts = [
         'activity_id' => 'array',
     ];
+
     public function setDomainAttribute($value)
     {
         $this->attributes['domain'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+
     public function theme()
     {
         return $this->hasOne(Theme::class);
     }
+
     public function products()
     {
         return $this->hasMany(Product::class);
     }
+
     public function importproduct()
     {
         return $this->hasMany(Importproduct::class);
@@ -50,20 +57,24 @@ class Store extends Model
     {
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
+
     public function country()
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
 
     }
+
     public function usercity()
     {
         return $this->belongsTo(City::class, 'user_city_id', 'id');
     }
+
     public function usercountry()
     {
         return $this->belongsTo(Country::class, 'user_country_id', 'id');
 
     }
+
     public function activities()
     {
         return $this->belongsToMany(
@@ -73,6 +84,7 @@ class Store extends Model
             'activity_id'
         );
     }
+
     public function categories()
     {
         return $this->belongsToMany(
@@ -100,6 +112,7 @@ class Store extends Model
 
         );
     }
+
     public function days()
     {
         return $this->belongsToMany(
@@ -110,6 +123,7 @@ class Store extends Model
 
         );
     }
+
     public function daystore()
     {
         return $this->hasMany(
@@ -119,7 +133,8 @@ class Store extends Model
     }
 
     public function left($id)
-    {$store = Store::where('id', $id)->first();
+    {
+        $store = Store::where('id', $id)->first();
         if ($store->package_id == null) {
             return 0;
         } else {
@@ -130,11 +145,13 @@ class Store extends Model
             return $interval->days;
         }
     }
+
     public function period($id)
     {
         $period = Store::select('periodtype')->where('id', $id)->first();
         return $period->period;
     }
+
     public function packagee($id)
     {
         if (is_null($id)) {
@@ -144,6 +161,7 @@ class Store extends Model
         $package = Package::select('name')->where('id', $id)->first();
         return $package->name;
     }
+
     public function packagestatus($id)
     {
         $store = Store::where('id', $id)->first();
@@ -154,6 +172,7 @@ class Store extends Model
             return null;
         }
     }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -163,6 +182,7 @@ class Store extends Model
     {
         return $this->hasMany(Page::class);
     }
+
     public function shippingtypes()
     {
         return $this->belongsToMany(
@@ -172,6 +192,7 @@ class Store extends Model
             'shippingtype_id'
         )->withPivot('price');
     }
+
     public function paymenttypes()
     {
         return $this->belongsToMany(
@@ -196,18 +217,19 @@ class Store extends Model
 
     public function getLogoAttribute($logo)
     {
-        if (is_null($logo) || $logo =="") {
+        if (is_null($logo) || $logo == "") {
             return null;
         } else {
             if (filter_var($logo, FILTER_VALIDATE_URL)) {
                 return $logo;
             } else {
-                return asset('storage/images/storelogo') . '/' . $logo;}
+                return asset('storage/images/storelogo') . '/' . $logo;
+            }
 
         }
 
     }
-    
+
     public function getLogoPureAttribute()
     {
         return $this->attributes['logo'];
@@ -230,11 +252,12 @@ class Store extends Model
 
     public function getIconAttribute($icon)
     {
-        if (is_null($icon) || $icon =="") {
+        if (is_null($icon) || $icon == "") {
             return null;
         } else {
             if (filter_var($icon, FILTER_VALIDATE_URL)) {
-                return $icon;} else {
+                return $icon;
+            } else {
                 return asset('storage/images/storeicon') . '/' . $icon;
 
             }
@@ -287,10 +310,12 @@ class Store extends Model
     {
         return $this->hasMany(Note::class);
     }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
+
     public function maintenance()
     {
         return $this->hasOne(Maintenance::class);
