@@ -2,33 +2,34 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CartResource;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\PaymenttypeResource;
-use App\Http\Resources\ShippingtypeTemplateResource;
-use App\Models\Account;
+use Carbon\Carbon;
 use App\Models\Cart;
-use App\Models\CartDetail;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Store;
 use App\Models\Coupon;
-use App\Models\coupons_products;
+use App\Models\Option;
+use App\Models\Account;
+use App\Models\Payment;
+use App\Models\Product;
+use App\Models\OrderItem;
+use App\Models\CartDetail;
+use App\Models\Paymenttype;
+use Illuminate\Support\Str;
+use App\Models\OrderAddress;
+use Illuminate\Http\Request;
 use App\Models\coupons_users;
 use App\Models\Importproduct;
-use App\Models\Option;
-use App\Models\Order;
-use App\Models\OrderAddress;
-use App\Models\OrderItem;
-use App\Models\Payment;
-use App\Models\Paymenttype;
-use App\Models\Product;
+use App\Models\coupons_products;
 use App\Models\shippingtype_store;
-use App\Models\Store;
-use App\Models\User;
 use App\Services\FatoorahServices;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\CartResource;
+use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\ShippingtypeTemplateResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CheckoutController extends BaseController
 {
@@ -107,24 +108,24 @@ class CheckoutController extends BaseController
             // Save the order to the database
             $order->save();
 
-                $shipping_type_object = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
-                if ($shipping_type_object == null) {
-                    $shipping_price = 30;
-                    $extraprice = 3;
-                    if ($order->weight > 15) {
-                        $extra_shipping_price = ($order->weight - 15) * 3;
-                    } else {
-                        $extra_shipping_price = 0;
-                    }
+            $shipping_type_object = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
+            if ($shipping_type_object == null) {
+                $shipping_price = 30;
+                $extraprice = 3;
+                if ($order->weight > 15) {
+                    $extra_shipping_price = ($order->weight - 15) * 3;
                 } else {
-                    $extraprice = $shipping_type_object->overprice;
-                    $shipping_price = $shipping_type_object->price;
-                    if ($order->weight > 15) {
-                        $extra_shipping_price = ($order->weight - 15) * $extraprice;
-                    } else {
-                        $extra_shipping_price = 0;
-                    }
+                    $extra_shipping_price = 0;
                 }
+            } else {
+                $extraprice = $shipping_type_object->overprice;
+                $shipping_price = $shipping_type_object->price;
+                if ($order->weight > 15) {
+                    $extra_shipping_price = ($order->weight - 15) * $extraprice;
+                } else {
+                    $extra_shipping_price = 0;
+                }
+            }
 
             if ($cart->free_shipping == 1) {
                 $order->update([
@@ -163,10 +164,10 @@ class CheckoutController extends BaseController
                         ]);
                     }
                     if ($cartItem->option_id != null) {
-                        if($importProduct == null){
-                            $importProduct= null;
-                        }else{
-                            $importProduct= $importProduct->id;
+                        if ($importProduct == null) {
+                            $importProduct = null;
+                        } else {
+                            $importProduct = $importProduct->id;
                         }
                         $optionQty = Option::where('id', $cartItem->option_id)->where('importproduct_id', $importProduct)->first();
                         if ($optionQty != null) {
@@ -263,10 +264,10 @@ class CheckoutController extends BaseController
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $vat=$order->total_price*0.15;
+                    $vat = $order->total_price * 0.15;
                     $deduction = ($order->total_price * 0.01) + 1 + $vat;
                     $price_after_deduction = $order->total_price - $deduction;
-                    
+
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
                         "ProposedShare" => $price_after_deduction,
@@ -318,7 +319,7 @@ class CheckoutController extends BaseController
                     } else {
                         $success['payment'] = $response;
                     }
-                   $cart->update(['order_id'=> $order->id]);
+                    $cart->update(['order_id' => $order->id]);
                     $success['status'] = 200;
 
                     return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
@@ -326,14 +327,14 @@ class CheckoutController extends BaseController
                 } elseif ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
 
                     $account = Account::where('store_id', $store_domain)->first();
-                    if(!$account){
-                        return $this->sendError("لا يوجد حساب بنكي","account is not exsit");
+                    if (!$account) {
+                        return $this->sendError("لا يوجد حساب بنكي", "account is not exsit");
                     }
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                  
-                    $vat=$order->total_price*0.15;
-                    $deduction = ($order->total_price * 0.01) + 1 +$vat;
+
+                    $vat = $order->total_price * 0.15;
+                    $deduction = ($order->total_price * 0.01) + 1 + $vat;
                     $price_after_deduction = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $deduction;
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
@@ -386,14 +387,13 @@ class CheckoutController extends BaseController
                     } else {
                         $success['payment'] = $response;
                     }
-                    $cart->update(['order_id'=> $order->id]);
+                    $cart->update(['order_id' => $order->id]);
                     $success['status'] = 200;
 
                     return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
                 }
 
-               
             }
 
             $success['order'] = new OrderResource($order);
@@ -588,13 +588,13 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, ' المتجر غير موجود', 'store is not exist');
 
         } else {
-            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;  
-            $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->where('is_archive',0)
-            ->where(function ($sub_query) {
-                $sub_query->where('paymentype_id',4)->orWhere('payment_status','paid');
-                 
-            })->orderByDesc('created_at');
-            $orders= $orders->paginate($count);
+            $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+            $orders = Order::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->where('is_archive', 0)
+                ->where(function ($sub_query) {
+                    $sub_query->where('paymentype_id', 4)->orWhere('payment_status', 'paid');
+
+                })->orderByDesc('created_at');
+            $orders = $orders->paginate($count);
             $success['page_count'] = $orders->lastPage();
             $success['current_page'] = $orders->currentPage();
             $success['order'] = OrderResource::collection($orders);
@@ -695,7 +695,7 @@ class CheckoutController extends BaseController
         }
 
     }
-    public function searchOrder(Request $request,$id)
+    public function searchOrder(Request $request, $id)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
@@ -703,10 +703,10 @@ class CheckoutController extends BaseController
         $orders = Order::with('items')->where(function ($main_query) use ($query) {
             $main_query->whereHas('items', function ($itemQuery) use ($query) {
                 $itemQuery->whereHas('product', function ($productQuery) use ($query) {
-                   $productQuery->Where('name', 'like', "%$query%");
+                    $productQuery->Where('name', 'like', "%$query%");
                 });
             })->orWhere('order_number', 'like', "%$query%");
-        })->where('is_deleted', 0)->where('store_id',$id)->where('user_id', auth()->user()->id)
+        })->where('is_deleted', 0)->where('store_id', $id)->where('user_id', auth()->user()->id)
             ->orderBy('created_at', 'desc')->paginate($count);
 
         $success['query'] = $query;
@@ -734,7 +734,7 @@ class CheckoutController extends BaseController
         ]);
         return $cart->refresh();
     }
-    public function shippingCalculation($store_id,$shipping_id)
+    public function shippingCalculation($store_id, $shipping_id)
     {
         $store_domain = Store::where('is_deleted', 0)->where('id', $store_id)->pluck('id')->first();
         if ($store_domain == null) {
@@ -745,47 +745,65 @@ class CheckoutController extends BaseController
         } else {
             $cart = Cart::where('user_id', auth()->user()->id)->where('store_id', $store_domain)->first();
 
-        if ($cart == null) {
+            if ($cart == null) {
+                $success['status'] = 200;
+
+                return $this->sendResponse($success, ' سلة فارغة', 'cart is not exist');
+
+            }
+            $shipping_object = shippingtype_store::where('shippingtype_id', $shipping_id)->where('store_id', $store_domain)->first();
+            if ($shipping_object != null) {
+                $shipping_price = $shipping_object->price;
+                if ($cart->weight > 15) {
+                    $extra_shipping_price = ($cart->weight - 15) * $shipping_object->overprice;
+                } else {
+                    $extra_shipping_price = 0;
+                }
+            } else {
+                $shipping_price = 30;
+                if ($cart->weight > 15) {
+                    $extra_shipping_price = ($cart->weight - 15) * 3;
+                } else {
+                    $extra_shipping_price = 0;
+                }
+            }
+            if ($cart->free_shipping == 1) {
+                $cart->update([
+                    'shipping_price' => $cart->shipping_price,
+                    'overweight_price' => 0,
+                ]);
+            } else {
+                $cart->update([
+                    'shipping_price' => $shipping_price,
+                    'total' => (($cart->total - $cart->shipping_price) - $cart->overweight_price) + $shipping_price + $extra_shipping_price,
+                    'overweight_price' => $extra_shipping_price,
+                ]);
+
+            }
+
+            $success['cart'] = new CartResource($cart);
             $success['status'] = 200;
 
-            return $this->sendResponse($success, ' سلة فارغة', 'cart is not exist');
-
+            return $this->sendResponse($success, 'تم ارجاع السلة بنجاح', 'cart return successfully');
         }
-        $shipping_object = shippingtype_store::where('shippingtype_id', $shipping_id)->where('store_id', $store_domain)->first();
-        if ($shipping_object != null) {
-            $shipping_price = $shipping_object->price;
-            if ($cart->weight > 15) {
-                $extra_shipping_price = ($cart->weight - 15) * $shipping_object->overprice;
-            } else {
-                $extra_shipping_price = 0;
-            }
-        } else {
-            $shipping_price = 30;
-            if ($cart->weight > 15) {
-                $extra_shipping_price = ($cart->weight - 15) * 3;
-            } else {
-                $extra_shipping_price = 0;
-            }
-        }
-        if ($cart->free_shipping == 1) {
-            $cart->update([
-                'shipping_price' => $cart->shipping_price,
-                'overweight_price' => 0,
-            ]);
-        } else {
-            $cart->update([
-                'shipping_price' => $shipping_price,
-                'total' => (($cart->total - $cart->shipping_price) - $cart->overweight_price) + $shipping_price + $extra_shipping_price,
-                'overweight_price' => $extra_shipping_price,
-            ]);
-
-        }
-
-        $success['cart'] = new CartResource($cart);
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم ارجاع السلة بنجاح', 'cart return successfully');
     }
+    public function initiateSession()
+    {
+        $payment = new FatoorahServices();
+        $data=[
+            'CustomerIdentifier'=>(String)Str::uuid()
+        ];
+        $response = $payment->buildRequest('v2/InitiateSession', 'POST', $data);
+
+        if (isset($response['IsSuccess'])) {
+            if ($response['IsSuccess'] == true) {
+
+                $success['respone'] = $response;
+            }
+        }
+         $success['status'] = 200;
+
+     return $this->sendResponse($success, 'تم تهيئة الدفع بنجاح', 'initiateSession successfully');
     }
 
 }
