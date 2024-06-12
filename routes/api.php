@@ -99,6 +99,7 @@ Route::get('cartShow/{id}', [App\Http\Controllers\api\storeTemplate\CartTemplate
 Route::post('addCart/{domain}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'addToCart']);
 Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'delete']);
 Route::post('cheackout/{domain}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'cheackout']);
+Route::post('initiateSession', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'initiateSession']);
 Route::get('paymentmethods/{domain}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'paymentMethods']);
 Route::get('shippingcompany/{domain}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'shippingCompany']);
 Route::post('applyCoupon/{domain}/{cart_id}', [App\Http\Controllers\api\storeTemplate\CheckoutController::class, 'applyCoupon']);
