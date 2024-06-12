@@ -123,7 +123,7 @@ class SupplierController extends BaseController
             $file = $store->file;
             $type = 20;
         }
-        $arrays = [[$request->civil_id, 1],[$request->bankAccountLetter, 21], [$request->website_image, 25], [$file, $type]];
+        $arrays = [[$request->civil_id, 1],[$request->bankAccountLetter, 21], [$request->website_image, 25], [$file, $type],[$request->national_address, 5]];
         foreach ($arrays as $file) {
             if (is_uploaded_file($file[0])) {
                 $supplier = new FatoorahServices();
@@ -209,7 +209,7 @@ class SupplierController extends BaseController
             $file = $store->file;
             $type = 20;
         }
-        $arrays = [[$request->civil_id, 1], [$file, $type], [$request->bankAccountLetter, 21], [$request->website_image, 25]];
+        $arrays = [[$request->civil_id, 1], [$file, $type], [$request->bankAccountLetter, 21], [$request->website_image, 25],[$request->national_address, 5]];
         foreach ($arrays as $file) {
             if (is_uploaded_file($file[0])) {
                 $supplier = new FatoorahServices();
