@@ -28,6 +28,9 @@ class PageController extends BaseController
         $data=Page::with(['user' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('store_id', null)->orderByDesc('created_at')->select('id', 'title', 'status', 'user_id', 'created_at');
+        if ($request->has('status')) {
+            $data->where('status', $request->status);
+        }
         $data= $data->paginate($count);
         $success['pages'] = PageResource::collection($data);
         $success['page_count'] =  $data->lastPage();
