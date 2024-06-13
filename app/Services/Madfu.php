@@ -74,7 +74,7 @@ class Madfu
 
     public function calculateFees($orderid, $refundAmount)
     {
-        $order = Order::find($orderid);
+        $order = Order::where('payment_id',$orderid)->first();
         $token = json_decode($this->login($this->username, $this->password, Str::random(8))->getBody()->getContents())->token;
         $url = $this->base_url . 'api/Refund/RefundFee/Calculate';
         $body = ["orderid" => $order->payment_id, "refundAmount" => $refundAmount];
