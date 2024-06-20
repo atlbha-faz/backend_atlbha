@@ -25,9 +25,14 @@ class CouponController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data =Coupon::where('is_deleted', 0)->where('store_id', null)->orderByDesc('created_at');
+        $data =Coupon::where('is_deleted', 0)->where('store_id', null);
         if ($request->has('status')) {
             $data->where('status', $request->status);
+        }
+        if ($request->has('code')) {
+            $data->orderBy('code', 'ASC');
+        }else{
+            $data->orderByDesc('created_at');
         }
         $data = $data->paginate($count);
         $success['coupons'] = CouponResource::collection($data);
