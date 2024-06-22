@@ -143,14 +143,20 @@ class PostStoreController extends BaseController
             $success['category'] = Category::where('is_deleted', 0)->where('store_id', $store->id)->with('products')->has('products')->get();
             $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
                 $query->select('id', 'name');
+            },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
             }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', null)->get());
             $success['posts'] = PageResource::collection(Page::with(['user' => function ($query) {
                 $query->select('id', 'name');
+            },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
             }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', $postCategory_id)->get());
             // $pages=Page_page_category::where('page_category_id',2)->pluck('page_id')->toArray();
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
             $success['lastPosts'] = PageResource::collection(Page::with(['user' => function ($query) {
                 $query->select('id', 'name');
+            },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
             }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', '!=', null)->orderBy('created_at', 'desc')->take(3)->get());
             // footer
             $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('store_name')->first();
@@ -216,18 +222,33 @@ class PostStoreController extends BaseController
 
             $tagarr = array();
             $tags = Page::where('is_deleted', 0)->where('store_id', $store->id)->pluck('tags')->toArray();
-            //    dd($tags);
             foreach ($tags as $tag) {
                 $tagarr[] = $tag;
             }
             $success['tags'] = $tagarr;
             $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store->id)->with('products')->has('products')->get());
-            $success['post'] = new PageResource(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('id', $pageId)->first());
-            $success['pages'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', null)->get());
+            $success['post'] = new PageResource(Page::with(['user' => function ($query) {
+                $query->select('id', 'name');
+            },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('id', $pageId)->first());
+            $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
+                $query->select('id', 'name');
+            },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', null)->get());
             $success['postCategory'] = Postcategory::where('is_deleted', 0)->get();
             $cats = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
-            $success['lastPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->whereIn('id', $cats)->whereNot('id', $pageId)->orderBy('created_at', 'desc')->take(3)->get());
-            $success['relatedPosts'] = PageResource::collection(Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->whereIn('id', $cats)->whereNot('id', $pageId)->orderBy('created_at', 'desc')->take(2)->get());
+            $success['lastPosts'] = PageResource::collection(Page::with(['user' => function ($query) {
+                $query->select('id', 'name');
+            },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->whereIn('id', $cats)->whereNot('id', $pageId)->orderBy('created_at', 'desc')->take(3)->get());
+            $success['relatedPosts'] = PageResource::collection(Page::with(['user' => function ($query) {
+                $query->select('id', 'name');
+            },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->whereIn('id', $cats)->whereNot('id', $pageId)->orderBy('created_at', 'desc')->take(2)->get());
 
             $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('store_name')->first();
             $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('store_email')->first();
@@ -286,7 +307,11 @@ class PostStoreController extends BaseController
         }
         $searchTerm = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $pages = Page::where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)
+        $pages = Page::with(['user' => function ($query) {
+            $query->select('id', 'name');
+        },'store' => function ($query) {
+            $query->select('id', 'domain', 'store_name');
+        }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)
             ->where(function ($query) use ($searchTerm) {
                 $query->where('title', 'like', "%$searchTerm%")
                     ->orWhere('page_desc', 'LIKE', "%$searchTerm%")
