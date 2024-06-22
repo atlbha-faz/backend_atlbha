@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\PageResource;
 use App\Models\Page;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\PageRequest;
+use App\Http\Resources\PageResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class PageController extends BaseController
 {
@@ -56,25 +57,10 @@ class PageController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PageRequest $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:26',
-            'page_desc' => 'required',
-            'page_content' => 'required',
-            'seo_title' => 'nullable',
-            'seo_link' => 'nullable',
-            'seo_desc' => 'nullable',
-            'tags' => 'nullable',
-            'altImage' => 'nullable',
-            'pageCategory' => ['required', 'array'],
-            'pageCategory.*' => 'required',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+      
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));

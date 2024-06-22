@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
+use Notification;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Alert;
+use App\Mail\SendMail;
+use App\Models\Contact;
+use Illuminate\Http\Request;
+use App\Models\NotificationModel;
+use App\Http\Requests\EmailRequest;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\AlertResource;
 use App\Http\Resources\ContactResource;
-use App\Http\Resources\NotificationResource;
-use App\Mail\SendMail;
-use App\Models\Alert;
-use App\Models\Contact;
-use App\Models\NotificationModel;
-use App\Models\User;
 use App\Notifications\emailNotification;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Notification;
+use App\Http\Resources\NotificationResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class NotificationController extends BaseController
 {
@@ -88,19 +89,9 @@ class NotificationController extends BaseController
         }
     }
 
-    public function addEmail(Request $request)
+    public function addEmail(EmailRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string|max:255',
-            'store_id' => 'exists:stores,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-
+     
         $data = [
             'subject' => $request->subject,
             'message' => $request->message,
