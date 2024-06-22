@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ContactResource;
+use Exception;
+use App\Models\User;
 use App\Mail\SendMail;
 use App\Models\Contact;
-use App\Models\Replaycontact;
-use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
+use App\Models\Replaycontact;
+use App\Http\Requests\EmailRequest;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class EmailController extends BaseController
 {
@@ -64,19 +65,8 @@ class EmailController extends BaseController
         return $this->sendResponse($success, 'تم حذف الرسالة بنجاح', 'Contact deleted successfully');
     }
 
-    public function addEmail(Request $request)
+    public function addEmail(EmailRequest $request)
     {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string|max:255',
-            'store_id' => 'exists:stores,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
 
         $data = [
             'subject' => $request->subject,

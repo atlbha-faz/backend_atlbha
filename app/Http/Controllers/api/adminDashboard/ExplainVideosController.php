@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ExplainVideoResource;
-use App\Models\ExplainVideos;
 use Illuminate\Http\Request;
+use App\Models\ExplainVideos;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ExplainVideoRequest;
+use App\Http\Resources\ExplainVideoResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ExplainVideosController extends BaseController
 {
@@ -53,19 +54,10 @@ class ExplainVideosController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
+    public function store(ExplainVideoRequest $request)
     {
 
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:255',
-            'video' => 'required|string',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+      
 
         if (isset($request->video)) {
             preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $request->video, $matches);
@@ -132,24 +124,14 @@ class ExplainVideosController extends BaseController
      * @param  \App\Models\ExplainVideos  $explainVideos
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $explainVideos)
+    public function update(ExplainVideoRequest $request, $explainVideos)
     {
         $explainVideosoObject = ExplainVideos::query()->find($explainVideos);
 
         if (is_null($explainVideosoObject) || $explainVideosoObject->is_deleted != 0) {
             return $this->sendError("الفيديو غير موجودة", "explainvideo is't exists");
         }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:255',
-            'video' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+       
         if (isset($request->video)) {
             preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $request->video, $matches);
 

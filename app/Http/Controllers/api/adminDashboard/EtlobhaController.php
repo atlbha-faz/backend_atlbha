@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ProductResource;
-use App\Models\Attribute;
-use App\Models\Attribute_product;
+use Carbon\Carbon;
 use App\Models\Image;
-use App\Models\Importproduct;
-use App\Models\Option;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\Store;
 use App\Models\Value;
-use Carbon\Carbon;
+use App\Models\Option;
+use App\Models\Product;
+use App\Models\Attribute;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Importproduct;
+use Illuminate\Validation\Rule;
+use App\Models\Attribute_product;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\EtlobhaStoreRequest;
+use App\Http\Requests\EtlobhaUpdateRequest;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class EtlobhaController extends BaseController
 {
@@ -65,52 +67,19 @@ class EtlobhaController extends BaseController
 
     }
 
-    public function store(Request $request)
+    public function store(EtlobhaStoreRequest $request)
     {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:25',
-            'description' => 'required|string',
-            'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
-            'stock' => ['required', 'numeric', 'gt:0'],
-            'less_qty' => ['nullable', 'numeric', 'gt:0'],
-            'images' => 'nullable|array',
-            'SEOdescription' => 'nullable',
-            'snappixel' => 'nullable|string',
-            'tiktokpixel' => 'nullable|string',
-            'twitterpixel' => 'nullable|string',
-            'instapixel' => 'nullable|string',
-            'short_description' => 'required|string|max:100',
-            'robot_link' => 'nullable|string',
-            'google_analytics' => 'nullable|url',
-            'weight' => 'nullable',
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => ['nullable', 'array'],
-            'subcategory_id.*' => ['nullable', 'numeric',
-                Rule::exists('categories', 'id')->where(function ($query) {
-                    return $query->join('categories', 'id', 'parent_id');
-                }),
-            ],
-            'product_has_options' => 'nullable|in:0,1',
-            'attribute' => 'array|required_if:product_has_options,1',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
 
         if (($request->hasFile("cover"))) {
             $validator = Validator::make($input, [
-                'cover' => 'required |image| mimes:jpeg,png,jpg,gif,svg| max:1048',
+                'cover' => 'image| mimes:jpeg,png,jpg,gif,svg| max:1048',
 
             ]);
             $cover = $request->cover;
 
         } else {
             $validator = Validator::make($input, [
-                'cover' => 'required |string| max:1048',
+                'cover' => 'string| max:1048',
 
             ]);
             if ($validator->fails()) {
@@ -281,48 +250,11 @@ class EtlobhaController extends BaseController
 
     }
 
-    public function update(Request $request, $id)
+    public function update(EtlobhaUpdateRequest $request, $id)
     {
         $product = Product::query()->where('for', 'etlobha')->find($id);
         if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
-        }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:25',
-            'description' => 'required|string',
-
-            'less_qty' => ['nullable', 'numeric', 'gt:0'],
-            'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
-            'stock' => ['required', 'numeric', 'gt:0'],
-
-            'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'images' => 'nullable|array',
-
-            'SEOdescription' => 'nullable',
-            'snappixel' => 'nullable|string',
-            'tiktokpixel' => 'nullable|string',
-            'twitterpixel' => 'nullable|string',
-            'instapixel' => 'nullable|string',
-            'short_description' => 'required|string|max:100',
-            'robot_link' => 'nullable|string',
-            'google_analytics' => 'nullable|url',
-            'weight' => 'nullable',
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => ['nullable', 'array'],
-            'subcategory_id.*' => ['nullable', 'numeric',
-                Rule::exists('categories', 'id')->where(function ($query) {
-                    return $query->join('categories', 'id', 'parent_id');
-                }),
-            ],
-            'product_has_options' => 'nullable|in:0,1',
-            'attribute' => 'array|required_if:product_has_options,1',
-        ]);
-
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
         }
         if ($request->subcategory_id != null) {
             $subcategory = implode(',', $request->subcategory_id);

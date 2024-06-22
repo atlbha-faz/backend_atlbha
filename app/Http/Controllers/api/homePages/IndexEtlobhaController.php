@@ -66,7 +66,7 @@ class IndexEtlobhaController extends BaseController
                 $query->select('id', 'domain', 'store_name');
             }, 'category' => function ($query) {
                 $query->select('id', 'name');
-            }, 'importproduct'])->where('is_deleted', 0)->where('admin_special', 'special')->select('id', 'name', 'status', 'cover', 'special', 'admin_special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->get());
+            }, 'importproduct'])->where('is_deleted', 0)->where('admin_special', 'special')->select('id', 'name', 'status', 'cover', 'special', 'admin_special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'stock')->take(30)->get());
 
         } else {
             $success['products'] = array();
