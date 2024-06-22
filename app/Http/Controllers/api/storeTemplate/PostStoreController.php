@@ -50,19 +50,25 @@ class PostStoreController extends BaseController
         $success['category'] = Category::where('is_deleted', 0)->where('store_id', $store->id)->with('products')->has('products')->get();
         $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
             $query->select('id', 'name');
-        }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', null)->get());
+        },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->where('postcategory_id', null)->get());
         $postIds = Page_page_category::where('page_category_id', 1)->pluck('page_id')->toArray();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data = Page::with(['user' => function ($query) {
             $query->select('id', 'name');
-        }])->whereIn('id', $postIds)->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->orderBy('created_at', 'desc');
+        },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }])->whereIn('id', $postIds)->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->orderBy('created_at', 'desc');
         $data = $data->paginate($count);
         $success['posts'] = PageResource::collection($data);
         $success['page_count'] = $data->lastPage();
         $success['current_page'] = $data->currentPage();
         $success['lastPosts'] = PageResource::collection(Page::with(['user' => function ($query) {
             $query->select('id', 'name');
-        }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->whereIn('id', $postIds)->orderBy('created_at', 'desc')->take(3)->get());
+        },'store' => function ($query) {
+                $query->select('id', 'domain', 'store_name');
+            }])->where('is_deleted', 0)->where('status', 'active')->where('store_id', $store->id)->whereIn('id', $postIds)->orderBy('created_at', 'desc')->take(3)->get());
         // footer
         $success['storeName'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('store_name')->first();
         $success['storeEmail'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('store_email')->first();
