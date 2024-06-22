@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\MarketerResource;
-use App\Models\Marketer;
 use App\Models\User;
+use App\Models\Marketer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Resources\MarketerResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\MarketerStoreRequest;
+use App\Http\Requests\MarketerUpdateRequest;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class MarketerController extends BaseController
 {
@@ -55,38 +57,8 @@ class MarketerController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MarketerStoreRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'checkbox_field' => 'required|in:1',
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0);
-            })],
-
-            'password' => 'nullable',
-            'password_confirm' => 'nullable',
-            'user_name' => ' nullable',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0);
-            }),
-            ],
-            'snapchat' => 'required|url',
-            'facebook' => 'required|url',
-            'twiter' => 'required|url',
-            'whatsapp' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'youtube' => 'required|url',
-            'instegram' => 'required|url',
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-            'status' => 'required|in:active,not_active',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -155,43 +127,12 @@ class MarketerController extends BaseController
      * @param  \App\Models\Marketer  $marketer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $marketer)
+    public function update(MarketerUpdateRequest $request, $marketer)
     {
         $marketer = Marketer::where('id', $marketer)->first();
         $user = User::query()->find($marketer->user_id);
         if (is_null($user) || $user->is_deleted != 0) {
             return $this->sendError(" المندوب غير موجود", "marketer is't exists");
-        }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($marketer) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0)->where('id', '!=', $marketer->user->id);
-            }),
-            ],
-
-            'password' => 'nullable',
-            'password_confirm' => 'nullable',
-            'user_name' => ' nullable',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($marketer) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted', 0)->where('id', '!=', $marketer->user->id);
-            }),
-            ],
-            'snapchat' => 'required',
-            'facebook' => 'required',
-            'twiter' => 'required',
-            'whatsapp' => 'required',
-            'youtube' => 'required',
-            'instegram' => 'required',
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-            'status' => 'required|in:active,not_active',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
         }
         $user = User::query()->find($marketer->user_id);
         $user->update([

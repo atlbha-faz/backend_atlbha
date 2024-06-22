@@ -69,7 +69,7 @@ class EtlobhaController extends BaseController
 
     public function store(EtlobhaStoreRequest $request)
     {
-
+        $input = $request->all();
         if (($request->hasFile("cover"))) {
             $validator = Validator::make($input, [
                 'cover' => 'image| mimes:jpeg,png,jpg,gif,svg| max:1048',
@@ -252,6 +252,7 @@ class EtlobhaController extends BaseController
 
     public function update(EtlobhaUpdateRequest $request, $id)
     {
+        $input = $request->all();
         $product = Product::query()->where('for', 'etlobha')->find($id);
         if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
