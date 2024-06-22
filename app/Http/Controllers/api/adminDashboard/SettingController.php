@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\SettingResource;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Http\Resources\SettingResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\SettingAdminRequest;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SettingController extends BaseController
 {
@@ -77,27 +78,11 @@ class SettingController extends BaseController
      * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $setting)
+    public function update(SettingAdminRequest $request, $setting)
     {
         $setting = Setting::query()->find($setting);
         if (is_null($setting) || $setting->is_deleted != 0) {
             return $this->sendError("الاعدادات غير موجودة", "setting is't exists");
-        }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'link' => 'required|url',
-            'email' => 'required|email|unique:settings,email,' . $setting->id,
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'address' => 'required|string',
-
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
         }
         $setting->update([
             'name' => $request->input('name'),

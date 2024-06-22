@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\SeoResource;
 use App\Models\Seo;
 use Illuminate\Http\Request;
+use App\Http\Resources\SeoResource;
+use App\Http\Requests\SeoAdminRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SeoController extends BaseController
 {
@@ -84,23 +85,9 @@ class SeoController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع تحسينات السيو بنجاح', 'Seo return successfully');
     }
-    public function updateSeo(Request $request)
+    public function updateSeo(SeoAdminRequest $request)
     {
 
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'google_analytics' => 'nullable|url',
-            'metatags' => 'nullable|string',
-            'snappixel' => 'nullable|string',
-            'tiktokpixel' => 'nullable|string',
-            'twitterpixel' => 'nullable|string',
-            'instapixel' => 'nullable|string',
-            'key_words' => 'required',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $seo = Seo::updateOrCreate([
             'store_id' => auth()->user()->store_id,
         ], [
