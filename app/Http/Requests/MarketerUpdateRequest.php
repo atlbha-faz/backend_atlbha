@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Marketer;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,6 +25,8 @@ class MarketerUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $marketer=$this->route('marketer');
+        $marketer = Marketer::where('id', $marketer)->first();
         return [
            'name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($marketer) {
