@@ -227,8 +227,10 @@ class IndexStoreController extends BaseController
             }
         }
         if ($product != null) {
-            $success['relatedProduct'] = ProductResource::collection(Product::where('is_deleted', 0)->where('status', 'active')
-                    ->where('store_id',  $store->id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->get());
+            $success['relatedProduct'] = ProductResource::collection(Product::with(['store' => function ($query) {
+                $query->select('id', 'domain', 'store_name', 'store_email', 'logo', 'icon');
+            }, 'category'])->where('is_deleted', 0)->where('status', 'active')
+                    ->where('store_id',  $store->id)->where('category_id', $product->category_id)->whereNotIn('id', [$id])->limit(10)->get());
         }
 
         $commentStatus = Homepage::where('is_deleted', 0)->where('store_id',  $store->id)->where('commentstatus', 'active')->first();

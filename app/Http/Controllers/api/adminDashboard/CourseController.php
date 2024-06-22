@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CourseResource;
-use App\Http\Resources\UnitResource;
-use App\Http\Resources\VideoResource;
-use App\Models\Course;
 use App\Models\Unit;
 use App\Models\Video;
+use App\Models\Course;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Requests\CourseRequest;
+use App\Http\Resources\UnitResource;
+use App\Http\Resources\VideoResource;
+use App\Http\Resources\CourseResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CourseController extends BaseController
 {
@@ -58,23 +59,9 @@ class CourseController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CourseRequest $request)
     {
 
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'tags' => 'required',
-            'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'data.*.video.*' => 'nullable|string',
-            'data.*.title' => 'required|string|max:255',
-            'data.*.file.*' => 'nullable|mimes:pdf,doc,excel',
-            // 'user_id'=>'required|exists:users,id'
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
 
         $course = Course::create([
             'name' => $request->name,
@@ -198,28 +185,14 @@ class CourseController extends BaseController
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $course)
+    public function update(CourseRequest $request, $course)
     {
         $course = Course::where('id', $course)->first();
 
         if (is_null($course) || $course->is_deleted != 0) {
             return $this->sendError("الكورس غير موجودة", "course is't exists");
         }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'tags' => 'required',
-            'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'data.*.video.*' => 'nullable|string',
-            'data.*.title' => 'required|string|max:255',
-            'data.*.file.*' => 'nullable|mimes:pdf,doc,excel',
-        ]);
-
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+       
         $course_id = $course->id;
         $course->update([
             'name' => $request->input('name'),

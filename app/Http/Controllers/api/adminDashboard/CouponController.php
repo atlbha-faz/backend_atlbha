@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CouponResource;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Resources\CouponResource;
+use App\Http\Requests\CouponStoreRequest;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CouponUpdateRequest;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CouponController extends BaseController
 {
@@ -59,25 +61,9 @@ class CouponController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CouponStoreRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'code' => ['required', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/', 'max:255',
-                Rule::unique('coupons')->where(function ($query) {
-                    return $query->where('store_id', null);
-                })->where('is_deleted', 0)],
-            'discount_type' => 'required|in:fixed,percent',
-            'discount' => ['required', 'numeric', 'gt:0'],
-            'start_at' => ['required', 'date'],
-            'expire_date' => ['required', 'date'],
-            'total_redemptions' => ['required', 'numeric'],
-            'user_redemptions' => ['nullable', 'numeric'],
 
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $coupon = Coupon::create([
             'code' => $request->code,
             'discount_type' => $request->discount_type,
@@ -155,27 +141,13 @@ class CouponController extends BaseController
      * @param  \App\Models\Coupon  $coupon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $coupon)
+    public function update(CouponUpdateRequest $request, $coupon)
     {
         $coupon = Coupon::where('id', $coupon)->first();
         if (is_null($coupon) || $coupon->is_deleted != 0 || $coupon->store_id != null) {
             return $this->sendError("الكوبون غير موجودة", " coupon is't exists");
         }
-        $input = $request->all();
-        $validator = Validator::make($input, [
 
-            'discount_type' => 'required|in:fixed,percent',
-            'discount' => ['required', 'numeric', 'gt:0'],
-            'expire_date' => ['required', 'date'],
-            'start_at' => ['required', 'date'],
-            'total_redemptions' => ['required', 'numeric'],
-            'user_redemptions' => ['nullable', 'numeric'],
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $coupon->update([
             'discount_type' => $request->input('discount_type'),
             'discount' => $request->input('discount'),

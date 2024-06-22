@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\HomepageResource;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
+use App\Http\Resources\HomepageResource;
+use App\Http\Requests\banarUpdateRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\sliderUpdateRequest;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class HomepageController extends BaseController
 {
@@ -105,26 +107,12 @@ class HomepageController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     }
 
-    public function banarUpdate(Request $request)
+    public function banarUpdate(banarUpdateRequest $request)
     {
         $banarhomepage = Homepage::where('store_id', null)->first();
         if (is_null($banarhomepage) || $banarhomepage->is_deleted != 0) {
             return $this->sendError("الصفحة غير موجودة", " homepage is't exists");
         }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'banar1' => ['nullable', 'required_without_all:banar2,banar3', 'max:1048'],
-            'banarstatus1' => 'required|in:active,not_active',
-            'banar2' => ['nullable', 'required_without_all:banar3,banar1', 'max:1048'],
-            'banarstatus2' => 'required|in:active,not_active',
-            'banar3' => ['nullable', 'required_without_all:banar2,banar1', 'max:1048'],
-            'banarstatus3' => 'required|in:active,not_active',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-
         $banarhomepage->update([
             'banarstatus1' => $request->banarstatus1,
             'banarstatus2' => $request->banarstatus2,
@@ -140,26 +128,12 @@ class HomepageController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'homepage updated successfully');
     }
 
-    public function sliderUpdate(Request $request)
+    public function sliderUpdate(sliderUpdateRequest $request)
     {
         $sliderhomepage = Homepage::where('store_id', null)->first();
         if (is_null($sliderhomepage) || $sliderhomepage->is_deleted != 0) {
             return $this->sendError("الصفحة غير موجودة", " homepage is't exists");
         }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'slider1' => ['nullable', 'required_without_all:slider2,slider3', 'max:1048'],
-            'sliderstatus1' => 'required|in:active,not_active',
-            'slider2' => ['nullable', 'required_without_all:slider1,slider3', 'max:1048'],
-            'sliderstatus2' => 'required|in:active,not_active',
-            'slider3' => ['nullable', 'required_without_all:slider2,slider1', 'max:1048'],
-            'sliderstatus3' => 'required|in:active,not_active',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-
         $sliderhomepage->update([
             'sliderstatus1' => $request->sliderstatus1,
             'sliderstatus2' => $request->sliderstatus2,
