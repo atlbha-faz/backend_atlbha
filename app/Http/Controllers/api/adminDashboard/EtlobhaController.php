@@ -73,7 +73,6 @@ class EtlobhaController extends BaseController
         if (($request->hasFile("cover"))) {
             $validator = Validator::make($input, [
                 'cover' => 'image| mimes:jpeg,png,jpg,gif,svg| max:1048',
-
             ]);
             $cover = $request->cover;
 

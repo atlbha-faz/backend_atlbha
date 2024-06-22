@@ -60,7 +60,6 @@ class PageController extends BaseController
     public function store(PageRequest $request)
     {
         $input = $request->all();
-      
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
@@ -102,25 +101,10 @@ class PageController extends BaseController
         return $this->sendResponse($success, 'تم إضافة  الصفحة بنجاح', 'page_category Added successfully');
     }
 
-    public function publish(Request $request)
+    public function publish(PageRequest $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:26',
-            'page_content' => 'required',
-            'page_desc' => 'required',
-            'seo_title' => 'nullable',
-            'seo_link' => 'nullable',
-            'seo_desc' => 'nullable',
-            'tags' => 'nullable',
-            'altImage' => 'nullable',
-            'pageCategory' => ['required', 'array'],
-            'pageCategory.*' => 'required',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+    
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
@@ -196,38 +180,18 @@ class PageController extends BaseController
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $page)
+    public function update(PageRequest $request, $page)
     {
         $page = Page::query()->find($page);
         if (is_null($page) || $page->is_deleted != 0) {
-
             return $this->sendError("الصفحة غير موجودة", "Page is't exists");
         }
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:26',
-            'page_desc' => 'required',
-            'page_content' => 'required',
-            'seo_title' => 'nullable',
-            'seo_link' => 'nullable',
-            'seo_desc' => 'nullable',
-            'tags' => 'nullable',
-            'altImage' => 'nullable',
-            'pageCategory' => ['required', 'array'],
-            'pageCategory.*' => 'required',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
-
-
         ]);
         if ($validator2->fails()) {
             return $this->sendError(null, $validator2->errors());
