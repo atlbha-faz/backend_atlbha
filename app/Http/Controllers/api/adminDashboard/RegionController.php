@@ -53,7 +53,6 @@ class RegionController extends Controller
         }
         $region = Region::create([
             'name' => $request->name,
-
             'country_id' => $request->country_id,
         ]);
 
