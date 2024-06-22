@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\NoteResource;
-use App\Http\Resources\StoreResource;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\VerificationResource;
-use App\Mail\SendMail;
-use App\Models\Comment;
-use App\Models\Homepage;
 use App\Models\Note;
 use App\Models\Page;
-use App\Models\paymenttype_store;
-use App\Models\Product;
-use App\Models\shippingtype_store;
+use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
-use App\Models\User;
+use App\Mail\SendMail;
+use App\Models\Comment;
+use App\Models\Product;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Models\paymenttype_store;
+use App\Models\shippingtype_store;
+use App\Http\Requests\StoreRequest;
+use Illuminate\Support\Facades\Log;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreUpdateRequest;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\VerificationResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class StoreController extends BaseController
 {
@@ -91,52 +93,10 @@ class StoreController extends BaseController
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
 
         $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
-            })],
-
-            'store_name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
-            })],
-            'store_email' => ['required', 'email', Rule::unique('stores')->where(function ($query) {
-                return $query->where('is_deleted', 0);
-            })],
-            'password' => 'required|min:8|string',
-            'domain' => ['required', 'string', Rule::unique('stores')->where(function ($query) {
-                return $query->where('is_deleted', 0);
-            })],
-            'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users', 'phonenumber')->where(function ($query) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
-            })],
-
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) {
-                return $query->where('is_deleted', 0);
-            })],
-            'activity_id' => 'required|array',
-            'subcategory_id' => ['nullable', 'array'],
-            //'package_id' =>'required',
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-            'user_country_id' => 'required|exists:countries,id',
-            'user_city_id' => 'required|exists:cities,id',
-            //'periodtype' => 'nullable|required_unless:package_id,1|in:6months,year',
-            'periodtype' => 'required|in:6months,year',
-            'status' => 'required|in:active,inactive',
-            'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -318,7 +278,7 @@ class StoreController extends BaseController
      * @param \App\Models\Store $store
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $store)
+    public function update(StoreUpdateRequest $request, $store)
     {
 
         $store = Store::query()->find($store);
@@ -327,39 +287,6 @@ class StoreController extends BaseController
         }
         $user = $store->user;
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'user_name' => ['required', 'string', Rule::unique('users')->where(function ($query) use ($store) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
-                    ->where('id', '!=', $store->user->id);
-            })],
-            'store_name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($store) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
-                    ->where('id', '!=', $store->user->id);
-            })],
-            'store_email' => 'required|email|unique:stores,store_email,' . $store->id,
-            'password' => 'required|min:8|string',
-            'domain' => ['required', 'string', Rule::unique('stores')->where(function ($query) use ($store) {
-                return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
-            })],
-            'userphonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users', 'phonenumber')->where(function ($query) use ($store) {
-                return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0)
-                    ->where('id', '!=', $store->user->id);
-            })],
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', 'unique:stores,phonenumber,' . $store->id],
-            // 'package_id' =>'required',
-            'activity_id' => 'required|array',
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-            'user_country_id' => 'required|exists:countries,id',
-            'user_city_id' => 'required|exists:cities,id',
-            'periodtype' => 'required|in:6months,year',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $request->package_id = 1;
         $user->update([
             'name' => $request->input('name'),
