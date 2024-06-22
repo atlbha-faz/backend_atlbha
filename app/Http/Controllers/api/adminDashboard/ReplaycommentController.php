@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ReplaycommentResource;
-use App\Models\Replaycomment;
 use Illuminate\Http\Request;
+use App\Models\Replaycomment;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ReplaycommentRequest;
+use App\Http\Resources\ReplaycommentResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ReplaycommentController extends BaseController
 {
@@ -46,19 +47,9 @@ class ReplaycommentController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ReplaycommentRequest $request)
     {
 
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment_text' => 'required|string|max:255',
-            'comment_id' => 'required|exists:comments,id',
-            'user_id' => 'required|exists:users,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $replaycomment = Replaycomment::create([
             'comment_text' => $request->comment_text,
             'comment_id' => $request->comment_id,
@@ -110,22 +101,11 @@ class ReplaycommentController extends BaseController
      * @param  \App\Models\Replaycomment  $replaycomment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $replaycomment)
+    public function update(ReplaycommentRequest $request, $replaycomment)
     {
         $replaycomment = Replaycomment::query()->find($replaycomment);
         if (is_null($replaycomment) || $replaycomment->is_deleted != 0) {
             return $this->sendError(" التعليق غير موجود", "replay comment is't exists");
-        }
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment_text' => 'required|string|max:255',
-            'comment_id' => 'required|exists:comments,id',
-            'user_id' => 'required|exists:users,id',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
         }
         $replaycomment->update([
             'comment_text' => $request->input('comment_text'),

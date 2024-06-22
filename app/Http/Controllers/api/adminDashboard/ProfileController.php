@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\UserResource;
-use App\Models\Store;
 use App\Models\User;
+use App\Models\Store;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\AdminProfileRequest;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ProfileController extends BaseController
 {
@@ -27,36 +28,12 @@ class ProfileController extends BaseController
         return $this->sendResponse($success, 'تم  عرض بنجاح', 'user showed successfully');
     }
 
-    public function update(Request $request)
+    public function update(AdminProfileRequest $request)
     {
         $user = auth()->user();
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])->where('is_deleted', 0)
-                    ->where('id', '!=', $user->id);
-            }),
-            ],
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])->where('is_deleted', 0)
-                    ->where('id', '!=', $user->id);
-            }),
-            ],
-            'password' => 'nullable|min:8|string',
-            'confirm_password' => 'required_if:password,required|same:password',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])
-                    ->where('id', '!=', $user->id)->where('is_deleted', 0);
-            }),
-            ],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+      
         $user->update([
             'name' => $request->input('name'),
             'user_name' => $request->input('user_name'),
