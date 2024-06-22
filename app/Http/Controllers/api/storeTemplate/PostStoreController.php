@@ -223,7 +223,12 @@ class PostStoreController extends BaseController
             $tagarr = array();
             $tags = Page::where('is_deleted', 0)->where('store_id', $store->id)->pluck('tags')->toArray();
             foreach ($tags as $tag) {
-                $tagarr[] = $tag;
+                if ($tag !== "" && $tag !== null) {
+                    $tag = explode(',', $tag);
+                    foreach ($tag as $t) {
+                        $tagarr[] = $t;
+                    }
+                }
             }
             $success['tags'] = $tagarr;
             $success['category'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('store_id', $store->id)->with('products')->has('products')->get());
