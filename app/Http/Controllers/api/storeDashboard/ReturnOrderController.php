@@ -32,13 +32,11 @@ class ReturnOrderController extends BaseController
         }
         $data = Order::with('returnOrders')->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
-        })->where('store_id', auth()->user()->store_id)->orderByDesc('id');
+        })->where('store_id', auth()->user()->store_id)->select(['id', 'user_id','order_number', 'total_price', 'quantity', 'order_status', 'payment_status', 'created_at'])->orderByDesc('id');
         if ($request->has('status')) {
-            $data = Order::with('returnOrders')->whereHas('items', function ($q) {
-                $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
-            })->whereHas('returnOrders', function ($q) use ($request) {
+            $data = $data->whereHas('returnOrders', function ($q) use ($request) {
                 $q->where('return_status', $request->status);
-            })->where('store_id', auth()->user()->store_id)->orderByDesc('id');
+            });
         }
         $data = $data->paginate($count);
         $success['ReturnOrders'] = ReturnOrderResource::collection($data);
