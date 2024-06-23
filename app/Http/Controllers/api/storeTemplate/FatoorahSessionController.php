@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\storeTemplate;
 
 use Illuminate\Http\Request;
 use App\Services\FatoorahServices;
