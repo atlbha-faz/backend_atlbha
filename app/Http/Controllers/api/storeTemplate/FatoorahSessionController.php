@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\FatoorahServices;
-use Illuminate\Support\Str;
+use App\Http\Requests\SessionRequest;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class FatoorahSessionController extends BaseController
@@ -33,7 +34,7 @@ class FatoorahSessionController extends BaseController
 
      return $this->sendResponse($success, 'تم تهيئة الدفع بنجاح', 'initiateSession successfully');
     }
-    public function updateSession(Request $request)
+    public function updateSession(SessionRequest $request)
     {
         $payment = new FatoorahServices();
         $data=[
