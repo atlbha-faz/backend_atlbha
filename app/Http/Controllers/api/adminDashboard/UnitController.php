@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\UnitResource;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use App\Http\Requests\UnitRequest;
+use App\Http\Resources\UnitResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class UnitController extends BaseController
 {
@@ -45,19 +46,8 @@ class UnitController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UnitRequest $request)
     {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:255',
-            'file' => 'mimes:pdf,doc,excel',
-            'course_id' => 'required|exists:courses,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $unit = unit::create([
             'title' => $request->title,
             'file' => $request->file,
@@ -110,21 +100,11 @@ class UnitController extends BaseController
      * @param  \App\Models\Unit  $unit
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Unit $unit)
+    public function update(UnitRequest $request, Unit $unit)
     {
         $unit = Unit::query()->find($unit);
         if (is_null($unit) || $unit->is_deleted != 0) {
             return $this->sendError("الوحدة غير موجودة", "unit is't exists");
-        }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:255',
-            'file' => 'mimes:pdf,doc,excel',
-            'course_id' => 'required|exists:courses,id',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
         }
         $unit->update([
             'title' => $request->input('title'),
