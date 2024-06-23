@@ -75,7 +75,7 @@ class IndexEtlobhaController extends BaseController
         $success['section2'] = Section::where('id', 2)->pluck('name')->first();
         if (!is_null(Section::where('id', 2)->where('is_deleted', 0)->where('status', 'active')->first())) {
             $stores=Store::with(['user' => function ($query) {
-                $query->select('id');
+                $query->select('name');
             }, 'city' => function ($query) {
                 $query->select('id', 'name');
             }, 'country' => function ($query) {
