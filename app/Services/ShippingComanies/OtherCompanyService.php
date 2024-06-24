@@ -1,15 +1,18 @@
 <?php
 namespace App\Services\ShippingComanies;
 
+use Carbon\Carbon;
+use App\Models\Order;
+use GuzzleHttp\Client;
+use App\Models\Shipping;
+use App\Models\Payment;
+use App\Models\ReturnOrder;
+use App\Models\OrderAddress;
+use GuzzleHttp\Psr7\Request;
+use App\Models\OrderOrderAddress;
+use App\Services\FatoorahServices;
 use App\Http\Resources\OrderResource;
 use App\Interfaces\ShippingInterface;
-use App\Models\Order;
-use App\Models\OrderAddress;
-use App\Models\OrderOrderAddress;
-use App\Models\Shipping;
-use Carbon\Carbon;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 
 class OtherCompanyService implements ShippingInterface
 {
@@ -101,35 +104,10 @@ class OtherCompanyService implements ShippingInterface
     {
         $order = Order::where('id', $id)->first();
         if ($order->order_status == "new" || $order->order_status == "ready") {
-
             if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
-                $payment = Payment::where('orderID', $order->id)->first();
-
-                $data = [
-                    "Key" => $payment->paymentTransectionID,
-                    "KeyType" => "invoiceid",
-                    "RefundChargeOnCustomer" => false,
-                    "ServiceChargeOnCustomer" => false,
-                    "Amount" => $order->total_price,
-                    "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $payment->price_after_deduction,
-                    "CurrencyIso" => "SAR",
-                ];
-
-                $supplier = new FatoorahServices();
-
-                $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
-                if ($response) {
-                    if ($response['IsSuccess'] == false) {
-                        return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                    } else {
-                        $success['message'] = $response;
-                    }
-                } else {
-                    return $this->sendError("خطأ في الارجاع المالي", 'error');
-                }
-            }
+                $this->refundCancelOrder($id);
         }
+    }
         $order->update([
             'order_status' => 'canceled',
         ]);
@@ -163,6 +141,45 @@ class OtherCompanyService implements ShippingInterface
 
         return null;
 
+    }
+    public function refundCancelOrder($id){
+        $order = Order::where('id', $id)->first();
+        if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
+            $payment = Payment::where('orderID', $order->id)->first();
+    
+            $data = [
+                "Key" => $payment->paymentTransectionID,
+                "KeyType" => "invoiceid",
+                "RefundChargeOnCustomer" => false,
+                "ServiceChargeOnCustomer" => false,
+                "Amount" =>$payment->price_after_deduction,
+                "Comment" => "refund to the customer",
+                "AmountDeductedFromSupplier" => $payment->price_after_deduction,
+                "CurrencyIso" => "SAR",
+            ];
+
+            $supplier = new FatoorahServices();
+
+            $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+            if ($response) {
+                if ($response['IsSuccess'] == false) {
+                    // return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                    $success['error'] = "خطأ في الارجاع المالي";
+
+                } else {
+                    $success['message'] = $response;
+                    $returns = ReturnOrder::where('order_id', $order->id)->get();
+                    foreach ($returns as $return) {
+                        $return->update([
+                            'refund_status' => 1
+                        ]);
+                    }
+                }
+            } else {
+                $success['error'] = "خطأ في الارجاع المالي";
+                // return $this->sendError("خطأ في الارجاع المالي", 'error');
+            }
+        }
     }
 
 }

@@ -67,6 +67,7 @@ class CheckoutController extends BaseController
                 'paymentype_id' => 'required|exists:paymenttypes,id',
                 'shippingtype_id' => 'required|exists:shippingtypes,id',
                 'cod' => 'nullable',
+                'SessionId'=> 'required',
                 'description' => 'nullable|string',
 
             ], [
@@ -280,7 +281,7 @@ class CheckoutController extends BaseController
                     $processingDetailsobject = (object) ($processingDetails);
                     $supplierobject = (object) ($supplierdata);
                     $data = [
-                        "PaymentMethodId" => $paymenttype->paymentMethodId,
+                        "SessionId" => $request->SessionId,
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
@@ -348,7 +349,7 @@ class CheckoutController extends BaseController
                     $processingDetailsobject = (object) ($processingDetails);
                     $supplierobject = (object) ($supplierdata);
                     $data = [
-                        "PaymentMethodId" => $paymenttype->paymentMethodId,
+                        "SessionId" => $request->SessionId,
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
