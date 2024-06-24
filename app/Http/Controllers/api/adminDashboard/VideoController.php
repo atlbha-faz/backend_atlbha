@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\VideoResource;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use App\Http\Requests\VideoRequest;
+use App\Http\Resources\VideoResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class VideoController extends BaseController
 {
@@ -46,18 +47,10 @@ class VideoController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(VideoRequest $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'video' => 'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
-            'unit_id' => 'required|exists:units,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-
+ 
         $fileName = $request->video->getClientOriginalName();
         $filePath = 'videos/' . $fileName;
 
@@ -125,22 +118,13 @@ class VideoController extends BaseController
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $video)
+    public function update(VideoRequest $request, $video)
     {
         $video = Video::query()->find($video);
         if (is_null($video) || $video->is_deleted != 0) {
             return $this->sendError("الفيديو غير موجودة", "video is't exists");
         }
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'video' => 'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
-
-            'unit_id' => 'required|exists:units,id',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $fileName = $request->video->getClientOriginalName();
         $filePath = 'videos/' . $fileName;
 
