@@ -67,7 +67,7 @@ class CheckoutController extends BaseController
                 'paymentype_id' => 'required|exists:paymenttypes,id',
                 'shippingtype_id' => 'required|exists:shippingtypes,id',
                 'cod' => 'nullable',
-                'SessionId'=> 'required',
+                'SessionId'=> 'required_if:paymentype_id,1,2',
                 'description' => 'nullable|string',
 
             ], [
