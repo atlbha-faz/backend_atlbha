@@ -272,7 +272,7 @@ class ReturnOrderController extends BaseController
                     "CustomerName" => $storeAdmain->store->owner_name,
                     "NotificationOption" => "LNK",
                     "MobileCountryCode" => "966",
-                    "CustomerMobile" => $storeAdmain->phonenumber,
+                    "CustomerMobile" => str_replace("+", "00", $storeAdmain->phonenumber),
                     "CustomerEmail" => $storeAdmain->email,
                     "InvoiceValue" => $final_price,
 
