@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Models\Order;
+use App\Models\Account;
 use App\Models\Payment;
 use App\Models\ReturnOrder;
 use Illuminate\Http\Request;
@@ -199,6 +200,7 @@ class ReturnOrderController extends BaseController
         }
         $payment = Payment::where('orderID', $order->id)->first();
         $returns = ReturnOrder::where('order_id', $order->id)->get();
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
         $prices = 0;
         foreach ($returns as $return) {
             $prices = $prices + ($return->qty * $return->orderItem->price);         
@@ -207,20 +209,22 @@ class ReturnOrderController extends BaseController
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
                 $final_price=$prices;
+                $supplierdata = [
+                    "SupplierCode" => $account->supplierCode,
+                    "SupplierDeductedAmount"=> $final_price,
+                ];
+                $supplierobject = (object) ($supplierdata);
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
-                    "RefundChargeOnCustomer" => false,
-                    "ServiceChargeOnCustomer" => false,
                     "Amount" =>  $final_price,
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" =>  $final_price,
-                    "CurrencyIso" => "SAR",
+                    "VendorDeductAmount" => 0,
+                    "Suppliers" => [$supplierobject],
                 ];
-
                 $supplier = new FatoorahServices();
                 try{
-                $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', json_encode($data));
+                $supplierCode = $supplier->buildRequest('v2/MakeSupplierRefund', 'POST', json_encode($data));
                 }
                 catch(ClientException $e) {
                     if($return_status->refund_status == 1)
