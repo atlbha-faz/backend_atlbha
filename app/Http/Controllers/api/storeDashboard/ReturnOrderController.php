@@ -270,7 +270,7 @@ class ReturnOrderController extends BaseController
                 $final_price = $prices;
                 $data = [
                     "CustomerName" => $storeAdmain->store->owner_name,
-                    "NotificationOption" => "ALL",
+                    "NotificationOption" => "LNK",
                     "MobileCountryCode" => "966",
                     "CustomerMobile" => $storeAdmain->phonenumber,
                     "CustomerEmail" => $storeAdmain->email,
