@@ -208,6 +208,7 @@ class ReturnOrderController extends BaseController
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
                 $final_price = $prices;
+                $final_price =$final_price * 0.0815;
                 $supplierdata = [
                     "SupplierCode" => $account->supplierCode,
                     "SupplierDeductedAmount" => $final_price,
@@ -272,8 +273,12 @@ class ReturnOrderController extends BaseController
                     "CustomerName" => $storeAdmain->store->owner_name,
                     "NotificationOption" => "LNK",
                     "MobileCountryCode" => "966",
-                    "CustomerMobile" => str_replace("+", "00", $storeAdmain->phonenumber),
+                    "CustomerMobile" =>  str_replace("+966","", $storeAdmain->phonenumber),
                     "CustomerEmail" => $storeAdmain->email,
+                    "CalLBackUrl"=>'https://backend.atlbha.com/api/Store/refundCallback',
+                    "Errorurl"=> 'https://backend.atlbha.com/api/error',  
+                    "Languagn"=> 'ar',
+                    "DisplayCurrencyIna"=>'SAR',
                     "InvoiceValue" => $final_price,
 
                 ];
@@ -289,7 +294,7 @@ class ReturnOrderController extends BaseController
                     return $this->sendError("خطأ في البيانات", $supplierCode->ValidationErrors[0]->Error);
                 } else {
                     if ($supplierCode['IsSuccess'] == true) {
-                       dd($supplierCode);
+                        $success['payment'] = $supplierCode;
                     }
                 }
             }
@@ -297,4 +302,67 @@ class ReturnOrderController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
     }
+    public function refundCallback(Request $request)
+    {
+        $postFields = [
+            'Key'     => $request->paymentId,
+            'KeyType' => 'paymentId'
+            ];
+              $payment = new FatoorahServices();
+                try {
+                    $response = $payment->buildRequest('v2/GetPaymentStatus', 'POST', json_encode($postFields ));
+                } catch (ClientException $e) {
+
+                    return $this->sendError("حدث خطأ", 'Message: ' . $e->getMessage());
+
+                }
+                dd($response);
+                if ($response['IsSuccess'] == true) {
+                
+
+                   
+                }
+                else{
+
+                }
+
+                 return $this->sendResponse($success, 'تم ارجاع الطلب بنجاح', 'order  returned successfully');
+    }
+    public function refundCancelOrder($id){
+     
+    
+            $data = [
+                "Key" => $payment->paymentTransectionID,
+                "KeyType" => "invoiceid",
+                "RefundChargeOnCustomer" => false,
+                "ServiceChargeOnCustomer" => false,
+                "Amount" =>$payment->price_after_deduction,
+                "Comment" => "refund to the customer",
+                "AmountDeductedFromSupplier" => 0,
+                "CurrencyIso" => "SAR",
+            ];
+
+            $supplier = new FatoorahServices();
+
+            $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+            if ($response) {
+                if ($response['IsSuccess'] == false) {
+                    // return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                    $success['error'] = "خطأ في الارجاع المالي";
+
+                } else {
+                    $success['message'] = $response;
+                    $returns = ReturnOrder::where('order_id', $order->id)->get();
+                    foreach ($returns as $return) {
+                        $return->update([
+                            'refund_status' => 1
+                        ]);
+                    }
+                }
+            } else {
+                $success['error'] = "خطأ في الارجاع المالي";
+                // return $this->sendError("خطأ في الارجاع المالي", 'error');
+            }
+        }
+   
 }
