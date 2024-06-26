@@ -12,8 +12,8 @@ use App\Models\User;
 use App\Services\FatoorahServices;
 use App\Services\ShippingComanies\AramexCompanyService;
 use App\Services\ShippingComanies\OtherCompanyService;
-use GuzzleHttp\Exception\ClientException;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -209,7 +209,7 @@ class ReturnOrderController extends BaseController
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
                 $final_price = $prices;
-                $final_price =$final_price * 0.0815;
+                $final_price = $final_price * 0.082;
                 $supplierdata = [
                     "SupplierCode" => $account->supplierCode,
                     "SupplierDeductedAmount" => $final_price,
@@ -232,11 +232,10 @@ class ReturnOrderController extends BaseController
                     } else {
                         return $this->sendError("لايوجد لديك رصيد كافي", 'Message: ' . $e->getMessage());
                     }
-                }
-                catch (Exception $e) {
+                } catch (Exception $e) {
                     return $this->sendError("An unexpected error occurred:", 'Message: ' . $e->getMessage());
                 }
-                
+
                 if ($supplierCode['IsSuccess'] == false) {
                     return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
                 } else {
@@ -277,28 +276,35 @@ class ReturnOrderController extends BaseController
                     "CustomerName" => $storeAdmain->store->owner_name,
                     "NotificationOption" => "LNK",
                     "MobileCountryCode" => "966",
-                    "CustomerMobile" =>  str_replace("+966","", $storeAdmain->phonenumber),
+                    "CustomerMobile" => str_replace("+966", "", $storeAdmain->phonenumber),
                     "CustomerEmail" => $storeAdmain->email,
-                    "CalLBackUrl"=>'https://backend.atlbha.com/api/Store/refundCallback',
-                    "Errorurl"=> 'https://backend.atlbha.com/api/error',  
-                    "Languagn"=> 'ar',
-                    "DisplayCurrencyIna"=>'SAR',
+                    "CalLBackUrl" => 'https://backend.atlbha.com/api/Store/refundCallback',
+                    "Errorurl" => 'https://backend.atlbha.com/api/error',
+                    "Languagn" => 'ar',
+                    "DisplayCurrencyIna" => 'SAR',
                     "InvoiceValue" => $final_price,
 
                 ];
                 $supplier = new FatoorahServices();
                 try {
-                    $supplierCode = $supplier->buildRequest('v2/SendPayment', 'POST', json_encode($data));
+                    $response = $supplier->buildRequest('v2/SendPayment', 'POST', json_encode($data));
                 } catch (ClientException $e) {
 
                     return $this->sendError("حدث خطأ", 'Message: ' . $e->getMessage());
 
                 }
-                if ($supplierCode['IsSuccess'] == false) {
-                    return $this->sendError("خطأ في البيانات", $supplierCode->ValidationErrors[0]->Error);
+                if ($response['IsSuccess'] == false) {
+                    return $this->sendError("خطأ في البيانات", $response->ValidationErrors[0]->Error);
                 } else {
-                    if ($supplierCode['IsSuccess'] == true) {
-                        $success['payment'] = $supplierCode;
+                    if ($response['IsSuccess'] == true) {
+                        $success['payment'] = $response;
+                        $returns = ReturnOrder::where('order_id', $order->id)->get();
+                        foreach ($returns as $return) {
+                            $return->update([
+                                'invoice_id' => $response['Data']['InvoiceId'],
+                            ]);
+                        }
+
                     }
                 }
             }
@@ -309,64 +315,71 @@ class ReturnOrderController extends BaseController
     public function refundCallback(Request $request)
     {
         $postFields = [
-            'Key'     => $request->paymentId,
-            'KeyType' => 'paymentId'
-            ];
-              $payment = new FatoorahServices();
-                try {
-                    $response = $payment->buildRequest('v2/GetPaymentStatus', 'POST', json_encode($postFields ));
-                } catch (ClientException $e) {
+            'Key' => $request->paymentId,
+            'KeyType' => 'paymentId',
+        ];
+        $payment = new FatoorahServices();
+        try {
+            $response = $payment->buildRequest('v2/GetPaymentStatus', 'POST', json_encode($postFields));
+        } catch (ClientException $e) {
 
-                    return $this->sendError("حدث خطأ", 'Message: ' . $e->getMessage());
+            return $this->sendError("حدث خطأ", 'Message: ' . $e->getMessage());
 
-                }
-                dd($response);
-                if ($response['IsSuccess'] == true) {
-                
-
-                   
-                }
-                else{
-
-                }
-
-                 return $this->sendResponse($success, 'تم ارجاع الطلب بنجاح', 'order  returned successfully');
-    }
-    public function refundCancelOrder($id){
-     
-    
-            $data = [
-                "Key" => $payment->paymentTransectionID,
-                "KeyType" => "invoiceid",
-                "RefundChargeOnCustomer" => false,
-                "ServiceChargeOnCustomer" => false,
-                "Amount" =>$payment->price_after_deduction,
-                "Comment" => "refund to the customer",
-                "AmountDeductedFromSupplier" => 0,
-                "CurrencyIso" => "SAR",
-            ];
-
-            $supplier = new FatoorahServices();
-
-            $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
-            if ($response) {
-                if ($response['IsSuccess'] == false) {
-                    // return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                    $success['error'] = "خطأ في الارجاع المالي";
-
-                } else {
-                    $success['message'] = $response;
-                    $returns = ReturnOrder::where('order_id', $order->id)->get();
-                    foreach ($returns as $return) {
-                        $return->update([
-                            'refund_status' => 1
-                        ]);
-                    }
-                }
-            } else {
-                $success['error'] = "خطأ في الارجاع المالي";
-                // return $this->sendError("خطأ في الارجاع المالي", 'error');
-            }
         }
-   
+        if ($response['IsSuccess'] == true) {
+            if ($response['IsSuccess']['InvoiceStatus'] == "Paid") {
+                $return = ReturnOrder::where('invoice_id', $response['Data']['InvoiceId'])->first();
+                refundOrder($return->order_id);
+            }
+        } else {
+            $succes['response'] = $response;
+        }
+
+        return $this->sendResponse($success, 'تم ارجاع الطلب ', 'returned successfully');
+    }
+    public function refundOrder($id)
+    {
+
+        $returns = ReturnOrder::where('order_id', $id)->get();
+
+        foreach ($returns as $return) {
+            $prices = $prices + ($return->qty * $return->orderItem->price);
+        }
+        $return = ReturnOrder::where('order_id', $id)->first();
+        $data = [
+            "Key" => $return->invoice_id,
+            "KeyType" => "invoiceid",
+            "RefundChargeOnCustomer" => false,
+            "ServiceChargeOnCustomer" => false,
+            "Amount" => $prices,
+            "Comment" => "refund to the customer",
+            "AmountDeductedFromSupplier" => 0,
+            "CurrencyIso" => "SAR",
+        ];
+
+        $supplier = new FatoorahServices();
+
+        $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+        if ($response) {
+            if ($response['IsSuccess'] == false) {
+                // return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                $success['error'] = "خطأ في الارجاع المالي";
+
+            } else {
+                $success['message'] = $response;
+                $returns = ReturnOrder::where('order_id', $order->id)->get();
+                foreach ($returns as $return) {
+                    $return->update([
+                        'refund_status' => 1,
+                    ]);
+                }
+            }
+        } else {
+            $success['error'] = "خطأ في الارجاع المالي";
+            // return $this->sendError("خطأ في الارجاع المالي", 'error');
+        }
+        return $this->sendResponse($success, 'تم ارجاع الطلب بنجاح', 'order  returned successfully');
+
+    }
+
 }
