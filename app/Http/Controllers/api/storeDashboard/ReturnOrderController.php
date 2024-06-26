@@ -278,7 +278,7 @@ class ReturnOrderController extends BaseController
                     "MobileCountryCode" => "966",
                     "CustomerMobile" => str_replace("+966", "", $storeAdmain->phonenumber),
                     "CustomerEmail" => $storeAdmain->email,
-                    "CalLBackUrl" => 'https://backend.atlbha.com/api/Store/refundCallback',
+                    "CalLBackUrl" => route('refundCallback'),
                     "Errorurl" => 'https://backend.atlbha.com/api/error',
                     "Languagn" => 'ar',
                     "DisplayCurrencyIna" => 'SAR',
@@ -314,6 +314,7 @@ class ReturnOrderController extends BaseController
     }
     public function refundCallback(Request $request)
     {
+        return $request->all();
         $postFields = [
             'Key' => $request->paymentId,
             'KeyType' => 'paymentId',
