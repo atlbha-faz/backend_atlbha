@@ -13,6 +13,7 @@ use App\Services\FatoorahServices;
 use App\Services\ShippingComanies\AramexCompanyService;
 use App\Services\ShippingComanies\OtherCompanyService;
 use GuzzleHttp\Exception\ClientException;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -230,9 +231,12 @@ class ReturnOrderController extends BaseController
                         return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
                     } else {
                         return $this->sendError("لايوجد لديك رصيد كافي", 'Message: ' . $e->getMessage());
-
                     }
                 }
+                catch (Exception $e) {
+                    return $this->sendError("An unexpected error occurred:", 'Message: ' . $e->getMessage());
+                }
+                
                 if ($supplierCode['IsSuccess'] == false) {
                     return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
                 } else {
