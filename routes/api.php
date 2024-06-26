@@ -51,6 +51,8 @@ Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class
 Route::get('selector/returnReasons', [App\Http\Controllers\api\SelectorController::class, 'returnReason']);
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
+Route::get('refundCallback', [App\Http\Controllers\api\RefundController::class, 'refundCallback'])->name('refundCallback');
+
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi', 'App\Http\Controllers\api\AuthController@loginAdmin');
 // Route::post('/logincustomerapi','App\Http\Controllers\api\AuthController@login_customer');
@@ -640,7 +642,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('searchReturnOrder', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'searchReturnOrder']);
         Route::get('refundReturnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'refundReturnOrder']);
         Route::get('sendRefundOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'sendRefundOrder']);
-        Route::get('refundCallback', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'refundCallback'])->name('refundCallback');
+      
 
         // });
     });
