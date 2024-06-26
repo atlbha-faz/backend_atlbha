@@ -27,21 +27,20 @@ class RefundController  extends BaseController
 
         }
         if ($response['IsSuccess'] == true) {
-            if ($response['IsSuccess']['InvoiceStatus'] == "Paid") {
+            if ($response['Data']['InvoiceStatus'] == "Paid") {
                 $return = ReturnOrder::where('invoice_id', $response['Data']['InvoiceId'])->first();
-                refundOrder($return->order_id);
+                $this->refundOrder($return->order_id);
             }
         } else {
-            $succes['response'] = $response;
-        }
-
-        return $this->sendResponse($success, 'تم ارجاع الطلب ', 'returned successfully');
+            $success['response'] = $response;
+            return $this->sendResponse($success, 'تم ارجاع الطلب ', 'returned successfully');
+        } 
     }
     public function refundOrder($id)
     {
 
         $returns = ReturnOrder::where('order_id', $id)->get();
-
+        $prices=0;
         foreach ($returns as $return) {
             $prices = $prices + ($return->qty * $return->orderItem->price);
         }
@@ -67,7 +66,7 @@ class RefundController  extends BaseController
 
             } else {
                 $success['message'] = $response;
-                $returns = ReturnOrder::where('order_id', $order->id)->get();
+                $returns = ReturnOrder::where('order_id', $id)->get();
                 foreach ($returns as $return) {
                     $return->update([
                         'refund_status' => 1,
