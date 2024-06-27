@@ -566,7 +566,7 @@ class AramexCompanyService implements ShippingInterface
         $order = Order::where('id', $id)->first();
         if ($order->order_status == "new" || $order->order_status == "ready") {
 
-       $this->refundCancelOrder($id);
+    //    $this->refundCancelOrder($id);
         }
         $order->update([
             'order_status' => 'canceled',

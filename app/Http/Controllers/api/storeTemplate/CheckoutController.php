@@ -2,34 +2,33 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Coupon;
-use App\Models\Option;
-use App\Models\Account;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\OrderItem;
-use App\Models\CartDetail;
-use App\Models\Paymenttype;
-use Illuminate\Support\Str;
-use App\Models\OrderAddress;
-use Illuminate\Http\Request;
-use App\Models\coupons_users;
-use App\Models\Importproduct;
-use App\Models\coupons_products;
-use App\Models\shippingtype_store;
-use App\Services\FatoorahServices;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\ShippingtypeTemplateResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\Account;
+use App\Models\Cart;
+use App\Models\CartDetail;
+use App\Models\Coupon;
+use App\Models\coupons_products;
+use App\Models\coupons_users;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderItem;
+use App\Models\Payment;
+use App\Models\Paymenttype;
+use App\Models\Product;
+use App\Models\shippingtype_store;
+use App\Models\Store;
+use App\Models\User;
+use App\Services\FatoorahServices;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends BaseController
 {
@@ -67,7 +66,7 @@ class CheckoutController extends BaseController
                 'paymentype_id' => 'required|exists:paymenttypes,id',
                 'shippingtype_id' => 'required|exists:shippingtypes,id',
                 'cod' => 'nullable',
-                'SessionId'=> 'required_if:paymentype_id,1,2',
+                'SessionId' => 'required_if:paymentype_id,1,2',
                 'description' => 'nullable|string',
 
             ], [
@@ -632,33 +631,33 @@ class CheckoutController extends BaseController
         }
         if ($order->order_status == "new" || $order->order_status == "ready") {
 
-            if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
-                $payment = Payment::where('orderID', $order->id)->first();
+            // if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
+            //     $payment = Payment::where('orderID', $order->id)->first();
 
-                $data = [
-                    "Key" => $payment->paymentTransectionID,
-                    "KeyType" => "invoiceid",
-                    "RefundChargeOnCustomer" => false,
-                    "ServiceChargeOnCustomer" => false,
-                    "Amount" => $order->total_price,
-                    "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $payment->price_after_deduction,
-                    "CurrencyIso" => "SAR",
-                ];
+            //     $data = [
+            //         "Key" => $payment->paymentTransectionID,
+            //         "KeyType" => "invoiceid",
+            //         "RefundChargeOnCustomer" => false,
+            //         "ServiceChargeOnCustomer" => false,
+            //         "Amount" => $order->total_price,
+            //         "Comment" => "refund to the customer",
+            //         "AmountDeductedFromSupplier" => $payment->price_after_deduction,
+            //         "CurrencyIso" => "SAR",
+            //     ];
 
-                $supplier = new FatoorahServices();
+            //     $supplier = new FatoorahServices();
 
-                $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
-                if ($response) {
-                    if ($response['IsSuccess'] == false) {
-                        return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                    } else {
-                        $success['message'] = $response;
-                    }
-                } else {
-                    return $this->sendError("خطأ في الارجاع المالي", 'error');
-                }
-            }
+            //     $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+            //     if ($response) {
+            //         if ($response['IsSuccess'] == false) {
+            //             return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+            //         } else {
+            //             $success['message'] = $response;
+            //         }
+            //     } else {
+            //         return $this->sendError("خطأ في الارجاع المالي", 'error');
+            //     }
+            // }
             $order->update([
                 'order_status' => 'canceled',
             ]);
@@ -788,6 +787,5 @@ class CheckoutController extends BaseController
             return $this->sendResponse($success, 'تم ارجاع السلة بنجاح', 'cart return successfully');
         }
     }
-
 
 }

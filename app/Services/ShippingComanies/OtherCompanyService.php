@@ -105,7 +105,7 @@ class OtherCompanyService implements ShippingInterface
         $order = Order::where('id', $id)->first();
         if ($order->order_status == "new" || $order->order_status == "ready") {
             if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
-                $this->refundCancelOrder($id);
+                // $this->refundCancelOrder($id);
         }
     }
         $order->update([
