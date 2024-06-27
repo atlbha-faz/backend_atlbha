@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Models\ReturnOrder;
 use Illuminate\Http\Request;
 use App\Services\FatoorahServices;
+use App\Models\Payment;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -22,14 +23,13 @@ class RefundController  extends BaseController
         try {
             $response = $payment->buildRequest('v2/GetPaymentStatus', 'POST', json_encode($postFields));
         } catch (ClientException $e) {
-
             return $this->sendError("حدث خطأ", 'Message: ' . $e->getMessage());
-
         }
         if ($response['IsSuccess'] == true) {
             if ($response['Data']['InvoiceStatus'] == "Paid") {
                 $return = ReturnOrder::where('invoice_id', $response['Data']['InvoiceId'])->first();
                 $this->refundOrder($return->order_id);
+                return $this->sendResponse($success, 'تم ارجاع الطلب ', 'returned successfully');
             }
         } else {
             $success['response'] = $response;
@@ -44,9 +44,9 @@ class RefundController  extends BaseController
         foreach ($returns as $return) {
             $prices = $prices + ($return->qty * $return->orderItem->price);
         }
-        $return = ReturnOrder::where('order_id', $id)->first();
+        $payment = Payment::where('orderID', $id)->first();
         $data = [
-            "Key" => $return->invoice_id,
+            "Key" => $payment->paymentTransectionID,
             "KeyType" => "invoiceid",
             "RefundChargeOnCustomer" => false,
             "ServiceChargeOnCustomer" => false,
