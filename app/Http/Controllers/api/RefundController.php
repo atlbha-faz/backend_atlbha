@@ -27,13 +27,19 @@ class RefundController  extends BaseController
         }
         if ($response['IsSuccess'] == true) {
             if ($response['Data']['InvoiceStatus'] == "Paid") {
+                $success['response'] = $response;
                 $return = ReturnOrder::where('invoice_id', $response['Data']['InvoiceId'])->first();
-                $this->refundOrder($return->order_id);
+                $refund_result= $this->refundOrder($return->order_id);
+              if($refund_result){
+                $success['$refund_status']= true;
+              }
+              else{
+                $success['$refund_status']= false;
+              }
                 return $this->sendResponse($success, 'تم ارجاع الطلب ', 'returned successfully');
             }
         } else {
-            $success['response'] = $response;
-            return $this->sendResponse($success, 'تم ارجاع الطلب ', 'returned successfully');
+            return $this->sendError('خطأ في العملية', 'process failed');
         } 
     }
     public function refundOrder($id)
@@ -61,23 +67,19 @@ class RefundController  extends BaseController
         $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
         if ($response) {
             if ($response['IsSuccess'] == false) {
-                // return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                $success['error'] = "خطأ في الارجاع المالي";
-
+              return false;
             } else {
-                $success['message'] = $response;
                 $returns = ReturnOrder::where('order_id', $id)->get();
                 foreach ($returns as $return) {
                     $return->update([
                         'refund_status' => 1,
                     ]);
                 }
+                return true;
             }
         } else {
-            $success['error'] = "خطأ في الارجاع المالي";
-            // return $this->sendError("خطأ في الارجاع المالي", 'error');
-        }
-        return $this->sendResponse($success, 'تم ارجاع الطلب بنجاح', 'order  returned successfully');
+            return false;
+        }  
 
     }
 
