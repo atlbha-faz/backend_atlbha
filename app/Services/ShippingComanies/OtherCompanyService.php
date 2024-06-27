@@ -102,33 +102,33 @@ class OtherCompanyService implements ShippingInterface
         $order = Order::where('id', $id)->first();
         if ($order->order_status == "new" || $order->order_status == "ready") {
 
-            if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
-                $payment = Payment::where('orderID', $order->id)->first();
+            // if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
+            //     $payment = Payment::where('orderID', $order->id)->first();
 
-                $data = [
-                    "Key" => $payment->paymentTransectionID,
-                    "KeyType" => "invoiceid",
-                    "RefundChargeOnCustomer" => false,
-                    "ServiceChargeOnCustomer" => false,
-                    "Amount" => $order->total_price,
-                    "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" => $payment->price_after_deduction,
-                    "CurrencyIso" => "SAR",
-                ];
+            //     $data = [
+            //         "Key" => $payment->paymentTransectionID,
+            //         "KeyType" => "invoiceid",
+            //         "RefundChargeOnCustomer" => false,
+            //         "ServiceChargeOnCustomer" => false,
+            //         "Amount" => $order->total_price,
+            //         "Comment" => "refund to the customer",
+            //         "AmountDeductedFromSupplier" => $payment->price_after_deduction,
+            //         "CurrencyIso" => "SAR",
+            //     ];
 
-                $supplier = new FatoorahServices();
+            //     $supplier = new FatoorahServices();
 
-                $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
-                if ($response) {
-                    if ($response['IsSuccess'] == false) {
-                        return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-                    } else {
-                        $success['message'] = $response;
-                    }
-                } else {
-                    return $this->sendError("خطأ في الارجاع المالي", 'error');
-                }
-            }
+            //     $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+            //     if ($response) {
+            //         if ($response['IsSuccess'] == false) {
+            //             return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+            //         } else {
+            //             $success['message'] = $response;
+            //         }
+            //     } else {
+            //         return $this->sendError("خطأ في الارجاع المالي", 'error');
+            //     }
+            // }
         }
         $order->update([
             'order_status' => 'canceled',
