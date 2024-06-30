@@ -214,7 +214,7 @@ class CheckoutController extends BaseController
             $processingDetailsobject = (object) ($processingDetails);
             $data = [
                 "PaymentMethodId" => $paymenttype->paymentMethodId,
-                "CustomerName" =>( $customer->store != null ? $customer->store->name : $customer->user_name),
+                "CustomerName" =>( $customer->store != null ? $customer->store->owner_name: $customer->user_name),
                 "InvoiceValue" => $order->total_price, // total_price
                 "CustomerEmail" => $customer->email,
                 "CallBackUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/success',
