@@ -41,7 +41,7 @@ class PaymenttypeResource extends JsonResource
             'status' => $status,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'is_madfu' => $is_madfu,
-            'is_send' => ($store)? $store->is_send :0,
+            'is_send' => ($store)? (($store->is_send) ? true:false) :false,
 
         ];
     }
