@@ -49,7 +49,7 @@ return [
             'transport' => 'smtp',
             'host' => env('MAIL_HOST_2', 'mail.atlbha.com'),
             'port' => env('MAIL_PORT_2', 587),
-            'encryption' => env('MAIL_ENCRYPTION_2', 'tls'),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME_2'),
             'password' => env('MAIL_PASSWORD_2'),
             'timeout' => null,
