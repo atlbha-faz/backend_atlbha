@@ -8,6 +8,7 @@ use App\Services\Madfu;
 use App\Models\MadfuLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\MadfuLoginRequest;
 use App\Http\Requests\CreateOrderRequest;
 
@@ -64,6 +65,13 @@ class MadfuController extends BaseController
         }
     }
 
+
+    public function sendStoresInfo(Request $request){
+        Mail::mailer('stores_info')
+    ->to('rawaa.faz.it@gmail.com')
+    ->subject('Test Email')
+    ->text('This is a test email sent from the stores_info mailer.');
+}
     public function refundFees(Request $request)
     {
         $fees = (new Madfu())->calculateFees($request->orderid, $request->refundAmount);
@@ -84,5 +92,6 @@ class MadfuController extends BaseController
         } else {
             return $this->sendError('خطأ في العملية', 'process failed');
         }
+
     }
 }
