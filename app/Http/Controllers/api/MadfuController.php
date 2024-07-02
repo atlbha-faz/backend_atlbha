@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Order;
+use App\Models\Store;
 use GuzzleHttp\Client;
 use App\Services\Madfu;
 use App\Models\MadfuLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\MadfuLoginRequest;
 use App\Http\Requests\CreateOrderRequest;
 
@@ -63,7 +65,24 @@ class MadfuController extends BaseController
             }
         }
     }
-
+    public function sendStoresInfo(StoreInfoRequest $request)
+    {
+        $store = Store::where('id', $request->store_id)->first();
+        $data = [
+            'Contact_name' => $request->name,
+            'phonenumber' => $request->phonenumber,
+            'email' =>$request->email,
+            'store_name' => $request->store_name,
+            'store_url' =>$request->store_url,
+        ];
+        Mail::mailer('stores_info')
+            ->to('rawaa.faz.it@gmail.com')
+            ->send(new StoreInfoMail($data));
+           $store->update(['is_send'=>1]); 
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم الارسال بنجاح', 'send successfully');
+           
+    }
     public function refundFees(Request $request)
     {
         $fees = (new Madfu())->calculateFees($request->orderid, $request->refundAmount);
