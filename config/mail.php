@@ -47,13 +47,14 @@ return [
         ],
         'stores_info' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST_2', 'mail.faz-it.net'),
+            'host' => env('MAIL_HOST_2', 'mail.atlbha.com'),
             'port' => env('MAIL_PORT_2', 587),
             'encryption' => env('MAIL_ENCRYPTION_2', 'tls'),
             'username' => env('MAIL_USERNAME_2'),
             'password' => env('MAIL_PASSWORD_2'),
             'timeout' => null,
             'auth_mode' => null,
+            'verify_peer' => false
         ],
 
         'ses' => [
