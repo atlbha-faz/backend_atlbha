@@ -67,10 +67,16 @@ class MadfuController extends BaseController
     }
     public function sendStoresInfo(StoreInfoRequest $request)
     {
-
+        $data = [
+            'Contact_name' => $request->name,
+            'phonenumber' => $request->phonenumber,
+            'email' =>$request->email,
+            'store_name' => $request->store_name,
+            'store_url' =>$request->store_url,
+        ];
         Mail::mailer('stores_info')
             ->to('rawaa.faz.it@gmail.com')
-            ->send(new StoreInfoMail($request));
+            ->send(new StoreInfoMail($data));
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم الارسال بنجاح', 'send successfully');
            
