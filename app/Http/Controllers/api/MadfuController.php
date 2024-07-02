@@ -8,6 +8,7 @@ use App\Services\Madfu;
 use App\Models\MadfuLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\MadfuLoginRequest;
 use App\Http\Requests\CreateOrderRequest;
 use GuzzleHttp\Exception\ClientException;
@@ -73,5 +74,12 @@ class MadfuController extends BaseController
                 $order->save();
             }
         }
+    }
+
+    public function sendStoresInfo(Request $request){
+        Mail::mailer('stores_info')
+    ->to('rawaa.faz.it@gmail.com')
+    ->subject('Test Email')
+    ->text('This is a test email sent from the stores_info mailer.');
     }
 }

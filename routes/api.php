@@ -26,6 +26,7 @@ Route::prefix('madfu')->group(function () {
     Route::post('login', [MadfuController::class, 'login']);
     Route::post('create-order', [MadfuController::class, 'createOrder']);
     Route::post('webhook', [MadfuController::class, 'webhook'])->name('madfu-webhook');
+    Route::post('sendStoresInfo', [MadfuController::class, 'sendStoresInfo']);
 });
 Route::prefix('aramex')->group(function () {
     Route::post('webhook', [AramexController::class, 'webhook'])->name('aramex-webhook');
