@@ -6,9 +6,10 @@ use App\Models\Order;
 use GuzzleHttp\Client;
 use App\Services\Madfu;
 use App\Models\MadfuLog;
+use App\Mail\StoreInfoMail;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\StoreInfoRequest;
 use App\Http\Requests\MadfuLoginRequest;
 use App\Http\Requests\CreateOrderRequest;
 
@@ -52,7 +53,7 @@ class MadfuController extends BaseController
         if ($request->status) {
             if ($request->orderStatus == 125) {
                 $order = Order::where('order_number', $request->MerchantReference)->first();
-                if($order == null){
+                if ($order == null) {
                     $client = new Client();
                     $response = $client->post('https://api.fayezbinsaleh.me/api/webhook', [
                         'json' => json_encode($request->all()),
@@ -64,14 +65,17 @@ class MadfuController extends BaseController
             }
         }
     }
+    public function sendStoresInfo(StoreInfoRequest $request)
+    {
 
-
-    public function sendStoresInfo(Request $request){
         Mail::mailer('stores_info')
-    ->to('rawaa.faz.it@gmail.com')
-    ->subject('Test Email')
-    ->text('This is a test email sent from the stores_info mailer.');
-}
+            ->to('rawaa.faz.it@gmail.com')
+            ->send(new StoreInfoMail($request));
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم الارسال بنجاح', 'send successfully');
+           
+    }
+
     public function refundFees(Request $request)
     {
         $fees = (new Madfu())->calculateFees($request->orderid, $request->refundAmount);
