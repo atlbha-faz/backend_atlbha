@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Order;
+use App\Models\Store;
 use GuzzleHttp\Client;
 use App\Services\Madfu;
 use App\Models\MadfuLog;
@@ -67,6 +68,7 @@ class MadfuController extends BaseController
     }
     public function sendStoresInfo(StoreInfoRequest $request)
     {
+        $store = Store::where('id', $request->store_id)->first();
         $data = [
             'Contact_name' => $request->name,
             'phonenumber' => $request->phonenumber,
@@ -77,6 +79,7 @@ class MadfuController extends BaseController
         Mail::mailer('stores_info')
             ->to('rawaa.faz.it@gmail.com')
             ->send(new StoreInfoMail($data));
+           $store->update(['is_send'=>1]); 
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم الارسال بنجاح', 'send successfully');
            
