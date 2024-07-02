@@ -7,9 +7,11 @@ use App\Models\Store;
 use GuzzleHttp\Client;
 use App\Services\Madfu;
 use App\Models\MadfuLog;
+use App\Mail\StoreInfoMail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\StoreInfoRequest;
 use App\Http\Requests\MadfuLoginRequest;
 use App\Http\Requests\CreateOrderRequest;
 
