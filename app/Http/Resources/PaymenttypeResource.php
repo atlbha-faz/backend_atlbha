@@ -16,8 +16,11 @@ class PaymenttypeResource extends JsonResource
     public function toArray($request)
     {
         $is_madfu = false;
+        $store = Store::find(auth()->user()->store_id);
+        $is_madfu = ($store) ? ($store->madfu_username != null && $store->madfu_password != null && $this->id == 5) : false;
+
         if (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
-            if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null) {
+            if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null  && $is_madfu == true ) {
                 $status = __('message.active');
             } else {
                 $status = __('message.not_active');
@@ -29,8 +32,7 @@ class PaymenttypeResource extends JsonResource
                 $status = __('message.not_active');
             }
         }
-        $store = Store::find(auth()->user()->store_id);
-        $is_madfu = ($store) ? ($store->madfu_username != null && $store->madfu_password != null && $this->id == 5) : false;
+       
         return [
             'id' => $this->id,
             'name' => $this->name,
