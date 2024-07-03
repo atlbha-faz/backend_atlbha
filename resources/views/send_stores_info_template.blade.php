@@ -5,6 +5,7 @@
 <style>
         .number-direction {
             direction: ltr;
+           text-align:left;
         }
     </style>
 </head>
