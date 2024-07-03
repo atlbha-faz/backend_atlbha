@@ -9,6 +9,7 @@
     </style>
 </head>
 <body dir="rtl">
+<h2>يرجى تفعيل بيانات التاجر في اطلبها لدى منصتكم في مدفوع</h2>
 <h2>	  الاسم:{{$data['Contact_name']}}</h2>
 <h2>رقم الجوال:	<span class="number-direction">{{$data['phonenumber']}}</span></h2>
 <h2>البريد الالكتروني:{{$data['email']}}</h2>
