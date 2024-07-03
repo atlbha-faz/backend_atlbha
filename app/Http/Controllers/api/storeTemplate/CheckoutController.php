@@ -408,7 +408,13 @@ class CheckoutController extends BaseController
     public function paymentMethods($domain)
     {
         $store = Store::where('is_deleted', 0)->where('domain', $domain)->first();
+        $is_madfu = ($store) ? ($store->madfu_username != null && $store->madfu_password != null ) : false;
+        if($is_madfu ){
         $success['payment_types'] = PaymenttypeResource::collection($store->paymenttypes);
+        }
+        else{
+     $success['payment_types'] = PaymenttypeResource::collection($store->paymenttypes->whereNot('id',5));
+        }
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'Payment Types return successfully');
