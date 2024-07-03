@@ -379,6 +379,7 @@ Auth::routes();
 Route::middleware([StoreUser::class])->group(function () {
     Route::prefix('/Store')->group(function () {
 
+        Route::post('madfu-auth/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'madfuAuth']);
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
 
