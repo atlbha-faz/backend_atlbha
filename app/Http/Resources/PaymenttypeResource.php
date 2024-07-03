@@ -38,7 +38,18 @@ class PaymenttypeResource extends JsonResource
             }
         } else {
             if ($this->status == null || $this->status == 'active') {
+                if($this->id == 5 ){
+                    if($is_madfu == true  && $store->is_send == 1)
+                    {
+                      $status = __('message.active');
+                    }
+                    else{
+                      $status = __('message.not_active');
+                    }
+                  }
+                  else{
                 $status = __('message.active');
+                  }
             } else {
                 $status = __('message.not_active');
             }
