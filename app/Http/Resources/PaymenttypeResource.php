@@ -26,6 +26,9 @@ class PaymenttypeResource extends JsonResource
                   {
                     $status = __('message.active');
                   }
+                  else{
+                    $status = __('message.not_active');
+                  }
                 }
                 else{
                 $status = __('message.active');
