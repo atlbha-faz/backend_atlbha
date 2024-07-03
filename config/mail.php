@@ -47,7 +47,7 @@ return [
         ],
         'stores_info' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST_2', 'mail.atlbha.com'),
+            'host' => env('MAIL_HOST_2', 'mail.atlbha.sa'),
             'port' => env('MAIL_PORT_2', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME_2'),
