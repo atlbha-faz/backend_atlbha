@@ -20,41 +20,27 @@ class PaymenttypeResource extends JsonResource
         $is_madfu = ($store) ? ($store->madfu_username != null && $store->madfu_password != null && $this->id == 5) : false;
 
         if (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
-            if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null  ) {
-                if($this->id == 5 ){
-                  if($is_madfu == true  && $store->is_send == 1)
-                  {
+            if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null) {
+                if ($this->id == 5) {
+                    if ($is_madfu == true && $store->is_send == 1) {
+                        $status = __('message.active');
+                    } else {
+                        $status = __('message.not_active');
+                    }
+                } else {
                     $status = __('message.active');
-                  }
-                  else{
-                    $status = __('message.not_active');
-                  }
-                }
-                else{
-                $status = __('message.active');
                 }
             } else {
                 $status = __('message.not_active');
             }
         } else {
             if ($this->status == null || $this->status == 'active') {
-                if($this->id == 5 ){
-                    if($is_madfu == true  && $store->is_send == 1)
-                    {
-                      $status = __('message.active');
-                    }
-                    else{
-                      $status = __('message.not_active');
-                    }
-                  }
-                  else{
-                $status = __('message.active');
-                  }
+                    $status = __('message.active');
             } else {
                 $status = __('message.not_active');
             }
         }
-       
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -65,7 +51,7 @@ class PaymenttypeResource extends JsonResource
             'status' => $status,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'is_madfu' => $is_madfu,
-            'is_send' => ($store)? (($store->is_send) ? true:false) :false,
+            'is_send' => ($store) ? (($store->is_send) ? true : false) : false,
 
         ];
     }
