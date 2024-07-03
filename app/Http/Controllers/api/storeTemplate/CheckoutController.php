@@ -413,7 +413,7 @@ class CheckoutController extends BaseController
         $success['payment_types'] = PaymenttypeResource::collection($store->paymenttypes);
         }
         else{
-     $success['payment_types'] = PaymenttypeResource::collection($store->paymenttypes->whereNot('id',5));
+     $success['payment_types'] = PaymenttypeResource::collection($store->paymenttypes->whereNotIn('id', [5]));
         }
         $success['status'] = 200;
 
