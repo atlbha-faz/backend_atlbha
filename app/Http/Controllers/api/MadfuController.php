@@ -74,7 +74,6 @@ class MadfuController extends BaseController
             'phonenumber' => $request->phonenumber,
             'email' =>$request->email,
             'store_name' => $request->store_name,
-            'store_url' =>$request->store_url,
         ];
         Mail::mailer('stores_info')
             ->to('rawaa.faz.it@gmail.com')
