@@ -21,7 +21,15 @@ class PaymenttypeResource extends JsonResource
 
         if (auth()->user()->user_type == 'store' || auth()->user()->user_type == 'store_employee') {
             if ($this->stores()->where('store_id', auth()->user()->store_id)->first() != null  ) {
+                if($this->id == 5 ){
+                  if($is_madfu == true  && $store->is_send == 1)
+                  {
+                    $status = __('message.active');
+                  }
+                }
+                else{
                 $status = __('message.active');
+                }
             } else {
                 $status = __('message.not_active');
             }
