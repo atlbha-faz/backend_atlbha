@@ -77,7 +77,7 @@ class MadfuController extends BaseController
             'store_name' => $request->store_name,
         ];
         Mail::mailer('stores_info')
-            ->to('rawaa.faz.it@gmail.com')
+            ->to('sales@madfu.com.sa')
             ->send(new StoreInfoMail($data));
            $store->update(['is_send'=>1]); 
             $success['status'] = 200;
