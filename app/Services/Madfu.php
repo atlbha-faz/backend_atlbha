@@ -50,7 +50,7 @@ class Madfu
 
     public function login($username, $password,$api_key, $app_code,$authorization, $uuid)
     {
-        $token = $this->initToken($api_key, $app_code,$authorization,$uuid);
+        $token = $this->initToken($username, $password,$api_key, $app_code,$authorization,$uuid);
         $url = $this->base_url . 'Merchants/sign-in';
         $body = ["userName" => $username, "password" => $password];
         $login = $this->makeRequest($url, $body,$api_key, $app_code,$authorization, ['token' => json_decode($token->getBody()->getContents())->token]);
@@ -71,9 +71,11 @@ class Madfu
         ];
         $order_db = Order::where('order_number', $order->MerchantReference)->first();
         $store=Store::where('id', $order_db->store_id)->first();
-        $api_key=($store) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
-        $app_code=($store) ? $store->madfu_app_code:'Atlbha';
-        $authorization=($store) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
+        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
+        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
+        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
+        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
         
         return $this->makeRequest($url, $body,$api_key, $app_code,$authorization, ['token' => $token]);
     }
@@ -83,11 +85,11 @@ class Madfu
         $order = Order::where('payment_id',$orderid)->first();
         $store=Store::where('id', $order->store_id)->first();
 
-        $username =($store) ?  $store->madfu_username :'wesam@faz-it.net';
-        $password = ($store) ? $store->madfu_password:'Welcome@123';
-        $api_key=($store) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
-        $app_code=($store) ? $store->madfu_app_code:'Atlbha';
-        $authorization=($store) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
+        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
+        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
+        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
+        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
 
         $token = json_decode($this->login($username, $password,$api_key, $app_code,$authorization, Str::random(8))->getBody()->getContents())->token;
         $url = $this->base_url . 'api/Refund/RefundFee/Calculate';
@@ -98,11 +100,11 @@ class Madfu
     {
         $order = Order::find($orderid);
         $store=Store::where('id', $order->store_id)->first();
-        $username =($store) ?  $store->madfu_username :'wesam@faz-it.net';
-        $password = ($store) ? $store->madfu_password:'Welcome@123';
-        $api_key=($store) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
-        $app_code=($store) ? $store->madfu_app_code:'Atlbha';
-        $authorization=($store) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
+        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
+        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
+        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
+        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
 
         $token = json_decode($this->login($username, $password,$api_key, $app_code,$authorization, Str::random(8))->getBody()->getContents())->token;
         $url = $this->base_url . 'api/Refund/Create';
