@@ -18,9 +18,13 @@ class MadfuController extends BaseController
 {
     public function login(MadfuLoginRequest $request)
     {
-        $username = 'wesam@faz-it.net';
-        $password = 'Welcome@123';
-        $login_request = (new Madfu())->login($username, $password, $request->uuid);
+        $store = Store::where('id', $request->store_id)->first();
+        $username =($store) ?  $store->madfu_username :'wesam@faz-it.net';
+        $password = ($store) ? $store->madfu_password:'Welcome@123';
+        $api_key=($store) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
+        $app_code=($store) ? $store->madfu_app_code:'Atlbha';
+        $authorization=($store) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $login_request = (new Madfu())->login($username, $password,$api_key, $app_code,$authorization,$request->uuid);
         if ($login_request->getStatusCode() == 200) {
             $login_request = json_decode($login_request->getBody()->getContents());
             if (!$login_request->status) {
@@ -76,7 +80,7 @@ class MadfuController extends BaseController
             'store_name' => $request->store_name,
         ];
         Mail::mailer('stores_info')
-            ->to('rawaa.faz.it@gmail.com')
+            ->to('support@atlbha.sa')
             ->send(new StoreInfoMail($data));
            $store->update(['is_send'=>1]); 
             $success['status'] = 200;

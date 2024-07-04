@@ -24,7 +24,7 @@ class StoreInfoMail extends Mailable
     public function build()
     {
 
-        return $this->from('stores_info@atlbha.com')->subject('stores Information')->view('send_stores_info_template')->with('data', $this->data);
+        return $this->from('support@atlbha.sa')->subject('stores Information')->view('send_stores_info_template')->with('data', $this->data);
 
     }
 }
