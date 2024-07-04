@@ -44,7 +44,7 @@ class Madfu
     {
         $url = $this->base_url . 'merchants/token/init';
         $body = ["uuid" => $uuid, "systemInfo" => "web"];
-        $result = $this->makeRequest($url,$api_key, $app_code,$authorization, $body);
+        $result = $this->makeRequest($url,$body,$api_key, $app_code,$authorization);
         return $result;
     }
 
@@ -53,7 +53,7 @@ class Madfu
         $token = $this->initToken($username, $password,$api_key, $app_code,$authorization,$uuid);
         $url = $this->base_url . 'Merchants/sign-in';
         $body = ["userName" => $username, "password" => $password];
-        $login = $this->makeRequest($url, $body,$api_key, $app_code,$authorization, ['token' => json_decode($token->getBody()->getContents())->token]);
+        $login = $this->makeRequest($url,$body,$api_key,$app_code,$authorization, ['token' => json_decode($token->getBody()->getContents())->token]);
         return $login;
     }
 
@@ -77,7 +77,7 @@ class Madfu
         $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
         $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
         
-        return $this->makeRequest($url, $body,$api_key, $app_code,$authorization, ['token' => $token]);
+        return $this->makeRequest($url,$body,$api_key, $app_code,$authorization, ['token' => $token]);
     }
 
     public function calculateFees($orderid, $refundAmount)
@@ -94,7 +94,7 @@ class Madfu
         $token = json_decode($this->login($username, $password,$api_key, $app_code,$authorization, Str::random(8))->getBody()->getContents())->token;
         $url = $this->base_url . 'api/Refund/RefundFee/Calculate';
         $body = ["orderid" => $order->payment_id, "refundAmount" => $refundAmount];
-        return $this->makeRequest($url,$api_key, $app_code,$authorization, $body, ['token' => $token]);
+        return $this->makeRequest($url,$body,$api_key, $app_code,$authorization, ['token' => $token]);
     }
     public function refund($orderid, $refundAmount,$refundFees)
     {
@@ -109,6 +109,6 @@ class Madfu
         $token = json_decode($this->login($username, $password,$api_key, $app_code,$authorization, Str::random(8))->getBody()->getContents())->token;
         $url = $this->base_url . 'api/Refund/Create';
         $body = ["orderid" => $order->payment_id, "refundAmount" => $refundAmount,'refundFees'=>$refundFees,'merchantReference'=>$order->order_number];
-        return $this->makeRequest($url,$api_key, $app_code,$authorization, $body, ['token' => $token]);
+        return $this->makeRequest($url,$body,$api_key, $app_code,$authorization, ['token' => $token]);
     }
 }
