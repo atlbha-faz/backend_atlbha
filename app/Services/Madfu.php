@@ -50,7 +50,7 @@ class Madfu
 
     public function login($username, $password,$api_key, $app_code,$authorization, $uuid)
     {
-        $token = $this->initToken($username, $password,$api_key, $app_code,$authorization,$uuid);
+        $token = $this->initToken($api_key, $app_code,$authorization,$uuid);
         $url = $this->base_url . 'Merchants/sign-in';
         $body = ["userName" => $username, "password" => $password];
         $login = $this->makeRequest($url,$body,$api_key,$app_code,$authorization, ['token' => json_decode($token->getBody()->getContents())->token]);
