@@ -19,11 +19,12 @@ class MadfuController extends BaseController
     public function login(MadfuLoginRequest $request)
     {
         $store = Store::where('id', $request->store_id)->first();
-        $username =($store) ?  $store->madfu_username :'wesam@faz-it.net';
-        $password = ($store) ? $store->madfu_password:'Welcome@123';
-        $api_key=($store) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
-        $app_code=($store) ? $store->madfu_app_code:'Atlbha';
-        $authorization=($store) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
+        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
+        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
+        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
+        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+       
         $login_request = (new Madfu())->login($username, $password,$api_key, $app_code,$authorization,$request->uuid);
         if ($login_request->getStatusCode() == 200) {
             $login_request = json_decode($login_request->getBody()->getContents());
