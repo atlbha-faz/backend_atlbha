@@ -70,7 +70,7 @@ class Madfu
             "MerchantUrls" => ["Success" => $cancel_url . '/success', "Failure" => $cancel_url . '/failed', "Cancel" => $cancel_url]
         ];
         $order_db = Order::where('order_number', $order->MerchantReference)->first();
-        $store=Store::where('id', $order_db->store_id)->first();
+        $store=($order_db) ? Store::where('id', $order_db->store_id)->first():null;
         $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
         $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
         $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
@@ -82,9 +82,8 @@ class Madfu
 
     public function calculateFees($orderid, $refundAmount)
     {
-        $order = Order::where('payment_id',$orderid)->first();
-        $store=Store::where('id', $order->store_id)->first();
-
+        $order = Order::where('id',$orderid)->first();
+        $store=($order) ? Store::where('id', $order->store_id)->first():null;
         $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
         $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
         $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
@@ -99,7 +98,7 @@ class Madfu
     public function refund($orderid, $refundAmount,$refundFees)
     {
         $order = Order::find($orderid);
-        $store=Store::where('id', $order->store_id)->first();
+        $store=($order) ? Store::where('id', $order->store_id)->first():null;
         $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
         $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
         $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
