@@ -9,7 +9,6 @@ use App\Services\Madfu;
 use App\Models\MadfuLog;
 use App\Mail\StoreInfoMail;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\StoreInfoRequest;
 use App\Http\Requests\MadfuLoginRequest;
@@ -19,9 +18,14 @@ class MadfuController extends BaseController
 {
     public function login(MadfuLoginRequest $request)
     {
-        $username = 'wesam@faz-it.net';
-        $password = 'Welcome@123';
-        $login_request = (new Madfu())->login($username, $password, $request->uuid);
+        $store = Store::where('id', $request->store_id)->first();
+        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
+        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
+        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
+        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
+        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+       
+        $login_request = (new Madfu())->login($username, $password,$api_key, $app_code,$authorization,$request->uuid);
         if ($login_request->getStatusCode() == 200) {
             $login_request = json_decode($login_request->getBody()->getContents());
             if (!$login_request->status) {
@@ -55,7 +59,7 @@ class MadfuController extends BaseController
         if ($request->status) {
             if ($request->orderStatus == 125) {
                 $order = Order::where('order_number', $request->MerchantReference)->first();
-                if($order == null){
+                if ($order == null) {
                     $client = new Client();
                     $response = $client->post('https://api.fayezbinsaleh.me/api/webhook', [
                         'json' => json_encode($request->all()),
@@ -77,13 +81,14 @@ class MadfuController extends BaseController
             'store_name' => $request->store_name,
         ];
         Mail::mailer('stores_info')
-            ->to('sales@madfu.com.sa')
+            ->to('support@atlbha.sa')
             ->send(new StoreInfoMail($data));
            $store->update(['is_send'=>1]); 
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم الارسال بنجاح', 'send successfully');
            
     }
+
     public function refundFees(Request $request)
     {
         $fees = (new Madfu())->calculateFees($request->orderid, $request->refundAmount);
@@ -104,5 +109,6 @@ class MadfuController extends BaseController
         } else {
             return $this->sendError('خطأ في العملية', 'process failed');
         }
+
     }
 }
