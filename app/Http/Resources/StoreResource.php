@@ -127,7 +127,12 @@ class StoreResource extends JsonResource
             'subcategory' => $this->categories->first() == !null ? CategoryResource::collection(\App\Models\Category::whereIn('id', $subcategory)->get()) : array(),
             'created_at' => (string) $this->created_at,
             'last_login' =>$lastLogin,
-            // 'updated_at' => (string) $this->updated_at,
+            'madfu_username'=>$this->madfu_username,
+            'madfu_password'=>$this->madfu_password,
+            'madfu_api_key'=>$this->madfu_api_key,
+            'madfu_app_code'=>$this->madfu_app_code,
+            'madfu_authorization'=>$this->madfu_authorization,
+            
         ];
     }
 }
