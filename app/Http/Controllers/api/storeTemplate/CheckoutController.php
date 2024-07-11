@@ -260,7 +260,7 @@ class CheckoutController extends BaseController
                 ]);
             } else {
                 $InvoiceId = null;
-                if ($order->paymentype_id == 1 && $order->shippingtype_id == 5) {
+                if (in_array($order->paymentype_id, [1, 2]) && $order->shippingtype_id == 5) {
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
@@ -324,7 +324,7 @@ class CheckoutController extends BaseController
 
                     return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
-                } elseif ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
+                } elseif (in_array($order->paymentype_id, [1, 2]) && $order->shippingtype_id == 1) {
 
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
