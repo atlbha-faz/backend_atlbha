@@ -30,7 +30,7 @@ class DeleteTokenFile extends Command
     public function handle()
     {
         if (Storage::disk('local')->exists('tokens/swapToken.txt')) {
-            Storage::disk('local')->delete('tokens/swapToken.txt');
+            Storage::disk('local')->delete('tokens/swapToken.txt');  
         // $this->info('sucess');
          }
         // else{
