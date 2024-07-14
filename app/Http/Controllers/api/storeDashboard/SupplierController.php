@@ -97,7 +97,7 @@ class SupplierController extends BaseController
         catch(ClientException $e) {
             return $this->sendError("خطأ في البيانات المدخلة",'Message: ' .$e->getMessage());
          }
-        if ($supplierCode->IsSuccess == false) {
+        if ($supplierCode == null || $supplierCode->IsSuccess == false) {
             return $this->sendError("خطأ في البيانات", $supplierCode->FieldsErrors[0]->Error);
         }
 
