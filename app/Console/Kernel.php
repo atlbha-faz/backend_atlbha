@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
             Commands\DeleteStore::class,
             Commands\PermanentDeletion::class,
             Commands\ArchiveIdleOrders::class,
-            ommands\DeleteTokenFile::class
+            Commands\DeleteTokenFile::class
 
     ];
     protected function schedule(Schedule $schedule)
