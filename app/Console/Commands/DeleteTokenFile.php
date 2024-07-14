@@ -20,7 +20,7 @@ class DeleteTokenFile extends Command
      *
      * @var string
      */
-    protected $description = 'Delete token file';
+    protected $description = 'deletefile token';
 
     /**
      * Execute the console command.
