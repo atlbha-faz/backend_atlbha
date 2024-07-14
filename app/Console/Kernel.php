@@ -18,7 +18,8 @@ class Kernel extends ConsoleKernel
         Commands\AbandonedCart::class,
             Commands\DeleteStore::class,
             Commands\PermanentDeletion::class,
-            Commands\ArchiveIdleOrders::class
+            Commands\ArchiveIdleOrders::class,
+            ommands\DeleteTokenFile::class
 
     ];
     protected function schedule(Schedule $schedule)
@@ -30,6 +31,8 @@ class Kernel extends ConsoleKernel
                 $schedule->command('deletion:permanent') 
                 ->everyMinute();
                 $schedule->command('orders:archive') 
+                ->everyMinute();
+                $schedule->command('token:deletefile') 
                 ->everyMinute();
     }
 
