@@ -90,7 +90,7 @@ class SeoController extends BaseController
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
             'instapixel' => 'nullable|string',
-            'key_words' => 'required',
+            'key_words' => 'nullable',
             'robot_link' => 'nullable|string',
         ]);
         if ($validator->fails()) {
