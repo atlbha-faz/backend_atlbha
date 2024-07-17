@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
                 $schedule->command('orders:archive') 
                 ->everyMinute();
                 $schedule->command('token:deletefile') 
-                ->everyFiveSeconds();
+                ->everyMinute();
     }
 
     /**
