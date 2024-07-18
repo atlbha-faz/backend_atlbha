@@ -2,33 +2,35 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CartResource;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\PaymenttypeResource;
-use App\Http\Resources\ShippingtypeTemplateResource;
-use App\Models\Account;
+use Carbon\Carbon;
 use App\Models\Cart;
-use App\Models\CartDetail;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Store;
 use App\Models\Coupon;
-use App\Models\coupons_products;
+use App\Models\Option;
+use App\Mail\SendMail2;
+use App\Models\Account;
+use App\Models\Payment;
+use App\Models\Product;
+use App\Models\OrderItem;
+use App\Models\CartDetail;
+use App\Models\Paymenttype;
+use App\Models\OrderAddress;
+use Illuminate\Http\Request;
 use App\Models\coupons_users;
 use App\Models\Importproduct;
-use App\Models\Option;
-use App\Models\Order;
-use App\Models\OrderAddress;
-use App\Models\OrderItem;
-use App\Models\Payment;
-use App\Models\Paymenttype;
-use App\Models\Product;
+use App\Models\coupons_products;
 use App\Models\shippingtype_store;
-use App\Models\Store;
-use App\Models\User;
 use App\Services\FatoorahServices;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\CartResource;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\ShippingtypeTemplateResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CheckoutController extends BaseController
 {
@@ -258,13 +260,23 @@ class CheckoutController extends BaseController
                     'deduction' => 0,
                     'price_after_deduction' => $order->total_price,
                 ]);
+                if ($order->store_id !== null) {
+                    $store = Store::where('id', $order->store_id)->first();
+                    $data = [
+                        'subject' => "طلب جديد",
+                        'message' => "تم وصول طلب جديد برقم ".$order->order_number." لدى متجركم",
+                        'store_id' => $store->store_name,
+                        'store_email' => $store->store_email,
+                    ];
+                    Mail::to($store->store_email)->send(new SendMail2($data));
+                }
             } else {
                 $InvoiceId = null;
                 if (in_array($order->paymentype_id, [1, 2]) && $order->shippingtype_id == 5) {
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $commission=0.009 * $order->total_price+1;
+                    $commission=(0.009 * $order->total_price)+1;
                     $vat = $commission * 0.15;
                     $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
                     $atlbha=$result*0.001;
@@ -332,7 +344,7 @@ class CheckoutController extends BaseController
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $commission=0.009 * $order->total_price+1;
+                    $commission=(0.009 * $order->total_price)+1;
                     $vat = $commission * 0.15;
                     $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
                     $atlbha=$result*0.001;

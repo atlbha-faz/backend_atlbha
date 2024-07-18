@@ -4,10 +4,13 @@ namespace App\Http\Controllers\api;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Store;
+use App\Mail\SendMail2;
 use App\Models\Account;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\MyfatoorahLog;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebhookController extends BaseController
@@ -87,6 +90,16 @@ class WebhookController extends BaseController
                             'paymentCardID' => $request->input('Data.PaymentId'),
                         ]);
                         $cart->delete();
+                        if ($order->store_id !== null) {
+                            $store = Store::where('id', $order->store_id)->first();
+                            $data = [
+                                'subject' => "طلب جديد",
+                                'message' => "تم وصول طلب جديد برقم ".$order->order_number." لدى متجركم",
+                                'store_id' => $store->store_name,
+                                'store_email' => $store->store_email,
+                            ];
+                            Mail::to($store->store_email)->send(new SendMail2($data));
+                        }
                         break;
                     case "FAILED":
                         $order->update([
