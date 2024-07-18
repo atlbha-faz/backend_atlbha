@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Models\Cart;
-use App\Models\Order;
-use App\Models\Account;
-use App\Models\Payment;
-use Illuminate\Http\Request;
-use App\Models\MyfatoorahLog;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Mail\SendMail2;
+use App\Models\Account;
+use App\Models\Cart;
+use App\Models\MyfatoorahLog;
+use App\Models\Order;
+use App\Models\Payment;
+use App\Models\Store;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class WebhookController extends BaseController
 {
@@ -55,85 +58,94 @@ class WebhookController extends BaseController
 
     public function handleWebhook(Request $request)
     {
-         $allData = $request->input('Data');
+        $allData = $request->input('Data');
         // if ($allData != null) {
 
-            //get MyFatoorah-Signature from request headers
-            $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
+        //get MyFatoorah-Signature from request headers
+        $MyFatoorah_Signature = $request->header('MyFatoorah-Signature');
 
-            // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
-            $secret = env("secret");
+        // $MyFatoorah_Signature = $request_headers['MyFatoorah-Signature'];
+        $secret = env("secret");
 
-            $body = $request->all();
+        $body = $request->all();
 
-            // if (!($this->validateSignature($body, $secret, $MyFatoorah_Signature))) {
-            //     return;
-            // }
-            $myfatoorahLog = new MyfatoorahLog();
-            $myfatoorahLog->request = json_encode($body);
-            $myfatoorahLog->save();
-            $event = $request->input('EventType');
+        // if (!($this->validateSignature($body, $secret, $MyFatoorah_Signature))) {
+        //     return;
+        // }
+        $myfatoorahLog = new MyfatoorahLog();
+        $myfatoorahLog->request = json_encode($body);
+        $myfatoorahLog->save();
+        $event = $request->input('EventType');
 
-            if ($event == 1) {
-                $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
-                $order = Order::where('id', $payment->orderID)->first();
-                $cart = Cart::where('order_id', $payment->orderID)->first();
-                switch ($request->input('Data.TransactionStatus')) {
-                    case "SUCCESS":
-                        $order->update([
-                            'payment_status' => "paid",
-                        ]);
-                        $payment->update([
-                            'paymentCardID' => $request->input('Data.PaymentId'),
-                        ]);
-                        $cart->delete();
-                        break;
-                    case "FAILED":
-                        $order->update([
-                            'payment_status' => "failed",
-                        ]);
-                        break;
-                    case "CANCELED":
-                        $order->update([
-                            'payment_status' => "failed",
-                        ]);
-                        break;
-                    default:
-                        $order->update([
-                            'payment_status' => "pending",
-                        ]);
-                }
-
-            } elseif ($event == 4) {
-                $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
-                switch ($request->input('Data.SupplierStatus')) {
-                    case "APPROVED":
-                        $account->update([
-                            'status' => "APPROVED",
-                            'comment'=>null
-                        ]);
-                        break;
-                    case "Active":
-                        $account->update([
-                            'status' => "APPROVED",
-                            'comment'=>null
-                        ]);
-                        break;
-                    case "REJECTED":
-                        $account->update([
-                            'status' => "REJECTED",
-                            'comment' => $request->input('Data.KycFeedback.Comments'),
-                        ]);
-                        break;
-                    default:
-                        $account->update([
-                            'status' => "Pending",
-                        ]);
-                }
+        if ($event == 1) {
+            $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
+            $order = Order::where('id', $payment->orderID)->first();
+            $cart = Cart::where('order_id', $payment->orderID)->first();
+            switch ($request->input('Data.TransactionStatus')) {
+                case "SUCCESS":
+                    $order->update([
+                        'payment_status' => "paid",
+                    ]);
+                    $payment->update([
+                        'paymentCardID' => $request->input('Data.PaymentId'),
+                    ]);
+                    $cart->delete();
+                    if ($order->store_id !== null) {
+                        $store = Store::where('id', $order->store_id)->first();
+                        $data = [
+                            'subject' => "طلب جديد",
+                            'message' => "تم وصول طلب جديد لدى متجركم",
+                            'store_id' => $store->store_name,
+                            'store_email' => $store->store_email,
+                        ];
+                        Mail::to($store->store_email)->send(new SendMail2($data));
+                    }
+                    break;
+                case "FAILED":
+                    $order->update([
+                        'payment_status' => "failed",
+                    ]);
+                    break;
+                case "CANCELED":
+                    $order->update([
+                        'payment_status' => "failed",
+                    ]);
+                    break;
+                default:
+                    $order->update([
+                        'payment_status' => "pending",
+                    ]);
             }
+
+        } elseif ($event == 4) {
+            $account = Account::where('supplierCode', $request->input('Data.SupplierCode'))->first();
+            switch ($request->input('Data.SupplierStatus')) {
+                case "APPROVED":
+                    $account->update([
+                        'status' => "APPROVED",
+                        'comment' => null,
+                    ]);
+                    break;
+                case "Active":
+                    $account->update([
+                        'status' => "APPROVED",
+                        'comment' => null,
+                    ]);
+                    break;
+                case "REJECTED":
+                    $account->update([
+                        'status' => "REJECTED",
+                        'comment' => $request->input('Data.KycFeedback.Comments'),
+                    ]);
+                    break;
+                default:
+                    $account->update([
+                        'status' => "Pending",
+                    ]);
+            }
+        }
         // }
 
     }
 
 }
-
