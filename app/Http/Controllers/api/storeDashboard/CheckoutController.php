@@ -203,9 +203,12 @@ class CheckoutController extends BaseController
         if ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
             $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
             $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-            $total_price_without_shipping = ($order->total_price) - ($order->shipping_price) - ($order->overweight_price);
-            $deduction = ($total_price_without_shipping * 0.01) + 1;
-            $price_after_deduction = $total_price_without_shipping - $deduction;
+            $commission = 0.009 * $order->total_price + 1;
+            $vat = $commission * 0.15;
+            $result = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $commission - $vat;
+            $atlbha = $result * 0.001;
+            $deduction = $commission + $vat + $atlbha;
+            $price_after_deduction = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $deduction;
 
             $processingDetails = [
                 "AutoCapture" => true,
@@ -256,15 +259,14 @@ class CheckoutController extends BaseController
 
             return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
+        } else {
+
+            $success['order'] = new OrderResource($order);
+
+            $success['status'] = 200;
+
+            return $this->sendResponse($success, 'تم ارسال بنجاح ', 'order send successfully');
         }
-     else{
-
-        $success['order'] = new OrderResource($order);
-
-        $success['status'] = 200;
-
-        return $this->sendResponse($success, 'تم ارسال بنجاح ', 'order send successfully');
-     }
     }
 
     public function paymentMethods()
