@@ -94,7 +94,7 @@ class WebhookController extends BaseController
                         $store = Store::where('id', $order->store_id)->first();
                         $data = [
                             'subject' => "طلب جديد",
-                            'message' => "تم وصول طلب جديد لدى متجركم",
+                            'message' => "تم وصول طلب جديد برقم ".$order->order_number." لدى متجركم",
                             'store_id' => $store->store_name,
                             'store_email' => $store->store_email,
                         ];
