@@ -264,9 +264,13 @@ class CheckoutController extends BaseController
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $vat = $order->total_price * 0.15;
-                    $deduction = ($order->total_price * 0.01) + 1 + $vat;
-                    $price_after_deduction = $order->total_price - $deduction;
+                    $commission=(0.009 * $order->total_price)+1;
+                    $vat = $commission * 0.15;
+                    $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
+                    $atlbha=$result*0.001;
+                    $deduction =  $commission+ $vat+$atlbha;
+                    $price_after_deduction = $order->total_price- $deduction;                    
+                  
 
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
@@ -333,8 +337,11 @@ class CheckoutController extends BaseController
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
 
-                    $vat = $order->total_price * 0.15;
-                    $deduction = ($order->total_price * 0.01) + 1 + $vat;
+                    $commission=0.009 * $order->total_price+1;
+                    $vat = $commission * 0.15;
+                    $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
+                    $atlbha=$result*0.001;
+                    $deduction =  $commission+ $vat+$atlbha;
                     $price_after_deduction = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $deduction;
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,

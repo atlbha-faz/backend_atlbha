@@ -203,10 +203,13 @@ class CheckoutController extends BaseController
         if ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
             $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
             $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-            $vat=$order->total_price*0.15;
-            $deduction = ($order->total_price * 0.01) + 1 +$vat;
+            $commission=0.009 * $order->total_price+1;
+            $vat = $commission * 0.15;
+            $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
+            $atlbha=$result*0.001;
+            $deduction =  $commission+ $vat+$atlbha;
             $price_after_deduction = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $deduction;
-
+            
             $processingDetails = [
                 "AutoCapture" => true,
                 "Bypass3DS" => false,
