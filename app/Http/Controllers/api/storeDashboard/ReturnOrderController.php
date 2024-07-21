@@ -209,7 +209,7 @@ class ReturnOrderController extends BaseController
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
                 $final_price = $prices;
-                $final_price = $final_price * 0.082;
+                // $final_price = $final_price * 0.082;
                 $supplierdata = [
                     "SupplierCode" => $account->supplierCode,
                     "SupplierDeductedAmount" => $final_price,
@@ -312,5 +312,49 @@ class ReturnOrderController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
     }
+    // public function TransferBalance($order_id)
+    // {
+    //     $order = Order::where('id', $order_id)->whereHas('items', function ($q) {
+    //         $q->where('store_id', auth()->user()->store_id)->where('is_return', 1);
+    //     })->first();
+    //     if (is_null($order)) {
+    //         return $this->sendError("'الطلب غير موجود", "Order is't exists");
+    //     }
+    //     $payment = Payment::where('orderID', $order->id)->first();
+    //     $returns = ReturnOrder::where('order_id', $order->id)->get();
+    //     $account = Account::where('store_id', auth()->user()->store_id)->first();
+    //     $storeAdmain = User::where('user_type', 'store')->where('store_id', auth()->user()->store_id)->first();
+    //     $prices = 0;
+    //     foreach ($returns as $return) {
+    //         $prices = $prices + ($return->qty * $return->orderItem->price);
+    //     }
+    //     if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
+    //         $return_status = ReturnOrder::where('order_id', $order->id)->first();
+    //         if ($payment != null) {
+    //             $final_price = $prices;
+    //             $data = [
+    //                 "SupplierCode"=> 0,
+    //                 "TransferAmount"=> 0,
+    //                 "TransferType"=>"push",
+
+    //             ];
+    //             $supplier = new FatoorahServices();
+    //             try {
+    //                 $response = $supplier->buildRequest('v2/TransferBalance', 'POST', json_encode($data));
+    //             } catch (ClientException $e) {
+
+    //                 return $this->sendError("حدث خطأ", 'Message: ' . $e->getMessage());
+
+    //             }
+    //             if ($response['IsSuccess'] == false) {
+    //                 return $this->sendError("خطأ في البيانات", $response->ValidationErrors[0]->Error);
+    //             } else {
+   
+    //             }
+    //         }
+    //     }
+    //     $success['status'] = 200;
+    //     return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
+    // }
   
 }
