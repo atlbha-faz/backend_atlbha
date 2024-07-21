@@ -43,6 +43,9 @@ class StoreDataController extends BaseController
         $user = User::with(['store' => function ($q) {
             return $q->select('id', 'logo', 'domain');
         }])->where('id', (Token::with([])->find($user))->user_id)->select('store_id', 'name', 'lastname', 'user_name', 'image')->first();
-        return ['token' => $token, 'user' => $user];
+        $success['token'] = $token;
+        $success['user'] = $user;
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم عرض توكين', 'token showed');
     }
 }
