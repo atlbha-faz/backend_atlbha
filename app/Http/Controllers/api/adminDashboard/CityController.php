@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\City;
 use Illuminate\Http\Request;
+use App\Http\Requests\CityRequest;
 use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -22,9 +23,14 @@ class CityController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $success['cities']=CityResource::collection(City::where('is_deleted',0)->orderByDesc('created_at')->get());
+    public function index(Request $request)
+    {      
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=City::where('is_deleted',0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['cities']=CityResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع المدن بنجاح','cities return successfully');
@@ -47,20 +53,10 @@ class CityController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CityRequest $request)
     {
 
         $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'name_en'=>'required|string|max:255',
-            'code' =>'required',
-            'country_id'=>'required|exists:countries,id'
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
         $city = City::create([
             'name' => $request->name,
             'name_en'=>$request->name_en,
@@ -127,24 +123,14 @@ class CityController extends BaseController
      * @param  \App\Models\City  $city
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $city)
+    public function update(CityRequest $request, $city)
 {
     $city =  City::where('id', $city)->first();
         if (is_null($city) || $city->is_deleted !=0){
          return $this->sendError("المدينه غير موجودة","city is't exists");
     }
          $input = $request->all();
-        $validator =  Validator::make($input ,[
-             'name'=>'required|string|max:255',
-            'name_en'=>'required|string|max:255',
-            'code' =>'required',
-             'country_id'=>'required|exists:countries,id'
-        ]);
-        if ($validator->fails())
-        {
-            # code...
-            return $this->sendError(null,$validator->errors());
-        }
+    
         $city->update([
             'name' => $request->input('name'),
             'name_en' => $request->input('name_en'),
@@ -197,6 +183,24 @@ class CityController extends BaseController
                 $success['status']= 200;
              return $this->sendResponse($success,'المدخلات غيرموجودة','id is not exit');
               }
+    }
+    public function searchCity(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $query = $request->input('query');
+        $cities = City::where('is_deleted', 0)
+        ->where('name', 'like', "%$query%")->orderByDesc('created_at');
+        $cities = $cities->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $cities->total();
+        $success['page_count'] = $cities->lastPage();
+        $success['current_page'] = $cities->currentPage();
+        $success['cities'] = cityResource::collection($cities);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المدن بنجاح', 'city Information returned successfully');
+
     }
 
 }

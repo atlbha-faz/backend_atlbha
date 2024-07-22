@@ -23,12 +23,12 @@ class AdminOrderController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
         $success['new'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->where('order_status', 'new')->count();
-        $success['completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'completed')->where('is_archive',0)->where('payment_status','paid')->count();
+        $success['completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->where('order_status', 'completed')->count();
 
-        $success['not_completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('order_status', 'not_completed')->where('is_archive',0)->where('payment_status','paid')->count();
+        $success['not_completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->where('order_status', 'not_completed')->count();
         $success['canceled'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null)->where('order_status', 'canceled');
         })->where('is_archive',0)->where('payment_status','paid')->count();
@@ -36,14 +36,17 @@ class AdminOrderController extends BaseController
         $success['all'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null);
         })->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->count();
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $data = OrderResource::collection(Order::with(['user' => function ($query) {
+        $data = Order::with(['user' => function ($query) {
             $query->select('id', 'city_id');
         }, 'shippings', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->get(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']));
-
-        $success['orders'] = $data;
+        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->select(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']);
+        $data= $data->paginate($count);
+        $success['orders'] = OrderResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'Orders return successfully');
@@ -157,17 +160,19 @@ class AdminOrderController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
         }
     }
-    public function searchName(Request $request)
+    public function searchOrder(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $orders = Order::where('is_deleted', 0)->where('store_id', null)->whereHas('user', function ($userQuery) use ($query) {
+        $orders = Order::where('is_deleted', 0)->where('store_id', null)->where(function ($q) use($query) {
+            $q->whereHas('user', function ($userQuery) use ($query) {
             $userQuery->whereHas('store', function ($storeQuery) use ($query) {
                 $storeQuery->where('store_name', 'like', "%$query%");
             });
-        })->orWhere('order_number', 'like', "%$query%")
-            ->orderBy('created_at', 'desc')
+        })->orWhere('order_number', 'like', "%$query%");
+    })
+            ->where('is_archive',0)->where('payment_status','paid')->orderBy('created_at', 'desc')
             ->paginate($count);
 
         $success['query'] = $query;
@@ -177,7 +182,7 @@ class AdminOrderController extends BaseController
         $success['orders'] = OrderResource::collection($orders);
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارجاع السلات المتروكة بنجاح', 'orders Information returned successfully');
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
 
     }
 

@@ -6,7 +6,9 @@ namespace App\Http\Controllers\api\adminDashboard;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -23,10 +25,20 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $userAdmain = User::where('user_type', 'admin')->first();
-        $success['users'] = UserResource::collection(User::where('is_deleted', 0)->where('user_type', 'admin_employee')->whereNot('id', auth()->user()->id)->whereNot('id', $userAdmain->id)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=User::where('is_deleted', 0)->where('user_type', 'admin_employee')->whereNot('id', auth()->user()->id)->whereNot('id', $userAdmain->id)->orderByDesc('created_at');
+        if ($request->has('id')) {
+            $data = $data->whereHas('roles' ,function ($userQuery) use ($request) {
+                $userQuery->where('id', $request->id);
+            });
+        }
+        $data= $data->paginate($count);
+        $success['users'] = UserResource::collection( $data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع االمستخدمين بنجاح', 'Users return successfully');
@@ -48,35 +60,9 @@ class UserController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])
-                    ->where('is_deleted', 0);
-            }),
-            ],
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])
-                    ->where('is_deleted', 0);
-            }),
-            ],
-            'password' => 'required|min:8|string',
-            'password_confirm' => 'required|same:password',
-
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])
-                    ->where('is_deleted', 0);
-            })],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-
-            'role' => 'required|string|max:255|exists:roles,name',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+  
         $user = User::create([
             'name' => $request->name,
             'user_name' => $request->user_name,
@@ -133,7 +119,7 @@ class UserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         $userAdmain = User::where('user_type', 'admin')->first();
         $user = User::query()->whereNot('id', $userAdmain->id)->find($id);
@@ -141,35 +127,7 @@ class UserController extends BaseController
             return $this->sendError("المستخدم غير موجودة", "user is't exists");
         }
 
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])->where('id', '!=', $user->id)
-                    ->where('is_deleted', 0);
-            }),
-            ],
-            // 'email' => 'required|email|unique:users,email,' . $user->id,
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])->where('is_deleted', 0)
-                    ->where('id', '!=', $user->id);
-            }),
-            ],
-            'password' => 'nullable|min:8|string',
-            'password_confirm' => 'nullable|same:password',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) use ($user) {
-                return $query->whereIn('user_type', ['admin_employee', 'admin'])->where('is_deleted', 0)
-                    ->where('id', '!=', $user->id);
-            }),
-            ],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'role' => 'required|string|max:255|exists:roles,name',
-        ]);
-
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+  
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -256,5 +214,27 @@ class UserController extends BaseController
         }
     }
 
+  public function searchUserName(Request $request)
+    {
+        $userAdmain = User::where('user_type', 'admin')->first();
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $query = $request->input('query');
+        $users = User::where('is_deleted', 0)->where('user_type', 'admin_employee')->whereNot('id', auth()->user()->id)->whereNot('id', $userAdmain->id)
+        ->where(function ($q) use($query) {
+           $q->where('user_name', 'like', "%$query%")
+        ->orwhere('name', 'like', "%$query%");
+        })->orderByDesc('created_at');
+        $users=$users->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $users->total();
+        $success['page_count'] = $users->lastPage();
+        $success['current_page'] = $users->currentPage();
+        $success['users'] = UserResource::collection($users);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المستخدمين بنجاح', 'users Information returned successfully');
+
+    }
 
 }

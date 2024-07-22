@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\SectionResource;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use App\Http\Requests\SectionRequest;
+use App\Http\Resources\SectionResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SectionController extends BaseController
 {
@@ -102,23 +103,8 @@ class SectionController extends BaseController
      * @param  \App\Models\Section  $section
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(SectionRequest $request)
     {
-        //     if (is_null($section) || $section->is_deleted !=0){
-        //         return $this->sendError("القسم غير موجودة"," section is't exists");
-        //    }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'data' => 'required|array',
-            'data.*.name' => 'required|string',
-            'data.*.status' => 'required',
-            'data.*.id' => 'nullable|numeric',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         foreach ($request->data as $data) {
             $sections[] = Section::updateOrCreate([
                 'id' => $data['id'],

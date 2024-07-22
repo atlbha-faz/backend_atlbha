@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ContactResource;
+use Exception;
+use App\Models\User;
 use App\Mail\SendMail;
 use App\Models\Contact;
-use App\Models\Replaycontact;
-use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
+use App\Models\Replaycontact;
+use App\Http\Requests\EmailRequest;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class EmailController extends BaseController
 {
@@ -19,10 +20,14 @@ class EmailController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['emails'] = ContactResource::collection(Contact::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Contact::where('is_deleted', 0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['emails'] = ContactResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع االرسائل بنجاح', 'email return successfully');
@@ -60,19 +65,8 @@ class EmailController extends BaseController
         return $this->sendResponse($success, 'تم حذف الرسالة بنجاح', 'Contact deleted successfully');
     }
 
-    public function addEmail(Request $request)
+    public function addEmail(EmailRequest $request)
     {
-
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string|max:255',
-            'store_id' => 'exists:stores,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
 
         $data = [
             'subject' => $request->subject,

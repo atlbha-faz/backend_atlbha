@@ -24,7 +24,7 @@ class StoreDataController extends BaseController
             Storage::disk('local')->put('tokens/swapToken.txt', $token);
             $success['token'] = $token;
             $success['status'] = 200;
-            return $this->sendResponse( $success, 'تم انشاء توكين', 'token created');
+            return $this->sendResponse($success, 'تم انشاء توكين', 'token created');
 
         } else {
             return $this->sendError('المتجر غير موجود', 'store not found');
@@ -46,6 +46,6 @@ class StoreDataController extends BaseController
         $success['token'] = $token;
         $success['user'] = $user;
         $success['status'] = 200;
-        return $this->sendResponse( $success, 'تم عرض توكين', 'token showed');
+        return $this->sendResponse($success, 'تم عرض توكين', 'token showed');
     }
 }

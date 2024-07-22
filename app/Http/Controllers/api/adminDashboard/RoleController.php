@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\RoleResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
+use App\Http\Resources\RoleResource;
+use App\Http\Requests\AdminRoleRequest;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\AdminRoleUpdateRequest;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class RoleController extends BaseController
 {
@@ -38,21 +40,9 @@ class RoleController extends BaseController
         return $this->sendResponse($success, 'تم عرض الدور بنجاح', 'Role showed successfully');
     }
 
-    public function store(Request $request)
+    public function store(AdminRoleRequest $request)
     {
 
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'role_name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')->where(function ($query) {
-                return $query->where('store_id', null);
-            })],
-            'permissions' => 'required|array',
-            'permissions.*' => 'nullable|exists:permissions,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         if (in_array(2, $request->permissions)) {
             $request->permissions = $request->permissions;
         } else {
@@ -69,24 +59,12 @@ class RoleController extends BaseController
         return $this->sendResponse($success, 'تم إضافة الأدوار بنجاح', 'Role Added successfully');
     }
 
-    public function update(Request $request, Role $role)
+    public function update(AdminRoleUpdateRequest $request, Role $role)
     {
         if (is_null($role) || $role->type != 'admin' || $role->id == 1) {
             return $this->sendError("الدور غير موجود", " Role is't exists");
         }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'role_name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')->where(function ($query) use ($role) {
-                return $query->where('store_id', null)->where('id', '!=', $role->id);
-            })],
-            'permissions' => 'required|array',
-            'permissions.*' => 'nullable|exists:permissions,id',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+       
 
         if (in_array(2, $request->permissions)) {
             $request->permissions = $request->permissions;

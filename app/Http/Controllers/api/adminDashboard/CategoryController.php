@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CategoryController extends BaseController
 {
@@ -21,9 +22,17 @@ class CategoryController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['categories'] = CategoryResource::collection(Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Category::where('is_deleted', 0)->where('parent_id', null)->where('store_id', null)->orderByDesc('created_at');
+        if ($request->has('category_id')) {
+            $data = $data->where('id', $request->category_id);
+        }
+        $data= $data->paginate($count);
+        $success['categories'] = CategoryResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
@@ -45,19 +54,11 @@ class CategoryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'icon' => ['nullable'],
-            'data.*.name' => 'nullable|string|max:255',
-            'data.*.id' => 'nullable|numeric',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+  
 
         $cat = Category::orderBy('id', 'desc')->first();
         if (is_null($cat)) {
@@ -73,7 +74,6 @@ class CategoryController extends BaseController
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
             'parent_id' => null,
-
             'store_id' => null,
         ]);
 
@@ -176,27 +176,16 @@ class CategoryController extends BaseController
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $category)
+    public function update(CategoryRequest $request, $category)
     {
         $category = Category::where('id', $category)->where('store_id', null)->first();
         if (is_null($category) || $category->is_deleted != 0) {
             return $this->sendError("التصنيف غير موجودة", " Category is't exists");
         }
         $category_id = $category->id;
-        // if($request->parent_id == null){
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'icon' => ['nullable'],
-            'data.*.name' => 'nullable|string|max:255',
-            'data.*.id' => 'nullable|numeric',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
-
+    
         $category->update([
             'name' => $request->input('name'),
             'icon' => $request->icon,
@@ -204,7 +193,6 @@ class CategoryController extends BaseController
 
         $subcategory = Category::where('parent_id', $category_id);
 
-        // dd($request->$data['id']);
         $subcategories_id = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         foreach ($subcategories_id as $oid) {
             if ($request->data != null) {

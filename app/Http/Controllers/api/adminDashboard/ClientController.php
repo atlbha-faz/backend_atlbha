@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use App\Http\Requests\ClientRequest;
+use App\Http\Resources\ClientResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ClientController extends BaseController
 {
@@ -21,9 +22,14 @@ class ClientController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $success['clients'] = ClientResource::collection(Client::where('is_deleted', 0)->orderByDesc('created_at')->get());
+    public function index(Request $request)
+    {    
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Client::where('is_deleted', 0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['clients'] = ClientResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع العملاء بنجاح', 'clients return successfully');
@@ -46,25 +52,9 @@ class ClientController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ClientRequest $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'ID_number' => 'required|numeric',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:clients',
-            'gender' => 'required|in:male,femal',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $client = Client::create([
             'ID_number' => $request->ID_number,
             'first_name' => $request->first_name,
@@ -122,7 +112,7 @@ class ClientController extends BaseController
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $client)
+    public function update(ClientRequest $request, $client)
     {
         $client = Client::where('id', $client)->first();
         if (is_null($client) || $client->is_deleted != 0) {
@@ -130,22 +120,7 @@ class ClientController extends BaseController
         }
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'ID_number' => 'required|numeric',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:clients',
-            'gender' => 'required|in:male,femal',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+       
         $client->update([
             'ID_number' => $request->input('ID_number'),
             'first_name' => $request->input('first_name'),

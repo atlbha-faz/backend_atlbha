@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Resources\MarketerResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\MarketerStoreRequest;
+use App\Http\Requests\MarketerUpdateRequest;
 use App\Http\Controllers\api\BaseController as BaseController;
 
 class MarketerController extends BaseController
@@ -23,11 +25,16 @@ class MarketerController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['marketers'] = MarketerResource::collection(Marketer::whereHas('user', function ($q) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data = Marketer::whereHas('user', function ($q) {
             $q->where('is_deleted', 0);
-        })->orderByDesc('created_at')->get());
+        })->orderByDesc('created_at');
+        $data = $data->paginate($count);
+        $success['marketers'] = MarketerResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المندوبين بنجاح', 'marketer return successfully');
@@ -50,38 +57,8 @@ class MarketerController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MarketerStoreRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'checkbox_field' => 'required|in:1',
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
-            })],
-
-            'password' => 'nullable',
-            'password_confirm' => 'nullable',
-            'user_name' => ' nullable',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('users')->where(function ($query) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0);
-            }),
-            ],
-            'snapchat' => 'required|url',
-            'facebook' => 'required|url',
-            'twiter' => 'required|url',
-            'whatsapp' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/'],
-            'youtube' => 'required|url',
-            'instegram' => 'required|url',
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-            'status' => 'required|in:active,not_active',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -119,10 +96,10 @@ class MarketerController extends BaseController
     public function show($marketer)
     {
         $marketer = Marketer::query()->find($marketer);
-        if($marketer != null){
-        $user = User::query()->find($marketer->user_id);
+        if ($marketer != null) {
+            $user = User::query()->find($marketer->user_id);
         }
-        if (is_null($marketer) || is_null($user) ||$user->is_deleted != 0 ||   $user->user_type != "marketer") {
+        if (is_null($marketer) || is_null($user) || $user->is_deleted != 0 || $user->user_type != "marketer") {
             return $this->sendError("المندوب غير موجودة", "marketer is't exists");
         }
         $success['marketers'] = new MarketerResource($marketer);
@@ -150,44 +127,12 @@ class MarketerController extends BaseController
      * @param  \App\Models\Marketer  $marketer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $marketer)
+    public function update(MarketerUpdateRequest $request, $marketer)
     {
         $marketer = Marketer::where('id', $marketer)->first();
         $user = User::query()->find($marketer->user_id);
         if (is_null($user) || $user->is_deleted != 0) {
             return $this->sendError(" المندوب غير موجود", "marketer is't exists");
-        }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-             'email' => ['required' , 'email', Rule::unique('users')->where(function ($query)use($marketer) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
-            }),
-            ],
-
-            'password' => 'nullable',
-            'password_confirm' => 'nullable',
-            'user_name' => ' nullable',
-            'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',Rule::unique('users')->where(function ($query) use($marketer) {
-                return $query->whereIn('user_type', ['marketer'])->where('is_deleted',0)->where('id','!=',$marketer->user->id);
-            }),
-            ],
-            'snapchat' => 'required',
-            'facebook' => 'required',
-            'twiter' => 'required',
-            'whatsapp' => 'required',
-            'youtube' => 'required',
-            'instegram' => 'required',
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-            'status' => 'required|in:active,not_active',
-
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
         }
         $user = User::query()->find($marketer->user_id);
         $user->update([
@@ -281,5 +226,24 @@ class MarketerController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
+    }
+    public function searchMarketerName(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $query = $request->input('query');
+        $users = Marketer::whereHas('user', function ($q) use ($query) {
+            $q->where('is_deleted', 0)->where('name', 'like', "%$query%");
+        })->orderByDesc('created_at');
+        $users=$users->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $users->total();
+        $success['page_count'] = $users->lastPage();
+        $success['current_page'] = $users->currentPage();
+        $success['marketers'] = MarketerResource::collection($users);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع المندوبين بنجاح', 'marketers Information returned successfully');
+
     }
 }

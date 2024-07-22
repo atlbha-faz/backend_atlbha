@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Http\Requests\CommentRequest;
+use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class CommentController extends BaseController
 {
@@ -21,14 +22,18 @@ class CommentController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['comment'] = CommentResource::collection(Comment::with(['user' => function ($query) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Comment::with(['user' => function ($query) {
             $query->with(['store' => function ($query) {
                 $query->select('id', 'domain', 'store_name', 'logo');
             }]);
-        }])->where('is_deleted', 0)->where('store_id', null)->where('product_id', null)->where('comment_for', 'store')->orderByDesc('created_at')->get());
+        }])->where('is_deleted', 0)->where('store_id', null)->where('product_id', null)->where('comment_for', 'store')->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['comment'] = CommentResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع التعليقات بنجاح', 'comments return successfully');
@@ -50,20 +55,10 @@ class CommentController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment_text' => 'required|string|max:255',
-            'rateing' => 'required|numeric',
-            'comment_for' => 'required|in:product,store',
-            'product_id' => 'required|exists:products,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $comment = Comment::create([
             'comment_text' => $request->comment_text,
             'rateing' => $request->rateing,
@@ -118,24 +113,13 @@ class CommentController extends BaseController
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $comment)
+    public function update(CommentRequest $request, $comment)
     {
         $comment = Comment::where('id', $comment)->first();
         if (is_null($comment) || $comment->is_deleted != 0) {
             return $this->sendError(" التعليق غير موجود", "comment is't exists");
         }
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'comment_text' => 'required|string|max:255',
-            'rateing' => 'required|numeric',
-            'comment_for' => 'required|in:product,store',
-            'product_id' => 'required|exists:products,id',
-            'user_id' => 'required|exists:users,id',
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $comment->update([
             'comment_text' => $request->input('comment_text'),
             'rateing' => $request->input('rateing'),

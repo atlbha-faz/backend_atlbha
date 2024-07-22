@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\PageResource;
 use App\Models\Page;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\PageRequest;
+use App\Http\Resources\PageResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class PageController extends BaseController
 {
@@ -22,11 +23,19 @@ class PageController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $success['pages'] = PageResource::collection(Page::with(['user' => function ($query) {
+    public function index(Request $request)
+    { 
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Page::with(['user' => function ($query) {
             $query->select('id', 'name');
-        }])->where('is_deleted', 0)->where('store_id', null)->orderByDesc('created_at')->select('id', 'title', 'status', 'user_id', 'created_at')->get());
+        }])->where('is_deleted', 0)->where('store_id', null)->orderByDesc('created_at')->select('id', 'title', 'status', 'user_id', 'created_at');
+        if ($request->has('status')) {
+            $data->where('status', $request->status);
+        }
+        $data= $data->paginate($count);
+        $success['pages'] = PageResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع  الصفحة بنجاح', 'Pages return successfully');
@@ -48,25 +57,9 @@ class PageController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PageRequest $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:26',
-            'page_desc' => 'required',
-            'page_content' => 'required',
-            'seo_title' => 'nullable',
-            'seo_link' => 'nullable',
-            'seo_desc' => 'nullable',
-            'tags' => 'nullable',
-            'altImage' => 'nullable',
-            'pageCategory' => ['required', 'array'],
-            'pageCategory.*' => 'required',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
@@ -108,25 +101,10 @@ class PageController extends BaseController
         return $this->sendResponse($success, 'تم إضافة  الصفحة بنجاح', 'page_category Added successfully');
     }
 
-    public function publish(Request $request)
+    public function publish(PageRequest $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:26',
-            'page_content' => 'required',
-            'page_desc' => 'required',
-            'seo_title' => 'nullable',
-            'seo_link' => 'nullable',
-            'seo_desc' => 'nullable',
-            'tags' => 'nullable',
-            'altImage' => 'nullable',
-            'pageCategory' => ['required', 'array'],
-            'pageCategory.*' => 'required',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+    
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
@@ -202,38 +180,18 @@ class PageController extends BaseController
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $page)
+    public function update(PageRequest $request, $page)
     {
         $page = Page::query()->find($page);
         if (is_null($page) || $page->is_deleted != 0) {
-
             return $this->sendError("الصفحة غير موجودة", "Page is't exists");
         }
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|string|max:26',
-            'page_desc' => 'required',
-            'page_content' => 'required',
-            'seo_title' => 'nullable',
-            'seo_link' => 'nullable',
-            'seo_desc' => 'nullable',
-            'tags' => 'nullable',
-            'altImage' => 'nullable',
-            'pageCategory' => ['required', 'array'],
-            'pageCategory.*' => 'required',
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $validator2 = Validator::make($input, [
             'postcategory_id' => Rule::requiredIf(function () {
                 return in_array('1', request('pageCategory'));
             }),
-
-
         ]);
         if ($validator2->fails()) {
             return $this->sendError(null, $validator2->errors());
@@ -355,6 +313,25 @@ class PageController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غير صحيحة', 'id does not exit');
         }
+    }
+    public function searchPageName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $pages = Page::where('is_deleted', 0)->where('store_id',null)
+            ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $pages->total();
+        $success['page_count'] = $pages->lastPage();
+        $success['current_page'] = $pages->currentPage();
+        $success['pages'] = PageResource::collection($pages);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الصفحات بنجاح', 'pages Information returned successfully');
+
     }
 
 }

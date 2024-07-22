@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 use Illuminate\Http\Request;
 use App\Models\CommonQuestion;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CommonQuestionRequest;
 use App\Http\Resources\CommonQuestionResource;
 use App\Http\Controllers\api\BaseController as BaseController;
 
@@ -14,26 +15,21 @@ class CommonQuestionController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['commonQuestions']=CommonQuestionResource::collection(CommonQuestion::where('is_deleted',0)->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=CommonQuestion::where('is_deleted',0);
+        $data= $data->paginate($count);
+        $success['commonQuestions']=CommonQuestionResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع الاسئلة بنجاح','Questions return successfully');
     }
-    public function store(Request $request)
+    public function store(CommonQuestionRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'question' =>  ['required','string','max:255'],
-            'answer' =>  ['required','string','max:255'],
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+      
 
         $CommonQuestion = CommonQuestion::create([
             'question' => $request->question,
@@ -61,18 +57,8 @@ class CommonQuestionController extends BaseController
 
     }
 
-    public function update(Request $request, $id)
+    public function update(CommonQuestionRequest $request, $id)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'question' =>  ['required','string','max:255'],
-            'answer' =>  ['required','string','max:255'],
-
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
         $question = CommonQuestion::find($id);
 
         if (is_null($question)) {
@@ -106,5 +92,24 @@ class CommonQuestionController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم الحذف بنجاح', 'deleted successfully');
+    }
+    public function searchQuestionName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $pages = CommonQuestion::where('is_deleted', 0)
+            ->where('question', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->paginate($count);
+
+        $success['query'] = $query;
+        $success['total_result'] = $pages->total();
+        $success['page_count'] = $pages->lastPage();
+        $success['current_page'] = $pages->currentPage();
+        $success['questions'] = CommonQuestionResource::collection($pages);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الاسئلة الشائعة بنجاح', 'questions Information returned successfully');
+
     }
 }

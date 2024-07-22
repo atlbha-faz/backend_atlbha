@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ServiceResource;
-use App\Http\Resources\StoreResource;
-use App\Models\Service;
 use App\Models\Store;
+use App\Models\Service;
 use Illuminate\Http\Request;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\ServiceResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ServiceAdminRequest;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ServiceController extends BaseController
 {
@@ -23,10 +24,14 @@ class ServiceController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $success['Services'] = ServiceResource::collection(Service::where('is_deleted', 0)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data = Service::where('is_deleted', 0)->orderByDesc('created_at');
+        $data = $data->paginate($count);
+        $success['Services'] = ServiceResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'Services return successfully');
@@ -48,18 +53,9 @@ class ServiceController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ServiceAdminRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'file' => 'nullable',
-            'price' => ['required', 'numeric', 'gt:0'],
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
+       
         $service = Service::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -98,23 +94,12 @@ class ServiceController extends BaseController
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(ServiceAdminRequest $request, Service $service)
     {
         if (is_null($service) || $service->is_deleted != 0) {
             return $this->sendError("الخدمة غير موجودة", "service is't exists");
         }
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'file' => 'nullable',
-            'price' => ['required', 'numeric', 'gt:0'],
-            'status' => ['nullable', 'in:active,not_active'],
-        ]);
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+
         $service->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
@@ -192,6 +177,22 @@ class ServiceController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة الخدمة بنجاح', 'service updated successfully');
+
+    }
+    public function searchServiceName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $services = Service::where('is_deleted', 0)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')->paginate($count);
+        $success['query'] = $query;
+        $success['total_result'] = $services->total();
+        $success['page_count'] = $services->lastPage();
+        $success['current_page'] = $services->currentPage();
+        $success['services'] = ServiceResource::collection($services);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الخدمات  بنجاح', 'service Information returned successfully');
 
     }
 }

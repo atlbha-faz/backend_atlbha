@@ -45,21 +45,10 @@ class StoreCategoryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
 
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'icon' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'data.*.name' => 'nullable|string|max:255',
-            'data.*.id' => 'nullable|numeric',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-
         $cat = Category::orderBy('id', 'desc')->first();
         if (is_null($cat)) {
             $number = 0001;
@@ -165,7 +154,7 @@ class StoreCategoryController extends BaseController
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
 
         $category = Category::where('store_id', null)->where('id', $id)->first();

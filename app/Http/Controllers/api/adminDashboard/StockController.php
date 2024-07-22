@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ProductResource;
-use App\Imports\AdminProductImport;
-use App\Models\Attribute;
-use App\Models\Attribute_product;
+use Carbon\Carbon;
 use App\Models\Image;
-use App\Models\Importproduct;
-use App\Models\Option;
-use App\Models\Product;
 use App\Models\Store;
 use App\Models\Value;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Option;
+use App\Models\Product;
+use App\Models\Attribute;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\Importproduct;
 use Illuminate\Validation\Rule;
+use App\Models\Attribute_product;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StockRequest;
+use App\Imports\AdminProductImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Resources\ProductResource;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StockUpdateRequest;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class StockController extends BaseController
 {
@@ -34,7 +36,7 @@ class StockController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         $success['total_stock'] = Product::where('is_deleted', 0)->where('for', 'stock')->count();
@@ -51,9 +53,18 @@ class StockController extends BaseController
         } else {
             $success['most_order'] = 0;
         }
-        $success['products'] = ProductResource::collection(Product::with(['store', 'category' => function ($query) {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Product::with(['store', 'category' => function ($query) {
             $query->select('id', 'name', 'icon');
-        }])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'description', 'short_description')->get());
+        }])->where('is_deleted', 0)->where('for', 'stock')->where('store_id', null)->orderByDesc('created_at')->select(['id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'description', 'short_description']);
+        if ($request->has('category_id')) {
+            $data = $data->where('category_id', $request->category_id);
+        }
+
+        $data= $data->paginate($count);
+        $success['products'] = ProductResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
@@ -76,45 +87,8 @@ class StockController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StockRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:25',
-            'description' => 'required|string',
-            'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
-            'stock' => ['required', 'numeric', 'gt:0'],
-
-            'less_qty' => ['nullable', 'numeric', 'gt:0'],
-            'images' => 'nullable|array',
-            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg', 'max:20000'],
-            'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-
-            'SEOdescription' => 'nullable',
-            'snappixel' => 'nullable|string',
-            'tiktokpixel' => 'nullable|string',
-            'twitterpixel' => 'nullable|string',
-            'instapixel' => 'nullable|string',
-            'short_description' => 'required|string|max:100',
-            'robot_link' => 'nullable|string',
-            'google_analytics' => 'nullable|url',
-            'weight' => 'nullable',
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => ['nullable', 'array'],
-            'subcategory_id.*' => ['nullable', 'numeric',
-                Rule::exists('categories', 'id')->where(function ($query) {
-                    return $query->join('categories', 'id', 'parent_id');
-                }),
-            ],
-            'product_has_options' => 'nullable|in:0,1',
-            'attribute' => 'array|required_if:product_has_options,1',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-
         if ($request->subcategory_id != null) {
             $subcategory = implode(',', $request->subcategory_id);
         } else {
@@ -265,47 +239,14 @@ class StockController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StockUpdateRequest $request, $id)
     {
         $product = Product::query()->where('for', 'stock')->find($id);
         if (is_null($product) || $product->is_deleted != 0) {
             return $this->sendError(" المنتج غير موجود", "product is't exists");
         }
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:25',
-            'description' => 'required|string',
-            'less_qty' => ['nullable', 'numeric', 'gt:0'],
-            'purchasing_price' => ['required', 'numeric', 'gt:0'],
-            'selling_price' => ['required', 'numeric', 'gte:' . (int) $request->purchasing_price],
-            'stock' => ['required', 'numeric', 'gt:0'],
-            'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
-            'images' => 'nullable|array',
-
-            'SEOdescription' => 'nullable',
-            'snappixel' => 'nullable|string',
-            'tiktokpixel' => 'nullable|string',
-            'twitterpixel' => 'nullable|string',
-            'instapixel' => 'nullable|string',
-            'short_description' => 'required|string|max:100',
-            'robot_link' => 'nullable|string',
-            'google_analytics' => 'nullable|url',
-            'weight' => 'nullable',
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => ['nullable', 'array'],
-            'subcategory_id.*' => ['nullable', 'numeric',
-                Rule::exists('categories', 'id')->where(function ($query) {
-                    return $query->join('categories', 'id', 'parent_id');
-                }),
-            ],
-            'product_has_options' => 'nullable|in:0,1',
-            'attribute' => 'array|required_if:product_has_options,1',
-        ]);
-
-        if ($validator->fails()) {
-            # code...
-            return $this->sendError(null, $validator->errors());
-        }
+ 
         if ($request->subcategory_id != null) {
             $subcategory = implode(',', $request->subcategory_id);
         } else {
@@ -573,12 +514,12 @@ class StockController extends BaseController
         }
 
     }
-    public function searchProductName(Request $request)
+    public function searchStockName(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $products = Product::where('is_deleted', 0)->where('store_id', null)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+        $products = Product::where('is_deleted', 0)->where('for','stock')->where('store_id', null)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
             ->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'short_description')->paginate($count);
 
         $success['query'] = $query;

@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
+use Notification;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Alert;
+use App\Mail\SendMail;
+use App\Models\Contact;
+use Illuminate\Http\Request;
+use App\Models\NotificationModel;
+use App\Http\Requests\EmailRequest;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\AlertResource;
 use App\Http\Resources\ContactResource;
-use App\Http\Resources\NotificationResource;
-use App\Mail\SendMail;
-use App\Models\Alert;
-use App\Models\Contact;
-use App\Models\NotificationModel;
-use App\Models\User;
 use App\Notifications\emailNotification;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Notification;
+use App\Http\Resources\NotificationResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class NotificationController extends BaseController
 {
@@ -24,11 +25,15 @@ class NotificationController extends BaseController
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function index(Request $request)
     {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $success['count_of_notifications'] = auth()->user()->Notifications->where('read_at', null)->count();
-        $success['notifications'] = NotificationResource::collection(auth()->user()->Notifications);
+        $data=auth()->user()->notifications()->paginate($count);
+        $success['notifications'] = NotificationResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الاشعارات بنجاح', 'Notifications return successfully');
@@ -84,19 +89,9 @@ class NotificationController extends BaseController
         }
     }
 
-    public function addEmail(Request $request)
+    public function addEmail(EmailRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string|max:255',
-            'store_id' => 'exists:stores,id',
-
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError(null, $validator->errors());
-        }
-
+     
         $data = [
             'subject' => $request->subject,
             'message' => $request->message,

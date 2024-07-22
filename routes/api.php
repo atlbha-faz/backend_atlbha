@@ -42,7 +42,6 @@ Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
 Route::get('sendMessage', 'App\Http\Controllers\api\AuthController@storeVerifyMessage');
 Route::post('webhook', [App\Http\Controllers\api\WebhookController::class, 'handleWebhook']);
 
-Route::get('unifonicTest', 'App\Http\Controllers\api\AuthController@unifonicTest');
 Route::get('selector/cities', [App\Http\Controllers\api\SelectorController::class, 'cities']);
 Route::get('selector/countries', [App\Http\Controllers\api\SelectorController::class, 'countries']);
 Route::get('selector/activities', [App\Http\Controllers\api\SelectorController::class, 'activities']);
@@ -54,6 +53,8 @@ Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorCo
 Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class, 'getBank']);
 Route::get('selector/returnReasons', [App\Http\Controllers\api\SelectorController::class, 'returnReason']);
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
+
+Route::get('refundCallback', [App\Http\Controllers\api\RefundController::class, 'refundCallback'])->name('refundCallback');
 
 Route::post('/loginapi', 'App\Http\Controllers\api\AuthController@login');
 Route::post('/loginadminapi', 'App\Http\Controllers\api\AuthController@loginAdmin');
@@ -98,7 +99,7 @@ Route::middleware([SetActiveStore::class])->group(function () {
 
     Route::post('addSubsicription/{domain}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addSubsicription']);
 
-});
+
 Route::get('cartShow/{id}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'show']);
 Route::post('addCart/{domain}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'addToCart']);
 Route::get('deleteCart/{domain}/{id}', [App\Http\Controllers\api\storeTemplate\CartTemplateController::class, 'delete']);
@@ -132,10 +133,7 @@ Route::group([
 ], function () {
     Route::post('addComment/{id}', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addComment']);
     Route::post('addContact', [App\Http\Controllers\api\storeTemplate\IndexStoreController::class, 'addContact']);
-    Route::prefix('madfu')->group(function () {
-
-        Route::post('login', [MadfuController::class, 'login']);
-    });
+});
 });
 // visit count
 Route::post('storeClientVisit', [App\Http\Controllers\api\VisitCountController::class, 'storeClientVisit']);
@@ -175,10 +173,13 @@ Route::get('store_token', [\App\Http\Controllers\api\adminDashboard\StoreDataCon
 
 Route::middleware([AdminUser::class])->group(function () {
     Route::prefix('/Admin')->group(function () {
-
+         
         Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
+        Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class);
+        Route::get('changePackageStatus/{id}',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
+
 
         Route::get('selector/etlobahCategory', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'etlobahCategory']);
         Route::get('selector/years', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'years']);
@@ -198,6 +199,22 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'index']);
         Route::post('profile', [App\Http\Controllers\api\adminDashboard\ProfileController::class, 'update']);
         Route::resource('storecategory', App\Http\Controllers\api\adminDashboard\StoreCategoryController::class);
+        //search
+        Route::get('searchOrder', [App\Http\Controllers\api\adminDashboard\AdminOrderController::class, 'searchOrder']);
+        Route::get('searchStoreName', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'searchStoreName']);
+        Route::get('searchStockName', [App\Http\Controllers\api\adminDashboard\StockController::class, 'searchStockName']);
+        Route::get('searchStoreProductName', [App\Http\Controllers\api\adminDashboard\ProductController::class, 'searchStoreProductName']);
+        Route::get('searchVerificationStoreName', [App\Http\Controllers\api\adminDashboard\VerificationController::class, 'searchVerificationStoreName']);
+        Route::get('searchPageName', [App\Http\Controllers\api\adminDashboard\PageController::class, 'searchPageName']);
+        Route::get('searchQuestionName', [App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, 'searchQuestionName']);
+        Route::get('searchUserName', [App\Http\Controllers\api\adminDashboard\UserController::class, 'searchUserName']);
+        Route::get('searchMarketerName', [App\Http\Controllers\api\adminDashboard\MarketerController::class, 'searchMarketerName']);
+        Route::get('searchOrderServiceName', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'searchOrderServiceName']);
+        Route::get('searchTechnicalSupport', [App\Http\Controllers\api\adminDashboard\TechnicalSupportController::class, 'searchTechnicalSupport']);
+        Route::get('searchCity', [App\Http\Controllers\api\adminDashboard\CityController::class, 'searchCity']);
+        Route::get('searchCountry', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'searchCountry']);
+        Route::get('searchSubscriptionsName', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'searchSubscriptionsName']);
+        Route::get('searchServiceName', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'searchServiceName']);
 
         Route::middleware([AdminCheckPermission::class])->group(function () {
             Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
@@ -378,8 +395,10 @@ Auth::routes();
 
 Route::middleware([StoreUser::class])->group(function () {
     Route::prefix('/Store')->group(function () {
-
         Route::post('madfu-auth/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'madfuAuth']);
+// cheackout import
+        Route::post('checkoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'checkOut']);
+
         Route::resource('country', App\Http\Controllers\api\storeDashboard\CountryController::class);
         Route::resource('city', App\Http\Controllers\api\storeDashboard\CityController::class);
 
@@ -445,8 +464,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('showImportCart', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'index']);
         Route::post('addImportCart', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'addToCart']);
         Route::get('deleteImportCart/{id}', [App\Http\Controllers\api\storeDashboard\ImportCartController::class, 'delete']);
-        // cheackout import
-        Route::post('checkoutImport', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'checkOut']);
+
         Route::post('applyCoupon/{cart_id}', [App\Http\Controllers\api\storeDashboard\CheckoutController::class, 'applyCoupon']);
 
         //  paymenttype import
@@ -626,6 +644,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('returnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'show']);
         Route::get('searchReturnOrder', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'searchReturnOrder']);
         Route::get('refundReturnOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'refundReturnOrder']);
+        Route::get('sendRefundOrder/{id}', [App\Http\Controllers\api\storeDashboard\ReturnOrderController::class, 'sendRefundOrder']);
+      
 
         // });
     });

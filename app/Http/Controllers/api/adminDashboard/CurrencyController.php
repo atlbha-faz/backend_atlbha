@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\Currency;
 use Illuminate\Http\Request;
+use App\Http\Requests\CurrencyRequest;
 use App\Http\Resources\CurrencyResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\api\BaseController as BaseController;
@@ -22,9 +23,14 @@ class CurrencyController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['Currencies']=CurrencyResource::collection(Currency::where('is_deleted',0)->orderByDesc('created_at')->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data=Currency::where('is_deleted',0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['Currencies']=CurrencyResource::collection($data);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
         $success['status']= 200;
 
          return $this->sendResponse($success,'تم ارجاع العملات بنجاح',' Currencies return successfully');
@@ -46,19 +52,8 @@ class CurrencyController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CurrencyRequest $request)
     {
-        $input = $request->all();
-        $validator =  Validator::make($input ,[
-            'name'=>'required|string|max:255',
-            'name_en'=>'required|string|max:255',
-            'image' =>'required',
-
-        ]);
-        if ($validator->fails())
-        {
-            return $this->sendError(null,$validator->errors());
-        }
         $currency = Currency::create([
             'name' => $request->name,
             'name_en'=>$request->name_en,
