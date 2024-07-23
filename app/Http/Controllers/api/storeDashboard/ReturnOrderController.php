@@ -208,8 +208,7 @@ class ReturnOrderController extends BaseController
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
-                $final_price = $prices;
-                // $final_price = $final_price * 0.082;
+                $final_price = ($prices -$payment->deduction) * 0.081;
                 $supplierdata = [
                     "SupplierCode" => $account->supplierCode,
                     "SupplierDeductedAmount" => $final_price,
@@ -218,7 +217,6 @@ class ReturnOrderController extends BaseController
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
-                    "Amount" => $final_price,
                     "Comment" => "refund to the customer",
                     "VendorDeductAmount" => 0,
                     "Suppliers" => [$supplierobject],
