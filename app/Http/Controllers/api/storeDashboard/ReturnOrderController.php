@@ -201,38 +201,40 @@ class ReturnOrderController extends BaseController
         }
         $payment = Payment::where('orderID', $order->id)->first();
         $returns = ReturnOrder::where('order_id', $order->id)->get();
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
         $prices = 0;
         foreach ($returns as $return) {
-            $prices = $prices + ($return->qty * $return->orderItem->price);         
+            $prices = $prices + ($return->qty * $return->orderItem->price);
         }
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
-                $final_price=$prices;
+                $final_price = $prices -$payment->deduction;
+                $supplierdata = [
+                    "SupplierCode" => $account->supplierCode,
+                    "SupplierDeductedAmount" => $final_price,
+                ];
+                $supplierobject = (object) ($supplierdata);
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
-                    "RefundChargeOnCustomer" => false,
-                    "ServiceChargeOnCustomer" => false,
-                    "Amount" =>  $final_price,
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" =>  $final_price,
-                    "CurrencyIso" => "SAR",
+                    "VendorDeductAmount" => 0,
+                    "Suppliers" => [$supplierobject],
                 ];
-
                 $supplier = new FatoorahServices();
-                try{
-                $supplierCode = $supplier->buildRequest('v2/MakeRefund', 'POST', json_encode($data));
+                try {
+                    $supplierCode = $supplier->buildRequest('v2/MakeSupplierRefund', 'POST', json_encode($data));
+                } catch (ClientException $e) {
+                    if ($return_status->refund_status == 1) {
+                        return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
+                    } else {
+                        return $this->sendError("لايوجد لديك رصيد كافي", 'Message: ' . $e->getMessage());
+                    }
+                } catch (Exception $e) {
+                    return $this->sendError("An unexpected error occurred:", 'Message: ' . $e->getMessage());
                 }
-                catch(ClientException $e) {
-                        if($return_status->refund_status == 1)
-                        {
-                        return $this->sendError("تم الارجاع مسبقا",'Message: ' .$e->getMessage());
-                        }
-                        else{
-                        return $this->sendError("لايوجد لديك رصيد كافي",'Message: ' .$e->getMessage());
-                        }
-                 }
+
                 if ($supplierCode['IsSuccess'] == false) {
                     return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
                 } else {
@@ -240,7 +242,7 @@ class ReturnOrderController extends BaseController
                     $returns = ReturnOrder::where('order_id', $order->id)->get();
                     foreach ($returns as $return) {
                         $return->update([
-                            'refund_status' => 1
+                            'refund_status' => 1,
                         ]);
                     }
                 }
