@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use in;
+use Exception;
 use App\Models\Order;
+use App\Models\Account;
+use App\Models\Payment;
 use App\Models\Shipping;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use App\Services\FatoorahServices;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\OrderResource;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Validator;
 use App\Services\ShippingComanies\OtherCompanyService;
 use App\Services\ShippingComanies\AramexCompanyService;
@@ -207,7 +212,7 @@ class OrderController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $payment = Payment::where('orderID', $order->id)->first();
-    
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
            
             if ($payment != null) {
