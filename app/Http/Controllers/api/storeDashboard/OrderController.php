@@ -233,7 +233,7 @@ class OrderController extends BaseController
                 try {
                     $supplierCode = $supplier->buildRequest('v2/MakeSupplierRefund', 'POST', json_encode($data));
                 } catch (ClientException $e) {
-                    if ($return_status->refund_status == 1) {
+                    if ($order->is_refund == 1) {
                         return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
                     } else {
                         return $this->sendError("لايوجد لديك رصيد كافي", 'Message: ' . $e->getMessage());
