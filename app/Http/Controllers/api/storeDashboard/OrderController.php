@@ -53,7 +53,7 @@ class OrderController extends BaseController
             ->where(function ($sub_query) {
                 $sub_query->where('paymentype_id', 4)->orWhere('payment_status', 'paid');
 
-            })->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id', 'created_at']);
+            })->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id','is_refund', 'created_at']);
         if ($request->has('order_status')) {
             $data->where('order_status', $request->order_status);
         }
