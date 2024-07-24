@@ -190,7 +190,7 @@ class OrderController extends BaseController
         return $this->sendResponse($success, 'تم التتبع بنجاح', 'orders tracking returned successfully');
 
     }
-    public function refundOrder($order_id)
+    public function refundOrder(Request $request,$order_id)
     {
         $order = Order::where('id', $order_id)->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id);
