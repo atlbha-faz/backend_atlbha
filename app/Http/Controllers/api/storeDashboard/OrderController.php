@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api\storeDashboard;
 use in;
 use Exception;
 use App\Models\Order;
-use App\Models\Account;
 use App\Models\Payment;
 use App\Models\Shipping;
 use App\Models\OrderItem;
@@ -18,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Services\ShippingComanies\OtherCompanyService;
 use App\Services\ShippingComanies\AramexCompanyService;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\Account;
 
 class OrderController extends BaseController
 {
@@ -216,7 +216,7 @@ class OrderController extends BaseController
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
            
             if ($payment != null) {
-                $final_price =  $input->price==null? $order->total_price* 0.081 : $input->price;
+                $final_price =  $request->price==null ? $order->total_price* 0.081 : $request->price;
                 $supplierdata = [
                     "SupplierCode" => $account->supplierCode,
                     "SupplierDeductedAmount" => $final_price,
