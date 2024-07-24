@@ -49,7 +49,7 @@ class CheckoutController extends BaseController
             'district' => 'required|string',
             'postal_code' => 'nullable|string',
             'default_address' => 'required',
-            'paymentype_id' => 'required|exists:paymenttypes,id',
+            'paymentype_id' => 'nullable|exists:paymenttypes,id',
             'shippingtype_id' => 'required|exists:shippingtypes,id',
             'cod' => 'nullable',
             'description' => 'nullable|string',
