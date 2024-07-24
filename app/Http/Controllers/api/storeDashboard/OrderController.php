@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\OrderResource;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Shipping;
-use App\Services\ShippingComanies\AramexCompanyService;
-use App\Services\ShippingComanies\OtherCompanyService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
 use in;
+use Exception;
+use App\Models\Order;
+use App\Models\Payment;
+use App\Models\Shipping;
+use App\Models\OrderItem;
+use Illuminate\Http\Request;
+use App\Services\FatoorahServices;
+use Illuminate\Support\Facades\Http;
+use App\Http\Resources\OrderResource;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Validator;
+use App\Services\ShippingComanies\OtherCompanyService;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Models\Account;
 
 class OrderController extends BaseController
 {
