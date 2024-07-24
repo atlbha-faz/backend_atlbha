@@ -615,6 +615,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('permissions', [App\Http\Controllers\api\storeDashboard\PermissionController::class, 'index'])->name('permissions');
         Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class, ['names' => 'store.roles']);
         Route::get('tracking/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'tracking']);
+        Route::get('refundOrder/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class,'refundOrder']);
 
         // reports
         Route::get('reports', [ReportController::class, 'index'])->name('store.reports.show');

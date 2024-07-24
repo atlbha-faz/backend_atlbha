@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use in;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
-use App\Models\Shipping;
 use App\Models\OrderItem;
+use App\Models\Shipping;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Services\ShippingComanies\OtherCompanyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
-use App\Services\ShippingComanies\OtherCompanyService;
-use App\Services\ShippingComanies\AramexCompanyService;
-use App\Http\Controllers\api\BaseController as BaseController;
+use in;
 
 class OrderController extends BaseController
 {
@@ -44,11 +44,11 @@ class OrderController extends BaseController
 
         $data = Order::with(['user', 'shippings', 'shippingtype', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->where('is_archive',0)
-        ->where(function ($sub_query) {
-            $sub_query->where('paymentype_id',4)->orWhere('payment_status','paid');
-             
-        })->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id', 'created_at']);
+        }])->where('store_id', auth()->user()->store_id)->where('is_archive', 0)
+            ->where(function ($sub_query) {
+                $sub_query->where('paymentype_id', 4)->orWhere('payment_status', 'paid');
+
+            })->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id', 'created_at']);
         if ($request->has('order_status')) {
             $data->where('order_status', $request->order_status);
         }
@@ -115,7 +115,7 @@ class OrderController extends BaseController
                 "shipper_line2" => $request->street_address,
                 "shipper_city" => $request->city,
                 "shipper_district" => $request->district,
-                "shipper_name" => auth()->user()->name == null ?auth()->user()->user_name :auth()->user()->name,
+                "shipper_name" => auth()->user()->name == null ? auth()->user()->user_name : auth()->user()->name,
                 "shipper_comany" => auth()->user()->store->store_name,
                 "shipper_phonenumber" => auth()->user()->phonenumber,
                 "shipper_email" => auth()->user()->email,
@@ -167,7 +167,68 @@ class OrderController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف الطلبات بنجاح', 'Order deleted successfully');
     }
+    public function refundOrder(Request $request, $order_id)
+    {
+        $order = Order::where('id', $order_id)->whereHas('items', function ($q) {
+            $q->where('store_id', auth()->user()->store_id);
+        })->first();
+        if (is_null($order)) {
+            return $this->sendError("'الطلب غير موجود", "Order is't exists");
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'price' => ['nullable', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+        $payment = Payment::where('orderID', $order->id)->first();
+        $account = Account::where('store_id', auth()->user()->store_id)->first();
+        if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
 
+            if ($payment != null) {
+                $final_price = $request->price == null ? $order->total_price : $request->price;
+                $supplierdata = [
+                    "SupplierCode" => $account->supplierCode,
+                    "SupplierDeductedAmount" => $final_price,
+                ];
+                $supplierobject = (object) ($supplierdata);
+                $data = [
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "Comment" => "refund to the customer",
+                    "VendorDeductAmount" => 0,
+                    "Suppliers" => [$supplierobject],
+                ];
+                $supplier = new FatoorahServices();
+                try {
+                    $supplierCode = $supplier->buildRequest('v2/MakeSupplierRefund', 'POST', json_encode($data));
+                } catch (ClientException $e) {
+                    if ($order->is_refund == 1) {
+                        return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
+                    } else {
+                        return $this->sendError("لايوجد لديك رصيد كافي", 'Message: ' . $e->getMessage());
+                    }
+                } catch (Exception $e) {
+                    return $this->sendError("An unexpected error occurred:", 'Message: ' . $e->getMessage());
+                }
+
+                if ($supplierCode['IsSuccess'] == false) {
+                    return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                } else {
+                    $success['payment'] = $supplierCode;
+                    $refund = Order::where('id', $order->id)->first();
+                    $refund->update([
+                        'is_refund' => 1,
+                    ]);
+
+                }
+            }
+        }
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
+    }
     public function tracking($track_id)
     {
         $shipping = Shipping::where('shipping_id', $track_id)->first();

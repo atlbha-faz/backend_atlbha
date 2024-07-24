@@ -13,7 +13,7 @@ class Order extends Model
         'total_price', 'tax', 'shipping_price', 'discount', 'paymentype_id',
         'weight', 'shippingtype_id', 'order_status', 'payment_status',
         'is_deleted','cod','created_at', 'is_archive','description',
-        'subtotal','overweight_price','is_return','totalCount','payment_id'];
+        'subtotal','overweight_price','is_refund','is_return','totalCount','payment_id'];
     protected $attributes = [
         'is_archive' =>false,
     ];
