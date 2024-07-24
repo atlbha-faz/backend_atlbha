@@ -49,7 +49,7 @@ class CheckoutController extends BaseController
             'district' => 'required|string',
             'postal_code' => 'nullable|string',
             'default_address' => 'required',
-            'paymentype_id' => 'required|exists:paymenttypes,id',
+            'paymentype_id' => 'nullable|exists:paymenttypes,id',
             'shippingtype_id' => 'required|exists:shippingtypes,id',
             'cod' => 'nullable',
             'description' => 'nullable|string',
@@ -200,73 +200,73 @@ class CheckoutController extends BaseController
         }
 
         $InvoiceId = null;
-        if ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
-            $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
-            $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-            $commission=0.009 * $order->total_price+1;
-            $vat = $commission * 0.15;
-            $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
-            $atlbha=$result*0.001;
-            $deduction =  $commission+ $vat+$atlbha;
-            $price_after_deduction = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $deduction;
+    //     if ($order->paymentype_id == 1 && $order->shippingtype_id == 1) {
+    //         $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
+    //         $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
+    //         $commission=0.009 * $order->total_price+1;
+    //         $vat = $commission * 0.15;
+    //         $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
+    //         $atlbha=$result*0.001;
+    //         $deduction =  $commission+ $vat+$atlbha;
+    //         $price_after_deduction = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $deduction;
             
-            $processingDetails = [
-                "AutoCapture" => true,
-                "Bypass3DS" => false,
-            ];
-            $processingDetailsobject = (object) ($processingDetails);
-            $data = [
-                "PaymentMethodId" => $paymenttype->paymentMethodId,
-                "CustomerName" =>( $customer->store != null ? $customer->store->owner_name: $customer->user_name),
-                "InvoiceValue" => $order->total_price, // total_price
-                "CustomerEmail" => $customer->email,
-                "CallBackUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/success',
-                "ErrorUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/failed',
-                "Language" => 'AR',
-                "DisplayCurrencyIso" => 'SAR',
-                "ProcessingDetails" => $processingDetailsobject,
-            ];
-            $data = json_encode($data);
-            $supplier = new FatoorahServices();
-            $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
+    //         $processingDetails = [
+    //             "AutoCapture" => true,
+    //             "Bypass3DS" => false,
+    //         ];
+    //         $processingDetailsobject = (object) ($processingDetails);
+    //         $data = [
+    //             "PaymentMethodId" => $paymenttype->paymentMethodId,
+    //             "CustomerName" =>( $customer->store != null ? $customer->store->owner_name: $customer->user_name),
+    //             "InvoiceValue" => $order->total_price, // total_price
+    //             "CustomerEmail" => $customer->email,
+    //             "CallBackUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/success',
+    //             "ErrorUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/failed',
+    //             "Language" => 'AR',
+    //             "DisplayCurrencyIso" => 'SAR',
+    //             "ProcessingDetails" => $processingDetailsobject,
+    //         ];
+    //         $data = json_encode($data);
+    //         $supplier = new FatoorahServices();
+    //         $response = $supplier->buildRequest('v2/ExecutePayment', 'POST', $data);
 
-            if (isset($response['IsSuccess'])) {
-                if ($response['IsSuccess'] == true) {
+    //         if (isset($response['IsSuccess'])) {
+    //             if ($response['IsSuccess'] == true) {
 
-                    $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
-                    $success['payment'] = $response;
-                    $payment = Payment::create([
-                        'paymenDate' => Carbon::now(),
-                        'paymentType' => $order->paymentype->name,
-                        'orderID' => $order->id,
-                        'store_id' => null,
-                        'deduction' => $deduction,
-                        'price_after_deduction' => $price_after_deduction,
-                        'paymentTransectionID' => $InvoiceId,
+    //                 $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
+    //                 $success['payment'] = $response;
+    //                 $payment = Payment::create([
+    //                     'paymenDate' => Carbon::now(),
+    //                     'paymentType' => $order->paymentype->name,
+    //                     'orderID' => $order->id,
+    //                     'store_id' => null,
+    //                     'deduction' => $deduction,
+    //                     'price_after_deduction' => $price_after_deduction,
+    //                     'paymentTransectionID' => $InvoiceId,
 
-                    ]);
+    //                 ]);
 
-                } else {
-                    $success['payment'] = $response;
-                }
-            } else {
-                $success['payment'] = $response;
-            }
-            $cart->update(['order_id' => $order->id]);
-            $success['order'] = new OrderResource($order);
-            $success['status'] = 200;
+    //             } else {
+    //                 $success['payment'] = $response;
+    //             }
+    //         } else {
+    //             $success['payment'] = $response;
+    //         }
+    //         $cart->update(['order_id' => $order->id]);
+    //         $success['order'] = new OrderResource($order);
+    //         $success['status'] = 200;
 
-            return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
+    //         return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
-        }
-     else{
+    //     }
+    //  else{
 
         $success['order'] = new OrderResource($order);
 
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارسال بنجاح ', 'order send successfully');
-     }
+    //  }
     }
 
     public function paymentMethods()
