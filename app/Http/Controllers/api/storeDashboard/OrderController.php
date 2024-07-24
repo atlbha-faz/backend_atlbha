@@ -216,7 +216,7 @@ class OrderController extends BaseController
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
            
             if ($payment != null) {
-                $final_price =   $order->shippingtype_id==5 ? $order->total_price* 0.081: ($order->total_price-($order->shipping_price +$order->overweight_price))* 0.081 ;
+                $final_price =   $request->price == null ?($order->shippingtype_id==5 ? $order->total_price* 0.081: ($order->total_price-($order->shipping_price +$order->overweight_price))* 0.081) : $request->price * 0.081;
                 $supplierdata = [
                     "SupplierCode" => $account->supplierCode,
                     "SupplierDeductedAmount" => $final_price,
