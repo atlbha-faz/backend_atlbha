@@ -25,24 +25,42 @@ class AdminOrderController extends BaseController
     }
     public function index(Request $request)
     {
-        $success['new'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->where('order_status', 'new')->count();
-        $success['completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->where('order_status', 'completed')->count();
+        $success['new'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where(function ($sub_query) {
+            $sub_query->where('paymentype_id',null)->orWhere('payment_status','paid');
+             
+        })->where('order_status', 'new')->count();
+        $success['completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where(function ($sub_query) {
+            $sub_query->where('paymentype_id',null)->orWhere('payment_status','paid');
+             
+        })->where('order_status', 'completed')->count();
 
-        $success['not_completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->where('order_status', 'not_completed')->count();
+        $success['not_completed'] = Order::where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where(function ($sub_query) {
+            $sub_query->where('paymentype_id',null)->orWhere('payment_status','paid');
+             
+        })->where('order_status', 'not_completed')->count();
         $success['canceled'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null)->where('order_status', 'canceled');
-        })->where('is_archive',0)->where('payment_status','paid')->count();
+        })->where('is_archive',0)->where(function ($sub_query) {
+            $sub_query->where('paymentype_id',null)->orWhere('payment_status','paid');
+             
+        })->count();
 
         $success['all'] = Order::whereHas('items', function ($q) {
             $q->where('store_id', null);
-        })->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->count();
+        })->where('is_deleted', 0)->where('is_archive',0)->where(function ($sub_query) {
+            $sub_query->where('paymentype_id',null)->orWhere('payment_status','paid');
+             
+        })->count();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
         $data = Order::with(['user' => function ($query) {
             $query->select('id', 'city_id');
         }, 'shippings', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where('payment_status','paid')->orderByDesc('id')->select(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']);
+        }])->where('store_id', null)->where('is_deleted', 0)->where('is_archive',0)->where(function ($sub_query) {
+            $sub_query->where('paymentype_id',null)->orWhere('payment_status','paid');
+             
+        })->orderByDesc('id')->select(['id', 'user_id', 'order_number', 'total_price', 'quantity', 'created_at', 'order_status']);
         $data= $data->paginate($count);
         $success['orders'] = OrderResource::collection($data);
         $success['page_count'] = $data->lastPage();
