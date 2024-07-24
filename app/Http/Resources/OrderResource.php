@@ -103,6 +103,7 @@ class OrderResource extends JsonResource
             'description' => $this->description,
             'is_deleted' => $this->is_deleted,
             'is_return' => $this->is_return,
+            'is_refund' => $this->is_refund,
             'store' => $store,
         ];
     }

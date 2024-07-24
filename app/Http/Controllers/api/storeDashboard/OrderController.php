@@ -190,6 +190,68 @@ class OrderController extends BaseController
         return $this->sendResponse($success, 'تم التتبع بنجاح', 'orders tracking returned successfully');
 
     }
+    public function refundOrder($order_id)
+    {
+        $order = Order::where('id', $order_id)->whereHas('items', function ($q) {
+            $q->where('store_id', auth()->user()->store_id);
+        })->first();
+        if (is_null($order)) {
+            return $this->sendError("'الطلب غير موجود", "Order is't exists");
+        }
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'price' => ['nullable', 'numeric']
+        ]);
+        if ($validator->fails()) {
+            # code...
+            return $this->sendError(null, $validator->errors());
+        }
+        $payment = Payment::where('orderID', $order->id)->first();
+    
+        if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
+           
+            if ($payment != null) {
+                $final_price =  $input->price==null? $order->total_price* 0.081 : $input->price;
+                $supplierdata = [
+                    "SupplierCode" => $account->supplierCode,
+                    "SupplierDeductedAmount" => $final_price,
+                ];
+                $supplierobject = (object) ($supplierdata);
+                $data = [
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "Comment" => "refund to the customer",
+                    "VendorDeductAmount" => 0,
+                    "Suppliers" => [$supplierobject],
+                ];
+                $supplier = new FatoorahServices();
+                try {
+                    $supplierCode = $supplier->buildRequest('v2/MakeSupplierRefund', 'POST', json_encode($data));
+                } catch (ClientException $e) {
+                    if ($return_status->refund_status == 1) {
+                        return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
+                    } else {
+                        return $this->sendError("لايوجد لديك رصيد كافي", 'Message: ' . $e->getMessage());
+                    }
+                } catch (Exception $e) {
+                    return $this->sendError("An unexpected error occurred:", 'Message: ' . $e->getMessage());
+                }
+
+                if ($supplierCode['IsSuccess'] == false) {
+                    return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                } else {
+                    $success['payment'] = $supplierCode;
+                    $refund = Order::where('id', $order->id)->first();
+                    $refund->update([
+                            'is_refund' => 1,
+                        ]);
+                    
+                }
+            }
+        }
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
+    }
     public function searchOrder(Request $request)
     {
         $query = $request->input('query');
