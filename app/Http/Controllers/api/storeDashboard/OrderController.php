@@ -193,7 +193,7 @@ class OrderController extends BaseController
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
 
             if ($payment != null) {
-                $final_price = $request->price == null ? $order->total_price : $request->price;
+                $final_price =  $request->price == null ?($order->shippingtype_id==5 ? $order->total_price : ($order->total_price-($order->shipping_price +$order->overweight_price))) : $request->price;
                 $supplierdata = [
                     "SupplierCode" => $account->supplierCode,
                     "SupplierDeductedAmount" => $final_price,
@@ -203,7 +203,7 @@ class OrderController extends BaseController
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "Comment" => "refund to the customer",
-                    "VendorDeductAmount" => 0,
+                    "VendorDeductAmount" => $order->shippingtype_id==5 ? 0 : ($order->shipping_price +$order->overweight_price),
                     "Suppliers" => [$supplierobject],
                 ];
                 $supplier = new FatoorahServices();
