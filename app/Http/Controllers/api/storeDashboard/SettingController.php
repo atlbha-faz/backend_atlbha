@@ -55,7 +55,7 @@ class SettingController extends BaseController
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
                 return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
             })],
-            // 'working_status' => 'required|in:active,not_active',
+            'is_external' => 'required|in:0,1',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
             'data.*.id' => 'required',
@@ -95,6 +95,8 @@ class SettingController extends BaseController
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
             'working_status' =>$request->working_status,
+            'is_external' =>$request->is_external,
+
         ]);
         $parameters = ['icon', 'logo'];
 
