@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('stores', function (Blueprint $table) {
-            $table->boolean('is_external')->nullable();
+            $table->enum('domain_type',['has_domain','pay_domain'])->nullable();
         });
     }
 
