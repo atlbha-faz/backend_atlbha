@@ -92,20 +92,16 @@ class FatoorahServices
       
     }
     public function refund( $url,$mothod, $data=[] ){
-        try {
+    
         $client = new Client(); 
         $response = $client->post( $this->base_url.$url, [
             'headers' => $this->headers,
             'json' => $data,
         ]);
-          if ($response->getStatusCode() != 200)
-              return false;
+      
           $response = json_decode ($response->getBody (),true);
           return $response;
-        } catch (\Exception $e) {
-         
-            return false;
-        }
+      
       }
 
 }
