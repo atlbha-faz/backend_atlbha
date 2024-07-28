@@ -216,15 +216,15 @@ class OrderController extends BaseController
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
            
             if ($payment != null) {
-                $final_price =   $request->price == null ?($order->shippingtype_id==5 ?  round(($order->total_price* 0.081),1):  round((($order->total_price-($order->shipping_price +$order->overweight_price))* 0.081),1)) :  round($request->price * 0.081,1);
+                $final_price =   $request->price == null ?($order->shippingtype_id==5 ?  round(($order->total_price),1):  round(($order->total_price-($order->shipping_price +$order->overweight_price)),1)) :  round($request->price,1);
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" =>round(($order->total_price* 0.081),1),
+                    "Amount" =>round(($order->total_price),1),
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" =>  $final_price,
+                    "AmountDeductedFromSupplier" =>$final_price,
                     "CurrencyIso" => "SAR",
                 ];
                 $supplier = new FatoorahServices();
