@@ -217,21 +217,19 @@ class OrderController extends BaseController
            
             if ($payment != null) {
                 $final_price =   $request->price == null ?($order->shippingtype_id==5 ?  round(($order->total_price* 0.081),1):  round((($order->total_price-($order->shipping_price +$order->overweight_price))* 0.081),1)) :  round($request->price * 0.081,1);
-                $supplierdata = [
-                    "SupplierCode" => $account->supplierCode,
-                    "SupplierDeductedAmount" => $final_price,
-                ];
-                $supplierobject = (object) ($supplierdata);
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
+                    "RefundChargeOnCustomer" => false,
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" =>round(($order->total_price* 0.081),1),
                     "Comment" => "refund to the customer",
-                    "VendorDeductAmount" =>  $order->shippingtype_id==5 ? 0 :  round((($order->shipping_price +$order->overweight_price)* 0.081),1),
-                    "Suppliers" => [$supplierobject],
+                    "AmountDeductedFromSupplier" =>  $final_price,
+                    "CurrencyIso" => "SAR",
                 ];
                 $supplier = new FatoorahServices();
                 try {
-                    $supplierCode = $supplier->buildRequest('v2/MakeSupplierRefund', 'POST', json_encode($data));
+                 $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
                 } catch (ClientException $e) {
                     if ($order->is_refund == 1) {
                         return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
@@ -242,10 +240,10 @@ class OrderController extends BaseController
                     return $this->sendError("An unexpected error occurred:", 'Message: ' . $e->getMessage());
                 }
 
-                if ($supplierCode['IsSuccess'] == false) {
-                    return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                if ($response['IsSuccess'] == false) {
+                    return $this->sendError("خطأ في الارجاع", $response->ValidationErrors[0]->Error);
                 } else {
-                    $success['payment'] = $supplierCode;
+                    $success['payment'] = $response;
                     $refund = Order::where('id', $order->id)->first();
                     $refund->update([
                             'is_refund' => 1,
