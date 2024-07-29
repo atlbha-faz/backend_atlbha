@@ -172,7 +172,7 @@ class OrderController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف الطلبات بنجاح', 'Order deleted successfully');
     }
-    public function refundOrder(Request $request, $order_id)
+    public function refundOrder(Request $request,$order_id)
     {
         $order = Order::where('id', $order_id)->whereHas('items', function ($q) {
             $q->where('store_id', auth()->user()->store_id);
@@ -182,7 +182,7 @@ class OrderController extends BaseController
         }
         $input = $request->all();
         $validator = Validator::make($input, [
-            'price' => ['nullable', 'numeric'],
+            'price' => ['nullable', 'numeric']
         ]);
         if ($validator->fails()) {
             # code...
@@ -191,24 +191,21 @@ class OrderController extends BaseController
         $payment = Payment::where('orderID', $order->id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
         if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
-
+           
             if ($payment != null) {
-                $final_price =  $request->price == null ?($order->shippingtype_id==5 ? $order->total_price : ($order->total_price-($order->shipping_price +$order->overweight_price))) : $request->price;
-                $supplierdata = [
-                    "SupplierCode" => $account->supplierCode,
-                    "SupplierDeductedAmount" => $final_price,
-                ];
-                $supplierobject = (object) ($supplierdata);
+                $final_price =   $request->price == null ?($order->shippingtype_id==5 ?  round(($order->total_price),1):  round(($order->total_price-($order->shipping_price +$order->overweight_price)),1)) :  round($request->price,1);
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" =>round(($order->total_price),1),
                     "Comment" => "refund to the customer",
-                    "VendorDeductAmount" => $order->shippingtype_id==5 ? 0 : ($order->shipping_price +$order->overweight_price),
-                    "Suppliers" => [$supplierobject],
+                    "AmountDeductedFromSupplier" =>$final_price,
+                    "CurrencyIso" => "SAR",
                 ];
                 $supplier = new FatoorahServices();
                 try {
-                    $supplierCode = $supplier->buildRequest('v2/MakeSupplierRefund', 'POST', json_encode($data));
+                 $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
                 } catch (ClientException $e) {
                     if ($order->is_refund == 1) {
                         return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
@@ -219,15 +216,15 @@ class OrderController extends BaseController
                     return $this->sendError("An unexpected error occurred:", 'Message: ' . $e->getMessage());
                 }
 
-                if ($supplierCode['IsSuccess'] == false) {
-                    return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                if ($response['IsSuccess'] == false) {
+                    return $this->sendError("خطأ في الارجاع", $response->ValidationErrors[0]->Error);
                 } else {
-                    $success['payment'] = $supplierCode;
+                    $success['payment'] = $response;
                     $refund = Order::where('id', $order->id)->first();
                     $refund->update([
-                        'is_refund' => 1,
-                    ]);
-
+                            'is_refund' => 1,
+                        ]);
+                    
                 }
             }
         }

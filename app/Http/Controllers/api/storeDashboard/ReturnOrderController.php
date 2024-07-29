@@ -210,21 +210,18 @@ class ReturnOrderController extends BaseController
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
                 $final_price = $prices;
-                $supplierdata = [
-                    "SupplierCode" => $account->supplierCode,
-                    "SupplierDeductedAmount" => $final_price,
-                ];
-                $supplierobject = (object) ($supplierdata);
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" =>round(($final_price),1),
                     "Comment" => "refund to the customer",
-                    "VendorDeductAmount" => 0,
-                    "Suppliers" => [$supplierobject],
+                    "AmountDeductedFromSupplier" =>$final_price,
+                    "CurrencyIso" => "SAR",
                 ];
                 $supplier = new FatoorahServices();
                 try {
-                    $supplierCode = $supplier->buildRequest('v2/MakeSupplierRefund', 'POST', json_encode($data));
+                 $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
                 } catch (ClientException $e) {
                     if ($return_status->refund_status == 1) {
                         return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
@@ -251,4 +248,5 @@ class ReturnOrderController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
     }
+   
 }
