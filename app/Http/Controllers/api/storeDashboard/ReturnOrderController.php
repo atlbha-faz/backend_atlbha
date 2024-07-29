@@ -206,7 +206,7 @@ class ReturnOrderController extends BaseController
         foreach ($returns as $return) {
             $prices = $prices + ($return->qty * $return->orderItem->price);
         }
-        if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
+        if ($order->payment_status == "paid" && in_array($order->paymentype_id, [1, 2])) {
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
                 $final_price = $prices;

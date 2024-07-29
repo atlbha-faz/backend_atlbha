@@ -190,7 +190,7 @@ class OrderController extends BaseController
         }
         $payment = Payment::where('orderID', $order->id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
-        if ($order->payment_status == "paid" && $order->paymentype_id == 1) {
+        if ($order->payment_status == "paid" && in_array($order->paymentype_id, [1, 2])) {
            
             if ($payment != null) {
                 $final_price =   $request->price == null ?($order->shippingtype_id==5 ?  round(($order->total_price),1):  round(($order->total_price-($order->shipping_price +$order->overweight_price)),1)) :  round($request->price,1);
