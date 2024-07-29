@@ -220,7 +220,6 @@ class OrderController extends BaseController
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
-                    "RefundChargeOnCustomer" => false,
                     "ServiceChargeOnCustomer" => false,
                     "Amount" =>round(($order->total_price),1),
                     "Comment" => "refund to the customer",
