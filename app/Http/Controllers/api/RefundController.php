@@ -12,36 +12,7 @@ use App\Http\Controllers\api\BaseController as BaseController;
 
 class RefundController  extends BaseController
 {
-    public function refundCallback(Request $request)
-    {
-      
-        $postFields = [
-            'Key' => $request->paymentId,
-            'KeyType' => 'paymentId',
-        ];
-        $payment = new FatoorahServices();
-        try {
-            $response = $payment->buildRequest('v2/GetPaymentStatus', 'POST', json_encode($postFields));
-        } catch (ClientException $e) {
-            return $this->sendError("حدث خطأ", 'Message: ' . $e->getMessage());
-        }
-        if ($response['IsSuccess'] == true) {
-            if ($response['Data']['InvoiceStatus'] == "Paid") {
-                $success['response'] = $response;
-                $return = ReturnOrder::where('invoice_id', $response['Data']['InvoiceId'])->first();
-                $refund_result= $this->refundOrder($return->order_id);
-              if($refund_result){
-                $success['$refund_status']= true;
-              }
-              else{
-                $success['$refund_status']= false;
-              }
-                return $this->sendResponse($success, 'تم ارجاع الطلب ', 'returned successfully');
-            }
-        } else {
-            return $this->sendError('خطأ في العملية', 'process failed');
-        } 
-    }
+
     public function refundOrder($id)
     {
 
@@ -54,7 +25,6 @@ class RefundController  extends BaseController
         $data = [
             "Key" => $payment->paymentTransectionID,
             "KeyType" => "invoiceid",
-            "RefundChargeOnCustomer" => false,
             "ServiceChargeOnCustomer" => false,
             "Amount" => $prices,
             "Comment" => "refund to the customer",
