@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ReturnOrderResource;
-use App\Models\Account;
+use Exception;
+use App\Models\User;
 use App\Models\Order;
+use App\Models\Store;
+use App\Mail\SendMail2;
+use App\Models\Account;
 use App\Models\Payment;
 use App\Models\ReturnOrder;
-use App\Models\User;
-use App\Services\FatoorahServices;
-use App\Services\ShippingComanies\AramexCompanyService;
-use App\Services\ShippingComanies\OtherCompanyService;
-use Exception;
-use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
+use App\Services\FatoorahServices;
+use Illuminate\Support\Facades\Mail;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ReturnOrderResource;
+use App\Services\ShippingComanies\OtherCompanyService;
+use App\Services\ShippingComanies\AramexCompanyService;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ReturnOrderController extends BaseController
 {
@@ -147,9 +150,27 @@ class ReturnOrderController extends BaseController
         }
         if ($request->status == 'accept') {
             $success['order'] = $shipping->refundOrder($order_id);
+            $store = Store::where('id', $order->store_id)->first();
+            $user=User::where('id',$order->user_id)->first();
+            $data = [
+                'subject' => "قبول طلب الارجاع ",
+                'message' => "تم قبول طلب الارجاع",
+                'store_id' => $store->store_name,
+                'store_email' => $store->store_email,
+            ];
+            Mail::to($user->email)->send(new SendMail2($data));
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم  قبول طلب الارجاع', 'order  return accept successfully');
         } else {
+            $store = Store::where('id', $order->store_id)->first();
+            $user=User::where('id',$order->user_id)->first();
+            $data = [
+                'subject' => " رفض طلب الارجاع ",
+                'message' => "تم رفض طلب الارجاع",
+                'store_id' => $store->store_name,
+                'store_email' => $store->store_email,
+            ];
+            Mail::to($user->email)->send(new SendMail2($data));
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم رفض  طلب الارجاع', 'order return reject successfully');
         }
