@@ -132,6 +132,7 @@ class StoreResource extends JsonResource
             'madfu_api_key'=>$this->madfu_api_key,
             'madfu_app_code'=>$this->madfu_app_code,
             'madfu_authorization'=>$this->madfu_authorization,
+            'domain_type' => $this->domain_type !== null ? $this->domain_type :null,
         ];
     }
 }

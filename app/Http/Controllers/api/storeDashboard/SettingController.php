@@ -37,7 +37,6 @@ class SettingController extends BaseController
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $input = $request->all();
 
-
         $validator = Validator::make($input, [
             'icon' => ['nullable'],
             'logo' => ['nullable'],
@@ -55,7 +54,7 @@ class SettingController extends BaseController
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
                 return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
             })],
-            // 'working_status' => 'required|in:active,not_active',
+            'domain_type' => 'required|in:has_domain,pay_domain',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
             'data.*.id' => 'required',
@@ -84,7 +83,7 @@ class SettingController extends BaseController
             return $this->sendError(null, $validator2->errors());
         }
         $settingStore = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
-        $request->working_status='active';
+        $request->working_status = 'active';
         $settingStore->update([
             'description' => $request->input('description'),
             'domain' => $request->input('domain'),
@@ -94,7 +93,8 @@ class SettingController extends BaseController
             'store_name' => $request->input('store_name'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
-            'working_status' =>$request->working_status,
+            'working_status' => $request->working_status,
+            'domain_type' => $request->domain_type,
         ]);
         $parameters = ['icon', 'logo'];
 
@@ -104,8 +104,8 @@ class SettingController extends BaseController
         }
         if ($request->has('icon')) {
             $settingStore->update([
-                'icon' => $request->icon
-             ]);
+                'icon' => $request->icon,
+            ]);
         }
         $store_user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('user_type', 'store')->first();
         $store_user->update([
