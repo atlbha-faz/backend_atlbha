@@ -74,7 +74,16 @@ class SupplierController extends BaseController
         if ($account) {
             return $this->sendError(" الحساب البنكي موجود مسبقا ", "account is't exists");
         }
- 
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'civil_id' =>'required',
+            'bankAccountLetter' => 'required',
+            'website_image' => 'required',
+
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(null, $validator->errors());
+        }
         $data = [
             'SupplierName' => $store->owner_name,
             'Mobile' => str_replace("+", "00", $storeAdmain->phonenumber),
