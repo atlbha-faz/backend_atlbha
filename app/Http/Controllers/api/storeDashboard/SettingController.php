@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\StoreResource;
-use App\Models\Day_Store;
-use App\Models\Homepage;
-use App\Models\Store;
 use App\Models\User;
+use App\Models\Store;
+use App\Mail\SendMail;
+use App\Models\Homepage;
+use App\Models\Day_Store;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SettingController extends BaseController
 {
@@ -36,7 +38,6 @@ class SettingController extends BaseController
     {
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $input = $request->all();
-
 
         $validator = Validator::make($input, [
             'icon' => ['nullable'],
@@ -84,7 +85,7 @@ class SettingController extends BaseController
             return $this->sendError(null, $validator2->errors());
         }
         $settingStore = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
-        $request->working_status='active';
+        $request->working_status = 'active';
         $settingStore->update([
             'description' => $request->input('description'),
             'domain' => $request->input('domain'),
@@ -94,8 +95,8 @@ class SettingController extends BaseController
             'store_name' => $request->input('store_name'),
             'store_address' => \App\Models\Country::find($request->input('country_id'))->name . '-' . \App\Models\City::find($request->input('city_id'))->name,
             'phonenumber' => $request->input('phonenumber'),
-            'working_status' =>$request->working_status,
-            'domain_type' =>$request->domain_type,
+            'working_status' => $request->working_status,
+            'domain_type' => $request->domain_type,
 
         ]);
         $parameters = ['icon', 'logo'];
@@ -106,8 +107,8 @@ class SettingController extends BaseController
         }
         if ($request->has('icon')) {
             $settingStore->update([
-                'icon' => $request->icon
-             ]);
+                'icon' => $request->icon,
+            ]);
         }
         $store_user = User::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->where('user_type', 'store')->first();
         $store_user->update([
@@ -121,7 +122,7 @@ class SettingController extends BaseController
         ], [
             'logo' => $request->logo,
         ]);
-       
+
         if ($request->working_status == 'active') {
             if (!is_null($request->data)) {
                 foreach ($request->data as $data) {
@@ -149,6 +150,30 @@ class SettingController extends BaseController
                     }
                 }
             }
+        }
+        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id', [1, 2])->get();
+        if ($store->domain_type == "pay_domain") {
+            $data = [
+                'message' => 'اسم الدومين' . $store->domain
+                . $store->name . ' طلب شراء الدومين من ',
+                'store_id' => $store->id,
+                'user_id' => auth()->user()->id,
+                'type' => "طلب شراء الدومين",
+                'object_id' => $store->created_at,
+            ];
+        } else {
+            $data = [
+                'message' => 'اسم الدومين' . $store->domain
+                . $store->name . ' طلب ربط دومين تاجر من ',
+                'store_id' => $store->id,
+                'user_id' => auth()->user()->id,
+                'type' => "طلب ربط دومين تاجر ",
+                'object_id' => $store->created_at,
+            ];
+
+        }
+        foreach ($users as $user) {
+            Mail::to($user->email)->send(new SendMail($data));
         }
         $success['storeSetting'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
         $success['setting_store'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
