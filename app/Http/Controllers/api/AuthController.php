@@ -33,8 +33,8 @@ class AuthController extends BaseController
             return $this->sendError('stop_registration', 'تم ايقاف التسجيل');
 
         } else {
-            $request->package_id = 2;
-            $request->periodtype = "6months";
+           
+            $request->periodtype = "year";
 
             if ($request->user_type == 'store') {
 
@@ -42,6 +42,7 @@ class AuthController extends BaseController
                 $validator = Validator::make($input, [
                     'checkbox_field' => 'required|in:1',
                     'device_token' => 'nullable|string',
+                    'package_id' => 'required|exists:packages,id',
                     'user_type' => 'required|in:store,marketer',
                     'user_name' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
                         return $query->whereIn('user_type', ['store', 'store_employee'])->where('is_deleted', 0);
@@ -107,7 +108,7 @@ class AuthController extends BaseController
                 $store = Store::create([
                     'package_id' => $request->package_id,
                     'user_id' => $userid,
-                    'periodtype' => '6months',
+                    'periodtype' => 'year',
                 ]);
 
                 $user->update([
