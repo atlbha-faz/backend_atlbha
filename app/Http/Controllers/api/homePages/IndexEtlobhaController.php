@@ -181,6 +181,19 @@ class IndexEtlobhaController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع الاسئلة بنجاح', 'Questions return successfully');
     }
+    public function packages(Request $request)
+    {
+
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
+        $data=Package::where('is_deleted', 0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
+        $success['packages'] =  PackageResource::collection($data);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
+    }
     public function searchIndex(Request $request)
     {
         $query = $request->input('query');

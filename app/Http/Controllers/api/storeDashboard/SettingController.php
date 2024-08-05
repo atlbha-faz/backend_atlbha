@@ -155,7 +155,7 @@ class SettingController extends BaseController
         if ($store->domain_type == "pay_domain") {
             $data = [
                 'message' => 'اسم الدومين' . $store->domain
-                . $store->name . ' طلب شراء الدومين من ',
+                . $store->store_name . ' طلب شراء الدومين من ',
                 'store_id' => $store->id,
                 'user_id' => auth()->user()->id,
                 'type' => "طلب شراء الدومين",
@@ -164,7 +164,7 @@ class SettingController extends BaseController
         } else {
             $data = [
                 'message' => 'اسم الدومين' . $store->domain
-                . $store->name . ' طلب ربط دومين تاجر من ',
+                . $store->store_name . ' طلب ربط دومين تاجر من ',
                 'store_id' => $store->id,
                 'user_id' => auth()->user()->id,
                 'type' => "طلب ربط دومين تاجر ",
