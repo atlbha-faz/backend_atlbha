@@ -2,37 +2,39 @@
 
 namespace App\Http\Controllers\api\homePages;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\AtlbhaIndexProductResource;
-use App\Http\Resources\AtlbhaIndexSearchProductResource;
-use App\Http\Resources\AtlbhaIndexSearchStoreResource;
-use App\Http\Resources\atlobhaContactResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\CityResource;
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\CommonQuestionResource;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\PartnerResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\StoreResource;
-use App\Http\Resources\website_socialmediaResource;
-use App\Models\AtlobhaContact;
-use App\Models\categories_stores;
-use App\Models\Category;
 use App\Models\City;
-use App\Models\Comment;
-use App\Models\CommonQuestion;
-use App\Models\Homepage;
 use App\Models\Page;
-use App\Models\Page_page_category;
+use App\Models\Store;
+use App\Models\Comment;
+use App\Models\Package;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Setting;
-use App\Models\Store;
-use App\Models\website_socialmedia;
+use App\Models\Category;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
+use App\Models\AtlobhaContact;
+use App\Models\CommonQuestion;
+use App\Models\categories_stores;
+use App\Models\Page_page_category;
+use App\Models\website_socialmedia;
+use App\Http\Resources\CityResource;
+use App\Http\Resources\PageResource;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\PackageResource;
+use App\Http\Resources\PartnerResource;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\atlobhaContactResource;
+use App\Http\Resources\CommonQuestionResource;
+use App\Http\Resources\AtlbhaIndexProductResource;
+use App\Http\Resources\website_socialmediaResource;
+use App\Http\Resources\AtlbhaIndexSearchStoreResource;
+use App\Http\Resources\AtlbhaIndexSearchProductResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class IndexEtlobhaController extends BaseController
 {
@@ -180,6 +182,19 @@ class IndexEtlobhaController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الاسئلة بنجاح', 'Questions return successfully');
+    }
+    public function packages(Request $request)
+    {
+
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
+        $data=Package::where('is_deleted', 0)->orderByDesc('created_at');
+        $data= $data->paginate($count);
+        $success['page_count'] =  $data->lastPage();
+        $success['current_page'] =  $data->currentPage();
+        $success['packages'] =  PackageResource::collection($data);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
     }
     public function searchIndex(Request $request)
     {
