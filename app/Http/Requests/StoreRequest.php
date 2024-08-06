@@ -50,7 +50,7 @@ class StoreRequest extends FormRequest
             })],
             'activity_id' => 'required|array',
             'subcategory_id' => ['nullable', 'array'],
-            //'package_id' =>'required',
+            'package_id' =>'required',
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'user_country_id' => 'required|exists:countries,id',

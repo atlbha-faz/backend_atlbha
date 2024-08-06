@@ -8,6 +8,7 @@ use App\Models\Account;
 use App\Models\Cart;
 use App\Models\MyfatoorahLog;
 use App\Models\Order;
+use App\Models\Package_store;
 use App\Models\Payment;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -78,33 +79,46 @@ class WebhookController extends BaseController
         $event = $request->input('EventType');
 
         if ($event == 1) {
+            $package = Package_store::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             $order = Order::where('id', $payment->orderID)->first();
             $cart = Cart::where('order_id', $payment->orderID)->first();
             switch ($request->input('Data.TransactionStatus')) {
                 case "SUCCESS":
-                    $order->update([
-                        'payment_status' => "paid",
-                    ]);
-                    $payment->update([
-                        'paymentCardID' => $request->input('Data.PaymentId'),
-                    ]);
-                    $cart->delete();
-                    if ($order->store_id !== null) {
-                        $store = Store::where('id', $order->store_id)->first();
-                        $data = [
-                            'subject' => "طلب جديد",
-                            'message' => "تم وصول طلب جديد برقم ".$order->order_number." لدى متجركم",
-                            'store_id' => $store->store_name,
-                            'store_email' => $store->store_email,
-                        ];
-                        Mail::to($store->store_email)->send(new SendMail2($data));
+                    if ($package) {
+                        $package->update([
+                            'payment_status' => "paid",
+                        ]);
+                    } else {
+                        $order->update([
+                            'payment_status' => "paid",
+                        ]);
+                        $payment->update([
+                            'paymentCardID' => $request->input('Data.PaymentId'),
+                        ]);
+                        $cart->delete();
+                        if ($order->store_id !== null) {
+                            $store = Store::where('id', $order->store_id)->first();
+                            $data = [
+                                'subject' => "طلب جديد",
+                                'message' => "تم وصول طلب جديد برقم " . $order->order_number . " لدى متجركم",
+                                'store_id' => $store->store_name,
+                                'store_email' => $store->store_email,
+                            ];
+                            Mail::to($store->store_email)->send(new SendMail2($data));
+                        }
                     }
                     break;
                 case "FAILED":
-                    $order->update([
-                        'payment_status' => "failed",
-                    ]);
+                    if ($package) {
+                        $package->update([
+                            'payment_status' => "failed",
+                        ]);
+                    } else {
+                        $order->update([
+                            'payment_status' => "failed",
+                        ]);
+                    }
                     break;
                 case "CANCELED":
                     $order->update([
