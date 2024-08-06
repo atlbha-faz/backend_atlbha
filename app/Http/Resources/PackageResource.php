@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Store;
 use App\Http\Resources\PlanResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PackageResource extends JsonResource
@@ -25,7 +26,7 @@ class PackageResource extends JsonResource
             }
             $plans[] = json_decode($pp);
         }
-        if (is_set(auth())) {
+        if (Auth::check()) {
             $store = Store::where('user_id', auth()->user()->id)->first();
             $current_package = $store->package_id == $this->id ? true : false;
         } else {
