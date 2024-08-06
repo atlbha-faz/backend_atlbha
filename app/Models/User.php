@@ -188,10 +188,10 @@ class User extends Authenticatable
     {
         $store = Store::where('id', $id)->first();
         $currentDate = Carbon::now();
-        if ($store->start_at->diffInDays($currentDate) > 3) {
+        if (Carbon::parse($store->start_at)->diffInDays($currentDate) > 3) {
             return false;
         } else {
-            return $store->start_at->diffInDays($currentDate);
+            return Carbon::parse($store->start_at)->diffInDays($currentDate);
         }
     }
 
