@@ -3,11 +3,14 @@
 namespace App\Models;
 
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
+use App\Models\Store;
+use App\Models\Package_store;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -157,6 +160,39 @@ class User extends Authenticatable
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);
+    }
+    public function check($id)
+    {
+        $store = Store::where('id', $id)->first();
+        $targetDateString = "6-8-2024";
+        $targetDate = Carbon::createFromFormat('m-d-Y', $targetDateString);
+        if ($store->created_at->lt($targetDate)) {
+          return true;
+        }
+      else {
+            return false;
+        }
+    }
+    public function checkPaid($id)
+    {
+        $store = Store::where('id', $id)->first();
+        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+        if ($store_package->payment_status =="paid") {
+          return true;
+        }
+      else {
+            return false;
+        }
+    }
+    public function checkExperimentPeriod($id)
+    {
+        $store = Store::where('id', $id)->first();
+        $currentDate = Carbon::now();
+        if ($store->start_at->diffInDays($currentDate) > 3) {
+            return false;
+        } else {
+            return $store->start_at->diffInDays($currentDate);
+        }
     }
 
 }
