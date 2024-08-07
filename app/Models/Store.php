@@ -137,7 +137,9 @@ class Store extends Model
     public function left($id)
     {
         $store = Store::where('id', $id)->first();
-        if ($store->package_id == null || $store->periodtype == "6months") {
+        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+
+        if ($store->package_id == null || $store->periodtype == "6months" ||$store_package->payment_status!="paid") {
             return 0;
         } else {
             $day = Store::select('end_at')->where('id', $id)->first();
