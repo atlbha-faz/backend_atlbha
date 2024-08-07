@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\Category;
+use DateTime;
+use Carbon\Carbon;
+use App\Models\Store;
 use App\Models\Comment;
-use App\Models\Maintenance;
 use App\Models\Package;
 use App\Models\Product;
-use Carbon\Carbon;
-use DateTime;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Category;
+use App\Models\Package_store;
+use App\Models\Maintenance;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Store extends Model
 {
@@ -135,7 +137,7 @@ class Store extends Model
     public function left($id)
     {
         $store = Store::where('id', $id)->first();
-        if ($store->package_id == null) {
+        if ($store->package_id == null || $store->periodtype == "6months") {
             return 0;
         } else {
             $day = Store::select('end_at')->where('id', $id)->first();
@@ -157,7 +159,10 @@ class Store extends Model
         if (is_null($id)) {
             return "no_subscription";
         }
-
+        $store = Store::where('id', $id)->first();
+        if($store->periodtype == "6months"){
+            return null;
+        }
         $package = Package::select('name')->where('id', $id)->first();
         return $package->name;
     }
@@ -320,5 +325,18 @@ class Store extends Model
     {
         return $this->hasOne(Maintenance::class);
     }
+  
+    public function checkPaid($id)
+    {
+        $store = Store::where('id', $id)->first();
+        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
+        if ($store_package->payment_status =="paid") {
+          return true;
+        }
+      else {
+            return false;
+        }
+    }
+
 
 }

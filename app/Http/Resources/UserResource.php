@@ -39,11 +39,6 @@ class UserResource extends JsonResource
         'store_logo' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->logo:"",
         'store_domain' => $this->user_type == "store" || $this->user_type == "store_employee" ? $this->store->domain:"",
          'role' => New RoleResource($this->roles->first()),
-        'old_date'=> $this->user_type == "store" || $this->user_type == "store_employee" ?$this->check($this->store->id):"",
-        'package_paid'=>$this->user_type == "store" || $this->user_type == "store_employee" ?$this->checkPaid($this->store->id):null,
-        'experiment_period'=>$this->user_type == "store" || $this->user_type == "store_employee" ?$this->checkExperimentPeriod($this->store->id):null,
-        'end_at' =>  $this->user_type == "store" || $this->user_type == "store_employee" ?$this->store->end_at:"",
-
         ];
     }
 }

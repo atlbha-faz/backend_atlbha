@@ -179,7 +179,7 @@ class WebhookController extends BaseController
             'nationality' => $store->country->name,
             'area' => $store->city->name,
             'specialization' => $store->categories->first()->name,
-            'type' => $store->package_id == 1 ? 'dubai' : 'china',
+            'type' => $store->package_id == 1 ? 'china' : 'dubai',
         );
         $client = new Client();
         $response = $client->post('https://api.fayezbinsaleh.me/api/sendEmail', [

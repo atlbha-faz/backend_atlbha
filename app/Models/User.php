@@ -161,38 +161,6 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($password);
     }
-    public function check($id)
-    {
-        $store = Store::where('id', $id)->first();
-        $targetDateString = "6-8-2024";
-        $targetDate = Carbon::createFromFormat('m-d-Y', $targetDateString);
-        if ($store->created_at->lt($targetDate)) {
-          return true;
-        }
-      else {
-            return false;
-        }
-    }
-    public function checkPaid($id)
-    {
-        $store = Store::where('id', $id)->first();
-        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
-        if ($store_package->payment_status =="paid") {
-          return true;
-        }
-      else {
-            return false;
-        }
-    }
-    public function checkExperimentPeriod($id)
-    {
-        $store = Store::where('id', $id)->first();
-        $currentDate = Carbon::now();
-        if (Carbon::parse($store->start_at)->diffInDays($currentDate) > 3) {
-            return false;
-        } else {
-            return Carbon::parse($store->start_at)->diffInDays($currentDate);
-        }
-    }
+  
 
 }
