@@ -133,6 +133,7 @@ class StoreResource extends JsonResource
             'madfu_app_code'=>$this->madfu_app_code,
             'madfu_authorization'=>$this->madfu_authorization,
             'domain_type' => $this->domain_type !== null ? $this->domain_type :null,
+            'package_paid'=>$this->checkPaid($this->id),
             
         ];
     }
