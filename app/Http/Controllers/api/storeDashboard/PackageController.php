@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\ProductResource;
-use App\Models\Package;
-use App\Models\Package_store;
-use App\Models\Paymenttype;
-use App\Models\Store;
-use App\Services\FatoorahServices;
 use Carbon\Carbon;
+use App\Models\Store;
+use App\Models\Package;
+use App\Models\Paymenttype;
 use Illuminate\Http\Request;
+use App\Models\Package_store;
+use App\Services\FatoorahServices;
+use App\Http\Resources\PackageResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class PackageController extends BaseController
 {
@@ -94,7 +94,7 @@ class PackageController extends BaseController
                 'paymentTransectionID' =>'package_'.$payment->id,
             ]);
         }
-        $success['package'] = new ProductResource($package);
+        $success['package'] = new PackageResource($package);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
