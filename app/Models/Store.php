@@ -161,10 +161,6 @@ class Store extends Model
         if (is_null($id)) {
             return "no_subscription";
         }
-        $store = Store::where('id', $id)->first();
-        if($store->periodtype == "6months"){
-            return null;
-        }
         $package = Package::select('name')->where('id', $id)->first();
         return $package->name;
     }
