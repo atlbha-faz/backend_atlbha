@@ -8,9 +8,11 @@ use App\Models\Account;
 use App\Models\Cart;
 use App\Models\MyfatoorahLog;
 use App\Models\Order;
+use App\Models\Package;
 use App\Models\Package_store;
 use App\Models\Payment;
 use App\Models\Store;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -79,16 +81,17 @@ class WebhookController extends BaseController
         $event = $request->input('EventType');
 
         if ($event == 1) {
-            $package = Package_store::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
+            $package_store = Package_store::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             $order = Order::where('id', $payment->orderID)->first();
             $cart = Cart::where('order_id', $payment->orderID)->first();
             switch ($request->input('Data.TransactionStatus')) {
                 case "SUCCESS":
-                    if ($package) {
-                        $package->update([
+                    if ($package_store) {
+                        $package_store->update([
                             'payment_status' => "paid",
                         ]);
+                        $this->sendEmail($package_store->id);
                     } else {
                         $order->update([
                             'payment_status' => "paid",
@@ -160,6 +163,27 @@ class WebhookController extends BaseController
         }
         // }
 
+    }
+    public function sendEmail($id)
+    {
+        $package_store = Package_store::where('id', $id)->first();
+        $store = Store::where('id', $package_store->store_id)->first();
+        $package = Package::where('id', $package_store->package_id)->first();
+        $data = array(
+            'name' => $store->owner_name,
+            'email' => $store->store_email,
+            'phonenumber' => $store->phonenumber,
+            'package' => $package->name,
+            'country' => $store->country->name,
+            'nationality' => $store->country->name,
+            'area' => $store->city->name,
+            'specialization' => $store->categories->first()->name,
+            'type' => $store->package_id == 1 ? 'dubai' : 'china',
+        );
+        $client = new Client();
+        $response = $client->post('https://api.fayezbinsaleh.me/api/sendEmail', [
+            'json' => $data,
+        ]);
     }
 
 }
