@@ -119,6 +119,7 @@ class StoreResource extends JsonResource
             'special' => $special,
             'verification_type' => $this->verification_type,
             // 'package' =>$this->packagee($this->packages->last()->package_id),
+            'package_id' => $this->periodtype =="year" ?$this->package_id: null,
             'package' => $this->packagee($this->package_id),
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'working_status' => $this->working_status,

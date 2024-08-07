@@ -30,7 +30,7 @@ class PackageResource extends JsonResource
         if (Auth::check()) {
             $store = Store::where('user_id', auth()->user()->id)->first();
             if($store){
-            $current_package = $store->package_id == $this->id ? true : false;
+            $current_package = ($store->package_id == $this->id && $store->periodtype =="year")? true : false;
             $package_store = Package_store::where('store_id', $store->id)->where('package_id',$this->id)->orderBy('id', 'desc')->first();
             $unique_id= $package_store !== null ? $package_store->id : null;
             }
