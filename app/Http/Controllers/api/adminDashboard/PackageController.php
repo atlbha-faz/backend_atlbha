@@ -56,7 +56,6 @@ class PackageController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'monthly_price' => 'required|numeric|gt:0',
             'yearly_price' => 'required|numeric|gt:0',
             'discount' => 'nullable|numeric|gt:0',
             'plan' => 'required|array',
@@ -68,7 +67,6 @@ class PackageController extends BaseController
         }
         $package = Package::create([
             'name' => $request->name,
-            'monthly_price' => $request->monthly_price,
             'yearly_price' => $request->yearly_price,
             'discount' => $request->discount,
 
@@ -132,7 +130,6 @@ class PackageController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'monthly_price' => 'required|numeric|gt:0',
             'yearly_price' => 'required|numeric|gt:0',
             'discount' => 'nullable|numeric|gt:0',
             'plan' => 'required|array',
@@ -145,7 +142,6 @@ class PackageController extends BaseController
         }
         $package->update([
             'name' => $request->input('name'),
-            'monthly_price' => $request->input('monthly_price'),
             'yearly_price' => $request->input('yearly_price'),
             'discount' => $request->input('discount'),
 
