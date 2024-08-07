@@ -41,7 +41,6 @@ Route::group(['prefix' => 'home'], function () {
 Route::post('/send', 'App\Http\Controllers\api\SmsController@smsSend');
 Route::get('sendMessage', 'App\Http\Controllers\api\AuthController@storeVerifyMessage');
 Route::post('webhook', [App\Http\Controllers\api\WebhookController::class, 'handleWebhook']);
-Route::post('sendEmail/{id}', [App\Http\Controllers\api\WebhookController::class, 'sendEmail']);
 
 Route::get('selector/cities', [App\Http\Controllers\api\SelectorController::class, 'cities']);
 Route::get('selector/countries', [App\Http\Controllers\api\SelectorController::class, 'countries']);

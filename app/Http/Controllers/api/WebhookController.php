@@ -12,6 +12,7 @@ use App\Models\Package;
 use App\Models\Package_store;
 use App\Models\Payment;
 use App\Models\Store;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -182,8 +183,17 @@ class WebhookController extends BaseController
         );
         $client = new Client();
         $response = $client->post('https://api.fayezbinsaleh.me/api/sendEmail', [
+            'headers' => [
+                "Content-Type" => 'application/json'],
             'json' => $data,
         ]);
+        try
+        {
+            $response = json_decode($response->getBody(), true);
+        } catch (Exception $e) {
+            return ("Error: " . $e->getMessage());
+        }
+
     }
 
 }
