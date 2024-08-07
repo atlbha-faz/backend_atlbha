@@ -37,7 +37,6 @@ class PackageResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'monthly_price' => $this->monthly_price,
             'yearly_price' => $this->yearly_price,
             'discount' => $this->discount,
             'status' => $this->status == null || $this->status == 'active' ? __('message.active') : __('message.not_active'),
