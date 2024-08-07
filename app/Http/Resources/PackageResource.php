@@ -28,7 +28,9 @@ class PackageResource extends JsonResource
         }
         if (Auth::check()) {
             $store = Store::where('user_id', auth()->user()->id)->first();
+            if($store){
             $current_package = $store->package_id == $this->id ? true : false;
+            }
         } else {
             $store = null;
         }
