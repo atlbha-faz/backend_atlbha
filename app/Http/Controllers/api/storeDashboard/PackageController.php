@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\storeDashboard;
 
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ProductResource;
 use App\Models\Package;
 use App\Models\Package_store;
 use App\Models\Paymenttype;
@@ -75,7 +76,7 @@ class PackageController extends BaseController
                     $payment = Package_store::where('store_id', $store->id)->where('package_id', $package->id)->orderBy('id', 'desc')->first();
                     $payment->update([
                         'paymentType' => $paymentype->name,
-                        'paymentTransectionID' => $InvoiceId
+                        'paymentTransectionID' => $InvoiceId,
                     ]);
 
                 } else {
@@ -84,10 +85,18 @@ class PackageController extends BaseController
             } else {
                 $success['payment'] = $response;
             }
-
-            $success['status'] = 200;
-            return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
-
         }
+        else{
+
+            $payment = Package_store::where('store_id', $store->id)->where('package_id', $package->id)->orderBy('id', 'desc')->first();
+            $payment->update([
+                'paymentType' => $paymentype->name,
+                'paymentTransectionID' =>'package_'.$payment->id,
+            ]);
+        }
+        $success['package'] = new ProductResource($package);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
+
     }
 }

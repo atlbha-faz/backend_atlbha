@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Models\Order;
 use App\Models\Store;
+use App\Models\Package_store;
 use GuzzleHttp\Client;
 use App\Services\Madfu;
 use App\Models\MadfuLog;
@@ -60,14 +61,15 @@ class MadfuController extends BaseController
             if ($request->orderStatus == 125) {
                 $order = Order::where('order_number', $request->MerchantReference)->first();
                 if ($order == null) {
-                    $client = new Client();
-                    $response = $client->post('https://api.fayezbinsaleh.me/api/webhook', [
-                        'json' => json_encode($request->all()),
-                    ]);
+                    $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('id', 'desc')->first();
+                    $payment->payment_status = "paid";
+                    $payment->save();
                 }
+                else{
                 $order->payment_status = "paid";
                 $order->payment_id = $request->orderId;
                 $order->save();
+                }
             }
         }
     }

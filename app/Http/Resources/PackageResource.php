@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Store;
+use App\Models\Package_store;
 use App\Http\Resources\PlanResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -30,6 +31,8 @@ class PackageResource extends JsonResource
             $store = Store::where('user_id', auth()->user()->id)->first();
             if($store){
             $current_package = $store->package_id == $this->id ? true : false;
+            $package_store = Package_store::where('store_id', $store->id)->where('package_id',$this->id)->orderBy('id', 'desc')->first();
+            $unique_id= $package_store !== null ? $package_store->id : null;
             }
         } else {
             $store = null;
@@ -44,6 +47,7 @@ class PackageResource extends JsonResource
             'is_selected' => $store !== null ? $current_package : null,
             'plans' => PlanResource::collection($plans),
             'templates' => TemplateResource::collection($this->templates),
+            'unique_id'=>$store !== null ? $unique_id : null,
             // 'stores'=> StoreResource::collection($this->stores)
 
         ];
