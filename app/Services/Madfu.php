@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Store;
-use \Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use \Illuminate\Support\Str;
 
 class Madfu
 {
@@ -20,13 +20,13 @@ class Madfu
         $this->password = env('MADFU_PASSWORD');
     }
 
-    private function makeRequest($url, $body,$api_key, $app_code,$authorization, $header = [], $method = 'POST')
+    private function makeRequest($url, $body, $api_key, $app_code, $authorization, $header = [], $method = 'POST')
     {
         $client = new \GuzzleHttp\Client();
         $header = array_merge($header, [
             'APIKey' => $api_key,
-            'Appcode' =>$app_code,
-            'Authorization' =>$authorization,
+            'Appcode' => $app_code,
+            'Authorization' => $authorization,
             'PlatformTypeId' => '5',
             'accept' => 'application/json',
             'content-type' => 'application/json',
@@ -40,20 +40,20 @@ class Madfu
 
     }
 
-    private function initToken($api_key, $app_code,$authorization,$uuid)
+    private function initToken($api_key, $app_code, $authorization, $uuid)
     {
         $url = $this->base_url . 'merchants/token/init';
         $body = ["uuid" => $uuid, "systemInfo" => "web"];
-        $result = $this->makeRequest($url,$body,$api_key, $app_code,$authorization);
+        $result = $this->makeRequest($url, $body, $api_key, $app_code, $authorization);
         return $result;
     }
 
-    public function login($username, $password,$api_key, $app_code,$authorization, $uuid)
+    public function login($username, $password, $api_key, $app_code, $authorization, $uuid)
     {
-        $token = $this->initToken($api_key, $app_code,$authorization,$uuid);
+        $token = $this->initToken($api_key, $app_code, $authorization, $uuid);
         $url = $this->base_url . 'Merchants/sign-in';
         $body = ["userName" => $username, "password" => $password];
-        $login = $this->makeRequest($url,$body,$api_key,$app_code,$authorization, ['token' => json_decode($token->getBody()->getContents())->token]);
+        $login = $this->makeRequest($url, $body, $api_key, $app_code, $authorization, ['token' => json_decode($token->getBody()->getContents())->token]);
         return $login;
     }
 
@@ -67,55 +67,70 @@ class Madfu
         $body = ["GuestOrderData" => $guest_order_data,
             "Order" => $order,
             "OrderDetails" => $order_details,
-            "MerchantUrls" => ["Success" => $cancel_url . '/success', "Failure" => $cancel_url . '/failed', "Cancel" => $cancel_url]
+            "MerchantUrls" => ["Success" => $cancel_url . '/success', "Failure" => $cancel_url . '/failed', "Cancel" => $cancel_url],
         ];
         $order_db = Order::where('order_number', $order->MerchantReference)->first();
-        $store=($order_db) ? Store::where('id', $order_db->store_id)->first():null;
-        if($store){
-        $username = $store->madfu_username ;
-        $password = $store->madfu_password;
-        $api_key= $store->madfu_api_key;
-        $app_code= $store->madfu_app_code;
-        $authorization= $store->madfu_authorization;
+        $store = ($order_db) ? Store::where('id', $order_db->store_id)->first() : null;
+        if ($store) {
+            $username = $store->madfu_username;
+            $password = $store->madfu_password;
+            $api_key = $store->madfu_api_key;
+            $app_code = $store->madfu_app_code;
+            $authorization = $store->madfu_authorization;
+        } else {
+            $username = 'wesam@faz-it.net';
+            $password = 'Welcome@123';
+            $api_key = 'b55dd64-dc765-12c5-bcd5-4';
+            $app_code = 'Atlbha';
+            $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
         }
-        else{
-            $username ='wesam@faz-it.net';
-            $password ='Welcome@123';
-            $api_key='b55dd64-dc765-12c5-bcd5-4';
-            $app_code='Atlbha';
-            $authorization='Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
-        }
-        return $this->makeRequest($url,$body,$api_key, $app_code,$authorization, ['token' => $token]);
+        return $this->makeRequest($url, $body, $api_key, $app_code, $authorization, ['token' => $token]);
     }
 
     public function calculateFees($orderid, $refundAmount)
     {
-        $order = Order::where('id',$orderid)->first();
-        $store=($order) ? Store::where('id', $order->store_id)->first():null;
-        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
-        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
-        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
-        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
-        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $order = Order::where('id', $orderid)->first();
+        $store = ($order) ? Store::where('id', $order->store_id)->first() : null;
+        if ($store) {
+            $username = $store->madfu_username;
+            $password = $store->madfu_password;
+            $api_key = $store->madfu_api_key;
+            $app_code = $store->madfu_app_code;
+            $authorization = $store->madfu_authorization;
+        } else {
+            $username = 'wesam@faz-it.net';
+            $password = 'Welcome@123';
+            $api_key = 'b55dd64-dc765-12c5-bcd5-4';
+            $app_code = 'Atlbha';
+            $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        }
 
-        $token = json_decode($this->login($username, $password,$api_key, $app_code,$authorization, Str::random(8))->getBody()->getContents())->token;
+        $token = json_decode($this->login($username, $password, $api_key, $app_code, $authorization, Str::random(8))->getBody()->getContents())->token;
         $url = $this->base_url . 'api/Refund/RefundFee/Calculate';
         $body = ["orderid" => $order->payment_id, "refundAmount" => $refundAmount];
-        return $this->makeRequest($url,$body,$api_key, $app_code,$authorization, ['token' => $token]);
+        return $this->makeRequest($url, $body, $api_key, $app_code, $authorization, ['token' => $token]);
     }
-    public function refund($orderid, $refundAmount,$refundFees)
+    public function refund($orderid, $refundAmount, $refundFees)
     {
         $order = Order::find($orderid);
-        $store=($order) ? Store::where('id', $order->store_id)->first():null;
-        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
-        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
-        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
-        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
-        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $store = ($order) ? Store::where('id', $order->store_id)->first() : null;
+        if ($store) {
+            $username = $store->madfu_username;
+            $password = $store->madfu_password;
+            $api_key = $store->madfu_api_key;
+            $app_code = $store->madfu_app_code;
+            $authorization = $store->madfu_authorization;
+        } else {
+            $username = 'wesam@faz-it.net';
+            $password = 'Welcome@123';
+            $api_key = 'b55dd64-dc765-12c5-bcd5-4';
+            $app_code = 'Atlbha';
+            $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        }
 
-        $token = json_decode($this->login($username, $password,$api_key, $app_code,$authorization, Str::random(8))->getBody()->getContents())->token;
+        $token = json_decode($this->login($username, $password, $api_key, $app_code, $authorization, Str::random(8))->getBody()->getContents())->token;
         $url = $this->base_url . 'api/Refund/Create';
-        $body = ["orderid" => $order->payment_id, "refundAmount" => $refundAmount,'refundFees'=>$refundFees,'merchantReference'=>$order->order_number];
-        return $this->makeRequest($url,$body,$api_key, $app_code,$authorization, ['token' => $token]);
+        $body = ["orderid" => $order->payment_id, "refundAmount" => $refundAmount, 'refundFees' => $refundFees, 'merchantReference' => $order->order_number];
+        return $this->makeRequest($url, $body, $api_key, $app_code, $authorization, ['token' => $token]);
     }
 }

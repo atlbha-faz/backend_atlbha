@@ -29,7 +29,7 @@ class StoreResource extends JsonResource
             $subcategory = explode(',', $a);
         }
         if ($this->periodtype == null || $this->periodtype == '6months') {
-            $periodtype = 'شهور' . ' ' . '6';
+            $periodtype = 'سنوي';
         } else {
             $periodtype = 'سنوي';
         }
