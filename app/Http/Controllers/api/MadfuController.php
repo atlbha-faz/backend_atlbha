@@ -129,15 +129,21 @@ class MadfuController extends BaseController
         $package_store = Package_store::where('id', $id)->first();
         $store = Store::where('id', $package_store->store_id)->first();
         $package = Package::where('id', $package_store->package_id)->first();
+        $firstCategory = $store->categories->first();
+        if ($firstCategory) {
+            $categoryName = $firstCategory->name;
+        } else {
+            $categoryName = 'No category';
+        }
         $data = array(
             'name' => $store->owner_name,
             'email' => $store->store_email,
             'phonenumber' => $store->phonenumber,
             'package' => $package->name,
-            'country' => $store->country->name,
-            'nationality' => $store->country->name,
-            'area' => $store->city->name,
-            'specialization' => $store->categories->first()->name ?? 'No category',
+            'country' => $store->country->name ?? "no data",
+            'nationality' => $store->country->name ?? "no data",
+            'area' => $store->city->name ?? "no data",
+            'specialization' => $categoryName,
             'type' => $store->package_id == 1 ? 'china' : 'dubai',
         );
         $client = new Client();
