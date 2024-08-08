@@ -2,41 +2,40 @@
 
 namespace App\Http\Controllers\api;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Order;
-use App\Models\Store;
-use GuzzleHttp\Client;
-use App\Models\Package;
-use App\Services\Madfu;
-use App\Models\MadfuLog;
-use App\Mail\StoreInfoMail;
-use Illuminate\Http\Request;
-use App\Models\Package_store;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\StoreInfoRequest;
-use App\Http\Requests\MadfuLoginRequest;
 use App\Http\Requests\CreateOrderRequest;
+use App\Http\Requests\MadfuLoginRequest;
+use App\Http\Requests\StoreInfoRequest;
+use App\Mail\StoreInfoMail;
+use App\Models\MadfuLog;
+use App\Models\Order;
+use App\Models\Package;
+use App\Models\Package_store;
+use App\Models\Store;
+use App\Services\Madfu;
+use Carbon\Carbon;
+use Exception;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class MadfuController extends BaseController
 {
     public function login(MadfuLoginRequest $request)
-    {         if($request->store_id == "atlbhaPlatform")
-        {
-        $username ='wesam@faz-it.net';
-        $password ='Welcome@123';
-        $api_key='b55dd64-dc765-12c5-bcd5-4';
-        $app_code='Atlbha';
-        $authorization='Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
-        }else{
-            $store = Store::where('id', $request->store_id)->first();
-        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
-        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
-        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
-        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
-        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ=='; 
-        }
-        $login_request = (new Madfu())->login($username, $password,$api_key, $app_code,$authorization,$request->uuid);
+    {if ($request->store_id == "atlbhaPlatform") {
+        $username = 'wesam@faz-it.net';
+        $password = 'Welcome@123';
+        $api_key = 'b55dd64-dc765-12c5-bcd5-4';
+        $app_code = 'Atlbha';
+        $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+    } else {
+        $store = Store::where('id', $request->store_id)->first();
+        $username = ($store && $store->madfu_username) ? $store->madfu_username : 'wesam@faz-it.net';
+        $password = ($store && $store->madfu_password) ? $store->madfu_password : 'Welcome@123';
+        $api_key = ($store && $store->madfu_api_key) ? $store->madfu_api_key : 'b55dd64-dc765-12c5-bcd5-4';
+        $app_code = ($store && $store->madfu_app_code) ? $store->madfu_app_code : 'Atlbha';
+        $authorization = ($store && $store->madfu_authorization) ? $store->madfu_authorization : 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+    }
+        $login_request = (new Madfu())->login($username, $password, $api_key, $app_code, $authorization, $request->uuid);
         if ($login_request->getStatusCode() == 200) {
             $login_request = json_decode($login_request->getBody()->getContents());
             if (!$login_request->status) {
@@ -46,8 +45,7 @@ class MadfuController extends BaseController
                 'data' => $login_request], 'عملية ناجحة', 'Success process');
         } else {
             return $this->sendError('خطأ في العملية', 'process failed');
-        }
-    }
+        }}
 
     public function createOrder(CreateOrderRequest $request)
     {
@@ -72,17 +70,16 @@ class MadfuController extends BaseController
                 $order = Order::where('order_number', $request->MerchantReference)->first();
                 if ($order == null) {
                     $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('id', 'desc')->first();
-                    if($payment){
-                    $this->sendEmail($payment->id);
-                    $this->updatePackage($payment->id);
-                    $payment->payment_status = "paid";
-                    $payment->save();
+                    if ($payment) {
+                        $this->sendEmail($payment->id);
+                        $this->updatePackage($payment->id);
+                        $payment->payment_status = "paid";
+                        $payment->save();
                     }
-                }
-                else{
-                $order->payment_status = "paid";
-                $order->payment_id = $request->orderId;
-                $order->save();
+                } else {
+                    $order->payment_status = "paid";
+                    $order->payment_id = $request->orderId;
+                    $order->save();
                 }
             }
         }
@@ -93,16 +90,16 @@ class MadfuController extends BaseController
         $data = [
             'Contact_name' => $request->name,
             'phonenumber' => $request->phonenumber,
-            'email' =>$request->email,
+            'email' => $request->email,
             'store_name' => $request->store_name,
         ];
         Mail::mailer('stores_info')
             ->to('support@atlbha.sa')
             ->send(new StoreInfoMail($data));
-           $store->update(['is_send'=>1]); 
-            $success['status'] = 200;
-            return $this->sendResponse($success, 'تم الارسال بنجاح', 'send successfully');
-           
+        $store->update(['is_send' => 1]);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم الارسال بنجاح', 'send successfully');
+
     }
 
     public function refundFees(Request $request)
@@ -132,15 +129,21 @@ class MadfuController extends BaseController
         $package_store = Package_store::where('id', $id)->first();
         $store = Store::where('id', $package_store->store_id)->first();
         $package = Package::where('id', $package_store->package_id)->first();
+        $firstCategory = $store->categories->first();
+        if ($firstCategory) {
+            $categoryName = $firstCategory->name;
+        } else {
+            $categoryName = 'No category';
+        }
         $data = array(
             'name' => $store->owner_name,
             'email' => $store->store_email,
             'phonenumber' => $store->phonenumber,
             'package' => $package->name,
-            'country' => $store->country->name,
-            'nationality' => $store->country->name,
-            'area' => $store->city->name,
-            'specialization' => $store->categories->first()->name,
+            'country' => $store->country->name ?? "no data",
+            'nationality' => $store->country->name ?? "no data",
+            'area' => $store->city->name ?? "no data",
+            'specialization' => $categoryName,
             'type' => $store->package_id == 1 ? 'china' : 'dubai',
         );
         $client = new Client();
@@ -166,13 +169,12 @@ class MadfuController extends BaseController
             'package_id' => $package_store->package_id,
             'periodtype' => 'year',
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'end_at' => $end_at
+            'end_at' => $end_at,
         ]);
-        
+
         $package_store->update([
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'end_at' => $end_at]);
-            
 
     }
 
