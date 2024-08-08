@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\api;
 
+use Exception;
+use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\Store;
-use App\Models\Package_store;
 use GuzzleHttp\Client;
+use App\Models\Package;
 use App\Services\Madfu;
 use App\Models\MadfuLog;
 use App\Mail\StoreInfoMail;
 use Illuminate\Http\Request;
+use App\Models\Package_store;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\StoreInfoRequest;
 use App\Http\Requests\MadfuLoginRequest;
@@ -62,8 +65,12 @@ class MadfuController extends BaseController
                 $order = Order::where('order_number', $request->MerchantReference)->first();
                 if ($order == null) {
                     $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('id', 'desc')->first();
+                    if($payment){
+                    $this->sendEmail($payment->id);
+                    $this->updatePackage($payment->id);
                     $payment->payment_status = "paid";
                     $payment->save();
+                    }
                 }
                 else{
                 $order->payment_status = "paid";
@@ -113,4 +120,53 @@ class MadfuController extends BaseController
         }
 
     }
+    public function sendEmail($id)
+    {
+        $package_store = Package_store::where('id', $id)->first();
+        $store = Store::where('id', $package_store->store_id)->first();
+        $package = Package::where('id', $package_store->package_id)->first();
+        $data = array(
+            'name' => $store->owner_name,
+            'email' => $store->store_email,
+            'phonenumber' => $store->phonenumber,
+            'package' => $package->name,
+            'country' => $store->country->name,
+            'nationality' => $store->country->name,
+            'area' => $store->city->name,
+            'specialization' => $store->categories->first()->name,
+            'type' => $store->package_id == 1 ? 'china' : 'dubai',
+        );
+        $client = new Client();
+        $response = $client->post('https://api.fayezbinsaleh.me/api/sendEmail', [
+            'headers' => [
+                "Content-Type" => 'application/json'],
+            'json' => $data,
+        ]);
+        try
+        {
+            $response = json_decode($response->getBody(), true);
+        } catch (Exception $e) {
+            return ("Error: " . $e->getMessage());
+        }
+
+    }
+    public function updatePackage($id)
+    {
+        $package_store = Package_store::where('id', $id)->first();
+        $store = Store::where('id', $package_store->store_id)->first();
+        $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
+        $store->update([
+            'package_id' => $package_store->package_id,
+            'periodtype' => 'year',
+            'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'end_at' => $end_at
+        ]);
+        
+        $package_store->update([
+            'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'end_at' => $end_at]);
+            
+
+    }
+
 }

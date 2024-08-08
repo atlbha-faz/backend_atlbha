@@ -32,14 +32,8 @@ class PackageController extends BaseController
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         if (!is_null($request->package_id)) {
             $package = Package::where('id', $request->package_id)->first();
-            $store->update([
-                'package_id' => $request->package_id,
-                'periodtype' => 'year',
-            ]);
             $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
-            $store->update([
-                'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'end_at' => $end_at]);
+           
             $store->packages()->attach($request->package_id, ['start_at' => Carbon::now()->format('Y-m-d H:i:s'), 'end_at' => $end_at, 'periodtype' => 'year']);
 
         } else {
@@ -58,8 +52,8 @@ class PackageController extends BaseController
                 "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->user_name),
                 "InvoiceValue" => $package->yearly_price, // total_price
                 "CustomerEmail" => auth()->user()->email,
-                "CallBackUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/success',
-                "ErrorUrl" => 'https://store.atlbha.com/Products/SouqOtlobha/failed',
+                "CallBackUrl" => 'https://store.atlbha.com/subscribe-successfully',
+                "ErrorUrl" => 'https://store.atlbha.com/subscribe-failed',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
                 "ProcessingDetails" => $processingDetailsobject,
