@@ -52,8 +52,8 @@ class PackageController extends BaseController
                 "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->user_name),
                 "InvoiceValue" => $package->yearly_price, // total_price
                 "CustomerEmail" => auth()->user()->email,
-                "CallBackUrl" => 'https://store.atlbha.com/checkout-packages/success',
-                "ErrorUrl" => 'https://store.atlbha.com/checkout-packages/failed',
+                "CallBackUrl" => 'https://store.atlbha.sa/checkout-packages/success',
+                "ErrorUrl" => 'https://store.atlbha.sa/checkout-packages/failed',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
                 "ProcessingDetails" => $processingDetailsobject,

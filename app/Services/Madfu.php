@@ -78,11 +78,11 @@ class Madfu
             $app_code = $store->madfu_app_code;
             $authorization = $store->madfu_authorization;
         } else {
-            $username = 'wesam@faz-it.net';
+            $username = 'otc02@madfu.com.sa';
             $password = 'Welcome@123';
-            $api_key = 'b55dd64-dc765-12c5-bcd5-4';
+            $api_key = 'a8e9c744-1999-4907-a78b-0';
             $app_code = 'Atlbha';
-            $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+            $authorization = 'Basic QXRsYmhhOlFYUnNZbWhoVUdGemMzZHZjbVJRYjJRPQ==';
         }
         return $this->makeRequest($url, $body, $api_key, $app_code, $authorization, ['token' => $token]);
     }
@@ -98,11 +98,11 @@ class Madfu
             $app_code = $store->madfu_app_code;
             $authorization = $store->madfu_authorization;
         } else {
-            $username = 'wesam@faz-it.net';
+            $username = 'otc02@madfu.com.sa';
             $password = 'Welcome@123';
-            $api_key = 'b55dd64-dc765-12c5-bcd5-4';
+            $api_key = 'a8e9c744-1999-4907-a78b-0';
             $app_code = 'Atlbha';
-            $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+            $authorization = 'Basic QXRsYmhhOlFYUnNZbWhoVUdGemMzZHZjbVJRYjJRPQ==';
         }
 
         $token = json_decode($this->login($username, $password, $api_key, $app_code, $authorization, Str::random(8))->getBody()->getContents())->token;
@@ -121,11 +121,11 @@ class Madfu
             $app_code = $store->madfu_app_code;
             $authorization = $store->madfu_authorization;
         } else {
-            $username = 'wesam@faz-it.net';
+            $username = 'otc02@madfu.com.sa';
             $password = 'Welcome@123';
-            $api_key = 'b55dd64-dc765-12c5-bcd5-4';
+            $api_key = 'a8e9c744-1999-4907-a78b-0';
             $app_code = 'Atlbha';
-            $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+            $authorization = 'Basic QXRsYmhhOlFYUnNZbWhoVUdGemMzZHZjbVJRYjJRPQ==';
         }
 
         $token = json_decode($this->login($username, $password, $api_key, $app_code, $authorization, Str::random(8))->getBody()->getContents())->token;
