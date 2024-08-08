@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\api;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\Order;
-use App\Models\Store;
-use GuzzleHttp\Client;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Mail\SendMail2;
 use App\Models\Account;
-use App\Models\Package;
-use App\Models\Payment;
-use Illuminate\Http\Request;
+use App\Models\Cart;
 use App\Models\MyfatoorahLog;
+use App\Models\Order;
+use App\Models\Package;
 use App\Models\Package_store;
+use App\Models\Payment;
+use App\Models\Store;
+use Carbon\Carbon;
+use Exception;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebhookController extends BaseController
 {
@@ -85,8 +85,10 @@ class WebhookController extends BaseController
         if ($event == 1) {
             $package_store = Package_store::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
-            $order = Order::where('id', $payment->orderID)->first();
-            $cart = Cart::where('order_id', $payment->orderID)->first();
+            if ($payment) {
+                $order = Order::where('id', $payment->orderID)->first();
+                $cart = Cart::where('order_id', $payment->orderID)->first();
+            }
             switch ($request->input('Data.TransactionStatus')) {
                 case "SUCCESS":
                     if ($package_store) {
@@ -206,13 +208,12 @@ class WebhookController extends BaseController
             'package_id' => $package_store->package_id,
             'periodtype' => 'year',
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'end_at' => $end_at
+            'end_at' => $end_at,
         ]);
-        
+
         $package_store->update([
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'end_at' => $end_at]);
-            
 
     }
 

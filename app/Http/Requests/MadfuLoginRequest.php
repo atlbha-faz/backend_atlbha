@@ -25,7 +25,7 @@ class MadfuLoginRequest extends FormRequest
     {
         return [
             'uuid'=>'required',
-            'store_id' => 'exists:stores,id',
+            'store_id' => 'nullable',
         ];
     }
 }
