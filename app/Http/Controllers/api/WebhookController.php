@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController as BaseController;
+use Exception;
+use Carbon\Carbon;
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\Store;
+use GuzzleHttp\Client;
 use App\Mail\SendMail2;
 use App\Models\Account;
-use App\Models\Cart;
-use App\Models\MyfatoorahLog;
-use App\Models\Order;
 use App\Models\Package;
-use App\Models\Package_store;
 use App\Models\Payment;
-use App\Models\Store;
-use Exception;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use App\Models\MyfatoorahLog;
+use App\Models\Package_store;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebhookController extends BaseController
 {
@@ -93,6 +94,7 @@ class WebhookController extends BaseController
                             'payment_status' => "paid",
                         ]);
                         $this->sendEmail($package_store->id);
+                        $this->updatePackage($package_store->id);
                     } else {
                         $order->update([
                             'payment_status' => "paid",
@@ -193,6 +195,24 @@ class WebhookController extends BaseController
         } catch (Exception $e) {
             return ("Error: " . $e->getMessage());
         }
+
+    }
+    public function updatePackage($id)
+    {
+        $package_store = Package_store::where('id', $id)->first();
+        $store = Store::where('id', $package_store->store_id)->first();
+        $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
+        $store->update([
+            'package_id' => $package_store->package_id,
+            'periodtype' => 'year',
+            'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'end_at' => $end_at
+        ]);
+        
+        $package_store->update([
+            'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'end_at' => $end_at]);
+            
 
     }
 
