@@ -52,8 +52,8 @@ class PackageController extends BaseController
                 "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->user_name),
                 "InvoiceValue" => $package->yearly_price, // total_price
                 "CustomerEmail" => auth()->user()->email,
-                "CallBackUrl" => 'https://store.atlbha.com/subscribe-successfully',
-                "ErrorUrl" => 'https://store.atlbha.com/subscribe-failed',
+                "CallBackUrl" => 'https://store.atlbha.com/checkout-packages/success',
+                "ErrorUrl" => 'https://store.atlbha.com/checkout-packages/failed',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
                 "ProcessingDetails" => $processingDetailsobject,
@@ -85,7 +85,7 @@ class PackageController extends BaseController
             $payment = Package_store::where('store_id', $store->id)->where('package_id', $package->id)->orderBy('id', 'desc')->first();
             $payment->update([
                 'paymentType' => $paymentype->name,
-                'paymentTransectionID' =>'package_'.$payment->id,
+                'paymentTransectionID' =>'package_reference_'.$payment->id,
             ]);
         }
         $success['package'] = new PackageResource($package);

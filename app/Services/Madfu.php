@@ -71,12 +71,20 @@ class Madfu
         ];
         $order_db = Order::where('order_number', $order->MerchantReference)->first();
         $store=($order_db) ? Store::where('id', $order_db->store_id)->first():null;
-        $username =($store && $store->madfu_username) ?  $store->madfu_username :'wesam@faz-it.net';
-        $password = ($store && $store->madfu_password) ? $store->madfu_password:'Welcome@123';
-        $api_key=($store && $store->madfu_api_key) ? $store->madfu_api_key:'b55dd64-dc765-12c5-bcd5-4';
-        $app_code=($store && $store->madfu_app_code) ? $store->madfu_app_code:'Atlbha';
-        $authorization=($store && $store->madfu_authorization) ? $store->madfu_authorization:'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
-        
+        if($store){
+        $username = $store->madfu_username ;
+        $password = $store->madfu_password;
+        $api_key= $store->madfu_api_key;
+        $app_code= $store->madfu_app_code;
+        $authorization= $store->madfu_authorization;
+        }
+        else{
+            $username ='wesam@faz-it.net';
+            $password ='Welcome@123';
+            $api_key='b55dd64-dc765-12c5-bcd5-4';
+            $app_code='Atlbha';
+            $authorization='Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        }
         return $this->makeRequest($url,$body,$api_key, $app_code,$authorization, ['token' => $token]);
     }
 
