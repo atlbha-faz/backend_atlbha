@@ -29,7 +29,7 @@ class StoreResource extends JsonResource
             $subcategory = explode(',', $a);
         }
         if ($this->periodtype == null || $this->periodtype == '6months') {
-            $periodtype = 'شهور' . ' ' . '6';
+            $periodtype = 'سنوي';
         } else {
             $periodtype = 'سنوي';
         }
@@ -119,6 +119,7 @@ class StoreResource extends JsonResource
             'special' => $special,
             'verification_type' => $this->verification_type,
             // 'package' =>$this->packagee($this->packages->last()->package_id),
+            'package_id' => $this->periodtype =="year" ?$this->package_id: null,
             'package' => $this->packagee($this->package_id),
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'working_status' => $this->working_status,
@@ -133,6 +134,8 @@ class StoreResource extends JsonResource
             'madfu_app_code'=>$this->madfu_app_code,
             'madfu_authorization'=>$this->madfu_authorization,
             'domain_type' => $this->domain_type !== null ? $this->domain_type :null,
+            'package_paid'=>$this->checkPaid($this->id),
+            
         ];
     }
 }

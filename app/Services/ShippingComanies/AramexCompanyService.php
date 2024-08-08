@@ -5,10 +5,13 @@ use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\Store;
 use GuzzleHttp\Client;
+use App\Models\Payment;
 use App\Models\Shipping;
+use App\Models\ReturnOrder;
 use App\Models\OrderAddress;
 use GuzzleHttp\Psr7\Request;
 use App\Models\OrderOrderAddress;
+use App\Services\FatoorahServices;
 use App\Http\Resources\OrderResource;
 use App\Interfaces\ShippingInterface;
 
@@ -25,7 +28,24 @@ class AramexCompanyService implements ShippingInterface
             'Accept' => 'application/json',
         ];
     }
-
+    public function sendError($error ,$error_en , $errorMessages=[], $code=200)
+    {
+     $response = [
+         'success' =>false ,
+         'message'=>['en' => $error_en, 'ar' => $error]
+ 
+     ];
+ 
+     if (!empty($errorMessages)) {
+         # code...
+         $response['data']= $errorMessages;
+     }else{
+         $response['data']= null;
+     }
+ 
+         return response()->json($response,$code);
+ 
+    }
     public function buildRequest($mothod, $data)
     {
 
@@ -38,6 +58,43 @@ class AramexCompanyService implements ShippingInterface
         }
         $response = json_decode((string) $response->getBody());
         return $response;
+    }
+    public function tracking($id)
+    {
+
+        $client = new Client();
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ];
+        $body = '{
+          "ClientInfo": {
+            "UserName": "armx.ruh.it@gmail.com",
+            "Password": "YUre@9982",
+            "Version": "v1",
+            "AccountNumber": "117620",
+            "AccountPin": "553654",
+            "AccountEntity": "JED",
+            "AccountCountryCode": "SA",
+            "Source": 24
+          },
+          "GetLastTrackingUpdateOnly": false,
+          "Shipments": [
+            "' . $id . '"
+          ],
+          "Transaction": {
+            "Reference1": "",
+            "Reference2": "",
+            "Reference3": "",
+            "Reference4": "",
+            "Reference5": ""
+          }
+        }';
+        $request = new Request('POST', 'https://ws.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
+        $res = $client->sendAsync($request)->wait();
+        $response = json_decode($res->getBody());
+        return $response;
+
     }
     public function createOrder($data)
     {
@@ -241,7 +298,11 @@ class AramexCompanyService implements ShippingInterface
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
-
+            // $track_id=null;
+            // if ($ship_id) {
+            //     $tracking= $this->tracking($ship_id);
+            //     $track_id=$tracking->TrackingResults[0]->Key;
+            // }
             $order->update([
                 'order_status' => "ready",
             ]);
@@ -255,7 +316,7 @@ class AramexCompanyService implements ShippingInterface
                 'order_id' => $order->id,
                 'store_id' => $order->store_id,
                 'shipping_id' => $ship_id,
-                'track_id' => $ship_id,
+                'track_id'=>$ship_id,
                 'sticker' => $url,
                 'description' => $order->description,
                 'price' => $order->total_price,
@@ -505,33 +566,7 @@ class AramexCompanyService implements ShippingInterface
         $order = Order::where('id', $id)->first();
         if ($order->order_status == "new" || $order->order_status == "ready") {
 
-            // if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
-            //     $payment = Payment::where('orderID', $order->id)->first();
-
-            //     $data = [
-            //         "Key" => $payment->paymentTransectionID,
-            //         "KeyType" => "invoiceid",
-            //         "RefundChargeOnCustomer" => false,
-            //         "ServiceChargeOnCustomer" => false,
-            //         "Amount" => $order->total_price,
-            //         "Comment" => "refund to the customer",
-            //         "AmountDeductedFromSupplier" => $payment->price_after_deduction,
-            //         "CurrencyIso" => "SAR",
-            //     ];
-
-            //     $supplier = new FatoorahServices();
-
-            //     $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
-            //     if ($response) {
-            //         if ($response['IsSuccess'] == false) {
-            //             return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
-            //         } else {
-            //             $success['message'] = $response;
-            //         }
-            //     } else {
-            //         return $this->sendError("خطأ في الارجاع المالي", 'error');
-            //     }
-            // }
+    //    $this->refundCancelOrder($id);
         }
         $order->update([
             'order_status' => 'canceled',
@@ -561,42 +596,58 @@ class AramexCompanyService implements ShippingInterface
         return new OrderResource($order);
 
     }
-    public function tracking($id)
-    {
+    public function refundCancelOrder($id){
+        $order = Order::where('id', $id)->first();
+        if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
+            $payment = Payment::where('orderID', $order->id)->first();
+          if($order->store_id== null)
+          {
+            $data = [
+                "Key" => $payment->paymentTransectionID,
+                "KeyType" => "invoiceid",
+                "RefundChargeOnCustomer" => false,
+                "ServiceChargeOnCustomer" => false,
+                "Amount" =>$payment->price_after_deduction,
+                "Comment" => "refund to the customer",
+                "AmountDeductedFromSupplier" => 0,
+                "CurrencyIso" => "SAR",
+            ];
+        }
+        else{
+            $data = [
+                "Key" => $payment->paymentTransectionID,
+                "KeyType" => "invoiceid",
+                "RefundChargeOnCustomer" => false,
+                "ServiceChargeOnCustomer" => false,
+                "Amount" =>$payment->price_after_deduction,
+                "Comment" => "refund to the customer",
+                "AmountDeductedFromSupplier" => $payment->price_after_deduction,
+                "CurrencyIso" => "SAR",
+            ];
 
-        $client = new Client();
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ];
-        $body = '{
-          "ClientInfo": {
-            "UserName": "armx.ruh.it@gmail.com",
-            "Password": "YUre@9982",
-            "Version": "v1",
-            "AccountNumber": "117620",
-            "AccountPin": "553654",
-            "AccountEntity": "JED",
-            "AccountCountryCode": "SA",
-            "Source": 24
-          },
-          "GetLastTrackingUpdateOnly": false,
-          "Shipments": [
-            "' . $id . '"
-          ],
-          "Transaction": {
-            "Reference1": "",
-            "Reference2": "",
-            "Reference3": "",
-            "Reference4": "",
-            "Reference5": ""
-          }
-        }';
-        $request = new Request('POST', 'https://ws.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
-        $res = $client->sendAsync($request)->wait();
-        $response = json_decode($res->getBody());
-        return $response;
+        }
+            $supplier = new FatoorahServices();
 
+            $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+            if ($response) {
+                if ($response['IsSuccess'] == false) {
+                    // return $this->sendError("خطأ في الارجاع", $supplierCode->ValidationErrors[0]->Error);
+                    $success['error'] = "خطأ في الارجاع المالي";
+
+                } else {
+                    $success['message'] = $response;
+                    $returns = ReturnOrder::where('order_id', $order->id)->get();
+                    foreach ($returns as $return) {
+                        $return->update([
+                            'refund_status' => 1
+                        ]);
+                    }
+                }
+            } else {
+                $success['error'] = "خطأ في الارجاع المالي";
+                // return $this->sendError("خطأ في الارجاع المالي", 'error');
+            }
+        }
     }
 
 }

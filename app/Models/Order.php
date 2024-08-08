@@ -9,11 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = ['order_number', 'store_id', 'user_id', 'quantity',
-        'total_price', 'tax', 'shipping_price', 'discount', 'paymentype_id',
-        'weight', 'shippingtype_id', 'order_status', 'payment_status',
-        'is_deleted','cod','created_at', 'is_archive','description',
-        'subtotal','overweight_price','is_refund','is_return','totalCount','payment_id'];
+    protected $fillable = ['order_number', 'store_id', 'user_id', 'quantity', 'total_price', 'tax', 'shipping_price', 'discount', 'paymentype_id','weight', 'shippingtype_id', 'order_status', 'payment_status', 'is_deleted','cod','created_at', 'is_archive','description','subtotal','is_refund','overweight_price','is_return','totalCount'];
     protected $attributes = [
         'is_archive' =>false,
     ];
