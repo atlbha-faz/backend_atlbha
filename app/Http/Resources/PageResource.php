@@ -20,13 +20,13 @@ class PageResource extends JsonResource
         } else {
             $status = __('message.forbidden');
         }
-    
+        $categoryIds = $this->page_categories->pluck('id')->toArray();
         return [
             'id' => $this->id,
             'title' => $this->title === "null" ? "" : $this->title,
             'page_content' => $this->page_content === null ? "" : $this->page_content,
             'seo_title' => $this->seo_title === "null" ? "" : $this->seo_title,
-            'seo_link' => $this->store_id == null ?( $this->postcategory !== null?'https://atlbha.com/post/'. $this->id . '/'. preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title): 'https://atlbha.com/page/'. $this->id . '/'. preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title)): 'https: //template.atlbha.sa/' . $this->store->domain . '/site/SitePages/' . $this->id,
+            'seo_link' => $this->store_id == null ?( $this->postcategory !== null?'https://atlbha.com/post/'. $this->id . '/'. preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title): 'https://atlbha.com/page/'. $this->id . '/'. preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title)):( in_array(1, $categoryIds)?'https: //template.atlbha.com/' . $this->store->domain . '/site/SitePages/'.$this->id.'/'. preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title):'https: //template.atlbha.com/' . $this->store->domain . '/blog/post/'.$this->id.'/'. preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $this->title)),
             'seo_desc' => $this->seo_desc === "null" ? "" : $this->seo_desc,
             'page_desc' => $this->page_desc === "null" ? "" : $this->page_desc,
             'image' => $this->image != null ? $this->image : "",
