@@ -89,7 +89,7 @@ class PageController extends BaseController
             'status' => 'not_active',
         ]);
 
-        if ($request->pageCategory) {
+        if ($request->has('pageCategory')) {
             $page->page_categories()->attach($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
                 $page->update([
@@ -137,7 +137,7 @@ class PageController extends BaseController
             'user_id' => auth()->user()->id,
             'status' => 'active',
         ]);
-        if ($request->pageCategory) {
+        if ($request->has('pageCategory')) {
             $page->page_categories()->attach($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
                 $page->update([
@@ -221,7 +221,7 @@ class PageController extends BaseController
 
         ]);
 
-        if ($request->pageCategory) {
+        if ($request->has('pageCategory')) {
             $page->page_categories()->sync($request->pageCategory);
             if (in_array(1, $request->pageCategory)) {
 
