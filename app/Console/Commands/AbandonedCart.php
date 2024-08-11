@@ -50,7 +50,7 @@ class AbandonedCart extends Command
         $carts =\App\Models\Cart::whereNot('count',0)->whereDate('updated_at', '<=', Carbon::now()->subHours(24)->format('Y-m-d'))->get();
         
         foreach($carts as $cart){
-          if($cart->discount_expire_date !== null)
+          if($cart->discount_expire_date !=null)
           {
             if($cart->discount_expire_date < Carbon::now()->toDateString()){
                    $cart->total=$cart->total +$cart->discount_total;
