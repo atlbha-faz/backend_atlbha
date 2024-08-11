@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\Page;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Requests\PageRequest;
 use App\Http\Resources\PageResource;
+use App\Models\Page;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class PageController extends BaseController
 {
@@ -24,18 +24,18 @@ class PageController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    { 
+    {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data=Page::with(['user' => function ($query) {
+        $data = Page::with(['user' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('store_id', null)->orderByDesc('created_at')->select('id', 'title', 'status', 'user_id', 'created_at');
         if ($request->has('status')) {
             $data->where('status', $request->status);
         }
-        $data= $data->paginate($count);
+        $data = $data->paginate($count);
         $success['pages'] = PageResource::collection($data);
-        $success['page_count'] =  $data->lastPage();
-        $success['current_page'] =  $data->currentPage();
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع  الصفحة بنجاح', 'Pages return successfully');
@@ -60,17 +60,21 @@ class PageController extends BaseController
     public function store(PageRequest $request)
     {
         $input = $request->all();
-        $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
-            'image' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+        if ($request->has('pageCategory')) {
+            $validator2 = Validator::make($input, [
+                'postcategory_id' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
+                'image' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
 
-        ]);
-        if ($validator2->fails()) {
-            return $this->sendError(null, $validator2->errors());
+            ]);
+            if ($validator2->fails()) {
+                return $this->sendError(null, $validator2->errors());
+            }
+        } else {
+            $request->pageCategory = array();
         }
 
         $page = Page::create([
@@ -94,6 +98,8 @@ class PageController extends BaseController
                     'altImage' => $request->altImage,
                 ]);
             }
+        } else {
+            $request->pageCategory = array();
         }
         $success['Pages'] = new PageResource($page);
         $success['status'] = 200;
@@ -104,20 +110,22 @@ class PageController extends BaseController
     public function publish(PageRequest $request)
     {
         $input = $request->all();
-    
-        $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
-            'image' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+        if ($request->has('pageCategory')) {
+            $validator2 = Validator::make($input, [
+                'postcategory_id' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
+                'image' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
 
-        ]);
-        if ($validator2->fails()) {
-            return $this->sendError(null, $validator2->errors());
+            ]);
+            if ($validator2->fails()) {
+                return $this->sendError(null, $validator2->errors());
+            }
+        } else {
+            $request->pageCategory = array();
         }
-
         $page = Page::create([
             'title' => $request->title,
             'page_content' => $request->page_content,
@@ -138,6 +146,8 @@ class PageController extends BaseController
                     'altImage' => $request->altImage,
                 ]);
             }
+        } else {
+            $request->pageCategory = array();
         }
         $success['Pages'] = new PageResource($page);
         $success['status'] = 200;
@@ -188,13 +198,17 @@ class PageController extends BaseController
         }
 
         $input = $request->all();
-        $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
-        ]);
-        if ($validator2->fails()) {
-            return $this->sendError(null, $validator2->errors());
+        if ($request->has('pageCategory')) {
+            $validator2 = Validator::make($input, [
+                'postcategory_id' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
+            ]);
+            if ($validator2->fails()) {
+                return $this->sendError(null, $validator2->errors());
+            }
+        } else {
+            $request->pageCategory = array();
         }
         $page->update([
             'title' => $request->input('title'),
@@ -217,7 +231,7 @@ class PageController extends BaseController
                 ]);
                 if ($request->has('image')) {
                     $page->update([
-                        'image' => $request->image
+                        'image' => $request->image,
                     ]);
                 }
             } else {
@@ -227,6 +241,8 @@ class PageController extends BaseController
                     'postcategory_id' => null,
                 ]);
             }
+        } else {
+            $request->pageCategory = array();
         }
         $success['pages'] = new PageResource($page);
         $success['status'] = 200;
@@ -319,7 +335,7 @@ class PageController extends BaseController
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $pages = Page::where('is_deleted', 0)->where('store_id',null)
+        $pages = Page::where('is_deleted', 0)->where('store_id', null)
             ->where('title', 'like', "%$query%")->orderBy('created_at', 'desc')
             ->paginate($count);
 
