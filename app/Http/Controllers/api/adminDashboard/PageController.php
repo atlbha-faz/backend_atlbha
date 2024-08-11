@@ -60,17 +60,21 @@ class PageController extends BaseController
     public function store(PageRequest $request)
     {
         $input = $request->all();
-        $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
-            'image' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
+        if ($request->has('pageCategory')) {
+            $validator2 = Validator::make($input, [
+                'postcategory_id' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
+                'image' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
 
-        ]);
-        if ($validator2->fails()) {
-            return $this->sendError(null, $validator2->errors());
+            ]);
+            if ($validator2->fails()) {
+                return $this->sendError(null, $validator2->errors());
+            }
+        } else {
+            $request->pageCategory = array();
         }
 
         $page = Page::create([
@@ -106,20 +110,22 @@ class PageController extends BaseController
     public function publish(PageRequest $request)
     {
         $input = $request->all();
+        if ($request->has('pageCategory')) {
+            $validator2 = Validator::make($input, [
+                'postcategory_id' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
+                'image' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
 
-        $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
-            'image' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
-
-        ]);
-        if ($validator2->fails()) {
-            return $this->sendError(null, $validator2->errors());
+            ]);
+            if ($validator2->fails()) {
+                return $this->sendError(null, $validator2->errors());
+            }
+        } else {
+            $request->pageCategory = array();
         }
-
         $page = Page::create([
             'title' => $request->title,
             'page_content' => $request->page_content,
@@ -192,13 +198,17 @@ class PageController extends BaseController
         }
 
         $input = $request->all();
-        $validator2 = Validator::make($input, [
-            'postcategory_id' => Rule::requiredIf(function () {
-                return in_array('1', request('pageCategory'));
-            }),
-        ]);
-        if ($validator2->fails()) {
-            return $this->sendError(null, $validator2->errors());
+        if ($request->has('pageCategory')) {
+            $validator2 = Validator::make($input, [
+                'postcategory_id' => Rule::requiredIf(function () {
+                    return in_array('1', request('pageCategory'));
+                }),
+            ]);
+            if ($validator2->fails()) {
+                return $this->sendError(null, $validator2->errors());
+            }
+        } else {
+            $request->pageCategory = array();
         }
         $page->update([
             'title' => $request->input('title'),
