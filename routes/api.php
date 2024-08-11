@@ -179,6 +179,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
         Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class);
+        Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class);
         Route::get('changePackageStatus/{id}',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
 
 
