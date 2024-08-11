@@ -85,16 +85,16 @@ class PageController extends BaseController
             'status' => 'not_active',
         ]);
 
-        // if ($request->pageCategory) {
-        //     $page->page_categories()->attach($request->pageCategory);
-        //     if (in_array(1, $request->pageCategory)) {
-        //         $page->update([
-        //             'image' => $request->image,
-        //             'postcategory_id' => $request->postcategory_id,
-        //             'altImage' => $request->altImage,
-        //         ]);
-        //     }
-        // }
+        if ($request->pageCategory) {
+            $page->page_categories()->attach($request->pageCategory);
+            if (in_array(1, $request->pageCategory)) {
+                $page->update([
+                    'image' => $request->image,
+                    'postcategory_id' => $request->postcategory_id,
+                    'altImage' => $request->altImage,
+                ]);
+            }
+        }
         $success['Pages'] = new PageResource($page);
         $success['status'] = 200;
 
@@ -129,16 +129,16 @@ class PageController extends BaseController
             'user_id' => auth()->user()->id,
             'status' => 'active',
         ]);
-        // if ($request->pageCategory) {
-        //     $page->page_categories()->attach($request->pageCategory);
-        //     if (in_array(1, $request->pageCategory)) {
-        //         $page->update([
-        //             'image' => $request->image,
-        //             'postcategory_id' => $request->postcategory_id,
-        //             'altImage' => $request->altImage,
-        //         ]);
-        //     }
-        // }
+        if ($request->pageCategory) {
+            $page->page_categories()->attach($request->pageCategory);
+            if (in_array(1, $request->pageCategory)) {
+                $page->update([
+                    'image' => $request->image,
+                    'postcategory_id' => $request->postcategory_id,
+                    'altImage' => $request->altImage,
+                ]);
+            }
+        }
         $success['Pages'] = new PageResource($page);
         $success['status'] = 200;
 
