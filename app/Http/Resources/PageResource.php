@@ -20,7 +20,7 @@ class PageResource extends JsonResource
         } else {
             $status = __('message.forbidden');
         }
-    
+        $categoryIds = $this->page_categories->pluck('id')->toArray();
         return [
             'id' => $this->id,
             'title' => $this->title === "null" ? "" : $this->title,
