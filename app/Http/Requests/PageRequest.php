@@ -32,7 +32,7 @@ class PageRequest extends FormRequest
             'seo_desc' => 'nullable',
             'tags' => 'nullable',
             'altImage' => 'nullable',
-            'pageCategory' => ['required', 'array'],
+            'pageCategory' => ['nullable', 'array'],
             'pageCategory.*' => 'required'
         ];
     }
