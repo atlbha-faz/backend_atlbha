@@ -243,6 +243,12 @@ class PageController extends BaseController
             }
         } else {
             $request->pageCategory = array();
+            $page->page_categories()->detach();
+            $page->update([
+                'image' => null,
+                'postcategory_id' => null,
+                'altImage'=>null
+            ]);
         }
         $success['pages'] = new PageResource($page);
         $success['status'] = 200;
