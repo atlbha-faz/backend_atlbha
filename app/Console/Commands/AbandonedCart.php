@@ -54,16 +54,17 @@ class AbandonedCart extends Command
           {
             if($cart->discount_expire_date < Carbon::now()->toDateString()){
                    $cart->total=$cart->total +$cart->discount_total;
-                    if($cart->free_shipping === 1){
-                       $cart->total =$cart->total +$cart->shipping_price;
+                    if($cart->free_shipping){
+                       $cart->total =$cart->total +30+$cart->overweight_price;
                     }
                    $cart->discount_total=0;
+                    $cart->discount_type=null;
                     $cart->discount_value=0;
                     $cart->free_shipping=0;
-                      $cart->message=null;
+                    $cart->message=null;
                     $cart->	shipping_price=30;
-                      $cart->discount_expire_date=null;
-                     $cart->timestamps = false;
+                    $cart->discount_expire_date=null;
+                    $cart->timestamps = false;
                    $cart->save();
                 
                 
