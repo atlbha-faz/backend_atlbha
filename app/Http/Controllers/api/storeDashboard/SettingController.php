@@ -43,7 +43,8 @@ class SettingController extends BaseController
             'description' => 'required|string',
             'store_address' => 'nullable|string',
             'store_name' => 'required|string',
-            'domain' => ['required', 'string', Rule::unique('stores')->where(function ($query) {
+            'domain_type' => 'required|in:has_domain,pay_domain,later_time',
+            'domain' => ['required_unless:domain_type,later_time', 'string', Rule::unique('stores')->where(function ($query) {
                 return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
             })],
             'country_id' => 'required|exists:countries,id',
@@ -54,7 +55,6 @@ class SettingController extends BaseController
             'phonenumber' => ['required', 'numeric', 'regex:/^(009665|9665|\+9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/', Rule::unique('stores')->where(function ($query) use ($store) {
                 return $query->where('is_deleted', 0)->where('id', '!=', $store->id);
             })],
-            'domain_type' => 'required|in:has_domain,pay_domain',
             'data' => 'nullable|array',
             'data.*.status' => 'in:active,not_active',
             'data.*.id' => 'required',
