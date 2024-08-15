@@ -87,7 +87,10 @@ class PackageController extends BaseController
                 "Bypass3DS" => false,
             ];
             $processingDetailsobject = (object) ($processingDetails);
-            $price = $payment->discount_value == null ? $package->yearly_price : $payment->discount_value;
+            $price = $package_store->coupon_id == null ? $package->yearly_price : $payment->discount_value;
+            if ($price == 0){
+                return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر","price must be more than zero");
+                }
             $data = [
                 "PaymentMethodId" => $paymentype->paymentMethodId,
                 "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->user_name),
