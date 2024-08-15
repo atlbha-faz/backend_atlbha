@@ -174,7 +174,7 @@ class PackageController extends BaseController
                 } else {
                     $couponDiscountPercent = $coupon->discount / 100;
                     $discountAmount = $package->yearly_price * $couponDiscountPercent;
-                    $couponAfterdiscount = $package->yearly_price - $discountAmount;
+                    $$packageAfterdiscount = $package->yearly_price - $discountAmount;
                     $package_coupon->update([
                         'discount_value' => $packageAfterdiscount,
                         'coupon_id' => $coupon->id,
