@@ -139,12 +139,12 @@ class StoreController extends BaseController
         ]);
         if ($request->has('domain')&& $request->domain !=null) {
             $store->update([
-               'domain_type'=>'later_time'
+                 'domain_type'=>'has_domain'
             ]);
         }
         else{
-            $store ->update([
-                'domain_type'=>'has_domain'
+            $store->update([
+                'domain_type'=>'later_time'
             ]);
         }
         $user->update([
