@@ -34,7 +34,7 @@ class AuthController extends BaseController
 
         } else {
             $request->package_id = 2;
-            $request->periodtype = "6months";
+            $request->periodtype = "year";
 
             if ($request->user_type == 'store') {
 
@@ -107,8 +107,10 @@ class AuthController extends BaseController
                 $store = Store::create([
                     'package_id' => $request->package_id,
                     'user_id' => $userid,
-                    'periodtype' => '6months',
+                    'periodtype' => 'year',
+                    'domain_type'=>'later_time'
                 ]);
+
 
                 $user->update([
                     'store_id' => $store->id]);

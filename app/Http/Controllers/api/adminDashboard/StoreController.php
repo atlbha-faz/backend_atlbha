@@ -2,30 +2,30 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\Note;
-use App\Models\Page;
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Theme;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Requests\StoreRequest;
+use App\Http\Requests\StoreUpdateRequest;
+use App\Http\Resources\NoteResource;
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\VerificationResource;
 use App\Mail\SendMail;
 use App\Models\Comment;
-use App\Models\Product;
 use App\Models\Homepage;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Models\Note;
+use App\Models\Page;
 use App\Models\paymenttype_store;
+use App\Models\Product;
 use App\Models\shippingtype_store;
-use App\Http\Requests\StoreRequest;
+use App\Models\Store;
+use App\Models\Theme;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\NoteResource;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Resources\StoreResource;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\StoreUpdateRequest;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\VerificationResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Validation\Rule;
 
 class StoreController extends BaseController
 {
@@ -137,6 +137,15 @@ class StoreController extends BaseController
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
         ]);
+        if ($request->has('domain') && $request->domain != null) {
+            $store->update([
+                'domain_type' => 'has_domain',
+            ]);
+        } else {
+            $store->update([
+                'domain_type' => 'later_time',
+            ]);
+        }
         $user->update([
             'store_id' => $store->id,
         ]);
