@@ -130,9 +130,15 @@ class PackageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $package_coupon = Package_store::where('id', $unique_id)->first();
+        if (is_null($package_coupon)){
+            return $this->sendError("اختار الباقة","package is't exists");
+            }
         $package = Package::where('id', $package_coupon->package_id)->first();
         $now_time = Carbon::now();
         $coupon = Coupon::where('code', $request->code)->where('is_deleted', 0)->where('store_id', null)->first();
+        if (is_null($coupon)){
+            return $this->sendError("الكوبون غير موجود","coupon is't exists");
+            }
         if ($coupon != null && $coupon->status == 'active' && !($now_time < $coupon->start_at)) {
             if ($package_coupon->coupon_id == $coupon->id) {
                 $success['status'] = 200;
