@@ -38,7 +38,7 @@ class MadfuController extends BaseController
         $login_request = (new Madfu())->login($username, $password, $api_key, $app_code, $authorization, $request->uuid);
         if ($login_request->getStatusCode() == 200) {
             $login_request = json_decode($login_request->getBody()->getContents());
-            if (!$login_request->status) {
+            if (!$login_request->merchantData) {
                 return $this->sendError('', $login_request->message);
             }
             return $this->sendResponse(['status' => 200,
