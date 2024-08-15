@@ -45,7 +45,7 @@ class Package extends Model
     public function left($id)
     {
         $store = Store::where('id', $id)->first();
-        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status','paid')->orderBy('id', 'DESC')->first();
+        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status','paid')->orderBy('start_at', 'DESC')->first();
 
         if ($store->package_id == null || $store->periodtype == "6months"|| $store_package == null ) {
             return 0;

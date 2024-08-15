@@ -77,7 +77,7 @@ class PackageController extends BaseController
         }
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
-        $payment = Package_store::where('store_id', $store->id)->where('package_id', $request->package_id)->where('payment_status', null)->orderBy('id', 'desc')->first();
+        $payment = Package_store::where('store_id', $store->id)->where('package_id', $request->package_id)->where('payment_status', null)->orderBy('start_at', 'desc')->first();
         $package = Package::where('id', $payment->package_id)->first();
         $paymentype = Paymenttype::where('id', $request->paymentype_id)->first();
         if (in_array($request->paymentype_id, [1, 2])) {
