@@ -137,6 +137,16 @@ class StoreController extends BaseController
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
         ]);
+        if ($request->has('domain')&& $request->domain !=null) {
+            $store->update([
+               'domain_type'=>'later_time'
+            ]);
+        }
+        else{
+            $store ->update([
+                'domain_type'=>'has_domain'
+            ]);
+        }
         $user->update([
             'store_id' => $store->id,
         ]);
