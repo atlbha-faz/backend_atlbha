@@ -88,6 +88,9 @@ class PackageController extends BaseController
             ];
             $processingDetailsobject = (object) ($processingDetails);
             $price = $payment->coupon_id == null ? $package->yearly_price : $payment->discount_value;
+            if ($price == 0){
+                return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر","price must be more than zero");
+                }
             $data = [
                 "PaymentMethodId" => $paymentype->paymentMethodId,
                 "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->user_name),
