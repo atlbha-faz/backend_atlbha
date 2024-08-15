@@ -151,7 +151,8 @@ class PackageController extends BaseController
         if (is_null($coupon)){
             return $this->sendError("الكوبون غير موجود","coupon is't exists");
             }
-        if ($coupon != null && $coupon->status == 'active' && !($now_time < $coupon->start_at)) {
+            // !($now_time < $coupon->start_at)
+        if ($coupon != null && $coupon->status == 'active') {
             if ($package_coupon->coupon_id == $coupon->id) {
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
@@ -174,7 +175,7 @@ class PackageController extends BaseController
                 } else {
                     $couponDiscountPercent = $coupon->discount / 100;
                     $discountAmount = $package->yearly_price * $couponDiscountPercent;
-                    $$packageAfterdiscount = $package->yearly_price - $discountAmount;
+                    $packageAfterdiscount = $package->yearly_price - $discountAmount;
                     $package_coupon->update([
                         'discount_value' => $packageAfterdiscount,
                         'coupon_id' => $coupon->id,
