@@ -23,7 +23,7 @@ class PackageController extends BaseController
         $this->middleware('auth:api');
     }
 
-    public function prePayment(Request $request)
+    public function setPackage(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -52,6 +52,18 @@ class PackageController extends BaseController
         $success['package'] = new PackageResource($package);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم اختيار الباقة بنجاح', 'package successfully');
+    }
+    public function getPackage(Request $request)
+    {
+        $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
+        $package_coupon = Package_store::where('store_id', $store->id)->orderBy('id', 'desc')->first();
+        if (is_null($package_coupon)){
+            return $this->sendError("اختار الباقة","package is't exists");
+            }
+        $package = Package::where('id', $package_coupon->package_id)->first();
+        $success['package'] = new PackageResource($package);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم عرض الباقة بنجاح', 'package successfully');
     }
     public function payment(Request $request)
     {
