@@ -43,7 +43,7 @@ class PackageResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'yearly_price' => $this->yearly_price,
-            'price_after_coupon' =>  ($package_store != null && $package_store->discount_value!= null )?$package_store->discount_value:$this->yearly_price,
+            'price_after_coupon' => $store !== null ? ($package_store != null && $package_store->discount_value!= null )?$package_store->discount_value:$this->yearly_price: null,
             'discount' => $this->discount,
             'status' => $this->status == null || $this->status == 'active' ? __('message.active') : __('message.not_active'),
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
