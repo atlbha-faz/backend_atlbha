@@ -38,7 +38,7 @@ class MadfuController extends BaseController
         $login_request = (new Madfu())->login($username, $password, $api_key, $app_code, $authorization, $request->uuid);
         if ($login_request->getStatusCode() == 200) {
             $login_request = json_decode($login_request->getBody()->getContents());
-            if (!$login_request->status) {
+            if (!$login_request->merchantData) {
                 return $this->sendError('', $login_request->message);
             }
             return $this->sendResponse(['status' => 200,
@@ -175,7 +175,7 @@ class MadfuController extends BaseController
         $package_store->update([
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'end_at' => $end_at]);
-        $subscriptions = Package_store::where('store_id', $store->id)->whereNot('payment_status','paid')->get();
+        $subscriptions = Package_store::where('store_id', $store->id)->where('payment_status',null)->get();
         if ($subscriptions) {
             foreach ($subscriptions as $subscription) {
                 $subscription->delete();
