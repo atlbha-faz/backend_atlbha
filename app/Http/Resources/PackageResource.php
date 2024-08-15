@@ -53,6 +53,9 @@ class PackageResource extends JsonResource
             'plans' => PlanResource::collection($plans),
             'templates' => TemplateResource::collection($this->templates),
             'unique_id'=>$store !== null ? $unique_id : null,
+            'price_after_coupon' => $store !== null ? ($package_store != null && $package_store->discount_value!= null )?$package_store->discount_value:$this->yearly_price: null,
+            'coupon_info'=> $store !== null ? ($package_store != null && $package_store->coupon_id!= null )?new CouponResource(Coupon::where('id', $package_store->coupon_id)->first()):null: null,
+
             // 'stores'=> StoreResource::collection($this->stores)
 
         ];

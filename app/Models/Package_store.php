@@ -12,5 +12,7 @@ class Package_store extends Model
 
     protected $table="packages_stores";
     protected $fillable = ['package_id','store_id','start_at','end_at','periodtype','packagecoupon_id','status','is_deleted','paymentType','paymentTransectionID','payment_status','discount_value','coupon_id'];
-     
+    protected $casts = [
+        'discount_value' => 'float',
+    ];
 }
