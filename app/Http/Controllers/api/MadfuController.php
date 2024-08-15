@@ -69,7 +69,7 @@ class MadfuController extends BaseController
             if ($request->orderStatus == 125) {
                 $order = Order::where('order_number', $request->MerchantReference)->first();
                 if ($order == null) {
-                    $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('id', 'desc')->first();
+                    $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('start_at', 'desc')->first();
                     if ($payment) {
                         $this->sendEmail($payment->id);
                         $this->updatePackage($payment->id);

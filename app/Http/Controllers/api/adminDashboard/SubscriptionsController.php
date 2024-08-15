@@ -80,7 +80,7 @@ class SubscriptionsController extends BaseController
         if (count($stores) > 0) {
             foreach ($stores as $store) {
 
-                $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status', 'paid')->orderBy('id', 'DESC')->first();
+                $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status', 'paid')->orderBy('start_at', 'DESC')->first();
                 //   if( $store->package_id != null){
                 //   $store->update(['package_id' => null]);
                 //   }
