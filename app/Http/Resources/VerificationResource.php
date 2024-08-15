@@ -22,11 +22,11 @@ class VerificationResource extends JsonResource
         if ($this->status == null || $this->status == 'active') {
             $status = __('message.active');
         } else {
-            $status =  __('message.not_active');
+            $status = __('message.not_active');
         }
 
         if ($this->special == null || $this->special == 'special') {
-            $special =   __('message.special');
+            $special = __('message.special');
         } else {
             $special = __('message.not_special');
         }
@@ -37,9 +37,9 @@ class VerificationResource extends JsonResource
         // }
 
         if ($this->verification_status == null || $this->verification_status == 'pending') {
-            $verification_status =__('message.verificationpending');
+            $verification_status = __('message.verificationpending');
         } elseif ($this->verification_status == 'admin_waiting') {
-            $verification_status =__('message.admin_waiting');
+            $verification_status = __('message.admin_waiting');
         } elseif ($this->verification_status == 'accept') {
             $verification_status = __('message.accept');
         } elseif ($this->verification_status == 'reject') {
@@ -55,7 +55,7 @@ class VerificationResource extends JsonResource
             'description' => $this->description,
             'business_license' => $this->business_license,
             'file' => $this->file,
-             'link' => 'https://eauthenticate.saudibusiness.gov.sa/inquiry',
+            'link' => 'https://eauthenticate.saudibusiness.gov.sa/inquiry',
             'owner_name' => $this->owner_name,
             'verification_type' => $this->verification_type,
             'commercial_name' => $this->commercial_name,
@@ -82,7 +82,7 @@ class VerificationResource extends JsonResource
             'special' => $special,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'subcategory' => $this->categories->first() == !null ? CategoryResource::collection(\App\Models\Category::whereIn('id', $subcategory)->get()) : array(),
-
+            'setting_is_done' => $this->store_name != null ? true : false,
         ];
     }
 }
