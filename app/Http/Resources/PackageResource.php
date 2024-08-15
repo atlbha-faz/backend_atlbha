@@ -3,9 +3,11 @@
 namespace App\Http\Resources;
 
 use App\Models\Store;
+use App\Models\Coupon;
 use App\Models\Package_store;
 use App\Http\Resources\PlanResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\CouponResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PackageResource extends JsonResource
@@ -19,7 +21,7 @@ class PackageResource extends JsonResource
     public function toArray($request)
     {
         $plans = array();
-        foreach (\App\Models\Plan::all() as $p) {
+        foreach (\App\Models\Plan::orderBy('status', 'desc')->get() as $p) {
             if (in_array($p->id, json_decode($this->plans->pluck('id')))) {
                 $pp = collect($p)->merge(['selected' => true]);
             } else {
@@ -31,9 +33,10 @@ class PackageResource extends JsonResource
             $store = Store::where('user_id', auth()->user()->id)->first();
             if($store){
             $current_package = ($store->package_id == $this->id && $store->periodtype =="year")? true : false;
-            $package_store = Package_store::where('store_id', $store->id)->where('package_id',$this->id)->orderBy('id', 'desc')->first();
+            $package_store = Package_store::where('store_id', $store->id)->where('package_id',$this->id)->orderBy('start_at', 'desc')->first();
             $paid= $package_store !== null ? ($package_store->payment_status =="paid"? true:false) : null;
             $unique_id= $package_store !== null ? $package_store->id : null;
+
             }
         } else {
             $store = null;
@@ -42,6 +45,7 @@ class PackageResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'yearly_price' => $this->yearly_price,
+            'price_after_coupon' => $store !== null ? ($package_store != null && $package_store->discount_value!= null )?$package_store->discount_value:$this->yearly_price: null,
             'discount' => $this->discount,
             'status' => $this->status == null || $this->status == 'active' ? __('message.active') : __('message.not_active'),
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
@@ -51,6 +55,9 @@ class PackageResource extends JsonResource
             'plans' => PlanResource::collection($plans),
             'templates' => TemplateResource::collection($this->templates),
             'unique_id'=>$store !== null ? $unique_id : null,
+            'price_after_coupon' => $store !== null ? ($package_store != null && $package_store->discount_value!= null )?$package_store->discount_value:$this->yearly_price: null,
+            'coupon_info'=> $store !== null ? ($package_store != null && $package_store->coupon_id!= null )?new CouponResource(Coupon::where('id', $package_store->coupon_id)->first()):null: null,
+
             // 'stores'=> StoreResource::collection($this->stores)
 
         ];

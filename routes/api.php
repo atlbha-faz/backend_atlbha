@@ -76,6 +76,7 @@ Route::get('addstoremonth', [App\Http\Controllers\api\homePages\IndexEtlobhaCont
 Route::get('searchIndex', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'searchIndex']);
 Route::get('packages', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'packages']);
 
+
 Route::post('atlobhaContactAdd', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'store']);
 //  index store page القالب
 Route::middleware([SetActiveStore::class])->group(function () {
@@ -181,7 +182,6 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class);
         Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class);
         Route::get('changePackageStatus/{id}',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
-
 
         Route::get('selector/etlobahCategory', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'etlobahCategory']);
         Route::get('selector/years', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'years']);
@@ -557,7 +557,10 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'changeStatus'])->name('store.shippingcompanies.activate');
         Route::resource('shippingtype', App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, ['names' => 'store.shippingcompanies']);
         Route::post('updatePrice/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'updatePrice']);
+        Route::post('setPackage', [App\Http\Controllers\api\storeDashboard\PackageController::class, 'setPackage']);
+        Route::get('getPackage', [App\Http\Controllers\api\storeDashboard\PackageController::class, 'getPackage']);
         Route::post('package_payment', [App\Http\Controllers\api\storeDashboard\PackageController::class, 'payment']);
+        Route::post('applyPackageCoupon/{id}', [App\Http\Controllers\api\storeDashboard\PackageController::class, 'applyPackageCoupon']);
 
         // payment type
         Route::get('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class, 'changeStatus'])->name('store.paymentsgateways.activate');
@@ -619,7 +622,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::resource('roles', App\Http\Controllers\api\storeDashboard\RoleController::class, ['names' => 'store.roles']);
         Route::get('tracking/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class, 'tracking']);
         Route::get('refundOrder/{id}', [App\Http\Controllers\api\storeDashboard\OrderController::class,'refundOrder']);
-
+        
         // reports
         Route::get('reports', [ReportController::class, 'index'])->name('store.reports.show');
 

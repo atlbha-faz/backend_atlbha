@@ -33,7 +33,7 @@ class SubscriptionsController extends BaseController
         }, 'user' => function ($query) {
             $query->select('id');
         }])->where('is_deleted', 0)->where('package_id', '!=', null)->whereHas('packages', function ($q) {
-            $q->where('payment_status','paid');
+            $q->where('payment_status', 'paid');
         })->orderByDesc('created_at')->select('id', 'store_name', 'verification_status', 'logo', 'package_id', 'created_at');
         $success['status'] = 200;
         $data = $data->paginate($count);
@@ -50,7 +50,7 @@ class SubscriptionsController extends BaseController
         if (count($stores) > 0) {
             foreach ($stores as $store) {
 
-                $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status','paid')->orderBy('id', 'DESC')->first();
+                $store_package = Package_store::where('package_id', $store->package_id)->where('payment_status', 'paid')->where('store_id', $store->id)->orderBy('id', 'DESC')->first();
 
                 if (is_null($store_package) || $store_package->is_deleted != 0) {
                 } else {
@@ -59,7 +59,7 @@ class SubscriptionsController extends BaseController
                 if ($store->package_id != null) {
                     $store->update(['package_id' => null]);
                     $store->update(['periodtype' => null]);
-               
+
                 }
                 $success['Subscriptions'] = new SubscriptionsResource($store);
 
@@ -80,7 +80,7 @@ class SubscriptionsController extends BaseController
         if (count($stores) > 0) {
             foreach ($stores as $store) {
 
-                $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status','paid')->orderBy('id', 'DESC')->first();
+                $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status', 'paid')->orderBy('start_at', 'DESC')->first();
                 //   if( $store->package_id != null){
                 //   $store->update(['package_id' => null]);
                 //   }
@@ -158,9 +158,10 @@ class SubscriptionsController extends BaseController
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')->whereHas('packages', function ($q) {
-            $q->where('payment_status','paid');
-        })->where(function ($q) use ($query) {
+        $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')
+            ->whereHas('packages', function ($q) {
+                $q->where('payment_status', 'paid');
+            })->where(function ($q) use ($query) {
             $q->where('store_name', 'like', "%$query%")->orWhereHas('packages', function ($subQuery) use ($query) {
                 $subQuery->where('name', 'like', "%$query%");
             });

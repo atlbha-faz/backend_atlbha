@@ -22,11 +22,11 @@ class MadfuController extends BaseController
 {
     public function login(MadfuLoginRequest $request)
     {if ($request->store_id == "atlbhaPlatform") {
-        $username = 'otc02@madfu.com.sa';
+        $username = 'wesam@faz-it.net';
         $password = 'Welcome@123';
-        $api_key = 'a8e9c744-1999-4907-a78b-0';
+        $api_key = 'b55dd64-dc765-12c5-bcd5-4';
         $app_code = 'Atlbha';
-        $authorization = 'Basic QXRsYmhhOlFYUnNZbWhoVUdGemMzZHZjbVJRYjJRPQ==';
+        $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
     } else {
         $store = Store::where('id', $request->store_id)->first();
         $username = ($store && $store->madfu_username) ? $store->madfu_username : 'wesam@faz-it.net';
@@ -69,7 +69,7 @@ class MadfuController extends BaseController
             if ($request->orderStatus == 125) {
                 $order = Order::where('order_number', $request->MerchantReference)->first();
                 if ($order == null) {
-                    $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('id', 'desc')->first();
+                    $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('start_at', 'desc')->first();
                     if ($payment) {
                         $this->sendEmail($payment->id);
                         $this->updatePackage($payment->id);
@@ -175,12 +175,10 @@ class MadfuController extends BaseController
         $package_store->update([
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'end_at' => $end_at]);
-        $subscriptions = Package_store::where('store_id', $store->id)->whereNot('payment_status', 'paid')->get();
+        $subscriptions = Package_store::where('store_id', $store->id)->where('payment_status',null)->get();
         if ($subscriptions) {
-            if ($subscriptions) {
-                foreach ($subscriptions as $subscription) {
-                    $subscription->delete();
-                }
+            foreach ($subscriptions as $subscription) {
+                $subscription->delete();
             }
         }
 
