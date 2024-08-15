@@ -109,6 +109,7 @@ class AuthController extends BaseController
                     'package_id' => $request->package_id,
                     'user_id' => $userid,
                     'periodtype' => 'year',
+                    'domain_type'=>'later_time'
                 ]);
 
                 $user->update([
