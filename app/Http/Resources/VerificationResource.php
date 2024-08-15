@@ -82,7 +82,6 @@ class VerificationResource extends JsonResource
             'special' => $special,
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'subcategory' => $this->categories->first() == !null ? CategoryResource::collection(\App\Models\Category::whereIn('id', $subcategory)->get()) : array(),
-            'setting_is_done'=>$this->store_name != null ? true : false,
         ];
     }
 }
