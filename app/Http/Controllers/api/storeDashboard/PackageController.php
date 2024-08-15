@@ -56,7 +56,7 @@ class PackageController extends BaseController
     public function getPackage(Request $request)
     {
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
-        $package_coupon = Package_store::where('store_id', $store->id)->orderBy('id', 'desc')->first();
+        $package_coupon = Package_store::where('store_id', $store->id)->orderBy('start_at', 'desc')->first();
         if (is_null($package_coupon)){
             return $this->sendError("اختار الباقة","package is't exists");
             }
