@@ -557,7 +557,9 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('changeShippingtypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'changeStatus'])->name('store.shippingcompanies.activate');
         Route::resource('shippingtype', App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, ['names' => 'store.shippingcompanies']);
         Route::post('updatePrice/{id}', [App\Http\Controllers\api\storeDashboard\ShippingtypeController::class, 'updatePrice']);
+        Route::post('prePayment', [App\Http\Controllers\api\storeDashboard\PackageController::class, 'prePayment']);
         Route::post('package_payment', [App\Http\Controllers\api\storeDashboard\PackageController::class, 'payment']);
+        Route::post('applyPackageCoupon/{id}', [App\Http\Controllers\api\storeDashboard\PackageController::class, 'applyPackageCoupon']);
 
         // payment type
         Route::get('changePaymenttypeStatus/{id}', [App\Http\Controllers\api\storeDashboard\PaymenttypeController::class, 'changeStatus'])->name('store.paymentsgateways.activate');

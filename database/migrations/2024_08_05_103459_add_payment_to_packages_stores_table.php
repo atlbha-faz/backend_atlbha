@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::table('packages_stores', function (Blueprint $table) {
             $table->string('paymentType')->nullable();
             $table->string('paymentTransectionID')->nullable();
+            $table->decimal('discount_value', 10, 2)->nullable();
+            $table->integer('coupon_id')->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->nullable();
         });
     }

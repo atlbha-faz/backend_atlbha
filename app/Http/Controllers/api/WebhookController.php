@@ -220,7 +220,7 @@ class WebhookController extends BaseController
         $package_store->update([
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'end_at' => $end_at]);
-        $subscriptions = Package_store::where('store_id', $store->id)->whereNot('payment_status','paid')->get();
+        $subscriptions = Package_store::where('store_id', $store->id)->where('payment_status',null)->get();
         if ($subscriptions) {
             if ($subscriptions) {
                 foreach ($subscriptions as $subscription) {
