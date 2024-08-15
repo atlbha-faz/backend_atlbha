@@ -3,9 +3,11 @@
 namespace App\Http\Resources;
 
 use App\Models\Store;
+use App\Models\Coupon;
 use App\Models\Package_store;
 use App\Http\Resources\PlanResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\CouponResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PackageResource extends JsonResource
