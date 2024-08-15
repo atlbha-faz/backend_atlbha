@@ -22,18 +22,18 @@ class MadfuController extends BaseController
 {
     public function login(MadfuLoginRequest $request)
     {if ($request->store_id == "atlbhaPlatform") {
-        $username = 'wesam@faz-it.net';
+        $username = 'otc02@madfu.com.sa';
         $password = 'Welcome@123';
-        $api_key = 'b55dd64-dc765-12c5-bcd5-4';
+        $api_key = 'a8e9c744-1999-4907-a78b-0';
         $app_code = 'Atlbha';
-        $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $authorization = 'Basic QXRsYmhhOlFYUnNZbWhoVUdGemMzZHZjbVJRYjJRPQ==';
     } else {
         $store = Store::where('id', $request->store_id)->first();
-        $username = ($store && $store->madfu_username) ? $store->madfu_username : 'wesam@faz-it.net';
+        $username = ($store && $store->madfu_username) ? $store->madfu_username : 'otc02@madfu.com.sa';
         $password = ($store && $store->madfu_password) ? $store->madfu_password : 'Welcome@123';
-        $api_key = ($store && $store->madfu_api_key) ? $store->madfu_api_key : 'b55dd64-dc765-12c5-bcd5-4';
+        $api_key = ($store && $store->madfu_api_key) ? $store->madfu_api_key : 'a8e9c744-1999-4907-a78b-0';
         $app_code = ($store && $store->madfu_app_code) ? $store->madfu_app_code : 'Atlbha';
-        $authorization = ($store && $store->madfu_authorization) ? $store->madfu_authorization : 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
+        $authorization = ($store && $store->madfu_authorization) ? $store->madfu_authorization : 'Basic QXRsYmhhOlFYUnNZbWhoVUdGemMzZHZjbVJRYjJRPQ==';
     }
         $login_request = (new Madfu())->login($username, $password, $api_key, $app_code, $authorization, $request->uuid);
         if ($login_request->getStatusCode() == 200) {
