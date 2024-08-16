@@ -34,7 +34,7 @@ class AtlbhaIndexProductResource extends JsonResource
         } else {
             $admin_special =__('message.not_special');
         }
-        $domain = $this->store_id !== null ? $this->store->domain : 'atlbha';
+        $domain = $this->store_id !== null ? $this->store->domain : 'atlbha-store.com';
 
         if ($this->is_import == 1) {
             $import = true;
