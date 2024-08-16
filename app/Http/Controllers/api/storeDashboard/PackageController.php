@@ -155,7 +155,7 @@ class PackageController extends BaseController
             return $this->sendError("الكوبون غير موجود","coupon is't exists");
             }
             // !($now_time < $coupon->start_at)
-        if ($coupon != null && $coupon->status == 'active') {
+        if ($coupon != null && $coupon->status == 'active'&&($now_time->gte($coupon->start_at))) {
             if ($package_coupon->coupon_id == $coupon->id) {
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
