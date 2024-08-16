@@ -20,7 +20,7 @@ class AtlbhaIndexSearchStoreResource extends JsonResource
                 'name' => $this->store_name,
                 'description' => $this->description,
                 'image' => $this->logo,
-                'url' => 'https://template.atlbha.sa/' . $this->domain,
+                'url' => 'https://' . $this->domain,
             ];
           
        

@@ -218,7 +218,7 @@ class IndexEtlobhaController extends BaseController
         }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->where('store_name', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special', 'store_email', 'verification_status', 'city_id', 'verification_date', 'created_at')->get());
         $results = $query1->merge($query2);
 
-        $success['results'] = $results;
+        $success['results'] = $query1;
 
         return $this->sendResponse($success, 'تم ارجاع نتائج البحث بنجاح', 'search Information returned successfully');
     }
