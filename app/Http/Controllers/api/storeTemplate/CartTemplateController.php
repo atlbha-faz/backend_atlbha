@@ -107,7 +107,7 @@ class CartTemplateController extends BaseController
                 ], [
                     'total' => 0,
                     'count' => 0,
-                    'shipping_price' => 30,
+                    'shipping_price' => 0,
                     'tax' => 0,
                 ]);
                 $cartid = $cart->id;
@@ -179,11 +179,9 @@ class CartTemplateController extends BaseController
                     return $total + ($item->qty);
                 });
                 $tax = $subtotal * 0.15;
-                if ($weight > 15) {
-                    $extra_shipping_price = ($weight - 15) * 3;
-                } else {
+            
                     $extra_shipping_price = 0;
-                }
+                
 
                 $total = $subtotal + Cart::where('id', $cartid)->value('shipping_price');
 
@@ -234,11 +232,9 @@ class CartTemplateController extends BaseController
             }),
 
         ]);
-        if ($newCart->weight > 15) {
-            $extra_shipping_price = ($newCart->weight - 15) * 3;
-        } else {
+      
             $extra_shipping_price = 0;
-        }
+        
         $newCart->update([
             'tax' => $newCart->total * 0.15,
             'shipping_price' => $newCart->shipping_price,
