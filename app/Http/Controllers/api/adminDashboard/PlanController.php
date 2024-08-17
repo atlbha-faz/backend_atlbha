@@ -26,7 +26,7 @@ class PlanController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data= Plan::where('is_deleted', 0);
         $data = $data->paginate($count);
-        $success['plans'] = PageResource::collection($data);
+        $success['plans'] = PlanResource::collection($data);
         $success['page_count'] = $data->lastPage();
         $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
