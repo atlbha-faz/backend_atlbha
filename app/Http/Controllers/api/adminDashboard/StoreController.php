@@ -67,7 +67,7 @@ class StoreController extends BaseController
             $query->select('id');
         }, 'user' => function ($query) {
             $query->select('id');
-        }])->where('is_deleted', 0)->where('verification_status', '!=', 'pending')->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special', 'store_email', 'verification_status', 'city_id', 'verification_date', 'created_at');
+        }])->where('is_deleted', 0)->where('store_name', '!=', null)->orderByDesc('created_at')->select('id', 'store_name', 'domain', 'phonenumber', 'status', 'periodtype', 'logo', 'icon', 'special', 'store_email', 'verification_status', 'city_id', 'verification_date', 'created_at');
         $data = $data->paginate($count);
         $success['stores'] = StoreResource::collection($data);
         $success['page_count'] = $data->lastPage();
