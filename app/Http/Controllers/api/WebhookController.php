@@ -118,8 +118,8 @@ class WebhookController extends BaseController
                     }
                     break;
                 case "FAILED":
-                    if ($package) {
-                        $package->update([
+                    if ($package_store) {
+                        $package_store->update([
                             'payment_status' => "failed",
                         ]);
                     } else {
