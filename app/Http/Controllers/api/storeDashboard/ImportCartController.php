@@ -64,7 +64,7 @@ class ImportCartController extends BaseController
             ], [
                 'total' => 0,
                 'count' => 0,
-                'shipping_price' => 30,
+                'shipping_price' => 0,
                 'tax' => 0,
             ]);
             $cartid = $cart->id;
@@ -139,7 +139,7 @@ class ImportCartController extends BaseController
             });
             $tax = $subtotal * 0.15;
             if ($weight > 15) {
-                $extra_shipping_price = ($weight - 15) * 3;
+                $extra_shipping_price = 0;
             } else {
                 $extra_shipping_price = 0;
             }
@@ -187,7 +187,7 @@ class ImportCartController extends BaseController
 
         ]);
         if ($newCart->weight > 15) {
-            $extra_shipping_price = ($newCart->weight - 15) * 3;
+            $extra_shipping_price = 0;
         } else {
             $extra_shipping_price = 0;
         }
