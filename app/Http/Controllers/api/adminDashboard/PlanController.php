@@ -194,4 +194,20 @@ class PlanController extends BaseController
         }
 
     }
+    public function searchPlanName(Request $request)
+    {
+        $query = $request->input('query');
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+
+        $plans = Plan::where('is_deleted', 0)->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')->paginate($count);
+        $success['query'] = $query;
+        $success['total_result'] = $plans->total();
+        $success['page_count'] = $plans->lastPage();
+        $success['current_page'] = $plans->currentPage();
+        $success['plans'] = PlanResource::collection($plans);
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الخطط  بنجاح', 'plans Information returned successfully');
+
+    }
 }
