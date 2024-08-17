@@ -21,9 +21,14 @@ class PlanController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $success['plans'] = PlanResource::collection(Plan::where('is_deleted', 0)->get());
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data= Plan::where('is_deleted', 0);
+        $data = $data->paginate($count);
+        $success['plans'] = PlanResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الخطط بنجاح', 'plans return successfully');
@@ -169,5 +174,24 @@ class PlanController extends BaseController
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم حذف الخطة بنجاح', 'plan deleted successfully');
+    }
+    public function deleteAll(Request $request)
+    {
+
+        $plans = Plan::whereIn('id', $request->id)->where('is_deleted', 0)->get();
+        if (count($plans) > 0) {
+            foreach ($plans as $plan) {
+
+                $plan->update(['is_deleted' => $plan->id]);
+                $success['plans'] = new PlanResource($plan);
+
+            }
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'تم حذف الخطة بنجاح', 'plans deleted successfully');
+        } else {
+            $success['status'] = 200;
+            return $this->sendResponse($success, 'المدخلات غيرموجودة', 'id is not exit');
+        }
+
     }
 }

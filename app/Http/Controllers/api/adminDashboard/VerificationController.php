@@ -198,6 +198,9 @@ class VerificationController extends BaseController
             'owner_name' => 'nullable|string|max:255',
             'commercial_name' => 'nullable',
             'verification_code' => 'required',
+            'domain' => ['nullable', 'string', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted', 0);
+            })],
         ]);
         if ($validator->fails()) {
             # code...
@@ -226,6 +229,11 @@ class VerificationController extends BaseController
             'verification_code' => $request->input('verification_code'),
 
         ]);
+        if ($request->has('domain')) {
+            $store->update([
+                'domain' => $request->input('domain'),
+            ]);
+        }
         if ($store->verification_type == 'commercialregister') {
             $store->update([
                 'commercial_name' => $request->input('commercial_name'),
