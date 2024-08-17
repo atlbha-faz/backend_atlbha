@@ -187,7 +187,7 @@ class PlanController extends BaseController
 
             }
             $success['status'] = 200;
-            return $this->sendResponse($success, 'تم حذف الأنشطة بنجاح', 'Activity deleted successfully');
+            return $this->sendResponse($success, 'تم حذف الخطة بنجاح', 'plans deleted successfully');
         } else {
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غيرموجودة', 'id is not exit');
