@@ -183,7 +183,8 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class);
         Route::get('changePackageStatus/{id}',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
         Route::get('plansDeleteAll',[App\Http\Controllers\api\adminDashboard\PlanController::class,'deleteAll']);
-        
+        Route::get('searchPlanName',[App\Http\Controllers\api\adminDashboard\PlanController::class,'searchPlanName']);
+
         Route::get('selector/etlobahCategory', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'etlobahCategory']);
         Route::get('selector/years', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'years']);
         Route::get('selector/cities', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'cities']);
