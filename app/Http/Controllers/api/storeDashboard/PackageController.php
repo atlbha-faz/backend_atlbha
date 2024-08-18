@@ -87,7 +87,11 @@ class PackageController extends BaseController
                 "Bypass3DS" => false,
             ];
             $processingDetailsobject = (object) ($processingDetails);
-            $price = $payment->coupon_id == null ? $package->yearly_price : $payment->discount_value;
+            if ($package->discount != null && $package->discount > 0) {
+                $price = $payment->coupon_id == null ? ($package->yearly_price - $package->discount) : $payment->discount_value;
+            } else {
+                $price = $payment->coupon_id == null ? ($package->yearly_price - $package->discount) : $payment->discount_value;
+            }
             if ($price == 0){
                 return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر","price must be more than zero");
                 }
@@ -169,7 +173,7 @@ class PackageController extends BaseController
             $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
             if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
                 if ($coupon->discount_type == 'fixed') {
-                    $packageAfterdiscount = $package->yearly_price - $coupon->discount;
+                    $packageAfterdiscount = $package->yearly_price - $package->discount - $coupon->discount;
                     $package_coupon->update([
                         'discount_value' => $packageAfterdiscount,
                         'coupon_id' => $coupon->id,
@@ -178,8 +182,8 @@ class PackageController extends BaseController
                 } else {
                     $couponDiscountPercent = $coupon->discount / 100;
                     $discountAmount = $package->yearly_price * $couponDiscountPercent;
-                    $packageAfterdiscount = $package->yearly_price - $discountAmount;
-                    $package_coupon->update([
+                    $packageAfterdiscount = $package->yearly_price - $discountAmount - $package->discount;                   
+                     $package_coupon->update([
                         'discount_value' => $packageAfterdiscount,
                         'coupon_id' => $coupon->id,
                     ]);
