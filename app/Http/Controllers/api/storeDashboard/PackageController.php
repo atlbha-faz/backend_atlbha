@@ -88,9 +88,9 @@ class PackageController extends BaseController
             ];
             $processingDetailsobject = (object) ($processingDetails);
             if ($package->discount != null && $package->discount > 0) {
-                $price = $package_store->coupon_id == null ? ($package->yearly_price - $package->discount) : $payment->discount_value;
+                $price = $payment->coupon_id == null ? ($package->yearly_price - $package->discount) : $payment->discount_value;
             } else {
-                $price = $package_store->coupon_id == null ? ($package->yearly_price - $package->discount) : $payment->discount_value;
+                $price = $payment->coupon_id == null ? ($package->yearly_price - $package->discount) : $payment->discount_value;
             }
             if ($price == 0) {
                 return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");
