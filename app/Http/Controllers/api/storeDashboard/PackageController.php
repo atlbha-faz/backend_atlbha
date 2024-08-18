@@ -57,9 +57,9 @@ class PackageController extends BaseController
     {
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $package_coupon = Package_store::where('store_id', $store->id)->orderBy('start_at', 'desc')->first();
-        if (is_null($package_coupon)){
-            return $this->sendError("اختار الباقة","package is't exists");
-            }
+        if (is_null($package_coupon)) {
+            return $this->sendError("اختار الباقة", "package is't exists");
+        }
         $package = Package::where('id', $package_coupon->package_id)->first();
         $success['package'] = new PackageResource($package);
         $success['status'] = 200;
@@ -87,10 +87,14 @@ class PackageController extends BaseController
                 "Bypass3DS" => false,
             ];
             $processingDetailsobject = (object) ($processingDetails);
-            $price = $package_store->coupon_id == null ? $package->yearly_price : $payment->discount_value;
-            if ($price == 0){
-                return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر","price must be more than zero");
-                }
+            if ($package->discount != null && $package->discount > 0) {
+                $price = $package_store->coupon_id == null ? ($package->yearly_price - $package->discount) : $payment->discount_value;
+            } else {
+                $price = $package_store->coupon_id == null ? ($package->yearly_price - $package->discount) : $payment->discount_value;
+            }
+            if ($price == 0) {
+                return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");
+            }
             $data = [
                 "PaymentMethodId" => $paymentype->paymentMethodId,
                 "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->user_name),
@@ -145,17 +149,17 @@ class PackageController extends BaseController
             return $this->sendError(null, $validator->errors());
         }
         $package_coupon = Package_store::where('id', $unique_id)->first();
-        if (is_null($package_coupon)){
-            return $this->sendError("اختار الباقة","package is't exists");
-            }
+        if (is_null($package_coupon)) {
+            return $this->sendError("اختار الباقة", "package is't exists");
+        }
         $package = Package::where('id', $package_coupon->package_id)->first();
         $now_time = Carbon::now();
         $coupon = Coupon::where('code', $request->code)->where('is_deleted', 0)->where('store_id', null)->first();
-        if (is_null($coupon)){
-            return $this->sendError("الكوبون غير موجود","coupon is't exists");
-            }
-            // !($now_time < $coupon->start_at)
-        if ($coupon != null && $coupon->status == 'active' &&($now_time->gte($coupon->start_at))) {
+        if (is_null($coupon)) {
+            return $this->sendError("الكوبون غير موجود", "coupon is't exists");
+        }
+
+        if ($coupon != null && $coupon->status == 'active' && ($now_time->gte($coupon->start_at))) {
             if ($package_coupon->coupon_id == $coupon->id) {
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
@@ -169,7 +173,7 @@ class PackageController extends BaseController
             $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
             if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
                 if ($coupon->discount_type == 'fixed') {
-                    $packageAfterdiscount = $package->yearly_price - $coupon->discount;
+                    $packageAfterdiscount = $package->yearly_price - $package->discount - $coupon->discount;
                     $package_coupon->update([
                         'discount_value' => $packageAfterdiscount,
                         'coupon_id' => $coupon->id,
@@ -178,7 +182,7 @@ class PackageController extends BaseController
                 } else {
                     $couponDiscountPercent = $coupon->discount / 100;
                     $discountAmount = $package->yearly_price * $couponDiscountPercent;
-                    $packageAfterdiscount = $package->yearly_price - $discountAmount;
+                    $packageAfterdiscount = $package->yearly_price - $discountAmount - $package->discount;
                     $package_coupon->update([
                         'discount_value' => $packageAfterdiscount,
                         'coupon_id' => $coupon->id,
