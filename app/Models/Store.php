@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-use DateTime;
-use Carbon\Carbon;
-use App\Models\Store;
-use App\Models\Comment;
-use App\Models\Package;
-use App\Models\Product;
 use App\Models\Category;
-use App\Models\Package_store;
+use App\Models\Comment;
 use App\Models\Maintenance;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Package;
+use App\Models\Package_store;
+use App\Models\Product;
+use App\Models\Store;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Store extends Model
 {
@@ -22,7 +22,7 @@ class Store extends Model
     protected $fillable = ['store_name', 'store_email', 'domain', 'slug', 'icon', 'description', 'business_license', 'phonenumber', 'verification_type', 'link', 'verification_status', 'store_address',
         'snapchat', 'facebook', 'tiktok', 'twiter', 'youtube', 'instegram', 'jaco', 'logo', 'entity_type', 'user_id', 'activity_id', 'package_id', 'country_id', 'city_id', 'user_country_id', 'user_city_id', 'category_id', 'start_at', 'end_at', 'period', 'verification_date',
         'periodtype', 'special', 'file', 'tiktok', 'working_status', 'status', 'category_id', 'subcategory_id', 'is_deleted', 'owner_name', 'commercial_name', 'verification_code', 'views', 'madfu_username', 'madfu_password',
-        'madfu_api_key','madfu_app_code','madfu_authorization','is_send','domain_type'];
+        'madfu_api_key', 'madfu_app_code', 'madfu_authorization', 'is_send', 'domain_type'];
 
     public function rate($id)
     {
@@ -137,9 +137,9 @@ class Store extends Model
     public function left($id)
     {
         $store = Store::where('id', $id)->first();
-        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status','paid')->orderBy('start_at', 'DESC')->first();
+        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status', 'paid')->orderBy('start_at', 'DESC')->first();
 
-        if ($store->package_id == null || $store->periodtype == "6months" ||$store_package == null) {
+        if ($store->package_id == null || $store->periodtype == "6months" || $store_package == null) {
             return 0;
         } else {
             $day = Store::select('end_at')->where('id', $id)->first();
@@ -323,18 +323,18 @@ class Store extends Model
     {
         return $this->hasOne(Maintenance::class);
     }
-  
+
     public function checkPaid($id)
     {
         $store = Store::where('id', $id)->first();
         $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->orderBy('start_at', 'DESC')->first();
-        if ($store_package->payment_status =="paid") {
-          return true;
-        }
-      else {
-            return false;
+        if ($store_package) {
+            if ($store_package->payment_status == "paid") {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
-
 
 }
