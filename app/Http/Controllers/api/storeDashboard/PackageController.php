@@ -100,7 +100,7 @@ class PackageController extends BaseController
                 "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->store->store_name.'('.auth()->user()->user_name.')'),
                 "InvoiceValue" => $price, // total_price
                 "CustomerEmail" => auth()->user()->email,
-                "CustomerMobile"=> str_replace("+", "00",auth()->user()->phonenumber),
+                "CustomerMobile"=>substr(auth()->user()->phonenumber, 4),
                 "CallBackUrl" => 'https://store.atlbha.com/checkout-packages/success',
                 "ErrorUrl" => 'https://store.atlbha.com/checkout-packages/failed',
                 "Language" => 'AR',
