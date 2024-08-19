@@ -49,6 +49,7 @@ class VerificationResource extends JsonResource
             'id' => $this->id,
             'store_name' => $this->store_name,
             'domain' => $this->domain,
+            'domain_type' => $this->domain_type !== null ? $this->domain_type :null,
             'phonenumber' => $this->phonenumber,
             'store_email' => $this->store_email,
             'icon' => $this->icon,
