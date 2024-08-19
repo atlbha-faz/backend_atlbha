@@ -298,7 +298,7 @@ class CheckoutController extends BaseController
                     $data = [
                         "SessionId" => $request->SessionId,
                         "CustomerName" => $customer->name,
-                        "CustomerMobile"=> str_replace("+", "00",$customer->phonenumber),
+                        "CustomerMobile"=>substr($customer->phonenumber, 4),
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
                         "CallBackUrl" => 'https://' . $domain . '/shop/checkout/success',
@@ -370,7 +370,7 @@ class CheckoutController extends BaseController
                     $data = [
                         "SessionId" => $request->SessionId,
                         "CustomerName" => $customer->name,
-                        "CustomerMobile"=> str_replace("+", "00",$customer->phonenumber),
+                        "CustomerMobile"=>substr($customer->phonenumber, 4),
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
                         "CallBackUrl" => 'https://' . $domain . '/shop/checkout/success',
