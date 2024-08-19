@@ -299,6 +299,7 @@ class CheckoutController extends BaseController
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
+                        "CustomerMobile"=>substr($customer->phonenumber, 4),
                         "CallBackUrl" => 'https://' . $domain . '/shop/checkout/success',
                         "ErrorUrl" => 'https://' . $domain . '/shop/checkout/failed',
                         "Language" => 'ar',
@@ -366,6 +367,7 @@ class CheckoutController extends BaseController
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
+                        "CustomerMobile"=>substr($customer->phonenumber, 4),
                         "CallBackUrl" => 'https://' . $domain . '/shop/checkout/success',
                         "ErrorUrl" => 'https://' . $domain . '/shop/checkout/failed',
                         "Language" => 'ar',
