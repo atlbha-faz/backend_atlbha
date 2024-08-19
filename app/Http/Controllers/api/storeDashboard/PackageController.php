@@ -97,9 +97,10 @@ class PackageController extends BaseController
             }
             $data = [
                 "PaymentMethodId" => $paymentype->paymentMethodId,
-                "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->user_name),
+                "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->store->store_name.'('.auth()->user()->user_name.')'),
                 "InvoiceValue" => $price, // total_price
                 "CustomerEmail" => auth()->user()->email,
+                "CustomerMobile"=>auth()->user()->phonenumber,
                 "CallBackUrl" => 'https://store.atlbha.com/checkout-packages/success',
                 "ErrorUrl" => 'https://store.atlbha.com/checkout-packages/failed',
                 "Language" => 'AR',
