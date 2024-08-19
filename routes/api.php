@@ -179,8 +179,6 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
-        Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class);
-        Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class);
         Route::get('changePackageStatus/{id}',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
         Route::get('plansDeleteAll',[App\Http\Controllers\api\adminDashboard\PlanController::class,'deleteAll']);
         
@@ -245,6 +243,8 @@ Route::middleware([AdminUser::class])->group(function () {
             Route::resource('explainVideos', App\Http\Controllers\api\adminDashboard\ExplainVideosController::class, ['names' => 'admin.explainvideo']);
             Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
             Route::resource('activity', App\Http\Controllers\api\adminDashboard\ActivityController::class, ['names' => 'admin.activity']);
+            Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class, ['names' => 'admin.package']);
+            Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class, ['names' => 'admin.plan']);
 
             Route::resource('commonquestion', App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, ['names' => 'admin.commonquestion']);
             Route::get('commonDeleteall', [App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, 'deleteAll'])->name('admin.commonquestion.deleteall');
