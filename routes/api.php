@@ -219,7 +219,8 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('searchCountry', [App\Http\Controllers\api\adminDashboard\CountryController::class, 'searchCountry']);
         Route::get('searchSubscriptionsName', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'searchSubscriptionsName']);
         Route::get('searchServiceName', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'searchServiceName']);
-
+        Route::get('searchOrderDomainName', [App\Http\Controllers\api\adminDashboard\WebsiteDomainOrderController::class, 'searchOrderDomainName']);
+        
         Route::middleware([AdminCheckPermission::class])->group(function () {
             Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
 
@@ -319,10 +320,13 @@ Route::middleware([AdminUser::class])->group(function () {
             Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class, 'optionsProduct']);
 
             Route::resource('websiteorder', App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, ['names' => 'admin.websiteorder']);
+            Route::resource('WebsiteDomainOrder', App\Http\Controllers\api\adminDashboard\WebsiteDomainOrderController::class, ['names' => 'admin.WebsiteDomainOrder']);
             Route::get('websiteorderdeleteall', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'deleteAll'])->name('admin.websiteorder.deleteall');
-
             Route::post('acceptService/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'acceptService'])->name('admin.websiteorder.acceptService');
             Route::post('rejectService/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'rejectService'])->name('admin.websiteorder.rejectService');
+            Route::post('acceptDomain/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteDomainOrderController::class, 'acceptDomain'])->name('admin.websiteorder.acceptDomain');
+            Route::post('rejectDomain/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteDomainOrderController::class, 'rejectDomain'])->name('admin.websiteorder.rejectDomain');
+            Route::get('WebsiteDomainOrderdeleteall', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'deleteAll'])->name('admin.WebsiteDomainOrder.deleteall');
 
             Route::resource('stock', App\Http\Controllers\api\adminDashboard\StockController::class, ['names' => 'admin.stock']);
             // import product
