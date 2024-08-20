@@ -168,7 +168,7 @@ class WebsiteDomainOrderController extends BaseController
         }
     }
 
-    public function acceptService($websiteorder)
+    public function acceptDomain($websiteorder)
     {
         $websiteorder = Websiteorder::query()->where('type','store')->find($websiteorder);
         if (is_null($websiteorder) || $websiteorder->is_deleted != 0) {
@@ -208,7 +208,7 @@ class WebsiteDomainOrderController extends BaseController
 
     }
 
-    public function rejectService($websiteorder)
+    public function rejectDomain($websiteorder)
     {
         $websiteorder = Websiteorder::query()->where('type', 'service')->find($websiteorder);
         if (is_null($websiteorder) || $websiteorder->is_deleted != 0) {
@@ -227,7 +227,7 @@ class WebsiteDomainOrderController extends BaseController
             'message' => ' تم رفض الخدمة' . implode(',', $serviceName),
             'store_id' => $websiteorder->store_id,
             'user_id' => auth()->user()->id,
-            'type' => "service_reject",
+            'type' => "domain_reject",
             'object_id' => $websiteorder->store_id,
         ];
 
