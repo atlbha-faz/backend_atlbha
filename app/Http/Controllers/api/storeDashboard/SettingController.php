@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\User;
-use App\Models\Store;
-use App\Mail\SendMail;
-use App\Models\Homepage;
-use App\Models\Day_Store;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Resources\StoreResource;
-use Illuminate\Support\Facades\Validator;
+use App\Events\VerificationEvent;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\StoreResource;
+use App\Models\Day_Store;
+use App\Models\Homepage;
+use App\Models\Store;
+use App\Models\User;
+use App\Models\Websiteorder;
+use App\Notifications\verificationNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SettingController extends BaseController
 {
@@ -151,29 +153,10 @@ class SettingController extends BaseController
                 }
             }
         }
-        $users = User::where('store_id', null)->whereIn('user_type', ['admin', 'admin_employee'])->whereIn('id', [1, 2])->get();
         if ($store->domain_type == "pay_domain") {
-            $data = [
-                'message' => 'اسم الدومين' . $store->domain
-                . $store->store_name . ' طلب شراء الدومين من ',
-                'store_id' => $store->id,
-                'user_id' => auth()->user()->id,
-                'type' => "طلب شراء الدومين",
-                'object_id' => $store->created_at,
-            ];
+            $this->addDomainRequest(75,1);
         } else {
-            $data = [
-                'message' => 'اسم الدومين' . $store->domain
-                . $store->store_name . ' طلب ربط دومين تاجر من ',
-                'store_id' => $store->id,
-                'user_id' => auth()->user()->id,
-                'type' => "طلب ربط دومين تاجر ",
-                'object_id' => $store->created_at,
-            ];
-
-        }
-        foreach ($users as $user) {
-            Mail::to($user->email)->send(new SendMail($data));
+            $this->addDomainRequest(76,0);
         }
         $success['storeSetting'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
         $success['setting_store'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
@@ -199,6 +182,34 @@ class SettingController extends BaseController
 
         $success['status'] = 200;
         return $this->sendResponse($success, 'دومين صحيح', ' correct domain');
+
+    }
+    public function addDomainRequest($id,$type)
+    {
+        $websiteorder = Websiteorder::create([
+            'type' => 'store',
+            'order_number' => 'domain_' . auth()->user()->store_id,
+            'store_id' => auth()->user()->store_id,
+        ]);
+        $websiteorder->services()->attach($id);
+        if($type){
+            $message="طلب شراء دومين جديد للمتجر";
+        }
+        else{
+            $message="طلب ربط الدومين الخاص بالمتجر";
+        }
+        $data = [
+            'message' =>$message,
+            'store_id' => auth()->user()->store_id,
+            'user_id' => auth()->user()->id,
+            'type' => "domain_store",
+            'object_id' => $websiteorder->id,
+        ];
+        $userAdmains = User::where('user_type', 'admin')->get();
+        foreach ($userAdmains as $user) {
+            Notification::send($user, new verificationNotification($data));
+        }
+        event(new VerificationEvent($data));
 
     }
 

@@ -320,6 +320,7 @@ Route::middleware([AdminUser::class])->group(function () {
             Route::post('optionsProduct/{id}', [App\Http\Controllers\api\adminDashboard\OptionController::class, 'optionsProduct']);
 
             Route::resource('websiteorder', App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, ['names' => 'admin.websiteorder']);
+            Route::resource('WebsiteDomainOrder', App\Http\Controllers\api\adminDashboard\WebsiteDomainOrderController::class, ['names' => 'admin.WebsiteDomainOrder']);
             Route::get('websiteorderdeleteall', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'deleteAll'])->name('admin.websiteorder.deleteall');
 
             Route::post('acceptService/{id}', [App\Http\Controllers\api\adminDashboard\WebsiteorderController::class, 'acceptService'])->name('admin.websiteorder.acceptService');
