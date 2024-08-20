@@ -31,7 +31,7 @@ class WebsiteDomainOrderController extends BaseController
     public function index(Request $request)
     {
 
-        $success['count_of_serivces_order'] = Websiteorder::where('is_deleted', 0)->where('type', 'store')->count();
+        $success['count_of_domain_orders'] = Websiteorder::where('is_deleted', 0)->where('type', 'store')->count();
         $success['count_of_pay_domain'] = Websiteorder::where('is_deleted', 0)->where('type', 'store')->whereHas('services', function ($q) {
             $q->where('service_id', 75);
         })->count();
