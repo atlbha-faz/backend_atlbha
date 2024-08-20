@@ -88,6 +88,17 @@ class SettingController extends BaseController
         }
         $settingStore = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $request->working_status = 'active';
+
+        if (in_array($request->domain_type, ['pay_domain', 'has_domain'])) {
+            if ($request->domain != $settingStore->domain) {
+                if ($request->domain_type == "pay_domain") {
+                    $this->addDomainRequest(75, 1);
+                } else {
+                    $this->addDomainRequest(76, 0);
+                }
+            }
+        }
+
         $settingStore->update([
             'description' => $request->input('description'),
             'domain' => $request->input('domain'),
@@ -153,11 +164,7 @@ class SettingController extends BaseController
                 }
             }
         }
-        if ($store->domain_type == "pay_domain") {
-            $this->addDomainRequest(75,1);
-        } else {
-            $this->addDomainRequest(76,0);
-        }
+
         $success['storeSetting'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
         $success['setting_store'] = new StoreResource(Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first());
 
@@ -184,7 +191,7 @@ class SettingController extends BaseController
         return $this->sendResponse($success, 'دومين صحيح', ' correct domain');
 
     }
-    public function addDomainRequest($id,$type)
+    public function addDomainRequest($id, $type)
     {
         $websiteorder = Websiteorder::create([
             'type' => 'store',
@@ -192,14 +199,13 @@ class SettingController extends BaseController
             'store_id' => auth()->user()->store_id,
         ]);
         $websiteorder->services()->attach($id);
-        if($type){
-            $message="طلب شراء دومين جديد للمتجر";
-        }
-        else{
-            $message="طلب ربط الدومين الخاص بالمتجر";
+        if ($type) {
+            $message = "طلب شراء دومين جديد للمتجر";
+        } else {
+            $message = "طلب ربط الدومين الخاص بالمتجر";
         }
         $data = [
-            'message' =>$message,
+            'message' => $message,
             'store_id' => auth()->user()->store_id,
             'user_id' => auth()->user()->id,
             'type' => "domain_store",
