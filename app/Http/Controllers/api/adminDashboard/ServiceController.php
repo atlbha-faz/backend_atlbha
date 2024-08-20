@@ -27,7 +27,7 @@ class ServiceController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data = Service::where('is_deleted', 0)->whereNotIn('id', [75, 76])->orderByDesc('created_at');
+        $data = Service::where('is_deleted', 0)->whereNotIn('id', [18,19])->orderByDesc('created_at');
         $data = $data->paginate($count);
         $success['Services'] = ServiceResource::collection($data);
         $success['page_count'] = $data->lastPage();

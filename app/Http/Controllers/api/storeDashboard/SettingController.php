@@ -187,6 +187,33 @@ class SettingController extends BaseController
         return $this->sendResponse($success, 'دومين صحيح', ' correct domain');
 
     }
+    public function addDomainRequest($id, $type)
+    {
+        $websiteorder = Websiteorder::create([
+            'type' => 'store',
+            'order_number' => 'domain_' . auth()->user()->store_id,
+            'store_id' => auth()->user()->store_id,
+        ]);
+        $websiteorder->services()->attach($id);
+        if ($type) {
+            $message = "طلب شراء دومين جديد للمتجر";
+        } else {
+            $message = "طلب ربط الدومين الخاص بالمتجر";
+        }
+        $data = [
+            'message' => $message,
+            'store_id' => auth()->user()->store_id,
+            'user_id' => auth()->user()->id,
+            'type' => "domain_store",
+            'object_id' => $websiteorder->id,
+        ];
+        $userAdmains = User::where('user_type', 'admin')->get();
+        foreach ($userAdmains as $user) {
+            Notification::send($user, new verificationNotification($data));
+        }
+        event(new VerificationEvent($data));
+
+    }
     
 
 }
