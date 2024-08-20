@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
+use App\Events\VerificationEvent;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\StoreResource;
 use App\Models\Day_Store;
 use App\Models\Homepage;
 use App\Models\Store;
 use App\Models\User;
+use App\Models\Websiteorder;
+use App\Notifications\verificationNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -84,6 +88,15 @@ class SettingController extends BaseController
         }
         $settingStore = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $request->working_status = 'active';
+        if (in_array($request->domain_type, ['pay_domain', 'has_domain'])) {
+            if ($request->domain != $settingStore->domain) {
+                if ($request->domain_type == "pay_domain") {
+                    $this->addDomainRequest(18, 1);
+                } else {
+                    $this->addDomainRequest(19, 0);
+                }
+            }
+        }
         $settingStore->update([
             'description' => $request->input('description'),
             'domain' => $request->input('domain'),
@@ -174,5 +187,6 @@ class SettingController extends BaseController
         return $this->sendResponse($success, 'دومين صحيح', ' correct domain');
 
     }
+    
 
 }
