@@ -249,7 +249,7 @@ class WebsiteDomainOrderController extends BaseController
         return $this->sendResponse($success, 'تم رفض الطلب بنجاح', ' reject successfully');
 
     }
-    public function searchOrderServiceName(Request $request)
+    public function searchOrderDomainName(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $query = $request->input('query');
