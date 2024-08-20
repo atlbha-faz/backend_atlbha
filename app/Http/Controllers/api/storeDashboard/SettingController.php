@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\StoreResource;
-use App\Models\Day_Store;
-use App\Models\Homepage;
-use App\Models\Store;
 use App\Models\User;
+use App\Models\Store;
+use App\Models\Homepage;
+use App\Models\Day_Store;
+use Illuminate\Support\Str;
 use App\Models\Websiteorder;
-use App\Notifications\verificationNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Events\VerificationEvent;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SettingController extends BaseController
 {
@@ -189,9 +190,10 @@ class SettingController extends BaseController
     }
     public function addDomainRequest($id, $type)
     {
+        $order_number = Str::random(4, 'numeric');
         $websiteorder = Websiteorder::create([
             'type' => 'store',
-            'order_number' => 'domain_' . auth()->user()->store_id,
+            'order_number' => $order_number,
             'store_id' => auth()->user()->store_id,
         ]);
         $websiteorder->services()->attach($id);
