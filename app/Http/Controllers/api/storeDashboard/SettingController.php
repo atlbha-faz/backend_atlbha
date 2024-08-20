@@ -193,9 +193,10 @@ class SettingController extends BaseController
     }
     public function addDomainRequest($id, $type)
     {
+        $order = Websiteorder::orderBy('id', 'desc')->first();
         $websiteorder = Websiteorder::create([
             'type' => 'store',
-            'order_number' => 'domain_' . auth()->user()->store_id,
+            'order_number' => 'domain_' . $order->order_number,
             'store_id' => auth()->user()->store_id,
         ]);
         $websiteorder->services()->attach($id);
