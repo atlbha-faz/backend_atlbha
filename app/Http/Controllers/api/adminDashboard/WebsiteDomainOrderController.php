@@ -183,7 +183,7 @@ class WebsiteDomainOrderController extends BaseController
         $websiteorder->update(['status' => 'accept']);
         $users = User::where('store_id', $websiteorder->store_id)->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0)->get();
         $data = [
-            'message' => ' تم قبول خدمة' . implode(',', $serviceName),
+            'message' => ' تم قبول' . implode(',', $serviceName),
             'store_id' => $websiteorder->store_id,
             'user_id' => auth()->user()->id,
             'type' => "domain_accept",
@@ -195,7 +195,7 @@ class WebsiteDomainOrderController extends BaseController
             if ($user->device_token !== null) {
 
                 $fcm = $this->sendFCM($user->device_token,
-                    $user->id, 'منصة اطلبها', ' تم قبول خدمة' . implode(',', $serviceName), $user->notifications()->count());
+                    $user->id, 'منصة اطلبها', ' تم قبول ' . implode(',', $serviceName), $user->notifications()->count());
 
             }
 
@@ -224,7 +224,7 @@ class WebsiteDomainOrderController extends BaseController
         $websiteorder->update(['status' => 'reject']);
         $users = User::where('store_id', $websiteorder->store_id)->get();
         $data = [
-            'message' => ' تم رفض الخدمة' . implode(',', $serviceName),
+            'message' => ' تم رفض ' . implode(',', $serviceName),
             'store_id' => $websiteorder->store_id,
             'user_id' => auth()->user()->id,
             'type' => "domain_reject",
@@ -236,7 +236,7 @@ class WebsiteDomainOrderController extends BaseController
             if ($user->device_token !== null) {
 
                 $fcm = $this->sendFCM($user->device_token,
-                    $user->id, 'منصة اطلبها', ' تم رفض خدمة' . implode(',', $serviceName), $user->notifications()->count());
+                    $user->id, 'منصة اطلبها', ' تم رفض ' . implode(',', $serviceName), $user->notifications()->count());
 
             }
 
