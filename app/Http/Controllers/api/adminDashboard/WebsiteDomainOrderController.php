@@ -210,7 +210,7 @@ class WebsiteDomainOrderController extends BaseController
 
     public function rejectDomain($websiteorder)
     {
-        $websiteorder = Websiteorder::query()->where('type', 'service')->find($websiteorder);
+        $websiteorder = Websiteorder::query()->where('type','store')->find($websiteorder);
         if (is_null($websiteorder) || $websiteorder->is_deleted != 0) {
             return $this->sendError("الطلب غير موجود", "Order is't exists");
         }
