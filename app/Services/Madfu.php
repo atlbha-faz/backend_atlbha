@@ -78,7 +78,7 @@ class Madfu
             $app_code = $store->madfu_app_code;
             $authorization = $store->madfu_authorization;
         } else {
-            $username = 'wesam@faz-it.net';
+            $username = 'Cashier@Atlbha.sa';
             $password = 'Welcome@123';
             $api_key = 'b55dd64-dc765-12c5-bcd5-4';
             $app_code = 'Atlbha';
@@ -98,7 +98,7 @@ class Madfu
             $app_code = $store->madfu_app_code;
             $authorization = $store->madfu_authorization;
         } else {
-            $username = 'wesam@faz-it.net';
+            $username = 'Cashier@Atlbha.sa';
             $password = 'Welcome@123';
             $api_key = 'b55dd64-dc765-12c5-bcd5-4';
             $app_code = 'Atlbha';
@@ -121,7 +121,7 @@ class Madfu
             $app_code = $store->madfu_app_code;
             $authorization = $store->madfu_authorization;
         } else {
-            $username = 'wesam@faz-it.net';
+            $username = 'Cashier@Atlbha.sa';
             $password = 'Welcome@123';
             $api_key = 'b55dd64-dc765-12c5-bcd5-4';
             $app_code = 'Atlbha';
