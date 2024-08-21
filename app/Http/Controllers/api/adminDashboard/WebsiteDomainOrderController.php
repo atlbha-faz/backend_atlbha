@@ -253,7 +253,7 @@ class WebsiteDomainOrderController extends BaseController
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $query = $request->input('query');
-        $orders = Websiteorder::where('is_deleted', 0)
+        $orders = Websiteorder::where('is_deleted', 0)->where('type','store')
         ->where('order_number', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
         $orders=$orders->paginate($count);
 
