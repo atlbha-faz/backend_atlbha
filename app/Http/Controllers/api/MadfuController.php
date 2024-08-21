@@ -22,14 +22,14 @@ class MadfuController extends BaseController
 {
     public function login(MadfuLoginRequest $request)
     {if ($request->store_id == "atlbhaPlatform") {
-        $username = 'wesam@faz-it.net';
+        $username = 'Cashier@Atlbha.sa';
         $password = 'Welcome@123';
         $api_key = 'b55dd64-dc765-12c5-bcd5-4';
         $app_code = 'Atlbha';
         $authorization = 'Basic QXRsYmhhOlFVMU5UQVVOUzFOWFNTRQ==';
     } else {
         $store = Store::where('id', $request->store_id)->first();
-        $username = ($store && $store->madfu_username) ? $store->madfu_username : 'wesam@faz-it.net';
+        $username = ($store && $store->madfu_username) ? $store->madfu_username : 'Cashier@Atlbha.sa';
         $password = ($store && $store->madfu_password) ? $store->madfu_password : 'Welcome@123';
         $api_key = ($store && $store->madfu_api_key) ? $store->madfu_api_key : 'b55dd64-dc765-12c5-bcd5-4';
         $app_code = ($store && $store->madfu_app_code) ? $store->madfu_app_code : 'Atlbha';
