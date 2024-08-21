@@ -183,7 +183,7 @@ class WebsiteDomainOrderController extends BaseController
         $websiteorder->update(['status' => 'accept']);
         $users = User::where('store_id', $websiteorder->store_id)->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0)->get();
         $data = [
-            'message' => ' تم قبول' . implode(',', $serviceName),
+            'message' => ' تم قبول ' . implode(',', $serviceName),
             'store_id' => $websiteorder->store_id,
             'user_id' => auth()->user()->id,
             'type' => "domain_accept",
