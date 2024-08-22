@@ -71,6 +71,7 @@ class PackageController extends BaseController
         $validator = Validator::make($input, [
             'paymentype_id' => 'required',
             'package_id' => 'required',
+            'package_reference'=>'required_if:paymentype_id,5'
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -131,8 +132,7 @@ class PackageController extends BaseController
 
             $payment->update([
                 'paymentType' => $paymentype->name,
-                'paymentTransectionID' => 'package_reference_' . $payment->id,
-            ]);
+                'paymentTransectionID' => $request->package_reference,            ]);
         }
         $success['package'] = new PackageResource($package);
         $success['status'] = 200;
