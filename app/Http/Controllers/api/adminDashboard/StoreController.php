@@ -616,7 +616,7 @@ class StoreController extends BaseController
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $stores = Store::where('is_deleted', 0)->where('verification_status', '!=', 'pending')
+        $stores = Store::where('is_deleted', 0)->where('store_name', '!=', null)
             ->where('store_name', 'like', "%$query%")
             ->orderBy('created_at', 'desc')
             ->paginate($count);
