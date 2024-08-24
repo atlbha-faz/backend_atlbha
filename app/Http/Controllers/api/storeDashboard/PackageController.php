@@ -47,6 +47,8 @@ class PackageController extends BaseController
         ], [
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'end_at' => $end_at,
+            'discount_value' => null,
+            'coupon_id' => null
         ]);
         $package = Package::where('id', $payment->package_id)->first();
         $success['package'] = new PackageResource($package);
