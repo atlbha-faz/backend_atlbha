@@ -16,8 +16,8 @@ class Kernel extends ConsoleKernel
         protected $commands = [
 
         Commands\AbandonedCart::class,
-            Commands\DeleteStore::class,
-            Commands\PermanentDeletion::class,
+            // Commands\DeleteStore::class,
+            // Commands\PermanentDeletion::class,
             Commands\ArchiveIdleOrders::class,
             Commands\DeleteTokenFile::class
 
@@ -26,10 +26,10 @@ class Kernel extends ConsoleKernel
     {
           $schedule->command('cart:abandoned') 
                 ->everyMinute();
-                 $schedule->command('store:delete') 
-                ->everyMinute();
-                $schedule->command('deletion:permanent') 
-                ->everyMinute();
+                //  $schedule->command('store:delete') 
+                // ->everyMinute();
+                // $schedule->command('deletion:permanent') 
+                // ->everyMinute();
                 $schedule->command('orders:archive') 
                 ->everyMinute();
                 $schedule->command('token:deletefile') 
