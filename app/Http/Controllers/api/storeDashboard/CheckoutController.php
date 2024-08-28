@@ -260,7 +260,7 @@ class CheckoutController extends BaseController
 
     //     }
     //  else{
-
+        $cart->delete();
         $success['order'] = new OrderResource($order);
 
         $success['status'] = 200;
