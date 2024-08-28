@@ -260,7 +260,7 @@ class CheckoutController extends BaseController
         //     return $this->sendResponse($success, 'تم ارسال الطلب بنجاح', 'order send successfully');
 
         // } else {
-
+            $cart->delete();
             $success['order'] = new OrderResource($order);
 
             $success['status'] = 200;
