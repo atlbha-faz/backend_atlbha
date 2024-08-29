@@ -176,7 +176,7 @@ Route::get('store_token', [\App\Http\Controllers\api\adminDashboard\StoreDataCon
 Route::middleware([AdminUser::class])->group(function () {
     Route::prefix('/Admin')->group(function () {
          
-        Route::resource('packagecoupon', App\Http\Controllers\api\adminDashboard\PackagecouponController::class);
+       
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
         Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class);
