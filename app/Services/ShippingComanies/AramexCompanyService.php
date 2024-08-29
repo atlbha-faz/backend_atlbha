@@ -22,7 +22,7 @@ class AramexCompanyService implements ShippingInterface
     public function __construct()
     {
 
-        $this->base_url = env('aramex_base_url', 'https://ws.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreateShipments');
+        $this->base_url = env('aramex_base_url', 'https://ws.sbx.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreateShipments');
         $this->headers = [
             "Content-Type" => 'application/json',
             'Accept' => 'application/json',
@@ -90,7 +90,7 @@ class AramexCompanyService implements ShippingInterface
             "Reference5": ""
           }
         }';
-        $request = new Request('POST', 'https://ws.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
+        $request = new Request('POST', 'https://ws.sbx.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
         $res = $client->sendAsync($request)->wait();
         $response = json_decode($res->getBody());
         return $response;
@@ -107,11 +107,11 @@ class AramexCompanyService implements ShippingInterface
 
         $json = '{
             "ClientInfo": {
-                "UserName": "armx.ruh.it@gmail.com",
-                "Password": "YUre@9982",
+                "UserName": "testingapi@aramex.com",
+                "Password": "R123456789$r",
                 "Version": "v1",
-                "AccountNumber": "117620",
-                "AccountPin": "553654",
+                "AccountNumber": "115051",
+                "AccountPin": "165165",
                 "AccountEntity": "JED",
                 "AccountCountryCode": "SA",
                 "Source": 24
@@ -199,7 +199,7 @@ class AramexCompanyService implements ShippingInterface
                     "ThirdParty": {
                         "Reference1": "",
                         "Reference2": "",
-                        "AccountNumber": "117620",
+                        "AccountNumber": "115051",
                         "PartyAddress": {
                             "Line1": "الرويس",
                             "Line2": "طريق المدينة المنورة",
@@ -348,15 +348,15 @@ class AramexCompanyService implements ShippingInterface
         }
 
         $json = '{
-                        "ClientInfo": {
-                            "UserName": "armx.ruh.it@gmail.com",
-                            "Password": "YUre@9982",
-                            "Version": "v1",
-                            "AccountNumber": "117620",
-                            "AccountPin": "553654",
-                            "AccountEntity": "JED",
-                            "AccountCountryCode": "SA",
-                            "Source": 24
+                  "ClientInfo": {
+                             "UserName": "testingapi@aramex.com",
+                             "Password": "R123456789$r",
+                             "Version": "v1",
+                             "AccountNumber": "115051",
+                             "AccountPin": "165165",
+                             "AccountEntity": "JED",
+                             "AccountCountryCode": "SA",
+                              "Source": 24
                         },
                         "LabelInfo": {
                             "ReportID": 9729,
@@ -441,7 +441,7 @@ class AramexCompanyService implements ShippingInterface
                                 "ThirdParty": {
                                     "Reference1": "",
                                     "Reference2": "",
-                                    "AccountNumber": "117620",
+                                    "AccountNumber": "115051",
                                     "PartyAddress": {
                                         "Line1": "الرويس",
                                         "Line2": "طريق المدينة المنورة",
