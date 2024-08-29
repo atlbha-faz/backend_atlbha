@@ -128,7 +128,7 @@ class AramexCompanyService implements ShippingInterface
                     "Shipper": {
                         "Reference1": "",
                         "Reference2": "",
-                        "AccountNumber": "117620",
+                        "AccountNumber": "115051",
                         "PartyAddress": {
                             "Line1": "' . $data["shipper_line1"] . '",
                             "Line2": "' . $data["shipper_line2"] . '",
@@ -370,7 +370,7 @@ class AramexCompanyService implements ShippingInterface
                                 "Shipper": {
                                     "Reference1": "",
                                     "Reference2": "",
-                                    "AccountNumber": "117620",
+                                    "AccountNumber": "115051",
                                     "PartyAddress": {
                                         "Line1": "' . $shipping->destination_streetaddress . '",
                                         "Line2": "' . $shipping->destination_streetaddress . '",
