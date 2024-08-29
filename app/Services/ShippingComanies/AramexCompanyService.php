@@ -1,19 +1,19 @@
 <?php
 namespace App\Services\ShippingComanies;
 
-use Carbon\Carbon;
-use App\Models\Order;
-use App\Models\Store;
-use GuzzleHttp\Client;
-use App\Models\Payment;
-use App\Models\Shipping;
-use App\Models\ReturnOrder;
-use App\Models\OrderAddress;
-use GuzzleHttp\Psr7\Request;
-use App\Models\OrderOrderAddress;
-use App\Services\FatoorahServices;
 use App\Http\Resources\OrderResource;
 use App\Interfaces\ShippingInterface;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderOrderAddress;
+use App\Models\Payment;
+use App\Models\ReturnOrder;
+use App\Models\Shipping;
+use App\Models\Store;
+use App\Services\FatoorahServices;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 class AramexCompanyService implements ShippingInterface
 {
@@ -28,23 +28,23 @@ class AramexCompanyService implements ShippingInterface
             'Accept' => 'application/json',
         ];
     }
-    public function sendError($error ,$error_en , $errorMessages=[], $code=200)
+    public function sendError($error, $error_en, $errorMessages = [], $code = 200)
     {
-     $response = [
-         'success' =>false ,
-         'message'=>['en' => $error_en, 'ar' => $error]
- 
-     ];
- 
-     if (!empty($errorMessages)) {
-         # code...
-         $response['data']= $errorMessages;
-     }else{
-         $response['data']= null;
-     }
- 
-         return response()->json($response,$code);
- 
+        $response = [
+            'success' => false,
+            'message' => ['en' => $error_en, 'ar' => $error],
+
+        ];
+
+        if (!empty($errorMessages)) {
+            # code...
+            $response['data'] = $errorMessages;
+        } else {
+            $response['data'] = null;
+        }
+
+        return response()->json($response, $code);
+
     }
     public function buildRequest($mothod, $data)
     {
@@ -68,16 +68,17 @@ class AramexCompanyService implements ShippingInterface
             'Content-Type' => 'application/json',
         ];
         $body = '{
-          "ClientInfo": {
-            "UserName": "armx.ruh.it@gmail.com",
-            "Password": "YUre@9982",
-            "Version": "v1",
-            "AccountNumber": "117620",
-            "AccountPin": "553654",
-            "AccountEntity": "JED",
-            "AccountCountryCode": "SA",
-            "Source": 24
-          },
+         "ClientInfo": {
+        "UserName": "testingapi@aramex.com",
+        "Password": "R123456789$r",
+        "Version": "1.0",
+        "AccountNumber": "115051",
+        "AccountPin": "165165",
+        "AccountEntity": "JED",
+        "AccountCountryCode": "SA",
+        "Source": 25,
+        "PreferredLanguageCode": null
+            },
           "GetLastTrackingUpdateOnly": false,
           "Shipments": [
             "' . $id . '"
@@ -255,13 +256,13 @@ class AramexCompanyService implements ShippingInterface
                         "CustomsValueAmount": null,
                         "CashOnDeliveryAmount": {
                             "CurrencyCode": "SAR",
-                            "Value": 1
+                            "Value": 0
                         },
                         "InsuranceAmount": null,
                         "CashAdditionalAmount": null,
                         "CashAdditionalAmountDescription": "",
                         "CollectAmount": null,
-                        "Services": "CODS",
+                        "Services": "",
                         "Items": []
                     },
                     "Attachments": [],
@@ -316,7 +317,7 @@ class AramexCompanyService implements ShippingInterface
                 'order_id' => $order->id,
                 'store_id' => $order->store_id,
                 'shipping_id' => $ship_id,
-                'track_id'=>$ship_id,
+                'track_id' => $ship_id,
                 'sticker' => $url,
                 'description' => $order->description,
                 'price' => $order->total_price,
@@ -497,13 +498,13 @@ class AramexCompanyService implements ShippingInterface
                                     "CustomsValueAmount": null,
                                     "CashOnDeliveryAmount": {
                                         "CurrencyCode": "SAR",
-                                        "Value": 1
+                                        "Value": 0
                                     },
                                     "InsuranceAmount": null,
                                     "CashAdditionalAmount": null,
                                     "CashAdditionalAmountDescription": "",
                                     "CollectAmount": null,
-                                    "Services": "CODS",
+                                    "Services": "",
                                     "Items": []
                                 },
                                 "Attachments": [],
@@ -566,7 +567,7 @@ class AramexCompanyService implements ShippingInterface
         $order = Order::where('id', $id)->first();
         if ($order->order_status == "new" || $order->order_status == "ready") {
 
-    //    $this->refundCancelOrder($id);
+            //    $this->refundCancelOrder($id);
         }
         $order->update([
             'order_status' => 'canceled',
@@ -596,36 +597,35 @@ class AramexCompanyService implements ShippingInterface
         return new OrderResource($order);
 
     }
-    public function refundCancelOrder($id){
+    public function refundCancelOrder($id)
+    {
         $order = Order::where('id', $id)->first();
         if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
             $payment = Payment::where('orderID', $order->id)->first();
-          if($order->store_id== null)
-          {
-            $data = [
-                "Key" => $payment->paymentTransectionID,
-                "KeyType" => "invoiceid",
-                "RefundChargeOnCustomer" => false,
-                "ServiceChargeOnCustomer" => false,
-                "Amount" =>$payment->price_after_deduction,
-                "Comment" => "refund to the customer",
-                "AmountDeductedFromSupplier" => 0,
-                "CurrencyIso" => "SAR",
-            ];
-        }
-        else{
-            $data = [
-                "Key" => $payment->paymentTransectionID,
-                "KeyType" => "invoiceid",
-                "RefundChargeOnCustomer" => false,
-                "ServiceChargeOnCustomer" => false,
-                "Amount" =>$payment->price_after_deduction,
-                "Comment" => "refund to the customer",
-                "AmountDeductedFromSupplier" => $payment->price_after_deduction,
-                "CurrencyIso" => "SAR",
-            ];
+            if ($order->store_id == null) {
+                $data = [
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "RefundChargeOnCustomer" => false,
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" => $payment->price_after_deduction,
+                    "Comment" => "refund to the customer",
+                    "AmountDeductedFromSupplier" => 0,
+                    "CurrencyIso" => "SAR",
+                ];
+            } else {
+                $data = [
+                    "Key" => $payment->paymentTransectionID,
+                    "KeyType" => "invoiceid",
+                    "RefundChargeOnCustomer" => false,
+                    "ServiceChargeOnCustomer" => false,
+                    "Amount" => $payment->price_after_deduction,
+                    "Comment" => "refund to the customer",
+                    "AmountDeductedFromSupplier" => $payment->price_after_deduction,
+                    "CurrencyIso" => "SAR",
+                ];
 
-        }
+            }
             $supplier = new FatoorahServices();
 
             $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
@@ -639,7 +639,7 @@ class AramexCompanyService implements ShippingInterface
                     $returns = ReturnOrder::where('order_id', $order->id)->get();
                     foreach ($returns as $return) {
                         $return->update([
-                            'refund_status' => 1
+                            'refund_status' => 1,
                         ]);
                     }
                 }
