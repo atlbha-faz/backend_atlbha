@@ -21,7 +21,7 @@ class PackageResource extends JsonResource
     public function toArray($request)
     {
         $plans = array();
-        foreach (\App\Models\Plan::orderBy('status', 'desc')->get() as $p) {
+        foreach (\App\Models\Plan::orderBy('status', 'desc')->where('is_deleted', 0)->get() as $p) {
             if (in_array($p->id, json_decode($this->plans->pluck('id')))) {
                 $pp = collect($p)->merge(['selected' => true]);
             } else {
