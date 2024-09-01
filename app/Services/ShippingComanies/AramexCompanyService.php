@@ -107,7 +107,7 @@ class AramexCompanyService implements ShippingInterface
 
         $json = '{
             "ClientInfo": {
-                "UserName": "armx.ruh.it@gmail.com",
+                "UserName": "info@atlbha.sa",
                 "Password": "YUre@9982",
                 "Version": "v1",
                 "AccountNumber": "72037322",
@@ -128,7 +128,7 @@ class AramexCompanyService implements ShippingInterface
                     "Shipper": {
                         "Reference1": "",
                         "Reference2": "",
-                        "AccountNumber": "72037322",
+                        "AccountNumber": "",
                         "PartyAddress": {
                             "Line1": "' . $data["shipper_line1"] . '",
                             "Line2": "' . $data["shipper_line2"] . '",
@@ -199,7 +199,7 @@ class AramexCompanyService implements ShippingInterface
                     "ThirdParty": {
                         "Reference1": "",
                         "Reference2": "",
-                        "AccountNumber": "117620",
+                        "AccountNumber": "72037322",
                         "PartyAddress": {
                             "Line1": "الرويس",
                             "Line2": "طريق المدينة المنورة",
@@ -349,7 +349,7 @@ class AramexCompanyService implements ShippingInterface
 
         $json = '{
                         "ClientInfo": {
-                            "UserName": "armx.ruh.it@gmail.com",
+                            "UserName": "info@atlbha.sa",
                             "Password": "YUre@9982",
                             "Version": "v1",
                             "AccountNumber": "72037322",
@@ -370,7 +370,7 @@ class AramexCompanyService implements ShippingInterface
                                 "Shipper": {
                                     "Reference1": "",
                                     "Reference2": "",
-                                    "AccountNumber": "72037322",
+                                    "AccountNumber": "",
                                     "PartyAddress": {
                                         "Line1": "' . $shipping->destination_streetaddress . '",
                                         "Line2": "' . $shipping->destination_streetaddress . '",
