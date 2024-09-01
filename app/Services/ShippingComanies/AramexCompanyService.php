@@ -69,11 +69,11 @@ class AramexCompanyService implements ShippingInterface
         ];
         $body = '{
           "ClientInfo": {
-            "UserName": "armx.ruh.it@gmail.com",
-            "Password": "YUre@9982",
+            "UserName": "info@atlbha.sa",
+            "Password": "Rm20$ljl24F",
             "Version": "v1",
-            "AccountNumber": "117620",
-            "AccountPin": "553654",
+            "AccountNumber": "72037322",
+            "AccountPin": "466605",
             "AccountEntity": "JED",
             "AccountCountryCode": "SA",
             "Source": 24
@@ -108,7 +108,7 @@ class AramexCompanyService implements ShippingInterface
         $json = '{
             "ClientInfo": {
                 "UserName": "info@atlbha.sa",
-                "Password": "YUre@9982",
+                "Password": "Rm20$ljl24F",
                 "Version": "v1",
                 "AccountNumber": "72037322",
                 "AccountPin": "466605",
@@ -350,7 +350,7 @@ class AramexCompanyService implements ShippingInterface
         $json = '{
                         "ClientInfo": {
                             "UserName": "info@atlbha.sa",
-                            "Password": "YUre@9982",
+                            "Password": "Rm20$ljl24F",
                             "Version": "v1",
                             "AccountNumber": "72037322",
                             "AccountPin": "466605",
