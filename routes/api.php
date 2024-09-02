@@ -277,7 +277,6 @@ Route::middleware([AdminUser::class])->group(function () {
 
             Route::get('deleteunit/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deleteUnit'])->name('admin.course.deleteunit');
 
-            Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
 
             Route::resource('shippingtype', App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, ['names' => 'admin.shippingtype']);
 
@@ -457,6 +456,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('searchCartName', [App\Http\Controllers\api\storeDashboard\CartController::class, 'searchCartName']);
         Route::get('searchPageName', [App\Http\Controllers\api\storeDashboard\PageController::class, 'searchPageName']);
         Route::get('searchCourseName', [App\Http\Controllers\api\storeDashboard\CourseController::class, 'searchCourseName']);
+        Route::get('searchLiveCourseName', [App\Http\Controllers\api\storeDashboard\CourseController::class, 'searchCourseName']);
+
         Route::get('searchTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'searchTechnicalSupport']);
         Route::get('explainVideoName', [App\Http\Controllers\api\storeDashboard\ExplainVideosController::class, 'explainVideoName']);
 
@@ -491,6 +492,7 @@ Route::middleware([StoreUser::class])->group(function () {
         // academy
         Route::resource('explainVideos', App\Http\Controllers\api\storeDashboard\ExplainVideosController::class, ['names' => 'store.explainvideos']);
         Route::resource('course', App\Http\Controllers\api\storeDashboard\CourseController::class, ['names' => 'store.academy']);
+        Route::resource('live_course', App\Http\Controllers\api\storeDashboard\CourseLiveController::class, ['names' => 'store.live_course']);
 
         // template
         Route::get('theme', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'theme'])->name('store.template.theme');

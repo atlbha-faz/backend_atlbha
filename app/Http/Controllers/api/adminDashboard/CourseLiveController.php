@@ -90,7 +90,7 @@ class CourseLiveController extends BaseController
             return $this->sendError("الكورس غير موجودة", "course is't exists");
         }
 
-        $success['$courses'] = new CourseResource($course);
+        $success['course'] = new CourseResource($course);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم عرض بنجاح', 'course showed successfully');
