@@ -7,7 +7,7 @@ use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
 
-class CourseController extends BaseController
+class CourseLiveController extends BaseController
 {
     public function __construct()
     {
