@@ -73,7 +73,7 @@ class CourseLiveController extends BaseController
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function searchCourseName(Request $request)
+    public function searchLiveCourseName(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
