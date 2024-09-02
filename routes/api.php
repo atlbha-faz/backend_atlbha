@@ -243,6 +243,7 @@ Route::middleware([AdminUser::class])->group(function () {
             Route::resource('marketer', App\Http\Controllers\api\adminDashboard\MarketerController::class, ['names' => 'admin.marketer']);
             Route::resource('explainVideos', App\Http\Controllers\api\adminDashboard\ExplainVideosController::class, ['names' => 'admin.explainvideo']);
             Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
+            Route::resource('live_course', App\Http\Controllers\api\adminDashboard\CourseLiveController::class, ['names' => 'admin.livecourse']);
             Route::resource('activity', App\Http\Controllers\api\adminDashboard\ActivityController::class, ['names' => 'admin.activity']);
             Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class, ['names' => 'admin.package']);
             Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class, ['names' => 'admin.plan']);
