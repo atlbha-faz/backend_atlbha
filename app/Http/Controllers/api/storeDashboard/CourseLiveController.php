@@ -28,7 +28,7 @@ class CourseLiveController extends BaseController
 
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارجاع الكورسات المشروحة بنجاح', 'courses return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الكورسات المباشرة بنجاح', 'courses return successfully');
     }
 
     /**
