@@ -33,7 +33,7 @@ class CourseController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data = Course::with(['user' => function ($query) {
             $query->select('id');
-        }])->where('is_deleted', 0)->orderByDesc('created_at');
+        }])->where('is_deleted', 0)->where('tags','!=', null)->orderByDesc('created_at');
         $data = $data->paginate($count);
         $success['courses'] = CourseResource::collection($data);
         $success['page_count'] = $data->lastPage();
