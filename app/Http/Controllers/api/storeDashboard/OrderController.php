@@ -130,7 +130,11 @@ class OrderController extends BaseController
             if ($request->status === "ready") {
 
                 $shipping = $shipping_companies[$order->shippingtype->id];
-                $success['orders'] = $shipping->createOrder($data);
+                if($order->shippingtype->id==1){
+                    $shipping->createOrder($data);
+                   $response= $shipping->creatPickup($data);
+                }
+                $success['orders'] = $response;
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
 
