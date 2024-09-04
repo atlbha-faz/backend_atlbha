@@ -23,7 +23,7 @@ class OtherCompanyService implements ShippingInterface
 
     }
 
-    public function buildRequest($mothod, $data)
+    public function buildRequest($mothod, $data,$url)
     {
 
         $client = new Client();
