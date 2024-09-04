@@ -101,6 +101,8 @@ class AramexCompanyService implements ShippingInterface
     {
         $order = Order::where('id', $data["order_id"])->first();
         $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
+        $cashOnDeleviry = $order->paymentype_id == 4 ? 0 : $order->total_price;
+        $store = Store::where('is_deleted', 0)->where('id', $order->store_id)->first();
         $address = OrderAddress::where('id', $orderAddress)->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
         //  if( $order->payment_status=='paid'|| $order->cod ==1)
@@ -243,12 +245,12 @@ class AramexCompanyService implements ShippingInterface
                         "Dimensions": null,
                         "ActualWeight": {
                             "Unit": "KG",
-                            "Value": 0.5
+                            "Value": ' . $order->weight . '
                         },
                         "ChargeableWeight": null,
-                        "DescriptionOfGoods": "",
+                        "DescriptionOfGoods": "' . $store->categories->first()?->name . '",
                         "GoodsOriginCountry": "SA",
-                        "NumberOfPieces": 1,
+                        "NumberOfPieces": ' . $order->totalCount . ',
                         "ProductGroup": "DOM",
                         "ProductType": "cds",
                         "PaymentType": "3",
@@ -256,13 +258,13 @@ class AramexCompanyService implements ShippingInterface
                         "CustomsValueAmount": null,
                         "CashOnDeliveryAmount": {
                             "CurrencyCode": "SAR",
-                            "Value": 0
+                            "Value":  ' . $cashOnDeleviry . ',
                         },
                         "InsuranceAmount": null,
                         "CashAdditionalAmount": null,
                         "CashAdditionalAmountDescription": "",
                         "CollectAmount": null,
-                        "Services": "",
+                        "Services": "CODS",
                         "Items": []
                     },
                     "Attachments": [],
@@ -330,6 +332,142 @@ class AramexCompanyService implements ShippingInterface
                 'destination_streetaddress' => $address->street_address,
                 'shipping_type' => 'send',
 
+            ]);
+
+            return new OrderResource($order);
+
+        }
+    }
+    public function createPickup($data)
+    {
+        $order = Order::where('id', $data["order_id"])->first();
+        $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
+        $cashOnDeleviry = $order->paymentype_id == 4 ? 0 : $order->total_price;
+        $store = Store::where('is_deleted', 0)->where('id', $order->store_id)->first();
+        $address = OrderAddress::where('id', $orderAddress)->first();
+        $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
+        //  if( $order->payment_status=='paid'|| $order->cod ==1)
+        //  {
+
+        $json = '{
+            "ClientInfo": {
+                "UserName": "testingapi@aramex.com",
+                "Password": "R123456789$r",
+                "Version": "v1",
+                "AccountNumber": "115051",
+                "AccountPin": "165165",
+                "AccountEntity": "JED",
+                "AccountCountryCode": "SA",
+                "Source": 24
+            },
+            "LabelInfo": {
+                "ReportID": 9729,
+                "ReportType": "URL"
+            },
+           "Pickup": {
+            "PickupAddress": {
+            "Line1": "'. $data["shipper_line1"].'",
+            "Line2": "' . $data["shipper_line2"] . '",
+            "Line3": "",
+            "City": "'. $data["shipper_city"] .'",
+            "StateOrProvinceCode": "",
+            "PostCode": "",
+            "CountryCode": "sa",
+            "Longitude": 0,
+            "Latitude": 0,
+            "BuildingNumber": null,
+            "BuildingName": null,
+            "Floor": null,
+            "Apartment": null,
+            "POBox": null,
+            "Description": null
+                },
+            "PickupContact": {
+            "Department": "",
+            "PersonName": "'. $data["shipper_name"] .'",
+            "Title": "",
+            "CompanyName": "'. $data["shipper_comany"] .'",
+            "PhoneNumber1": "'. $data["shipper_phonenumber"].'",
+            "PhoneNumber1Ext": "",
+            "PhoneNumber2": "",
+            "PhoneNumber2Ext": "",
+            "FaxNumber": "",
+            "CellPhone": "'. $data["shipper_phonenumber"].'",
+            "EmailAddress": "'.$data["shipper_email"].'",
+            "Type": ""
+            },
+            "PickupLocation": "'.$data["shipper_line2"].'",
+           "PickupDate":"\\/Date(' . $shippingDate . ')\\/",
+           "ReadyTime": "\/Date(1711191439000-0500)\/",
+           "LastPickupTime": "\/Date(1711191439000-0500)\/",
+           "ClosingTime": "\/Date(1711191439000-0500)\/",
+            "Comments": "",
+            "Reference1": "'.$data["order_id"].'",
+            "Reference2": "",
+            "Vehicle": "",
+            "Shipments": [],
+             "PickupItems": [
+              {
+                "ProductGroup": "DOM",
+                "ProductType": "CDS",
+                "NumberOfShipments": 1,
+                "PackageType": "Box",
+                "Payment": "3",
+                "ShipmentWeight": {
+                    "Unit": "KG",
+                    "Value": ' . $order->weight . '
+                },
+                "ShipmentVolume": null,
+                "NumberOfPieces": ' . $order->totalCount . ',
+                "CashAmount": null,
+                "ExtraCharges": null,
+                "ShipmentDimensions": {
+                    "Length": 0,
+                    "Width": 0,
+                    "Height": 0,
+                    "Unit": ""
+                },
+                "Comments": ""
+              }
+          ],
+        "Status": "Ready",
+        "ExistingShipments": null,
+        "Branch": "",
+        "RouteCode": ""
+          },
+            "Transaction": {
+                "Reference1": "",
+                "Reference2": "",
+                "Reference3": "",
+                "Reference4": "",
+                "Reference5": ""
+            }
+        }';
+
+        $arData = $this->buildRequest('POST', $json);
+        if ($arData->HasErrors == true) {
+            $errorsMessages = "";
+
+            foreach ($arData->Notifications as $error) {
+                $errorsMessages .= $error->Message . ",";
+                // array_push($errorsMessages, $error->Message);
+            }
+          
+            return $errorsMessages;
+        } else {
+            $pickup_id = $arData->ProcessedPickup->GUID;
+        
+            // $order->update([
+            //     'order_status' => "ready",
+            // ]);
+            // foreach ($order->items as $orderItem) {
+            //     $orderItem->update([
+            //         'order_status' => "ready",
+            //     ]);
+            // }
+            $shipping = Shipping::where('order_id',$order->id)->where('type','send')->first();
+            $shipping->update([
+                'track_id' => $pickup_id,
             ]);
 
             return new OrderResource($order);
