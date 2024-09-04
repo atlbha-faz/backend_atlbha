@@ -73,6 +73,11 @@ class OtherCompanyService implements ShippingInterface
         return new OrderResource($order);
 
     }
+    public function createPickup($data)
+    {
+        $order = Order::where('id', $data["order_id"])->first();
+        return new OrderResource($order);
+    }
     public function refundOrder($order_id)
     {
         $order = Order::where('id', $order_id)->first();
