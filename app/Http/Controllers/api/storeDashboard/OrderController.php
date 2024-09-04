@@ -132,7 +132,7 @@ class OrderController extends BaseController
                 $shipping = $shipping_companies[$order->shippingtype->id];
                 if($order->shippingtype->id==1){
                     $shipping->createOrder($data);
-                   $response= $shipping->creatPickup($data);
+                   $response= $shipping->createPickup($data);
                 }
                 $success['orders'] = $response;
                 $success['status'] = 200;
