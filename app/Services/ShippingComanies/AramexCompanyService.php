@@ -68,6 +68,48 @@ class AramexCompanyService implements ShippingInterface
             'Content-Type' => 'application/json',
         ];
         $body = '{
+         "ClientInfo": {
+        "UserName": "testingapi@aramex.com",
+        "Password": "R123456789$r",
+        "Version": "1.0",
+        "AccountNumber": "115051",
+        "AccountPin": "165165",
+        "AccountEntity": "JED",
+        "AccountCountryCode": "SA",
+        "Source": 25,
+        "PreferredLanguageCode": null
+            },
+          "GetLastTrackingUpdateOnly": false,
+          "Shipments": [
+            "' . $id . '"
+          ],
+          "Transaction": {
+            "Reference1": "",
+            "Reference2": "",
+            "Reference3": "",
+            "Reference4": "",
+            "Reference5": ""
+          }
+        }';
+        $request = new Request('POST', 'https://ws.sbx.aramex.net/ShippingAPI.V2/Tracking/Service_1_0.svc/json/TrackShipments', $headers, $body);
+        $res = $client->sendAsync($request)->wait();
+        $response = json_decode($res->getBody());
+        return $response;
+
+    }
+    public function createOrder($data)
+    {
+
+        $order = Order::where('id', $data["order_id"])->first();
+        $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
+        $cashOnDeleviry = $order->paymentype_id == 4 ? 0 : $order->total_price;
+        $store = Store::where('is_deleted', 0)->where('id', $order->store_id)->first();
+        $address = OrderAddress::where('id', $orderAddress)->first();
+        $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
+        //  if( $order->payment_status=='paid'|| $order->cod ==1)
+        //  {
+
+        $json = '{
             "ClientInfo": {
                 "UserName": "testingapi@aramex.com",
                 "Password": "R123456789$r",
@@ -217,7 +259,7 @@ class AramexCompanyService implements ShippingInterface
                         "CustomsValueAmount": null,
                         "CashOnDeliveryAmount": {
                             "CurrencyCode": "SAR",
-                            "Value": 0
+                            "Value": ' . $cashOnDeleviry . '
                         },
                         "InsuranceAmount": null,
                         "CashAdditionalAmount": null,
@@ -242,6 +284,7 @@ class AramexCompanyService implements ShippingInterface
                 "Reference5": ""
             }
         }';
+
         $arData = $this->buildRequest('POST', $json);
         if ($arData->HasErrors == true) {
             $errorsMessages = "";
