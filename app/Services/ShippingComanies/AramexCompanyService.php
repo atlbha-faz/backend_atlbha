@@ -237,7 +237,7 @@ class AramexCompanyService implements ShippingInterface
                         }
                     },
                     "ShippingDateTime": "\\/Date(' . $shippingDate . ')\\/",
-                    "DueDate": "\\/Date(' . $shippingDate . ')\\/",
+                    "DueDate": "",
                     "Comments": "",
                     "PickupLocation": "",
                     "OperationsInstructions": "",
@@ -298,15 +298,11 @@ class AramexCompanyService implements ShippingInterface
                     $errorsMessages .= $error->Message;
                 }
             }
-            return $errorsMessages;
+             return response()->json(['error' => $errorsMessages], 404); ;
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
-            // $track_id=null;
-            // if ($ship_id) {
-            //     $tracking= $this->tracking($ship_id);
-            //     $track_id=$tracking->TrackingResults[0]->Key;
-            // }
+         
             $order->update([
                 'order_status' => "ready",
             ]);
@@ -398,10 +394,10 @@ class AramexCompanyService implements ShippingInterface
             "Type": ""
             },
             "PickupLocation": "' . $data["shipper_line2"] . '",
-           "PickupDate":"\\/Date(' . $shippingDate . ')\\/",
-           "ReadyTime": "\/Date(1711191439000-0500)\/",
-           "LastPickupTime": "\/Date(1711191439000-0500)\/",
-           "ClosingTime": "\/Date(1711191439000-0500)\/",
+           "PickupDate":"\\/Date(' . $data["pickup_date"] . ')\\/",
+           "ReadyTime": "\/Date(' . $data["pickup_date"] . ')\/",
+           "LastPickupTime": "\/Date(' . $data["pickup_date"] . ')\/",
+           "ClosingTime": "\/Date(' . $data["pickup_date"] . ')\/",
             "Comments": "",
             "Reference1": "' . $data["order_id"] . '",
             "Reference2": "",
@@ -454,7 +450,7 @@ class AramexCompanyService implements ShippingInterface
                 // array_push($errorsMessages, $error->Message);
             }
 
-            return $errorsMessages;
+             return response()->json(['error' => $errorsMessages], 404);
         } else {
             $pickup_id = $arData->ProcessedPickup->GUID;
 
@@ -475,13 +471,13 @@ class AramexCompanyService implements ShippingInterface
 
         }
     }
-    public function createReversePickup($data)
+    public function createReversePickup($order_id)
     {
-        $order = Order::where('id', $data["order_id"])->first();
-        $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
-        $cashOnDeleviry = $order->paymentype_id == 4 ? 0 : $order->total_price;
-        $store = Store::where('is_deleted', 0)->where('id', $order->store_id)->first();
-        $address = OrderAddress::where('id', $orderAddress)->first();
+        $order = Order::where('id', $order_id)->first();
+        // $orderAddress = OrderOrderAddress::where('order_id', $order_id)->where('type', 'shipping')->value('order_address_id');
+        // $address = OrderAddress::where('id', $orderAddress)->first();
+        $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
+        $shipping = Shipping::where('order_id', $order_id)->where('shipping_type', 'send')->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
         //  if( $order->payment_status=='paid'|| $order->cod ==1)
         //  {
@@ -503,10 +499,10 @@ class AramexCompanyService implements ShippingInterface
             },
            "Pickup": {
             "PickupAddress": {
-            "Line1": "' . $data["shipper_line1"] . '",
-            "Line2": "' . $data["shipper_line2"] . '",
+            "Line1": "' . $shipping->destination_streetaddress . '",
+            "Line2": "' . $shipping->destination_streetaddress . '",
             "Line3": "",
-            "City": "' . $data["shipper_city"] . '",
+            "City": "' . $shipping->destination_city . '",
             "StateOrProvinceCode": "",
             "PostCode": "",
             "CountryCode": "sa",
@@ -521,32 +517,32 @@ class AramexCompanyService implements ShippingInterface
                 },
             "PickupContact": {
             "Department": "",
-            "PersonName": "' . $data["shipper_name"] . '",
+            "PersonName": "' . $order->user->name. '",
             "Title": "",
-            "CompanyName": "' . $data["shipper_comany"] . '",
-            "PhoneNumber1": "' . $data["shipper_phonenumber"] . '",
+            "CompanyName": "' . $order->user->name . '",
+            "PhoneNumber1": "' . $order->user->phonenumber. '",
             "PhoneNumber1Ext": "",
             "PhoneNumber2": "",
             "PhoneNumber2Ext": "",
             "FaxNumber": "",
-            "CellPhone": "' . $data["shipper_phonenumber"] . '",
-            "EmailAddress": "' . $data["shipper_email"] . '",
+            "CellPhone": "' . $order->user->phonenumber . '",
+            "EmailAddress": "' . $order->user->email. '",
             "Type": ""
             },
-            "PickupLocation": "' . $data["shipper_line2"] . '",
+            "PickupLocation": "' . $shipping->destination_streetaddress . '",
            "PickupDate":"\\/Date(' . $shippingDate . ')\\/",
-           "ReadyTime": "\/Date(1711191439000-0500)\/",
-           "LastPickupTime": "\/Date(1711191439000-0500)\/",
-           "ClosingTime": "\/Date(1711191439000-0500)\/",
+           "ReadyTime": "\/Date(' . $shippingDate . ')\/",
+           "LastPickupTime": "\/Date(' . $shippingDate . ')\/",
+           "ClosingTime": "\/Date(' . $shippingDate . ')\/",
             "Comments": "",
-            "Reference1": "' . $data["order_id"] . '",
+            "Reference1": "' . $order->id . '",
             "Reference2": "",
             "Vehicle": "",
             "Shipments": [],
              "PickupItems": [
               {
                 "ProductGroup": "DOM",
-                "ProductType": "CDS",
+                "ProductType": "Rtn",
                 "NumberOfShipments": 1,
                 "PackageType": "Box",
                 "Payment": "3",
@@ -590,7 +586,7 @@ class AramexCompanyService implements ShippingInterface
                 // array_push($errorsMessages, $error->Message);
             }
 
-            return $errorsMessages;
+            return response()->json(['error' => $errorsMessages], 404); 
         } else {
             $pickup_id = $arData->ProcessedPickup->GUID;
 
@@ -602,7 +598,7 @@ class AramexCompanyService implements ShippingInterface
             //         'order_status' => "ready",
             //     ]);
             // }
-            $shipping = Shipping::where('order_id', $order->id)->where('shipping_type', 'send')->first();
+            $shipping = Shipping::where('order_id', $order->id)->where('shipping_type', 'return')->first();
             $shipping->update([
                 'track_id' => $pickup_id,
             ]);
@@ -751,7 +747,7 @@ class AramexCompanyService implements ShippingInterface
                                     }
                                 },
                                 "ShippingDateTime": "\\/Date(' . $shippingDate . ')\\/",
-                                "DueDate": "\\/Date(' . $shippingDate . ')\\/",
+                                "DueDate": "",
                                 "Comments": "",
                                 "PickupLocation": "",
                                 "OperationsInstructions": "",
