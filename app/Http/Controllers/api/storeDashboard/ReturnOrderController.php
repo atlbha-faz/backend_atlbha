@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use Exception;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Store;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ReturnOrderResource;
 use App\Mail\SendMail2;
 use App\Models\Account;
+use App\Models\Order;
 use App\Models\Payment;
 use App\Models\ReturnOrder;
-use Illuminate\Http\Request;
+use App\Models\Store;
+use App\Models\User;
 use App\Services\FatoorahServices;
-use Illuminate\Support\Facades\Mail;
-use GuzzleHttp\Exception\ClientException;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\ReturnOrderResource;
-use App\Services\ShippingComanies\OtherCompanyService;
 use App\Services\ShippingComanies\AramexCompanyService;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Services\ShippingComanies\OtherCompanyService;
+use Exception;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class ReturnOrderController extends BaseController
 {
@@ -149,9 +149,13 @@ class ReturnOrderController extends BaseController
             $return->save();
         }
         if ($request->status == 'accept') {
+            $response = $shipping->refundOrder($order_id);
+            if ($response) {
+                $shipping->createReversePickup($order_id);
+            }
             $success['order'] = $shipping->refundOrder($order_id);
             $store = Store::where('id', $order->store_id)->first();
-            $user=User::where('id',$order->user_id)->first();
+            $user = User::where('id', $order->user_id)->first();
             $data = [
                 'subject' => "قبول طلب الارجاع ",
                 'message' => "تم قبول طلب الارجاع",
@@ -163,7 +167,7 @@ class ReturnOrderController extends BaseController
             return $this->sendResponse($success, 'تم  قبول طلب الارجاع', 'order  return accept successfully');
         } else {
             $store = Store::where('id', $order->store_id)->first();
-            $user=User::where('id',$order->user_id)->first();
+            $user = User::where('id', $order->user_id)->first();
             $data = [
                 'subject' => " رفض طلب الارجاع ",
                 'message' => "تم رفض طلب الارجاع",
@@ -230,19 +234,19 @@ class ReturnOrderController extends BaseController
             $return_status = ReturnOrder::where('order_id', $order->id)->first();
             if ($payment != null) {
                 $final_price = $prices;
-              
+
                 $data = [
                     "Key" => $payment->paymentTransectionID,
                     "KeyType" => "invoiceid",
                     "ServiceChargeOnCustomer" => false,
-                    "Amount" =>round(($final_price),1),
+                    "Amount" => round(($final_price), 1),
                     "Comment" => "refund to the customer",
-                    "AmountDeductedFromSupplier" =>$final_price,
+                    "AmountDeductedFromSupplier" => $final_price,
                     "CurrencyIso" => "SAR",
                 ];
                 $supplier = new FatoorahServices();
                 try {
-                 $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
+                    $response = $supplier->refund('v2/MakeRefund', 'POST', $data);
                 } catch (ClientException $e) {
                     if ($return_status->refund_status == 1) {
                         return $this->sendError("تم الارجاع مسبقا", 'Message: ' . $e->getMessage());
@@ -269,6 +273,5 @@ class ReturnOrderController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
     }
-   
-  
+
 }

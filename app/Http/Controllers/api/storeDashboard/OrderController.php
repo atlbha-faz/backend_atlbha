@@ -100,6 +100,7 @@ class OrderController extends BaseController
             'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
 
             'city' => 'required_if:status,==,ready',
+            'pickup_date' => 'required_if:status,==,ready',
             'street_address' => 'required_if:status,==,ready',
         ]);
         if ($validator->fails()) {
@@ -125,14 +126,17 @@ class OrderController extends BaseController
                 "shipper_phonenumber" => auth()->user()->phonenumber,
                 "shipper_email" => auth()->user()->email,
                 "order_id" => $order->id,
+                "pickup_date"=> $request->pickup_date,
 
             ];
             if ($request->status === "ready") {
 
                 $shipping = $shipping_companies[$order->shippingtype->id];
                 if($order->shippingtype->id==1){
-                    $shipping->createOrder($data);
-                   $response= $shipping->createPickup($data);
+                    $response=$shipping->createOrder($data);
+                    if($response){
+                        $response= $shipping->createPickup($data); 
+                    }
                 }
                 $success['orders'] = $response;
                 $success['status'] = 200;
