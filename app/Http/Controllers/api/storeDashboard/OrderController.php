@@ -101,7 +101,7 @@ class OrderController extends BaseController
 
             'city' => 'required_if:status,==,ready',
             'pickup_date' => 'required_if:status,==,ready',
-            'street_address' => 'required_if:status,==,ready',
+            'street_address' => 'required_if:status,==,ready|date',
         ]);
         if ($validator->fails()) {
             # code...
