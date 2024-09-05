@@ -100,7 +100,7 @@ class OrderController extends BaseController
             'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
 
             'city' => 'required_if:status,==,ready',
-            'pickup_date' => 'required_if:status,==,ready|date',
+            'pickup_date' => 'required_if:status,==,ready',
             'street_address' => 'required_if:status,==,ready',
         ]);
         if ($validator->fails()) {
@@ -130,19 +130,23 @@ class OrderController extends BaseController
 
             ];
             if ($request->status === "ready") {
-
                 $shipping = $shipping_companies[$order->shippingtype->id];
-                if($order->shippingtype->id==1){
+    
                     $response=$shipping->createOrder($data);
-                    if($response){
-                        $response= $shipping->createPickup($data); 
-                    }
-                }
-                $success['orders'] = $response;
-                $success['status'] = 200;
-                return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+                
+               
+                return $response;
+            }
+              if ($request->status === "delivery_in_progress") {
 
-            } else {
+                    $shipping = $shipping_companies[$order->shippingtype->id];
+                    
+                            $response= $shipping->createPickup($data); 
+                      
+                    
+                    return $response;
+                    }
+                else{
                 $order->update([
                     'order_status' => $request->status,
                 ]);
@@ -155,7 +159,6 @@ class OrderController extends BaseController
                 $success['orders'] = new OrderResource($order);
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-
             }
 
         }

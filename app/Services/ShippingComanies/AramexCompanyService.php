@@ -298,11 +298,11 @@ class AramexCompanyService implements ShippingInterface
                     $errorsMessages .= $error->Message;
                 }
             }
-             return response()->json(['error' => $errorsMessages], 404); ;
+            return response()->json(['error' => $errorsMessages], 404);
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
-         
+
             $order->update([
                 'order_status' => "ready",
             ]);
@@ -331,8 +331,7 @@ class AramexCompanyService implements ShippingInterface
 
             ]);
 
-            return new OrderResource($order);
-
+            return  response()->json(['success' =>['orders'=> new OrderResource($order),'status'=>200]],200);
         }
     }
     public function createPickup($data)
@@ -450,24 +449,24 @@ class AramexCompanyService implements ShippingInterface
                 // array_push($errorsMessages, $error->Message);
             }
 
-             return response()->json(['error' => $errorsMessages], 404);
+            return response()->json(['error' => $errorsMessages], 404);
         } else {
             $pickup_id = $arData->ProcessedPickup->GUID;
 
-            // $order->update([
-            //     'order_status' => "ready",
-            // ]);
-            // foreach ($order->items as $orderItem) {
-            //     $orderItem->update([
-            //         'order_status' => "ready",
-            //     ]);
-            // }
+            $order->update([
+                'order_status' => "delivery_in_progress",
+            ]);
+            foreach ($order->items as $orderItem) {
+                $orderItem->update([
+                    'order_status' => "delivery_in_progress",
+                ]);
+            }
             $shipping = Shipping::where('order_id', $order->id)->where('shipping_type', 'send')->first();
             $shipping->update([
                 'track_id' => $pickup_id,
             ]);
 
-            return new OrderResource($order);
+            return  response()->json(['success' =>['orders'=> new OrderResource($order),'status'=>200]],200);
 
         }
     }
@@ -517,16 +516,16 @@ class AramexCompanyService implements ShippingInterface
                 },
             "PickupContact": {
             "Department": "",
-            "PersonName": "' . $order->user->name. '",
+            "PersonName": "' . $order->user->name . '",
             "Title": "",
             "CompanyName": "' . $order->user->name . '",
-            "PhoneNumber1": "' . $order->user->phonenumber. '",
+            "PhoneNumber1": "' . $order->user->phonenumber . '",
             "PhoneNumber1Ext": "",
             "PhoneNumber2": "",
             "PhoneNumber2Ext": "",
             "FaxNumber": "",
             "CellPhone": "' . $order->user->phonenumber . '",
-            "EmailAddress": "' . $order->user->email. '",
+            "EmailAddress": "' . $order->user->email . '",
             "Type": ""
             },
             "PickupLocation": "' . $shipping->destination_streetaddress . '",
@@ -586,7 +585,7 @@ class AramexCompanyService implements ShippingInterface
                 // array_push($errorsMessages, $error->Message);
             }
 
-            return response()->json(['error' => $errorsMessages], 404); 
+            return response()->json(['error' => $errorsMessages], 404);
         } else {
             $pickup_id = $arData->ProcessedPickup->GUID;
 
@@ -603,7 +602,8 @@ class AramexCompanyService implements ShippingInterface
                 'track_id' => $pickup_id,
             ]);
 
-            return new OrderResource($order);
+            return  response()->json(['success' =>['orders'=> new OrderResource($order),'status'=>200]],200);
+
 
         }
     }
@@ -829,7 +829,8 @@ class AramexCompanyService implements ShippingInterface
                 'shipping_type' => 'return',
             ]);
 
-            return new OrderResource($order);
+            return  response()->json(['success' =>['orders'=> new OrderResource($order),'status'=>200]],200);
+
         }
 
     }
@@ -838,7 +839,12 @@ class AramexCompanyService implements ShippingInterface
         $order = Order::where('id', $id)->first();
         if ($order->order_status == "new" || $order->order_status == "ready") {
 
-            //    $this->refundCancelOrder($id);
+            $shippings = Shipping::where('order_id', $order_id)->get();
+            if ($shippings != null) {
+                foreach ($shippings as $shipping) {
+                    $shipping->delete();
+                }
+            }
         }
         $order->update([
             'order_status' => 'canceled',
