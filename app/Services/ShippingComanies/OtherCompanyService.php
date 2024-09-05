@@ -76,6 +76,14 @@ class OtherCompanyService implements ShippingInterface
     public function createPickup($data)
     {
         $order = Order::where('id', $data["order_id"])->first();
+        $order->update([
+            'order_status' => 'delivery_in_progress',
+        ]);
+        foreach ($order->items as $orderItem) {
+            $orderItem->update([
+                'order_status' => 'delivery_in_progress',
+            ]);
+        }
         return new OrderResource($order);
     }
     public function createReversePickup($data)
@@ -114,9 +122,12 @@ class OtherCompanyService implements ShippingInterface
     {
         $order = Order::where('id', $id)->first();
         if ($order->order_status == "new" || $order->order_status == "ready") {
-            if ($order->paymentype_id == 1 && $order->payment_status == "paid") {
-                // $this->refundCancelOrder($id);
-        }
+            $shippings = Shipping::where('order_id', $order_id)->get();
+            if ($shippings != null) {
+                foreach ($shippings as $shipping) {
+                    $shipping->delete();
+                }
+            }
     }
         $order->update([
             'order_status' => 'canceled',
