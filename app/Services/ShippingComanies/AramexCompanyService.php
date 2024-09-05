@@ -333,7 +333,7 @@ class AramexCompanyService implements ShippingInterface
             $response = [
                 'success' =>true ,
                 'data'=>['orders'=> new OrderResource($order),'status'=>200],
-                'message'=>['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
+                'message'=>['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
             ];
             return  response()->json($response,200);
         }
@@ -473,7 +473,7 @@ class AramexCompanyService implements ShippingInterface
             $response = [
                 'success' =>true ,
                 'data'=>['orders'=> new OrderResource($order),'status'=>200],
-                'message'=>['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
+                'message'=>['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
             ];
             return  response()->json($response,200);
         }
@@ -844,7 +844,7 @@ class AramexCompanyService implements ShippingInterface
             $response = [
                 'success' =>true ,
                 'data'=>['orders'=> new OrderResource($order),'status'=>200],
-                'message'=>['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
+                'message'=>['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
             ];
             return  response()->json($response,200);
         }
