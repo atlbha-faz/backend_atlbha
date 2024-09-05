@@ -330,8 +330,12 @@ class AramexCompanyService implements ShippingInterface
                 'shipping_type' => 'send',
 
             ]);
-
-            return  response()->json(['success' =>['orders'=> new OrderResource($order),'status'=>200]],200);
+            $response = [
+                'success' =>true ,
+                'data'=>['orders'=> new OrderResource($order),'status'=>200],
+                'message'=>['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
+            ];
+            return  response()->json($response,200);
         }
     }
     public function createPickup($data)
@@ -466,8 +470,12 @@ class AramexCompanyService implements ShippingInterface
                 'track_id' => $pickup_id,
             ]);
 
-            return  response()->json(['success' =>['orders'=> new OrderResource($order),'status'=>200]],200);
-
+            $response = [
+                'success' =>true ,
+                'data'=>['orders'=> new OrderResource($order),'status'=>200],
+                'message'=>['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
+            ];
+            return  response()->json($response,200);
         }
     }
     public function createReversePickup($order_id)
@@ -602,8 +610,12 @@ class AramexCompanyService implements ShippingInterface
                 'track_id' => $pickup_id,
             ]);
 
-            return  response()->json(['success' =>['orders'=> new OrderResource($order),'status'=>200]],200);
-
+            $response = [
+                'success' =>true ,
+                'data'=>['orders'=> new OrderResource($order),'status'=>200],
+                'message'=>['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
+            ];
+            return  response()->json($response,200);
 
         }
     }
@@ -808,7 +820,7 @@ class AramexCompanyService implements ShippingInterface
                     $errorsMessages .= $error->Message;
                 }
             }
-            return $errorsMessages;
+            return response()->json(['error' => $errorsMessages], 404);
         } else {
             $ship_id = $arData->Shipments[0]->ID;
             $url = $arData->Shipments[0]->ShipmentLabel->LabelURL;
@@ -829,8 +841,12 @@ class AramexCompanyService implements ShippingInterface
                 'shipping_type' => 'return',
             ]);
 
-            return  response()->json(['success' =>['orders'=> new OrderResource($order),'status'=>200]],200);
-
+            $response = [
+                'success' =>true ,
+                'data'=>['orders'=> new OrderResource($order),'status'=>200],
+                'message'=>['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
+            ];
+            return  response()->json($response,200);
         }
 
     }

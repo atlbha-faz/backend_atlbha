@@ -100,7 +100,7 @@ class OrderController extends BaseController
             'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
 
             'city' => 'required_if:status,==,ready',
-            'pickup_date' => 'required_if:status,==,ready',
+            'pickup_date' => 'required_if:status,==,delivery_in_progress|required_if:status,ready',
             'street_address' => 'required_if:status,==,ready',
         ]);
         if ($validator->fails()) {
