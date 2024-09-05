@@ -151,9 +151,9 @@ class ReturnOrderController extends BaseController
         if ($request->status == 'accept') {
             $response = $shipping->refundOrder($order_id);
             if ($response) {
-                $shipping->createReversePickup($order_id);
+                $response=$shipping->createReversePickup($order_id);
             }
-            $success['order'] = $shipping->refundOrder($order_id);
+            $success['order'] = $response;
             $store = Store::where('id', $order->store_id)->first();
             $user = User::where('id', $order->user_id)->first();
             $data = [
