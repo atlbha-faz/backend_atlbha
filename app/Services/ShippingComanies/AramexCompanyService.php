@@ -237,7 +237,7 @@ class AramexCompanyService implements ShippingInterface
                         }
                     },
                     "ShippingDateTime": "\\/Date(' . $shippingDate . ')\\/",
-                    "DueDate": "",
+                    "DueDate": "\\/Date(' . $shippingDate . ')\\/",
                     "Comments": "",
                     "PickupLocation": "",
                     "OperationsInstructions": "",
@@ -747,7 +747,7 @@ class AramexCompanyService implements ShippingInterface
                                     }
                                 },
                                 "ShippingDateTime": "\\/Date(' . $shippingDate . ')\\/",
-                                "DueDate": "",
+                                "DueDate":  "\\/Date(' . $shippingDate . ')\\/",
                                 "Comments": "",
                                 "PickupLocation": "",
                                 "OperationsInstructions": "",
