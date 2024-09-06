@@ -331,11 +331,11 @@ class AramexCompanyService implements ShippingInterface
 
             ]);
             $response = [
-                'success' =>true ,
-                'data'=>['orders'=> new OrderResource($order),'status'=>200],
-                'message'=>['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
+                'success' => true,
+                'data' => ['orders' => new OrderResource($order), 'status' => 200],
+                'message' => ['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
             ];
-            return  response()->json($response,200);
+            return response()->json($response, 200);
         }
     }
     public function createPickup($data)
@@ -471,118 +471,148 @@ class AramexCompanyService implements ShippingInterface
             ]);
 
             $response = [
-                'success' =>true ,
-                'data'=>['orders'=> new OrderResource($order),'status'=>200],
-                'message'=>['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
+                'success' => true,
+                'data' => ['orders' => new OrderResource($order), 'status' => 200],
+                'message' => ['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
             ];
-            return  response()->json($response,200);
+            return response()->json($response, 200);
         }
+    }
+    public function workDay($timestampMilliseconds)
+    {
+        $timestampSeconds = $timestampMilliseconds / 1000;
+
+        // Create a Carbon instance from the timestamp
+        $dateTime = Carbon::createFromTimestamp($timestampSeconds);
+
+        // Set the timezone (adjust as needed)
+        $dateTime->setTimezone('America/New_York'); // Change to your desired timezone
+
+        // Get the timezone offset in the required format
+        $timezoneOffset = $dateTime->format('P'); // ±HH:MM
+        $timezoneOffsetFormatted = str_replace(':', '', $timezoneOffset); // Remove the colon
+
+        // Format the output as required
+        $formattedDate = sprintf('\/Date(%d%s)\/', $timestampMilliseconds, $timezoneOffsetFormatted);
+        return $formattedDate;
     }
     public function createReversePickup($order_id)
     {
         $order = Order::where('id', $order_id)->first();
         // $orderAddress = OrderOrderAddress::where('order_id', $order_id)->where('type', 'shipping')->value('order_address_id');
         // $address = OrderAddress::where('id', $orderAddress)->first();
-        $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
+        // $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
         $shipping = Shipping::where('order_id', $order_id)->where('shipping_type', 'send')->first();
-        $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
-        //  if( $order->payment_status=='paid'|| $order->cod ==1)
-        //  {
+        //   dd($this->workDay($shippingDate));
+        $dateTime = new DateTime();
+
+        // Check if the day is Thursday (4 corresponds to Thursday)
+        if ($dateTime->format('N') == 4) {
+            $dateTime->modify('next Saturday');
+        } else {
+            $dateTime->modify('tomorrow');
+        }
+        $dateTime->setTime(9, 0);
+        $carbonDateTime = Carbon::instance($dateTime);
+
+        // Get the precise timestamp with 3 decimal places for milliseconds
+        $preciseTimestamp = $carbonDateTime->getPreciseTimestamp(3);
+        $shippingDate = $this->workDay($preciseTimestamp);
 
         $json = '{
-            "ClientInfo": {
-                "UserName": "testingapi@aramex.com",
-                "Password": "R123456789$r",
-                "Version": "v1",
-                "AccountNumber": "115051",
-                "AccountPin": "165165",
-                "AccountEntity": "JED",
-                "AccountCountryCode": "SA",
-                "Source": 24
-            },
-            "LabelInfo": {
-                "ReportID": 9729,
-                "ReportType": "URL"
-            },
-           "Pickup": {
+          "ClientInfo": {
+        "UserName": "testingapi@aramex.com",
+        "Password": "R123456789$r",
+        "Version": "1.0",
+        "AccountNumber": "115051",
+        "AccountPin": "165165",
+        "AccountEntity": "JED",
+        "AccountCountryCode": "SA",
+        "Source": 25
+        },
+        "LabelInfo": {
+            "ReportID": 9729,
+            "ReportType": "URL"
+        },
+        "Pickup": {
             "PickupAddress": {
-            "Line1": "' . $shipping->destination_streetaddress . '",
-            "Line2": "' . $shipping->destination_streetaddress . '",
-            "Line3": "",
-            "City": "' . $shipping->destination_city . '",
-            "StateOrProvinceCode": "",
-            "PostCode": "",
-            "CountryCode": "sa",
-            "Longitude": 0,
-            "Latitude": 0,
-            "BuildingNumber": null,
-            "BuildingName": null,
-            "Floor": null,
-            "Apartment": null,
-            "POBox": null,
-            "Description": null
-                },
-            "PickupContact": {
-            "Department": "",
-            "PersonName": "' . $order->user->name . '",
-            "Title": "",
-            "CompanyName": "' . $order->user->name . '",
-            "PhoneNumber1": "' . $order->user->phonenumber . '",
-            "PhoneNumber1Ext": "",
-            "PhoneNumber2": "",
-            "PhoneNumber2Ext": "",
-            "FaxNumber": "",
-            "CellPhone": "' . $order->user->phonenumber . '",
-            "EmailAddress": "' . $order->user->email . '",
-            "Type": ""
+                "Line1": "' . $shipping->destination_streetaddress . '",
+                "Line2": "' . $shipping->destination_streetaddress . '",
+                "Line3": "",
+                "City": "' . $shipping->destination_city . '",
+                "StateOrProvinceCode": "",
+                "PostCode": "",
+                "CountryCode": "sa",
+                "Longitude": 0,
+                "Latitude": 0,
+                "BuildingNumber": null,
+                "BuildingName": null,
+                "Floor": null,
+                "Apartment": null,
+                "POBox": null,
+                "Description": null
             },
-            "PickupLocation": "' . $shipping->destination_streetaddress . '",
-           "PickupDate":"\\/Date(' . $shippingDate . ')\\/",
-           "ReadyTime": "\/Date(' . $shippingDate . ')\/",
-           "LastPickupTime": "\/Date(' . $shippingDate . ')\/",
-           "ClosingTime": "\/Date(' . $shippingDate . ')\/",
+            "PickupContact": {
+                "Department": "",
+                "PersonName": "' . $order->user->name . '",
+                "Title": "",
+                "CompanyName": "' . $order->user->name . '",
+                "PhoneNumber1": "' . $order->user->phonenumber . '",
+                "PhoneNumber1Ext": "",
+                "PhoneNumber2": "",
+                "PhoneNumber2Ext": "",
+                "FaxNumber": "",
+                "CellPhone":  "' . $order->user->phonenumber . '",
+                "EmailAddress": "' . $order->user->email . '",
+                "Type": ""
+            },
+            "PickupLocation": "test",
+            "PickupDate": "' . $shippingDate . '",
+            "ReadyTime": "' . $shippingDate . '",
+            "LastPickupTime": "' . $shippingDate . '",
+            "ClosingTime": "' . $shippingDate . '",
             "Comments": "",
             "Reference1": "' . $order->id . '",
             "Reference2": "",
             "Vehicle": "",
             "Shipments": [],
-             "PickupItems": [
-              {
-                "ProductGroup": "DOM",
-                "ProductType": "Rtn",
-                "NumberOfShipments": 1,
-                "PackageType": "Box",
-                "Payment": "3",
-                "ShipmentWeight": {
-                    "Unit": "KG",
-                    "Value": ' . $order->weight . '
-                },
-                "ShipmentVolume": null,
-                "NumberOfPieces": ' . $order->totalCount . ',
-                "CashAmount": null,
-                "ExtraCharges": null,
-                "ShipmentDimensions": {
-                    "Length": 0,
-                    "Width": 0,
-                    "Height": 0,
-                    "Unit": ""
-                },
-                "Comments": ""
-              }
-          ],
-        "Status": "Ready",
-        "ExistingShipments": null,
-        "Branch": "",
-        "RouteCode": ""
-          },
-            "Transaction": {
-                "Reference1": "",
-                "Reference2": "",
-                "Reference3": "",
-                "Reference4": "",
-                "Reference5": ""
-            }
-        }';
+            "PickupItems": [
+                {
+                    "ProductGroup": "DOM",
+                    "ProductType": "Rtn",
+                    "NumberOfShipments": 1,
+                    "PackageType": "Box",
+                    "Payment": "3",
+                    "ShipmentWeight": {
+                        "Unit": "KG",
+                        "Value": ' . $order->weight . '
+                    },
+                    "ShipmentVolume": null,
+                    "NumberOfPieces": ' . $order->totalCount . ',
+                    "CashAmount": null,
+                    "ExtraCharges": null,
+                    "ShipmentDimensions": {
+                        "Length": 0,
+                        "Width": 0,
+                        "Height": 0,
+                        "Unit": ""
+                    },
+                    "Comments": ""
+                }
+            ],
+            "Status": "Ready",
+            "ExistingShipments": null,
+            "Branch": "",
+            "RouteCode": ""
+        },
+        "Transaction": {
+            "Reference1": "",
+            "Reference2": "",
+            "Reference3": "",
+            "Reference4": "",
+            "Reference5": ""
+        }
+    }';
 
         $arData = $this->buildRequest('POST', $json, "CreatePickup");
         if ($arData->HasErrors == true) {
@@ -611,11 +641,11 @@ class AramexCompanyService implements ShippingInterface
             ]);
 
             $response = [
-                'success' =>true ,
-                'data'=>['orders'=> new OrderResource($order),'status'=>200],
-                'message'=>['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
+                'success' => true,
+                'data' => ['orders' => new OrderResource($order), 'status' => 200],
+                'message' => ['en' => 'تم تعديل الطلب', 'ar' => "Order updated successfully"],
             ];
-            return  response()->json($response,200);
+            return response()->json($response, 200);
 
         }
     }
@@ -632,180 +662,180 @@ class AramexCompanyService implements ShippingInterface
         }
 
         $json = '{
-                  "ClientInfo": {
-                             "UserName": "testingapi@aramex.com",
-                             "Password": "R123456789$r",
-                             "Version": "v1",
-                             "AccountNumber": "115051",
-                             "AccountPin": "165165",
-                             "AccountEntity": "JED",
-                             "AccountCountryCode": "SA",
-                              "Source": 24
-                        },
-                        "LabelInfo": {
-                            "ReportID": 9729,
-                            "ReportType": "URL"
-                        },
-                        "Shipments": [
-                            {
-                                "Reference1": "' . $order->id . '",
+                      "ClientInfo": {
+                                 "UserName": "testingapi@aramex.com",
+                                 "Password": "R123456789$r",
+                                 "Version": "v1",
+                                 "AccountNumber": "115051",
+                                 "AccountPin": "165165",
+                                 "AccountEntity": "JED",
+                                 "AccountCountryCode": "SA",
+                                  "Source": 24
+                            },
+                            "LabelInfo": {
+                                "ReportID": 9729,
+                                "ReportType": "URL"
+                            },
+                            "Shipments": [
+                                {
+                                    "Reference1": "' . $order->id . '",
+                                    "Reference2": "",
+                                    "Reference3": "",
+                                    "Shipper": {
+                                        "Reference1": "",
+                                        "Reference2": "",
+                                        "AccountNumber": "",
+                                        "PartyAddress": {
+                                            "Line1": "' . $shipping->destination_streetaddress . '",
+                                            "Line2": "' . $shipping->destination_streetaddress . '",
+                                            "Line3": "",
+                                            "City": "' . $shipping->destination_city . '",
+                                            "StateOrProvinceCode": "",
+                                            "PostCode": "",
+                                            "CountryCode": "SA",
+                                            "Longitude": 0,
+                                            "Latitude": 0,
+                                            "BuildingNumber": null,
+                                            "BuildingName": null,
+                                            "Floor": null,
+                                            "Apartment": null,
+                                            "POBox": null,
+                                            "Description": null
+                                        },
+                                        "Contact": {
+                                            "Department": "",
+                                            "PersonName": "' . $order->user->name . '",
+                                            "Title": "",
+                                            "CompanyName": "' . $order->user->name . '",
+                                            "PhoneNumber1": "' . $order->user->phonenumber . '",
+                                            "PhoneNumber1Ext": "",
+                                            "PhoneNumber2": "",
+                                            "PhoneNumber2Ext": "",
+                                            "FaxNumber": "",
+                                            "CellPhone": "' . $order->user->phonenumber . '",
+                                            "EmailAddress": "' . $order->user->email . '",
+                                            "Type": ""
+                                        }
+                                    },
+                                    "Consignee": {
+                                        "Reference1": "",
+                                        "Reference2": "",
+                                        "AccountNumber": "",
+                                        "PartyAddress": {
+                                            "Line1": "' . $shipping->streetaddress . '",
+                                            "Line2": "' . $shipping->streetaddress . '",
+                                            "Line3": "",
+                                            "City": "' . $shipping->city . '",
+                                            "StateOrProvinceCode": "",
+                                            "PostCode": "",
+                                            "CountryCode": "SA",
+                                            "Longitude": 0,
+                                            "Latitude": 0,
+                                            "BuildingNumber": "",
+                                            "BuildingName": "",
+                                            "Floor": "",
+                                            "Apartment": "",
+                                            "POBox": null,
+                                            "Description": ""
+                                        },
+                                        "Contact": {
+                                            "Department": "",
+                                            "PersonName": "' . ($store->user->name == null ? $store->user->user_name : $store->user->name) . '",
+                                            "CompanyName": "' . $store->store_name . '",
+                                            "PhoneNumber1": "' . $store->phonenumber . '",
+                                            "PhoneNumber1Ext": "",
+                                            "PhoneNumber2": "",
+                                            "PhoneNumber2Ext": "",
+                                            "FaxNumber": "",
+                                            "CellPhone": "' . $store->phonenumber . '",
+                                            "EmailAddress": "' . $store->store_email . '",
+                                            "Type": ""
+                                        }
+                                    },
+                                    "ThirdParty": {
+                                        "Reference1": "",
+                                        "Reference2": "",
+                                        "AccountNumber": "115051",
+                                        "PartyAddress": {
+                                            "Line1": "الرويس",
+                                            "Line2": "طريق المدينة المنورة",
+                                            "Line3": "",
+                                            "City": "jeddah",
+                                            "StateOrProvinceCode": "Western Province",
+                                            "PostCode": "",
+                                            "CountryCode": "SA",
+                                            "Longitude": 0,
+                                            "Latitude": 0,
+                                            "BuildingNumber": null,
+                                            "BuildingName": null,
+                                            "Floor": null,
+                                            "Apartment": null,
+                                            "POBox": null,
+                                            "Description": null
+                                        },
+                                        "Contact": {
+                                            "Department": "",
+                                            "PersonName": "FAZ",
+                                            "Title": "",
+                                            "CompanyName": "FAZ",
+                                            "PhoneNumber1": "+966506340450",
+                                            "PhoneNumber1Ext": "",
+                                            "PhoneNumber2": "",
+                                            "PhoneNumber2Ext": "",
+                                            "FaxNumber": "",
+                                            "CellPhone": "+966506340450",
+                                            "EmailAddress": "info@atlbha.sa",
+                                            "Type": ""
+                                        }
+                                    },
+                                    "ShippingDateTime": "\\/Date(' . $shippingDate . ')\\/",
+                                    "DueDate":  "\\/Date(' . $shippingDate . ')\\/",
+                                    "Comments": "",
+                                    "PickupLocation": "",
+                                    "OperationsInstructions": "",
+                                    "AccountingInstrcutions": "",
+                                    "Details": {
+                                        "Dimensions": null,
+                                        "ActualWeight": {
+                                            "Unit": "KG",
+                                            "Value":  ' . $order->weight . '
+                                        },
+                                        "ChargeableWeight": null,
+                                        "DescriptionOfGoods": "",
+                                        "GoodsOriginCountry": "SA",
+                                        "NumberOfPieces": ' . $order->totalCount . ',
+                                        "ProductGroup": "DOM",
+                                        "ProductType": "Rtn",
+                                        "PaymentType": "3",
+                                        "PaymentOptions": "",
+                                        "CustomsValueAmount": null,
+                                        "CashOnDeliveryAmount": {
+                                            "CurrencyCode": "SAR",
+                                            "Value": 0
+                                        },
+                                        "InsuranceAmount": null,
+                                        "CashAdditionalAmount": null,
+                                        "CashAdditionalAmountDescription": "",
+                                        "CollectAmount": null,
+                                        "Services": "",
+                                        "Items": []
+                                    },
+                                    "Attachments": [],
+                                    "ForeignHAWB": "",
+                                    "TransportType ": 0,
+                                    "PickupGUID": "a620ba04-2d15-4294-991a-051ba56fae45",
+                                    "Number": null,
+                                    "ScheduledDelivery": null
+                                }
+                            ],
+                            "Transaction": {
+                                "Reference1": "",
                                 "Reference2": "",
                                 "Reference3": "",
-                                "Shipper": {
-                                    "Reference1": "",
-                                    "Reference2": "",
-                                    "AccountNumber": "",
-                                    "PartyAddress": {
-                                        "Line1": "' . $shipping->destination_streetaddress . '",
-                                        "Line2": "' . $shipping->destination_streetaddress . '",
-                                        "Line3": "",
-                                        "City": "' . $shipping->destination_city . '",
-                                        "StateOrProvinceCode": "",
-                                        "PostCode": "",
-                                        "CountryCode": "SA",
-                                        "Longitude": 0,
-                                        "Latitude": 0,
-                                        "BuildingNumber": null,
-                                        "BuildingName": null,
-                                        "Floor": null,
-                                        "Apartment": null,
-                                        "POBox": null,
-                                        "Description": null
-                                    },
-                                    "Contact": {
-                                        "Department": "",
-                                        "PersonName": "' . $order->user->name . '",
-                                        "Title": "",
-                                        "CompanyName": "' . $order->user->name . '",
-                                        "PhoneNumber1": "' . $order->user->phonenumber . '",
-                                        "PhoneNumber1Ext": "",
-                                        "PhoneNumber2": "",
-                                        "PhoneNumber2Ext": "",
-                                        "FaxNumber": "",
-                                        "CellPhone": "' . $order->user->phonenumber . '",
-                                        "EmailAddress": "' . $order->user->email . '",
-                                        "Type": ""
-                                    }
-                                },
-                                "Consignee": {
-                                    "Reference1": "",
-                                    "Reference2": "",
-                                    "AccountNumber": "",
-                                    "PartyAddress": {
-                                        "Line1": "' . $shipping->streetaddress . '",
-                                        "Line2": "' . $shipping->streetaddress . '",
-                                        "Line3": "",
-                                        "City": "' . $shipping->city . '",
-                                        "StateOrProvinceCode": "",
-                                        "PostCode": "",
-                                        "CountryCode": "SA",
-                                        "Longitude": 0,
-                                        "Latitude": 0,
-                                        "BuildingNumber": "",
-                                        "BuildingName": "",
-                                        "Floor": "",
-                                        "Apartment": "",
-                                        "POBox": null,
-                                        "Description": ""
-                                    },
-                                    "Contact": {
-                                        "Department": "",
-                                        "PersonName": "' . $store->user->name . '",
-                                        "CompanyName": "' . $store->store_name . '",
-                                        "PhoneNumber1": "' . $store->phonenumber . '",
-                                        "PhoneNumber1Ext": "",
-                                        "PhoneNumber2": "",
-                                        "PhoneNumber2Ext": "",
-                                        "FaxNumber": "",
-                                        "CellPhone": "' . $store->phonenumber . '",
-                                        "EmailAddress": "' . $store->store_email . '",
-                                        "Type": ""
-                                    }
-                                },
-                                "ThirdParty": {
-                                    "Reference1": "",
-                                    "Reference2": "",
-                                    "AccountNumber": "115051",
-                                    "PartyAddress": {
-                                        "Line1": "الرويس",
-                                        "Line2": "طريق المدينة المنورة",
-                                        "Line3": "",
-                                        "City": "jeddah",
-                                        "StateOrProvinceCode": "Western Province",
-                                        "PostCode": "",
-                                        "CountryCode": "SA",
-                                        "Longitude": 0,
-                                        "Latitude": 0,
-                                        "BuildingNumber": null,
-                                        "BuildingName": null,
-                                        "Floor": null,
-                                        "Apartment": null,
-                                        "POBox": null,
-                                        "Description": null
-                                    },
-                                    "Contact": {
-                                        "Department": "",
-                                        "PersonName": "FAZ",
-                                        "Title": "",
-                                        "CompanyName": "FAZ",
-                                        "PhoneNumber1": "+966506340450",
-                                        "PhoneNumber1Ext": "",
-                                        "PhoneNumber2": "",
-                                        "PhoneNumber2Ext": "",
-                                        "FaxNumber": "",
-                                        "CellPhone": "+966506340450",
-                                        "EmailAddress": "info@atlbha.sa",
-                                        "Type": ""
-                                    }
-                                },
-                                "ShippingDateTime": "\\/Date(' . $shippingDate . ')\\/",
-                                "DueDate":  "\\/Date(' . $shippingDate . ')\\/",
-                                "Comments": "",
-                                "PickupLocation": "",
-                                "OperationsInstructions": "",
-                                "AccountingInstrcutions": "",
-                                "Details": {
-                                    "Dimensions": null,
-                                    "ActualWeight": {
-                                        "Unit": "KG",
-                                        "Value": 0.5
-                                    },
-                                    "ChargeableWeight": null,
-                                    "DescriptionOfGoods": "",
-                                    "GoodsOriginCountry": "SA",
-                                    "NumberOfPieces": 1,
-                                    "ProductGroup": "DOM",
-                                    "ProductType": "Rtn",
-                                    "PaymentType": "3",
-                                    "PaymentOptions": "",
-                                    "CustomsValueAmount": null,
-                                    "CashOnDeliveryAmount": {
-                                        "CurrencyCode": "SAR",
-                                        "Value": 0
-                                    },
-                                    "InsuranceAmount": null,
-                                    "CashAdditionalAmount": null,
-                                    "CashAdditionalAmountDescription": "",
-                                    "CollectAmount": null,
-                                    "Services": "",
-                                    "Items": []
-                                },
-                                "Attachments": [],
-                                "ForeignHAWB": "",
-                                "TransportType ": 0,
-                                "PickupGUID": "a620ba04-2d15-4294-991a-051ba56fae45",
-                                "Number": null,
-                                "ScheduledDelivery": null
+                                "Reference4": "",
+                                "Reference5": ""
                             }
-                        ],
-                        "Transaction": {
-                            "Reference1": "",
-                            "Reference2": "",
-                            "Reference3": "",
-                            "Reference4": "",
-                            "Reference5": ""
-                        }
-                    }';
+                        }';
 
         $arData = $this->buildRequest('POST', $json, "CreateShipments");
         if ($arData->HasErrors == true) {
@@ -842,11 +872,11 @@ class AramexCompanyService implements ShippingInterface
             ]);
 
             $response = [
-                'success' =>true ,
-                'data'=>['orders'=> new OrderResource($order),'status'=>200],
-                'message'=>['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
+                'success' => true,
+                'data' => ['orders' => new OrderResource($order), 'status' => 200],
+                'message' => ['ar' => 'تم تعديل الطلب', 'en' => "Order updated successfully"],
             ];
-            return  response()->json($response,200);
+            return response()->json($response, 200);
         }
 
     }
