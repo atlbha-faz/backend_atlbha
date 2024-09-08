@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use DateTime;
+use DateTimeZone;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Shipping extends Model
 {
@@ -21,6 +23,25 @@ class Shipping extends Model
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
+    public function convertTimestamp($time){
+        $timestamp = $time;
+        list($milliseconds, $timezoneOffset) = explode('-', $timestamp);
+
+        // Convert milliseconds to seconds
+        $seconds = $milliseconds / 1000;
+        
+        // Calculate timezone offset in seconds
+        $offsetHours = (int)substr($timezoneOffset, 0, 3);
+        $offsetMinutes = (int)substr($timezoneOffset, 3, 2);
+        $offsetInSeconds = ($offsetHours * 3600) + ($offsetMinutes * 60);
+        
+        // Adjust seconds based on timezone offset
+        $adjustedSeconds = $seconds + $offsetInSeconds;
+        
+        // Format the adjusted date
+        $formattedDate = gmdate('Y-m-d H:i:s', $adjustedSeconds);
+        return  $formattedDate;
     }
 
 
