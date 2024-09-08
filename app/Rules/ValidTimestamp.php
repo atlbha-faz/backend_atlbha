@@ -46,6 +46,6 @@ class ValidTimestamp implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'حقل التاريخ غير صحيح.';
     }
 }
