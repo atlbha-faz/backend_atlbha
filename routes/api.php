@@ -176,13 +176,12 @@ Route::get('store_token', [\App\Http\Controllers\api\adminDashboard\StoreDataCon
 Route::middleware([AdminUser::class])->group(function () {
     Route::prefix('/Admin')->group(function () {
          
-       
+      
         Route::resource('notification', App\Http\Controllers\api\adminDashboard\NotificationController::class);
         Route::resource('notification_type', App\Http\Controllers\api\adminDashboard\Notification_typesController::class);
-        Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class);
-        Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class);
         Route::get('changePackageStatus/{id}',[App\Http\Controllers\api\adminDashboard\PackageController::class,'changeStatus']);
         Route::get('plansDeleteAll',[App\Http\Controllers\api\adminDashboard\PlanController::class,'deleteAll']);
+        
         Route::get('searchPlanName',[App\Http\Controllers\api\adminDashboard\PlanController::class,'searchPlanName']);
 
         Route::get('selector/etlobahCategory', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'etlobahCategory']);
@@ -220,7 +219,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('searchSubscriptionsName', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'searchSubscriptionsName']);
         Route::get('searchServiceName', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'searchServiceName']);
         Route::get('searchOrderDomainName', [App\Http\Controllers\api\adminDashboard\WebsiteDomainOrderController::class, 'searchOrderDomainName']);
-        
+
         Route::middleware([AdminCheckPermission::class])->group(function () {
             Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');
 
@@ -244,7 +243,10 @@ Route::middleware([AdminUser::class])->group(function () {
             Route::resource('marketer', App\Http\Controllers\api\adminDashboard\MarketerController::class, ['names' => 'admin.marketer']);
             Route::resource('explainVideos', App\Http\Controllers\api\adminDashboard\ExplainVideosController::class, ['names' => 'admin.explainvideo']);
             Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
+            Route::resource('live_course', App\Http\Controllers\api\adminDashboard\CourseLiveController::class, ['names' => 'admin.livecourse']);
             Route::resource('activity', App\Http\Controllers\api\adminDashboard\ActivityController::class, ['names' => 'admin.activity']);
+            Route::resource('package', App\Http\Controllers\api\adminDashboard\PackageController::class, ['names' => 'admin.package']);
+            Route::resource('plan', App\Http\Controllers\api\adminDashboard\PlanController::class, ['names' => 'admin.plan']);
 
             Route::resource('commonquestion', App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, ['names' => 'admin.commonquestion']);
             Route::get('commonDeleteall', [App\Http\Controllers\api\adminDashboard\CommonQuestionController::class, 'deleteAll'])->name('admin.commonquestion.deleteall');
@@ -275,7 +277,6 @@ Route::middleware([AdminUser::class])->group(function () {
 
             Route::get('deleteunit/{id}', [App\Http\Controllers\api\adminDashboard\CourseController::class, 'deleteUnit'])->name('admin.course.deleteunit');
 
-            Route::resource('course', App\Http\Controllers\api\adminDashboard\CourseController::class, ['names' => 'admin.course']);
 
             Route::resource('shippingtype', App\Http\Controllers\api\adminDashboard\ShippingtypeController::class, ['names' => 'admin.shippingtype']);
 
@@ -455,6 +456,8 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('searchCartName', [App\Http\Controllers\api\storeDashboard\CartController::class, 'searchCartName']);
         Route::get('searchPageName', [App\Http\Controllers\api\storeDashboard\PageController::class, 'searchPageName']);
         Route::get('searchCourseName', [App\Http\Controllers\api\storeDashboard\CourseController::class, 'searchCourseName']);
+        Route::get('searchLiveCourseName', [App\Http\Controllers\api\storeDashboard\CourseLiveController::class, 'searchLiveCourseName']);
+
         Route::get('searchTechnicalSupport', [App\Http\Controllers\api\storeDashboard\TechnicalSupportController::class, 'searchTechnicalSupport']);
         Route::get('explainVideoName', [App\Http\Controllers\api\storeDashboard\ExplainVideosController::class, 'explainVideoName']);
 
@@ -489,6 +492,7 @@ Route::middleware([StoreUser::class])->group(function () {
         // academy
         Route::resource('explainVideos', App\Http\Controllers\api\storeDashboard\ExplainVideosController::class, ['names' => 'store.explainvideos']);
         Route::resource('course', App\Http\Controllers\api\storeDashboard\CourseController::class, ['names' => 'store.academy']);
+        Route::resource('live_course', App\Http\Controllers\api\storeDashboard\CourseLiveController::class, ['names' => 'store.live_course']);
 
         // template
         Route::get('theme', [App\Http\Controllers\api\storeDashboard\HomepageController::class, 'theme'])->name('store.template.theme');

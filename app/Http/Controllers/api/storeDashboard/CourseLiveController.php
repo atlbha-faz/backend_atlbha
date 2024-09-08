@@ -7,7 +7,7 @@ use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
 
-class CourseController extends BaseController
+class CourseLiveController extends BaseController
 {
     public function __construct()
     {
@@ -21,14 +21,14 @@ class CourseController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $courses = CourseResource::collection(Course::where('is_deleted', 0)->where('tags','!=', null)->orderByDesc('created_at')->paginate($count));
+        $courses = CourseResource::collection(Course::where('is_deleted', 0)->where('tags', null)->orderByDesc('created_at')->paginate($count));
         $success['page_count'] = $courses->lastPage();
         $success['current_page'] = $courses->currentPage();
         $success['courses'] = $courses;
 
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارجاع الكورسات المشروحة بنجاح', 'courses return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الكورسات المباشرة بنجاح', 'courses return successfully');
     }
 
     /**
@@ -56,7 +56,7 @@ class CourseController extends BaseController
      */
     public function show($course)
     {
-        $course = Course::query()->find($course);
+        $course = Course::query()->where('tags', null)->find($course);
         if (is_null($course) || $course->is_deleted != 0) {
             return $this->sendError("الكورس غير موجودة", "course is't exists");
         }
@@ -73,12 +73,12 @@ class CourseController extends BaseController
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function searchCourseName(Request $request)
+    public function searchLiveCourseName(Request $request)
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $courses = Course::where('is_deleted', 0)->where('tags','!=', null)
+        $courses = Course::where('is_deleted', 0)->where('tags', null)
             ->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
             ->paginate($count);
 
