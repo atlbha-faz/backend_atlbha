@@ -259,7 +259,7 @@ class AramexCompanyService implements ShippingInterface
                         "CustomsValueAmount": null,
                         "CashOnDeliveryAmount": {
                             "CurrencyCode": "SAR",
-                            "Value": ' . $cashOnDeleviry . '
+                            "Value": 0
                         },
                         "InsuranceAmount": null,
                         "CashAdditionalAmount": null,
