@@ -66,7 +66,9 @@ class OtherCompanyService implements ShippingInterface
                 'destination_district' => $address->district,
                 'destination_city' => $address->city,
                 'destination_streetaddress' => $address->street_address,
+                'pickup_date'=> $data["pickup_date"],
                 'shipping_type' => 'send',
+                
 
             ]);
 
@@ -82,6 +84,7 @@ class OtherCompanyService implements ShippingInterface
         foreach ($order->items as $orderItem) {
             $orderItem->update([
                 'order_status' => 'delivery_in_progress',
+                'pickup_date'=> $data["pickup_date"]
             ]);
         }
         return new OrderResource($order);
