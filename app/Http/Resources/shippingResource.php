@@ -32,6 +32,7 @@ class shippingResource extends JsonResource
             'id' =>$this->id,
             'shipping_id' => $this->shipping_id,
              'track_id' => $this->track_id,
+             'pickup_date' => $this->pickup_date,
              'sticker'=> $this->sticker,
              'district'=>$this->district,
             'city'=>$this->city,
@@ -40,7 +41,6 @@ class shippingResource extends JsonResource
             'destination_city'=>$this->destination_city,
             'destination_streetaddress'=>$this->destination_streetaddress,
             'description'=>$this->description,
-            
             'created_at' => $this->created_at,
         ];
     }

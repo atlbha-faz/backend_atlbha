@@ -43,7 +43,7 @@ return new class extends Migration
 
             $table->enum('shipping_status', ['new', 'completed', 'delivery_in_progress', 'ready', 'canceled', 'not_completed'])->default('new');
             $table->enum('shipping_type', [ 'send', 'return'])->default('send');
-
+            $table->string('pickup_date')->nullable();
             $table->bigInteger('is_deleted')->default(0);
             $table->boolean('cashondelivery')->default(0);
             $table->timestamps();
