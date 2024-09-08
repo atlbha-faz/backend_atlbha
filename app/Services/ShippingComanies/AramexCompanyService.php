@@ -327,6 +327,7 @@ class AramexCompanyService implements ShippingInterface
                 'destination_district' => $address->district,
                 'destination_city' => $address->city,
                 'destination_streetaddress' => $address->street_address,
+                'pickup_date'=> $data["pickup_date"],
                 'shipping_type' => 'send',
 
             ]);
@@ -468,6 +469,7 @@ class AramexCompanyService implements ShippingInterface
             $shipping = Shipping::where('order_id', $order->id)->where('shipping_type', 'send')->first();
             $shipping->update([
                 'track_id' => $pickup_id,
+                'pickup_date'=> $data["pickup_date"],
             ]);
 
             $response = [
@@ -638,6 +640,7 @@ class AramexCompanyService implements ShippingInterface
             $shipping = Shipping::where('order_id', $order->id)->where('shipping_type', 'return')->first();
             $shipping->update([
                 'track_id' => $pickup_id,
+                'pickup_date'=> $shippingDate,
             ]);
 
             $response = [
@@ -868,6 +871,7 @@ class AramexCompanyService implements ShippingInterface
                 'destination_district' => $shipping->district,
                 'destination_city' => $shipping->city,
                 'destination_streetaddress' => $shipping->streetaddress,
+                'pickup_date'=> $shippingDate,
                 'shipping_type' => 'return',
             ]);
 
