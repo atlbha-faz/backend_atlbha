@@ -32,7 +32,7 @@ class shippingResource extends JsonResource
             'id' =>$this->id,
             'shipping_id' => $this->shipping_id,
              'track_id' => $this->track_id,
-             'pickup_date' =>$this->pickup_date,
+             'pickup_date' =>$this->convertTimestamp($this->pickup_date),
              'sticker'=> $this->sticker,
              'district'=>$this->district,
             'city'=>$this->city,
