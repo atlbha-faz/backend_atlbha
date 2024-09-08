@@ -5,10 +5,12 @@ namespace App\Http\Controllers\api\storeDashboard;
 use in;
 use Exception;
 use App\Models\Order;
+use App\Models\Account;
 use App\Models\Payment;
 use App\Models\Shipping;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use App\Rules\ValidTimestamp;
 use App\Services\FatoorahServices;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\OrderResource;
@@ -17,7 +19,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Services\ShippingComanies\OtherCompanyService;
 use App\Services\ShippingComanies\AramexCompanyService;
 use App\Http\Controllers\api\BaseController as BaseController;
-use App\Models\Account;
 
 class OrderController extends BaseController
 {
@@ -100,7 +101,7 @@ class OrderController extends BaseController
             'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
 
             'city' => 'required_if:status,==,ready',
-            'pickup_date' => 'required_if:status,==,delivery_in_progress|required_if:status,ready',
+            'pickup_date' =>[ 'required_if:status,==,delivery_in_progress','required_if:status,ready',new ValidTimestamp],
             'street_address' => 'required_if:status,==,ready',
         ]);
         if ($validator->fails()) {
