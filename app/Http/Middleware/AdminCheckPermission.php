@@ -19,14 +19,14 @@ class AdminCheckPermission
         $user = auth()->user();
         $hasPermission = false;
         // $routeName = strtolower($request->route()->getName());
-
+        $permissionNames = $user->roles->first()->permissions->pluck('name')->toArray();
         if (!is_null($user)) {
 
             if ( $user->user_type == 'admin') {
                 $hasPermission = true;
             }
 
-            if ($user->can($request->route()->getName())) {
+         if(in_array($request->route()->getName(), $permissionNames))   {
                 $hasPermission = true;
             }
 
