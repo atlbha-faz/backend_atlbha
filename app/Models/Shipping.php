@@ -27,22 +27,38 @@ class Shipping extends Model
             return null;
         }
         $timestamp = $time;
-        list($milliseconds, $timezoneOffset) = explode('-', $timestamp);
-
+        $milliseconds = 0;
+        $timezoneOffset = '';
+    
+        // Check for '+' in the timestamp
+        if (strpos($timestamp, '+') !== false) {
+            list($milliseconds, $timezoneOffset) = explode('+', $timestamp);
+        } 
+        // Check for '-' in the timestamp
+        elseif (strpos($timestamp, '-') !== false) {
+            list($milliseconds, $timezoneOffset) = explode('-', $timestamp);
+            $timezoneOffset = '-' . $timezoneOffset; // Reattach the minus sign
+        } 
+        // Handle invalid format
+        else {
+            return null;
+        }
+    
         // Convert milliseconds to seconds
         $seconds = $milliseconds / 1000;
-        
+    
         // Calculate timezone offset in seconds
         $offsetHours = (int)substr($timezoneOffset, 0, 3);
-        $offsetMinutes = (int)substr($timezoneOffset, 3, 2);
+        $offsetMinutes = (int)(isset($timezoneOffset[3]) ? substr($timezoneOffset, 3, 2) : 0); // Handle minutes
         $offsetInSeconds = ($offsetHours * 3600) + ($offsetMinutes * 60);
-        
+    
         // Adjust seconds based on timezone offset
         $adjustedSeconds = $seconds + $offsetInSeconds;
-        
+    
         // Format the adjusted date
         $formattedDate = gmdate('Y-m-d H:i:s', $adjustedSeconds);
-        return  $formattedDate;
+    
+        return $formattedDate . ' ' . $timezoneOffset; 
     }
 
 
