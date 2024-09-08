@@ -455,7 +455,7 @@ class AramexCompanyService implements ShippingInterface
 
             return response()->json(['error' => $errorsMessages], 404);
         } else {
-            $pickup_id = $arData->ProcessedPickup->GUID;
+            $pickup_id = $arData->ProcessedPickup->ID;
 
             $order->update([
                 'order_status' => "delivery_in_progress",
@@ -625,7 +625,7 @@ class AramexCompanyService implements ShippingInterface
 
             return response()->json(['error' => $errorsMessages], 404);
         } else {
-            $pickup_id = $arData->ProcessedPickup->GUID;
+            $pickup_id = $arData->ProcessedPickup->ID;
 
             // $order->update([
             //     'order_status' => "ready",
