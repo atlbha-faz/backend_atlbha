@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use DateTime;
-use DateTimeZone;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -25,6 +23,9 @@ class Shipping extends Model
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
     public function convertTimestamp($time){
+        if($time == null){
+            return null;
+        }
         $timestamp = $time;
         list($milliseconds, $timezoneOffset) = explode('-', $timestamp);
 
