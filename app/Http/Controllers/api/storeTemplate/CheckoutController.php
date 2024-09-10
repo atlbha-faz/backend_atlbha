@@ -142,6 +142,11 @@ class CheckoutController extends BaseController
                 ]);
 
             }
+            if( $order->paymentype_id == 4 && $order->shippingtype_id == 1 && $order->total_price >= 3740){
+                $order->delete();
+                return $this->sendError("لايمكن ارسال الطلب لانه المبلغ تجاوز الحد الاقصى في الدفع عند الاستلام لدى شركة ارامكس", "order cannot be sent due to the amount exceeding the maximum limit when paying at delivery");
+                
+               }
 
             // Loop through the cart items and associate them with the order
             foreach ($cart->cartDetails as $cartItem) {
@@ -243,7 +248,7 @@ class CheckoutController extends BaseController
             }
 
             if ($order->paymentype_id == 4) {
-
+           
                 //الدفع عند الاستلام
                 $order->update([
                     'total_price' => $order->total_price + 10,
