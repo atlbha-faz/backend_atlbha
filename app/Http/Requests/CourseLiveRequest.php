@@ -28,6 +28,7 @@ class CourseLiveRequest extends FormRequest
                 'name' => 'required|string|max:255',
                 'description' => 'required|string',
                 'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
+                'link' => 'required|string'
             ];
     
     }
