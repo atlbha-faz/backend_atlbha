@@ -5,10 +5,12 @@ namespace App\Http\Controllers\api\storeDashboard;
 use in;
 use Exception;
 use App\Models\Order;
+use App\Models\Account;
 use App\Models\Payment;
 use App\Models\Shipping;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use App\Rules\ValidTimestamp;
 use App\Services\FatoorahServices;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\OrderResource;
@@ -17,7 +19,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Services\ShippingComanies\OtherCompanyService;
 use App\Services\ShippingComanies\AramexCompanyService;
 use App\Http\Controllers\api\BaseController as BaseController;
-use App\Models\Account;
 
 class OrderController extends BaseController
 {
@@ -49,11 +50,11 @@ class OrderController extends BaseController
 
         $data = Order::with(['user', 'shippings', 'shippingtype', 'items' => function ($query) {
             $query->select('id');
-        }])->where('store_id', auth()->user()->store_id)->where('is_archive', 0)
-            ->where(function ($sub_query) {
-                $sub_query->where('paymentype_id', 4)->orWhere('payment_status', 'paid');
-
-            })->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id','is_refund', 'created_at']);
+        }])->where('store_id', auth()->user()->store_id)->where('is_archive',0)
+        ->where(function ($sub_query) {
+            $sub_query->where('paymentype_id',4)->orWhere('payment_status','paid');
+             
+        })->orderByDesc('id')->select(['id', 'user_id', 'shippingtype_id', 'total_price', 'quantity', 'order_status', 'payment_status', 'paymentype_id','is_refund','created_at']);
         if ($request->has('order_status')) {
             $data->where('order_status', $request->order_status);
         }
@@ -100,6 +101,7 @@ class OrderController extends BaseController
             'status' => 'required|in:new,completed,delivery_in_progress,ready,canceled',
 
             'city' => 'required_if:status,==,ready',
+            'pickup_date' =>[ 'required_if:status,==,delivery_in_progress','required_if:status,ready',new ValidTimestamp],
             'street_address' => 'required_if:status,==,ready',
         ]);
         if ($validator->fails()) {
@@ -120,21 +122,32 @@ class OrderController extends BaseController
                 "shipper_line2" => $request->street_address,
                 "shipper_city" => $request->city,
                 "shipper_district" => $request->district,
-                "shipper_name" => auth()->user()->name == null ? auth()->user()->user_name : auth()->user()->name,
+                "shipper_name" => auth()->user()->name == null ?auth()->user()->user_name :auth()->user()->name,
                 "shipper_comany" => auth()->user()->store->store_name,
                 "shipper_phonenumber" => auth()->user()->phonenumber,
                 "shipper_email" => auth()->user()->email,
                 "order_id" => $order->id,
+                "pickup_date"=> $request->pickup_date,
 
             ];
             if ($request->status === "ready") {
-
                 $shipping = $shipping_companies[$order->shippingtype->id];
-                $success['orders'] = $shipping->createOrder($data);
-                $success['status'] = 200;
-                return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+    
+                    $response=$shipping->createOrder($data);
+                
+               
+                return $response;
+            }
+              if ($request->status === "delivery_in_progress") {
 
-            } else {
+                    $shipping = $shipping_companies[$order->shippingtype->id];
+                    
+                            $response= $shipping->createPickup($data); 
+                      
+                    
+                    return $response;
+                    }
+                else{
                 $order->update([
                     'order_status' => $request->status,
                 ]);
@@ -147,7 +160,6 @@ class OrderController extends BaseController
                 $success['orders'] = new OrderResource($order);
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
-
             }
 
         }
@@ -171,6 +183,29 @@ class OrderController extends BaseController
         $success['orders'] = OrderResource::collection($orders);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف الطلبات بنجاح', 'Order deleted successfully');
+    }
+
+    public function tracking($track_id)
+    {
+        $shipping = Shipping::where('shipping_id', $track_id)->first();
+        if (is_null($shipping)) {
+            return $this->sendError("'الشحنة غير موجود", "shipping is't exists");
+        }
+        $order = Order::where('id', $shipping->order_id)->first();
+        if (is_null($order)) {
+            return $this->sendError("'الطلب غير موجود", "Order is't exists");
+        }
+
+        $shipping_companies = [
+            1 => new AramexCompanyService(),
+            5 => new OtherCompanyService(),
+        ];
+
+        $shipping = $shipping_companies[$order->shippingtype->id];
+        $success['tracking'] = $shipping->tracking($track_id);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم التتبع بنجاح', 'orders tracking returned successfully');
+
     }
     public function refundOrder(Request $request,$order_id)
     {
@@ -230,28 +265,6 @@ class OrderController extends BaseController
         }
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع الطلبات بنجاح', 'orders Information returned successfully');
-    }
-    public function tracking($track_id)
-    {
-        $shipping = Shipping::where('shipping_id', $track_id)->first();
-        if (is_null($shipping)) {
-            return $this->sendError("'الشحنة غير موجود", "shipping is't exists");
-        }
-        $order = Order::where('id', $shipping->order_id)->first();
-        if (is_null($order)) {
-            return $this->sendError("'الطلب غير موجود", "Order is't exists");
-        }
-
-        $shipping_companies = [
-            1 => new AramexCompanyService(),
-            5 => new OtherCompanyService(),
-        ];
-
-        $shipping = $shipping_companies[$order->shippingtype->id];
-        $success['tracking'] = $shipping->tracking($track_id);
-        $success['status'] = 200;
-        return $this->sendResponse($success, 'تم التتبع بنجاح', 'orders tracking returned successfully');
-
     }
     public function searchOrder(Request $request)
     {
