@@ -2,29 +2,31 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\CityResource;
-use App\Http\Resources\CountryResource;
-use App\Http\Resources\PackageResource;
-use App\Http\Resources\Page_categoryResource;
-use App\Http\Resources\PlanResource;
-use App\Http\Resources\PostCategoryResource;
-use App\Http\Resources\RoleResource;
-use App\Http\Resources\TemplateResource;
-use App\Http\Resources\UnitResource;
-use App\Models\Category;
 use App\Models\City;
+use App\Models\Plan;
+use App\Models\Unit;
+use App\Models\Course;
 use App\Models\Country;
 use App\Models\Package;
-use App\Models\Page_category;
-use App\Models\Plan;
-use App\Models\Postcategory;
+use App\Models\Category;
 use App\Models\Template;
-use App\Models\Unit;
+use App\Models\Postcategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Page_category;
 use Spatie\Permission\Models\Role;
+use App\Http\Resources\CityResource;
+use App\Http\Resources\PlanResource;
+use App\Http\Resources\RoleResource;
+use App\Http\Resources\UnitResource;
+use App\Http\Resources\CourseResource;
+use App\Http\Resources\CountryResource;
+use App\Http\Resources\PackageResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\TemplateResource;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PostCategoryResource;
+use App\Http\Resources\Page_categoryResource;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SelectorController extends BaseController
 {
@@ -82,6 +84,14 @@ class SelectorController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
     }
+    public function packagesForTrips()
+    {
+        $success['packages'] = PackageResource::collection(Package::where('is_deleted', 0)->where('status', 'active')->whereDoesntHave('trip')->get());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
+    }
+  
 
     public function plans()
     {
@@ -90,7 +100,13 @@ class SelectorController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع المميزات بنجاح', 'plans return successfully');
     }
+    public function courses()
+    {
+        $success['courses'] = CourseResource::collection(Course::where('is_deleted', 0)->where('tags', null)->where('status', 'active')->get());
+        $success['status'] = 200;
 
+        return $this->sendResponse($success, 'تم ارجاع الدورات المباشره بنجاح', 'courses return successfully');
+    }
     public function templates()
     {
         $success['templates'] = TemplateResource::collection(Template::where('is_deleted', 0)->where('status', 'active')->get());

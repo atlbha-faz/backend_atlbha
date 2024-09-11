@@ -14,11 +14,10 @@ class TripController extends BaseController
         {
             $data = Trip::get();
             if ($request->has('id')) {
-                $data->where('package_id', $request->$id);
+                $data->where('package_id', $request->id);
             }
             $success['trip_details'] = TripResource::collection($data);
             $success['status'] = 200;
-    
             return $this->sendResponse($success, 'تم ارجاع تفاصيل الباقة بنجاح', 'trip return successfully');
         }
     

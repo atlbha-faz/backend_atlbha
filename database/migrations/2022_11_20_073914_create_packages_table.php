@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('packages', function (Blueprint $table) {
            $table->id();
             $table->string('name');
+            $table->string('image')->nullable();
             $table->double('monthly_price');
             $table->double('yearly_price');
             $table->double('discount')->nullable()->default(0);

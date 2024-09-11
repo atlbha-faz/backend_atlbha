@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTime;
 use Carbon\Carbon;
+use App\Models\Trip;
 use App\Models\Store;
 use App\Models\Package_store;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Package extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'monthly_price', 'yearly_price', 'discount', 'status', 'is_deleted'];
+    protected $fillable = ['name','image', 'monthly_price', 'yearly_price', 'discount', 'status', 'is_deleted'];
 
     public function stores()
     {
@@ -31,6 +32,16 @@ class Package extends Model
             'packages_plans',
             'package_id',
             'plan_id'
+        );
+    }
+    public function courses()
+    {
+        return $this->belongsToMany(
+            Course::class,
+            'courses_packages',
+            'package_id',
+            'course_id',
+       
         );
     }
     public function templates()
@@ -56,6 +67,30 @@ class Package extends Model
             $interval = $date1->diff($now_date);
             return $interval->days;
         }
+    }
+    
+    public function setImageAttribute($image)
+    {
+        if (!is_null($image)) {
+            if (gettype($image) != 'string') {
+                $i = $image->store('images/package', 'public');
+                $this->attributes['image'] = $image->hashName();
+            } else {
+                $this->attributes['image'] = $image;
+            }
+        }
+    }
+
+    public function getImageAttribute($image)
+    {
+        if (is_null($image)) {
+            return   asset('assets/media/man.png');
+        }
+        return asset('storage/images/package') . '/' . $image;
+    }
+    public function trip()
+    {
+        return $this->hasOne(Trip::class);
     }
 
 }
