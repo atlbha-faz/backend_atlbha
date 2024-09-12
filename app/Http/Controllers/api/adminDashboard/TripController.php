@@ -73,11 +73,11 @@ class TripController extends BaseController
 
     public function update(TripRequest $request, $id)
     {
-        $trip = Trip::query()->find($id);
-        if (is_null($trip)) {
+        $main_trip = Trip::query()->find($id);
+        if (is_null($main_trip)) {
             return $this->sendError("تفاصيل الباقة غير موجودة", "Trip is't exists");
         }
-        $trip->update([
+        $main_trip->update([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'image' => $request->image,
@@ -96,12 +96,12 @@ class TripController extends BaseController
                 $sub_details = Trip::create([
                     'title' => $data['title'],
                     'description' => $data['description'],
-                    'parent_id' => $trip->id,
+                    'parent_id' => $main_trip->id,
                 ]);
             }
         }
         //$country->fill($request->post())->update();
-        $success['trip_details'] = new TripResource($trip);
+        $success['trip_details'] = new TripResource($main_trip);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'Trip updated successfully');
