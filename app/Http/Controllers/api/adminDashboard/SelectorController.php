@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\adminDashboard;
 
 use App\Models\City;
 use App\Models\Plan;
+use App\Models\Trip;
 use App\Models\Unit;
 use App\Models\Course;
 use App\Models\Country;
@@ -17,6 +18,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\RoleResource;
+use App\Http\Resources\TripResource;
 use App\Http\Resources\UnitResource;
 use App\Http\Resources\CourseResource;
 use App\Http\Resources\CountryResource;
@@ -84,12 +86,11 @@ class SelectorController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
     }
-    public function packagesForTrips()
-    {
-        $success['packages'] = PackageResource::collection(Package::where('is_deleted', 0)->where('status', 'active')->whereDoesntHave('trip')->get());
+    public function trips()    {
+        $success['trips'] = TripResource::collection(Trip::where('parent_id', null)->get());
         $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
+        return $this->sendResponse($success, 'تم ارجاع الرحلات بنجاح', 'trips return successfully');
     }
   
 

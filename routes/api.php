@@ -199,7 +199,7 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('selector/post-categories', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'postCategories']);
         Route::get('selector/roles', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'roles']);
         Route::get('selector/subcategories', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'subCategories']);
-        Route::get('selector/packagesForTrips', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'packagesForTrips']);
+        Route::get('selector/trips', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'trips']);
         Route::get('selector/courses', [App\Http\Controllers\api\adminDashboard\SelectorController::class, 'courses']);
 
         Route::resource('pagecategory', App\Http\Controllers\api\adminDashboard\PageCategoryController::class);
