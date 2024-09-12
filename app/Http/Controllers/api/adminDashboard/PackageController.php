@@ -60,6 +60,8 @@ class PackageController extends BaseController
             'discount' => 'nullable|numeric|gt:0',
             'plan' => 'required|array',
             'template' => 'required|array',
+            'course' => 'required|array',
+            'trip_id' => 'nullable|numeric',
 
         ]);
         if ($validator->fails()) {
@@ -69,9 +71,12 @@ class PackageController extends BaseController
             'name' => $request->name,
             'yearly_price' => $request->yearly_price,
             'discount' => $request->discount,
+            'image' => $request->image,
+            'trip_id' => $request->trip_id,
 
         ]);
         $package->plans()->attach($request->plan);
+        $package->courses()->attach($request->course);
         $package->templates()->attach($request->template);
 
         $success['packages'] = new PackageResource($package);
@@ -134,6 +139,7 @@ class PackageController extends BaseController
             'discount' => 'nullable|numeric|gt:0',
             'plan' => 'required|array',
             'template' => 'required|array',
+            'trip_id' => 'nullable|numeric',
 
         ]);
         if ($validator->fails()) {
@@ -144,14 +150,22 @@ class PackageController extends BaseController
             'name' => $request->input('name'),
             'yearly_price' => $request->input('yearly_price'),
             'discount' => $request->input('discount'),
+            'image' => $request->image,
+            'trip_id' => $request->trip_id,
 
         ]);
 
         if ($request->plan != null) {
-            $package->plans()->sync($request->plan);
+            $package->plans()->detach();
+            $package->plans()->attach($request->plan);
+        }
+        if ($request->course != null) {
+            $package->courses()->detach();
+            $package->courses()->attach($request->course);
         }
         if ($request->template != null) {
-            $package->templates()->sync($request->template);
+            $package->templates()->detach();
+            $package->templates()->attach($request->template);
         }
 
         $success['packages'] = new PackageResource($package);

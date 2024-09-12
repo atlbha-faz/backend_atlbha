@@ -82,10 +82,19 @@ class Course extends Model
     public function getImageAttribute($image)
     {
         if (is_null($image)) {
-            return asset('assets/media/man.png');
+            return asset('assets/media/course.png');
         }
         return asset('storage/images/courses') . '/' . $image;
     }
-
+    public function packages()
+    {
+        return $this->belongsToMany(
+            Package::class,
+            'courses_packages',
+            'course_id',
+            'package_id',
+       
+        );
+    }
 
 }
