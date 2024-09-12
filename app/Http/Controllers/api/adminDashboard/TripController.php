@@ -86,7 +86,7 @@ class TripController extends BaseController
 
         ]);
         if ($request->has('data')) {
-            $trips = Trip::where('parent_id', $trip->id)->get();
+            $trips = Trip::where('parent_id', $main_trip->id)->get();
             if ($trips) {
                 foreach ($trips as $trip) {
                     $trip->delete();

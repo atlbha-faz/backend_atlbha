@@ -26,8 +26,7 @@ class TripRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'image' => 'required|image|mimes:PNG,JPG,jpg,JPEG',
-            'description' => 'required|string',
-            'package_id' => 'required',
+            'description' => 'required|string'
         ];
     }
 }
