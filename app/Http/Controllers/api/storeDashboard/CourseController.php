@@ -83,9 +83,12 @@ class CourseController extends BaseController
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $packageId = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('package_id')->first();
 
         $courses = Course::where('is_deleted', 0)->where('tags','!=', null)
-            ->where('name', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->where('name', 'like', "%$query%")->whereHas('packages', function($query) use ($packageId) {
+                $query->where('packages.id', $packageId);
+               })->orderBy('created_at', 'desc')
             ->paginate($count);
 
         $success['query'] = $query;

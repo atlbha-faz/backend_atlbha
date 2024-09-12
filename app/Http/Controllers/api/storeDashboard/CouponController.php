@@ -398,9 +398,11 @@ class CouponController extends BaseController
     {
         $query = $request->input('query');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-
+        $packageId = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->pluck('package_id')->first();
         $coupons = Coupon::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)
-            ->where('code', 'like', "%$query%")->orderBy('created_at', 'desc')
+            ->where('code', 'like', "%$query%") ->whereHas('packages', function($query) use ($packageId) {
+                $query->where('packages.id', $packageId);
+               })->orderBy('created_at', 'desc')
             ->paginate($count);
 
         $success['query'] = $query;
