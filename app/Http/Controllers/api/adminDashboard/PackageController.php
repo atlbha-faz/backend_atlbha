@@ -61,6 +61,7 @@ class PackageController extends BaseController
             'plan' => 'required|array',
             'template' => 'required|array',
             'course' => 'required|array',
+            'trip_id' => 'nullable|numeric',
 
         ]);
         if ($validator->fails()) {
@@ -71,6 +72,7 @@ class PackageController extends BaseController
             'yearly_price' => $request->yearly_price,
             'discount' => $request->discount,
             'image' => $request->image,
+            'trip_id' => $request->trip_id,
 
         ]);
         $package->plans()->attach($request->plan);
@@ -137,6 +139,7 @@ class PackageController extends BaseController
             'discount' => 'nullable|numeric|gt:0',
             'plan' => 'required|array',
             'template' => 'required|array',
+            'trip_id' => 'nullable|numeric',
 
         ]);
         if ($validator->fails()) {
@@ -148,6 +151,7 @@ class PackageController extends BaseController
             'yearly_price' => $request->input('yearly_price'),
             'discount' => $request->input('discount'),
             'image' => $request->image,
+            'trip_id' => $request->trip_id,
 
         ]);
 

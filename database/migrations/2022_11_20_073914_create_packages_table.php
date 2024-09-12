@@ -22,6 +22,8 @@ return new class extends Migration
             $table->double('discount')->nullable()->default(0);
             $table->enum('status',['active','not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
+            $table->unsignedBigInteger('trip_id')->nullable();
+            $table->foreign('trip_id')->references('id')->on('trips')->onDelete('cascade');
             $table->timestamps();
         });
     }
