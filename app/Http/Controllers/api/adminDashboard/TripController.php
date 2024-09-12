@@ -62,7 +62,7 @@ class TripController extends BaseController
     {
         $trip = Trip::query()->find($id);
         if (is_null($trip)) {
-            return $this->sendError("الوحدة غير موجودة", "Trip is't exists");
+            return $this->sendError("الباقة غير موجودة", "Trip is't exists");
         }
 
         $success['trip_details'] = new TripResource($trip);
