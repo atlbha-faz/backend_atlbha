@@ -20,6 +20,7 @@ class CourseResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'link' => $this->link != null? $this->link : null,
             'description' => $this->description,
             'image' => $this->image,
             'tags' => $this->tags != null ? explode(',',$this->tags): array(),
