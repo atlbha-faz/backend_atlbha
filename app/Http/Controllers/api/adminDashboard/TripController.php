@@ -38,7 +38,7 @@ class TripController extends BaseController
             'description' => $request->description,
             'image' => $request->image,
             'parent_id' => $request->parent_id,
-            'package_id' => $request->package_id,
+
         ]);
         if ($request->has('data')) {
             foreach ($request->data as $data) {
@@ -82,7 +82,7 @@ class TripController extends BaseController
             'description' => $request->input('description'),
             'image' => $request->image,
             'parent_id' => $request->parent_id,
-            'package_id' => $request->package_id,
+       
 
         ]);
         if ($request->has('data')) {

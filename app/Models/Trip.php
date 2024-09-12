@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Package;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Trip extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'image', 'parent_id' , 'package_id'];
-    public function package()
-    {
-        return $this->belongsTo(Package::class, 'package_id');
-    }
+    protected $fillable = ['title', 'description', 'image', 'parent_id'];
+   
 
     public function setImageAttribute($image)
     {
@@ -36,5 +34,9 @@ class Trip extends Model
     public function details()
     {
         return $this->hasMany(Trip::class, 'parent_id');
+    }
+    public function package()
+    {
+        return $this->hasOne(Package::class);
     }
 }

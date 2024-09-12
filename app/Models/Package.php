@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-use DateTime;
-use Carbon\Carbon;
-use App\Models\Trip;
-use App\Models\Store;
 use App\Models\Package_store;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Store;
+use App\Models\Trip;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','image', 'monthly_price', 'yearly_price', 'discount', 'status', 'is_deleted'];
+    protected $fillable = ['name', 'image', 'monthly_price', 'yearly_price', 'discount', 'status', 'trip_id', 'is_deleted'];
 
     public function stores()
     {
@@ -41,7 +41,7 @@ class Package extends Model
             'courses_packages',
             'package_id',
             'course_id',
-       
+
         );
     }
     public function templates()
@@ -56,9 +56,9 @@ class Package extends Model
     public function left($id)
     {
         $store = Store::where('id', $id)->first();
-        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status','paid')->orderBy('start_at', 'DESC')->first();
+        $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status', 'paid')->orderBy('start_at', 'DESC')->first();
 
-        if ($store->package_id == null || $store->periodtype == "6months"|| $store_package == null ) {
+        if ($store->package_id == null || $store->periodtype == "6months" || $store_package == null) {
             return 0;
         } else {
             $day = Store::select('end_at')->where('id', $id)->first();
@@ -68,7 +68,7 @@ class Package extends Model
             return $interval->days;
         }
     }
-    
+
     public function setImageAttribute($image)
     {
         if (!is_null($image)) {
@@ -84,13 +84,14 @@ class Package extends Model
     public function getImageAttribute($image)
     {
         if (is_null($image)) {
-            return   asset('assets/media/man.png');
+            return asset('assets/media/man.png');
         }
         return asset('storage/images/package') . '/' . $image;
     }
     public function trip()
     {
-        return $this->hasOne(Trip::class);
+        return $this->belongsTo(Trip::class, 'trip_id');
+
     }
 
 }
