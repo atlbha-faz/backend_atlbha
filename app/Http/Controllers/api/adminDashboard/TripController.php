@@ -22,10 +22,8 @@ class TripController extends BaseController
      */
     public function index(Request $request)
     {
-        $data = Trip::get();
-        if ($request->has('id')) {
-            $data->where('package_id', $request->$id);
-        }
+        $data = Trip::where('parent_id', null)->get();
+       
         $success['trip_details'] = TripResource::collection($data);
         $success['status'] = 200;
 
