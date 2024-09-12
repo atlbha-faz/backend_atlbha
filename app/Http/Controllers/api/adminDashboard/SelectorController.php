@@ -102,7 +102,7 @@ class SelectorController extends BaseController
     }
     public function courses()
     {
-        $success['courses'] = CourseResource::collection(Course::where('is_deleted', 0)->where('tags', null)->where('status', 'active')->get());
+        $success['courses'] = CourseResource::collection(Course::where('is_deleted', 0)->where('status', 'active')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الدورات المباشره بنجاح', 'courses return successfully');
