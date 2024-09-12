@@ -47,6 +47,7 @@ class PackageResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'image' => $this->image,
             'yearly_price' => $this->yearly_price,
             'price_after_coupon' => $store !== null ? ($package_store != null && $package_store->coupon_id != null )?$package_store->discount_value:($this->yearly_price-$this->discount): null,
             'discount' => $this->discount,
