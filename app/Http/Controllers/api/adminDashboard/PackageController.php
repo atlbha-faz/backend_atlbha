@@ -156,13 +156,16 @@ class PackageController extends BaseController
         ]);
 
         if ($request->plan != null) {
-            $package->plans()->sync($request->plan);
+            $package->plans()->detach();
+            $package->plans()->attach($request->plan);
         }
         if ($request->course != null) {
-            $package->courses()->sync($request->course);
+            $package->courses()->detach();
+            $package->courses()->attach($request->course);
         }
         if ($request->template != null) {
-            $package->templates()->sync($request->template);
+            $package->templates()->detach();
+            $package->templates()->attach($request->template);
         }
 
         $success['packages'] = new PackageResource($package);
