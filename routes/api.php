@@ -75,8 +75,6 @@ Route::get('commonquestion', [App\Http\Controllers\api\homePages\IndexEtlobhaCon
 Route::get('addstoremonth', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'addstoremonth']);
 Route::get('searchIndex', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'searchIndex']);
 Route::get('packages', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'packages']);
-Route::get('trip', [App\Http\Controllers\api\homePages\TripController::class, 'index']);
-Route::get('trip/{id}', [App\Http\Controllers\api\homePages\TripController::class, 'show']);
 
 
 Route::post('atlobhaContactAdd', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'store']);
