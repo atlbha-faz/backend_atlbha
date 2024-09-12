@@ -20,12 +20,13 @@ class CourseController extends BaseController
      */
     public function index(Request $request)
     {
-        // ->whereHas('packages', function($query) use ($packageId) {
-        //     $query->where('packages.id', $packageId);
-        // })
+       
         $packageId = auth()->user()->package_id;
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $courses = CourseResource::collection(Course::where('is_deleted', 0)->where('tags','!=', null)->orderByDesc('created_at')->paginate($count));
+        $courses = CourseResource::collection(Course::where('is_deleted', 0)->where('tags','!=', null)
+        ->whereHas('packages', function($query) use ($packageId) {
+             $query->where('packages.id', $packageId);
+            })->orderByDesc('created_at')->paginate($count));
         $success['page_count'] = $courses->lastPage();
         $success['current_page'] = $courses->currentPage();
         $success['courses'] = $courses;
