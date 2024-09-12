@@ -6,8 +6,10 @@ use App\Models\Store;
 use App\Models\Coupon;
 use App\Models\Package_store;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\TripResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\CouponResource;
+use App\Http\Resources\CourseResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PackageResource extends JsonResource
@@ -54,6 +56,8 @@ class PackageResource extends JsonResource
             'left_days'=>$store !== null ? $this->left($store->id) : null,
             'plans' => PlanResource::collection($plans),
             'templates' => TemplateResource::collection($this->templates),
+            'courses' => CourseResource::collection($this->courses),
+            'trip' => new TripResource($this->trip),
             'unique_id'=>$store !== null ? $unique_id : null,
             'coupon_info'=> $store !== null ? ($package_store != null && $package_store->coupon_id!= null )?new CouponResource(Coupon::where('id', $package_store->coupon_id)->first()):null: null,
 

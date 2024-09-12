@@ -86,6 +86,15 @@ class Course extends Model
         }
         return asset('storage/images/courses') . '/' . $image;
     }
-
+    public function packages()
+    {
+        return $this->belongsToMany(
+            Package::class,
+            'courses_packages',
+            'course_id',
+            'package_id',
+       
+        );
+    }
 
 }
