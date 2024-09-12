@@ -37,8 +37,18 @@ class TripController extends BaseController
             'title' => $request->title,
             'description' => $request->description,
             'image' => $request->image,
+            'parent_id' => $request->parent_id,
             'package_id' => $request->package_id,
         ]);
+        if ($request->has('data')) {
+            foreach ($request->data as $data) {
+                $sub_details = Trip::create([
+                    'title' => $data['title'],
+                    'description' => $data['description'],
+                    'parent_id' => $trip->id,
+                ]);
+            }
+        }
 
         // return new CountryResource($country);
         $success['trip_details'] = new TripResource($trip);
@@ -47,6 +57,7 @@ class TripController extends BaseController
         return $this->sendResponse($success, 'تم إضافة تفاصيل الباقة بنجاح', 'trip Added successfully');
 
     }
+
     public function show($id)
     {
         $trip = Trip::query()->find($id);
@@ -70,9 +81,25 @@ class TripController extends BaseController
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'image' => $request->image,
-            'package_id' => $request->package_id
+            'parent_id' => $request->parent_id,
+            'package_id' => $request->package_id,
 
         ]);
+        if ($request->has('data')) {
+            $trips = Trip::where('parent_id', $trip->id)->get();
+            if ($trips) {
+                foreach ($trips as $trip) {
+                    $trip->delete();
+                }
+            }
+            foreach ($request->data as $data) {
+                $sub_details = Trip::create([
+                    'title' => $data['title'],
+                    'description' => $data['description'],
+                    'parent_id' => $trip->id,
+                ]);
+            }
+        }
         //$country->fill($request->post())->update();
         $success['trip_details'] = new TripResource($trip);
         $success['status'] = 200;
@@ -86,8 +113,14 @@ class TripController extends BaseController
             return $this->sendError("تفاصيل  الباقة غير موجودة", "Trip is't exists");
         }
         $trip->delete();
+        $trips = Trip::where('parent_id', $trip->id)->get();
+        if ($trips) {
+            foreach ($trips as $trip) {
+                $trip->delete();
+            }
+        }
 
-        $success['trip_details'] = new TripResource($trip);
+        // $success['trip_details'] = new TripResource($trip);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم حذف التفاصيل بنجاح', 'Trip deleted successfully');

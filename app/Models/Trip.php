@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Trip extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'image', 'row_order' , 'package_id'];
+    protected $fillable = ['title', 'description', 'image', 'parent_id' , 'package_id'];
     public function package()
     {
         return $this->belongsTo(Package::class, 'package_id');
     }
+
     public function setImageAttribute($image)
     {
         if (!is_null($image)) {
@@ -31,5 +32,9 @@ class Trip extends Model
             return   asset('assets/media/man.png');
         }
         return asset('storage/images/trip') . '/' . $image;
+    }
+    public function details()
+    {
+        return $this->hasMany(Trip::class, 'parent_id');
     }
 }

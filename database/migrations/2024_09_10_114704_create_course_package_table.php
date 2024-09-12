@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('trips', function (Blueprint $table) {
+        Schema::create('courses_packages', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->integer('parent_id')->nullable();
+            $table->unsignedBigInteger('course_id')->nullable();
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->unsignedBigInteger('package_id')->nullable();
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->timestamps();
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trips');
+        Schema::dropIfExists('courses_packages');
     }
 };
