@@ -175,6 +175,16 @@ class Store extends Model
             return null;
         }
     }
+    public function packagePayment($id)
+    {
+        $store = Store::where('id', $id)->first();
+        $store_package = Package_store::where('package_id', $store->package_id)->where('payment_status', 'paid')->where('store_id', $store->id)->orderBy('start_at', 'DESC')->first();
+        if ($store_package != null) {
+            return $store_package;
+        } else {
+            return null;
+        }
+    }
 
     public function user()
     {

@@ -60,6 +60,8 @@ class SubscriptionsResource extends JsonResource
        'periodtype'=>$periodtype,
        'left'=>$this->left($this->id),
        'package_name' => $this->packagee($this->package_id),
+       'referance'=>$this->packagePayment($this->id) !==null ? $this->packagePayment($this->id)->paymentTransectionID: $this->packagePayment($this->id),
+       'payment_type'=>$this->packagePayment($this->id) !==null ? $this->packagePayment($this->id)->paymentType: $this->packagePayment($this->id),
        'rate'=> $this->rate($this->id)!==null ? $this->rate($this->id):0,
        'verification_status'=>$verification_status,
        'status' => $status,
