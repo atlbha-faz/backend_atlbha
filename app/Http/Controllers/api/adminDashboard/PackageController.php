@@ -57,7 +57,7 @@ class PackageController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'yearly_price' => 'required|numeric|gt:0',
-            'discount' => 'nullable|numeric|gt:0',
+            'discount' => 'nullable|numeric',
             'plan' => 'required|array',
             'template' => 'required|array',
             'course' => 'required|array',
@@ -136,7 +136,7 @@ class PackageController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'yearly_price' => 'required|numeric|gt:0',
-            'discount' => 'nullable|numeric|gt:0',
+            'discount' => 'nullable|numeric',
             'plan' => 'required|array',
             'template' => 'required|array',
             'trip_id' => 'nullable|numeric',
@@ -151,7 +151,6 @@ class PackageController extends BaseController
             'name' => $request->input('name'),
             'yearly_price' => $request->input('yearly_price'),
             'discount' => $request->input('discount'),
-            'image' => $request->image,
             'trip_id' => $request->trip_id,
 
         ]);
