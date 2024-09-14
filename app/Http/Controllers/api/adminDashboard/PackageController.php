@@ -60,7 +60,7 @@ class PackageController extends BaseController
             'discount' => 'nullable|numeric',
             'plan' => 'required|array',
             'template' => 'nullable|array',
-            'course' => 'required|array',
+            'course' => 'nullable|array',
             'trip_id' => 'nullable|numeric',
 
         ]);
@@ -76,7 +76,9 @@ class PackageController extends BaseController
 
         ]);
         $package->plans()->attach($request->plan);
+        if ($request->has('course')) {
         $package->courses()->attach($request->course);
+        }
         if ($request->has('template')) {
             $package->templates()->attach($request->template);
         }
