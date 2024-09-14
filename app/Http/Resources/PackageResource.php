@@ -58,7 +58,7 @@ class PackageResource extends JsonResource
             'left_days'=>$store !== null ? $this->left($store->id) : null,
             'plans' => PlanResource::collection($plans),
             'templates' => TemplateResource::collection($this->templates),
-            'courses' => PackageCourseResource::collection($this->courses),
+            'courses' => PackageCourseResource::collection($this->courses->where('is_deleted', 0)),
             'trip' => $this->trip !== null ? new TripResource($this->trip): null,
             'unique_id'=>$store !== null ? $unique_id : null,
             'coupon_info'=> $store !== null ? ($package_store != null && $package_store->coupon_id!= null )?new CouponResource(Coupon::where('id', $package_store->coupon_id)->first()):null: null,
