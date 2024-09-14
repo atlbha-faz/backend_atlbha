@@ -25,11 +25,11 @@ class PackageController extends BaseController
     public function index(Request $request)
     {
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
-        $data=Package::where('is_deleted', 0)->orderByDesc('created_at');
-        $data= $data->paginate($count);
-        $success['page_count'] =  $data->lastPage();
-        $success['current_page'] =  $data->currentPage();
-        $success['packages'] =  PackageResource::collection($data);
+        $data = Package::where('is_deleted', 0)->orderByDesc('created_at');
+        $data = $data->paginate($count);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
+        $success['packages'] = PackageResource::collection($data);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
@@ -155,20 +155,32 @@ class PackageController extends BaseController
         ]);
         if ($request->has('image')) {
             $package->update([
-                'image' => $request->image
+                'image' => $request->image,
             ]);
         }
-        if ($request->plan != null) {
+        if ($request->has('plan')) {
+            if ($request->plan != null) {
+                $package->plans()->detach();
+                $package->plans()->attach($request->plan);
+            }
+        } else {
             $package->plans()->detach();
-            $package->plans()->attach($request->plan);
         }
-        if ($request->course != null) {
+        if ($request->has('course')) {
+            if ($request->course != null) {
+                $package->courses()->detach();
+                $package->courses()->attach($request->course);
+            }
+        } else {
             $package->courses()->detach();
-            $package->courses()->attach($request->course);
         }
-        if ($request->template != null) {
+        if ($request->has('template')) {
+            if ($request->template != null) {
+                $package->templates()->detach();
+                $package->templates()->attach($request->template);
+            }
+        } else {
             $package->templates()->detach();
-            $package->templates()->attach($request->template);
         }
 
         $success['packages'] = new PackageResource($package);
