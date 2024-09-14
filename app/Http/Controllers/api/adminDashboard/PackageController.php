@@ -140,6 +140,7 @@ class PackageController extends BaseController
             'plan' => 'required|array',
             'template' => 'required|array',
             'trip_id' => 'nullable|numeric',
+            'image'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg',
 
         ]);
         if ($validator->fails()) {
@@ -154,7 +155,11 @@ class PackageController extends BaseController
             'trip_id' => $request->trip_id,
 
         ]);
-
+        if ($request->has('image')) {
+            $package->update([
+                'image' => $request->image
+            ]);
+        }
         if ($request->plan != null) {
             $package->plans()->detach();
             $package->plans()->attach($request->plan);
