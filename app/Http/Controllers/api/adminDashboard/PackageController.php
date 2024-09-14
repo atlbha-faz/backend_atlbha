@@ -140,7 +140,7 @@ class PackageController extends BaseController
             'plan' => 'required|array',
             'template' => 'required|array',
             'trip_id' => 'nullable|numeric',
-
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
         if ($validator->fails()) {
             # code...
@@ -150,11 +150,14 @@ class PackageController extends BaseController
             'name' => $request->input('name'),
             'yearly_price' => $request->input('yearly_price'),
             'discount' => $request->input('discount'),
-            'image' => $request->image,
             'trip_id' => $request->trip_id,
 
         ]);
-
+        if ($request->has('image')) {
+            $package->update([
+                'image' => $request->image
+            ]);
+        }
         if ($request->plan != null) {
             $package->plans()->detach();
             $package->plans()->attach($request->plan);

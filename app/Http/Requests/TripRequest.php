@@ -25,7 +25,7 @@ class TripRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'image' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'description' => 'required|string'
         ];
     }

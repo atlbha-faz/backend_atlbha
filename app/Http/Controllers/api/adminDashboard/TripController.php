@@ -78,11 +78,13 @@ class TripController extends BaseController
         $main_trip->update([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'image' => $request->image,
             'parent_id' => $request->parent_id,
-       
-
         ]);
+        if ($request->has('image')) {
+            $main_trip->update([
+                'image' => $request->image
+            ]);
+        }
         if ($request->has('data')) {
             $trips = Trip::where('parent_id', $main_trip->id)->get();
             if ($trips) {
