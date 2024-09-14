@@ -57,7 +57,7 @@ class PackageResource extends JsonResource
             'package_paid' => $store !== null ? $paid : null,
             'left_days'=>$store !== null ? $this->left($store->id) : null,
             'plans' => PlanResource::collection($plans),
-            'templates' => TemplateResource::collection($this->templates),
+            'templates' => $this->templates !== null ? TemplateResource::collection($this->templates):null,
             'courses' => PackageCourseResource::collection($this->courses->where('is_deleted', 0)),
             'trip' => $this->trip !== null ? new TripResource($this->trip): null,
             'unique_id'=>$store !== null ? $unique_id : null,

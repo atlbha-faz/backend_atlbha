@@ -59,7 +59,7 @@ class PackageController extends BaseController
             'yearly_price' => 'required|numeric|gt:0',
             'discount' => 'nullable|numeric|gt:0',
             'plan' => 'required|array',
-            'template' => 'required|array',
+            'template' => 'nullable|array',
             'course' => 'required|array',
             'trip_id' => 'nullable|numeric',
 
@@ -77,7 +77,9 @@ class PackageController extends BaseController
         ]);
         $package->plans()->attach($request->plan);
         $package->courses()->attach($request->course);
+        if ($request->has('template')) {
         $package->templates()->attach($request->template);
+        }
 
         $success['packages'] = new PackageResource($package);
         $success['status'] = 200;
@@ -138,7 +140,7 @@ class PackageController extends BaseController
             'yearly_price' => 'required|numeric|gt:0',
             'discount' => 'nullable|numeric',
             'plan' => 'required|array',
-            'template' => 'required|array',
+            'template' => 'nullable|array',
             'trip_id' => 'nullable|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
