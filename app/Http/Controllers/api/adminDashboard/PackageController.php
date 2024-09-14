@@ -62,6 +62,7 @@ class PackageController extends BaseController
             'template' => 'nullable|array',
             'course' => 'nullable|array',
             'trip_id' => 'nullable|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
 
         ]);
         if ($validator->fails()) {
