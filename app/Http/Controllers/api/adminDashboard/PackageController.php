@@ -136,7 +136,7 @@ class PackageController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'yearly_price' => 'required|numeric|gt:0',
-            'discount' => 'nullable|numeric|gt:0',
+            'discount' => 'nullable|numeric',
             'plan' => 'required|array',
             'template' => 'required|array',
             'trip_id' => 'nullable|numeric',
