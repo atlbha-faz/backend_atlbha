@@ -25,7 +25,7 @@ class Service extends Model
             }
         }
         else {
-            $this->attributes['file'] = $file;
+            $this->attributes['file'] = null;
         }
     }
 

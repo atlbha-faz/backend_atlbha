@@ -14,6 +14,7 @@ use App\Http\Resources\CommonQuestionResource;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ServiceResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\website_socialmediaResource;
 use App\Models\AtlobhaContact;
@@ -28,6 +29,7 @@ use App\Models\Page_page_category;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
+use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Store;
 use App\Models\website_socialmedia;
@@ -74,7 +76,7 @@ class IndexEtlobhaController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $success['section2'] = Section::where('id', 2)->pluck('name')->first();
         if (!is_null(Section::where('id', 2)->where('is_deleted', 0)->where('status', 'active')->first())) {
-            $stores=Store::with(['user' => function ($query) {
+            $stores = Store::with(['user' => function ($query) {
                 $query->select('name');
             }, 'city' => function ($query) {
                 $query->select('id', 'name');
@@ -92,9 +94,10 @@ class IndexEtlobhaController extends BaseController
         $success['atlbha_products'] = ProductResource::collection(Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }, 'category' => function ($query) {
-            $query->select('id', 'name');}])->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at','short_description', 'category_id', 'subcategory_id') ->limit(20)
-            ->get());
-            
+            $query->select('id', 'name');
+        }])->where('store_id', null)->where('for', 'etlobha')->whereNot('stock', 0)->orderByDesc('created_at')->select('id', 'name', 'cover', 'selling_price', 'purchasing_price', 'stock', 'less_qty', 'created_at', 'short_description', 'category_id', 'subcategory_id')->limit(20)
+                ->get());
+
         $success['comment'] = CommentResource::collection(Comment::with(['user' => function ($query) {
             $query->with(['store' => function ($query) {
                 $query->select('id', 'domain', 'store_name', 'logo');
@@ -136,7 +139,7 @@ class IndexEtlobhaController extends BaseController
             $data->where('city_id', $request->input('city_id'));
         }
         if ($request->has('category_id')) {
-            $data->whereHas('categories', function ($q) use($request) {
+            $data->whereHas('categories', function ($q) use ($request) {
                 $q->where('category_id', $request->input('category_id'));
             });
         }
@@ -185,11 +188,11 @@ class IndexEtlobhaController extends BaseController
     {
 
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 20;
-        $data=Package::where('is_deleted', 0)->orderByDesc('created_at');
-        $data= $data->paginate($count);
-        $success['page_count'] =  $data->lastPage();
-        $success['current_page'] =  $data->currentPage();
-        $success['packages'] =  PackageResource::collection($data);
+        $data = Package::where('is_deleted', 0)->orderByDesc('created_at');
+        $data = $data->paginate($count);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
+        $success['packages'] = PackageResource::collection($data);
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الباقات بنجاح', 'packages return successfully');
@@ -220,6 +223,17 @@ class IndexEtlobhaController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع نتائج البحث بنجاح', 'search Information returned successfully');
     }
+    public function services(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data = Service::where('is_deleted', 0)->whereNotIn('id', [75, 76])->where('status', 'active')->orderBy('created_at');
+        $data = $data->paginate($count);
+        $success['Services'] = ServiceResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
+        $success['status'] = 200;
 
+        return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'Services return successfully');
+    }
 }
 //
