@@ -56,6 +56,7 @@ class PlanController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
 
         ]);
         if ($validator->fails()) {
@@ -63,6 +64,7 @@ class PlanController extends BaseController
         }
         $plan = Plan::create([
             'name' => $request->name,
+            'description' => $request->description,
 
         ]);
 
@@ -121,6 +123,7 @@ class PlanController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
 
         ]);
         if ($validator->fails()) {
@@ -129,6 +132,7 @@ class PlanController extends BaseController
         }
         $plan->update([
             'name' => $request->input('name'),
+            'description' => $request->input('description'),
 
         ]);
         //$country->fill($request->post())->update();
