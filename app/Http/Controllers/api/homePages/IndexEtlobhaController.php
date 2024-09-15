@@ -10,6 +10,7 @@ use App\Models\Package;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Section;
+use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Homepage;
@@ -26,6 +27,7 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\PackageResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ServiceResource;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\atlobhaContactResource;
@@ -221,6 +223,18 @@ class IndexEtlobhaController extends BaseController
         $success['results'] = $query1;
 
         return $this->sendResponse($success, 'تم ارجاع نتائج البحث بنجاح', 'search Information returned successfully');
+    }
+    public function services(Request $request)
+    {
+        $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
+        $data = Service::where('is_deleted', 0)->whereNotIn('id', [75, 76])->where('status', 'active')->orderBy('created_at');
+        $data = $data->paginate($count);
+        $success['Services'] = ServiceResource::collection($data);
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'Services return successfully');
     }
 
 }
