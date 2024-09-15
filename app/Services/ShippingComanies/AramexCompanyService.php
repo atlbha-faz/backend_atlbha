@@ -102,7 +102,8 @@ class AramexCompanyService implements ShippingInterface
 
         $order = Order::where('id', $data["order_id"])->first();
         $orderAddress = OrderOrderAddress::where('order_id', $data["order_id"])->where('type', 'shipping')->value('order_address_id');
-        $cashOnDeleviry = $order->paymentype_id == 4 ? 0 : $order->total_price;
+        $cashOnDeleviry = $order->paymentype_id == 4 ? $order->total_price : 0;
+        $service = $order->paymentype_id == 4 ? "CODS" : '';
         $store = Store::where('is_deleted', 0)->where('id', $order->store_id)->first();
         $address = OrderAddress::where('id', $orderAddress)->first();
         $shippingDate = Carbon::parse(Carbon::now())->getPreciseTimestamp(3);
@@ -265,7 +266,7 @@ class AramexCompanyService implements ShippingInterface
                         "CashAdditionalAmount": null,
                         "CashAdditionalAmountDescription": "",
                         "CollectAmount": null,
-                        "Services": "CODS",
+                        "Services":"' . $order->user->phonenumber . '",
                         "Items": []
                     },
                     "Attachments": [],
