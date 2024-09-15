@@ -266,7 +266,7 @@ class AramexCompanyService implements ShippingInterface
                         "CashAdditionalAmount": null,
                         "CashAdditionalAmountDescription": "",
                         "CollectAmount": null,
-                        "Services": ' .$service. ',
+                        "Services": "CODS",
                         "Items": []
                     },
                     "Attachments": [],
