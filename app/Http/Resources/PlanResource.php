@@ -22,6 +22,7 @@ class PlanResource extends JsonResource
         return [
             'id' =>$this->id,
             'name' => $this->name,
+            'description' => $this->description,
             'selected' => $this->selected,
             'status' => $status,
             'is_deleted' => $this->is_deleted!==null ? $this->is_deleted:0,
