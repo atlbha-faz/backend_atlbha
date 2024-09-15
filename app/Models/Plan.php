@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Plan extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','status','is_deleted'];
+    protected $fillable = ['name','description','status','is_deleted'];
 
     public function packages()
     {

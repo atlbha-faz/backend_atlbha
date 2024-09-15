@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('description')->nullable();
             $table->enum('status',['active','not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();
