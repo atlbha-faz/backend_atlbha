@@ -42,7 +42,7 @@ class WebsiteorderController extends BaseController
             $q->where('service_id', 3);
         })->count();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
+        $data = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type','name','email','phone_number','total_price','payment_status' ,'payment_method','paymentTransectionID','created_at');
         $data = $data->paginate($count);
         $success['Websiteorder'] = WebsiteorderResource::collection($data);
         $success['page_count'] = $data->lastPage();
