@@ -31,18 +31,18 @@ class WebsiteorderController extends BaseController
     public function index(Request $request)
     {
 
-        $success['count_of_serivces_order'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->count();
-        $success['count_of_Design'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->whereHas('services', function ($q) {
+        $success['count_of_serivces_order'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->count();
+        $success['count_of_Design'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->whereHas('services', function ($q) {
             $q->where('service_id', 1);
         })->count();
-        $success['count_of_TechnicalSupport'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->whereHas('services', function ($q) {
+        $success['count_of_TechnicalSupport'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->whereHas('services', function ($q) {
             $q->where('service_id', 2);
         })->count();
-        $success['count_of_celebrities'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->whereHas('services', function ($q) {
+        $success['count_of_celebrities'] = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->whereHas('services', function ($q) {
             $q->where('service_id', 3);
         })->count();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data=Websiteorder::where('is_deleted', 0)->where('type', 'service')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
+        $data=Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
         $data= $data->paginate($count);
         $success['Websiteorder'] = WebsiteorderResource::collection($data);
         $success['page_count'] = $data->lastPage();
