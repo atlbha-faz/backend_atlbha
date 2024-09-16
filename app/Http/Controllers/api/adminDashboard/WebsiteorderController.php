@@ -42,8 +42,8 @@ class WebsiteorderController extends BaseController
             $q->where('service_id', 3);
         })->count();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data=Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
-        $data= $data->paginate($count);
+        $data = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
+        $data = $data->paginate($count);
         $success['Websiteorder'] = WebsiteorderResource::collection($data);
         $success['page_count'] = $data->lastPage();
         $success['current_page'] = $data->currentPage();
@@ -191,27 +191,29 @@ class WebsiteorderController extends BaseController
         }
 
         $websiteorder->update(['status' => 'accept']);
+        if ($websiteorder->store_id != null) {
 
-        $users = User::where('store_id', $websiteorder->store_id)->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0)->get();
-        $data = [
-            'message' => ' تم قبول خدمة' . implode(',', $serviceName),
-            'store_id' => $websiteorder->store_id,
-            'user_id' => auth()->user()->id,
-            'type' => "service_accept",
-            'object_id' => $websiteorder->store_id,
-        ];
+            $users = User::where('store_id', $websiteorder->store_id)->whereIn('user_type', ['store_employee', 'store'])->where('is_deleted', 0)->get();
+            $data = [
+                'message' => ' تم قبول خدمة' . implode(',', $serviceName),
+                'store_id' => $websiteorder->store_id,
+                'user_id' => auth()->user()->id,
+                'type' => "service_accept",
+                'object_id' => $websiteorder->store_id,
+            ];
 
-        foreach ($users as $user) {
-            Notification::send($user, new verificationNotification($data));
-            if ($user->device_token !== null) {
+            foreach ($users as $user) {
+                Notification::send($user, new verificationNotification($data));
+                if ($user->device_token !== null) {
 
-                $fcm = $this->sendFCM($user->device_token,
-                    $user->id, 'منصة اطلبها', ' تم قبول خدمة' . implode(',', $serviceName), $user->notifications()->count());
+                    $fcm = $this->sendFCM($user->device_token,
+                        $user->id, 'منصة اطلبها', ' تم قبول خدمة' . implode(',', $serviceName), $user->notifications()->count());
+
+                }
 
             }
-
+            event(new VerificationEvent($data));
         }
-        event(new VerificationEvent($data));
         $success['websiteorder'] = new WebsiteorderResource($websiteorder);
         $success['status'] = 200;
 
@@ -237,6 +239,9 @@ class WebsiteorderController extends BaseController
         }
 
         $websiteorder->update(['status' => 'reject']);
+        if($websiteorder->store_id != null){
+            
+        
         $users = User::where('store_id', $websiteorder->store_id)->get();
         $data = [
             'message' => ' تم رفض الخدمة' . implode(',', $serviceName),
@@ -258,6 +263,7 @@ class WebsiteorderController extends BaseController
         }
 
         event(new VerificationEvent($data));
+    }
         $success['websiteorder'] = new WebsiteorderResource($websiteorder);
         $success['status'] = 200;
 
@@ -269,8 +275,8 @@ class WebsiteorderController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $query = $request->input('query');
         $orders = Websiteorder::where('is_deleted', 0)
-        ->where('order_number', 'like', "%$query%")->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
-        $orders=$orders->paginate($count);
+            ->where('order_number', 'like', "%$query%")->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'created_at');
+        $orders = $orders->paginate($count);
 
         $success['query'] = $query;
         $success['total_result'] = $orders->total();

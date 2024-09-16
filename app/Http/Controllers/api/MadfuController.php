@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Requests\CreateOrderRequest;
-use App\Http\Requests\MadfuLoginRequest;
-use App\Http\Requests\StoreInfoRequest;
-use App\Mail\StoreInfoMail;
-use App\Models\MadfuLog;
-use App\Models\Order;
-use App\Models\Package;
-use App\Models\Package_store;
-use App\Models\Store;
-use App\Services\Madfu;
-use Carbon\Carbon;
 use Exception;
+use Notification;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Store;
 use GuzzleHttp\Client;
+use App\Models\Package;
+use App\Services\Madfu;
+use App\Models\MadfuLog;
+use App\Mail\StoreInfoMail;
+use App\Models\Websiteorder;
 use Illuminate\Http\Request;
+use App\Models\Package_store;
+use App\Events\VerificationEvent;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\StoreInfoRequest;
+use App\Http\Requests\MadfuLoginRequest;
+use App\Http\Requests\CreateOrderRequest;
+use App\Notifications\verificationNotification;
 
 class MadfuController extends BaseController
 {
@@ -70,11 +75,20 @@ class MadfuController extends BaseController
                 $order = Order::where('order_number', $request->MerchantReference)->first();
                 if ($order == null) {
                     $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('start_at', 'desc')->first();
+                    $websitesOrder = Websiteorder::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                     if ($payment) {
                         $payment->payment_status = "paid";
                         $payment->save();
                         $this->updatePackage($payment->id);
                         $this->sendEmail($payment->id);
+                    }
+                    else{
+                        if ($websitesOrder) {
+                            $websitesOrder->update([
+                                'payment_status' => "paid",
+                            ]);
+                            $this->sendNotification($websitesOrder->id);
+                        }
                     }
                 } else {
                     $order->payment_status = "paid";
@@ -176,6 +190,26 @@ class MadfuController extends BaseController
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'end_at' => $end_at]);
  
+
+    }
+    public function sendNotification($id)
+    {
+        $websitesOrder = websitesOrder::where('id', $id)->first();
+        if ($websitesOrder->name) {
+            $data = [
+                'message' => 'طلب خدمة',
+                'store_id' => null,
+                'user_id' => auth()->user()->id,
+                'type' => "service",
+                'object_id' => $websiteorder->id,
+            ];
+            $userAdmains = User::where('user_type', 'admin')->get();
+            foreach ($userAdmains as $user) {
+                Notification::send($user, new verificationNotification($data));
+            }
+            event(new VerificationEvent($data));
+        }
+        return true;
 
     }
 
