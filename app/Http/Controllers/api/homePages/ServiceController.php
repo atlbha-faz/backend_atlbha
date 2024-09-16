@@ -84,7 +84,7 @@ class ServiceController extends BaseController
     
     private function generateOrderNumber()
     {
-        $order_number = Websiteorder::orderBy('id', 'desc')->first();
+        $order_number = Websiteorder::orderBy('id', 'desc')->where('type', 'service')->first();
         if (is_null($order_number)) {
             $number = 0001;
         } else {
