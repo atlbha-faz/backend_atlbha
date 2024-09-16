@@ -36,9 +36,15 @@ class WebsiteorderResource extends JsonResource
             'status' => $status,
             'is_deleted' => $this->is_deleted,
             'created_at' => (string) $this->created_at,
-            'store' => new StoreResource($this->store),
+            'store' =>$this->store==null ? null : new StoreResource($this->store),
             'services' => ServiceResource::collection($this->services),
-
+            'name' =>$this->name==null ? null :$this->name,
+            'phone_number' => $this->phone_number==null ? null :$this->phone_number,
+            'email' => $this->email==null ? null :$this->email,
+            'total_price' => $this->total_price,
+            'payment_method'=>$this->payment_method,
+            'reference'=>$this->paymentTransectionID,
+            'payment_status'=>$this->payment_status
         ];
     }
 }
