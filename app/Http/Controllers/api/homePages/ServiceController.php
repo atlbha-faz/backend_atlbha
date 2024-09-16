@@ -12,7 +12,7 @@ use App\Http\Resources\WebsiteorderResource;
 
 class ServiceController extends BaseController
 {
-    public function checkout(EtlobhaServiceRequest $request)
+    public function serviceCheckout(EtlobhaServiceRequest $request)
     {
         $number = $this->generateOrderNumber();
         $totalPrice = $this->calculateTotalPrice($request->service_id);
