@@ -28,7 +28,7 @@ class EtlobhaServiceRequest extends FormRequest
             'email' => 'required|string|email',
             'phone_number' => 'required|string',
             'service_id' => 'required|array',
-            'payment_id' => 'required',
+            'paymentype_id' => 'required',
             'service_referance' => 'required if:payment_id,5',
         ];
     }
