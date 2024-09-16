@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\VerificationEvent;
 use App\Http\Controllers\api\BaseController as BaseController;
 use App\Mail\SendMail2;
 use App\Models\Account;
@@ -12,11 +13,15 @@ use App\Models\Package;
 use App\Models\Package_store;
 use App\Models\Payment;
 use App\Models\Store;
+use App\Models\User;
+use App\Models\Websiteorder;
+use App\Notifications\verificationNotification;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Notification;
 
 class WebhookController extends BaseController
 {
@@ -85,6 +90,7 @@ class WebhookController extends BaseController
         if ($event == 1) {
             $package_store = Package_store::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
+            $websitesOrder = Websiteorder::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             if ($payment) {
                 $order = Order::where('id', $payment->orderID)->first();
                 $cart = Cart::where('order_id', $payment->orderID)->first();
@@ -98,22 +104,29 @@ class WebhookController extends BaseController
                         $this->sendEmail($package_store->id);
                         $this->updatePackage($package_store->id);
                     } else {
-                        $order->update([
-                            'payment_status' => "paid",
-                        ]);
-                        $payment->update([
-                            'paymentCardID' => $request->input('Data.PaymentId'),
-                        ]);
-                        $cart->delete();
-                        if ($order->store_id !== null) {
-                            $store = Store::where('id', $order->store_id)->first();
-                            $data = [
-                                'subject' => "طلب جديد",
-                                'message' => "تم وصول طلب جديد برقم " . $order->order_number . " لدى متجركم",
-                                'store_id' => $store->store_name,
-                                'store_email' => $store->store_email,
-                            ];
-                            Mail::to($store->store_email)->send(new SendMail2($data));
+                        if ($websitesOrder) {
+                            $websitesOrder->update([
+                                'payment_status' => "paid",
+                            ]);
+                            $this->sendNotification($websitesOrder->id);
+                        } else {
+                            $order->update([
+                                'payment_status' => "paid",
+                            ]);
+                            $payment->update([
+                                'paymentCardID' => $request->input('Data.PaymentId'),
+                            ]);
+                            $cart->delete();
+                            if ($order->store_id !== null) {
+                                $store = Store::where('id', $order->store_id)->first();
+                                $data = [
+                                    'subject' => "طلب جديد",
+                                    'message' => "تم وصول طلب جديد برقم " . $order->order_number . " لدى متجركم",
+                                    'store_id' => $store->store_name,
+                                    'store_email' => $store->store_email,
+                                ];
+                                Mail::to($store->store_email)->send(new SendMail2($data));
+                            }
                         }
                     }
                     break;
@@ -220,7 +233,26 @@ class WebhookController extends BaseController
         $package_store->update([
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'end_at' => $end_at]);
-    
+
+    }
+    public function sendNotification($id)
+    {
+        $websitesOrder = websitesOrder::where('id', $id)->first();
+        if ($websitesOrder->name) {
+            $data = [
+                'message' => 'طلب خدمة',
+                'store_id' => null,
+                'user_id' => auth()->user()->id,
+                'type' => "service",
+                'object_id' => $websiteorder->id,
+            ];
+            $userAdmains = User::where('user_type', 'admin')->get();
+            foreach ($userAdmains as $user) {
+                Notification::send($user, new verificationNotification($data));
+            }
+            event(new VerificationEvent($data));
+        }
+        return true;
 
     }
 
