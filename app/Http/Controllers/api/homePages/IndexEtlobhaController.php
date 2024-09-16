@@ -29,7 +29,7 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\PaymenttypeResource;
+use App\Http\Resources\PaymentMethodResource;
 use App\Http\Resources\atlobhaContactResource;
 use App\Http\Resources\CommonQuestionResource;
 use App\Http\Resources\AtlbhaIndexProductResource;
@@ -251,7 +251,7 @@ class IndexEtlobhaController extends BaseController
     public function paymentMethod()
     {
 
-        $success['paymenttypes'] = PaymenttypeResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
+        $success['paymenttypes'] = PaymentMethodResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->orderByDesc('created_at')->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'payment types return successfully');

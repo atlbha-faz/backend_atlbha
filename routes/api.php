@@ -78,6 +78,7 @@ Route::get('packages', [App\Http\Controllers\api\homePages\IndexEtlobhaControlle
 Route::get('services', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'services']);
 Route::get('showServiceDetail/{id}', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'showServiceDetail']);
 Route::get('paymentMethod', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'paymentMethod']);
+Route::post('checkout', [App\Http\Controllers\api\homePages\ServiceController::class, 'checkout']);
 
 
 Route::post('atlobhaContactAdd', [App\Http\Controllers\api\homePages\IndexEtlobhaController::class, 'store']);

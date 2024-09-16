@@ -25,10 +25,9 @@ class EtlobhaServiceRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'phone_number' => 'required|string|max:255',
-            'service_id' => 'required|exists:services,id',
-            'total_price' => 'required|numeric',
+            'email' => 'required|string|email',
+            'phone_number' => 'required|string',
+            'service_id' => 'required|array',
             'payment_id' => 'required',
         ];
     }
