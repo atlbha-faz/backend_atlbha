@@ -227,14 +227,19 @@ class IndexEtlobhaController extends BaseController
     }
     public function services(Request $request)
     {
+        if($request->has('all') && $request->input('all') !== null){
+            $data = Service::where('is_deleted', 0)->whereNotIn('id', [75, 76])->where('status', 'active')->orderBy('created_at')->get();
+            $success['Services'] = ServiceResource::collection($data);
+        }
+        else{
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data = Service::where('is_deleted', 0)->whereNotIn('id', [75, 76])->where('status', 'active')->orderBy('created_at');
         $data = $data->paginate($count);
         $success['Services'] = ServiceResource::collection($data);
         $success['page_count'] = $data->lastPage();
         $success['current_page'] = $data->currentPage();
+        }
         $success['status'] = 200;
-
         return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'Services return successfully');
     }
     public function showServiceDetail($service)
