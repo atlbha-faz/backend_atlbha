@@ -67,6 +67,7 @@ class CourseLiveController extends BaseController
             'description' => $request->description,
             'image' => $request->image,
             'user_id' => auth()->user()->id,
+            'link'=> $request->link,
         ]);
   
         // return new CountryResource($country);
@@ -124,7 +125,8 @@ class CourseLiveController extends BaseController
         $course->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'image' => $request->image, 
+            'image' => $request->image,
+            'link'=> $request->link
         ]);
         
         $success['courses'] = new CourseResource($course);
