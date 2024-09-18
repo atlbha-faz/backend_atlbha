@@ -74,7 +74,7 @@ class ServiceController extends BaseController
 
             $websiteorder->update([
                 'payment_method' => $paymentype->name,
-                'paymentTransectionID' => $request->service_reference,
+                'paymentTransectionID' =>$request->service_referance,
             ]);
         }
         $success['websiteorder'] = new WebsiteorderResource($websiteorder);
