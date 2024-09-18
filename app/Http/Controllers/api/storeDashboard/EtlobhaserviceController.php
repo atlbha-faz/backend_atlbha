@@ -100,8 +100,8 @@ class EtlobhaserviceController extends BaseController
                 "InvoiceValue" => $websiteorder->total_price, // total_price
                 "CustomerEmail" => auth()->user()->email,
                 "CustomerMobile"=>substr(auth()->user()->phonenumber, 4),
-                "CallBackUrl" => 'https://store.atlbha.com/checkout-packages/success',
-                "ErrorUrl" => 'https://store.atlbha.com/checkout-packages/failed',
+                "CallBackUrl" => 'https://store.atlbha.com/checkout-services/success',
+                "ErrorUrl" => 'https://store.atlbha.com/checkout-services/failed',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
                 "ProcessingDetails" => $processingDetailsobject,

@@ -44,8 +44,8 @@ class ServiceController extends BaseController
                 "InvoiceValue" => $websiteorder->total_price, // total_price
                 "CustomerEmail" => $websiteorder->email,
                 "CustomerMobile"=>substr($websiteorder->phone_number, 4),
-                "CallBackUrl" => 'https://store.atlbha.com/checkout-packages/success',
-                "ErrorUrl" => 'https://store.atlbha.com/checkout-packages/failed',
+                "CallBackUrl" => 'https://atlbha.com/checkout-services/success',
+                "ErrorUrl" => 'https://atlbha.com/checkout-services/failed',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
                 "ProcessingDetails" => $processingDetailsobject,
