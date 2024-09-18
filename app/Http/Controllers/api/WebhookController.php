@@ -90,7 +90,7 @@ class WebhookController extends BaseController
         if ($event == 1) {
             $package_store = Package_store::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
-            $websitesOrder = Websiteorder::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
+            $websites_order = Websiteorder::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             if ($payment) {
                 $order = Order::where('id', $payment->orderID)->first();
                 $cart = Cart::where('order_id', $payment->orderID)->first();
@@ -104,11 +104,11 @@ class WebhookController extends BaseController
                         $this->sendEmail($package_store->id);
                         $this->updatePackage($package_store->id);
                     } else {
-                        if ($websitesOrder) {
-                            $websitesOrder->update([
+                        if ($websites_order) {
+                            $websites_order->update([
                                 'payment_status' => "paid",
                             ]);
-                            $this->sendNotification($websitesOrder->id);
+                            $this->sendserviceNotification($websites_order->id);
                         } else {
                             $order->update([
                                 'payment_status' => "paid",
@@ -235,17 +235,28 @@ class WebhookController extends BaseController
             'end_at' => $end_at]);
 
     }
-    public function sendNotification($id)
+    public function sendserviceNotification($id)
     {
-        $websitesOrder = websitesOrder::where('id', $id)->first();
-        if ($websitesOrder->name) {
-            $data = [
-                'message' => 'طلب خدمة',
-                'store_id' => null,
-                'user_id' => auth()->user()->id,
-                'type' => "service",
-                'object_id' => $websiteorder->id,
-            ];
+        $websites_order = websitesOrder::where('id', $id)->first();
+        if ($websites_order) {
+
+            if ($websites_order->name) {
+                $data = [
+                    'message' => 'طلب خدمة',
+                    'store_id' => null,
+                    'user_id' => null,
+                    'type' => "service",
+                    'object_id' => $websites_order->id,
+                ];
+            } else {
+                $data = [
+                    'message' => 'طلب خدمة',
+                    'store_id' => $websites_order->store_id,
+                    'user_id' => null,
+                    'type' => "service",
+                    'object_id' => $websites_order->id,
+                ];
+            }
             $userAdmains = User::where('user_type', 'admin')->get();
             foreach ($userAdmains as $user) {
                 Notification::send($user, new verificationNotification($data));
