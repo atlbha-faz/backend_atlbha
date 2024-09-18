@@ -41,7 +41,7 @@ class EtlobhaserviceController extends BaseController
             'service_id' => 'required|array|exists:services,id',
             'name' => 'nullable|string',
             'description' => 'nullable|string',
-            'paymentype_id' => 'required|exists:paymentypes,id',
+            'paymentype_id' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
