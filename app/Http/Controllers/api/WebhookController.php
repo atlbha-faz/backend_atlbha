@@ -12,6 +12,7 @@ use App\Models\Package;
 use App\Models\Package_store;
 use App\Models\Payment;
 use App\Models\Store;
+use App\Models\Websiteorder;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
@@ -85,6 +86,7 @@ class WebhookController extends BaseController
         if ($event == 1) {
             $package_store = Package_store::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             $payment = Payment::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
+            $websites_order = Websiteorder::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
             if ($payment) {
                 $order = Order::where('id', $payment->orderID)->first();
                 $cart = Cart::where('order_id', $payment->orderID)->first();
@@ -98,22 +100,28 @@ class WebhookController extends BaseController
                         $this->sendEmail($package_store->id);
                         $this->updatePackage($package_store->id);
                     } else {
-                        $order->update([
-                            'payment_status' => "paid",
-                        ]);
-                        $payment->update([
-                            'paymentCardID' => $request->input('Data.PaymentId'),
-                        ]);
-                        $cart->delete();
-                        if ($order->store_id !== null) {
-                            $store = Store::where('id', $order->store_id)->first();
-                            $data = [
-                                'subject' => "طلب جديد",
-                                'message' => "تم وصول طلب جديد برقم " . $order->order_number . " لدى متجركم",
-                                'store_id' => $store->store_name,
-                                'store_email' => $store->store_email,
-                            ];
-                            Mail::to($store->store_email)->send(new SendMail2($data));
+                        if ($websites_order) {
+                            $websites_order->update([
+                                'payment_status' => "paid",
+                            ]);
+                        } else {
+                            $order->update([
+                                'payment_status' => "paid",
+                            ]);
+                            $payment->update([
+                                'paymentCardID' => $request->input('Data.PaymentId'),
+                            ]);
+                            $cart->delete();
+                            if ($order->store_id !== null) {
+                                $store = Store::where('id', $order->store_id)->first();
+                                $data = [
+                                    'subject' => "طلب جديد",
+                                    'message' => "تم وصول طلب جديد برقم " . $order->order_number . " لدى متجركم",
+                                    'store_id' => $store->store_name,
+                                    'store_email' => $store->store_email,
+                                ];
+                                Mail::to($store->store_email)->send(new SendMail2($data));
+                            }
                         }
                     }
                     break;

@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Requests\CreateOrderRequest;
-use App\Http\Requests\MadfuLoginRequest;
-use App\Http\Requests\StoreInfoRequest;
-use App\Mail\StoreInfoMail;
-use App\Models\MadfuLog;
-use App\Models\Order;
-use App\Models\Package;
-use App\Models\Package_store;
-use App\Models\Store;
-use App\Services\Madfu;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\Store;
 use GuzzleHttp\Client;
+use App\Models\Package;
+use App\Services\Madfu;
+use App\Models\MadfuLog;
+use App\Mail\StoreInfoMail;
+use App\Models\Websiteorder;
 use Illuminate\Http\Request;
+use App\Models\Package_store;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\StoreInfoRequest;
+use App\Http\Requests\MadfuLoginRequest;
+use App\Http\Requests\CreateOrderRequest;
 
 class MadfuController extends BaseController
 {
@@ -70,11 +71,18 @@ class MadfuController extends BaseController
                 $order = Order::where('order_number', $request->MerchantReference)->first();
                 if ($order == null) {
                     $payment = Package_store::where('paymentTransectionID', $request->MerchantReference)->orderBy('start_at', 'desc')->first();
+                    $websites_order = Websiteorder::where('paymentTransectionID', $request->input('Data.InvoiceId'))->first();
                     if ($payment) {
                         $payment->payment_status = "paid";
                         $payment->save();
                         $this->updatePackage($payment->id);
                         $this->sendEmail($payment->id);
+                    } else {
+                        if ($websites_order) {
+                            $websites_order->update([
+                                'payment_status' => "paid",
+                            ]);
+                        }
                     }
                 } else {
                     $order->payment_status = "paid";

@@ -14,6 +14,7 @@ use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Homepage;
+use App\Models\Paymenttype;
 use Illuminate\Http\Request;
 use App\Models\AtlobhaContact;
 use App\Models\CommonQuestion;
@@ -30,6 +31,7 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PaymentMethodResource;
 use App\Http\Resources\atlobhaContactResource;
 use App\Http\Resources\CommonQuestionResource;
 use App\Http\Resources\AtlbhaIndexProductResource;
@@ -240,6 +242,25 @@ class IndexEtlobhaController extends BaseController
         }
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'Services return successfully');
+    }
+    public function showServiceDetail($service)
+    {
+        $service = Service::where('id', $service)->first();
+        if (is_null($service) || $service->is_deleted != 0) {
+            return $this->sendError("الخدمة غير موجودة", "service is't exists");
+        }
+    
+        $success['service'] = new ServiceResource($service);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم عرض الخدمة  بنجاح', 'service showed successfully');
+    }
+    public function paymentMethod()
+    {
+
+        $success['paymenttypes'] = PaymentMethodResource::collection(Paymenttype::where('is_deleted', 0)->where('status', 'active')->whereNot('id', 4)->orderByDesc('created_at')->get());
+        $success['status'] = 200;
+
+        return $this->sendResponse($success, 'تم ارجاع طرق الدفع بنجاح', 'payment types return successfully');
     }
 
 }
