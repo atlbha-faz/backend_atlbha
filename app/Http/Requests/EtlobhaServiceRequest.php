@@ -29,7 +29,7 @@ class EtlobhaServiceRequest extends FormRequest
             'phone_number' => 'required|string',
             'service_id' => 'required|array',
             'paymentype_id' => 'required',
-            'service_referance' => 'required if:paymentype_id,5',
+            'service_reference' => 'required if:paymentype_id,5',
         ];
     }
 }
