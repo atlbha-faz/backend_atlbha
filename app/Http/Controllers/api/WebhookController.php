@@ -108,7 +108,6 @@ class WebhookController extends BaseController
                             $websites_order->update([
                                 'payment_status' => "paid",
                             ]);
-                            $this->sendserviceNotification($websites_order->id);
                         } else {
                             $order->update([
                                 'payment_status' => "paid",
@@ -235,36 +234,36 @@ class WebhookController extends BaseController
             'end_at' => $end_at]);
 
     }
-    public function sendserviceNotification($id)
-    {
-        $websites_order = websitesOrder::where('id', $id)->first();
-        if ($websites_order) {
+    // public function sendserviceNotification($id)
+    // {
+    //     $websites_order = websitesOrder::where('id', $id)->first();
+    //     if ($websites_order) {
 
-            if ($websites_order->name) {
-                $data = [
-                    'message' => 'طلب خدمة',
-                    'store_id' => null,
-                    'user_id' => null,
-                    'type' => "service",
-                    'object_id' => $websites_order->id,
-                ];
-            } else {
-                $data = [
-                    'message' => 'طلب خدمة',
-                    'store_id' => $websites_order->store_id,
-                    'user_id' => null,
-                    'type' => "service",
-                    'object_id' => $websites_order->id,
-                ];
-            }
-            $userAdmains = User::where('user_type', 'admin')->get();
-            foreach ($userAdmains as $user) {
-                Notification::send($user, new verificationNotification($data));
-            }
-            event(new VerificationEvent($data));
-        }
-        return true;
+    //         if ($websites_order->name) {
+    //             $data = [
+    //                 'message' => 'طلب خدمة',
+    //                 'store_id' => null,
+    //                 'user_id' => null,
+    //                 'type' => "service",
+    //                 'object_id' => $websites_order->id,
+    //             ];
+    //         } else {
+    //             $data = [
+    //                 'message' => 'طلب خدمة',
+    //                 'store_id' => $websites_order->store_id,
+    //                 'user_id' => null,
+    //                 'type' => "service",
+    //                 'object_id' => $websites_order->id,
+    //             ];
+    //         }
+    //         $userAdmains = User::where('user_type', 'admin')->get();
+    //         foreach ($userAdmains as $user) {
+    //             Notification::send($user, new verificationNotification($data));
+    //         }
+    //         event(new VerificationEvent($data));
+    //     }
+    //     return true;
 
-    }
+    // }
 
 }
