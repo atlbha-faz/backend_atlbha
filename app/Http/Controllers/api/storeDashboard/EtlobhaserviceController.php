@@ -41,8 +41,8 @@ class EtlobhaserviceController extends BaseController
             'service_id' => 'required|array|exists:services,id',
             'name' => 'nullable|string',
             'description' => 'nullable|string',
-            'paymentype_id' => 'required',
-            'service_referance' => 'required if:paymentype_id,5',
+            // 'paymentype_id' => 'required',
+            // 'service_referance' => 'required if:paymentype_id,5',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -82,57 +82,57 @@ class EtlobhaserviceController extends BaseController
         if ($result != null) {
             $websiteorder->services()->attach($result);
         }
-        $paymentype = Paymenttype::where('id', $request->paymentype_id)->first();
-        if (in_array($request->paymentype_id, [1, 2])) {
+        // $paymentype = Paymenttype::where('id', $request->paymentype_id)->first();
+        // if (in_array($request->paymentype_id, [1, 2])) {
 
-            $processingDetails = [
-                "AutoCapture" => true,
-                "Bypass3DS" => false,
-            ];
-            $processingDetailsobject = (object) ($processingDetails);
+        //     $processingDetails = [
+        //         "AutoCapture" => true,
+        //         "Bypass3DS" => false,
+        //     ];
+        //     $processingDetailsobject = (object) ($processingDetails);
         
-            if ($totalPrice == 0) {
-                return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");
-            }
-            $data = [
-                "PaymentMethodId" => $paymentype->paymentMethodId,
-                "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->store->store_name.'('.auth()->user()->user_name.')'),
-                "InvoiceValue" => $websiteorder->total_price, // total_price
-                "CustomerEmail" => auth()->user()->email,
-                "CustomerMobile"=>substr(auth()->user()->phonenumber, 4),
-                "CallBackUrl" => 'https://store.atlbha.sa/checkout-services/success',
-                "ErrorUrl" => 'https://store.atlbha.sa/checkout-services/failed',
-                "Language" => 'AR',
-                "DisplayCurrencyIso" => 'SAR',
-                "ProcessingDetails" => $processingDetailsobject,
-            ];
-            $data = json_encode($data);
-            $payment_process = new FatoorahServices();
-            $response = $payment_process->buildRequest('v2/ExecutePayment', 'POST', $data);
+        //     if ($totalPrice == 0) {
+        //         return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");
+        //     }
+        //     $data = [
+        //         "PaymentMethodId" => $paymentype->paymentMethodId,
+        //         "CustomerName" => (auth()->user()->name != null ? auth()->user()->name : auth()->user()->store->store_name.'('.auth()->user()->user_name.')'),
+        //         "InvoiceValue" => $websiteorder->total_price, // total_price
+        //         "CustomerEmail" => auth()->user()->email,
+        //         "CustomerMobile"=>substr(auth()->user()->phonenumber, 4),
+        //         "CallBackUrl" => 'https://store.atlbha.sa/checkout-services/success',
+        //         "ErrorUrl" => 'https://store.atlbha.sa/checkout-services/failed',
+        //         "Language" => 'AR',
+        //         "DisplayCurrencyIso" => 'SAR',
+        //         "ProcessingDetails" => $processingDetailsobject,
+        //     ];
+        //     $data = json_encode($data);
+        //     $payment_process = new FatoorahServices();
+        //     $response = $payment_process->buildRequest('v2/ExecutePayment', 'POST', $data);
 
-            if (isset($response['IsSuccess'])) {
-                if ($response['IsSuccess'] == true) {
+        //     if (isset($response['IsSuccess'])) {
+        //         if ($response['IsSuccess'] == true) {
 
-                    $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
-                    $success['payment'] = $response;
-                    $websiteorder->update([
-                        'payment_method' => $paymentype->name,
-                        'paymentTransectionID' => $InvoiceId,
-                    ]);
+        //             $InvoiceId = $response['Data']['InvoiceId']; // save this id with your order table
+        //             $success['payment'] = $response;
+        //             $websiteorder->update([
+        //                 'payment_method' => $paymentype->name,
+        //                 'paymentTransectionID' => $InvoiceId,
+        //             ]);
 
-                } else {
-                    $success['payment'] = $response;
-                }
-            } else {
-                $success['payment'] = $response;
-            }
-        } else {
+        //         } else {
+        //             $success['payment'] = $response;
+        //         }
+        //     } else {
+        //         $success['payment'] = $response;
+        //     }
+        // } else {
 
-            $websiteorder->update([
-                'payment_method' => $paymentype->name,
-                'paymentTransectionID' => $request->service_reference,
-            ]);
-        }
+        //     $websiteorder->update([
+        //         'payment_method' => $paymentype->name,
+        //         'paymentTransectionID' => $request->service_reference,
+        //     ]);
+        // }
        
         
 
