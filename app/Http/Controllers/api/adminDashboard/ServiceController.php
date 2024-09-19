@@ -145,11 +145,13 @@ class ServiceController extends BaseController
         if (is_null($service) || $service->is_deleted != 0) {
             return $this->sendError("الخدمة غير موجودة", "service is't exists");
         }
-        $orders = $service->websiteorders;
+        $orders = $service->websiteorders->where('payment_status','paid');
         $store_id = [];
         if (!is_null($orders)) {
             foreach ($orders as $order) {
+                if($order->store_id != null){
                 $store_id[] = $order->store_id;
+                }
             }
         }
 
