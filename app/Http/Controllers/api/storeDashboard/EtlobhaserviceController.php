@@ -42,7 +42,7 @@ class EtlobhaserviceController extends BaseController
             'name' => 'nullable|string',
             'description' => 'nullable|string',
             'paymentype_id' => 'required',
-            'service_referance' => 'required if:paymentype_id,5',
+            'service_reference' => 'required if:paymentype_id,5',
         ]);
         if ($validator->fails()) {
             return $this->sendError(null, $validator->errors());
@@ -100,8 +100,8 @@ class EtlobhaserviceController extends BaseController
                 "InvoiceValue" => $websiteorder->total_price, // total_price
                 "CustomerEmail" => auth()->user()->email,
                 "CustomerMobile"=>substr(auth()->user()->phonenumber, 4),
-                "CallBackUrl" => 'https://store.atlbha.com/checkout-services/success',
-                "ErrorUrl" => 'https://store.atlbha.com/checkout-services/failed',
+                "CallBackUrl" => 'https://store.atlbha.com/success',
+                "ErrorUrl" => 'https://store.atlbha.com/failed',
                 "Language" => 'AR',
                 "DisplayCurrencyIso" => 'SAR',
                 "ProcessingDetails" => $processingDetailsobject,
