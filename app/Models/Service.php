@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Websiteorder;
+use App\Models\Service_Websiteorder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Service extends Model
 {
@@ -11,7 +13,8 @@ class Service extends Model
       protected $fillable = ['name','description','file','price','status','is_deleted'];
 
     public function pendingServices($id){
-        $pendingServices=Service_Websiteorder::select('*')->where('service_id',$id)->where('status','pending')->count();
+       $Websiteorders= Websiteorder::Where('type','service')->where('payment_status','paid')->pluck('id')->toArray();
+        $pendingServices=Service_Websiteorder::select('*')->where('service_id',$id)->whereIn('websiteorder_id',$Websiteorders)->where('status','pending')->count();
         return  $pendingServices;
     }
     public function setFileAttribute($file)
