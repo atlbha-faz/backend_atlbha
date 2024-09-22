@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Http\Controllers\api\BaseController as BaseController;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class ReportController extends BaseController
 {
@@ -35,7 +36,8 @@ class ReportController extends BaseController
             $success['discount_coupons'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->sum('discount');
             $success['shipping_price'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->sum('shipping_price');
             $success['taxs'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->sum('tax');
-            $success['payment'] = 0;
+            $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->orwhere('paymentype_id',4)->pluck('id')->toArray();
+            $success['payment'] = Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->sum('deduction');
             $success['sales'] =  round($success['total_sales'] + $success['products_costs'] + $success['discount_coupons'] + $success['taxs'] + $success['payment'] + $success['shipping_price'], 2);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع التقارير بنجاح', 'Reports all return successfully');
@@ -46,7 +48,8 @@ class ReportController extends BaseController
             $success['discount_coupons'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->sum('discount');
             $success['shipping_price'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->sum('shipping_price');
             $success['taxs'] = Order::where('store_id', auth()->user()->store_id)->where('order_status', 'completed')->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->sum('tax');
-            $success['payment'] = 0;
+            $ids=Order::where('store_id', auth()->user()->store_id)->where('payment_status','paid')->orwhere('paymentype_id',4)->pluck('id')->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->toArray();
+            $success['payment'] = Payment::where('store_id', auth()->user()->store_id)->wherein('orderID',$ids)->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->sum('deduction');
             $success['sales'] =  round($success['total_sales'] + $success['products_costs'] + $success['discount_coupons'] + $success['taxs'] + $success['payment'] + $success['shipping_price'], 2);
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم ارجاع التقارير بنجاح', 'Reports return successfully');

@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Websiteorder;
+use App\Models\Service_Websiteorder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Service extends Model
 {
     use HasFactory;
-      protected $fillable = ['name','description','file','price','status','is_deleted'];
+    protected $fillable = ['name', 'description', 'file', 'price', 'status', 'is_deleted'];
 
-    public function pendingServices($id){
-        $pendingServices=Service_Websiteorder::select('*')->where('service_id',$id)->where('status','pending')->count();
-        return  $pendingServices;
+    public function pendingServices($id)
+    {
+        $websiteorders = Websiteorder::Where('type', 'service')->where('payment_status', 'paid')->pluck('id')->toArray();
+        $pendingServices = Service_Websiteorder::select('*')->where('service_id', $id)->whereIn('websiteorder_id', $websiteorders)->where('status', 'pending')->count();
+        return $pendingServices;
     }
     public function setFileAttribute($file)
     {
@@ -23,8 +27,7 @@ class Service extends Model
             } else {
                 $this->attributes['file'] = $file;
             }
-        }
-        else {
+        } else {
             $this->attributes['file'] = $file;
         }
     }
@@ -33,20 +36,18 @@ class Service extends Model
     {
         if (is_null($file)) {
             return null;
-        }
-        else{
-        return asset('storage/images/service') . '/' . $file;
+        } else {
+            return asset('storage/images/service') . '/' . $file;
         }
     }
     public function websiteorders()
     {
-       return $this->belongsToMany(
-       Websiteorder::class,
-          'services_websiteorders',
+        return $this->belongsToMany(
+            Websiteorder::class,
+            'services_websiteorders',
             'service_id',
             'websiteorder_id'
-            );
+        );
     }
 
 }
-?>
