@@ -412,7 +412,8 @@ return [
         "postcategory_id" => "تصنيف المقالات",
         "owner_name" => "اسم مالك الوثيقة",
         "verification_code" => "رقم الوثيقة ",
-        "domain_type"=>'نوع الدومين'
+        "domain_type"=>'نوع الدومين',
+        "phone_number"=>' رقم الجوال',
     ],
 
 ];
