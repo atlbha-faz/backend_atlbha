@@ -28,7 +28,7 @@ class WebsiteorderResource extends JsonResource
         } elseif ($this->type == 'service') {
             $type = 'طلب خدمة';
         }
-
+        $tax = round($this->total_price * 0.15, 2);
         return [
             'id' => $this->id,
             'order_number' => $this->order_number,
@@ -41,6 +41,8 @@ class WebsiteorderResource extends JsonResource
             'name' =>$this->name==null ? null :$this->name,
             'phone_number' => $this->phone_number==null ? null :$this->phone_number,
             'email' => $this->email==null ? null :$this->email,
+            'price' => $this->total_price - $tax,
+            'tax'=> $tax,
             'total_price' => $this->total_price,
             'payment_method'=>$this->payment_method,
             'reference'=>$this->paymentTransectionID,
