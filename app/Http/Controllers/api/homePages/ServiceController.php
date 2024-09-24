@@ -177,8 +177,8 @@ class ServiceController extends BaseController
     }
     public function removeServiceCoupon($id)
     {
-        $service = Websiteorder::where('id', $id)->first();
-        $service->update([
+        $websiteorder = Websiteorder::where('id', $id)->first();
+        $websiteorder->update([
             'discount_value' => null,
             'coupon_id' => null,
         ]);
