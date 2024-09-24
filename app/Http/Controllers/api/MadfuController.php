@@ -182,6 +182,7 @@ class MadfuController extends BaseController
 
         $package_store->update([
             'start_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'periodtype' => 'year',
             'end_at' => $end_at]);
 
 

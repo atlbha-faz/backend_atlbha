@@ -34,7 +34,7 @@ class SubscriptionsController extends BaseController
             $query->select('id');
         }])->where('is_deleted', 0)->where('package_id', '!=', null)->whereHas('packages', function ($q) {
             $q->where('payment_status', 'paid');
-        })->orderByDesc('created_at')->select('id', 'store_name', 'verification_status', 'logo', 'package_id', 'created_at');
+        })->orderByDesc('start_at')->select('id', 'store_name', 'verification_status', 'logo', 'package_id', 'start_at');
         $success['status'] = 200;
         $data = $data->paginate($count);
         $success['stores'] = SubscriptionsResource::collection($data);
