@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\homePages;
 
 use Carbon\Carbon;
+use App\Models\Coupon;
 use App\Models\Service;
 use App\Models\Paymenttype;
 use App\Models\Websiteorder;
