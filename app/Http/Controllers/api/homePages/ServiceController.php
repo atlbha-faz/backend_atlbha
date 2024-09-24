@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\api\homePages;
 
-use Carbon\Carbon;
-use App\Models\Coupon;
-use App\Models\Service;
-use App\Models\Paymenttype;
-use App\Models\Websiteorder;
-use App\Services\FatoorahServices;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\EtlobhaServiceRequest;
 use App\Http\Resources\WebsiteorderResource;
+use App\Models\Coupon;
+use App\Models\Paymenttype;
+use App\Models\Service;
+use App\Models\Websiteorder;
+use App\Services\FatoorahServices;
+use Carbon\Carbon;
 
 class ServiceController extends BaseController
 {
@@ -33,7 +33,7 @@ class ServiceController extends BaseController
             $websiteorder->services()->attach($request->service_id);
         }
         if ($request->has('code') && $request->code != null) {
-            $this->applyServiceCoupon($request->code, $websiteorder->id);
+            return $this->applyServiceCoupon($request->code, $websiteorder->id);
         } else {
             $paymentype = Paymenttype::where('id', $request->paymentype_id)->first();
             if (in_array($request->paymentype_id, [1, 2])) {
@@ -43,18 +43,19 @@ class ServiceController extends BaseController
                     "Bypass3DS" => false,
                 ];
                 $processingDetailsobject = (object) ($processingDetails);
-                if ($websiteorder->$code_id != null) {
+                if ($websiteorder->coupon_id != null) {
                     $totalPrice = $websiteorder->discount_value;
                 }
                 if ($totalPrice == 0) {
                     return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");
                 }
+                
                 $data = [
                     "PaymentMethodId" => $paymentype->paymentMethodId,
                     "CustomerName" => $websiteorder->name,
                     "InvoiceValue" => $totalPrice, // total_price
                     "CustomerEmail" => $websiteorder->email,
-                    "CustomerMobile" => substr($websiteorder->phone_number, 4),
+                     "CustomerMobile" => substr($websiteorder->phone_number, 4),
                     "CallBackUrl" => 'https://atlbha.com/success',
                     "ErrorUrl" => 'https://atlbha.com/failed',
                     "Language" => 'AR',
@@ -135,40 +136,34 @@ class ServiceController extends BaseController
             // $useCouponAll = coupons_users::where('coupon_id', $coupon->id)->get();
             $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
             // if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
-                if ($coupon->discount_type == 'fixed') {
-                    $service_after_discount = $website_order->total_price - $coupon->discount;
-                    $website_order->update([
-                        'discount_value' => $service_after_discount,
-                        'coupon_id' => $coupon->id,
-                    ]);
-
-                } else {
-                    $couponDiscountPercent = $coupon->discount / 100;
-                    $discountAmount = $website_order->total_price * $couponDiscountPercent;
-                    $service_after_discount = $website_order->total_price - $discountAmount;
-                    $website_order->update([
-                        'discount_value' => $service_after_discount,
-                        'coupon_id' => $coupon->id,
-                    ]);
-
-                }
+            if ($coupon->discount_type == 'fixed') {
+                $service_after_discount = $website_order->total_price - $coupon->discount;
+                $website_order->update([
+                    'discount_value' => $service_after_discount,
+                    'coupon_id' => $coupon->id,
+                ]);
 
             } else {
-                $success['status'] = 200;
-
-                return $this->sendResponse($success, 'الكود غير صالح', 'The coupon is invalid');
+                $couponDiscountPercent = $coupon->discount / 100;
+                $discountAmount = $website_order->total_price * $couponDiscountPercent;
+                $service_after_discount = $website_order->total_price - $discountAmount;
+                $website_order->update([
+                    'discount_value' => $service_after_discount,
+                    'coupon_id' => $coupon->id,
+                ]);
 
             }
-        // } else {
-        //     $success['status'] = 200;
+            $success['websiteorder'] = new WebsiteorderResource($website_order);
+            $success['status'] = 200;
 
-        //     return $this->sendResponse($success, 'الكود غير صالح', 'The coupon is invalid');
+            return $this->sendResponse($success, 'تم تفعيل الكود بنجاح', 'coupon updated successfully');
+        } else {
+            $success['status'] = 200;
 
-        // }
-        $success['websiteorder'] = new WebsiteorderResource($website_order);
-        $success['status'] = 200;
+            return $this->sendResponse($success, 'الكود غير صالح', 'The coupon is invalid');
 
-        return $this->sendResponse($success, 'تم تفعيل الكود بنجاح', 'coupon updated successfully');
+        }
+  
 
     }
     private function restService($id)
