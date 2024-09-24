@@ -175,4 +175,15 @@ class ServiceController extends BaseController
         ]);
         return $service->refresh();
     }
+    public function removeServiceCoupon($id)
+    {
+        $service = Websiteorder::where('id', $id)->first();
+        $service->update([
+            'discount_value' => null,
+            'coupon_id' => null,
+        ]);
+        $success['websiteorder'] = new WebsiteorderResource($websiteorder);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
+    }
 }
