@@ -129,12 +129,12 @@ class ServiceController extends BaseController
             } else {
                 $website_order = $this->restService($website_order->id);
             }
-            $coupon->users()->attach(auth()->user()->id);
-            $user = User::where('id', auth()->user()->id)->first();
-            $useCouponUser = coupons_users::where('user_id', auth()->user()->id)->where('coupon_id', $coupon->id)->get();
-            $useCouponAll = coupons_users::where('coupon_id', $coupon->id)->get();
+            // $coupon->users()->attach(auth()->user()->id);
+            // $user = User::where('id', auth()->user()->id)->first();
+            // $useCouponUser = coupons_users::where('user_id', auth()->user()->id)->where('coupon_id', $coupon->id)->get();
+            // $useCouponAll = coupons_users::where('coupon_id', $coupon->id)->get();
             $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
-            if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
+            // if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
                 if ($coupon->discount_type == 'fixed') {
                     $service_after_discount = $website_order->total_price - $coupon->discount;
                     $website_order->update([
@@ -159,12 +159,12 @@ class ServiceController extends BaseController
                 return $this->sendResponse($success, 'الكود غير صالح', 'The coupon is invalid');
 
             }
-        } else {
-            $success['status'] = 200;
+        // } else {
+        //     $success['status'] = 200;
 
-            return $this->sendResponse($success, 'الكود غير صالح', 'The coupon is invalid');
+        //     return $this->sendResponse($success, 'الكود غير صالح', 'The coupon is invalid');
 
-        }
+        // }
         $success['websiteorder'] = new WebsiteorderResource($website_order);
         $success['status'] = 200;
 
