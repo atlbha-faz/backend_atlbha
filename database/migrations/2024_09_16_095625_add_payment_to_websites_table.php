@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
-            $table->integer('total_price')->nullable();
+            $table->decimal('total_price', 10, 2)->nullable();
+            $table->decimal('discount_value', 10, 2)->nullable();
+            $table->unsignedBigInteger('coupon_id')->nullable();
+            $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade');
             $table->string('paymentType')->nullable();
             $table->string('paymentTransectionID')->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->nullable();
