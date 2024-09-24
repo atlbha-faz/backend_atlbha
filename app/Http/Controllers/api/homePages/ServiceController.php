@@ -14,19 +14,22 @@ class ServiceController extends BaseController
 {
     public function serviceCheckout(EtlobhaServiceRequest $request)
     {
-        $number = $this->generateOrderNumber();
-        $totalPrice = $this->calculateTotalPrice($request->service_id);
-        $websiteorder = Websiteorder::create([
-            'type' => 'service',
-            'order_number' => str_pad($number, 4, '0', STR_PAD_LEFT),
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'total_price' => $totalPrice,
+        if ($request->has('order_id')) {
+            $websiteorder = Websiteorder::where('id', $request->order_id)->first();
+        } else {
+            $number = $this->generateOrderNumber();
+            $totalPrice = $this->calculateTotalPrice($request->service_id);
+            $websiteorder = Websiteorder::create([
+                'type' => 'service',
+                'order_number' => str_pad($number, 4, '0', STR_PAD_LEFT),
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'total_price' => $totalPrice,
 
-        ]);
-
-        $websiteorder->services()->attach($request->service_id);
+            ]);
+            $websiteorder->services()->attach($request->service_id);
+        }
         if ($request->has('code') && $request->code != null) {
             $this->applyServiceCoupon($request->code, $websiteorder->id);
         } else {
@@ -38,9 +41,9 @@ class ServiceController extends BaseController
                     "Bypass3DS" => false,
                 ];
                 $processingDetailsobject = (object) ($processingDetails);
-               if($websiteorder->$code_id != null){
-                $totalPrice = $websiteorder->discount_value;
-               }
+                if ($websiteorder->$code_id != null) {
+                    $totalPrice = $websiteorder->discount_value;
+                }
                 if ($totalPrice == 0) {
                     return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");
                 }
