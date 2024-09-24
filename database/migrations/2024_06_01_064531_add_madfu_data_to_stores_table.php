@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('stores', function (Blueprint $table) {
-$table->string('madfu_username')->nullable();
-$table->string('madfu_password')->nullable();
+            $table->string('madfu_username')->nullable();
+            $table->string('madfu_password')->nullable();
         });
     }
 
