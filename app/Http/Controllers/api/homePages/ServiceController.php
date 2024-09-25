@@ -192,4 +192,17 @@ class ServiceController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف الكود بنجاح', 'The coupon is already deleted');
     }
+    public function showServiceOrder($id)
+    {
+        $websiteorder = Websiteorder::where('id', $id)->where('payment_status', '!=', 'paid')->first();
+        if ($websiteorder == null) {
+            return $this->sendError("الطلب غير موجود", " websiteorder is't exists");
+        }
+    
+       
+         $success['websiteorder'] = new WebsiteorderResource($websiteorder);
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم حذف الكود بنجاح', 'The coupon is already deleted');
+    }
+    
 }
