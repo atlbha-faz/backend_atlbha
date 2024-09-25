@@ -39,6 +39,7 @@ class WebsiteorderResource extends JsonResource
             'store' =>$this->store==null ? null : new StoreResource($this->store),
             'services' => ServiceResource::collection($this->services),
             'name' =>$this->name==null ? null :$this->name,
+            'store_domain'=> $this->store_domain==null ? null :$this->store_domain,
             'phone_number' => $this->phone_number==null ? null :$this->phone_number,
             'email' => $this->email==null ? null :$this->email,
             'price' => number_format($this->total_price - $tax,2),

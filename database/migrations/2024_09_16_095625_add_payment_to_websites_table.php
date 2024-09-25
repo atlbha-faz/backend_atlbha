@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('websiteorders', function (Blueprint $table) {
             $table->string('name')->nullable();
             $table->string('email')->nullable();
+            $table->string('store_domain')->nullable();
             $table->string('phone_number')->nullable();
             $table->integer('total_price')->nullable();
             $table->string('paymentType')->nullable();
