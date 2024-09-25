@@ -18,6 +18,7 @@ class ServiceController extends BaseController
     {
         if ($request->has('order_id')) {
             $websiteorder = Websiteorder::where('id', $request->order_id)->first();
+            $totalPrice = $this->calculateTotalPrice($request->service_id);
         } else {
             $number = $this->generateOrderNumber();
             $totalPrice = $this->calculateTotalPrice($request->service_id);
