@@ -25,6 +25,7 @@ class ServiceController extends BaseController
                 'type' => 'service',
                 'order_number' => str_pad($number, 4, '0', STR_PAD_LEFT),
                 'name' => $request->name,
+                'store_domain' => $request->store_domain,
                 'email' => $request->email,
                 'phone_number' => $request->phone_number,
                 'total_price' => $totalPrice,

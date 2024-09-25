@@ -27,6 +27,7 @@ class EtlobhaServiceRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email',
             'phone_number' => 'required|string',
+            'store_domain'=>'nullable|string',
             'code' => 'nullable|string',
             'service_id' => 'required|array',
             'paymentype_id' => 'required_without:code',

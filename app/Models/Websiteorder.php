@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Websiteorder extends Model
 {
     use HasFactory;
-    protected $fillable = ['order_number','type','store_id','status','is_deleted','name','email','phone_number','total_price','discount_value','coupon_id','payment_status','payment_method','paymentTransectionID'];
+    protected $fillable = ['order_number','type','store_id','status','store_domain','is_deleted','name','email','phone_number','total_price','discount_value','coupon_id','payment_status','payment_method','paymentTransectionID'];
 
      public function store()
     {
