@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\StoreResource;
+use App\Http\Resources\CouponResource;
+use App\Http\Resources\ServiceResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class WebsiteorderResource extends JsonResource
@@ -39,15 +42,17 @@ class WebsiteorderResource extends JsonResource
             'store' =>$this->store==null ? null : new StoreResource($this->store),
             'services' => ServiceResource::collection($this->services),
             'name' =>$this->name==null ? null :$this->name,
-            'store_domain'=> $this->store_domain==null ? null :$this->store_domain,
+            'store_domain'=>$this->store_domain==null ? null :$this->store_domain,
             'phone_number' => $this->phone_number==null ? null :$this->phone_number,
             'email' => $this->email==null ? null :$this->email,
             'price' => number_format($this->total_price - $tax,2),
             'tax'=> number_format($tax,2),
             'total_price' => $this->total_price,
+            'discount_value' => $this->discount_value==null ? $this->total_price :$this->discount_value,
             'payment_method'=>$this->payment_method,
             'reference'=>$this->paymentTransectionID,
-            'payment_status'=>$this->payment_status
+            'payment_status'=>$this->payment_status,
+            'coupon' => $this->coupon==null ? null : new CouponResource($this->coupon),
         ];
     }
 }

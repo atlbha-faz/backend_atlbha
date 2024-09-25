@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('store_domain')->nullable();
             $table->string('phone_number')->nullable();
-            $table->integer('total_price')->nullable();
+            $table->decimal('total_price', 10, 2)->nullable();
+            $table->decimal('discount_value', 10, 2)->nullable();
+            $table->integer('coupon_id')->nullable();
             $table->string('paymentType')->nullable();
             $table->string('paymentTransectionID')->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->nullable();

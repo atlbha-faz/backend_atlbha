@@ -24,12 +24,13 @@ class EtlobhaServiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required_without:code|string|max:255',
+            'email' => 'required_without:code|string|email',
+            'phone_number' => 'required_without:code|string',
             'store_domain'=>'nullable|string',
-            'email' => 'required|string|email',
-            'phone_number' => 'required|string',
+            'code' => 'nullable|string',
             'service_id' => 'required|array',
-            'paymentype_id' => 'required',
+            'paymentype_id' => 'required_without:code',
             'service_reference' => 'required if:paymentype_id,5',
         ];
     }
