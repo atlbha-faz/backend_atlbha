@@ -45,7 +45,7 @@ class WebsiteorderResource extends JsonResource
             'price' => number_format($this->total_price - $tax,2),
             'tax'=> number_format($tax,2),
             'total_price' => $this->total_price,
-            'discount_value' => $this->discount_value,
+            'discount_value' => $this->discount_value==null ? $this->total_price :$this->discount_value,
             'payment_method'=>$this->payment_method,
             'reference'=>$this->paymentTransectionID,
             'payment_status'=>$this->payment_status,

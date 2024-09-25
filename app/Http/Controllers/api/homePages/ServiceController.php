@@ -177,13 +177,19 @@ class ServiceController extends BaseController
     }
     public function removeServiceCoupon($id)
     {
-        $websiteorder = Websiteorder::where('id', $id)->first();
+        $websiteorder = Websiteorder::where('id', $id)->where('payment_status', '!=', 'paid')->first();
+        if ($websiteorder == null) {
+            return $this->sendError("الطلب غير موجود", " websiteorder is't exists");
+        }
+        if ($websiteorder->coupon_id == null) {
+            return $this->sendError("الكوبون غير موجود", "coupon is't exists");
+        }
         $websiteorder->update([
             'discount_value' => null,
             'coupon_id' => null,
         ]);
-        $success['websiteorder'] = new WebsiteorderResource($websiteorder);
+        // $success['websiteorder'] = new WebsiteorderResource($websiteorder);
         $success['status'] = 200;
-        return $this->sendResponse($success, 'الكوبون مستخدم بالفعل', 'The coupon is already used');
+        return $this->sendResponse($success, 'تم حذف الكود بنجاح', 'The coupon is already deleted');
     }
 }
