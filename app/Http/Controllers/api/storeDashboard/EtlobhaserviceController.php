@@ -34,6 +34,7 @@ class EtlobhaserviceController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
     }
+    
     public function store(Request $request)
     {
         $input = $request->all();
