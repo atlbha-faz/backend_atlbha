@@ -188,7 +188,7 @@ class ServiceController extends BaseController
             'discount_value' => null,
             'coupon_id' => null,
         ]);
-        // $success['websiteorder'] = new WebsiteorderResource($websiteorder);
+         $success['websiteorder'] = new WebsiteorderResource($websiteorder);
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف الكود بنجاح', 'The coupon is already deleted');
     }
