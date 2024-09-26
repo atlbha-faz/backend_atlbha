@@ -10,7 +10,7 @@ class StoreHelper
 
     public static function check_store_existing($id)
     {
-        $store = Store::where('domain', $id)->where('verification_status', 'accept')->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
+        $store = Store::where('domain', $id)->whereNot('package_id', null)->whereDate('end_at', '>', Carbon::now())->first();
         if (!is_null($store)) {
             $store_package = Package_store::where('package_id', $store->package_id)->where('store_id', $store->id)->where('payment_status', 'paid')->orderBy('id', 'DESC')->first();
         }
