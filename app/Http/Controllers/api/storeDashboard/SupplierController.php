@@ -68,6 +68,10 @@ class SupplierController extends BaseController
     public function store(Request $request)
     {
        
+        $store = Store::where('id', auth()->user()->store_id)->whereNot('verification_status', 'accept')->first();
+        if ($store) {
+            return $this->sendError("المتجر  غير موثق ", "store is't verified");
+        }
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
@@ -176,6 +180,10 @@ class SupplierController extends BaseController
     }
     public function update(Request $request)
     {
+        $store = Store::where('id', auth()->user()->store_id)->whereNot('verification_status', 'accept')->first();
+        if ($store) {
+            return $this->sendError("المتجر  غير موثق ", "store is't verified");
+        }
         $storeAdmain = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->first();
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         $account = Account::where('store_id', auth()->user()->store_id)->first();
