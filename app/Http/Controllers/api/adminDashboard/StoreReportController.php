@@ -86,7 +86,8 @@ class StoreReportController extends BaseController
         })->count();
         if ($success['count_of_marketers'] > 0) {
             $success['average_of_marketers'] = round(((Marketer::whereHas('user', function ($q) {
-                $q->where('is_deleted', 0);})->whereYear('created_at', Carbon::now()->year)
+                $q->where('is_deleted', 0);
+            })->whereYear('created_at', Carbon::now()->year)
                     ->whereMonth('created_at', Carbon::now()->month)->count()) / (Marketer::whereHas('user', function ($q) {
                 $q->where('is_deleted', 0);
             })->count()) * 100), 2);
@@ -100,20 +101,22 @@ class StoreReportController extends BaseController
         } else {
             $success['average_of_services'] = 0;
         }
-     // احمالي المتاجر خلال 6 شهور
+        // احمالي المتاجر خلال 6 شهور
         if (is_null($request->startDate1) || is_null($request->endDate1)) {
             $sum = 0;
             $p = Package::where('is_deleted', 0)->count();
             for ($i = 1; $i <= $p; $i++) {
                 $package = Package::query()->find($i);
-                $stores = $package->stores->where('created_at', '>=', Carbon::now()->subMonths(6)->month);
-                foreach ($stores as $store) {
-                    if ($store->periodtype == "year") {
-                        $sum = $sum + $package->yearly_price;
-                    } else {
-                        $sum = $sum + $package->monthly_price;
-                    }
+                if ($package->stores) {
+                    $stores = $package->stores->where('created_at', '>=', Carbon::now()->subMonths(6)->month);
+                    foreach ($stores as $store) {
+                        if ($store->periodtype == "year") {
+                            $sum = $sum + $package->yearly_price;
+                        } else {
+                            $sum = $sum + $package->monthly_price;
+                        }
 
+                    }
                 }
             }
             $success['Subscriptions_withPeriod'] = $sum;
