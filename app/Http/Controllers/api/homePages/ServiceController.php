@@ -18,7 +18,7 @@ class ServiceController extends BaseController
     {
         if ($request->has('order_id')) {
             $websiteorder = Websiteorder::where('id', $request->order_id)->first();
-            $totalPrice = $this->calculateTotalPrice($request->service_id);
+          
         } else {
             $number = $this->generateOrderNumber();
             $totalPrice = $this->calculateTotalPrice($request->service_id);
@@ -47,6 +47,8 @@ class ServiceController extends BaseController
                 $processingDetailsobject = (object) ($processingDetails);
                 if ($websiteorder->coupon_id != null) {
                     $totalPrice = $websiteorder->discount_value;
+                } else {
+                    $totalPrice = $websiteorder->total_price;
                 }
                 if ($totalPrice == 0) {
                     return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");

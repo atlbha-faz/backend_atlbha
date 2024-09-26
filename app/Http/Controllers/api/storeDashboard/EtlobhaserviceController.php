@@ -100,6 +100,8 @@ class EtlobhaserviceController extends BaseController
                 $processingDetailsobject = (object) ($processingDetails);
                 if ($websiteorder->coupon_id != null) {
                     $totalPrice = $websiteorder->discount_value;
+                }else{
+                    $totalPrice = $websiteorder->total_price;
                 }
                 if ($totalPrice == 0) {
                     return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");
