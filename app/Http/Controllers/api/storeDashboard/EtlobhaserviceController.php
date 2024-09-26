@@ -34,7 +34,7 @@ class EtlobhaserviceController extends BaseController
 
         return $this->sendResponse($success, 'تم ارجاع المتاجر بنجاح', 'Stores return successfully');
     }
-    
+
     public function store(Request $request)
     {
         $input = $request->all();
@@ -100,6 +100,8 @@ class EtlobhaserviceController extends BaseController
                 $processingDetailsobject = (object) ($processingDetails);
                 if ($websiteorder->coupon_id != null) {
                     $totalPrice = $websiteorder->discount_value;
+                } else {
+                    $totalPrice = $websiteorder->total_price;
                 }
                 if ($totalPrice == 0) {
                     return $this->sendError("يجب ان يكون المبلغ اكبر من الصفر", "price must be more than zero");
@@ -237,5 +239,4 @@ class EtlobhaserviceController extends BaseController
         return $service->refresh();
     }
 
-   
 }
