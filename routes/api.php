@@ -51,7 +51,6 @@ Route::get('selector/shippingcities/{id}', [App\Http\Controllers\api\SelectorCon
 Route::get('selector/activateAccount/{id}', [App\Http\Controllers\api\SelectorController::class, 'activateAccount']);
 Route::get('selector/registrationMarketer', [App\Http\Controllers\api\SelectorController::class, 'registrationMarketer']);
 Route::get('selector/banks', [App\Http\Controllers\api\SelectorController::class, 'getBank']);
-Route::get('selector/updatePage', [App\Http\Controllers\api\SelectorController::class, 'updatePage']);
 Route::get('selector/returnReasons', [App\Http\Controllers\api\SelectorController::class, 'returnReason']);
 Route::post('/social-mobile', 'App\Http\Controllers\api\AuthController@social_mobile');
 
