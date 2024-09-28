@@ -97,7 +97,7 @@ class WebhookController extends BaseController
                         $package_store->update([
                             'payment_status' => "paid",
                         ]);
-                        $this->sendEmail($package_store->id);
+                        // $this->sendEmail($package_store->id);
                         $this->updatePackage($package_store->id);
                     } else {
                         if ($websites_order) {
