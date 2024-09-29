@@ -34,13 +34,13 @@ class GenerateSitemap extends Command
         $postsSitemap = $sitemapController->posts();
 
         // Save the sitemap for posts to a file
-        file_put_contents(public_path('sitemap-posts.xml'), $postsSitemap);
+        file_put_contents(public_path('../../sitemap-posts.xml'), $postsSitemap);
 
         // Generate sitemap for products
         $productsSitemap = $sitemapController->products();
 
         // Save the sitemap for products to a file
-        file_put_contents(public_path('sitemap-products.xml'), $productsSitemap);
+        file_put_contents(public_path('../../sitemap-products.xml'), $productsSitemap);
 
         $this->info('Sitemap generated successfully.');
     }
