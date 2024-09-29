@@ -42,11 +42,19 @@ class WebsiteorderController extends BaseController
             $q->where('service_id', 3);
         })->count();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type','name','email','phone_number','total_price','payment_status' ,'payment_method','paymentTransectionID','created_at');
-        $data = $data->paginate($count);
+        $data = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'name', 'email', 'phone_number', 'total_price', 'coupon_id', 'payment_status', 'payment_method', 'paymentTransectionID', 'created_at');
+        if ($request->has('search') && $request->input('search') !== null) {
+            $data->coupon->where('code', 'like', "%$request->search%");
+        }
+        if ($request->has('all') && $request->input('all') !== null) {
+            $data = $data->get();
+        } else {
+            $data = $data->paginate($count);
+            $success['page_count'] = $data->lastPage();
+            $success['current_page'] = $data->currentPage();
+        }
         $success['Websiteorder'] = WebsiteorderResource::collection($data);
-        $success['page_count'] = $data->lastPage();
-        $success['current_page'] = $data->currentPage();
+
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الطلبات بنجاح', 'Websiteorder return successfully');
@@ -239,31 +247,30 @@ class WebsiteorderController extends BaseController
         }
 
         $websiteorder->update(['status' => 'reject']);
-        if($websiteorder->store_id != null){
-            
-        
-        $users = User::where('store_id', $websiteorder->store_id)->get();
-        $data = [
-            'message' => ' تم رفض الخدمة' . implode(',', $serviceName),
-            'store_id' => $websiteorder->store_id,
-            'user_id' => auth()->user()->id,
-            'type' => "service_reject",
-            'object_id' => $websiteorder->store_id,
-        ];
+        if ($websiteorder->store_id != null) {
 
-        foreach ($users as $user) {
-            Notification::send($user, new verificationNotification($data));
-            if ($user->device_token !== null) {
+            $users = User::where('store_id', $websiteorder->store_id)->get();
+            $data = [
+                'message' => ' تم رفض الخدمة' . implode(',', $serviceName),
+                'store_id' => $websiteorder->store_id,
+                'user_id' => auth()->user()->id,
+                'type' => "service_reject",
+                'object_id' => $websiteorder->store_id,
+            ];
 
-                $fcm = $this->sendFCM($user->device_token,
-                    $user->id, 'منصة اطلبها', ' تم رفض خدمة' . implode(',', $serviceName), $user->notifications()->count());
+            foreach ($users as $user) {
+                Notification::send($user, new verificationNotification($data));
+                if ($user->device_token !== null) {
+
+                    $fcm = $this->sendFCM($user->device_token,
+                        $user->id, 'منصة اطلبها', ' تم رفض خدمة' . implode(',', $serviceName), $user->notifications()->count());
+
+                }
 
             }
 
+            event(new VerificationEvent($data));
         }
-
-        event(new VerificationEvent($data));
-    }
         $success['websiteorder'] = new WebsiteorderResource($websiteorder);
         $success['status'] = 200;
 
