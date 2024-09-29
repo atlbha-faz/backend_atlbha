@@ -36,10 +36,15 @@ class CouponController extends BaseController
         }else{
             $data->orderByDesc('created_at');
         }
-        $data = $data->paginate($count);
+        if ($request->has('all') && $request->input('all') !== null) {
+            $data = $data->get();
+        }
+        else{
+            $data = $data->paginate($count);
+            $success['page_count'] =  $data->lastPage();
+            $success['current_page'] =  $data->currentPage();
+        }
         $success['coupons'] = CouponResource::collection($data);
-        $success['page_count'] =  $data->lastPage();
-        $success['current_page'] =  $data->currentPage();
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الكوبونات بنجاح', 'coupons return successfully');
