@@ -44,8 +44,8 @@ class WebsiteorderController extends BaseController
         })->count();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'name', 'email', 'phone_number', 'total_price', 'coupon_id', 'payment_status', 'payment_method', 'paymentTransectionID', 'created_at');
-        if ($request->has('search') && $request->input('search') !== null) {
-            $code = Coupon::where('code', $request->search)->where('store_id', null)->first();
+        if ($request->has('filter') && $request->input('filter') !== null) {
+            $code = Coupon::where('code', $request->filter)->where('store_id', null)->first();
             if ($code) {
                 $data = $data->where('coupon_id', $code->id);
             } else {
