@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Models\User;
-use App\Models\Store;
+use App\Events\VerificationEvent;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\WebsiteorderResource;
 use App\Models\Coupon;
 use App\Models\Service;
-use App\Models\Websiteorder;
-use Illuminate\Http\Request;
-use App\Events\VerificationEvent;
 use App\Models\Service_Websiteorder;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\WebsiteorderResource;
-use Illuminate\Support\Facades\Notification;
+use App\Models\Store;
+use App\Models\User;
+use App\Models\Websiteorder;
 use App\Notifications\verificationNotification;
-use App\Http\Controllers\api\BaseController as BaseController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class WebsiteorderController extends BaseController
 {
@@ -45,8 +45,12 @@ class WebsiteorderController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'name', 'email', 'phone_number', 'total_price', 'coupon_id', 'payment_status', 'payment_method', 'paymentTransectionID', 'created_at');
         if ($request->has('search') && $request->input('search') !== null) {
-            $code=Coupon::where('code', $request->search)->first();
-              $data = $data->where('coupon_id',$code->id);
+            $code = Coupon::where('code', $request->search)->where('store_id', null)->first();
+            if ($code) {
+                $data = $data->where('coupon_id', $code->id);
+            } else {
+                $data = $data->where('coupon_id', "");
+            }
         }
         if ($request->has('all') && $request->input('all') !== null) {
             $data = $data->get();
@@ -56,7 +60,6 @@ class WebsiteorderController extends BaseController
             $success['current_page'] = $data->currentPage();
         }
         $success['Websiteorder'] = WebsiteorderResource::collection($data);
-
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع جميع الطلبات بنجاح', 'Websiteorder return successfully');
