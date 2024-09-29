@@ -11,8 +11,8 @@ class SitemapController extends Controller
     public function posts()
     {
         $posts = Page::where('status', 'active')->where('is_deleted', 0)->get();
-        $sitemap = '<?xml version="1.0" encoding="UTF-8"?>';
-        $sitemap .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        $sitemap ='<?xml version="1.0" encoding="UTF-8"?>';
+        $sitemap .='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
         foreach ($posts as $post) {
             if ($post->store_id == null) {
@@ -39,7 +39,7 @@ class SitemapController extends Controller
             $sitemap .= '</url>';
         }
 
-        $sitemap .= '</urlset>';
+        $sitemap .='</urlset>';
 
         return response($sitemap)->header('Content-Type','text/xml');
     }
@@ -48,8 +48,8 @@ class SitemapController extends Controller
     {
         $products = Product::where('status', 'active')->where('is_deleted', 0)->get();
 
-        $sitemap = '<?xml version="1.0" encoding="UTF-8"?>';
-        $sitemap .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        $sitemap ='<?xml version="1.0" encoding="UTF-8"?>';
+        $sitemap .='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
         foreach ($products as $product) {
             if ($product->store_id != null) {
@@ -80,7 +80,7 @@ class SitemapController extends Controller
             $sitemap .= '<priority>' . $priority . '</priority>';
             $sitemap .= '</url>';
         }
-        $sitemap .= '</urlset>';
+        $sitemap .='</urlset>';
 
         return response($sitemap)->header('Content-Type','text/xml');
     }
