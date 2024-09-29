@@ -41,7 +41,7 @@ class SitemapController extends Controller
 
         $sitemap .= '</urlset>';
 
-        return response($sitemap)->header('Content-Type', 'text/xml');
+        return response($sitemap)->header('Content-Type','text/xml');
     }
 
     public function products()
@@ -82,7 +82,7 @@ class SitemapController extends Controller
         }
         $sitemap .= '</urlset>';
 
-        return response($sitemap)->header('Content-Type', 'text/xml');
+        return response($sitemap)->header('Content-Type','text/xml');
     }
 
 }
