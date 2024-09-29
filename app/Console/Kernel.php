@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\AbandonedCart::class,
             // Commands\DeleteStore::class,
             // Commands\PermanentDeletion::class,
+            Commands\GenerateSitemap::class,
             Commands\ArchiveIdleOrders::class,
             Commands\DeleteTokenFile::class
 
@@ -34,6 +35,7 @@ class Kernel extends ConsoleKernel
                 ->everyMinute();
                 $schedule->command('token:deletefile') 
                 ->everyMinute();
+                // $schedule->command('generate:sitemap')->daily();
     }
 
     /**
