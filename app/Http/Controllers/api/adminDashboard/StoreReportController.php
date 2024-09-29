@@ -104,10 +104,10 @@ class StoreReportController extends BaseController
         // احمالي المتاجر خلال 6 شهور
         if (is_null($request->startDate1) || is_null($request->endDate1)) {
             $sum = 0;
-            $p = Package::where('is_deleted', 0)->count();
+            $p = Package::where('is_deleted', 0)->where('status', 'active')->count();
             for ($i = 1; $i <= $p; $i++) {
                 $package = Package::query()->find($i);
-                if ($package->stores) {
+                if ($package) {
                     $stores = $package->stores->where('created_at', '>=', Carbon::now()->subMonths(6)->month);
                     foreach ($stores as $store) {
                         if ($store->periodtype == "year") {
@@ -136,6 +136,7 @@ class StoreReportController extends BaseController
             $p = Package::where('is_deleted', 0)->count();
             for ($i = 1; $i <= $p; $i++) {
                 $package = Package::query()->find($i);
+                if ($package) {
                 $stores = $package->stores->whereBetween('created_at', [$startDate1 . ' 00:00:00', $endDate1 . ' 23:59:59']);
                 foreach ($stores as $store) {
                     if ($store->periodtype == "year") {
@@ -146,6 +147,7 @@ class StoreReportController extends BaseController
 
                 }
             }
+        }
             $success['Subscriptions_withPeriod'] = $sum;
 
             $period = CarbonPeriod::create($startDate1, $endDate1)->month();
@@ -164,6 +166,7 @@ class StoreReportController extends BaseController
         $p = Package::where('is_deleted', 0)->count();
         for ($i = 1; $i <= $p; $i++) {
             $package = Package::query()->find($i);
+            if ($package) {
             $stores = $package->stores->where('created_at', '>=', Carbon::now()->subDays(30)->toDateTimeString());
             foreach ($stores as $store) {
                 if ($store->periodtype == "year") {
@@ -174,6 +177,7 @@ class StoreReportController extends BaseController
 
             }
         }
+    }
         $success['Subscriptions'] = $sum;
         //  ايرادات اطلبها خلال شهر
         $sum_service = 0;

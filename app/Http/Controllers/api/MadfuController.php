@@ -80,7 +80,7 @@ class MadfuController extends BaseController
                         $payment->payment_status = "paid";
                         $payment->save();
                         $this->updatePackage($payment->id);
-                        $this->sendEmail($payment->id);
+                        // $this->sendEmail($payment->id);
                     } else {
                         if ($websites_order) {
                             $websites_order->update([
