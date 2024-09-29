@@ -17,16 +17,16 @@ class SitemapController extends Controller
         foreach ($posts as $post) {
             if ($post->store_id == null) {
                 if ($post->postcategory != null) {
-                    $url = 'https://atlbha.com/post/' . $post->id . '/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $post->title);
+                    $url ='https://atlbha.com/post/' . $post->id . '/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $post->title);
                 } else {
-                    $url = 'https://atlbha.com/page/' . $post->id . '/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $post->title);
+                    $url ='https://atlbha.com/page/' . $post->id . '/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $post->title);
                 }
             } else {
                 $categoryIds = empty($post->page_categories) ? array() : $post->page_categories->pluck('id')->toArray();
                 if (in_array(1, $categoryIds)) {
-                    $url = 'https://' . $post->store->domain . '/blog/post/' . $post->id . '/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $post->title);
+                    $url ='https://' . $post->store->domain . '/blog/post/' . $post->id . '/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $post->title);
                 } else {
-                    $url = 'https://' . $post->store->domain . '/site/SitePages/' . $post->id . '/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $post->title);
+                    $url ='https://' . $post->store->domain . '/site/SitePages/' . $post->id . '/' . preg_replace('/[^a-zA-Z0-9\x{0621}-\x{064A}]+/u', '-', $post->title);
                 }
             }
             $lastmod = (string) $post->updated_at; // Last modification date
@@ -41,7 +41,8 @@ class SitemapController extends Controller
 
         $sitemap .='</urlset>';
 
-        return response($sitemap)->header('Content-Type','text/xml');
+        $output =  response($sitemap)->header('Content-Type','text/xml');
+        return  $output->getContent();
     }
 
     public function products()
@@ -82,7 +83,8 @@ class SitemapController extends Controller
         }
         $sitemap .='</urlset>';
 
-        return response($sitemap)->header('Content-Type','text/xml');
+        $output =  response($sitemap)->header('Content-Type','text/xml');
+        return  $output->getContent();
     }
 
 }
