@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\WebsiteorderResource;
-use App\Models\Service;
-use App\Models\Service_Websiteorder;
-use App\Models\Store;
 use App\Models\User;
+use App\Models\Store;
+use App\Models\Coupon;
+use App\Models\Service;
 use App\Models\Websiteorder;
-use App\Notifications\verificationNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
+use App\Events\VerificationEvent;
+use App\Models\Service_Websiteorder;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\WebsiteorderResource;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class WebsiteorderController extends BaseController
 {
@@ -44,7 +45,8 @@ class WebsiteorderController extends BaseController
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
         $data = Websiteorder::where('is_deleted', 0)->where('type', 'service')->where('payment_status', 'paid')->orderByDesc('created_at')->select('id', 'status', 'order_number', 'type', 'name', 'email', 'phone_number', 'total_price', 'coupon_id', 'payment_status', 'payment_method', 'paymentTransectionID', 'created_at');
         if ($request->has('search') && $request->input('search') !== null) {
-            $data->coupon->where('code', 'like', "%$request->search%");
+            $code=Coupon::where('code', $request->search)->first();
+              $data = $data->where('coupon_id',$code->id);
         }
         if ($request->has('all') && $request->input('all') !== null) {
             $data = $data->get();
