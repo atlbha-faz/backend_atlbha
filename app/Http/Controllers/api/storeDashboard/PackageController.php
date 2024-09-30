@@ -80,9 +80,7 @@ class PackageController extends BaseController
         }
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         if($store->store_name == null){
-            {
                return $this->sendError( 'يرجى إدخال بيانات اعدادات المتجر',null);
-            }
         }
         $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
         $payment = Package_store::where('store_id', $store->id)->where('package_id', $request->package_id)->where('payment_status', null)->orderBy('start_at', 'desc')->first();
