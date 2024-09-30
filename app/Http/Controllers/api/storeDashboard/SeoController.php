@@ -108,7 +108,11 @@ class SeoController extends BaseController
             'instapixel' => $request->instapixel,
             'key_words' => $request->key_words,
             'robot_link' => $request->robot_link,
-
+            'title' => $request->title,
+            'header' => $request->header,
+            'footer' => $request->footer,
+            'siteMap' => $request->siteMap,
+            'metaDescription' => $request->metaDescription,
         ]);
 
         $success['seos'] = new SeoResource($seo);
