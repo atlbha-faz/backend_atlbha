@@ -107,7 +107,7 @@ class SeoController extends BaseController
             'key_words' => $request->key_words,
             'robot_link' => $request->robot_link,
             'title' => $request->title,
-            'metatags' => $request->metatags,
+            'metaDescription' => $request->metaDescription,
             'header' => $request->header,
             'footer' => $request->footer,
             'siteMap' => $request->siteMap,
