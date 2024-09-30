@@ -20,7 +20,6 @@ class SeoController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -37,7 +36,7 @@ class SeoController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    
+
     /**
      * Display the specified resource.
      *
@@ -64,14 +63,13 @@ class SeoController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-   
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Seo  $seo
      * @return \Illuminate\Http\Response
      */
-   
+
     public function index()
     {
         $success['Seo'] = SeoResource::collection(Seo::where('is_deleted', 0)->where('store_id', auth()->user()->store_id)->get());
@@ -85,7 +83,7 @@ class SeoController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'google_analytics' => 'nullable|url',
-            // 'metatags' => 'nullable|string',
+             'metatags' => 'nullable|string',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
             'twitterpixel' => 'nullable|string',
@@ -108,7 +106,11 @@ class SeoController extends BaseController
             'instapixel' => $request->instapixel,
             'key_words' => $request->key_words,
             'robot_link' => $request->robot_link,
-
+            'title' => $request->title,
+            'metatags' => $request->metatags,
+            'header' => $request->header,
+            'footer' => $request->footer,
+            'siteMap' => $request->siteMap,
         ]);
 
         $success['seos'] = new SeoResource($seo);
@@ -118,6 +120,5 @@ class SeoController extends BaseController
         return $this->sendResponse($success, 'تم التعديل بنجاح', 'seo updated successfully');
 
     }
-   
- 
+
 }

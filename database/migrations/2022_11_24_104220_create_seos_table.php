@@ -21,7 +21,11 @@ return new class extends Migration
             $table->text('tiktokpixel')->nullable();
             $table->text('twitterpixel')->nullable();
             $table->text('instapixel')->nullable();
+            $table->string('title')->nullable();
             $table->string('metatags')->nullable();
+            $table->text('header')->nullable();
+            $table->text('footer')->nullable();
+            $table->text('siteMap')->nullable();
             $table->string('key_words');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
