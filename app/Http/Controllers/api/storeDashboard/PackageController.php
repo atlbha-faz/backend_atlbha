@@ -81,8 +81,7 @@ class PackageController extends BaseController
         $store = Store::where('is_deleted', 0)->where('id', auth()->user()->store_id)->first();
         if($store->store_name == null){
             {
-               return $this->sendError(' في الاعدادات
-               يرجى تعبئة اسم المتجر', 'يرجى تعبئة اعدادات المتجر');
+               return $this->sendError( 'يرجى إدخال بيانات اعدادات المتجر',null);
             }
         }
         $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
