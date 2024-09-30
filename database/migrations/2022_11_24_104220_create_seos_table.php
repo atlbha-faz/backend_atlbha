@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('twitterpixel')->nullable();
             $table->text('instapixel')->nullable();
             $table->string('title')->nullable();
-            $table->string('metatags')->nullable();
+            $table->text('metaDescription')->nullable();
             $table->text('header')->nullable();
             $table->text('footer')->nullable();
             $table->text('siteMap')->nullable();

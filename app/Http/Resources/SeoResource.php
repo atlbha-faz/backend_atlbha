@@ -27,7 +27,7 @@ class SeoResource extends JsonResource
             'tiktokpixel' => $this->tiktokpixel,
             'twitterpixel' => $this->twitterpixel,
             'instapixel' => $this->instapixel,
-            'metatags' => $this->metatags,
+            'metaDescription' => $this->metaDescription,
             'robot_link' => $this->robot_link,
             'key_words' => $this->key_words !=="" ?explode(',', $this->key_words): null,
             'title' => $this->title,
