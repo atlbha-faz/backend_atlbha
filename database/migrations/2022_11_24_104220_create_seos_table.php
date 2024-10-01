@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('seos', function (Blueprint $table) {
             $table->id();
-            $table->longText('robot_link')->nullable();
             $table->longText('google_analytics')->nullable();
             $table->text('snappixel')->nullable();
             $table->text('tiktokpixel')->nullable();
@@ -25,7 +24,6 @@ return new class extends Migration
             $table->text('metaDescription')->nullable();
             $table->text('header')->nullable();
             $table->text('footer')->nullable();
-            $table->text('siteMap')->nullable();
             $table->string('key_words');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
