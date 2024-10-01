@@ -89,7 +89,7 @@ class SeoController extends BaseController
             'twitterpixel' => 'nullable|string',
             'instapixel' => 'nullable|string',
             'key_words' => 'nullable',
-            'robot_link' => 'nullable|string',
+            
         ]);
         if ($validator->fails()) {
             # code...
@@ -105,12 +105,10 @@ class SeoController extends BaseController
             'twitterpixel' => $request->twitterpixel,
             'instapixel' => $request->instapixel,
             'key_words' => $request->key_words,
-            'robot_link' => $request->robot_link,
             'title' => $request->title,
             'metaDescription' => $request->metaDescription,
             'header' => $request->header,
             'footer' => $request->footer,
-            'siteMap' => $request->siteMap,
         ]);
 
         $success['seos'] = new SeoResource($seo);
