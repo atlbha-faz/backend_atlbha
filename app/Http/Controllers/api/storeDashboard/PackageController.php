@@ -179,7 +179,7 @@ class PackageController extends BaseController
             $useCouponUser = coupons_users::where('user_id', auth()->user()->id)->where('coupon_id', $coupon->id)->get();
             $useCouponAll = coupons_users::where('coupon_id', $coupon->id)->get();
             $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
-            if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
+            if ( $coupon->total_redemptions >= count($useCouponAll)) {
                 if ($coupon->discount_type == 'fixed') {
                     $packageAfterdiscount = $package->yearly_price - $package->discount - $coupon->discount;
                     $package_coupon->update([
