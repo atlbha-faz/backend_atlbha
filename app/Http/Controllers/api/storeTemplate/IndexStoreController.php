@@ -174,7 +174,7 @@ class IndexStoreController extends BaseController
 
         $success['workDays'] = DaystoreResource::collection($daystore);
 
-        $seo = Seo::where('is_deleted', 0)->where('store_id',  $store->id)->select('id', 'google_analytics', 'snappixel', 'tiktokpixel', 'twitterpixel', 'instapixel', 'metaDescription','header', 'footer','title', 'key_words')->first();
+        $seo = Seo::where('is_deleted', 0)->where('store_id',  $store->id)->select('id', 'google_analytics', 'snappixel', 'tiktokpixel', 'twitterpixel', 'instapixel', 'metaDescription','header', 'footer','graph', 'tag', 'search','title', 'key_words')->first();
         if ($seo !== null) {
             $success['Seo'] = new SeoResource($seo);
         } else {

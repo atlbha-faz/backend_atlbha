@@ -109,6 +109,9 @@ class SeoController extends BaseController
             'metaDescription' => $request->metaDescription,
             'header' => $request->header,
             'footer' => $request->footer,
+            'graph' => $request->graph,
+            'tag' => $request->tag,
+            'search' => $request->search,
         ]);
 
         $success['seos'] = new SeoResource($seo);

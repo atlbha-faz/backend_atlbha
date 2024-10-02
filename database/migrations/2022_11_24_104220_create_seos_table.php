@@ -24,6 +24,9 @@ return new class extends Migration
             $table->text('metaDescription')->nullable();
             $table->text('header')->nullable();
             $table->text('footer')->nullable();
+            $table->text('graph')->nullable();
+            $table->text('tag')->nullable();
+            $table->text('search')->nullable();
             $table->string('key_words');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
