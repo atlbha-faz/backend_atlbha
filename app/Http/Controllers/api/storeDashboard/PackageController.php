@@ -50,6 +50,10 @@ class PackageController extends BaseController
             'discount_value' => null,
             'coupon_id' => null
         ]);
+        $coupon = coupons_users::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
+        if ($coupon != null){
+            $coupon->delete();
+         }
         $package = Package::where('id', $payment->package_id)->first();
         $success['package'] = new PackageResource($package);
         $success['status'] = 200;
@@ -179,7 +183,7 @@ class PackageController extends BaseController
             $useCouponUser = coupons_users::where('user_id', auth()->user()->id)->where('coupon_id', $coupon->id)->get();
             $useCouponAll = coupons_users::where('coupon_id', $coupon->id)->get();
             $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
-            if ( $coupon->total_redemptions >= count($useCouponAll)) {
+            if ($coupon->user_redemptions >= count($useCouponUser) && $coupon->total_redemptions >= count($useCouponAll)) {
                 if ($coupon->discount_type == 'fixed') {
                     $packageAfterdiscount = $package->yearly_price - $package->discount - $coupon->discount;
                     $package_coupon->update([
