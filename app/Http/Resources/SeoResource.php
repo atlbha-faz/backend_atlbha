@@ -30,7 +30,7 @@ class SeoResource extends JsonResource
             'title' => $this->title,
             'header'=> $this->header,
             'footer'=> $this->footer,
-            'graph'=> $this->graph,
+            'graph'=>json_decode($this->graph,true),
             'tag'=> $this->tag,
             'search'=> $this->search,
             'metaDescription'=> $this->metaDescription,
