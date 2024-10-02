@@ -109,6 +109,9 @@ class SeoController extends BaseController
             'title' => $request->title,
             'header' => $request->header,
             'footer' => $request->footer,
+            'graph' => $request->graph,
+            'tag' => $request->tag,
+            'search' => $request->search,
             'metaDescription' => $request->metaDescription,
         ]);
 

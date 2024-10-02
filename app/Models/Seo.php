@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Seo extends Model
 {
     use HasFactory;
-    protected $fillable = ['google_analytics', 'snappixel', 'tiktokpixel','twitterpixel', 'instapixel', 'metaDescription','header', 'footer','title', 'key_words', 'store_id', 'status', 'is_deleted'];
+    protected $fillable = ['google_analytics', 'snappixel', 'tiktokpixel','twitterpixel', 'instapixel', 'metaDescription','header', 'footer','graph','tag','search','title', 'key_words', 'store_id', 'status', 'is_deleted'];
 
     public function store()
     {
