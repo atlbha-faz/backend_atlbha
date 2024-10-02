@@ -29,6 +29,8 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->integer('less_qty')->nullable();
             $table->integer('stock')->nullable();
+            $table->integer('period')->nullable();
+            $table->boolean('is_service')->default(0);
             $table->string('cover');
             $table->text("tags")->nullable();
             $table->decimal('discount_price', 10, 2)->nullable();
