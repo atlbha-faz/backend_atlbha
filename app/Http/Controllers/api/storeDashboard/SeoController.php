@@ -95,6 +95,21 @@ class SeoController extends BaseController
             # code...
             return $this->sendError(null, $validator->errors());
         }
+        $image = null;
+        if ($request->hasFile('og_image')) {
+            $image = $request->file('og_image');
+            $image->store('files/store', 'public');
+            $image = $image->hashName();
+        }
+     
+        $data = [
+            "og_title" => $request->og_title,
+            "og_type" => $request->og_type,
+            "og_description" =>  $request->og_description,
+            "og_image" => $image!=null ? asset('storage/files/store') . '/' . $image : $request->og_image,
+            "og_url" => $request->og_url,
+            "og_site_name" => $request->og_site_name,
+        ];
         $seo = Seo::updateOrCreate([
             'store_id' => auth()->user()->store_id,
         ], [
@@ -109,7 +124,7 @@ class SeoController extends BaseController
             'metaDescription' => $request->metaDescription,
             'header' => $request->header,
             'footer' => $request->footer,
-            'graph' => $request->graph,
+            'graph' =>json_encode($data),
             'tag' => $request->tag,
             'search' => $request->search,
         ]);
