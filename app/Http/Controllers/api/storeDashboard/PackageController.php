@@ -50,8 +50,8 @@ class PackageController extends BaseController
             'discount_value' => null,
             'coupon_id' => null
         ]);
-        $coupons = coupons_users::where('user_id', auth()->user()->id)->get();
-        foreach ($coupons as $coupon) {
+        $coupon = coupons_users::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
+        if ($coupon != null){
             $coupon->delete();
         }
         $package = Package::where('id', $payment->package_id)->first();
