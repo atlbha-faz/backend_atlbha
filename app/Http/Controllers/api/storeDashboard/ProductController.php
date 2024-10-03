@@ -95,14 +95,12 @@ class ProductController extends BaseController
         $query = $request->input('query');
         $filter_category = $request->input('category_id');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $products = Importproduct::with('product')->when($filter_category,function ($query) use ($filter_category) {
+        $products = Importproduct::with('product')->when($filter_category, function ($query) use ($filter_category) {
             $query->whereHas('product', function ($sub_query) use ($filter_category) {
-         $sub_query->where('category_id', $filter_category);
-                });
-        }) 
-    ->where('store_id', auth()->user()->store_id)->paginate($count);
-      
-     
+                $sub_query->where('category_id', $filter_category);
+            });
+        })
+            ->where('store_id', auth()->user()->store_id)->paginate($count);
 
         $success['page_count'] = $products->lastPage();
         $success['current_page'] = $products->currentPage();
@@ -139,7 +137,8 @@ class ProductController extends BaseController
             'for' => 'store',
             'description' => 'required|string',
             'selling_price' => ['required', 'numeric', 'gt:0'],
-            'stock' => ['required', 'numeric', 'gt:0'],
+            'is_service' => 'nullable|in:0,1',
+            'stock' => ['required_if:is_service,0', 'numeric', 'gt:0'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'discount_price' => ['nullable', 'numeric'],
             'images' => 'nullable|array',
@@ -163,6 +162,7 @@ class ProductController extends BaseController
             ],
             'amount' => 'nullable|in:0,1',
             'product_has_options' => 'nullable|in:0,1',
+            'period' => 'nullable|numeric',
             'attribute' => 'array|required_if:product_has_options,1',
             'data.*.price' => 'numeric|required_if:amount,1',
             'data.*.quantity' => 'numeric|required_if:amount,1',
@@ -182,7 +182,7 @@ class ProductController extends BaseController
             'for' => "store",
             'description' => $request->description,
             'selling_price' => $request->selling_price,
-            'stock' => $request->stock,
+            'stock' => (!is_null($request->stock) ? $request->stock : 100),
             'cover' => $request->cover,
             'SEOdescription' => $request->SEOdescription,
             'discount_price' => $request->discount_price,
@@ -353,8 +353,10 @@ class ProductController extends BaseController
             $validator = Validator::make($input, [
                 'name' => 'required|string|max:25',
                 'description' => 'required|string',
+                'is_service' => 'nullable|in:0,1',
+                'period' => 'nullable|numeric',
                 'selling_price' => ['required', 'numeric', 'gt:0'],
-                'stock' => ['required', 'numeric', 'gt:0'],
+                'stock' => ['required_if:is_service,0', 'numeric', 'gt:0'],
                 'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
                 'discount_price' => ['nullable', 'numeric'],
                 'images' => 'nullable|array',
@@ -476,10 +478,11 @@ class ProductController extends BaseController
             foreach ($preAttributes as $preAttribute) {
                 $preAttribute->delete();
             }
-
-            $preOptions = Option::where('product_id', $productid)->get();
-            foreach ($preOptions as $preOption) {
-                $preOption->delete();
+            if (!($request->has('is_service') && $request->is_service == 1)) {
+                $preOptions = Option::where('product_id', $productid)->get();
+                foreach ($preOptions as $preOption) {
+                    $preOption->delete();
+                }
             }
             if ($request->has('attribute') && !is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
@@ -851,7 +854,6 @@ class ProductController extends BaseController
 
         }
 
-       
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');

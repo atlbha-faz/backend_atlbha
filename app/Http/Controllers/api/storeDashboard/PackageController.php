@@ -50,6 +50,10 @@ class PackageController extends BaseController
             'discount_value' => null,
             'coupon_id' => null
         ]);
+        $coupon = coupons_users::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
+        if ($coupon != null){
+            $coupon->delete();
+        }
         $package = Package::where('id', $payment->package_id)->first();
         $success['package'] = new PackageResource($package);
         $success['status'] = 200;
