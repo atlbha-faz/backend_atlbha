@@ -720,15 +720,13 @@ class IndexStoreController extends BaseController
 
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
 
-        $oneWeekAgo = Carbon::now()->subWeek();
-
         $resentproduct = Product::with(['importproduct' => function ($query) use ($store) {
             $query->where('store_id', $store->id);
         }])->where('status', 'active')->where('is_deleted', 0)
-            ->where(function ($query) use ($store, $oneWeekAgo) {
-                $query->whereHas('importproduct', function ($productQuery) use ($store, $oneWeekAgo) {
-                    $productQuery->where('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
-                })->orwhere('store_id', $store->id)->whereDate('created_at', '>=', $oneWeekAgo)->where('status', 'active');
+            ->where(function ($query) use ($store) {
+                $query->whereHas('importproduct', function ($productQuery) use ($store) {
+                    $productQuery->where('store_id', $store->id)->where('status', 'active');
+                })->orwhere('store_id', $store->id)->where('status', 'active');
 
             })->orderBy('created_at', 'desc')->select('id', 'name', 'status', 'cover', 'special', 'stock', 'selling_price', 'purchasing_price', 'discount_price', 'store_id', 'category_id', 'created_at');
         if ($request->has('category_id')) {
