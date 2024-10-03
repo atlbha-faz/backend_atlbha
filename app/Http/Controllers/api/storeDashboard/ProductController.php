@@ -199,6 +199,8 @@ class ProductController extends BaseController
             'store_id' => auth()->user()->store_id,
             'amount' => $request->amount,
             'product_has_options' => $request->product_has_options,
+            'period' => $request->period,
+            'is_service' => $request->is_service,
         ]);
         $productid = $product->id;
         if ($request->hasFile("images")) {
@@ -416,6 +418,8 @@ class ProductController extends BaseController
                 'amount' => $request->amount,
                 'product_has_options' => $request->product_has_options,
                 // 'store_id' => $request->input('store_id'),
+                'period' => $request->period,
+                'is_service' => $request->is_service,
 
             ]);
             $productid = $product->id;
