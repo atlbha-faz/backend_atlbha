@@ -10,7 +10,6 @@ use App\Models\Theme;
 use App\Mail\SendMail;
 use App\Models\Comment;
 use App\Models\Product;
-use App\Models\UserLog;
 use App\Models\Homepage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -36,7 +35,7 @@ class StoreController extends BaseController
         $this->middleware('auth:api');
     }
 
-    public function loginId($id, Request $request)
+    public function loginId($id)
     {
 
         $user = User::where('user_type', 'store')->where('is_deleted', 0)->where('store_id', $id)->first();
@@ -44,13 +43,7 @@ class StoreController extends BaseController
             $success['user'] = new UserResource($user);
             $success['token'] = $user->createToken('authToken')->accessToken;
             $success['status'] = 200;
-            UserLog::create([
-                'user_id' => auth()->user()->id,
-                'action' => 'login from admin dashboard',
-                'ip' => $request->ip(), 
-                'user_agent' => $request->userAgent(),
-                'platform' =>(auth()->user()->store->store_name) ? auth()->user()->store->store_name : auth()->user()->store->id,
-            ]);
+
             return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
         } else {
             return $this->sendError("المتجر غير موجودة", "store is't exists");
