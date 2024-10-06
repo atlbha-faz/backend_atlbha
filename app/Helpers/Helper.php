@@ -1,6 +1,5 @@
 <?php
 namespace App\Helpers;
-
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Store;
@@ -103,5 +102,5 @@ class Helper{
 
     }
   }
-
+  
 }

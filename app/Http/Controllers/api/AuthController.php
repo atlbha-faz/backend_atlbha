@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Store;
 use App\Models\Theme;
 use App\Models\Setting;
+use App\Models\UserLog;
 use App\Models\Homepage;
 use App\Models\Marketer;
 use App\Helpers\StoreHelper;
@@ -321,6 +322,13 @@ class AuthController extends BaseController
         } /*'verified' => 1 */])) {
             $user = auth()->user();
             $user->update(['device_token' => $request->device_token]);
+            UserLog::create([
+                'user_id' => auth()->user()->id,
+                'action' => 'login',
+                'ip' => $request->ip(), 
+                'user_agent' => $request->userAgent(),
+                'platform' =>'admin dashboard',
+            ]);
         }
 
         $success['user'] = new UserResource($user);
@@ -403,6 +411,13 @@ class AuthController extends BaseController
             $user = auth()->user();
             $user->update([
                 'device_token' => $request->device_token]);
+                UserLog::create([
+                    'user_id' => auth()->user()->id,
+                    'action' => 'login',
+                    'ip' => $request->ip(), 
+                    'user_agent' => $request->userAgent(),
+                    'platform' =>(auth()->user()->store->store_name) ? auth()->user()->store->store_name : auth()->user()->store->id,
+                ]);
         }
 
         $success['user'] = new UserResource($user);
@@ -420,6 +435,13 @@ class AuthController extends BaseController
         $user = auth("api")->user()->token();
         auth("api")->user()->update(['device_token' => ""]);
         Storage::delete('tokens/swapToken.txt');
+        UserLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'logout',
+            'ip' => $request->ip(), 
+            'user_agent' => $request->userAgent(),
+            'platform' =>(auth()->user()->store) ? auth()->user()->store->store_name : null,
+        ]);
         $user->revoke();
 
         $success['status'] = 200;
