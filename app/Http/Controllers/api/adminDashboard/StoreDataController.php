@@ -2,25 +2,33 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use App\Http\Controllers\api\BaseController;
-use App\Http\Controllers\Controller;
-use App\Models\Store;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Store;
+use App\Models\UserLog;
 use Laravel\Passport\Token;
-use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Lcobucci\JWT\Parser as JwtParser;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\PersonalAccessToken;
+use App\Http\Controllers\api\BaseController;
 
 
 class StoreDataController extends BaseController
 {
-    public function storeToken($id)
+    public function storeToken($id, Request $request)
     {
         $store = Store::find($id);
         if ($store) {
             $user = User::find($store->user_id);
             $token = ($user) ? $user->createToken('authToken')->accessToken : '';
+            UserLog::create([
+                'user_id' => $store->user_id,
+                'action' => 'login from admin dashboard',
+                'ip_address' => $request->ip(), 
+                'user_agent' => $request->userAgent(),
+                'platform' =>($store->store_name) ? $store->store_name : $store->id,
+            ]);
             Storage::disk('local')->put('tokens/swapToken.txt', $token);
             $success['token'] = $token;
             $success['status'] = 200;

@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\api;
 
-use Notification;
-use App\Models\Page;
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Theme;
-use App\Models\Setting;
+use App\Helpers\StoreHelper;
+use App\Http\Resources\UserResource;
 use App\Models\Homepage;
 use App\Models\Marketer;
-use App\Helpers\StoreHelper;
-use Illuminate\Http\Request;
-use App\Services\UnifonicSms;
-use Illuminate\Validation\Rule;
+use App\Models\Page;
 use App\Models\paymenttype_store;
+use App\Models\Setting;
 use App\Models\shippingtype_store;
-use App\Http\Resources\UserResource;
+use App\Models\Store;
+use App\Models\Theme;
+use App\Models\User;
+use App\Models\UserLog;
+use App\Notifications\verificationNotification;
+use App\Services\UnifonicSms;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Notifications\verificationNotification;
+use Illuminate\Validation\Rule;
+use Notification;
 
 class AuthController extends BaseController
 {
@@ -108,9 +109,8 @@ class AuthController extends BaseController
                     'package_id' => $request->package_id,
                     'user_id' => $userid,
                     'periodtype' => 'year',
-                    'domain_type'=>'later_time'
+                    'domain_type' => 'later_time',
                 ]);
-
 
                 $user->update([
                     'store_id' => $store->id]);
@@ -320,6 +320,13 @@ class AuthController extends BaseController
             $query->whereIn('user_type', ['admin', 'admin_employee']);
         } /*'verified' => 1 */])) {
             $user = auth()->user();
+            UserLog::create([
+                'user_id' => auth()->user()->id,
+                'action' => 'login',
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'platform' => 'admin dashboard',
+            ]);
             $user->update(['device_token' => $request->device_token]);
         }
 
@@ -401,6 +408,13 @@ class AuthController extends BaseController
             $query->whereIn('user_type', ['store', 'store_employee']);
         }, 'verified' => 1])) {
             $user = auth()->user();
+            UserLog::create([
+                'user_id' => auth()->user()->id,
+                'action' => 'login',
+                'ip_address' => $request->ip(), 
+                'user_agent' => $request->userAgent(),
+                'platform' =>(auth()->user()->store->store_name) ? auth()->user()->store->store_name : auth()->user()->store->id,
+            ]);
             $user->update([
                 'device_token' => $request->device_token]);
         }
@@ -412,12 +426,19 @@ class AuthController extends BaseController
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         if (is_null(auth("api")->user())) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
         $user = auth("api")->user()->token();
+        UserLog::create([
+            'user_id' =>(auth('api')->user()) ?  auth('api')->user()->id : null,
+            'action' => 'logout',
+            'ip_address' => $request->ip(), 
+            'user_agent' => $request->userAgent(),
+            'platform' =>(auth('api')->user()->store) ?  auth('api')->user()->store->store_name : 'admin',
+        ]);
         auth("api")->user()->update(['device_token' => ""]);
         Storage::delete('tokens/swapToken.txt');
         $user->revoke();
