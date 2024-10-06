@@ -325,7 +325,7 @@ class AuthController extends BaseController
             UserLog::create([
                 'user_id' => auth()->user()->id,
                 'action' => 'login',
-                'ip' => $request->ip(), 
+                'ip_address' => $request->ip(), 
                 'user_agent' => $request->userAgent(),
                 'platform' =>'admin dashboard',
             ]);
@@ -414,7 +414,7 @@ class AuthController extends BaseController
                 UserLog::create([
                     'user_id' => auth()->user()->id,
                     'action' => 'login',
-                    'ip' => $request->ip(), 
+                    'ip_address' => $request->ip(), 
                     'user_agent' => $request->userAgent(),
                     'platform' =>(auth()->user()->store->store_name) ? auth()->user()->store->store_name : auth()->user()->store->id,
                 ]);
@@ -427,21 +427,21 @@ class AuthController extends BaseController
         return $this->sendResponse($success, 'تم تسجيل الدخول بنجاح', 'Login Successfully');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         if (is_null(auth("api")->user())) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
+        UserLog::create([
+            'user_id' =>(auth('api')->user()) ?  auth('api')->user()->id : null,
+            'action' => 'logout',
+            'ip_address' => $request->ip(), 
+            'user_agent' => $request->userAgent(),
+            'platform' =>(auth('api')->user()) ?  auth('api')->user()->store->store_name : 'admin',
+        ]);
         $user = auth("api")->user()->token();
         auth("api")->user()->update(['device_token' => ""]);
         Storage::delete('tokens/swapToken.txt');
-        UserLog::create([
-            'user_id' => auth()->user()->id,
-            'action' => 'logout',
-            'ip' => $request->ip(), 
-            'user_agent' => $request->userAgent(),
-            'platform' =>(auth()->user()->store) ? auth()->user()->store->store_name : null,
-        ]);
         $user->revoke();
 
         $success['status'] = 200;
