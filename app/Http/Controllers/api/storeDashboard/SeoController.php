@@ -84,7 +84,7 @@ class SeoController extends BaseController
 
         $input = $request->all();
         $validator = Validator::make($input, [
-            'google_analytics' => 'nullable|url',
+            'google_analytics' => 'nullable|string',
             // 'metatags' => 'nullable|string',
             'snappixel' => 'nullable|string',
             'tiktokpixel' => 'nullable|string',
