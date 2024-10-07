@@ -437,7 +437,7 @@ class AuthController extends BaseController
             'action' => 'logout',
             'ip_address' => $request->ip(), 
             'user_agent' => $request->userAgent(),
-            'platform' =>(auth('api')->user()) ?  auth('api')->user()->store->store_name : 'admin',
+            'platform' =>(auth('api')->user()->store) ?  auth('api')->user()->store->store_name : 'admin',
         ]);
         $user = auth("api")->user()->token();
         auth("api")->user()->update(['device_token' => ""]);
