@@ -684,7 +684,7 @@ class ProductController extends BaseController
                 }
                 // $success['products'] = new ProductResource($product);
 
-                $preAttributes = Attribute_product::where('product_id', $productid)->get();
+                $preAttributes = Attribute_product::where('product_id', $product->id)->get();
                 if ($preAttributes !== null) {
                     foreach ($preAttributes as $preAttribute) {
                         $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
@@ -768,7 +768,7 @@ class ProductController extends BaseController
                 }
                 $success['products'] = new ProductResource($product);
 
-                $preAttributes = Attribute_product::where('product_id', $productid)->get();
+                $preAttributes = Attribute_product::where('product_id', $product->id)->get();
                 if ($preAttributes !== null) {
                     foreach ($preAttributes as $preAttribute) {
                         $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
