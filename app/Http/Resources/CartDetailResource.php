@@ -26,11 +26,13 @@ class CartDetailResource extends JsonResource
          $array = explode(',', $q->name['ar']);
          $qty= $q->quantity;
          $less_qty= $q->less_qty;
+         $period= $q->period;
         }
         else{
             $array=null;
             $qty=null;
             $less_qty= null;
+            $period= null;
         }
         // $options = array_combine($array,$attribute);
         }
@@ -42,6 +44,7 @@ class CartDetailResource extends JsonResource
             'sum' => $this->subtotal($this->id),
             'stock'=> $this->option_id !== null ?  $qty :$this->product->stock,
             'less_qty'=> $this->option_id !== null ?  $less_qty :$this->product->less_qty,
+            'period'=> $period,
             'options' => $this->option_id !== null ?  $array :null, 
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

@@ -17,6 +17,7 @@ class Option extends Model
         'product_id',
         'status',
         'less_qty',
+        'period',
         'is_deleted',
         'default_option',
         'original_id',
