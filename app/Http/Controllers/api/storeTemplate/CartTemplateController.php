@@ -126,16 +126,19 @@ class CartTemplateController extends BaseController
                         $data['option_id'] = null;
                         $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
                         //if product is service
-                        if ($request->has('value') && !is_null($request->value)) {
-                            $price = 0;
-                            $discount_price = 0;
-                            $period = 0;
-                            foreach ($request->value as $value) {
+                       if (isset($data['value']) && !is_null($data['value'])) {
+                            $service_product = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
+                            $price =$service_product->selling_price;
+                            $discount_price = $service_product->discount_price;
+                            $period = $service_product->period;
+                            $names = [];
+                            foreach ($data['value'] as $value) {
 
-                                $data_value = Value::where('id', $value['id'])->first();
+                                $data_value = Value::where('id', $value)->first();
                                 $data_value = explode(',', $data_value->value);
+                                array_push($names, $data_value[0]);
                                 $name = [
-                                    "ar" => implode(',', $data_value[0]),
+                                    "ar" => implode(',',$names),
                                 ];
                                 $price += $data_value[1];
                                 $discount_price += $data_value[2];
@@ -144,7 +147,8 @@ class CartTemplateController extends BaseController
                             $option = new Option([
                                 'price' => $price,
                                 'discount_price' => $discount_price,
-                                'quantity' => $period,
+                                'quantity' => 1,
+                                'period' => $period,
                                 'name' => $name,
                                 'product_id' => $data['id'],
                                 'default_option' => 0,
@@ -152,7 +156,7 @@ class CartTemplateController extends BaseController
                             ]);
 
                             $option->save();
-
+                            $data['option_id'] =$option->id;
                         }
 
                     }
