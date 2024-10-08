@@ -478,14 +478,29 @@ class ProductController extends BaseController
                     }
                 }
             }
+
             $preAttributes = Attribute_product::where('product_id', $productid)->get();
-            foreach ($preAttributes as $preAttribute) {
-                $preAttribute->delete();
+            if ($preAttributes !== null) {
+                foreach ($preAttributes as $preAttribute) {
+                    $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
+                    if ($values !== null) {
+                        foreach ($values as $value) {
+                            $value->delete();
+                        }
+                    }
+                    $main_attribute = Attribute::where('id', $preAttribute->attribute_id)->first();
+                    if ($main_attribute !== null) {
+                        $main_attribute->delete();
+                    }
+                    $preAttribute->delete();
+                }
             }
             if (!($request->has('is_service') && $request->is_service == 1)) {
                 $preOptions = Option::where('product_id', $productid)->get();
-                foreach ($preOptions as $preOption) {
-                    $preOption->delete();
+                if ($preOptions !== null) {
+                    foreach ($preOptions as $preOption) {
+                        $preOption->update(['is_deleted' =>$preOption->id]);
+                    }
                 }
             }
             if ($request->has('attribute') && !is_null($request->attribute)) {
@@ -669,16 +684,28 @@ class ProductController extends BaseController
                 }
                 // $success['products'] = new ProductResource($product);
 
-                $preAttributes = Attribute_product::where('product_id', $product->id)->get();
+                $preAttributes = Attribute_product::where('product_id', $productid)->get();
                 if ($preAttributes !== null) {
                     foreach ($preAttributes as $preAttribute) {
+                        $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
+                        if ($values !== null) {
+                            foreach ($values as $value) {
+                                $value->delete();
+                            }
+                        }
+                        $main_attribute = Attribute::where('id', $preAttribute->attribute_id)->first();
+                        if ($main_attribute !== null) {
+                            $main_attribute->delete();
+                        }
                         $preAttribute->delete();
                     }
                 }
-                $preOptions = Option::where('product_id', $product->id)->get();
-                if ($preOptions !== null) {
-                    foreach ($preOptions as $preOption) {
-                        $preOption->delete();
+                if (!($request->has('is_service') && $request->is_service == 1)) {
+                    $preOptions = Option::where('product_id', $product->id)->get();
+                    if ($preOptions !== null) {
+                        foreach ($preOptions as $preOption) {
+                            $preOption->update(['is_deleted' =>$preOption->id]);
+                        }
                     }
                 }
             }
@@ -741,16 +768,28 @@ class ProductController extends BaseController
                 }
                 $success['products'] = new ProductResource($product);
 
-                $preAttributes = Attribute_product::where('product_id', $product->id)->get();
+                $preAttributes = Attribute_product::where('product_id', $productid)->get();
                 if ($preAttributes !== null) {
                     foreach ($preAttributes as $preAttribute) {
+                        $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
+                        if ($values !== null) {
+                            foreach ($values as $value) {
+                                $value->delete();
+                            }
+                        }
+                        $main_attribute = Attribute::where('id', $preAttribute->attribute_id)->first();
+                        if ($main_attribute !== null) {
+                            $main_attribute->delete();
+                        }
                         $preAttribute->delete();
                     }
                 }
-                $preOptions = Option::where('product_id', $product->id)->get();
-                if ($preOptions !== null) {
-                    foreach ($preOptions as $preOption) {
-                        $preOption->delete();
+                if (!($request->has('is_service') && $request->is_service == 1)) {
+                    $preOptions = Option::where('product_id', $product->id)->get();
+                    if ($preOptions !== null) {
+                        foreach ($preOptions as $preOption) {
+                            $preOption->update(['is_deleted' =>$preOption->id]);
+                        }
                     }
                 }
 
