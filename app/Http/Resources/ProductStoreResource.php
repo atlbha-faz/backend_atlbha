@@ -91,7 +91,7 @@ class ProductStoreResource extends JsonResource
             'category' => new CategoryResource($this->category),
             'store' =>new StoreResource($object->store),
             'images' =>ImageResource::collection($this->image->where('is_deleted', 0)),
-            'options' => OptionResource::collection( $object->option) ,
+            'options' => OptionResource::collection( $object->option->where('is_deleted', 0)),
             'attributes' => AttributeResource::collection($this->attributes),
             'type' => $type,
             'is_import' => $import,

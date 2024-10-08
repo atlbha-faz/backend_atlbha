@@ -88,7 +88,7 @@ class ProductResource extends JsonResource
             'images' => ImageResource::collection($this->image->where('is_deleted', 0)),
             'period' => $this->period,
             'is_service' => ($this->is_service) ? true : false,
-            'options' => ($this->is_service) ? null : OptionResource::collection($this->option),
+            'options' => ($this->is_service) ? null : OptionResource::collection($this->option->where('is_deleted', 0)),
             'attributes' => AttributeResource::collection($this->attributes),
             'type' => $type,
             'is_import' => $import,
