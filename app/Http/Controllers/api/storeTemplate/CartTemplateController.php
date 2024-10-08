@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use Carbon\Carbon;
+use App\Helpers\StoreHelper;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CartResource;
 use App\Models\Cart;
-use App\Models\User;
-use App\Models\Store;
+use App\Models\CartDetail;
+use App\Models\Importproduct;
 use App\Models\Option;
 use App\Models\Product;
-use App\Models\CartDetail;
-use App\Helpers\StoreHelper;
+use App\Models\Store;
+use App\Models\User;
+use App\Models\Value;
 use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Models\Package_store;
-use App\Http\Resources\CartResource;
-use App\Http\Resources\OptionResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class CartTemplateController extends BaseController
 {
@@ -42,7 +40,7 @@ class CartTemplateController extends BaseController
         if ($store) {
             if ($store->maintenance != null) {
                 if ($store->maintenance->status == 'active') {
-                    $success['maintenanceMode'] =new MaintenanceResource($store->maintenance);
+                    $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
                     $success['status'] = 200;
                     return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
                 }
@@ -50,7 +48,7 @@ class CartTemplateController extends BaseController
         } else {
             return $this->sendError("  المتجر غير موجود", "store is't exists");
         }
-        
+
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('domain')->first();
 
         $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $store->id)->first();
@@ -58,17 +56,16 @@ class CartTemplateController extends BaseController
         if (is_null($cart)) {
             return $this->sendError("السلة غير موجودة", "cart is't exists");
         }
-         if($request->has('delete')){
+        if ($request->has('delete')) {
             $cart->delete();
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم حذف السلة بنجاح', 'Cart deleted successfully');
-         }
-         else{
-        $success['cart'] = new CartResource($cart);
-        $success['status'] = 200;
+        } else {
+            $success['cart'] = new CartResource($cart);
+            $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
-         }
+            return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
+        }
         // }
     }
     public function addToCart(Request $request, $domain)
@@ -90,6 +87,7 @@ class CartTemplateController extends BaseController
                 'data.*.price' => 'required|numeric',
                 'data.*.qty' => 'required|numeric',
                 'data.*.option_id' => 'nullable|exists:options,id',
+                'data.*.value' => 'nullable|array',
 
             ]);
             if ($validator->fails()) {
@@ -127,6 +125,36 @@ class CartTemplateController extends BaseController
                     } else {
                         $data['option_id'] = null;
                         $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
+                        //if product is service
+                        if ($request->has('value') && !is_null($request->value)) {
+                            $price = 0;
+                            $discount_price = 0;
+                            $period = 0;
+                            foreach ($request->value as $value) {
+
+                                $data_value = Value::where('id', $value['id'])->first();
+                                $data_value = explode(',', $data_value->value);
+                                $name = [
+                                    "ar" => implode(',', $data_value[0]),
+                                ];
+                                $price += $data_value[1];
+                                $discount_price += $data_value[2];
+                                $period += $data_value[3];
+                            }
+                            $option = new Option([
+                                'price' => $price,
+                                'discount_price' => $discount_price,
+                                'quantity' => $period,
+                                'name' => $name,
+                                'product_id' => $data['id'],
+                                'default_option' => 0,
+
+                            ]);
+
+                            $option->save();
+
+                        }
+
                     }
                     if ($product_quantity == null) {
                         $product_quantity = Importproduct::where('product_id', $data['id'])->where('store_id', $store_id)->pluck('qty')->first();
@@ -190,7 +218,7 @@ class CartTemplateController extends BaseController
                 $cart->update([
                     'total' => $total + $extra_shipping_price,
                     'count' => CartDetail::where('cart_id', $cartid)->count(),
-                    'subtotal' => $subtotal- $tax,
+                    'subtotal' => $subtotal - $tax,
                     'totalCount' => $totalCount,
                     'overweight_price' => $extra_shipping_price,
                     'tax' => $tax,
@@ -206,9 +234,9 @@ class CartTemplateController extends BaseController
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم إضافة  السلة بنجاح', 'Cart Added successfully');
 
-            }
-        }
+            }}
     }
+
     public function delete($domain, $id)
     {
 
@@ -262,7 +290,7 @@ class CartTemplateController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
