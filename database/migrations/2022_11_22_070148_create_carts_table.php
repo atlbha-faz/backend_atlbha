@@ -34,6 +34,7 @@ return new class extends Migration
             $table->boolean('free_shipping')->default(0);
             $table->bigInteger('is_deleted')->default(0);
             $table->string('message')->nullable();
+            $table->boolean('is_service')->default(0);
             $table->timestamps();
             // $table->unique('user_id','store_id');
         });

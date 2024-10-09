@@ -72,6 +72,7 @@ class OrderResource extends JsonResource
             'id' => $this->id,
             'order_number' => $this->order_number,
             'user' => new UserResource($this->user),
+            'is_service' => $this->is_service,
             // 'products' =>$this->products != null? ProductResource::collection($this->products):null,
             'totalCount' => $this->totalCount,
             'quantity' => $this->quantity,
