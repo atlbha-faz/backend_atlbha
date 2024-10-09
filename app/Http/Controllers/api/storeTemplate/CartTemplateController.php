@@ -169,6 +169,13 @@ class CartTemplateController extends BaseController
                         }
                         if ($data['item'] !== null) {
                             $cartDetail = CartDetail::where('cart_id', $cartid)->where('id', $data['item'])->first();
+                            //if product is service
+                            if (isset($data['value']) && !is_null($data['value'])) {
+                                $previous_option_id = $cartDetail->option_id;
+                                if(!is_null($previous_option_id)){
+                                    Option::where('id', $previous_option_id)->delete();
+                                }
+                            }
                         } else {
 
                             $cartDetail = CartDetail::where('cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->first();
