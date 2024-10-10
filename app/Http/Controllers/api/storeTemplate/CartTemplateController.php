@@ -79,6 +79,7 @@ class CartTemplateController extends BaseController
 
         } else { $input = $request->all();
             $validator = Validator::make($input, [
+                'is_service' => 'nullable|in:0,1',
                 'data' => 'nullable|array',
                 'data.*.id' => [
                     'required',
@@ -102,6 +103,7 @@ class CartTemplateController extends BaseController
                 $cart = Cart::updateOrCreate([
                     'user_id' => auth()->user()->id,
                     'store_id' => $store_id,
+                    'is_service' => $request->is_service,
                 ], [
                     'total' => 0,
                     'count' => 0,
@@ -126,37 +128,39 @@ class CartTemplateController extends BaseController
                         $data['option_id'] = null;
                         $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
                         //if product is service
-                       if (isset($data['value']) && !is_null($data['value'])) {
-                            $service_product = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
-                            $price =$service_product->selling_price;
-                            $discount_price = $service_product->discount_price;
-                            $period = $service_product->period;
-                            $names = [];
-                            foreach ($data['value'] as $value) {
+                        if ($request->is_service == 1) {
+                            if (isset($data['value']) && !is_null($data['value'])) {
+                                $service_product = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
+                                $price = $service_product->selling_price;
+                                $discount_price = $service_product->discount_price;
+                                $period = $service_product->period;
+                                $names = [];
+                                foreach ($data['value'] as $value) {
 
-                                $data_value = Value::where('id', $value)->first();
-                                $data_value = explode(',', $data_value->value);
-                                array_push($names, $data_value[0]);
-                                $name = [
-                                    "ar" => implode(',',$names),
-                                ];
-                                $price += $data_value[1];
-                                $discount_price += $data_value[2];
-                                $period += $data_value[3];
+                                    $data_value = Value::where('id', $value)->first();
+                                    $data_value = explode(',', $data_value->value);
+                                    array_push($names, $data_value[0]);
+                                    $name = [
+                                        "ar" => implode(',', $names),
+                                    ];
+                                    $price += $data_value[1];
+                                    $discount_price += $data_value[2];
+                                    $period += $data_value[3];
+                                }
+                                $option = new Option([
+                                    'price' => $price,
+                                    'discount_price' => $discount_price,
+                                    'quantity' => 1,
+                                    'period' => $period,
+                                    'name' => $name,
+                                    'product_id' => $data['id'],
+                                    'default_option' => 0,
+
+                                ]);
+
+                                $option->save();
+                                $data['option_id'] = $option->id;
                             }
-                            $option = new Option([
-                                'price' => $price,
-                                'discount_price' => $discount_price,
-                                'quantity' => 1,
-                                'period' => $period,
-                                'name' => $name,
-                                'product_id' => $data['id'],
-                                'default_option' => 0,
-
-                            ]);
-
-                            $option->save();
-                            $data['option_id'] =$option->id;
                         }
 
                     }
@@ -170,9 +174,9 @@ class CartTemplateController extends BaseController
                         if ($data['item'] !== null) {
                             $cartDetail = CartDetail::where('cart_id', $cartid)->where('id', $data['item'])->first();
                             //if product is service
-                            if (isset($data['value']) && !is_null($data['value'])) {
+                            if ($request->is_service == 1) {
                                 $previous_option_id = $cartDetail->option_id;
-                                if(!is_null($previous_option_id)){
+                                if (!is_null($previous_option_id)) {
                                     Option::where('id', $previous_option_id)->delete();
                                 }
                             }

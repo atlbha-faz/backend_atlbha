@@ -12,6 +12,7 @@ class AtlbhaIndexProductResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+    //'/products/' .preg_replace('/ /', '-',$this->name). '/'. $this->id,
     public function toArray($request)
     {
        
