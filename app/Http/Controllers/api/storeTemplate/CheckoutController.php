@@ -204,9 +204,9 @@ class CheckoutController extends BaseController
             $subtotal = OrderItem::where('order_id', $order->id)->get()->reduce(function ($total, $item) {
                 return $total + ($item->quantity * $item->price);
             });
-
-            $orderAddress = OrderAddress::where('user_id', auth()->user()->id)->where('id', $request->shippingAddress_id)->first();
+            
             if ($cart->is_service == 0) {
+            $orderAddress = OrderAddress::where('user_id', auth()->user()->id)->where('id', $request->shippingAddress_id)->first();
                 if ($orderAddress === null) {
 
                     $orderaddress = OrderAddress::create([
