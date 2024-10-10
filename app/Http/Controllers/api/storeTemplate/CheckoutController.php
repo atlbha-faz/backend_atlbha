@@ -63,7 +63,7 @@ class CheckoutController extends BaseController
             $validator = Validator::make($input, [
                 'city' => 'required_if:is_service,0|string|max:255',
                 'street_address' => 'required_if:is_service,0|string',
-                'district' => 'rrequired_if:is_service,0|string',
+                'district' => 'required_if:is_service,0|string',
                 'postal_code' => 'nullable|string',
                 'default_address' => 'required_if:is_service,0',
                 'paymentype_id' => 'required|exists:paymenttypes,id',
@@ -204,7 +204,7 @@ class CheckoutController extends BaseController
             $subtotal = OrderItem::where('order_id', $order->id)->get()->reduce(function ($total, $item) {
                 return $total + ($item->quantity * $item->price);
             });
-            
+
             if ($cart->is_service == 0) {
             $orderAddress = OrderAddress::where('user_id', auth()->user()->id)->where('id', $request->shippingAddress_id)->first();
                 if ($orderAddress === null) {
