@@ -89,7 +89,10 @@ class PackageController extends BaseController
                
         }
         $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
-        $payment = Package_store::where('store_id', $store->id)->where('package_id', $request->package_id)->where('payment_status', null)->orderBy('start_at', 'desc')->first();
+        $payment = Package_store::where('store_id', $store->id)->where('package_id', $request->package_id)->whereNot('payment_status','paid')->orderBy('start_at', 'desc')->first();
+        if (is_null($payment)){
+            return $this->sendError(" اختار الباقة"," package available");
+        }
         $package = Package::where('id', $payment->package_id)->first();
         $paymentype = Paymenttype::where('id', $request->paymentype_id)->first();
         if (in_array($request->paymentype_id, [1, 2])) {
