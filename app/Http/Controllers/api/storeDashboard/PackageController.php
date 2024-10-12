@@ -87,7 +87,11 @@ class PackageController extends BaseController
                return $this->sendError( 'يرجى إدخال بيانات اعدادات المتجر',null);
         }
         $end_at = Carbon::now()->addYear()->format('Y-m-d H:i:s');
-        $payment = Package_store::where('store_id', $store->id)->where('package_id', $request->package_id)->whereNot('payment_status', 'paid')->orderBy('start_at', 'desc')->first();
+        $payment = Package_store::where('store_id', $store->id)->where('package_id', $request->package_id)->where(function ($query) {
+            $query->where('payment_status', '!=', 'paid')
+                  ->orWhereNull('payment_status');
+        })->orderBy('start_at', 'desc')->first();
+
         if (is_null($payment)) {
             return $this->sendError(" اختار الباقة المناسبة ", "package is't exists");
         }
