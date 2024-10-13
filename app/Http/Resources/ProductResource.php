@@ -74,7 +74,7 @@ class ProductResource extends JsonResource
                     'status' => $status,
                     'special' => $special,
                     'admin_special' => $admin_special,
-                    'url' => 'https://' . $domain .'/shop/product/' . $this->id.'/'.preg_replace('/ /', '-',$this->name),
+                    'url' => $this->store_id !== 155 ? 'https://' . $domain .'/shop/product/' . $this->id.'/'.preg_replace('/ /', '-',$this->name) : 'https://' . $domain .'/products/' .preg_replace('/ /', '-',$this->name). '/'. $this->id,
                     'amount' => $this->amount,
                     'product_has_options' => $this->product_has_options,
                     'productRating' => $this->productrate($this->id) !== null ? $this->productrate($this->id) : 0,
