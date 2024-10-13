@@ -230,16 +230,16 @@ class EtlobhaController extends BaseController
 
         ]);
         $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id', null)->get();
-        if(count($options) > 0){
-        foreach ($options as $option) {
-            $newOption = $option->replicate();
-            $newOption->product_id = null;
-            $newOption->original_id = $option->id;
-            $newOption->importproduct_id = $importproduct->id;
-            $newOption->price = $option->price;
-            $newOption->save();
+        if ($options) {
+            foreach ($options as $option) {
+                $newOption = $option->replicate();
+                $newOption->product_id = null;
+                $newOption->original_id = $option->id;
+                $newOption->importproduct_id = $importproduct->id;
+                $newOption->price = $option->price;
+                $newOption->save();
+            }
         }
-    }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
@@ -540,8 +540,8 @@ class EtlobhaController extends BaseController
 
                 ]);
             } else {
-                $options = Option::where('is_deleted', 0)->where('product_id', $imported->id)->where('importproduct_id', null)->get();
-                if (count($options) > 0) {
+                $options = Option::where('is_deleted', 0)->where('product_id', $imported->product_id)->where('importproduct_id', null)->get();
+                if ($options) {
                     foreach ($options as $option) {
                         $newOption = $option->replicate();
                         $newOption->product_id = null;
