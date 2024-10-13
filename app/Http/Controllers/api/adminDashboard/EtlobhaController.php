@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Carbon\Carbon;
-use App\Models\Image;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Value;
-use App\Models\Option;
-use App\Models\Product;
-use App\Models\Attribute;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use Illuminate\Validation\Rule;
-use App\Models\Attribute_product;
-use Illuminate\Support\Facades\DB;
-use App\Http\Resources\ProductResource;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Requests\EtlobhaStoreRequest;
 use App\Http\Requests\EtlobhaUpdateRequest;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ProductResource;
+use App\Models\Attribute;
+use App\Models\Attribute_product;
+use App\Models\Image;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\Value;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class EtlobhaController extends BaseController
 {
@@ -43,7 +42,7 @@ class EtlobhaController extends BaseController
         $success['not_active_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('status', 'not_active')->count();
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data=Product::with(['store', 'category' => function ($query) {
+        $data = Product::with(['store', 'category' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select(['id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'admin_special']);
         if ($request->has('category_id')) {
@@ -58,11 +57,11 @@ class EtlobhaController extends BaseController
             });
         }
 
-        $data= $data->paginate($count);
+        $data = $data->paginate($count);
         $success['products'] = ProductResource::collection($data);
         $success['status'] = 200;
-        $success['page_count'] =  $data->lastPage();
-        $success['current_page'] =  $data->currentPage();
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
     }
@@ -227,10 +226,11 @@ class EtlobhaController extends BaseController
             'product_id' => $product->id,
             'store_id' => $atlbha_id,
             'price' => $product->selling_price,
-            'qty'=>$product->stock
+            'qty' => $product->stock,
 
         ]);
-        $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
+        $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id', null)->get();
+        if(count($options) > 0){
         foreach ($options as $option) {
             $newOption = $option->replicate();
             $newOption->product_id = null;
@@ -239,6 +239,7 @@ class EtlobhaController extends BaseController
             $newOption->price = $option->price;
             $newOption->save();
         }
+    }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
@@ -524,19 +525,33 @@ class EtlobhaController extends BaseController
             return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
         }
     }
-    public function import(Request $request){
-        $imports=Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->get();
-        foreach ($imports as $import){
-            $imported=Importproduct::where('product_id', $import->id)->first();
-            if ($imported == null){
-                $atlbha_id = Store::where('is_deleted', 0)->where('domain','atlbha-store.com')->pluck('id')->first();
+    public function import(Request $request)
+    {
+        $imports = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->get();
+        foreach ($imports as $import) {
+            $imported = Importproduct::where('product_id', $import->id)->first();
+            if ($imported == null) {
+                $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha-store.com')->pluck('id')->first();
                 $importproduct = Importproduct::create([
                     'product_id' => $import->id,
                     'store_id' => $atlbha_id,
                     'price' => $import->selling_price,
-                    'qty'=>$import->stock
-        
+                    'qty' => $import->stock,
+
                 ]);
+            } else {
+                $options = Option::where('is_deleted', 0)->where('product_id', $imported->id)->where('importproduct_id', null)->get();
+                if (count($options) > 0) {
+                    foreach ($options as $option) {
+                        $newOption = $option->replicate();
+                        $newOption->product_id = null;
+                        $newOption->original_id = $option->id;
+                        $newOption->importproduct_id = $imported->id;
+                        $newOption->price = $option->price;
+                        $newOption->save();
+
+                    }
+                }
             }
         }
         $success['status'] = 200;
