@@ -230,9 +230,16 @@ class EtlobhaController extends BaseController
             'qty'=>$product->stock
 
         ]);
-      
- 
-        
+        $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
+        foreach ($options as $option) {
+            $newOption = $option->replicate();
+            $newOption->product_id = null;
+            $newOption->original_id = $option->id;
+            $newOption->importproduct_id = $importproduct->id;
+            $newOption->price = $option->price;
+            $newOption->save();
+
+        }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
