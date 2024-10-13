@@ -238,7 +238,6 @@ class EtlobhaController extends BaseController
             $newOption->importproduct_id = $importproduct->id;
             $newOption->price = $option->price;
             $newOption->save();
-
         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
