@@ -137,17 +137,17 @@ class StoreReportController extends BaseController
             for ($i = 1; $i <= $p; $i++) {
                 $package = Package::query()->find($i);
                 if ($package) {
-                $stores = $package->stores->whereBetween('created_at', [$startDate1 . ' 00:00:00', $endDate1 . ' 23:59:59']);
-                foreach ($stores as $store) {
-                    if ($store->periodtype == "year") {
-                        $sum = $sum + $package->yearly_price;
-                    } else {
-                        $sum = $sum + $package->monthly_price;
-                    }
+                    $stores = $package->stores->whereBetween('created_at', [$startDate1 . ' 00:00:00', $endDate1 . ' 23:59:59']);
+                    foreach ($stores as $store) {
+                        if ($store->periodtype == "year") {
+                            $sum = $sum + $package->yearly_price;
+                        } else {
+                            $sum = $sum + $package->monthly_price;
+                        }
 
+                    }
                 }
             }
-        }
             $success['Subscriptions_withPeriod'] = $sum;
 
             $period = CarbonPeriod::create($startDate1, $endDate1)->month();
@@ -167,17 +167,17 @@ class StoreReportController extends BaseController
         for ($i = 1; $i <= $p; $i++) {
             $package = Package::query()->find($i);
             if ($package) {
-            $stores = $package->stores->where('created_at', '>=', Carbon::now()->subDays(30)->toDateTimeString());
-            foreach ($stores as $store) {
-                if ($store->periodtype == "year") {
-                    $sum = $sum + $package->yearly_price;
-                } else {
-                    $sum = $sum + $package->monthly_price;
-                }
+                $stores = $package->stores->where('created_at', '>=', Carbon::now()->subDays(30)->toDateTimeString());
+                foreach ($stores as $store) {
+                    if ($store->periodtype == "year") {
+                        $sum = $sum + $package->yearly_price;
+                    } else {
+                        $sum = $sum + $package->monthly_price;
+                    }
 
+                }
             }
         }
-    }
         $success['Subscriptions'] = $sum;
         //  ايرادات اطلبها خلال شهر
         $sum_service = 0;
@@ -234,17 +234,21 @@ class StoreReportController extends BaseController
         $packageCount = Package::where('is_deleted', 0)->count();
         for ($i = 1; $i <= $packageCount; $i++) {
             $package = Package::query()->find($i);
-            $stores = $package->stores;
-            foreach ($stores as $store) {
-                foreach ($cities as $city) {
-                    if ($store->city != null) {
-                        if ($store->city->id == $city->id) {
-                            if ($store->periodtype == "year") {
-                                $array_city_store[$store->city->name] = $array_city_store[$store->city->name] + $package->yearly_price;
-                            } else {
-                                $array_city_store[$store->city->name] = $array_city_store[$store->city->name] + $package->monthly_price;
-                            }
+            if ($package) {
+                $stores = $package->stores;
+                if ($stores->count() > 0) {
+                    foreach ($stores as $store) {
+                        foreach ($cities as $city) {
+                            if ($store->city != null) {
+                                if ($store->city->id == $city->id) {
+                                    if ($store->periodtype == "year") {
+                                        $array_city_store[$store->city->name] = $array_city_store[$store->city->name] + $package->yearly_price;
+                                    } else {
+                                        $array_city_store[$store->city->name] = $array_city_store[$store->city->name] + $package->monthly_price;
+                                    }
 
+                                }
+                            }
                         }
                     }
                 }
