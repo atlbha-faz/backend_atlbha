@@ -222,7 +222,7 @@ class EtlobhaController extends BaseController
             }
         }
         //إستيراد الى متجر اطلبها
-        $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+        $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha-store.com')->pluck('id')->first();
         $importproduct = Importproduct::create([
             'product_id' => $product->id,
             'store_id' => $atlbha_id,
@@ -231,16 +231,7 @@ class EtlobhaController extends BaseController
 
         ]);
       
-            $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
-            foreach ($options as $option) {
-                $newOption = $option->replicate();
-                $newOption->product_id = null;
-                $newOption->original_id = $option->id;
-                $newOption->importproduct_id = $importproduct->id;
-                $newOption->price = $option->price;
-                $newOption->save();
-
-            }
+ 
         
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
@@ -457,13 +448,13 @@ class EtlobhaController extends BaseController
         if (count($products) > 0) {
             foreach ($products as $product) {
 
-                // $imports = Importproduct::where('product_id', $product->id)->get();
-                // if (count($imports) > 0) {
-                //     foreach ($imports as $import) {
+                $imports = Importproduct::where('product_id', $product->id)->get();
+                if (count($imports) > 0) {
+                    foreach ($imports as $import) {
 
-                //         $import->delete();
-                //     }
-                // }
+                        $import->delete();
+                    }
+                }
 
                 $product->update(['is_deleted' => $product->id]);
                 $preAttributes = Attribute_product::where('product_id', $product->id)->get();
@@ -526,5 +517,24 @@ class EtlobhaController extends BaseController
             $success['status'] = 200;
             return $this->sendResponse($success, 'المدخلات غير موجودة', 'id does not exit');
         }
+    }
+    public function import(Request $request){
+        $imports=Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->get();
+        foreach ($imports as $import){
+            $imported=Importproduct::where('product_id', $import->id)->first();
+            if ($imported == null){
+                $atlbha_id = Store::where('is_deleted', 0)->where('domain','atlbha-store.com')->pluck('id')->first();
+                $importproduct = Importproduct::create([
+                    'product_id' => $import->id,
+                    'store_id' => $atlbha_id,
+                    'price' => $import->selling_price,
+                    'qty'=>$import->stock
+        
+                ]);
+            }
+        }
+        $success['status'] = 200;
+        return $this->sendResponse($success, 'تم العرض بنجاح', ' product show successfully');
+
     }
 }

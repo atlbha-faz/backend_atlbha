@@ -227,6 +227,8 @@ Route::middleware([AdminUser::class])->group(function () {
         Route::get('searchSubscriptionsName', [App\Http\Controllers\api\adminDashboard\SubscriptionsController::class, 'searchSubscriptionsName']);
         Route::get('searchServiceName', [App\Http\Controllers\api\adminDashboard\ServiceController::class, 'searchServiceName']);
         Route::get('searchOrderDomainName', [App\Http\Controllers\api\adminDashboard\WebsiteDomainOrderController::class, 'searchOrderDomainName']);
+        Route::get('searchOrderDomainName', [App\Http\Controllers\api\adminDashboard\WebsiteDomainOrderController::class, 'searchOrderDomainName']);
+        Route::get('import', [App\Http\Controllers\api\adminDashboard\EtlobhaController::class, 'import']);
 
         Route::middleware([AdminCheckPermission::class])->group(function () {
             Route::get('loginid/{id}', [App\Http\Controllers\api\adminDashboard\StoreController::class, 'loginId'])->name('admin.store.loginStore');

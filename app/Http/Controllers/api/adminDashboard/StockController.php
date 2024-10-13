@@ -458,7 +458,7 @@ class StockController extends BaseController
         if ($product->for === 'stock') {
             $product->update(['for' => 'etlobha']);
             //إستيراد الى متجر اطلبها
-            $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+            $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha-store.com')->pluck('id')->first();
             $importproduct = Importproduct::create([
                 'product_id' => $product->id,
                 'store_id' => $atlbha_id,
@@ -466,16 +466,7 @@ class StockController extends BaseController
                 'qty'=>$product->stock
     
             ]);
-                $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
-                foreach ($options as $option) {
-                    $newOption = $option->replicate();
-                    $newOption->product_id = null;
-                    $newOption->original_id = $option->id;
-                    $newOption->importproduct_id = $importproduct->id;
-                    $newOption->price = $option->price;
-                    $newOption->save();
-    
-                }
+               
         }
 
         $success['products'] = new ProductResource($product);
