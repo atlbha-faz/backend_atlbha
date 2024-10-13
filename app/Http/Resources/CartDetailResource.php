@@ -33,9 +33,10 @@ class CartDetailResource extends JsonResource
             $period = null;
             $discount_price = 0;
         }
-        $period = null;
+      
         // $options = array_combine($array,$attribute);
     }
+    $period = null;
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
