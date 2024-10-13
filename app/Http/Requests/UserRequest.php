@@ -43,7 +43,7 @@ class UserRequest extends FormRequest
                 return $query->whereIn('user_type', ['admin_employee', 'admin'])
                     ->where('is_deleted', 0);
             })],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
 
             'role' => 'required|string|max:255|exists:roles,name',
         ];

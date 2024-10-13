@@ -70,11 +70,14 @@ class UserController extends BaseController
             'email' => $request->email,
             'password' => $request->password,
             'phonenumber' => $request->phonenumber,
-            'image' => $request->image,
             'verified' => 1,
 
         ]);
-
+        if ($request->has('image')) {
+            $user->update([
+                'image' => $request->input('image'),
+            ]);
+        }
         $user->assignRole($request->role);
 
         $success['users'] = new UserResource($user);
@@ -133,12 +136,16 @@ class UserController extends BaseController
             'email' => $request->input('email'),
             'user_name' => $request->input('user_name'),
             'phonenumber' => $request->input('phonenumber'),
-            'image' => $request->image,
 
         ]);
         if (!is_null($request->password)) {
             $user->update([
                 'password' => $request->password,
+            ]);
+        }
+        if ($request->has('image')) {
+            $user->update([
+                'image' => $request->input('image'),
             ]);
         }
 
