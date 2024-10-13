@@ -25,7 +25,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $id=$this->route('id'); 
+        $id=$this->route('user'); 
         $userAdmain = User::where('user_type', 'admin')->first();
         $user = User::query()->whereNot('id', $userAdmain->id)->find($id);
         return [
