@@ -420,7 +420,7 @@ class EtlobhaController extends BaseController
             }
         }
          // تعديل إستيراد الى متجر اطلبها
-         $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+         $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha-store.com')->pluck('id')->first();
          $importproduct = Importproduct::where('store_id', $atlbha_id)->where('product_id', $productid)->first();
          if ($importproduct != null) {
              $importproduct->update([
