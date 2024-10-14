@@ -419,7 +419,7 @@ class ProductController extends BaseController
                 'product_has_options' => $request->product_has_options,
                 // 'store_id' => $request->input('store_id'),
                 'period' => $request->period,
-                'is_service' => $request->is_service,
+                'is_service' =>is_null($request->is_service) ? 0 : $request->is_service,
 
             ]);
             $productid = $product->id;
