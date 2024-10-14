@@ -200,7 +200,7 @@ class ProductController extends BaseController
             'amount' => $request->amount,
             'product_has_options' => $request->product_has_options,
             'period' => $request->period,
-            'is_service' => $request->is_service,
+            'is_service' => is_null($request->is_service) ? 0 : $request->is_service,
         ]);
         $productid = $product->id;
         if ($request->hasFile("images")) {
