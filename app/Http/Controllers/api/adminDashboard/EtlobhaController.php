@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers\api\adminDashboard;
 
-use Carbon\Carbon;
-use App\Models\Image;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Value;
-use App\Models\Option;
-use App\Models\Product;
-use App\Models\Attribute;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use Illuminate\Validation\Rule;
-use App\Models\Attribute_product;
-use Illuminate\Support\Facades\DB;
-use App\Http\Resources\ProductResource;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Requests\EtlobhaStoreRequest;
 use App\Http\Requests\EtlobhaUpdateRequest;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\ProductResource;
+use App\Models\Attribute;
+use App\Models\Attribute_product;
+use App\Models\Image;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\Value;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class EtlobhaController extends BaseController
 {
@@ -43,7 +42,7 @@ class EtlobhaController extends BaseController
         $success['not_active_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('status', 'not_active')->count();
         $success['about_to_finish_products'] = Product::where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->where('stock', '<', '20')->count();
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $data=Product::with(['store', 'category' => function ($query) {
+        $data = Product::with(['store', 'category' => function ($query) {
             $query->select('id', 'name');
         }])->where('is_deleted', 0)->where('for', 'etlobha')->where('store_id', null)->orderByDesc('created_at')->select(['id', 'name', 'status', 'cover', 'special', 'purchasing_price', 'selling_price', 'stock', 'category_id', 'store_id', 'subcategory_id', 'created_at', 'admin_special']);
         if ($request->has('category_id')) {
@@ -58,11 +57,11 @@ class EtlobhaController extends BaseController
             });
         }
 
-        $data= $data->paginate($count);
+        $data = $data->paginate($count);
         $success['products'] = ProductResource::collection($data);
         $success['status'] = 200;
-        $success['page_count'] =  $data->lastPage();
-        $success['current_page'] =  $data->currentPage();
+        $success['page_count'] = $data->lastPage();
+        $success['current_page'] = $data->currentPage();
         return $this->sendResponse($success, 'تم ارجاع المنتجات بنجاح', 'products return successfully');
 
     }
@@ -227,21 +226,21 @@ class EtlobhaController extends BaseController
             'product_id' => $product->id,
             'store_id' => $atlbha_id,
             'price' => $product->selling_price,
-            'qty'=>$product->stock
+            'qty' => $product->stock,
 
         ]);
-      
-            $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id',null)->get();
-            foreach ($options as $option) {
-                $newOption = $option->replicate();
-                $newOption->product_id = null;
-                $newOption->original_id = $option->id;
-                $newOption->importproduct_id = $importproduct->id;
-                $newOption->price = $option->price;
-                $newOption->save();
 
-            }
-        
+        $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id', null)->get();
+        foreach ($options as $option) {
+            $newOption = $option->replicate();
+            $newOption->product_id = null;
+            $newOption->original_id = $option->id;
+            $newOption->importproduct_id = $importproduct->id;
+            $newOption->price = $option->price;
+            $newOption->save();
+
+        }
+
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
@@ -340,8 +339,18 @@ class EtlobhaController extends BaseController
             }
         }
         $preAttributes = Attribute_product::where('product_id', $productid)->get();
-        if ($preAttributes != null) {
+        if ($preAttributes !== null) {
             foreach ($preAttributes as $preAttribute) {
+                $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
+                if ($values !== null) {
+                    foreach ($values as $value) {
+                        $value->delete();
+                    }
+                }
+                $main_attribute = Attribute::where('id', $preAttribute->attribute_id)->first();
+                if ($main_attribute !== null) {
+                    $main_attribute->delete();
+                }
                 $preAttribute->delete();
             }
         }
@@ -409,6 +418,34 @@ class EtlobhaController extends BaseController
                     $options[] = $option;
 
                 }
+            }
+        }
+        // تعديل إستيراد الى متجر اطلبها
+        $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+        $importproduct = Importproduct::where('store_id', $atlbha_id)->where('product_id', $productid)->first();
+        if ($importproduct == null) {
+            $importproduct->update([
+                'price' => $product->selling_price,
+                'qty' => $product->stock,
+
+            ]);
+        }
+        $atlbha_options = Option::where('is_deleted', 0)->where('importproduct_id', $importproduct->id)->get();
+        if ($atlbha_options != null) {
+            foreach ($atlbha_options as $atlbha_option) {
+                $atlbha_option->delete();
+            }
+        }
+        $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id', null)->get();
+        if ($options != null) {
+            foreach ($options as $option) {
+                $newOption = $option->replicate();
+                $newOption->product_id = null;
+                $newOption->original_id = $option->id;
+                $newOption->importproduct_id = $importproduct->id;
+                $newOption->price = $option->price;
+                $newOption->save();
+
             }
         }
         $success['products'] = new ProductResource($product);

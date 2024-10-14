@@ -499,7 +499,7 @@ class ProductController extends BaseController
                 $preOptions = Option::where('product_id', $productid)->get();
                 if ($preOptions !== null) {
                     foreach ($preOptions as $preOption) {
-                        $preOption->update(['is_deleted' =>$preOption->id]);
+                        $preOption->delete();
                     }
                 }
             }
