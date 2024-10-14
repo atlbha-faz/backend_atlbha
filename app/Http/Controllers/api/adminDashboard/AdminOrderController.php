@@ -137,6 +137,7 @@ class AdminOrderController extends BaseController
 
                 return $response;
             }
+            else{
             if ($request->status === "delivery_in_progress") {
 
                 $shipping = $shipping_companies[$order->shippingtype->id];
@@ -153,10 +154,11 @@ class AdminOrderController extends BaseController
                         'order_status' => $request->status,
                     ]);
                 }
-
                 $success['orders'] = new OrderResource($order);
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم تعديل الطلب', 'order update successfully');
+            }
+               
 
             }
         }
