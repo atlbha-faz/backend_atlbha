@@ -338,8 +338,18 @@ class EtlobhaController extends BaseController
             }
         }
         $preAttributes = Attribute_product::where('product_id', $productid)->get();
-        if ($preAttributes != null) {
+        if ($preAttributes !== null) {
             foreach ($preAttributes as $preAttribute) {
+                $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
+                if ($values !== null) {
+                    foreach ($values as $value) {
+                        $value->delete();
+                    }
+                }
+                $main_attribute = Attribute::where('id', $preAttribute->attribute_id)->first();
+                if ($main_attribute !== null) {
+                    $main_attribute->delete();
+                }
                 $preAttribute->delete();
             }
         }
@@ -409,6 +419,34 @@ class EtlobhaController extends BaseController
                 }
             }
         }
+         // تعديل إستيراد الى متجر اطلبها
+         $atlbha_id = Store::where('is_deleted', 0)->where('domain', 'atlbha')->pluck('id')->first();
+         $importproduct = Importproduct::where('store_id', $atlbha_id)->where('product_id', $productid)->first();
+         if ($importproduct == null) {
+             $importproduct->update([
+                 'price' => $product->selling_price,
+                 'qty' => $product->stock,
+ 
+             ]);
+         }
+         $atlbha_options = Option::where('is_deleted', 0)->where('importproduct_id', $importproduct->id)->get();
+         if ($atlbha_options != null) {
+             foreach ($atlbha_options as $atlbha_option) {
+                 $atlbha_option->delete();
+             }
+         }
+         $options = Option::where('is_deleted', 0)->where('product_id', $product->id)->where('importproduct_id', null)->get();
+         if ($options != null) {
+             foreach ($options as $option) {
+                 $newOption = $option->replicate();
+                 $newOption->product_id = null;
+                 $newOption->original_id = $option->id;
+                 $newOption->importproduct_id = $importproduct->id;
+                 $newOption->price = $option->price;
+                 $newOption->save();
+ 
+             }
+         }
         $success['products'] = new ProductResource($product);
         $success['status'] = 200;
 
