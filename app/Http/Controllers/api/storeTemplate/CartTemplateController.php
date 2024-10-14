@@ -114,6 +114,17 @@ class CartTemplateController extends BaseController
                 $options = array();
 
                 foreach ($request->data as $data) {
+                    if ($request->is_service == 1) {
+                        $service = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
+                        if ($service->is_service == 0) {
+                            return $this->sendError("لا يمكن الاضافة لأن هذا المنتج ليس خدمة", "can't add");
+                        }
+                    } else {
+                        $product = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
+                        if ($product->is_service == 1) {
+                            return $this->sendError("لا يمكن الاضافة لأن هذا المنتج  خدمة", "Can't add");
+                        }
+                    }
                     if (isset($data['option_id']) && !is_null($data['option_id'])) {
                         $q = Option::where('id', $data['option_id'])->where('product_id', $data['id'])->first();
                         if (is_null($q)) {
