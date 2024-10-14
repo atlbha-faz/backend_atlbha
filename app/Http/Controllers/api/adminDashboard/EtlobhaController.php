@@ -429,6 +429,15 @@ class EtlobhaController extends BaseController
  
              ]);
          }
+         else{
+             $importproduct = Importproduct::create([
+                 'product_id' => $productid,
+                 'store_id' => $atlbha_id,
+                 'price' => $product->selling_price,
+                 'qty' => $product->stock,
+ 
+             ]);
+         }
          $atlbha_options = Option::where('is_deleted', 0)->where('importproduct_id', $importproduct->id)->get();
          if ($atlbha_options != null) {
              foreach ($atlbha_options as $atlbha_option) {
