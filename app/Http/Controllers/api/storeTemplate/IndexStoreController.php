@@ -500,7 +500,13 @@ class IndexStoreController extends BaseController
                 
                 $storeproducts= ProductResource::collection($store_products->orderBy($s, $sort)->paginate($limit));
         }
-        $products = $storeproducts->merge($importsproducts);
+        if ($request->has('is_service')) {
+            $products = $storeproducts;
+        }
+        else{
+            $products = $storeproducts->merge($importsproducts);
+        }
+       
         $product_ids = Importproduct::where('store_id', $store->id)->pluck('product_id')->toArray();
         $prodtcts = Product::whereIn('id', $product_ids)->where('is_deleted', 0)->where('status', 'active')->groupBy('category_id')->get();
         $category = array();
@@ -538,12 +544,11 @@ class IndexStoreController extends BaseController
         $success['sort'] = $sort;
         $success['price_from'] = $price_from;
         $success['price_to'] = $price_to;
-        $success['pages'] = ($storeproducts->lastPage() < $importsproducts->lastPage() ? $importsproducts->lastPage() : $storeproducts->lastPage());
+        $success['pages'] = (!$request->has('is_service')) ?($storeproducts->lastPage() < $importsproducts->lastPage() ? $importsproducts->lastPage() : $storeproducts->lastPage()):$storeproducts->lastPage();
 
-        $success['from'] = ($storeproducts->firstItem() == null ? $importsproducts->firstItem() : $storeproducts->firstItem());
-        $success['to'] = ($storeproducts->lastItem() == null ? 0 : $storeproducts->lastItem()) + ($importsproducts->lastItem() == null ? 0 : $importsproducts->lastItem());
-        $success['total'] = ($storeproducts->total() == null ? 0 : $storeproducts->total()) + ($importsproducts->total() == null ? 0 : $importsproducts->total());
-
+        $success['from'] = (!$request->has('is_service')) ?($storeproducts->firstItem() == null ? $importsproducts->firstItem() : $storeproducts->firstItem()):$storeproducts->firstItem();
+        $success['to'] = (!$request->has('is_service')) ?(($storeproducts->lastItem() == null ? 0 : $storeproducts->lastItem()) + ($importsproducts->lastItem() == null ? 0 : $importsproducts->lastItem())):$storeproducts->lastItem();
+        $success['total'] =(!$request->has('is_service')) ? (($storeproducts->total() == null ? 0 : $storeproducts->total()) + ($importsproducts->total() == null ? 0 : $importsproducts->total())):$storeproducts->total();
         $success['Products'] = $products;
 
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('domain')->first();
