@@ -463,7 +463,7 @@ class IndexStoreController extends BaseController
                 $query->select('id', 'domain', 'store_name');
             }, 'category' => function ($query) {
                 $query->select('id', 'name');
-            }])->where('is_service', 0)->where('is_deleted', 0)->where('status', 'active')
+            }])->where('is_deleted', 0)->where('status', 'active')
                     ->where('store_id', $store->id)->whereIn('id', $productssStoreid)->when($price_from, function ($query, $price_from) {
                     $query->where('selling_price', '>=', $price_from);
                 })->when($price_to, function ($query, $price_to) {
@@ -473,6 +473,9 @@ class IndexStoreController extends BaseController
                 if ($request->has('is_service')) {
                     $store_products->where('is_service', 1);
                 }
+                else{
+                     $store_products->where('is_service', 0);
+                }
                 $storeproducts= ProductResource::collection($store_products->orderBy($s, $sort)->paginate($limit));
 
         } else {
@@ -480,7 +483,7 @@ class IndexStoreController extends BaseController
                 $query->select('id', 'domain', 'store_name');
             }, 'category' => function ($query) {
                 $query->select('id', 'name');
-            }])->where('is_deleted', 0)->where('is_service', 0)->where('status', 'active')
+            }])->where('is_deleted', 0)->where('status', 'active')
                     ->where('store_id', $store->id)->when($filter_category, function ($query, $filter_category) use ($parent) {
                     $query->where('category_id', $filter_category)->orWhere('category_id', $parent);
                 })->when($price_from, function ($query, $price_from) {
@@ -490,6 +493,9 @@ class IndexStoreController extends BaseController
                 })->where('store_id', $store->id)->where('is_deleted', 0);
                 if ($request->has('is_service')) {
                     $store_products->where('is_service', 1);
+                }
+                else{
+                     $store_products->where('is_service', 0);
                 }
                 
                 $storeproducts= ProductResource::collection($store_products->orderBy($s, $sort)->paginate($limit));
@@ -733,7 +739,7 @@ class IndexStoreController extends BaseController
 
         $resentproduct = Product::with(['importproduct' => function ($query) use ($store) {
             $query->where('store_id', $store->id);
-        }])->where('status', 'active')->where('is_service', 0)->where('is_deleted', 0)
+        }])->where('status', 'active')->where('is_deleted', 0)
             ->where(function ($query) use ($store) {
                 $query->whereHas('importproduct', function ($productQuery) use ($store) {
                     $productQuery->where('store_id', $store->id)->where('status', 'active');
@@ -745,6 +751,9 @@ class IndexStoreController extends BaseController
         }
         if ($request->has('is_service')) {
             $resentproduct->where('is_service', 1);
+        }
+        else{
+             $resentproduct->where('is_service', 0);
         }
 
         $resentproduct = $resentproduct->paginate($count);
