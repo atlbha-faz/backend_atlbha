@@ -189,8 +189,8 @@ class AramexCompanyService implements ShippingInterface
                         },
                         "Contact": {
                             "Department": "",
-                            "PersonName": "' . $order->user->name . '",
-                            "CompanyName": "' . $order->user->name . '",
+                            "PersonName": "' . $order->user->username . '",
+                            "CompanyName": "' . $order->user->username . '",
                             "PhoneNumber1": "' . $order->user->phonenumber . '",
                             "PhoneNumber1Ext": "",
                             "PhoneNumber2": "",
@@ -250,7 +250,7 @@ class AramexCompanyService implements ShippingInterface
                             "Value":' . $order->weight . '
                         },
                         "ChargeableWeight": null,
-                        "DescriptionOfGoods": "' . $store->categories->first()->name . '",
+                        "DescriptionOfGoods": "' . $store==null?'':$store->categories->first()->name . '",
                         "GoodsOriginCountry": "SA",
                         "NumberOfPieces": ' . $order->totalCount . ',
                         "ProductGroup": "DOM",
