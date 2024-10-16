@@ -562,11 +562,17 @@ class IndexStoreController extends BaseController
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('domain')->first();
         $product_ids = Importproduct::where('store_id', $store->id)->orderBy('created_at', 'desc')->pluck('product_id')->toArray();
         $importprodtcts = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('products.status', 'active')->whereIn('products.id', $product_ids)->select('products.*', 'importproducts.qty', 'importproducts.discount_price_import', 'importproducts.price')->orderBy('importproducts.created_at', 'desc')->take(5)->get();
-        $products = Product::with(['store' => function ($query) {
+        $last_products = Product::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
-        }])->where('is_deleted', 0)->where('store_id', $store->id)->orderBy('created_at', 'desc')->take(5)->get();
+        }])->where('is_deleted', 0)->where('store_id', $store->id);
+        if($request->has('is_service')){
+            $last_products  =  $last_products->where('is_service', 1);
+        }
+        else{
+            $last_products=  $last_products->where('is_service', 0);
+        }
         if ($products != null) {
-            $success['lastProducts'] = ProductResource::collection($products);
+            $success['lastProducts'] = ProductResource::collection($last_products->orderBy('created_at', 'desc')->take(5)->get());
         } else {
             $success['lastProducts'] = importsResource::collection($importprodtcts);
         }

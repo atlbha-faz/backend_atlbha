@@ -102,7 +102,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع الأنشطة بنجاح', 'activities return successfully');
     }
 
-    public function mainCategories()
+    public function mainCategories(Request $request)
     {
 
         $atlbhaCategory = Category::
@@ -114,8 +114,21 @@ class SelectorController extends BaseController
             where('is_deleted', 0)
             ->where('parent_id', null)
             ->Where('store_id', auth()->user()->store_id)
+            ->where('is_service', 0)
             ->where('status', 'active')->orderByDesc('created_at')->get();
-        $success['categories'] = CategoryResource::collection($storeCategory->merge($atlbhaCategory));
+            $service_category = Category::
+            where('is_deleted', 0)
+            ->where('parent_id', null)
+            ->Where('store_id', auth()->user()->store_id)
+            ->where('is_service', 1)
+            ->where('status', 'active')->orderByDesc('created_at')->get();
+            if($request->has('is_service')){
+                $success['categories'] = CategoryResource::collection($service_category);
+            }
+            else{
+            $success['categories'] = CategoryResource::collection($storeCategory->merge($atlbhaCategory));
+            }
+        
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
