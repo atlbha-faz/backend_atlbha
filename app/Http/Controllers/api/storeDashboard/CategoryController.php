@@ -47,6 +47,12 @@ class CategoryController extends BaseController
             if ($request->has('category_id')) {
                 $categories->where('id', $request->category_id);
             }
+            if ($request->has('is_service')) {
+                $categories->where('is_service',1);
+            }
+            else{
+                $categories->where('is_service',0);
+            }
             $categories = $categories->paginate($count);
             $success['etlobha_page_count'] = $etlobha_categories->lastPage();
             $success['etlobha_current_page'] = $etlobha_categories->currentPage();
@@ -110,6 +116,7 @@ class CategoryController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'icon' => 'nullable',
+            'is_service' => 'nullable|in:0,1',
             'data.*.name' => 'nullable|string|max:255',
             'data.*.id' => 'nullable|numeric',
 
@@ -131,6 +138,7 @@ class CategoryController extends BaseController
             'name' => $request->input('name'),
             'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
             'icon' => $request->icon,
+            'is_service' =>is_null($request->is_service) ? 0 : $request->is_service,
             'for' => 'store',
             'parent_id' => null,
             'store_id' => auth()->user()->store_id,
@@ -145,6 +153,7 @@ class CategoryController extends BaseController
                 $subcategory = new Category([
                     'name' => $data['name'],
                     'number' => str_pad($number, 4, '0', STR_PAD_LEFT),
+                    'is_service' =>is_null($request->is_service) ? 0 : $request->is_service,
                     'parent_id' => $category->id,
                     'store_id' => auth()->user()->store_id,
                 ]);
