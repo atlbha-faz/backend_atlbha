@@ -16,7 +16,8 @@ class ValueResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'value' =>explode(',', $this->value)
+            'value' =>explode(',', $this->value),
+            'value_object' =>json_decode(json_encode(explode(',', $this->value_en))),
         ];
     }
 }

@@ -181,11 +181,18 @@ class SelectorController extends BaseController
             $success['page_count'] = $storeCategory->lastPage();
             $success['categories'] = $storeCategory;
         } else {
-            $success['categories'] = CategoryResource::collection(Category::
-                    where('is_deleted', 0)
+            $storeCategory =Category::
+            where('is_deleted', 0)
 
-                    ->where('parent_id', null
-                    )->where('store_id', auth()->user()->store_id)->get());
+            ->where('parent_id', null
+            )->where('store_id', auth()->user()->store_id)->get();
+            if($request->has('is_service')){
+                $storeCategory = $storeCategory->where('is_service', 1);
+            }
+            else{
+                $storeCategory = $storeCategory->where('is_service', 0);
+            }
+            $success['categories'] = CategoryResource::collection($storeCategory);
         }
         $success['status'] = 200;
 
