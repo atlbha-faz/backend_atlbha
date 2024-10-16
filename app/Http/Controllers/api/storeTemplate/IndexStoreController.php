@@ -516,14 +516,22 @@ class IndexStoreController extends BaseController
         $adminCategory = Category::where('is_deleted', 0)->where('status', 'active')
             ->Where('store_id', null)->with('products')->has('products')->get();
         $filters = array();
-        $filters[0]["items"] = CategoryResource::collection(Category::with(['store' => function ($query) {
+        $categories=Category::with(['store' => function ($query) {
             $query->select('id', 'domain', 'store_name');
         }])->where('is_deleted', 0)->where('status', 'active')->where(function ($query) use ($store) {
             $query->where('store_id', $store->id)
                 ->OrWhere('store_id', null)->whereHas('products', function ($query) use ($store) {
                 $query->where('is_deleted', 0)->where('store_id', $store->id);
             });
-        })->with('products')->get()->merge($category));
+        })->with('products');
+
+        if ($request->has('is_service')) {
+            $categories= $categories->where('is_service', 1)->get(); 
+        }
+        else{
+            $categories=$categories->where('is_service', 0)->get()->merge($category);
+        }
+        $filters[0]["items"] = CategoryResource::collection( $categories);
 
         $filters[0]["name"] = "التصنيفات";
         $filters[0]["slug"] = "category";
