@@ -131,6 +131,9 @@ class OrderController extends BaseController
 
             ];
             if ($request->status === "ready") {
+               if ($order->is_service == 1){
+                return $this->sendError("لا يمكن تحويل الطلب للخدمات", "لا يمكن  تحويل الطلب للخدمات");
+               }
                 $shipping = $shipping_companies[$order->shippingtype->id];
     
                     $response=$shipping->createOrder($data);
@@ -139,6 +142,9 @@ class OrderController extends BaseController
                 return $response;
             }
               if ($request->status === "delivery_in_progress") {
+                if ($order->is_service == 1){
+                    return $this->sendError("لا يمكن تحويل الطلب للخدمات", "لا يمكن  تحويل الطلب للخدمات");
+                   }
 
                     $shipping = $shipping_companies[$order->shippingtype->id];
                     
