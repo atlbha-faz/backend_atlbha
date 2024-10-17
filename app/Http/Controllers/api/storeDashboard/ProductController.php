@@ -401,7 +401,7 @@ class ProductController extends BaseController
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
                 'selling_price' => $request->input('selling_price'),
-                'stock' => $request->input('stock'),
+                'stock' => (!is_null($request->input('stock')) ? $request->input('stock') : 100),
                 'cover' => $request->cover,
                 'SEOdescription' => $request->SEOdescription,
                 'discount_price' => $request->input('discount_price'),
