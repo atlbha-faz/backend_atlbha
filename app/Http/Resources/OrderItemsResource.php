@@ -39,6 +39,7 @@ class OrderItemsResource extends JsonResource
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
+            'is_service' => ($this->product->is_service) ? true : false,
             'quantity' => $this->quantity,
             'price' => $this->price,
             'sum' =>round( $this->subtotal($this->id),2),
