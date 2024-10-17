@@ -40,6 +40,7 @@ class CartDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
+            'is_service' => ($this->product->is_service) ? true : false,
             'qty' => $this->qty,
             'price' => $this->price,
             'discount_price' => $this->option_id !== null ? $discount_price : $this->product->discount_price,
