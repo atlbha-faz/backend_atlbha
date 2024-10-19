@@ -372,12 +372,18 @@ class EtlobhaController extends BaseController
 
                     foreach ($attribute['value'] as $attributeValue) {
                         if (isset($attributeValue['image'])) {
+                            if (is_uploaded_file($attributeValue['image'])) {
                             $imageName = Str::random(10) . time() . '.' . $attributeValue['image']->getClientOriginalExtension();
                             $filePath = 'images/product/' . $imageName;
                             $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($attributeValue['image']));
                             if ($isFileUploaded) {
                                 $attributeValue['image'] = asset('storage/images/product') . '/' . $imageName;
                             }
+                        }
+                        else {
+
+                            $attributeValue['image'] = $attributeValue['image'];
+                        }
 
                         }
                         $value = new Value([
