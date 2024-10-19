@@ -32,7 +32,7 @@ class CategoryController extends BaseController
                 where('is_deleted', 0)
                 ->where('parent_id', null)
                 ->where('store_id', null)
-                ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id', 'created_at');
+                ->orderByDesc('created_at')->select('id', 'name', 'status', 'icon', 'number', 'store_id', 'parent_id','is_service', 'created_at');
 
             if ($request->has('category_id')) {
                 $etlobha_categories->where('id', $request->category_id);
