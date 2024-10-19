@@ -17,7 +17,6 @@ class ValueResource extends JsonResource
         return [
             'id' => $this->id,
             'value' =>explode(',', $this->value),
-            'value_object' =>(object) explode(',', $this->value),
         ];
     }
 }
