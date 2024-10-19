@@ -47,12 +47,6 @@ class CategoryController extends BaseController
             if ($request->has('category_id')) {
                 $categories->where('id', $request->category_id);
             }
-            if ($request->has('is_service')) {
-                $categories->where('is_service',1);
-            }
-            else{
-                $categories->where('is_service',0);
-            }
             $categories = $categories->paginate($count);
             $success['etlobha_page_count'] = $etlobha_categories->lastPage();
             $success['etlobha_current_page'] = $etlobha_categories->currentPage();
