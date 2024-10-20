@@ -60,15 +60,15 @@ class CheckoutController extends BaseController
             }
             $input = $request->all();
             $validator = Validator::make($input, [
-                'city' => 'required|string|max:255',
-                'street_address' => 'required|string',
-                'district' => 'required|string',
+                'city' => 'required_if:is_service,0|string|max:255',
+                'street_address' => 'required_if:is_service,0|string',
+                'district' => 'required_if:is_service,0|string',
                 'postal_code' => 'nullable|string',
-                'default_address' => 'required',
+                'default_address' => 'required_if:is_service,0',
                 'paymentype_id' => 'required|exists:paymenttypes,id',
-                'shippingtype_id' => 'required|exists:shippingtypes,id',
-                'SessionId' => 'required_if:paymentype_id,1,2',
+                'shippingtype_id' => 'required_if:is_service,0|exists:shippingtypes,id',
                 'cod' => 'nullable',
+                'SessionId' => 'required_if:paymentype_id,1,2',
                 'description' => 'nullable|string',
 
             ], [
@@ -113,10 +113,10 @@ class CheckoutController extends BaseController
 
             $shipping_type_object = shippingtype_store::where('shippingtype_id', $order->shippingtype_id)->where('store_id', $store_domain)->first();
             if ($shipping_type_object == null) {
-                $shipping_price = 30;
-                $extraprice = 3;
+                $shipping_price = 0;
+                $extraprice = 0;
                 if ($order->weight > 15) {
-                    $extra_shipping_price = ($order->weight - 15) * 3;
+                    $extra_shipping_price = 0;
                 } else {
                     $extra_shipping_price = 0;
                 }

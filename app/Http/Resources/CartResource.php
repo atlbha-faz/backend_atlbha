@@ -38,6 +38,7 @@ class CartResource extends JsonResource
             'user' => new UserResource($this->user),
             // 'store' => New StoreResource($this->store),
             'cartDetail' => $this->cartDetails !== null ? CartDetailResource::collection($this->cartDetails) : 0,
+            'is_service' => ($this->is_service) ? true : false,
             'status' =>  __('message.not_complete'),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

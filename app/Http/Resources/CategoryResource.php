@@ -22,6 +22,7 @@ class CategoryResource extends JsonResource
             'number' => $this->number,
             'icon' => $this->icon,
             'for' => $this->for,
+            'is_service' => ($this->is_service) ? true : false,
             'status' => $this->status == null || $this->status == 'active' ? __('message.active'):__('message.not_active'),
             'is_deleted' => $this->is_deleted !== null ? $this->is_deleted : 0,
             'created_at' => (string) $this->created_at,

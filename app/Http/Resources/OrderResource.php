@@ -74,6 +74,7 @@ class OrderResource extends JsonResource
             'user' => new UserResource($this->user),
             // 'products' =>$this->products != null? ProductResource::collection($this->products):null,
             'totalCount' => $this->totalCount,
+            'is_service' => ($this->is_service) ? true : false,
             'quantity' => $this->quantity,
             'weight' => $this->weight,
             'overweight' => $this->weight > 15 ? ($this->weight - 15) : 0,
