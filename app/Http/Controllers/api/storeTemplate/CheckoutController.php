@@ -2,35 +2,35 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Coupon;
-use App\Models\Option;
-use App\Mail\SendMail2;
-use App\Models\Account;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\OrderItem;
-use App\Models\CartDetail;
-use App\Models\Paymenttype;
-use App\Models\OrderAddress;
-use Illuminate\Http\Request;
-use App\Models\coupons_users;
-use App\Models\Importproduct;
-use App\Models\coupons_products;
-use App\Models\shippingtype_store;
-use App\Services\FatoorahServices;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\api\BaseController as BaseController;
 use App\Http\Resources\CartResource;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\OrderResource;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PaymenttypeResource;
 use App\Http\Resources\ShippingtypeTemplateResource;
-use App\Http\Controllers\api\BaseController as BaseController;
+use App\Mail\SendMail2;
+use App\Models\Account;
+use App\Models\Cart;
+use App\Models\CartDetail;
+use App\Models\Coupon;
+use App\Models\coupons_products;
+use App\Models\coupons_users;
+use App\Models\Importproduct;
+use App\Models\Option;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderItem;
+use App\Models\Payment;
+use App\Models\Paymenttype;
+use App\Models\Product;
+use App\Models\shippingtype_store;
+use App\Models\Store;
+use App\Models\User;
+use App\Services\FatoorahServices;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends BaseController
 {
@@ -97,6 +97,7 @@ class CheckoutController extends BaseController
             $order->overweight_price = $cart->overweight_price;
             $order->totalCount = $cart->totalCount;
             $order->subtotal = $cart->subtotal;
+            $order->is_service = $cart->is_service;
             $order->tax = $cart->tax;
             $order->discount = $cart->discount_total;
             $order->order_status = "new";
@@ -142,44 +143,46 @@ class CheckoutController extends BaseController
                 ]);
 
             }
-            if( $order->paymentype_id == 4 && $order->shippingtype_id == 1 && $order->total_price >= 3740){
+            if ($order->paymentype_id == 4 && $order->shippingtype_id == 1 && $order->total_price >= 3740) {
                 $order->delete();
                 return $this->sendError("لايمكن ارسال الطلب لانه المبلغ تجاوز الحد الاقصى في الدفع عند الاستلام لدى شركة ارامكس", "order cannot be sent due to the amount exceeding the maximum limit when paying at delivery");
-                
-               }
+
+            }
             // Loop through the cart items and associate them with the order
-            foreach ($cart->cartDetails as $cartItem) {
-                $product = Product::where('is_deleted', 0)->where('id', $cartItem->product_id)->where('store_id', $store_domain)->first();
-                // $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->first();
-                if ($product != null) {
-                    $product->update([
-                        'stock' => $product->stock - $cartItem->qty,
-                    ]);
-                    if ($cartItem->option_id != null) {
-                        $optionQty = Option::where('id', $cartItem->option_id)->first();
-                        $optionQty->update([
-                            'quantity' => $optionQty->quantity - $cartItem->qty,
+            if ($cart->is_service == 0) {
+                foreach ($cart->cartDetails as $cartItem) {
+                    $product = Product::where('is_deleted', 0)->where('id', $cartItem->product_id)->where('store_id', $store_domain)->first();
+                    // $product=Product::where('is_deleted',0)->where('id', $cartItem->product_id)->first();
+                    if ($product != null) {
+                        $product->update([
+                            'stock' => $product->stock - $cartItem->qty,
                         ]);
-                    }
-                    //   $product-> quantity=  $product-> quantity-$cartItem->qty;
-                } else {
-                    $importProduct = Importproduct::where('product_id', $cartItem->product_id)->where('store_id', $store_domain)->first();
-                    if ($importProduct != null) {
-                        $importProduct->update([
-                            'qty' => $importProduct->qty - $cartItem->qty,
-                        ]);
-                    }
-                    if ($cartItem->option_id != null) {
-                        if ($importProduct == null) {
-                            $importProduct = null;
-                        } else {
-                            $importProduct = $importProduct->id;
-                        }
-                        $optionQty = Option::where('id', $cartItem->option_id)->where('importproduct_id', $importProduct)->first();
-                        if ($optionQty != null) {
+                        if ($cartItem->option_id != null) {
+                            $optionQty = Option::where('id', $cartItem->option_id)->first();
                             $optionQty->update([
                                 'quantity' => $optionQty->quantity - $cartItem->qty,
                             ]);
+                        }
+                        //   $product-> quantity=  $product-> quantity-$cartItem->qty;
+                    } else {
+                        $importProduct = Importproduct::where('product_id', $cartItem->product_id)->where('store_id', $store_domain)->first();
+                        if ($importProduct != null) {
+                            $importProduct->update([
+                                'qty' => $importProduct->qty - $cartItem->qty,
+                            ]);
+                        }
+                        if ($cartItem->option_id != null) {
+                            if ($importProduct == null) {
+                                $importProduct = null;
+                            } else {
+                                $importProduct = $importProduct->id;
+                            }
+                            $optionQty = Option::where('id', $cartItem->option_id)->where('importproduct_id', $importProduct)->first();
+                            if ($optionQty != null) {
+                                $optionQty->update([
+                                    'quantity' => $optionQty->quantity - $cartItem->qty,
+                                ]);
+                            }
                         }
                     }
                 }
@@ -200,52 +203,53 @@ class CheckoutController extends BaseController
                 return $total + ($item->quantity * $item->price);
             });
 
-            $orderAddress = OrderAddress::where('user_id', auth()->user()->id)->where('id', $request->shippingAddress_id)->first();
+            if ($cart->is_service == 0) {
+                $orderAddress = OrderAddress::where('user_id', auth()->user()->id)->where('id', $request->shippingAddress_id)->first();
 
-            if ($orderAddress === null) {
+                if ($orderAddress === null) {
 
-                $orderaddress = OrderAddress::create([
-                    'city' => $request->city,
-                    'street_address' => $request->street_address,
-                    'district' => $request->district,
-                    'postal_code' => $request->postal_code,
-                    'default_address' => $request->default_address,
-                    'user_id' => auth()->user()->id,
-                    'shippingtype_id' => $request->shippingtype_id,
+                    $orderaddress = OrderAddress::create([
+                        'city' => $request->city,
+                        'street_address' => $request->street_address,
+                        'district' => $request->district,
+                        'postal_code' => $request->postal_code,
+                        'default_address' => $request->default_address,
+                        'user_id' => auth()->user()->id,
+                        'shippingtype_id' => $request->shippingtype_id,
 
-                ]);
-                if ($orderaddress->default_address === '1') {
+                    ]);
+                    if ($orderaddress->default_address === '1') {
 
-                    $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $orderaddress->id)->get();
-                    foreach ($addresses as $address) {
-                        $address->update([
-                            'default_address' => 0,
-                        ]);
+                        $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $orderaddress->id)->get();
+                        foreach ($addresses as $address) {
+                            $address->update([
+                                'default_address' => 0,
+                            ]);
+                        }
                     }
-                }
 
-                $order->order_addresses()->attach($orderaddress->id, ["type" => "shipping"]);
-            } else {
-                $orderAddress->update([
-                    'city' => $request->city,
-                    'street_address' => $request->street_address,
-                    'district' => $request->district,
-                    'postal_code' => $request->postal_code,
-                    'shippingtype_id' => $request->shippingtype_id,
-                ]);
-                $order->order_addresses()->attach($orderAddress->id, ["type" => "shipping"]);
-                if ($orderAddress->default_address === '1') {
+                    $order->order_addresses()->attach($orderaddress->id, ["type" => "shipping"]);
+                } else {
+                    $orderAddress->update([
+                        'city' => $request->city,
+                        'street_address' => $request->street_address,
+                        'district' => $request->district,
+                        'postal_code' => $request->postal_code,
+                        'shippingtype_id' => $request->shippingtype_id,
+                    ]);
+                    $order->order_addresses()->attach($orderAddress->id, ["type" => "shipping"]);
+                    if ($orderAddress->default_address === '1') {
 
-                    $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $orderAddress->id)->get();
-                    foreach ($addresses as $address) {
-                        $address->update([
-                            'default_address' => 0,
-                        ]);
+                        $addresses = OrderAddress::where('user_id', auth()->user()->id)->whereNot('id', $orderAddress->id)->get();
+                        foreach ($addresses as $address) {
+                            $address->update([
+                                'default_address' => 0,
+                            ]);
+                        }
                     }
-                }
 
+                }
             }
-
             if ($order->paymentype_id == 4) {
 
                 //الدفع عند الاستلام
@@ -268,7 +272,7 @@ class CheckoutController extends BaseController
                     $store = Store::where('id', $order->store_id)->first();
                     $data = [
                         'subject' => "طلب جديد",
-                        'message' => "تم وصول طلب جديد برقم ".$order->order_number." لدى متجركم",
+                        'message' => "تم وصول طلب جديد برقم " . $order->order_number . " لدى متجركم",
                         'store_id' => $store->store_name,
                         'store_email' => $store->store_email,
                     ];
@@ -276,15 +280,15 @@ class CheckoutController extends BaseController
                 }
             } else {
                 $InvoiceId = null;
-                if (in_array($order->paymentype_id, [1, 2]) && $order->shippingtype_id == 5) {
+                if (in_array($order->paymentype_id, [1, 2]) && ($order->shippingtype_id == 5 || $order->shippingtype_id == null)) {
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $commission=(0.009 * $order->total_price)+1;
+                    $commission = (0.009 * $order->total_price) + 1;
                     $vat = $commission * 0.15;
-                    $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
-                    $atlbha=$result*0.001;
-                    $deduction =  $commission+ $vat+$atlbha;
+                    $result = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $commission - $vat;
+                    $atlbha = $result * 0.001;
+                    $deduction = $commission + $vat + $atlbha;
                     $price_after_deduction = $order->total_price - $deduction;
 
                     $supplierdata = [
@@ -303,7 +307,7 @@ class CheckoutController extends BaseController
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
-                        "CustomerMobile"=>substr($customer->phonenumber, 4),
+                        "CustomerMobile" => substr($customer->phonenumber, 4),
                         "CallBackUrl" => 'https://' . $domain . '/shop/checkout/success',
                         "ErrorUrl" => 'https://' . $domain . '/shop/checkout/failed',
                         "Language" => 'ar',
@@ -349,11 +353,11 @@ class CheckoutController extends BaseController
                     $account = Account::where('store_id', $store_domain)->first();
                     $customer = User::where('id', $order->user_id)->where('is_deleted', 0)->first();
                     $paymenttype = Paymenttype::where('id', $order->paymentype_id)->first();
-                    $commission=(0.009 * $order->total_price)+1;
+                    $commission = (0.009 * $order->total_price) + 1;
                     $vat = $commission * 0.15;
-                    $result=$order->total_price - ($order->shipping_price) - ($order->overweight_price)-  $commission- $vat;
-                    $atlbha=$result*0.001;
-                    $deduction =  $commission+ $vat+$atlbha;
+                    $result = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $commission - $vat;
+                    $atlbha = $result * 0.001;
+                    $deduction = $commission + $vat + $atlbha;
                     $price_after_deduction = $order->total_price - ($order->shipping_price) - ($order->overweight_price) - $deduction;
                     $supplierdata = [
                         "SupplierCode" => $account->supplierCode,
@@ -371,7 +375,7 @@ class CheckoutController extends BaseController
                         "CustomerName" => $customer->name,
                         "InvoiceValue" => $order->total_price, // total_price
                         "CustomerEmail" => $customer->email,
-                        "CustomerMobile"=>substr($customer->phonenumber, 4),
+                        "CustomerMobile" => substr($customer->phonenumber, 4),
                         "CallBackUrl" => 'https://' . $domain . '/shop/checkout/success',
                         "ErrorUrl" => 'https://' . $domain . '/shop/checkout/failed',
                         "Language" => 'ar',
