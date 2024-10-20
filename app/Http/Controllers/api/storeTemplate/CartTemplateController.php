@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers\api\storeTemplate;
 
-use Carbon\Carbon;
+use App\Helpers\StoreHelper;
+use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\CartResource;
 use App\Models\Cart;
-use App\Models\User;
-use App\Models\Store;
+use App\Models\CartDetail;
+use App\Models\Importproduct;
 use App\Models\Option;
 use App\Models\Product;
-use App\Models\CartDetail;
-use App\Helpers\StoreHelper;
+use App\Models\Store;
+use App\Models\User;
+use App\Models\Value;
 use Illuminate\Http\Request;
-use App\Models\Importproduct;
-use App\Models\Package_store;
-use App\Http\Resources\CartResource;
-use App\Http\Resources\OptionResource;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\api\BaseController as BaseController;
 
 class CartTemplateController extends BaseController
 {
@@ -42,7 +40,7 @@ class CartTemplateController extends BaseController
         if ($store) {
             if ($store->maintenance != null) {
                 if ($store->maintenance->status == 'active') {
-                    $success['maintenanceMode'] =new MaintenanceResource($store->maintenance);
+                    $success['maintenanceMode'] = new MaintenanceResource($store->maintenance);
                     $success['status'] = 200;
                     return $this->sendResponse($success, 'تم ارجاع وضع الصيانة بنجاح', 'Maintenance return successfully');
                 }
@@ -50,7 +48,7 @@ class CartTemplateController extends BaseController
         } else {
             return $this->sendError("  المتجر غير موجود", "store is't exists");
         }
-        
+
         $success['domain'] = Store::where('is_deleted', 0)->where('id', $store->id)->pluck('domain')->first();
 
         $cart = Cart::where('user_id', auth()->user()->id)->where('is_deleted', 0)->where('store_id', $store->id)->first();
@@ -58,17 +56,16 @@ class CartTemplateController extends BaseController
         if (is_null($cart)) {
             return $this->sendError("السلة غير موجودة", "cart is't exists");
         }
-         if($request->has('delete')){
+        if ($request->has('delete')) {
             $cart->delete();
             $success['status'] = 200;
             return $this->sendResponse($success, 'تم حذف السلة بنجاح', 'Cart deleted successfully');
-         }
-         else{
-        $success['cart'] = new CartResource($cart);
-        $success['status'] = 200;
+        } else {
+            $success['cart'] = new CartResource($cart);
+            $success['status'] = 200;
 
-        return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
-         }
+            return $this->sendResponse($success, 'تم عرض  السلة بنجاح', 'Cart Showed successfully');
+        }
         // }
     }
     public function addToCart(Request $request, $domain)
@@ -82,6 +79,7 @@ class CartTemplateController extends BaseController
 
         } else { $input = $request->all();
             $validator = Validator::make($input, [
+                'is_service' => 'nullable|in:0,1',
                 'data' => 'nullable|array',
                 'data.*.id' => [
                     'required',
@@ -90,6 +88,7 @@ class CartTemplateController extends BaseController
                 'data.*.price' => 'required|numeric',
                 'data.*.qty' => 'required|numeric',
                 'data.*.option_id' => 'nullable|exists:options,id',
+                'data.*.value' => 'nullable|array',
 
             ]);
             if ($validator->fails()) {
@@ -104,6 +103,7 @@ class CartTemplateController extends BaseController
                 $cart = Cart::updateOrCreate([
                     'user_id' => auth()->user()->id,
                     'store_id' => $store_id,
+                    'is_service' => $request->is_service,
                 ], [
                     'total' => 0,
                     'count' => 0,
@@ -114,6 +114,17 @@ class CartTemplateController extends BaseController
                 $options = array();
 
                 foreach ($request->data as $data) {
+                    if ($request->is_service == 1) {
+                        $service = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
+                        if ($service->is_service == 0) {
+                            return $this->sendError("لا يمكن الاضافة لأن هذا المنتج ليس خدمة", "can't add");
+                        }
+                    } else {
+                        $product = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
+                        if ($product->is_service == 1) {
+                            return $this->sendError("لا يمكن الاضافة لأن هذا المنتج  خدمة", "Can't add");
+                        }
+                    }
                     if (isset($data['option_id']) && !is_null($data['option_id'])) {
                         $q = Option::where('id', $data['option_id'])->where('product_id', $data['id'])->first();
                         if (is_null($q)) {
@@ -127,6 +138,42 @@ class CartTemplateController extends BaseController
                     } else {
                         $data['option_id'] = null;
                         $product_quantity = Product::where('id', $data['id'])->where('store_id', $store_id)->pluck('stock')->first();
+                        //if product is service
+                        if ($request->is_service == 1) {
+                            if (isset($data['value']) && !is_null($data['value'])) {
+                                $service_product = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
+                                $price = $service_product->selling_price;
+                                $discount_price = $service_product->discount_price;
+                                $period = $service_product->period;
+                                $names = [];
+                                foreach ($data['value'] as $value) {
+
+                                    $data_value = Value::where('id', $value)->first();
+                                    $data_value = explode(',', $data_value->value);
+                                    array_push($names, $data_value[0]);
+                                    $name = [
+                                        "ar" => implode(',', $names),
+                                    ];
+                                    $price += $data_value[1];
+                                    $discount_price += $data_value[2];
+                                    $period += $data_value[3];
+                                }
+                                $option = new Option([
+                                    'price' => $price,
+                                    'discount_price' => $discount_price,
+                                    'quantity' => 1,
+                                    'period' => $period,
+                                    'name' => $name,
+                                    'product_id' => $data['id'],
+                                    'default_option' => 0,
+
+                                ]);
+
+                                $option->save();
+                                $data['option_id'] = $option->id;
+                            }
+                        }
+
                     }
                     if ($product_quantity == null) {
                         $product_quantity = Importproduct::where('product_id', $data['id'])->where('store_id', $store_id)->pluck('qty')->first();
@@ -137,6 +184,13 @@ class CartTemplateController extends BaseController
                         }
                         if ($data['item'] !== null) {
                             $cartDetail = CartDetail::where('cart_id', $cartid)->where('id', $data['item'])->first();
+                            //if product is service
+                            if ($request->is_service == 1) {
+                                $previous_option_id = $cartDetail->option_id;
+                                if (!is_null($previous_option_id)) {
+                                    Option::where('id', $previous_option_id)->delete();
+                                }
+                            }
                         } else {
 
                             $cartDetail = CartDetail::where('cart_id', $cartid)->where('option_id', $data['option_id'])->where('product_id', $data['id'])->first();
@@ -179,16 +233,18 @@ class CartTemplateController extends BaseController
                     return $total + ($item->qty);
                 });
                 $tax = $subtotal * 0.15;
-            
+                if ($weight > 15) {
                     $extra_shipping_price = 0;
-                
+                } else {
+                    $extra_shipping_price = 0;
+                }
 
                 $total = $subtotal + Cart::where('id', $cartid)->value('shipping_price');
 
                 $cart->update([
                     'total' => $total + $extra_shipping_price,
                     'count' => CartDetail::where('cart_id', $cartid)->count(),
-                    'subtotal' => $subtotal- $tax,
+                    'subtotal' => $subtotal - $tax,
                     'totalCount' => $totalCount,
                     'overweight_price' => $extra_shipping_price,
                     'tax' => $tax,
@@ -204,9 +260,9 @@ class CartTemplateController extends BaseController
                 $success['status'] = 200;
                 return $this->sendResponse($success, 'تم إضافة  السلة بنجاح', 'Cart Added successfully');
 
-            }
-        }
+            }}
     }
+
     public function delete($domain, $id)
     {
 
@@ -232,9 +288,11 @@ class CartTemplateController extends BaseController
             }),
 
         ]);
-      
+        if ($newCart->weight > 15) {
             $extra_shipping_price = 0;
-        
+        } else {
+            $extra_shipping_price = 0;
+        }
         $newCart->update([
             'tax' => $newCart->total * 0.15,
             'shipping_price' => $newCart->shipping_price,
@@ -258,7 +316,7 @@ class CartTemplateController extends BaseController
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم حذف المنتج بنجاح', 'product deleted successfully');
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *

@@ -41,7 +41,7 @@ class ProductController extends BaseController
         }, 'category' => function ($query) {
             $query->select('id', 'name');
         }])
-            ->where('is_deleted', 0)->where('is_import', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'original_id', 'short_description');
+            ->where('is_deleted', 0)->where('is_import', 0)->where('store_id', auth()->user()->store_id)->where('for', 'store')->orderByDesc('created_at')->select('id', 'name', 'status', 'cover', 'special', 'store_id', 'created_at', 'category_id', 'subcategory_id', 'selling_price', 'purchasing_price', 'discount_price', 'stock', 'description', 'is_import', 'is_service', 'original_id', 'short_description');
 
         // $import = Product::join('importproducts', 'products.id', '=', 'importproducts.product_id')->where('products.is_deleted', 0)->where('importproducts.store_id', auth()->user()->store_id)
         //     ->select(['products.id', 'products.name', 'products.status', 'products.cover', 'importproducts.special', 'products.store_id', 'products.created_at', 'products.category_id', 'products.subcategory_id', 'products.selling_price', 'products.stock', 'importproducts.qty', 'importproducts.price', 'importproducts.status', 'products.description', 'products.short_description'])->get()->makeHidden(['products.*status', 'selling_price', 'store_id']);
@@ -95,14 +95,12 @@ class ProductController extends BaseController
         $query = $request->input('query');
         $filter_category = $request->input('category_id');
         $count = ($request->has('number') && $request->input('number') !== null) ? $request->input('number') : 10;
-        $products = Importproduct::with('product')->when($filter_category,function ($query) use ($filter_category) {
+        $products = Importproduct::with('product')->when($filter_category, function ($query) use ($filter_category) {
             $query->whereHas('product', function ($sub_query) use ($filter_category) {
-         $sub_query->where('category_id', $filter_category);
-                });
-        }) 
-    ->where('store_id', auth()->user()->store_id)->paginate($count);
-      
-     
+                $sub_query->where('category_id', $filter_category);
+            });
+        })
+            ->where('store_id', auth()->user()->store_id)->paginate($count);
 
         $success['page_count'] = $products->lastPage();
         $success['current_page'] = $products->currentPage();
@@ -135,11 +133,12 @@ class ProductController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'name' => 'required|string|max:25',
+            'name' => 'required|string',
             'for' => 'store',
             'description' => 'required|string',
             'selling_price' => ['required', 'numeric', 'gt:0'],
-            'stock' => ['required', 'numeric', 'gt:0'],
+            'is_service' => 'nullable|in:0,1',
+            'stock' => ['required_if:is_service,0', 'numeric', 'gt:0'],
             'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
             'discount_price' => ['nullable', 'numeric'],
             'images' => 'nullable|array',
@@ -163,6 +162,7 @@ class ProductController extends BaseController
             ],
             'amount' => 'nullable|in:0,1',
             'product_has_options' => 'nullable|in:0,1',
+            'period' => 'nullable|numeric',
             'attribute' => 'array|required_if:product_has_options,1',
             'data.*.price' => 'numeric|required_if:amount,1',
             'data.*.quantity' => 'numeric|required_if:amount,1',
@@ -182,7 +182,7 @@ class ProductController extends BaseController
             'for' => "store",
             'description' => $request->description,
             'selling_price' => $request->selling_price,
-            'stock' => $request->stock,
+            'stock' => (!is_null($request->stock) ? $request->stock : 100),
             'cover' => $request->cover,
             'SEOdescription' => $request->SEOdescription,
             'discount_price' => $request->discount_price,
@@ -199,6 +199,8 @@ class ProductController extends BaseController
             'store_id' => auth()->user()->store_id,
             'amount' => $request->amount,
             'product_has_options' => $request->product_has_options,
+            'period' => $request->period,
+            'is_service' => is_null($request->is_service) ? 0 : $request->is_service,
         ]);
         $productid = $product->id;
         if ($request->hasFile("images")) {
@@ -351,10 +353,12 @@ class ProductController extends BaseController
 
             $input = $request->all();
             $validator = Validator::make($input, [
-                'name' => 'required|string|max:25',
+                'name' => 'required|string',
                 'description' => 'required|string',
+                'is_service' => 'nullable|in:0,1',
+                'period' => 'nullable|numeric',
                 'selling_price' => ['required', 'numeric', 'gt:0'],
-                'stock' => ['required', 'numeric', 'gt:0'],
+                'stock' => ['required_if:is_service,0', 'numeric', 'gt:0'],
                 'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:1048'],
                 'discount_price' => ['nullable', 'numeric'],
                 'images' => 'nullable|array',
@@ -397,7 +401,7 @@ class ProductController extends BaseController
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
                 'selling_price' => $request->input('selling_price'),
-                'stock' => $request->input('stock'),
+                'stock' => (!is_null($request->input('stock')) ? $request->input('stock') : 100),
                 'cover' => $request->cover,
                 'SEOdescription' => $request->SEOdescription,
                 'discount_price' => $request->input('discount_price'),
@@ -414,6 +418,8 @@ class ProductController extends BaseController
                 'amount' => $request->amount,
                 'product_has_options' => $request->product_has_options,
                 // 'store_id' => $request->input('store_id'),
+                'period' => $request->period,
+                'is_service' => is_null($request->is_service) ? 0 : $request->is_service,
 
             ]);
             $productid = $product->id;
@@ -472,14 +478,30 @@ class ProductController extends BaseController
                     }
                 }
             }
-            $preAttributes = Attribute_product::where('product_id', $productid)->get();
-            foreach ($preAttributes as $preAttribute) {
-                $preAttribute->delete();
-            }
 
-            $preOptions = Option::where('product_id', $productid)->get();
-            foreach ($preOptions as $preOption) {
-                $preOption->delete();
+            $preAttributes = Attribute_product::where('product_id', $productid)->get();
+            if ($preAttributes !== null) {
+                foreach ($preAttributes as $preAttribute) {
+                    $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
+                    if ($values !== null) {
+                        foreach ($values as $value) {
+                            $value->delete();
+                        }
+                    }
+                    $main_attribute = Attribute::where('id', $preAttribute->attribute_id)->first();
+                    if ($main_attribute !== null) {
+                        $main_attribute->delete();
+                    }
+                    $preAttribute->delete();
+                }
+            }
+            if (!($request->has('is_service') && $request->is_service == 1)) {
+                $preOptions = Option::where('product_id', $productid)->get();
+                if ($preOptions !== null) {
+                    foreach ($preOptions as $preOption) {
+                        $preOption->delete();
+                    }
+                }
             }
             if ($request->has('attribute') && !is_null($request->attribute)) {
                 foreach ($request->attribute as $attribute) {
@@ -500,7 +522,7 @@ class ProductController extends BaseController
                                 $attributeValue['image'] = asset('storage/images/product') . '/' . $imageName;
                             }
                         }
-                        else{
+                        else {
                             $attributeValue['image'] = $attributeValue['image'];
                         }
 
@@ -670,13 +692,25 @@ class ProductController extends BaseController
                 $preAttributes = Attribute_product::where('product_id', $product->id)->get();
                 if ($preAttributes !== null) {
                     foreach ($preAttributes as $preAttribute) {
+                        $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
+                        if ($values !== null) {
+                            foreach ($values as $value) {
+                                $value->delete();
+                            }
+                        }
+                        $main_attribute = Attribute::where('id', $preAttribute->attribute_id)->first();
+                        if ($main_attribute !== null) {
+                            $main_attribute->delete();
+                        }
                         $preAttribute->delete();
                     }
                 }
-                $preOptions = Option::where('product_id', $product->id)->get();
-                if ($preOptions !== null) {
-                    foreach ($preOptions as $preOption) {
-                        $preOption->delete();
+                if (!($request->has('is_service') && $request->is_service == 1)) {
+                    $preOptions = Option::where('product_id', $product->id)->get();
+                    if ($preOptions !== null) {
+                        foreach ($preOptions as $preOption) {
+                            $preOption->update(['is_deleted' => $preOption->id]);
+                        }
                     }
                 }
             }
@@ -742,13 +776,25 @@ class ProductController extends BaseController
                 $preAttributes = Attribute_product::where('product_id', $product->id)->get();
                 if ($preAttributes !== null) {
                     foreach ($preAttributes as $preAttribute) {
+                        $values = Value::where('attribute_id', $preAttribute->attribute_id)->get();
+                        if ($values !== null) {
+                            foreach ($values as $value) {
+                                $value->delete();
+                            }
+                        }
+                        $main_attribute = Attribute::where('id', $preAttribute->attribute_id)->first();
+                        if ($main_attribute !== null) {
+                            $main_attribute->delete();
+                        }
                         $preAttribute->delete();
                     }
                 }
-                $preOptions = Option::where('product_id', $product->id)->get();
-                if ($preOptions !== null) {
-                    foreach ($preOptions as $preOption) {
-                        $preOption->delete();
+                if (!($request->has('is_service') && $request->is_service == 1)) {
+                    $preOptions = Option::where('product_id', $product->id)->get();
+                    if ($preOptions !== null) {
+                        foreach ($preOptions as $preOption) {
+                            $preOption->update(['is_deleted' => $preOption->id]);
+                        }
                     }
                 }
 
@@ -856,7 +902,6 @@ class ProductController extends BaseController
 
         }
 
-       
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم تعديل حالة المنتج بنجاح', 'product updated successfully');

@@ -62,7 +62,7 @@ class SelectorController extends BaseController
 
     public function services()
     {
-        $success['services'] = ServiceResource::collection(Service::where('is_deleted', 0)->where('status', 'active')->whereNotIn('id', [18, 19])->get());
+        $success['services'] = ServiceResource::collection(Service::where('is_deleted', 0)->where('status', 'active')->whereNotIn('id', [75, 76])->get());
         $success['status'] = 200;
 
         return $this->sendResponse($success, 'تم ارجاع الخدمات بنجاح', 'Services return successfully');
@@ -102,7 +102,7 @@ class SelectorController extends BaseController
         return $this->sendResponse($success, 'تم ارجاع الأنشطة بنجاح', 'activities return successfully');
     }
 
-    public function mainCategories()
+    public function mainCategories(Request $request)
     {
 
         $atlbhaCategory = Category::
@@ -114,8 +114,21 @@ class SelectorController extends BaseController
             where('is_deleted', 0)
             ->where('parent_id', null)
             ->Where('store_id', auth()->user()->store_id)
+            ->where('is_service', 0)
             ->where('status', 'active')->orderByDesc('created_at')->get();
-        $success['categories'] = CategoryResource::collection($storeCategory->merge($atlbhaCategory));
+            $service_category = Category::
+            where('is_deleted', 0)
+            ->where('parent_id', null)
+            ->Where('store_id', auth()->user()->store_id)
+            ->where('is_service', 1)
+            ->where('status', 'active')->orderByDesc('created_at')->get();
+            if($request->has('is_service')){
+                $success['categories'] = CategoryResource::collection($service_category);
+            }
+            else{
+            $success['categories'] = CategoryResource::collection($storeCategory->merge($atlbhaCategory));
+            }
+        
         $success['status'] = 200;
         return $this->sendResponse($success, 'تم ارجاع جميع التصنيفات بنجاح', 'categories return successfully');
 
@@ -181,11 +194,18 @@ class SelectorController extends BaseController
             $success['page_count'] = $storeCategory->lastPage();
             $success['categories'] = $storeCategory;
         } else {
-            $success['categories'] = CategoryResource::collection(Category::
-                    where('is_deleted', 0)
+            $storeCategory =Category::
+            where('is_deleted', 0)
 
-                    ->where('parent_id', null
-                    )->where('store_id', auth()->user()->store_id)->get());
+            ->where('parent_id', null
+            )->where('store_id', auth()->user()->store_id)->get();
+            if($request->has('is_service')){
+                $storeCategory = $storeCategory->where('is_service', 1);
+            }
+            else{
+                $storeCategory = $storeCategory->where('is_service', 0);
+            }
+            $success['categories'] = CategoryResource::collection($storeCategory);
         }
         $success['status'] = 200;
 
