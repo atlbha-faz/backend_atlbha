@@ -32,6 +32,7 @@ return new class extends Migration
             $table->decimal('discount_total', 10, 2)->nullable();
             $table->timestamp('discount_expire_date')->nullable();
             $table->boolean('free_shipping')->default(0);
+            $table->boolean('is_service')->default(0);
             $table->bigInteger('is_deleted')->default(0);
             $table->string('message')->nullable();
             $table->timestamps();

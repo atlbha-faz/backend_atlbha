@@ -49,6 +49,8 @@ return new class extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->integer('original_id')->nullable();
             $table->boolean('is_import')->default(0);
+            $table->integer('period')->nullable();
+            $table->boolean('is_service')->default(0);
             $table->enum('status', ['active', 'not_active'])->default('active');
             $table->bigInteger('is_deleted')->default(0);
             $table->timestamps();

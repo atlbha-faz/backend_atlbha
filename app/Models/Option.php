@@ -20,6 +20,7 @@ class Option extends Model
         'is_deleted',
         'default_option',
         'original_id',
+        'period',
         'importproduct_id'
     ];
     protected $casts = [

@@ -40,6 +40,7 @@ return new class extends Migration
             $table->enum('payment_status', ['pending', 'paid', 'failed'])
                 ->default('pending');
             $table->bigInteger('is_deleted')->default(0);
+            $table->boolean('is_service')->default(0);
             $table->boolean('cod')->default(0);
             $table->timestamps();
         });
