@@ -154,9 +154,9 @@ class CartTemplateController extends BaseController
                                     $name = [
                                         "ar" => implode(',', $names),
                                     ];
-                                    $price += $data_value[1];
-                                    $discount_price += $data_value[2];
-                                    $period += $data_value[3];
+                                    $price +=(int)$data_value[1] !=""? $data_value[1] : 0;
+                                    $discount_price +=(int) $data_value[2] !=""? $data_value[2] : 0;
+                                    $period +=(int) $data_value[3] !=""? $data_value[3] : 0;
                                 }
                                 $option = new Option([
                                     'price' => $price,
