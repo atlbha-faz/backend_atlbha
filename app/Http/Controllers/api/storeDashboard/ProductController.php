@@ -133,7 +133,7 @@ class ProductController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'name' => 'required|string|max:25',
+            'name' => 'required|string',
             'for' => 'store',
             'description' => 'required|string',
             'selling_price' => ['required', 'numeric', 'gt:0'],
@@ -353,7 +353,7 @@ class ProductController extends BaseController
 
             $input = $request->all();
             $validator = Validator::make($input, [
-                'name' => 'required|string|max:25',
+                'name' => 'required|string',
                 'description' => 'required|string',
                 'is_service' => 'nullable|in:0,1',
                 'period' => 'nullable|numeric',
