@@ -143,7 +143,7 @@ class CartTemplateController extends BaseController
                             if (isset($data['value']) && !is_null($data['value'])) {
                                 $service_product = Product::where('id', $data['id'])->where('store_id', $store_id)->first();
                                 $price = $service_product->selling_price;
-                                $discount_price = $service_product->discount_price;
+                                $discount_price = (int) ($service_product->discount_price !=""? $service_product->discount_price : 0);
                                 $period = $service_product->period;
                                 $names = [];
                                 foreach ($data['value'] as $value) {
@@ -154,9 +154,9 @@ class CartTemplateController extends BaseController
                                     $name = [
                                         "ar" => implode(',', $names),
                                     ];
-                                    $price +=(int)$data_value[1] !=""? $data_value[1] : 0;
-                                    $discount_price +=(int) $data_value[2] !=""? $data_value[2] : 0;
-                                    $period +=(int) $data_value[3] !=""? $data_value[3] : 0;
+                                    $price +=(int)($data_value[1] !=""? $data_value[1] : 0);
+                                    $discount_price +=(int) ($data_value[2] !=""? $data_value[2] : 0);
+                                    $period +=(int) ($data_value[3] !=""? $data_value[3] : 0);
                                 }
                                 $option = new Option([
                                     'price' => $price,
