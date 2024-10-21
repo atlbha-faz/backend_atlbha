@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Events\VerificationEvent;
-use App\Http\Controllers\api\BaseController as BaseController;
-use App\Http\Resources\StoreResource;
-use App\Models\Day_Store;
-use App\Models\Homepage;
-use App\Models\Store;
 use App\Models\User;
-use App\Models\Websiteorder;
-use App\Notifications\verificationNotification;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Store;
+use App\Models\Homepage;
+use App\Models\Day_Store;
 use Illuminate\Support\Str;
+use App\Models\Websiteorder;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Events\VerificationEvent;
+use Illuminate\Support\Facades\Http;
+use App\Http\Resources\StoreResource;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\verificationNotification;
+use App\Http\Controllers\api\BaseController as BaseController;
 
 class SettingController extends BaseController
 {
