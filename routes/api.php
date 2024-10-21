@@ -620,6 +620,7 @@ Route::middleware([StoreUser::class])->group(function () {
         Route::get('setting_store_show', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'settingStoreShow'])->name('store.basicdata.show');
         Route::post('setting_store_update', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'settingStoreUpdate'])->name('store.basicdata.update');
         Route::get('checkDomain', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'checkDomain']);
+        Route::get('checkGoddayDomain', [App\Http\Controllers\api\storeDashboard\SettingController::class, 'checkGoddayDomain']);
         // notifications
         Route::get('NotificationIndex', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'index'])->name('store.notifications.NotificationIndex');
         Route::get('NotificationRead', [App\Http\Controllers\api\storeDashboard\NotificationController::class, 'read'])->name('store.notifications.NotificationRead');
