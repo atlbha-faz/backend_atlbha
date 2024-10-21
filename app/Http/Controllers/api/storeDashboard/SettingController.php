@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\api\storeDashboard;
 
-use App\Models\User;
-use App\Models\Store;
-use App\Models\Homepage;
-use App\Models\Day_Store;
-use Illuminate\Support\Str;
-use App\Models\Websiteorder;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use App\Events\VerificationEvent;
-use App\Http\Resources\StoreResource;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\verificationNotification;
 use App\Http\Controllers\api\BaseController as BaseController;
+use App\Http\Resources\StoreResource;
+use App\Models\Day_Store;
+use App\Models\Homepage;
+use App\Models\Store;
+use App\Models\User;
+use App\Models\Websiteorder;
+use App\Notifications\verificationNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class SettingController extends BaseController
 {
@@ -192,12 +192,41 @@ class SettingController extends BaseController
         return $this->sendResponse($success, 'دومين صحيح', ' correct domain');
 
     }
+    public function checkGoddayDomain(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'domain' => ['required', 'string', Rule::unique('stores')->where(function ($query) {
+                return $query->where('is_deleted', 0)->where('id', '!=', auth()->user()->store_id);
+            })],
+        ]);
+        if ($validator->fails()) {
+            # code...
+
+            return $this->sendError(null, $validator->errors());
+        }
+        $domain = $request->domain;
+        $apiKey = env('GODADDY_API_KEY');
+        $apiSecret = env('GODADDY_SECRET_KEY');
+
+        $response = Http::withHeaders([
+            'Authorization' => "sso-key {$apiKey}:{$apiSecret}",
+        ])->get("https://api.ote-godaddy.com/v1/domains/available", [
+            'domain' => $domain,
+        ]);
+
+        $data = $response->json();
+        $success['status'] = 200;
+        $success['reason'] = $data;
+        return $this->sendResponse($success, ' تم تحقق من الدومين', ' correct domain');
+
+    }
     public function addDomainRequest($id, $type)
     {
         $order_number = Str::random(4, 'numeric');
         $websiteorder = Websiteorder::create([
             'type' => 'store',
-            'order_number' =>$order_number,
+            'order_number' => $order_number,
             'store_id' => auth()->user()->store_id,
         ]);
         $websiteorder->services()->attach($id);
