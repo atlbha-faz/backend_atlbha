@@ -67,7 +67,7 @@ class CheckoutController extends BaseController
                 'postal_code' => 'nullable|string',
                 'default_address' => 'required_if:is_service,0',
                 'paymentype_id' => 'required|exists:paymenttypes,id',
-                'shippingtype_id' => 'required_if:is_service,0|exists:shippingtypes,id',
+                'shippingtype_id' => 'nullable|exists:shippingtypes,id',
                 'cod' => 'nullable',
                 'SessionId' => 'required_if:paymentype_id,1,2',
                 'description' => 'nullable|string',
