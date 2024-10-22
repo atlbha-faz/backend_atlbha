@@ -59,7 +59,7 @@ class CheckoutController extends BaseController
 
             }
             $input = $request->all();
-            $request->is_service = $cart->is_service;
+            $request->is_service = $cart->is_service==null ? 0 : $cart->is_service;
             $validator = Validator::make($input, [
                 'city' => 'required_if:is_service,0|string|max:255',
                 'street_address' => 'required_if:is_service,0|string',
@@ -95,7 +95,7 @@ class CheckoutController extends BaseController
             $order->total_price = $cart->total; // Initialize the total price
             $order->quantity = $cart->count;
             $order->weight = $cart->weight;
-            $order->is_service = $cart->is_service;
+            $order->is_service = ($cart->is_service == null ? 0 : $cart->is_service);
             $order->overweight_price = $cart->overweight_price;
             $order->totalCount = $cart->totalCount;
             $order->subtotal = $cart->subtotal;
