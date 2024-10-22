@@ -49,7 +49,7 @@ class CartDetailResource extends JsonResource
             'product' => new ProductResource($this->product),
             'is_service' => ($this->product->is_service) ? true : false,
             'qty' => $this->qty,
-            'price' =>($this->product->is_service)?$price: $this->price,
+            'price' => $this->price,
             'discount_price' => $this->option_id !== null ? $discount_price : $this->product->discount_price,
             'sum' => $this->subtotal($this->id),
             'stock' => $this->option_id !== null ? $qty : $this->product->stock,
