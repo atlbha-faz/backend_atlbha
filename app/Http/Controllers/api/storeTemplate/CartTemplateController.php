@@ -103,7 +103,7 @@ class CartTemplateController extends BaseController
                 $cart = Cart::updateOrCreate([
                     'user_id' => auth()->user()->id,
                     'store_id' => $store_id,
-                    'is_service' => $request->is_service,
+                    'is_service' => ($request->is_service ==null ? 0 : $request->is_service),
                 ], [
                     'total' => 0,
                     'count' => 0,

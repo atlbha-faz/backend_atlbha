@@ -24,16 +24,22 @@ class OrderItemsResource extends JsonResource
         if($q !== null){
             $array = explode(',', $q->name['ar']);
             $qty= $q->quantity;
+            $period = $q->period;
             $less_qty= $q->less_qty;
            }
            else{
                $array=null;
                $qty=null;
                $less_qty=null;
+               $period=null;
+
            }
         // $options = array_combine($array,$attribute);
         }
-       
+        else
+        {
+        $period = null;
+           }
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
@@ -43,6 +49,7 @@ class OrderItemsResource extends JsonResource
             'stock'=> $this->option_id !== null ?  $qty :$this->product->stock,
             'less_qty'=> $this->option_id !== null ?  $less_qty :$this->product->less_qty,
             'options' => $this->option_id !== null ?  $array :null,
+            'period' => $period,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
 
