@@ -35,6 +35,10 @@ class OrderItemsResource extends JsonResource
            }
         // $options = array_combine($array,$attribute);
         }
+        else
+        {   
+            $period = null;
+        }
        
         return [
             'id' => $this->id,
@@ -42,6 +46,7 @@ class OrderItemsResource extends JsonResource
             'is_service' => ($this->product->is_service) ? true : false,
             'quantity' => $this->quantity,
             'price' => $this->price,
+            'period' => $period,
             'sum' =>round( $this->subtotal($this->id),2),
             'stock'=> $this->option_id !== null ?  $qty :$this->product->stock,
             'period'=> $this->option_id !== null ?  $period :null,
