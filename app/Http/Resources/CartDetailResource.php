@@ -17,33 +17,30 @@ class CartDetailResource extends JsonResource
     public function toArray($request)
     {
         if ($this->option_id !== null) {
-        $q = Option::where('id', $this->option_id)->where('product_id', $this->product->id)->first();
-        // $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
-        // $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
-        if ($q !== null) {
-            $array = explode(',', $q->name['ar']);
-            $qty = $q->quantity;
-            $less_qty = $q->less_qty;
-            $period = $q->period;
-            $discount_price = $q->discount_price;
-            $price = $q->price;
+            $q = Option::where('id', $this->option_id)->where('product_id', $this->product->id)->first();
+            // $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
+            // $attribute=Attribute::whereIn('id', $attributeArray)->pluck('name')->toArray();
+            if ($q !== null) {
+                $array = explode(',', $q->name['ar']);
+                $qty = $q->quantity;
+                $less_qty = $q->less_qty;
+                $period = $q->period;
+                $discount_price = $q->discount_price;
+                $price = $q->price;
 
+            } else {
+                $array = null;
+                $qty = null;
+                $less_qty = null;
+                $period = ($this->product->is_service == 0) ? null : $this->product->period;
+                $discount_price = ($this->product->is_service == 0) ? 0 : $this->product->discount_price;
+                $price = ($this->product->is_service == 0) ? 0 : $this->product->price;
+            }
+
+            // $options = array_combine($array,$attribute);
         } else {
-            $array = null;
-            $qty = null;
-            $less_qty = null;
-            $period = null;
-            $discount_price = 0;
-            $price = 0;
+            $period = ($this->product->is_service == 0) ? null : $this->product->period;
         }
-      
-        // $options = array_combine($array,$attribute);
-    }
-    else
-    {
-    $period = null;
-    $price = 0;
-    }
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
@@ -59,5 +56,6 @@ class CartDetailResource extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
 
-        ];}
+        ];
+    }
 }
