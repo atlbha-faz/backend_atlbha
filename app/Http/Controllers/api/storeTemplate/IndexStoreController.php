@@ -762,12 +762,7 @@ class IndexStoreController extends BaseController
         if ($request->has('category_id')) {
             $resentproduct->where('category_id', $request->category_id);
         }
-        if ($request->has('is_service')) {
-            $resentproduct->where('is_service', 1);
-        } else {
-            $resentproduct->where('is_service', 0);
-        }
-
+        
         $resentproduct = $resentproduct->paginate($count);
         $success['resent_arrive'] = ProductStoreResource::collection($resentproduct);
         $success['page_count'] = $resentproduct->lastPage();
