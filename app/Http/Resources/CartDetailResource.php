@@ -26,12 +26,15 @@ class CartDetailResource extends JsonResource
             $less_qty = $q->less_qty;
             $period = $q->period;
             $discount_price = $q->discount_price;
+            $price = $q->price;
+
         } else {
             $array = null;
             $qty = null;
             $less_qty = null;
             $period = null;
             $discount_price = 0;
+            $price = 0;
         }
       
         // $options = array_combine($array,$attribute);
@@ -39,13 +42,14 @@ class CartDetailResource extends JsonResource
     else
     {
     $period = null;
+    $price = 0;
     }
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
             'is_service' => ($this->product->is_service) ? true : false,
             'qty' => $this->qty,
-            'price' => $this->price,
+            'price' =>($this->product->is_service)?$price: $this->price,
             'discount_price' => $this->option_id !== null ? $discount_price : $this->product->discount_price,
             'sum' => $this->subtotal($this->id),
             'stock' => $this->option_id !== null ? $qty : $this->product->stock,
