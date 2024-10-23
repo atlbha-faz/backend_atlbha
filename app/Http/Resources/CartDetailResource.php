@@ -31,13 +31,15 @@ class CartDetailResource extends JsonResource
                 $array = null;
                 $qty = null;
                 $less_qty = null;
-                $period = null;
-                $discount_price = 0;
+                $period = ($this->product->is_service == 0) ? null : $this->product->period;
+                $discount_price = ($this->product->is_service == 0) ? 0 : $this->product->discount_price;
             }
 
             // $options = array_combine($array,$attribute);
         }
-        $period = null;
+        else{
+        $period = ($this->product->is_service == 0) ? null : $this->product->period;
+        }
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),

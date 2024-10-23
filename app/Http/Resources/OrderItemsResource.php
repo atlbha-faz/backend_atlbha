@@ -16,7 +16,8 @@ class OrderItemsResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    { if( $this->option_id !== null)
+    { 
+        if( $this->option_id !== null)
         {
         $q = Option::where('id',$this->option_id)->where('product_id',$this->product->id)->first();
         // $attributeArray=Attribute_product::where('product_id',$this->product->id)->pluck('attribute_id')->toArray();
@@ -31,14 +32,15 @@ class OrderItemsResource extends JsonResource
                $array=null;
                $qty=null;
                $less_qty=null;
-               $period=null;
+               $period = ($this->product->is_service == 0) ? null : $this->product->period;
+
 
            }
         // $options = array_combine($array,$attribute);
         }
         else
         {
-        $period = null;
+        $period = ($this->product->is_service == 0) ? null : $this->product->period;
            }
         return [
             'id' => $this->id,
