@@ -52,7 +52,7 @@ class ProductAdaminResource extends JsonResource
                 'status' => $status,
                 'special' => $special,
                 'admin_special' => $admin_special,
-                'url' => 'https://template.atlbha.com/' . $domain . '/shop/product/' . $this->id.'/'.preg_replace('/ /', '-',$this->name),
+                'url' =>($this->is_service==1)? 'https://' . $domain . '/services/'.$this->id.'/' .preg_replace('/ /', '-',$this->name) : 'https://' . $domain . '/products/'.preg_replace('/ /', '-',$this->name).'/'. $this->id,
                 'created_at' => (string) $this->created_at,
                 'updated_at' => (string) $this->updated_at,
                 'category' => new CategoryResource($this->category),
